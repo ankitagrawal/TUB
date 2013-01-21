@@ -20,12 +20,10 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
-import org.apache.commons.collections.CollectionUtils;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +36,6 @@ public class PaymentModeAction extends BaseAction {
   List<Issuer>                  cardIssuers;
   private Set<CartLineItem>     trimCartLineItems = new HashSet<CartLineItem>();
   private Integer               sizeOfCLI;
-
 
   @Autowired
   GatewayIssuerMappingService gatewayIssuerMappingService;
@@ -58,20 +55,14 @@ public class PaymentModeAction extends BaseAction {
     if (order.getAddress() == null) {
       addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
       return new RedirectResolution(SelectAddressAction.class);
+     }
+    if(trimCartLineItems==null || trimCartLineItems.size()==0){
+      trimCartLineItems = orderManager.trimEmptyLineItems(order);
     }
-    if(trimCartLineItems==null || (trimCartLineItems.size()==0)){
-    Set<CartLineItem> oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-    order = orderManager.trimEmptyLineItems(order);
-    Set<CartLineItem> newCartLineItems = order.getCartLineItems();
-    Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
-    if(diffCartLineItems!=null && diffCartLineItems.size()>0){
-      trimCartLineItems.addAll(diffCartLineItems);
-       }
-    }
-    sizeOfCLI = order.getCartLineItems().size();
-    bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(),true);
-    cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(),true);
-    return new ForwardResolution("/pages/paymentMode.jsp");
+      sizeOfCLI = order.getCartLineItems().size();
+      bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
+      cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
+      return new ForwardResolution("/pages/paymentMode.jsp");
   }
 
   public List<Issuer> getBankIssuers() {
@@ -90,14 +81,6 @@ public class PaymentModeAction extends BaseAction {
     this.cardIssuers = cardIssuers;
   }
 
-  public Integer getSizeOfCLI() {
-    return sizeOfCLI;
-  }
-
-  public void setSizeOfCLI(Integer sizeOfCLI) {
-    this.sizeOfCLI = sizeOfCLI;
-  }
-
   public Set<CartLineItem> getTrimCartLineItems() {
     return trimCartLineItems;
   }
@@ -112,4 +95,12 @@ public class PaymentModeAction extends BaseAction {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
 }

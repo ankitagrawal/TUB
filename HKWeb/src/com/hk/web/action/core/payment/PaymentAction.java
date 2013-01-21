@@ -27,7 +27,6 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,16 +74,12 @@ public class PaymentAction extends BaseAction {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
             Set<CartLineItem>oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            order = orderManager.trimEmptyLineItems(order);
-            Set<CartLineItem> newCartLineItems = order.getCartLineItems();
-//            Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
-           Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems); 
-           if(diffCartLineItems!=null && diffCartLineItems.size()>0){
-              trimCartLineItems.addAll(diffCartLineItems);
-              sizeOfCLI = order.getCartLineItems().size();
-              return new ForwardResolution("/pages/paymentMode.jsp").addParameter("order", order);
+            trimCartLineItems = orderManager.trimEmptyLineItems(order);
+            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
+                return new RedirectResolution(PaymentModeAction.class).addParameter("order", order).addParameter("trimCartLineItems",trimCartLineItems);
             }
-          String issuerCode = null;
+            sizeOfCLI = order.getCartLineItems().size();
+            String issuerCode = null;
             if (issuer != null) {
                 try {
                     List<GatewayIssuerMapping> gatewayIssuerMappings = gatewayIssuerMappingService.searchGatewayIssuerMapping(issuer, null, true);
@@ -174,19 +169,19 @@ public class PaymentAction extends BaseAction {
         this.billingAddressId = billingAddressId;
     }
 
-  public Integer getSizeOfCLI() {
-    return sizeOfCLI;
-  }
-
-  public void setSizeOfCLI(Integer sizeOfCLI) {
-    this.sizeOfCLI = sizeOfCLI;
-  }
-
   public Set<CartLineItem> getTrimCartLineItems() {
     return trimCartLineItems;
   }
 
   public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
     this.trimCartLineItems = trimCartLineItems;
+  }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
   }
 }

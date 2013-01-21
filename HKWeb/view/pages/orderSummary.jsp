@@ -262,6 +262,7 @@
      </c:if>
      </c:otherwise>
       </c:choose>
+      <c:set var="comboInstanceIds"  value=""/>
   </s:layout-component>
 </s:layout-render>
 
@@ -375,7 +376,7 @@
                <td>&nbsp;</td>
                <td>&nbsp;</td>
            </tr>
-               <c:forEach items="${cartAction.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+               <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
                    <tr>
                        <div class='product' style="border-bottom-style: solid;">
                          <td style="padding-left: 15px;">
@@ -398,11 +399,17 @@
                                <table width="100%">
                                    <tr>
                                        <td>
-                                               ${cartLineItem.productVariant.product.name} <br/>
-                                               <c:if test="${cartLineItem.comboInstance == null}">
-                                               ${cartLineItem.productVariant.variantName}
-                                               </c:if>
-                                           <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
+                                            <c:choose>
+                                                  <c:when test="${cartLineItem.comboInstance!=null}">
+                                                    <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','"/>
+                                                        ${cartLineItem.productVariant.product.name} <br/>
+                                                     </c:if>
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                       ${cartLineItem.productVariant.variantName}
+                                                  </c:otherwise>
+                                               </c:choose>
                                        </td>
                                    </tr>
                                </table>
@@ -424,7 +431,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
 
-                 <c:if test="${cartAction.sizeOfCLI > 0}">
+                 <c:if test="${orderSummary.sizeOfCLI > 0}">
                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
                      </td><td>
                    </c:if>

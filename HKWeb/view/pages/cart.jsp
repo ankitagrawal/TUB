@@ -698,7 +698,7 @@
 			</c:if>
 </s:layout-component>
 </c:if>
-
+<c:set var="comboInstanceIds"  value=""/>
 <s:layout-component name="htmlHead">
 <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
         <script type="text/javascript">
@@ -779,11 +779,17 @@
                                <table width="100%">
                                    <tr>
                                        <td>
-                                               ${cartLineItem.productVariant.product.name} <br/>
-                                               <c:if test="${cartLineItem.comboInstance == null}">
-                                               ${cartLineItem.productVariant.variantName}
-                                               </c:if>    
-                                           <%--<c:set var="${invoiceLineItem.qty}" value="0"/>--%>
+                                               <c:choose>
+                                                  <c:when test="${cartLineItem.comboInstance!=null}">
+                                                    <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','"/>
+                                                        ${cartLineItem.productVariant.product.name} <br/>
+                                                     </c:if>
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                       ${cartLineItem.productVariant.variantName}
+                                                  </c:otherwise>
+                                               </c:choose>
                                        </td>
                                    </tr>
                                </table>

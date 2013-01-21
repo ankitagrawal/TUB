@@ -77,7 +77,7 @@ public class UserManageAddressAction extends BaseAction {
     user = userService.getLoggedInUser();
     if (user != null) {
       address.setUser(user);
-      address = addressDao.save(address);
+      address = addressDao.save(address);                                                               
     }
     addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
     return showAddressBook();
