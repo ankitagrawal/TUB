@@ -66,7 +66,7 @@ public class User {
 
 
     @Column(name = "subscribed_mask", nullable = false)
-    private int subscribedMask;
+    private Integer subscribedMask;
 
 
     @Column(name = "unsubscribe_token", length = 512)
@@ -449,7 +449,7 @@ public class User {
         this.createDate = createDate;
     }
 
-    public int getSubscribedMask() {
+    public Integer getSubscribedMask() {
         return subscribedMask;
     }
 

@@ -117,8 +117,11 @@ public class UserServiceImpl implements UserService {
             if (user.getStore() == null) {
                 user.setStore(getStoreService().getDefaultStore());
             }
+            if (user.getSubscribedMask() == null){
+                user.setSubscribedMask(30);//Subscribe for all
+            }
         }
-        user.setSubscribedMask(30);//Subscribe for all
+
         return getUserDao().save(user);
     }
 
