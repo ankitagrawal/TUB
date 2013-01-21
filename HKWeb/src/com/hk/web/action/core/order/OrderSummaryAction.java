@@ -2,11 +2,7 @@ package com.hk.web.action.core.order;
 
 import java.util.*;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +36,7 @@ import com.hk.web.action.core.user.SelectAddressAction;
 
 @Secure
 @Component
+@HttpCache(allow = false)
 public class OrderSummaryAction extends BaseAction {
 
     // private static Logger logger = LoggerFactory.getLogger(OrderSummaryAction.class);

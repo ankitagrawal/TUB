@@ -1,6 +1,5 @@
 package com.hk.impl.service.order;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,19 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
-import com.hk.cache.UserCache;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -106,9 +101,9 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
-        //finalize order -- create shipping order and update inventory
-        finalizeOrder(order);
-        return  order;
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+       return  order;
     }
 
     private Order recalAndUpdateAmount(Order order){
@@ -146,57 +141,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         payment.setCreateDate(BaseUtils.getCurrentTimestamp());
         payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         return paymentService.save(payment);
-    }
-
-    /**
-     * takes necessary steps and updates inventory after an order is placed
-     * @param order
-     */
-    public void finalizeOrder(Order order){
-
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-
-        boolean shippingOrderExists = false;
-
-        //Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            if (lineItemDao.getLineItem(cartLineItem) != null) {
-                shippingOrderExists = true;
-            }
-        }
-
-        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-
-        if (!shippingOrderExists) {
-            shippingOrders = orderService.createShippingOrders(order);
-        }
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            // save order with InProcess status since shipping orders have been created
-            order.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = orderService.save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            //User adminUser = UserCache.getInstance().getAdminUser();
-            User adminUser = getUserService().getAdminUser();
-            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
-
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-        }
-
-        //Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-        }
     }
 
     public OrderService getOrderService() {

@@ -39,12 +39,12 @@ import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
@@ -70,7 +70,7 @@ public class InventoryCheckoutAction extends BaseAction {
     @Autowired
     private LineItemDao                     lineItemDao;
     @Autowired
-    private SkuGroupDao                     skuGroupDao;
+    private SkuGroupService                  skuGroupService;
     @Autowired
     private ProductVariantDao               productVariantDao;
     @Autowired
@@ -149,7 +149,8 @@ public class InventoryCheckoutAction extends BaseAction {
         logger.debug("upc: " + upc);
 
         if (StringUtils.isNotBlank(upc)) {
-            skuGroupBarcode = skuGroupDao.getSkuGroup(upc);
+	        //TODO: Fetch available sku groups
+            skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
             if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
                 productVariant = skuGroupBarcode.getSku().getProductVariant();
                 skuGroups = new ArrayList<SkuGroup>();

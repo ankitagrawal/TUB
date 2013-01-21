@@ -87,6 +87,7 @@ public class SkuGroup implements java.io.Serializable {
 	@Column (name = "mrp")
 	private Double mrp;
 
+	@JsonSkip
 	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "skuGroup")
 	private Set<SkuItem> skuItems = new HashSet<SkuItem>(0);
 

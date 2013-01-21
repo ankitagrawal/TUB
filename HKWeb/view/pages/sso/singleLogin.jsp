@@ -1,7 +1,7 @@
 
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <c:set var="httpPath" value="${pageContext.request.contextPath}" />
-<s:useActionBean beanclass="com.hk.web.action.core.auth.SingleLoginAction" var="sla" />
+<s:useActionBean beanclass="com.hk.web.action.core.auth.SSOLoginAction" var="sla" />
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -23,7 +23,7 @@
                 <a href="#" id="logintab" class="tab">log in</a>
             </c:otherwise>
         </c:choose>
-        <img src="${httpPath}/images/stripe_top.png" alt="top_stripe" border="0" height="10" width="705">
+        <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="top_stripe" border="0" height="10" width="705">
     </div>
     <div class="logo_block">
         <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140"></a>
@@ -35,9 +35,9 @@
     <div id="panel">
         <h1 class="login-header">Welcome to the Healthkart Network</h1>
         <div id="loginbox">
-            <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SingleLoginAction">
+            <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction">
 
-                <s:text type="text" placeholder="enter your username" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
+                <s:text type="text" placeholder="enter your login email" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="loginNameError" ></p>
                 <s:text type="password" placeholder="enter password" name="password" id="password"  tabindex="20" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="passwordError" ></p>
@@ -47,17 +47,17 @@
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
                 <div class="login_block">
                     <s:submit tabindex="30" name="login" id="login"  class="submit" value="Log in"/>
-                    <a id="signin_forgotPasswordLink" tabindex="40" class="forgot_link" href="">Forgot password?</a>
+                    <s:link beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction" id="signin_forgotPasswordLink" tabindex="40" class="forgot_link">Forgot password?</s:link>
                 </div>
 
             </s:form>
         </div>
         <div id="signupbox">
-            <s:form id="signup_form" method="post" event="signup"  beanclass="com.hk.web.action.core.auth.SingleLoginAction">
+            <s:form id="signup_form" method="post" event="signup"  beanclass="com.hk.web.action.core.auth.SSOLoginAction">
 
                 <s:text placeholder="enter your name" name="userName" id="name" tabindex="10" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="nameError" ></p>
-                <s:text placeholder="enter your username" name="userLogin" id="email" tabindex="20" size="50" maxlength="50" value=""/>
+                <s:text placeholder="enter your login email" name="userLogin" id="email" tabindex="20" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="emailError" ></p>
                 <s:text type="password" placeholder="enter password" name="password" id="signup_password" tabindex="30" size="50" maxlength="50" value=""/>
                 <p class="errors_class" id="signup_passwordError" ></p>
@@ -69,12 +69,11 @@
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
                 <div class="login_block">
                     <s:submit tabindex="60" name="signup" id="signup" class="submit" value="Sign up"></s:submit>
-                    <a id="signup_forgotPasswordLink" class="forgot_link" href="">Forgot password?</a>
                 </div>
             </s:form>
         </div>
     </div>
-    <div class="footer"> <img src="${httpPath}/images/stripe_bottom.png" alt="bottom_stripe" border="0" height="10" width="705"> </div>
+    <div class="footer"> <img src="${httpPath}/images/hk_bar_SSO.jpg" alt="bottom_stripe" border="0" height="10" width="705"> </div>
 </div>
 
 

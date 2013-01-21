@@ -198,6 +198,19 @@
 					return false;
 				}
 
+				var invoiceDateString = $('#invoice-date').val();
+				var dateValues = invoiceDateString.split("-");
+				var invoiceDate = new Date();
+
+				invoiceDate.setYear(parseInt(dateValues[0]));
+				invoiceDate.setMonth(parseInt(dateValues[1]) - 1);
+				invoiceDate.setDate(parseInt(dateValues[2]));
+				if (invoiceDate > new Date()) {
+					alert("Invoice date cannot be in future");
+					return false;
+				}
+
+
 				var returnFalse = false;
 				$.each($('.receivedQuantity'), function(index, value){
 					var valueChangeRow = $(this).parents('.lineItemRow');
@@ -274,7 +287,7 @@
 	</tr>
 	<tr>
 		<td>Invoice Date <em class="mandatory">*</em></td>
-		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.invoiceDate"/></td>
+		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.invoiceDate" id="invoice-date"/></td>
 		<td>Invoice Number <em class="mandatory">*</em></td>
 		<td><s:text name="grn.invoiceNumber" class="invoiceNumber"/></td>
 		<td></td>
@@ -332,7 +345,7 @@
 		<th>Tax</th>
 		<th>Surcharge</th>
 		<th>Payable</th>
-		<th>Weight</th>
+		<th>Weight <br/>(in gms)</th>
 		<th>Length</th>
 		<th>Breadth</th>
 		<th>Height</th>

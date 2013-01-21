@@ -8,6 +8,7 @@
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 
 <s:useActionBean
         beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre"
@@ -20,7 +21,8 @@
     Double codMinAmount = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
     Double codCharges = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codCharges));
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-
+	boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
 <c:set var="codMinAmount" value="<%=codMinAmount%>"/>
@@ -70,7 +72,7 @@
             value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
             currencySymbol="Rs "/> </strong></h4>
     <h6>If you have any trouble during the payment process, call our
-        helpline number <strong class='red'> 0124 - 4551616 </strong></h6>
+        helpline number <strong class='red'> 0124 - 4502930 </strong></h6>
 </div>
 
 <div class="alert messages" style="font-size: 14px; color: red">
@@ -473,6 +475,25 @@
           });
     </script>
      </c:if>
+=======
+
+ <c:if test="${not isSecure }">
+	  <iframe src="" id="vizuryTargeting" scrolling="no" width="1"
+	          height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
+
+
+	  <script type="text/javascript">
+		  var vizuryLink = "http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e400";
+		  var user_hash;
+		  <c:forEach items="${paymentModeBean.order.productCartLineItems}" var="cartLineItem" varStatus="liCtr">
+		  vizuryLink += "&pid${liCtr.count}=${cartLineItem.productVariant.product.id}&catid${liCtr.count}=${cartLineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${cartLineItem.qty}";
+		  user_hash = "${user_hash}";
+		  </c:forEach>
+
+		  vizuryLink += "&currency=INR&section=1&level=3";
+		  document.getElementById("vizuryTargeting").src = vizuryLink + "&uid="+user_hash;
+	  </script>
+  </c:if>
 </s:layout-component>
 
 

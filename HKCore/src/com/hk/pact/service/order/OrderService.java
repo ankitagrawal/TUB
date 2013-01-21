@@ -74,5 +74,8 @@ public interface OrderService {
     
     public void setTargetDispatchDelDatesOnBO(Order order);
 
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
+
+
 }
 

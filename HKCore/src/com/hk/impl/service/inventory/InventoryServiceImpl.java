@@ -26,6 +26,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ public class InventoryServiceImpl implements InventoryService {
     private UserManager                userManager;
     @Autowired
     private EmailManager               emailManager;
-    @Autowired
-    private SkuItemDao                 skuItemDao;
+//    @Autowired
+//    private SkuItemDao                 skuItemDao;
     @Autowired
     private SkuService                 skuService;
     @Autowired
@@ -63,6 +64,8 @@ public class InventoryServiceImpl implements InventoryService {
     private UpdatePvPriceDao           updatePvPriceDao;
     @Autowired
     private ProductService             productService;
+	@Autowired
+	SkuGroupService skuGroupService;
 	
 
     @Override
@@ -195,7 +198,7 @@ public class InventoryServiceImpl implements InventoryService {
 	    boolean isBrandAudited = updatePvPriceDao.isBrandAudited(productVariant.getProduct().getBrand());
 	    if (isBrandAudited) {
 		    Long bookedInventory = this.getBookedQty(productVariant);
-		    SkuGroup leastMRPSkuGroup = skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);
+		    SkuGroup leastMRPSkuGroup = skuGroupService.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);
 		    if (leastMRPSkuGroup != null) {
 			    //logger.info("leastMRPSkuGroup: "+leastMRPSkuGroup.getId());
 			    if (leastMRPSkuGroup != null && leastMRPSkuGroup.getMrp() != null
@@ -288,7 +291,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Supplier getSupplierForSKU(Sku sku) {
-        List<SkuGroup> availableSkuGroups = getSkuItemDao().getInStockSkuGroups(sku);
+        List<SkuGroup> availableSkuGroups = skuGroupService.getInStockSkuGroups(sku);
         return (availableSkuGroups != null && !availableSkuGroups.isEmpty()) ? availableSkuGroups.get(0).getGoodsReceivedNote().getPurchaseOrder().getSupplier() : null;
     }
 
@@ -308,13 +311,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.userManager = userManager;
     }
 
-    public SkuItemDao getSkuItemDao() {
-        return skuItemDao;
-    }
 
-    public void setSkuItemDao(SkuItemDao skuItemDao) {
-        this.skuItemDao = skuItemDao;
-    }
 
     public SkuService getSkuService() {
         return skuService;

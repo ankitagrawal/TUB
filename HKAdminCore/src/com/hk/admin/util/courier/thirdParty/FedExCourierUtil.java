@@ -63,8 +63,7 @@ import com.fedex.ship.stub.WebAuthenticationDetail;
 import com.fedex.ship.stub.Weight;
 import com.fedex.ship.stub.WeightUnits;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.cache.UserCache;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
@@ -100,7 +99,7 @@ public class FedExCourierUtil {
 
     private String               fedExServerUrl;
 
-    private ShipmentService      shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
+    private ShipmentService shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
 
     private ShippingOrderService shippingOrderService     = ServiceLocatorFactory.getService(ShippingOrderService.class);
     private UserService          userService              = ServiceLocatorFactory.getService(UserService.class);

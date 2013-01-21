@@ -1,5 +1,9 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.inventory.rv.ReconciliationType" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="poa"/>
@@ -8,6 +12,8 @@
    <%
        WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
        pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+	   Long addId = EnumReconciliationType.Add.getId();
+	   pageContext.setAttribute("addId", addId);
    %>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -18,9 +24,21 @@
 
   <s:layout-component name="content">
     <c:if test="${whAction.setWarehouse != null}">
-      <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
-              event="view">Create New Reconciliation Voucher</s:link>
+	    <div>
+		    <div style="float:left;">
+	     <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+              event="subtractReconciliation">Subtract/Delete Reconciliation Voucher</s:link>
+			    </div>
+
+		    <div style="float:right;" >
+			  <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+              event="addReconciliation">Add Reconciliation Voucher</s:link>
+		    </div>
+
+	    </div>
     </c:if>
+	  <div class="clear"></div>
+	  <div>
     <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
 
       <fieldset>
@@ -40,7 +58,7 @@
               <s:select name="warehouse">
                 <s:option value="0">-All-</s:option>
                 <c:forEach items="${whList}" var="wh">
-                  <s:option value="${wh.id}">${wh.city}</s:option>
+                  <s:option value="${wh.id}">${wh.name}</s:option>
                 </c:forEach>
               </s:select>
             </c:otherwise>
@@ -55,28 +73,49 @@
     <table class="zebra_vert">
       <thead>
       <tr>
-        <th>ID</th>
-        <th>Create Date</th>
-        <th>Created By</th>
-        <th>Reconciliation Date</th>
-        <th>Actions</th>
+	      <th>ID</th>
+	      <th>Create Date</th>
+	      <th>Created By</th>
+	      <th>Reconciliation Date</th>
+	      <th>Reconciliation Type</th>
+	      <th>Actions</th>
+
       </tr>
       </thead>
-      <c:forEach items="${poa.reconciliationVouchers}" var="purchaseOrder" varStatus="ctr">
+      <c:forEach items="${poa.reconciliationVouchers}" var="reconvoucher" varStatus="ctr">
         <tr>
-          <td>${purchaseOrder.id}</td>
-          <td><fmt:formatDate value="${purchaseOrder.createDate}" type="both" timeStyle="short"/></td>
-          <td>${purchaseOrder.createdBy.name} <br/>(${purchaseOrder.createdBy.login})</td>
-          <td><fmt:formatDate value="${purchaseOrder.reconciliationDate}" type="both" timeStyle="short"/></td>
+          <td>${reconvoucher.id}</td>
+          <td><fmt:formatDate value="${reconvoucher.createDate}" type="both" timeStyle="short"/></td>
+          <td>${reconvoucher.createdBy.name} <br/>(${reconvoucher.createdBy.login})</td>
+          <td><fmt:formatDate value="${reconvoucher.reconciliationDate}" type="both" timeStyle="short"/></td>
+	        <td>
+		      <c:choose>
+		          <c:when test="${reconvoucher.reconciliationType.id == addId}">
+			        Add
+		          </c:when>
+		          <c:otherwise>
+			         Subtract
+		          </c:otherwise>
+	          </c:choose>
+
+	        </td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="view">Edit
-              <s:param name="reconciliationVoucher" value="${purchaseOrder.id}"/></s:link>
+	          <c:choose>
+		          <c:when test="${reconvoucher.reconciliationType.id == addId}">
+			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="addReconciliation">Edit
+				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
+		          </c:when>
+		          <c:otherwise>
+			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="create">Edit
+				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
+		          </c:otherwise>
+	          </c:choose>
           </td>
         </tr>
       </c:forEach>
     </table>
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
-
+	</div>
   </s:layout-component>
 </s:layout-render>

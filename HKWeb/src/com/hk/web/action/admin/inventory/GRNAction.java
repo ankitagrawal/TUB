@@ -189,10 +189,17 @@ public class GRNAction extends BasePaginatedAction {
 					addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for item "+grnLineItem.getSku().getProductVariant().getId()));
 					return new RedirectResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
 				}
+
+				if(grnLineItem.getCheckedInQty() != null && grnLineItem.getCheckedInQty() > 0 && grnLineItem.getQty() < grnLineItem.getCheckedInQty()){
+					addRedirectAlertMessage(new SimpleMessage("GRN qty cannot be less than checked in quantity for item "+grnLineItem.getSku().getProductVariant().getId()));
+					return new RedirectResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
+				}
+
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
-				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
+				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
+						(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
 					grnLineItemDao.delete(grnLineItem);
 				} else if (grnLineItem.getQty() > 0) {
 					if (grnLineItem.getPayableAmount() != null) {
@@ -513,18 +520,6 @@ public class GRNAction extends BasePaginatedAction {
 		this.grnStatus = grnStatus;
 	}
 
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("productVariant");
-		params.add("invoiceNumber");
-		params.add("tinNumber");
-		params.add("supplierName");
-		params.add("grn");
-		params.add("grnStatus");
-		params.add("reconciled");
-		return params;
-	}
-
 	public Double getSurcharge() {
 		if (grn.getPurchaseOrder().getSupplier().getState().equals(StateList.HARYANA)) {
 			return 0.05;
@@ -667,5 +662,18 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
+	}
+
+    public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("productVariant");
+		params.add("invoiceNumber");
+		params.add("tinNumber");
+		params.add("supplierName");
+		params.add("grn");
+		params.add("grnStatus");
+		params.add("reconciled");
+		params.add("warehouse");
+		return params;
 	}
 }

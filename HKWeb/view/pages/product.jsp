@@ -8,6 +8,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 
  <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
@@ -168,15 +169,13 @@
 	<%--<s:layout-render name="/pages/modal/eyeGlasses.jsp" product="${product}"/>--%>
 	<%--</c:if>--%>
 
-	<c:if test="${pa.combo == null}">
 		<shiro:hasPermission name="<%=PermissionConstants.GET_PRODUCT_LINK%>">
 			<s:layout-render name="/pages/modal/productLink.jsp" product="${product}"
 			                 affiliateId="${pa.affiliate.id}"/>
 
-			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}"
+			<s:layout-render name="/pages/modal/productBannerLink.jsp" product="${product}" combo="${pa.combo}"
 			                 affiliateId="${pa.affiliate.id}"/>
 		</shiro:hasPermission>
-	</c:if>
 
 	<div class="jqmWindow" style="display:none;" id="notifyMeWindow"></div>
 
@@ -416,7 +415,7 @@
 			$(document).ready(function () {
 				$('#subscriptionWindow').jqm({trigger:'.addSubscriptionButton', ajax:'@href', ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
 				$('.addSubscriptionButton').mouseover(function () {
-					var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 55;
+					var top = $(this).offset().top - $('#subscription-tooltip').outerHeight() - 20;
 					var left = $(this).offset().left - $('#subscription-tooltip').outerWidth() / 2 + $(this).outerWidth() / 2;
 
 					$('#subscription-tooltip').css({
@@ -1095,7 +1094,7 @@
 
 	<c:if test="${not isSecure }">
 		<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 	</c:if>

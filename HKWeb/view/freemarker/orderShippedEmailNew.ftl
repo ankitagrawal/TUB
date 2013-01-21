@@ -153,7 +153,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 					<br/>
 					<br/>
 					In case you have any queries, feel free to chat with our Customer Care or call them at
-					0124-4551616. <br/>
+					0124-4502930. <br/>
 					<br/>
 
 					Healthy Shopping!<br/>
@@ -198,7 +198,7 @@ Your order ${order.baseOrder.gatewayOrderId} has been shipped.
 				<td align="right" valign="middle"
 				    style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
 						href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-					&nbsp;t: 0124-4551616
+					&nbsp;t: 0124-4502930
 				</td>
 			</tr>
 		</table>

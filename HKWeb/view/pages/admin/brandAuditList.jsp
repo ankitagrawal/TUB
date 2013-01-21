@@ -26,7 +26,7 @@
 				<label>WH:</label><s:select name="warehouse">
 				<s:option value="">-ALL-</s:option>
               <c:forEach items="${whList}" var="wh">
-                <s:option value="${wh.id}">${wh.city}</s:option>
+                <s:option value="${wh.id}">${wh.name}</s:option>
               </c:forEach>
             </s:select>
 				<s:submit name="pre" value="Search"/>

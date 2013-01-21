@@ -127,6 +127,8 @@ public class EmailManager {
     private String              hkNoReplyName;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+	private String              logisticsOpsEmails;
 
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
@@ -784,6 +786,16 @@ public class EmailManager {
             }
         }
         return emailRecepients;
+    }
+
+
+
+    public boolean sendEscalationToDropShipEmail(ShippingOrder shippingOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("shippingOrder", shippingOrder);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.dropShipEscalationEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsOpsEmails,
+                EmailTemplateConstants.operationsTeam);
     }
 
     /*

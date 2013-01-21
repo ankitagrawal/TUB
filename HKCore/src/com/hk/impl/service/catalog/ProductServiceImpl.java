@@ -148,6 +148,10 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getProductByCategory(category);
     }
 
+    public List<Product> getProductByCategories(List<String> categoryNames) {
+        return getProductDAO().getProductByCategories(categoryNames);
+    }
+
     public List<Product> getProductByCategoryAndBrand(String category, String brand) {
         return getProductDAO().getProductByCategoryAndBrand(category, brand);
     }

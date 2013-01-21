@@ -21,6 +21,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.collections.CollectionUtils;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class PaymentModeAction extends BaseAction {
 
   List<Issuer>                  bankIssuers;
@@ -61,8 +63,7 @@ public class PaymentModeAction extends BaseAction {
     Set<CartLineItem> oldCartLineItems =new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
     order = orderManager.trimEmptyLineItems(order);
     Set<CartLineItem> newCartLineItems = order.getCartLineItems();
-//    Collection<CartLineItem> diffCartLineItems = CollectionUtils.subtract(oldCartLineItems,newCartLineItems);
-     Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
+    Set<CartLineItem> diffCartLineItems = orderManager.getDiffCartLineItems(oldCartLineItems,newCartLineItems);
     if(diffCartLineItems!=null && diffCartLineItems.size()>0){
       trimCartLineItems.addAll(diffCartLineItems);
        }
@@ -104,4 +105,11 @@ public class PaymentModeAction extends BaseAction {
   public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
     this.trimCartLineItems = trimCartLineItems;
   }
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 }

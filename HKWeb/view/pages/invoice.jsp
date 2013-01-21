@@ -115,6 +115,7 @@
       </h3>
     </div>
   </div>
+  <%--<c:if test="${orderSummary.order.store.id != 3}">
   <div class="grid_4 alpha omega" style="width: 320px;">
     <div class="formatting" style="float: right;">
       <div
@@ -136,6 +137,7 @@
       </div>
     </div>
   </div>
+  </c:if>--%>
 </div>
 
 <div class="clear"></div>

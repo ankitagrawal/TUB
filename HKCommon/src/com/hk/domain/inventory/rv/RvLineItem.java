@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
+import com.akube.framework.gson.JsonSkip;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 
 @SuppressWarnings("serial")
@@ -32,6 +34,7 @@ public class RvLineItem implements java.io.Serializable {
   @Column(name = "id", unique = true, nullable = false)
   private Long id;
 
+  @JsonSkip
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reconciliation_voucher_id", nullable = false)
   private ReconciliationVoucher reconciliationVoucher;
@@ -59,6 +62,7 @@ public class RvLineItem implements java.io.Serializable {
   @Transient
   private ProductVariant productVariant;
 
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "sku_id", nullable = false)
   private Sku sku;
@@ -67,10 +71,13 @@ public class RvLineItem implements java.io.Serializable {
   @JoinColumn(name="reconciliation_type_id")
   private ReconciliationType reconciliationType;
 
-  @Column(name = "remarks")
-  private String remarks;	
+	@Column(name = "remarks")
+	private String remarks;
 
-  public Long getId() {
+	@Column(name = "reconciled_qty")
+	private Long reconciledQty;
+
+	public Long getId() {
     return this.id;
   }
 
@@ -165,4 +172,47 @@ public class RvLineItem implements java.io.Serializable {
   public void setRemarks(String remarks) {
     this.remarks = remarks;
   }
+
+	public Long getReconciledQty() {
+		return reconciledQty;
+	}
+
+	public void setReconciledQty(Long reconciledQty) {
+		this.reconciledQty = reconciledQty;
+	}
+
+
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o instanceof RvLineItem) {
+			RvLineItem rvLineItem = (RvLineItem) o;
+			if (this.id != null && rvLineItem.getId() != null) {
+				return this.id.equals(rvLineItem.getId());
+			} else {
+				EqualsBuilder equalsBuilder = new EqualsBuilder();
+				if ( this.getProductVariant() == null || rvLineItem.getProductVariant() == null
+						|| this.getBatchNumber() == null || rvLineItem.getBatchNumber() == null || this.reconciliationType.getId() == null || rvLineItem.getReconciliationType().getId() == null) {
+					return false;
+
+				}
+				equalsBuilder.append(this.productVariant.getId(), rvLineItem.getProductVariant().getId());
+				equalsBuilder.append(this.batchNumber, rvLineItem.getBatchNumber());
+				equalsBuilder.append(this.reconciliationType.getId(), rvLineItem.getReconciliationType().getId());
+				return equalsBuilder.isEquals();
+			}
+		}
+		return false;
+
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
+
 }
+
+

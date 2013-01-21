@@ -3,14 +3,17 @@ package com.hk.admin.impl.service.courier;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.order.Order;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.akube.framework.dao.Page;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +70,10 @@ public class CourierServiceImpl implements CourierService {
         return getCourierServiceInfoDao().searchCouriers(order.getAddress().getPin(), isCOD, false, false , false);
     }
 
+     public List<Courier> listOfVendorCouriers(){
+         return getCourierDao().listOfVendorCouriers();
+     }
+    
     public List<Courier> getAvailableCouriers(String pinCode, boolean isCOD, boolean isGroundShipping, boolean isCodAvailableOnGroundShipping , Boolean disabled) {
         return getCourierServiceInfoDao().searchCouriers(pinCode, isCOD, isGroundShipping, isCodAvailableOnGroundShipping , disabled);
     }
@@ -135,4 +142,20 @@ public class CourierServiceImpl implements CourierService {
 	public List<Courier>  getCouriers(String pincode ,Boolean isrGroundShipping ,Boolean isCod,Boolean isCodAvailableOnGroundShipping,Boolean disabled){
 		return getCourierServiceInfoDao().getCouriers(pincode ,isrGroundShipping ,isCod,isCodAvailableOnGroundShipping, disabled);
 	}
+
+	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage){
+		return  courierDao.getCouriers(courierName,disabled,courierGroup,page,perPage);
+	}
+
+	public void saveOrUpdate(Courier courier) {
+		courierDao.saveOrUpdate(courier);
+	}
+
+	public List<Courier> getCouriersForDispatchLot() {
+		List<Courier> dispatchLotCourierList = new ArrayList<Courier>(0);
+		dispatchLotCourierList.add(EnumCourier.JP_CargoVan_Delhi.asCourier());
+		dispatchLotCourierList.add(EnumCourier.Xpress_Logistics.asCourier());
+		return dispatchLotCourierList;
+	}
+
 }

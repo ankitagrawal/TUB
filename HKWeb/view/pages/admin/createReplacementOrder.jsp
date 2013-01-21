@@ -164,7 +164,9 @@
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
-                                <td>${lineItem.cartLineItem.productVariant.product.name}</td>
+                                <td>${lineItem.cartLineItem.productVariant.product.name}<br/>
+                                Variant: ${lineItem.cartLineItem.productVariant.id}
+                                </td>
                                 <td>${lineItem.qty}</td>
                                 <td>
                                     <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
@@ -180,6 +182,8 @@
 												   serviceProperty="replacementOrderReasonForRto" value="id"
 												   label="name"/>
 					</s:select>
+	                <br/><br/>
+	                <s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
                     <s:submit class="createReplacementOrderButton rto" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>
@@ -214,7 +218,8 @@
                             <tr>
                                 <td>${lineItemCtr.count}</td>
                                 <td>
-                                        ${lineItem.cartLineItem.productVariant.product.name}
+                                        ${lineItem.cartLineItem.productVariant.product.name}  <br/>
+	                                Variant: ${lineItem.cartLineItem.productVariant.id}
                                 </td>
                                 <td>${lineItem.qty}</td>
                                 <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>
@@ -228,7 +233,9 @@
 		                                           serviceProperty="replacementOrderReasonForReplacement" value="id"
 		                                           label="name"/>
 	                </s:select>
-					
+	                <br/><br/>
+					<s:label name="Comment/Remark:" style="margin-left:7px;"/><s:textarea name="roComment" style="height:50px;" />
+	                <br/>
                     <s:submit class="createReplacementOrderButton" name="createReplacementOrder" value="Generate Replacement Order"/>
                 </s:form>
             </fieldset>

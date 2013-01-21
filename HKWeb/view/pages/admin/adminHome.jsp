@@ -24,7 +24,7 @@
 				<s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
 					<s:option value="0">-None-</s:option>
 					<c:forEach items="${whList}" var="wh">
-						<s:option value="${wh.id}">${wh.city}</s:option>
+						<s:option value="${wh.id}">${wh.name}</s:option>
 					</c:forEach>
 				</s:select>
 				<s:submit class="button_orange" name="bindUserWithWarehouse" value="Save"/>
@@ -35,6 +35,14 @@
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
 				</shiro:hasRole>
 			</td>
+			<%--<td>
+				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
+				<shiro:hasRole name="<%=RoleConstants.GOD%>">
+					<s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
+					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
+				</shiro:hasRole>
+				</c:if>
+			</td>--%>
 		</tr>
 	</table>
 </shiro:hasAnyRoles>
@@ -156,6 +164,12 @@
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
 
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction">Drop Shipping Queue</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.queue.ShipmentInstallationAwaitingQueueAction">Installation Awaiting Queue</s:link></h3>
+
 	<h3>
 		</c:if>
 		<s:link
@@ -220,7 +234,7 @@
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
-	<%--<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>--%>
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 	            event="generateCourierReport">Download Courier Excel

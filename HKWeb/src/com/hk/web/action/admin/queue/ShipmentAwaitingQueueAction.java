@@ -229,7 +229,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
           courierList.add(courier);
         }
         if (courier != null) {
-          if (courier.equals(courierService.getCourierById(EnumCourier.BlueDart.getId())) || courier.equals(courierService.getCourierById(EnumCourier.BlueDart_COD.getId()))) {
+          if (courier.equals(courierService.getCourierById(EnumCourier.BlueDart.getId()))) {
             xlsFile = reportGenerator.generateCourierReportXslForBlueDart(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse);
           } else {
             xlsFile = reportGenerator.generateCourierReportXsl(xlsFile.getPath(), EnumShippingOrderStatus.SO_Packed, courierList, startDate, endDate, warehouse, zone);

@@ -62,15 +62,15 @@
 					<td><s:text name="supplier.email_id"/></td>
 				</tr>
 				<tr>
-					<td>Credit Days</td>
+					<td>Credit Days<span class='aster' title="this field is required">*</span></td>
 					<td><s:text name="supplier.creditDays" maxlength="3"/></td>
 				</tr>
 				<tr>
-					<td>Target Credit Days</td>
+					<td>Target Credit Days<span class='aster' title="this field is required">*</span></td>
 					<td><s:text name="supplier.targetCreditDays" maxlength="3"/></td>
 				</tr>
 				<tr>
-					<td>Lead Time (in Days)</td>
+					<td>Lead Time (in Days)<span class='aster' title="this field is required">*</span></td>
 					<td><s:text name="supplier.leadTime" maxlength="3"/></td>
 				</tr>
 				<tr>
@@ -93,10 +93,16 @@
 				</tr>
 
 				<tr>
-					<td>Status - ${sma.supplier.active}</td>
+					<td>Status<span class='aster' title="this field is required">*</span> - ${sma.supplier.active}</td>
 					<td><s:radio name="supplier.active" value="true" checked="${sma.supplier.active}"/>Active
 						<s:radio name="supplier.active" value="false" checked="${sma.supplier.active}"/>Inactive</td>
 				</tr>
+
+				<tr>
+					<td>Comments</td>
+					<td><s:textarea name="supplier.comments" rows="5" cols="20"/></td>
+				</tr>
+
 			</table>
 			<s:submit name="save" value="Save" class="buttons"/>
 

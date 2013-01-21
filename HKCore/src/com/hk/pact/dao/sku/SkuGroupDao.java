@@ -18,12 +18,18 @@ public interface SkuGroupDao extends BaseDao {
 //
 //  public void resetInventory(ProductVariant productVariant);
 
-  public SkuGroup getSkuGroup(String barcode);
+  public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
 
   public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
 
   public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
 
-  public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
+	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
+
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
+
+	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId);
+
+    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
 }
