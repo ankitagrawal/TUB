@@ -124,33 +124,6 @@ public class CycleCountHelper {
 	}
 
 
-	public File generateTextFile(File barcodeError, Map<String, String> hkBarcodeErrorsMap) throws IOException {
-		this.xlsFile = barcodeError;
-		if (hkBarcodeErrorsMap != null && hkBarcodeErrorsMap.size() > 0) {
-			BufferedWriter bufferedWriter = null;
-			try {
-				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
-					StringBuffer data = new StringBuffer();
-					data = data.append(hkBarcode).append("\t").append(hkBarcodeErrorsMap.get(hkBarcode).toString());
-					FileWriter fileWriter;
-					fileWriter = new FileWriter(barcodeError.getAbsolutePath(), false);
-					bufferedWriter = new BufferedWriter(fileWriter);
-					bufferedWriter.append(data);
-
-				}
-			}
-			finally {
-				try {
-					if (bufferedWriter != null)
-						bufferedWriter.close();
-				} catch (Exception ex) {
-				  logger.debug("error in closing buffered stream"+ex.getMessage());
-				}
-			}
-		}
-		return xlsFile;
-	}
-
 
 	public Resolution download() {
 		return new Resolution() {
