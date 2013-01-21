@@ -29,11 +29,10 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
             return null;
     }
     public UserReviewMail save(UserReviewMail userReviewMail){
-        userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         return (UserReviewMail) super.save(userReviewMail);
     }
 
-    public UserReviewMail getByUserAndProduct(User user, ProductVariant productVariant){
+    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant){
         List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant = :productVariant", new String[]{"user", "productVariant"}, new Object[]{user, productVariant});
         if(result !=null && result.size()>0){
             return result.get(0);

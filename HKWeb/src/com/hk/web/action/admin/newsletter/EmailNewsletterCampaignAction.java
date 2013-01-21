@@ -61,7 +61,6 @@ public class EmailNewsletterCampaignAction extends BaseAction {
   String name;
 //  String contentFolderName;
   Boolean ftlGenerated = Boolean.FALSE;
-  Boolean contentUploaded = Boolean.FALSE;
 
   @DontValidate
   @DefaultHandler
@@ -117,8 +116,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
           ftlGenerated = Boolean.TRUE;
           logger.info("ftl generated");
 
-          contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
-          //  contentUploaded = true;
+          adminEmailCampaignService.uploadEmailContent(contentFolder);
           logger.info("uploaded email content to s3.");
           FileUtils.deleteDirectory(contentFolder);
           FileUtils.deleteQuietly(contentZipFolder);
@@ -176,15 +174,6 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     return new ForwardResolution(EmailNewsletterCampaignAction.class, "editEmailCampaign");
   }
 
-
-
-    public Boolean getContentUploaded() {
-        return contentUploaded;
-    }
-
-    public void setContentUploaded(Boolean contentUploaded) {
-        this.contentUploaded = contentUploaded;
-    }
 
     public EmailCampaign getEmailCampaign() {
     return emailCampaign;

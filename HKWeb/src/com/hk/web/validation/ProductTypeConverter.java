@@ -27,8 +27,7 @@ public class ProductTypeConverter implements TypeConverter<Product> {
         if (s == null) {
             return null;
         } else {
-            Product product = getBaseDao().get(Product.class, s);
-            return product;
+            return getBaseDao().get(Product.class, s);
             // return productDao.getProductById(s);
         }
     }

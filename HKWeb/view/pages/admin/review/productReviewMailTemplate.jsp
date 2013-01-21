@@ -22,7 +22,7 @@
                     <li>
                         <label>Mail Template Name</label>
                         <s:text name="mail.name" id="name"/>
-                        <s:submit name="searchMail" value="Search" />
+                        <s:submit name="searchMail" value="Edit" />
                     </li>
                     <li>
                         <label>Subject</label>
@@ -46,7 +46,13 @@
                         </script>
                     </li>
                     <li>
-                        <s:submit name="generateFtl" value="GENERATE FTL" id="btn"/>
+                        <c:if test="${cmta.editTemplate}">
+                            <s:submit name="saveMailTemplate" value="save" id = "btn"/>
+                        </c:if>
+                        <c:if test="${!cmta.editTemplate}">
+                            <s:submit name="createMailTemplate" value="Create Template" id="btn"/>
+                        </c:if>
+
                     </li>
                 </ul>
             </fieldset>
@@ -64,6 +70,7 @@
                         return true;
                     }
                     var subject = $('#subject').val().trim();
+                    var name = $('#name').val();
                     if (subject === "") {
                         $('#error').html("Kindly mention the subject for template");
                         return false;

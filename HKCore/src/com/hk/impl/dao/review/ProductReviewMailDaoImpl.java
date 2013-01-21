@@ -20,12 +20,4 @@ public class ProductReviewMailDaoImpl extends BaseDaoImpl implements ProductRevi
     public ProductReviewMail save(ProductReviewMail productReviewMail){
         return (ProductReviewMail) super.save(productReviewMail);
     }
-    /*public Boolean isMailingEnabled(String productId){
-        return getSession().createQuery("select p.isEnabled from ProductReviewMail p where p.product.id = :productId").setString("productId", productId).equals("true");
-    }
-    public List<ProductReviewMail> getMailSetting(String productId){
-        return getSession().createQuery("select p from ProductReviewMail p where p.product.id = :productId").setString("productId", productId).list();
-    } */
-
-
 }

@@ -15,7 +15,7 @@ public interface UserReviewMailService {
 
     public UserReviewMail save(UserReviewMail userReviewMail);
 
-    public UserReviewMail getByUserAndProduct(User user, ProductVariant productVariant);
+    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant);
 
 
 }

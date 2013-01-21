@@ -39,10 +39,11 @@ public class UserReviewMailServiceImpl implements UserReviewMailService {
         return userReviewMailDao.getAllUserReviewMailByDueDate(date);
     }
     public UserReviewMail save(UserReviewMail userReviewMail){
+        userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         return userReviewMailDao.save(userReviewMail);
     }
 
-    public UserReviewMail getByUserAndProduct(User user, ProductVariant productVariant){
-        return userReviewMailDao.getByUserAndProduct(user,productVariant);
+    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant){
+        return userReviewMailDao.getByUserAndProductVariant(user, productVariant);
     }
 }

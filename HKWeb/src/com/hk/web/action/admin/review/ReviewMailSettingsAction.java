@@ -3,9 +3,7 @@ package com.hk.web.action.admin.review;
 import com.akube.framework.stripes.population.CustomPopulationStrategy;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.order.Order;
-import com.hk.domain.review.Mail;
 import com.hk.domain.review.ProductReviewMail;
-import com.hk.domain.review.UserReviewMail;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.service.review.ProductReviewMailService;
@@ -21,10 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 
 @CustomPopulationStrategy(BeanFirstPopulationStrategy.class)
@@ -59,14 +53,14 @@ public class ReviewMailSettingsAction extends BaseAction {
     })
    private ProductReviewMail productReviewMail;
 
-   @Validate(required = true, on={"editProductSettings","createProductSettings","saveProductSettings", "testEmail"})
+   @Validate(required = true, on={"editProductSettings","createProductSettings","saveProductSettings", "sendTestEmail"})
    private Product product;
 
    private boolean editSettings = false;
 
     @DefaultHandler
     public Resolution pre(){
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+        return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
     }
 
     public Resolution editProductSettings(){
@@ -76,7 +70,7 @@ public class ReviewMailSettingsAction extends BaseAction {
             editSettings=false;
             addRedirectAlertMessage(new SimpleMessage("Review Mailing Product doesn't exist"));
         }
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+        return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
     }
 
     public Resolution createProductSettings(){
@@ -104,30 +98,30 @@ public class ReviewMailSettingsAction extends BaseAction {
         return new RedirectResolution(ReviewMailSettingsAction.class);
     }
 
-    public Resolution test(){
+    /*public Resolution test(){
         if(order!=null){
-            reviewCollectionFrameworkService.userEntry(order);
+            reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
         }else{
             addRedirectAlertMessage(new SimpleMessage("order doesn't exist"));
         }
         editSettings = false;
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
-    }
+        return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
+    } */
 
-    public Resolution testEmail(){
-        boolean  result = reviewCollectionFrameworkService.testEmail(getPrincipalUser(), product);
+    public Resolution sendTestEmail(){
+        boolean  result = reviewCollectionFrameworkService.sendTestEmail(getPrincipalUser(), product);
         if(result)
             addRedirectAlertMessage(new SimpleMessage("Test Email Sent successfully."));
         else
             addRedirectAlertMessage(new SimpleMessage("Error in sending the test email."));
 
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+        return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
 
     }
 
-    public Resolution sendEmail(){
-        reviewCollectionFrameworkService.sendEmails();
-        return new ForwardResolution("/pages/admin/review/settings.jsp");
+    public Resolution sendDueEmail(){
+        reviewCollectionFrameworkService.sendDueEmails();
+        return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
     }
 
 

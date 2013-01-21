@@ -7,11 +7,6 @@
 
     <s:layout-component name="content">
         <s:messages/>
-
-        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
-            orderId <s:text name="order"></s:text>
-            <s:submit name="test" id="test"/>
-        </s:form>
         <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction">Create Mail Template</s:link>
         <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">
 
@@ -61,8 +56,8 @@
         </s:form>
         <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
             <label>Product ID</label>
-            <s:text name="product" /><s:submit name= "testEmail" value="Test Email" />
-            <s:submit name= "sendEmail" value="Send Email" />
+            <s:text name="product" /><s:submit name= "sendTestEmail" value="Test Email" />
+            <s:submit name= "sendDueEmail" value="Send Email" />
         </s:form>
     </s:layout-component>
 </s:layout-render>

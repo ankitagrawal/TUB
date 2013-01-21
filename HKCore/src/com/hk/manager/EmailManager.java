@@ -410,7 +410,7 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }
 
-    public boolean sendProductReviewEmail(User user, Product product, Mail mail){
+    public boolean sendProductReviewEmail(User user, Product product, Mail mail, String testEmailId){
         HashMap valuesMap = new HashMap();
 
         valuesMap.put("user", user);
@@ -425,7 +425,10 @@ public class EmailManager {
             StringBuilder finalContents = new StringBuilder(mail.getSubject());
             finalContents.append(BaseUtils.newline + mailTemplateContents);
             Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
-            return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
+            if(StringUtils.isNotEmpty(testEmailId))
+                return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, testEmailId, user.getName());
+            else
+                return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
         } else {
             logger.error("Email Template Content is not present");
             return false;
