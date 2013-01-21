@@ -49,7 +49,7 @@ class PopulateUnsubscribeToken {
             userRec ->
             String unsbuscribeToken = TokenUtils.getTokenToUnsubscribeWommEmail(userRec.login);
             try{
-            sql.executeInsert("""
+            sql.executeUpdate("""
                     UPDATE user SET unsubscribe_token = ${unsbuscribeToken} WHERE login = ${userRec.login};
                    """);
             }catch(Exception ex){

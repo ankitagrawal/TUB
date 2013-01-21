@@ -8,7 +8,7 @@ package com.hk.constants.user;
  * To change this template use File | Settings | File Templates.
  */
 
-public enum EnumSubscriptions {
+public enum EnumEmailSubscriptions {
 
     /*public final static int PROMOTIONAL_OFFERS = 2;
     public final static int NEWSLETTERS = 4;
@@ -23,7 +23,7 @@ public enum EnumSubscriptions {
 
     private int value;
 
-    EnumSubscriptions(int id){
+    EnumEmailSubscriptions(int id){
         this.value = id;
     }
 
@@ -31,7 +31,7 @@ public enum EnumSubscriptions {
         return value;
     }
 
-    public static boolean isSubscribed(EnumSubscriptions subscriptionEnum,int subscriptionMask){
+    public static boolean isSubscribed(EnumEmailSubscriptions subscriptionEnum,int subscriptionMask){
         return   ((subscriptionMask & subscriptionEnum.getValue()) == subscriptionEnum.getValue());
     }
 }

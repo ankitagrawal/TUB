@@ -8,6 +8,7 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 
  <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
@@ -1093,7 +1094,7 @@
 
 	<c:if test="${not isSecure }">
 		<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1"
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${product.id}&catid=${product.primaryCategory.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 	</c:if>

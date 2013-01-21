@@ -46,4 +46,6 @@ public interface CourierService {
 	public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage);
 
 	public void saveOrUpdate(Courier courier);
+
+	public List<Courier> getCouriersForDispatchLot();
 }
