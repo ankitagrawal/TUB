@@ -52,7 +52,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
             @Validate(field = "line2", maxlength = 120, on = { "save" }),
             @Validate(field = "city", maxlength = 60, required = true, on = { "save" }),
             @Validate(field = "state", maxlength = 50, required = true, on = { "save" }),
-            @Validate(field = "pin", maxlength = 10, required = true, on = { "save" }),
+            @Validate(field = "pincode", maxlength = 10, required = true, on = { "save" }),
             @Validate(field = "phone", maxlength = 25, required = true, on = { "save" }) })
     private Address             newAddress;
 
@@ -75,7 +75,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
         }
         subscription.setAddress(address);
         subscriptionService.save(subscription);
-        addRedirectAlertMessage(new SimpleMessage("address replaced succuessfully"));
+        addRedirectAlertMessage(new SimpleMessage("address replaced successfully"));
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddressChanged);
         return new RedirectResolution(ChangeSubscriptionAddressAction.class).addParameter("subscription", subscription.getId());
     }
@@ -86,6 +86,11 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
     }
 
     public Resolution save() {
+      if(address.getPincode()==null){
+        newAddress = subscription.getAddress();
+        addRedirectAlertMessage(new SimpleMessage("We don't serve to this pincode !!!!"));
+        return new ForwardResolution("/pages/admin/subscription/editSubscriptionAddress.jsp");
+      }
         if (copyToUserAddressBook) {
             newAddress = addressBookManager.editAddress(subscription.getUser(), subscription.getAddress(), this.newAddress); // here
             // edited
@@ -110,7 +115,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
         if (newAddress != null) {
             subscription.setAddress(newAddress);
             subscriptionService.save(subscription);
-            addRedirectAlertMessage(new SimpleMessage("address edited succesfully"));
+            addRedirectAlertMessage(new SimpleMessage("address edited successfully"));
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddressChanged);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Duplicate address, it has been used in a different HK account too."));

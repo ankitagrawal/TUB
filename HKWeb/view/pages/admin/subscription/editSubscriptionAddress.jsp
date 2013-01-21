@@ -13,20 +13,27 @@
     <s:layout-component name="content">
 
         <s:useActionBean beanclass="com.hk.web.action.admin.subscription.ChangeSubscriptionAddressAction" var="addressBean" event="edit"/>
-
-        <s:form beanclass="com.hk.web.action.admin.subscription.ChangeSubscriptionAddressAction">
+     <script type="text/javascript">
+      $(document).ready(function(){
+         form = $('#addressForm');
+                        form.find("input[type='text'][name='address.name']").val(${addressBean.address.name});
+                        form.find("input[type='text'][name='address.line1']").val(${addressBean.address.line1});
+                        if (${addressBean.address.line2!=null or fn:length(addressBean.address.line2)>0}) {
+                            form.find("input[type='text'][name='address.line2']").val(${addressBean.address.line2});
+                        }
+                        form.find("input[type='text'][name='address.city']").val(${addressBean.address.city});
+                        form.find("[name='address.state']").val(${addressBean.address.state});
+                        form.find("input[type='text'][name='address.pincode']").val(${addressBean.address.pincode.pincode});
+                        form.find("input[type='text'][name='address.phone']").val(${addressBean.address.phone});
+                    });
+  </script>   
+        <s:form beanclass="com.hk.web.action.admin.subscription.ChangeSubscriptionAddressAction" id="addressForm">
             <fieldset>
                 <legend>edit subscription address</legend>
                 <ul>
                     <li>
-                        <s:param name="newAddress.user" value="${addressBean.subscription.user}"/>
-                        Name: <s:text name="newAddress.name"/><br/>
-                        Address line1: <s:text name="newAddress.line1"/><br/>
-                        Address line2: <s:text name="newAddress.line2"/><br/>
-                        City: <s:text name="newAddress.city"/><br/>
-                        State: <s:text name="newAddress.state"/><br/>
-                        Pin: <s:text name="newAddress.pincode.pincode"/><br/>
-                        Phone: <s:text name="newAddress.phone"/><br/>
+                        <s:hidden name="newAddress.user" value="${addressBean.subscription.user}"/>
+                        <s:layout-render name="/layouts/addressLayout.jsp" />
                         <s:hidden name="subscription" value="${addressBean.subscription}"/>
                         Copy This Address to user's address book <s:checkbox name="copyToUserAddressBook"/><br/>
                         <s:submit name="save" value="save"/>
