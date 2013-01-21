@@ -22,6 +22,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
+import static com.hk.constants.user.EnumEmailSubscriptions.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
                 user.setStore(getStoreService().getDefaultStore());
             }
             if (user.getSubscribedMask() == null){
-                user.setSubscribedMask(30);//Subscribe for all
+                user.setSubscribedMask(SUBSCRIBE_ALL);//Subscribe for all
             }
         }
 

@@ -22,6 +22,7 @@ public enum EnumEmailSubscriptions {
     OTHERS(32);
 
     private int value;
+	public final static int SUBSCRIBE_ALL = 30;  //11110
 
     EnumEmailSubscriptions(int id){
         this.value = id;
