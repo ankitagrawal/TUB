@@ -822,6 +822,7 @@ public class XslParser {
         Map<Integer, String> rowMap;
         Set<RetailLineItem> retailLineItemList = new HashSet<RetailLineItem>();
         int rowCount = 0;
+		int rowsUpdated = 0;
         try {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
@@ -834,7 +835,7 @@ public class XslParser {
                  */
                 rowMap = getRowMap(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
-                String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
+                String awb =  String.valueOf(getCellValue(ReportConstants.AWB, rowMap, headerMap));
                 Courier courier = getCourierService().getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
@@ -872,6 +873,7 @@ public class XslParser {
                 shipment.setShipmentCharge(shippingCharge);
                 shipment.setShippingOrder(shippingOrder);
                 shipmentService.save(shipment);
+				rowsUpdated += 1;
 
                 /*
                  * if (courier != null) { productLineItemsByCourier =
@@ -933,7 +935,7 @@ public class XslParser {
                      * logger.debug("read row " + rowCount);
                      */
             }
-
+		    messagePostUpdation += "No. of Rows updated successfully: "+ rowsUpdated +".<br/>";
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
             throw new Exception("Exception @ Row:" + rowCount, e);
