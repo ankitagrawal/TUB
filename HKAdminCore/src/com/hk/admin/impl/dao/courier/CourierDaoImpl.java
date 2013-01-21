@@ -51,7 +51,7 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 			courierCriteria.add(Restrictions.eq("active", active));
 		}
         if(operationBitset != null){
-            courierCriteria.add(Restrictions.eq("mod(operationsBitset,operationBitset)", 0));
+            courierCriteria.add(Restrictions.sqlRestriction("mod(operationsBitset,operationBitset) = 0"));
         }
 		if (courierGroups != null && courierGroups.size() > 0) {
 			courierCriteria.createCriteria("courierGroup", "group");

@@ -379,7 +379,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Courier> getAvailableCouriers() {
-        return courierService.getCouriers(null, null, false, EnumCourierOperations.HK_SHIPPING.getId());
+        return courierService.getCouriers(null, null, true, EnumCourierOperations.HK_SHIPPING.getId());
     }
 
     public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
