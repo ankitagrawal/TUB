@@ -13,7 +13,6 @@
     <s:layout-component name="heading">
         Brands Audit List
     </s:layout-component>
-
     <s:layout-component name="content">
         <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
             Add New Brand To Audit

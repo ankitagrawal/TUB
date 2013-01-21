@@ -140,6 +140,18 @@
 
 </script>
 
+    <div id="sdt-js"></div>
+    <script type="text/javascript">
+        var _beaconping = _beaconping || [];
+        _beaconping.push({goalName:"Conversions", appId:"cb71699d-7566-45ad-9b77-a253b8fb25fb",event:"onloadbeacon"});
+        (function() {
+            var e = document.createElement('script');
+            e.src = 'http://sdtbeacon.appsdt.com/sdtbeacon.js';
+            e.async = true;
+            document.getElementById('sdt-js').appendChild(e);
+        }());
+    </script> 
+
   <%
     }
   %>
@@ -226,7 +238,7 @@
 
             <h2 class="paymentH2">Customer Support</h2>
 
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4551616</p>
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4502930</p>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">

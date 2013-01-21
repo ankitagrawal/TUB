@@ -5,7 +5,7 @@ import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -182,7 +182,7 @@ public class CreateDropShipmentAction extends BaseAction {
             comment = "Shipment Details has been saved: " + shipment.getAwb().getCourier().getName() + "/" + trackingId;
         }
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentDetailSaved, comment);
-        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipmet has been created for your order"));
+        addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Shipment has been created for your order"));
         return new RedirectResolution(CreateDropShipmentAction.class).addParameter("shippingOrder", shippingOrder);
     }
 

@@ -16,6 +16,8 @@ public interface HKAPIUserService {
 
     public User getHKUser(User user);
 
+    public HKAPIBaseDTO authenticate(String loginEmail, String password);
+
     public HKAPIBaseDTO getUserDetails(String userAccessToken);
 
     public HKAPIBaseDTO awardRewardPoints(String userAccessToken, Double rewardPoints);

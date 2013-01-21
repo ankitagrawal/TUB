@@ -3,6 +3,10 @@ package com.hk.web.action.admin.courier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
+import com.hk.domain.order.ReplacementOrder;
+import com.hk.domain.order.ReplacementOrderReason;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -16,14 +20,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourier;
@@ -68,6 +71,8 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 	private ShipmentPricingEngine shipmentPricingEngine;
 	@Autowired
 	AwbService awbService;
+	@Autowired
+	AdminShippingOrderService adminShippingOrderService;
 
 	@Autowired
 	CourierServiceInfoDao courierServiceInfoDao;
@@ -194,6 +199,22 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Pincode is INVALID, Please contact Customer Care. It cannot be packed."));
 			return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class);
 		}
+
+		if(shippingOrder instanceof ReplacementOrder){
+			ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
+			if(((ReplacementOrder) shippingOrder).isRto()){
+				ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
+				if(replacementOrderReason != null){
+					if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
+						if(selectedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(selectedCourier.getId())){
+							addRedirectAlertMessage(new SimpleMessage("Previous shipping order was returned due to the courier selected. Please select another courier or contact admin"));
+							return new RedirectResolution(SearchOrderAndEnterCourierInfoAction.class, "searchOrders").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+						}
+					}
+				}
+			}
+		}
+
 		Awb finalAwb = null;
 		Awb suggestedAwb = null;
 		if (shippingOrder.getShipment() != null) {
@@ -378,5 +399,9 @@ public class SearchOrderAndEnterCourierInfoAction extends BaseAction {
 
 	public void setSelectedCourier(Courier selectedCourier) {
 		this.selectedCourier = selectedCourier;
+	}
+
+	public AdminShippingOrderService getAdminShippingOrderService() {
+		return adminShippingOrderService;
 	}
 }

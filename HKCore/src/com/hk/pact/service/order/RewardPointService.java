@@ -8,6 +8,7 @@ import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
+import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.exception.InvalidRewardPointsException;
@@ -20,6 +21,8 @@ public interface RewardPointService {
 
     public RewardPoint addRewardPoints(User referredBy, User referredUser, Order referredOrder, Double value, String comment, EnumRewardPointStatus rewardPointStatus,
             RewardPointMode rewardPointMode) throws InvalidRewardPointsException;
+
+    public RewardPointTxn createRewardPointTxnForApprovedRewardPoints(RewardPoint rewardPoint, Date expiryDate);
 
     // logic for cashback offer
     public void awardRewardPoints(Order order);

@@ -106,9 +106,9 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), "Automated Order Placement");
 
 	    order=orderService.save(order);
-        //finalize order -- create shipping order and update inventory
-        finalizeOrder(order);
-        return  order;
+        orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+
+       return  order;
     }
 
     private Order recalAndUpdateAmount(Order order){
@@ -146,57 +146,6 @@ public class AutomatedOrderServiceImpl implements AutomatedOrderService{
         payment.setCreateDate(BaseUtils.getCurrentTimestamp());
         payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
         return paymentService.save(payment);
-    }
-
-    /**
-     * takes necessary steps and updates inventory after an order is placed
-     * @param order
-     */
-    public void finalizeOrder(Order order){
-
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-
-        boolean shippingOrderExists = false;
-
-        //Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            if (lineItemDao.getLineItem(cartLineItem) != null) {
-                shippingOrderExists = true;
-            }
-        }
-
-        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
-
-        if (!shippingOrderExists) {
-            shippingOrders = orderService.createShippingOrders(order);
-        }
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            // save order with InProcess status since shipping orders have been created
-            order.setOrderStatus(orderStatusService.find(EnumOrderStatus.InProcess));
-            order.setShippingOrders(shippingOrders);
-            order = orderService.save(order);
-
-            /**
-             * Order lifecycle activity logging - Order split to shipping orders
-             */
-            //User adminUser = UserCache.getInstance().getAdminUser();
-            User adminUser = getUserService().getAdminUser();
-            orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), null);
-
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-        }
-
-        //Check Inventory health of order lineitems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-        }
     }
 
     public OrderService getOrderService() {

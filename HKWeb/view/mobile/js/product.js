@@ -168,7 +168,7 @@ $('#product').bind('pagebeforeshow', function () {
             $.ajax({
                 url: URL + '&pageNo=' + pageNo + '&perPage=' + perPage,
                 dataType: 'json',
-                timeout: '8000',
+                timeout: '15000',
                 success: function (response) {
                     if (hasErr(response)) {
                         loadingPop('h');
@@ -193,7 +193,7 @@ $('#product').bind('pagebeforeshow', function () {
                     }
                 },
                 error: function () {
-                    popUpMob.show(_hkG.errs.requestFail);
+                    popUpMob.show(__hkG.errs.requestFail);
                     loadingPop('h');
                 }
 

@@ -17,7 +17,6 @@ import com.hk.admin.pact.dao.warehouse.BinDao;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.Bin;
 import com.hk.domain.sku.SkuGroup;
-import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.SkuGroupService;
@@ -72,7 +71,7 @@ public class InventoryBinAllocationAction extends BaseAction {
        return new ForwardResolution("/pages/admin/inventoryBinAllocation.jsp").addParameter("saved","false");
     }
 
-    this.skuGroup = skuGroupService.getSkuGroup(barcode);
+    this.skuGroup = skuGroupService.getInStockSkuGroup(barcode, userService.getWarehouseForLoggedInUser().getId());
     if (skuGroup != null) {
    ProductVariant productVariant = skuGroup.getSku().getProductVariant();
       if (productVariant == null) {

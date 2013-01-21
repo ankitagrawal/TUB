@@ -1,31 +1,21 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumAuditStatus;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
+import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
-import com.hk.constants.core.RoleConstants;
-import com.hk.domain.inventory.BrandsToAudit;
-import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.web.action.error.AdminPermissionAction;
+import java.util.*;
 
 @Secure(hasAnyRoles = {RoleConstants.WH_MANAGER}, authActionBean = AdminPermissionAction.class)
 public class BrandsToAuditAction extends BasePaginatedAction {
@@ -37,7 +27,6 @@ public class BrandsToAuditAction extends BasePaginatedAction {
     private Date startDate;
     private Date endDate;
     private List<BrandsToAudit> brandsToAuditList = new ArrayList<BrandsToAudit>();
-    private List<String> brands = new ArrayList<String>();
     private Page brandsAuditPage;
     private BrandsToAudit brandsToAudit;
 
@@ -85,12 +74,13 @@ public class BrandsToAuditAction extends BasePaginatedAction {
                         return new RedirectResolution(BrandsToAuditAction.class);
                     }
                     brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
-                    if (getPrincipalUser() != null) {
-                        User auditor = getPrincipalUser();
-                        warehouse = auditor.getSelectedWarehouse();
-                        brandsToAudit.setAuditor(auditor);
-                        brandsToAudit.setWarehouse(warehouse);
-                    }
+                }
+
+                if (getPrincipalUser() != null) {
+                    User auditor = getPrincipalUser();
+                    warehouse = auditor.getSelectedWarehouse();
+                    brandsToAudit.setAuditor(auditor);
+                    brandsToAudit.setWarehouse(warehouse);
                 }
 
                 getBrandsToAuditDao().save(brandsToAudit);
@@ -98,7 +88,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Kindly enter the audit date!"));
                 return new RedirectResolution(BrandsToAuditAction.class, "view")
-                        .addParameter("brandToAudit", brandsToAudit.getId());
+                        .addParameter("brandsToAudit", brandsToAudit.getId());
             }
         }
         return new RedirectResolution(BrandsToAuditAction.class);

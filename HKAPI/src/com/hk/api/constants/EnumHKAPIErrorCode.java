@@ -20,6 +20,7 @@ public enum EnumHKAPIErrorCode {
     Unauthorized(90,"You are unauthorized to do this operation"),
     EmptyCart(100,"Empty cart"),
     UnauthorizedToPlaceOrder(110,"Unauthorized to place order"),
+    InvalidUserCredentials(120,"Invalid User Credentials"),
     InternalError(9999, "Internal Error");
 
     private java.lang.String message;
