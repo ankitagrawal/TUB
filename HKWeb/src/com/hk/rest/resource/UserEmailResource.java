@@ -1,10 +1,9 @@
 package com.hk.rest.resource;
 
 import com.hk.admin.pact.service.email.AdminEmailService;
-import com.hk.constants.user.EnumSubscriptions;
+import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
-import com.hk.domain.user.UserDetail;
 import com.hk.manager.LinkManager;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -56,7 +55,7 @@ public class UserEmailResource {
             List<User> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId,role);
             List<UserDto> categoryUsers = new ArrayList<UserDto>();
             for (User user : emailRecepients){
-                boolean subscribePromotionalOffers = EnumSubscriptions.isSubscribed(EnumSubscriptions.PROMOTIONAL_OFFERS,user.getSubscribedMask());
+                boolean subscribePromotionalOffers = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.PROMOTIONAL_OFFERS, user.getSubscribedMask());
                 if (subscribePromotionalOffers){
                     UserDto userDto = new UserDto();
                     userDto.email = user.getEmail();
