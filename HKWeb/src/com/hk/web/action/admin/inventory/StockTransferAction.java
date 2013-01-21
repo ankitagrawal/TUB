@@ -6,7 +6,9 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.sku.Sku;
@@ -18,6 +20,7 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -49,6 +52,8 @@ public class StockTransferAction extends BasePaginatedAction {
 	InventoryService inventoryService;
 	@Autowired
 	BaseDao baseDao;
+	@Autowired
+	SkuGroupService skuGroupService;
 
 	private StockTransfer stockTransfer;
 	private String userLogin;
@@ -63,6 +68,7 @@ public class StockTransferAction extends BasePaginatedAction {
 	private Warehouse toWarehouse;
 
 	private String productVariantBarcode;
+	private StockTransferLineItem stliToBeReduced;
 
 	@SuppressWarnings("unchecked")
 	@DefaultHandler
@@ -97,80 +103,8 @@ public class StockTransferAction extends BasePaginatedAction {
 		stockTransfer.setFromWarehouse(fromWarehouse);
 		stockTransfer = (StockTransfer) stockTransferDao.save(stockTransfer);
 		addRedirectAlertMessage(new SimpleMessage("Stock Transfer Updated"));
-		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
-
-	/* public Resolution save() {
-			User loggedOnUser = null;
-			if (getPrincipal() != null) {
-				loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-			}
-			if (stockTransfer == null || stockTransfer.getId() == null) {
-				stockTransfer = new StockTransfer();
-			}
-			stockTransfer.setCreateDate(createDate);
-			stockTransfer.setCheckoutDate(checkOutDate);
-			stockTransfer.setCreatedBy(loggedOnUser);
-			stockTransfer.setToWarehouse(toWarehouse);
-			stockTransfer.setFromWarehouse(fromWarehouse);
-			stockTransfer = (StockTransfer) stockTransferDao.save(stockTransfer);
-
-			if (stockTransfer != null) {
-				logger.debug("stockTransferLineItems@Save: " + stockTransferLineItems.size());
-
-				for (StockTransferLineItem stockTransferLineItem : stockTransferLineItems) {
-					if (stockTransferLineItem.getId() != null) {
-						StockTransferLineItem stockTransferLineItemInDb = stockTransferDao.get(StockTransferLineItem.class, stockTransferLineItem.getId());
-						stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItemInDb);
-					} else {
-						Sku sku = stockTransferLineItem.getSku();
-						if (sku == null) {
-							try {
-								sku = skuService.getSKU(stockTransferLineItem.getProductVariant(), stockTransfer.getFromWarehouse());
-							} catch (Exception e) {
-								addRedirectAlertMessage(new SimpleMessage("SKU doesn't exist for " + stockTransferLineItem.getProductVariant().getId()));
-								return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
-							}
-						}
-						if (stockTransferLineItem.getCheckedoutQty() != null && stockTransferLineItem.getCheckedoutQty() == 0 && stockTransferLineItem.getId() != null) {
-							stockTransferDao.delete(stockTransferLineItem);
-						}
-						List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsByQty(sku, stockTransferLineItem.getCheckedoutQty().intValue());
-						if (!instockSkuItems.isEmpty() && stockTransferLineItem.getCheckedoutQty() <= instockSkuItems.size()) {
-							stockTransferLineItem.setSku(sku);
-							stockTransferLineItem.setStockTransfer(stockTransfer);
-							try {
-								stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
-							} catch (Exception e) {
-								logger.info("Duplicate batch and variant in stock transfer for - " + stockTransferLineItem.getSku().getProductVariant().getId());
-								addRedirectAlertMessage(new SimpleMessage("Duplicate batch and variant - " + stockTransferLineItem.getSku().getProductVariant().getId()));
-								return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId());
-							}
-
-							if (adminProductVariantInventoryDao.getPVIForStockTransfer(sku, stockTransferLineItem).isEmpty()) {
-								// Delete from available batches.
-								int counter = 0;
-								for (SkuItem instockSkuItem : instockSkuItems) {
-									if (counter < Math.abs(stockTransferLineItem.getCheckedoutQty())) {
-										adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, null, stockTransferLineItem,
-												inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT), -1L, loggedOnUser);
-										counter++;
-									} else {
-										break;
-									}
-								}
-							}
-							getInventoryService().checkInventoryHealth(sku.getProductVariant());
-						} else {
-							addRedirectAlertMessage(new SimpleMessage("There are only " + instockSkuItems.size() + "  stock line item(PVI) for " + stockTransferLineItem.getProductVariant().getId()));
-							return new RedirectResolution(StockTransferAction.class).addParameter("view", stockTransfer.getId());
-						}
-					}
-				}
-			}
-			addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-			return new RedirectResolution(StockTransferAction.class);
-		}*/
 
 	public Resolution save() {
 		if (stockTransfer == null) {
@@ -209,8 +143,7 @@ public class StockTransferAction extends BasePaginatedAction {
 			}
 			stockTransferLineItem = (StockTransferLineItem)baseDao.save(stockTransferLineItem);
 
-			adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
-
+     		adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
 			getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
 		} else {
@@ -219,7 +152,50 @@ public class StockTransferAction extends BasePaginatedAction {
 		}
 
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
+	}
+
+	public Resolution revertStockTransferOut() {
+		if (stockTransfer == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		}
+
+		if(stliToBeReduced == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer Item chosen"));
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		}
+
+		if(stliToBeReduced.getCheckedoutQty() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("Qty is already 0, cannot reduce further"));
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		}
+
+		User loggedOnUser = null;
+		if (getPrincipal() != null) {
+			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+		}
+		SkuGroup skuGroupToBeReverted = stliToBeReduced.getCheckedOutSkuGroup();
+		if(skuGroupToBeReverted == null) {
+			addRedirectAlertMessage(new SimpleMessage("Some error occurred. SkuGroup not found"));
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		}
+		SkuItem skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+		if(skuItemToBeReverted == null) {
+			addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));
+			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+		}
+		skuItemToBeReverted.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+		baseDao.save(skuGroupToBeReverted);
+
+		adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null, stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+
+		getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
+
+		stliToBeReduced.setCheckedoutQty(stliToBeReduced.getCheckedoutQty() - 1);
+		baseDao.save(stliToBeReduced);
+		addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
 	public Resolution checkinInventoryAgainstStockTransfer() {
@@ -234,6 +210,7 @@ public class StockTransferAction extends BasePaginatedAction {
 		}
 		return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
 	}
+
 
 	public Resolution print() {
 		logger.debug("purchaseOrder: " + stockTransfer);
@@ -344,5 +321,13 @@ public class StockTransferAction extends BasePaginatedAction {
 
 	public void setProductVariantBarcode(String productVariantBarcode) {
 		this.productVariantBarcode = productVariantBarcode;
+	}
+
+	public StockTransferLineItem getStliToBeReduced() {
+		return stliToBeReduced;
+	}
+
+	public void setStliToBeReduced(StockTransferLineItem stliToBeReduced) {
+		this.stliToBeReduced = stliToBeReduced;
 	}
 }

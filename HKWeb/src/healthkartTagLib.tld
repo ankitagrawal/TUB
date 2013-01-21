@@ -646,6 +646,19 @@
 
     <function>
         <description>
+            removes html from text
+        </description>
+        <name>stripHtml</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String stripHtml(java.lang.String)</function-signature>
+        <example>
+            ${hk:stripHtml(${str)}
+        </example>
+    </function>
+
+
+    <function>
+        <description>
             returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
         </description>
         <name>getApplicableOfferPrice</name>
