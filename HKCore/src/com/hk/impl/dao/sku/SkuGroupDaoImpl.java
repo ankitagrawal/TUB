@@ -163,7 +163,9 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
 		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, barcode, null, null);
 		skuGroupCriteria.createCriteria("sku", "sku");
+		if(warehouseId != null){
 		skuGroupCriteria.add(Restrictions.eq("sku.warehouse.id", warehouseId));
+		}
 		List<SkuGroup> skuGroupList = findByCriteria(skuGroupCriteria);
 		return skuGroupList;
 	}

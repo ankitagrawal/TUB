@@ -51,7 +51,7 @@
 									</c:otherwise>
 								</c:choose>
 							</td>
-							<c:set value="${cycle.cycleCountPVImap}" var="item"/>
+							<c:set value="${cycle.cycleCountPviMap}" var="item"/>
 							<td>${item[cCItem.id]}</td>
 							<td>${(item[cCItem.id]) - (cCItem.scannedQty)}</td>
 						</tr>

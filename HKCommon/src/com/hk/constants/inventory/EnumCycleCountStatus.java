@@ -12,10 +12,10 @@ import java.util.Arrays;
  */
 public enum EnumCycleCountStatus {
 
-	InProgress(10L, "InProgress"),
-	RequestForApproval(20L, "PendingForApproval"),
-	Approved(99L, "Approved"),
-	Closed(999L, "Closed");
+	InProgress(100L, "InProgress"),
+	RequestForApproval(200L, "PendingForApproval"),
+	Approved(300L, "Approved"),
+	Closed(400L, "Closed");
 
 	private String name;
 	private Long id;

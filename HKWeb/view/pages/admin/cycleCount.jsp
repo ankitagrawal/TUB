@@ -99,7 +99,7 @@
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
 								<td>${cCItem.scannedQty}</td>
 								<td>
-									<c:set value="${cycle.cycleCountPVImap}" var="item"/>
+									<c:set value="${cycle.cycleCountPviMap}" var="item"/>
 										${item[cCItem.id]}
 								</td>
 							</tr>

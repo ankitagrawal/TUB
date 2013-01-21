@@ -144,7 +144,7 @@ public class CycleCountHelper {
 					if (bufferedWriter != null)
 						bufferedWriter.close();
 				} catch (Exception ex) {
-
+				  logger.debug("error in closing buffered stream"+ex.getMessage());
 				}
 			}
 		}
@@ -175,23 +175,20 @@ public class CycleCountHelper {
 
 	public Map<String, Integer> readCycleCountNotepad(File file) throws IOException {
 		logger.debug("parsing Cycle Count Notepad : " + file.getAbsolutePath());
-		Map<String, Integer> barcodeQty = new HashMap<String, Integer>();
-		try {
+		Map<String, Integer> barcodeQtyMap = new HashMap<String, Integer>();
 			BufferedReader buffer = new BufferedReader(new FileReader(file));
 			String barcode = null;
 			while ((barcode = buffer.readLine()) != null) {
-				if (barcodeQty.containsKey(barcode)) {
-					int qty = barcodeQty.get(barcode);
-					barcodeQty.put(barcode, (qty + 1));
+				if (barcodeQtyMap.containsKey(barcode)) {
+					int qty = barcodeQtyMap.get(barcode);
+					barcodeQtyMap.put(barcode, (qty + 1));
 				} else {
-					barcodeQty.put(barcode, 1);
+					barcodeQtyMap.put(barcode, 1);
 				}
 			}
 
-		} catch (IOException ex) {
-			throw new IOException();
-		}
-		return barcodeQty;
+
+		return barcodeQtyMap;
 	}
 
 
