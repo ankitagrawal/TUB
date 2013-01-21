@@ -22,7 +22,7 @@
          form = $('#addressForm');
                         form.find("input[type='text'][name='address.name']").val(${umaa.address.name});
                         form.find("input[type='text'][name='address.line1']").val(${umaa.address.line1});
-                        if (${umaa.address.line2!=null or fn:length(umaa.address.line2)}) {
+                        if (${umaa.address.line2!=null or fn:length(umaa.address.line2)>0}) {
                             form.find("input[type='text'][name='address.line2']").val(${umaa.address.line2});
                         }
                         form.find("input[type='text'][name='address.city']").val(${umaa.address.city});

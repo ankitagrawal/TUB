@@ -82,17 +82,23 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution save() {
+        String error= "",success = "";
+         boolean bool = false;
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
-                 addRedirectAlertMessage(new SimpleMessage("One of the mappings is currently not serviceable"));
-                 return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
+                   error += defaultCourier.getCourier().getName() + ",";
+                   bool = true;
+            }
+          else{
+               getBaseDao().save(defaultCourier);
+               success += defaultCourier.getCourier().getName() + ",";
             }
         }
-        for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
-            getBaseDao().save(defaultCourier);
-        }
-       addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
+      if(bool){
+        addRedirectAlertMessage(new SimpleMessage("Mappings for pincode " + pincodeString + " are currently not serviceable for couriers " + error + "<br>Changes Saved Successfully for Couriers " + success ));
+        return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
+      }
+       return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     @SuppressWarnings("unchecked")
