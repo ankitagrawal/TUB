@@ -92,7 +92,7 @@
 									<s:param name="brandsToAudit" value="${auditBrand.id}"/>
 									<span style="color:blue;">Edit</span>
 								</s:link>
-								<c:set value="<%= EnumAuditStatus.Pending %>" var="pending"/>
+								<c:set value="<%= EnumAuditStatus.Pending.getId() %>" var="pending"/>
 								<c:if test="${auditBrand.auditStatus == pending}">
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
 								        event="directToCycleCount">
