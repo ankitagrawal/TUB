@@ -36,17 +36,17 @@ public class CourierServiceImpl implements CourierService {
         if (name != null) {
             List<String> nameList = new ArrayList<String>();
             nameList.add(name);
-            List<Courier> courierList = getCourierDao().getCouriers(null, nameList, null);
+            List<Courier> courierList = getCourierDao().getCouriers(null, nameList, null, null);
             return courierList.size() > 0 ? courierList.get(0) : null;
         }
         return null;
     }
 
-    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
-        return courierDao.getCouriers(courierIds, courierNames, disabled);
+    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean active, Long operationBitset) {
+        return courierDao.getCouriers(courierIds, courierNames, active, operationBitset);
     }
-    public Page getCouriers(String courierName,Boolean disabled, String courierGroup,int page, int perPage){
-        return  courierDao.getCouriers(courierName,disabled,courierGroup,page,perPage);
+    public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationsBitset){
+        return  courierDao.getCouriers(courierName,active,courierGroup,page,perPage, operationsBitset);
     }
 
     public void saveOrUpdate(Courier courier) {
@@ -55,15 +55,6 @@ public class CourierServiceImpl implements CourierService {
 
     public List<Courier> getAllCouriers() {
         return getCourierDao().getAll(Courier.class);
-    }
-
-     public List<Courier> listOfVendorCouriers(){
-         return getCourierDao().listOfVendorCouriers();
-     }
-    
-    public Courier getDefaultCourierByPincodeForLoggedInWarehouse(Pincode pincode, boolean isCOD, boolean isGroundShipping) {
-        Warehouse warehouse = getUserService().getWarehouseForLoggedInUser();
-        return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
     }
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {

@@ -11124,4 +11124,26 @@
 			update warehouse set warehouse_type_id = 10 where id = 301;
 		</sql>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1358767479539-6">
+        <addColumn tableName="courier">
+            <column name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham" id="21-01-2013-01">
+        <sql>
+            update courier set active = (-1 * disabled);
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1358767479539-7">
+        <addColumn tableName="courier">
+            <column name="operations_bitset" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1358767479539-79">
+        <dropColumn columnName="disabled" tableName="courier"/>
+    </changeSet>
 </databaseChangeLog>
