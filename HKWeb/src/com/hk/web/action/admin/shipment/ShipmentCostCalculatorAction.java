@@ -1,30 +1,12 @@
 package com.hk.web.action.admin.shipment;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
-
-import com.hk.util.ShipmentServiceMapper;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
-import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
@@ -33,12 +15,27 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.ShipmentServiceMapper;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -72,13 +69,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(ShipmentCostCalculatorAction.class);
 
     @Autowired
-    PincodeDao pincodeDao;
-
-    @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
-
-    @Autowired
-    ShippingOrderDao shippingOrderDao;
 
     @Autowired
     CourierCostCalculator courierCostCalculator;
@@ -96,7 +87,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     CourierGroupService courierGroupService;
 
     @Autowired
-    CourierDao courierDao;
+    CourierService courierService;
 
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
     List<Courier> applicableCourierList;
@@ -107,7 +98,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution saveActualShippingCostForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
             if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
@@ -131,7 +122,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateCourierCostingForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Order order = shippingOrder.getBaseOrder();
             Shipment shipment = shippingOrder.getShipment();
@@ -159,7 +150,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             }
         }
         if (courierList.size() == 0) {
-            courierList = courierDao.getCouriers(null,null,false);
+            courierList = courierService.getCouriers(null,null,true, EnumCourierOperations.HK_SHIPPING.getId());
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForEnteringShippingCost()));

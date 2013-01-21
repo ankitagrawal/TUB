@@ -149,7 +149,7 @@
                                     ${pCourierMap.courier.name}
                             </td>
                             <td>
-                                    ${pCourierMap.courier.disabled ? 'No' : 'Yes'}
+                                    ${pCourierMap.courier.active ? 'Yes' : 'No'}
                             </td>
                             <td>
                                 <c:out value="${pCourierMap.prepaidAir}"/>

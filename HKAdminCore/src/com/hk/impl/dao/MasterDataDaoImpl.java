@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -377,12 +378,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierGroupService.getAllCourierGroup();
     }
 
-    public List<Courier> getDisableCourier() {
-        return courierService.getCouriers(null, null, true);
-    }
-
     public List<Courier> getAvailableCouriers() {
-        return courierService.getCouriers(null, null, false);
+        return courierService.getCouriers(null, null, false, EnumCourierOperations.HK_SHIPPING.getId());
     }
 
     public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
@@ -449,7 +446,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Courier> getListOfVendorCouriers() {
-        return courierService.listOfVendorCouriers();
+        return courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
     }
 
     public List<ReconciliationType> getAddReconciliationTypeList() {

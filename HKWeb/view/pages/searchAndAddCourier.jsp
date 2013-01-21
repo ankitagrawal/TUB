@@ -82,11 +82,11 @@
 					</td>
 					<td>
 					<c:choose>
-					<c:when test="${courierv.disabled}">
-						InActive
+					<c:when test="${courierv.active}">
+                        Active
 					</c:when>
 					<c:otherwise>
-						Active
+                        InActive
 					</c:otherwise>
 					</c:choose>
 					</td>

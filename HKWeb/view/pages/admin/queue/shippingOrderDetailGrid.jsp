@@ -203,11 +203,13 @@
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
-                                 class="delieverSO">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Mark SO Delivered 
-        </s:link>)
+            <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
+                                     class="resolveShipment">
+                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                Resolve Shipment
+            </s:link>)
+            </shiro:hasAnyRoles>
         </c:if>
 
         <c:if test="${shippingOrder.dropShipping}">

@@ -50,7 +50,7 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         }
         if (activeCourier != null) {
             DetachedCriteria courierCriteria = pincodeCourierMappingCriteria.createCriteria("courier");
-            courierCriteria.add(Restrictions.ne("disabled", activeCourier));
+            courierCriteria.add(Restrictions.eq("active", activeCourier));
         }
 
         String lhsCondition = "";       //assuming we wont reach a state where more than two shipment service types are applicable
