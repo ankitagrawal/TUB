@@ -244,22 +244,22 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     public Resolution escalate() {
         StringBuilder falseMessage = new StringBuilder();
         StringBuilder trueMessage = new StringBuilder();
-        trueMessage.append("Shipping order which escalated are ");
-        falseMessage.append("Shipping order which couldn't be escalated are ");
+        trueMessage.append("Base order which escalated are ");
+        falseMessage.append("Base order which couldn't be escalated are ");
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
                 if (isManualEscalable) {
-                    trueMessage.append(shippingOrder.getId());
+                    trueMessage.append(shippingOrder.getBaseOrder().getId());
                     trueMessage.append(" ");
                     shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
-                        trueMessage.append(shippingOrder.getId());
+                        trueMessage.append(shippingOrder.getBaseOrder().getId());
                         trueMessage.append(" ");
                         shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                     } else {
-                        falseMessage.append(shippingOrder.getId());
+                        falseMessage.append(shippingOrder.getBaseOrder().getId());
                         falseMessage.append(" ");
                     }
                 }

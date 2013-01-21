@@ -9,7 +9,7 @@
 <jsp:useBean id="now" class="java.util.Date" scope="request"/>
 <s:layout-component name="htmlHead">
  <c:set var="fromwarehouse" value="${whAction.setWarehouse}"/>
-	<c:set var="STOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
+	<c:set var="STOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getId()%>" />
 	<c:set var="STGenerated" value="<%=EnumStockTransferStatus.Generated.getId()%>" />
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
@@ -121,9 +121,12 @@
 				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>
 			</tr>
 		</table>
-		<div>
-			<s:submit name="markAsStockTransferOutCompleted" value="Mark As Stock Transfer Completed" id="markAsStockTransferOutCompleted"/>
-		</div>
+		<c:if test="${sta.stockTransfer.id != null}">
+			<div>
+				<s:submit name="markAsStockTransferOutCompleted" value="Mark As Stock Transfer Completed"
+				          id="markAsStockTransferOutCompleted"/>
+			</div>
+		</c:if>
 	</s:form>
 	<div class="alertST messages"><s:messages key="generalMessages"/></div>
 

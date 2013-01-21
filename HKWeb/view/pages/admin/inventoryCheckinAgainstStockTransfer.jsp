@@ -1,7 +1,10 @@
+<%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer Inventory Checkin">
+	<c:set var="stOutCompleted" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_Completed.getId()%>" />
+	<c:set var="stCheckinInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
     <jsp:useBean id="now" class="java.util.Date" scope="request"/>
     <s:layout-component name="htmlHead">
         <%
@@ -51,15 +54,18 @@
     <s:layout-component name="content">
         <div style="display:inline;float:left;">
             <h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
-
+	        <s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
 	        <div>
-		        <s:submit name="markAsStockTransferOutCompleted" value="Close Stock Transfer"
+		        <s:submit name="closeStockTransfer" value="Close Stock Transfer"
 		                  id="markAsStockTransferOutCompleted"/>
+		        <s:hidden name="stockTransfer" value="${ica.stockTransfer.id}" />
 	        </div>
+	        </s:form>
             <input type="hidden" id="messageColorParam" value="${messageColor}">
 
             <div class="alertST messages"><s:messages key="generalMessages"/></div>
             <c:if test="${ica.stockTransfer.id != null}">
+	            <c:if test="${ica.stockTransfer.stockTransferStatus.id == stOutCompleted || ica.stockTransfer.stockTransferStatus.id == stCheckinInProcess}">
                 <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="stForm2">
                     <fieldset class="right_label">
                         <legend>Scan Barcode:</legend>
@@ -72,7 +78,7 @@
                         </ul>
                     </fieldset>
                 </s:form>
-
+	            </c:if>
                 <table border="1">
                     <thead>
                     <tr>

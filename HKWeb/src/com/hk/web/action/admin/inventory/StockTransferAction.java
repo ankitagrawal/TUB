@@ -229,6 +229,16 @@ public class StockTransferAction extends BasePaginatedAction {
 		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
 	}
 
+	public Resolution closeStockTransfer() {
+		if (stockTransfer == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		}
+		stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Closed.getStockTransferStatus());
+		baseDao.save(stockTransfer);
+		addRedirectAlertMessage(new SimpleMessage("Stock Transfer Closed"));
+		return new RedirectResolution(StockTransferAction.class).addParameter("pre");
+	}
 
 	public Resolution print() {
 		logger.debug("purchaseOrder: " + stockTransfer);
