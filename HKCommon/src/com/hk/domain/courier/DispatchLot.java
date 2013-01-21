@@ -78,6 +78,9 @@ public class DispatchLot implements Serializable {
 	@JoinColumn(name = "received_by")
 	private User receivedBy;
 
+	@Column(name = "document_file_name")
+	private String documentFileName;
+
 	public Long getId() {
 		return id;
 	}
@@ -212,5 +215,13 @@ public class DispatchLot implements Serializable {
 
 	public void setReceivedBy(User receivedBy) {
 		this.receivedBy = receivedBy;
+	}
+
+	public String getDocumentFileName() {
+		return documentFileName;
+	}
+
+	public void setDocumentFileName(String documentFileName) {
+		this.documentFileName = documentFileName;
 	}
 }

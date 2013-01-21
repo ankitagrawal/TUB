@@ -10978,6 +10978,11 @@
 			update warehouse set warehouse_type_id = 10 where id = 301;
 		</sql>
 	</changeSet>
+    <changeSet author="Rohit (generated)" id="1358502461101-1">
+        <addColumn tableName="dispatch_lot">
+            <column name="document_file_name" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Marut (generated)" id="1357977084301-2">
         <addColumn tableName="user">
             <column name="subscribed_mask" type="INT">
@@ -10993,9 +10998,8 @@
     </changeSet>
     <changeSet author="Marut (generated)" id="1357977084301-4">
         <addColumn tableName="user">
-            <column name="unsubscribe_token" type="VARCHAR(512)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
+        <column name="unsubscribe_token" type="VARCHAR(512)">
+            <constraints nullable="false"/>
+        </column>
     </changeSet>
 </databaseChangeLog>
