@@ -184,7 +184,7 @@
 
 	<div class="row">
 		<s:label class="rowLabel" name="Pincode*"/>
-		<s:text name="address.pincode" class="rowText" id="pin"/>
+		<s:text name="address.pincode" class="rowText" id="pin" maxlength="6"/>
 	</div>
 
 	<div class="clear"></div>

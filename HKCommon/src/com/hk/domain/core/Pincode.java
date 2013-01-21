@@ -91,13 +91,17 @@ public class Pincode implements java.io.Serializable {
 
         Pincode pincode1 = (Pincode) o;
 
-        return pincode.equals(pincode1.pincode);
-
+      return pincode.equals(pincode1.pincode);
     }
 
     @Override
     public int hashCode() {
         return pincode.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return pincode == null ? "" : pincode;
     }
 }
 
