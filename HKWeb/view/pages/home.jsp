@@ -220,10 +220,18 @@
   <div class="clear"></div>
 		
 		<c:if test="${not isSecure }">
-			<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
-				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
-				frameborder="0"></iframe>
+      <shiro:user>
+        <iframe
+          src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1&uid=<shiro:principal property="id"/>"
+          scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+          frameborder="0"></iframe>
+      </shiro:user>
+      <shiro:guest>
+        <iframe
+          src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+          scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+          frameborder="0"></iframe>
+      </shiro:guest>
 		</c:if>
 
 	</s:layout-component>
