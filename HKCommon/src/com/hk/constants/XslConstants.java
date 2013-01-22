@@ -155,5 +155,5 @@ public class XslConstants {
 	public static final String GATEWAY_ORDER_ID = "GATEWAY ORDER ID";
 	public static final String AMOUNT = "AMOUNT";
 
-
+	public static final String SHIPMENT_STATUS = "SHIPMENT STATUS";
 }

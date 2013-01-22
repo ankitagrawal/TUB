@@ -1,7 +1,10 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.EnumDispatchLotStatus" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="View Dispatch Lot">
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.DispatchLotAction" var="dispatchLotBean"/>
+	<c:set var="dispatchLotInTransit" value="<%=EnumDispatchLotStatus.InTransit.getId()%>"/>
+	<c:set var="dispatchLotPartiallyReceived" value="<%=EnumDispatchLotStatus.PartiallyReceived.getId()%>"/>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -23,6 +26,15 @@
 			}
 
 		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#markDispatchLotReceived').click(function() {
+					if(!confirm("Some shipments are not yet received, do you still want to Mark Lot As Received?")) {
+						return false;
+					}
+				});
+			})
+		</script>
 	</s:layout-component>
 	<s:layout-component name="heading">
 		<h4>View Dispatch Lot: ${dispatchLotBean.dispatchLot.id}</h4>
@@ -106,14 +118,17 @@
 					<td><label><strong>Remarks</strong></label></td>
 					<td>${dispatchLotBean.dispatchLot.remarks}</td>
 				</tr>
-				<tr>
-					<td colspan="2">
-						<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
-							<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
-							<s:submit name="markDispatchLotReceived" value="Mark Lot As Received"/>
-						</s:form>
-					</td>
-				</tr>
+				<c:if test="${dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotInTransit
+				|| dispatchLotBean.dispatchLot.dispatchLotStatus.id == dispatchLotPartiallyReceived}">
+					<tr>
+						<td colspan="2">
+							<s:form beanclass="com.hk.web.action.admin.courier.DispatchLotAction">
+								<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
+								<s:submit name="markDispatchLotReceived" value="Mark Lot As Received" id="markDispatchLotReceived"/>
+							</s:form>
+						</td>
+					</tr>
+				</c:if>
 			</table>
 		</fieldset>
 
@@ -128,6 +143,7 @@
 				</s:select>
 				<s:hidden name="dispatchLot" value="${dispatchLotBean.dispatchLot.id}"/>
 				<s:submit name="viewLot" value="Filter" />
+				<s:submit name="downloadLotDetailsToExcel" value="Download To Excel" />
 			</s:form>
 		</fieldset>
 
@@ -136,8 +152,6 @@
 		<table class="zebra_vert">
 			<thead>
 			<tr>
-				<th>Shipment ID</th>
-				<th>Shipping Order</th>
 				<th>Gateway Order Id</th>
 				<th>AWB Number</th>
 				<th>Shipment Status</th>
@@ -145,8 +159,6 @@
 			</thead>
 			<c:forEach items="${dispatchLotBean.dispatchLotShipments}" var="dispatchLotShipment">
 				<tr>
-					<td>${dispatchLotShipment.shipment.id}</td>
-					<td>${dispatchLotShipment.shipment.shippingOrder.id}</td>
 					<td>${dispatchLotShipment.shipment.shippingOrder.gatewayOrderId}</td>
 					<td>${dispatchLotShipment.shipment.awb.awbNumber}</td>
 					<td>${dispatchLotShipment.shipmentStatus}</td>
