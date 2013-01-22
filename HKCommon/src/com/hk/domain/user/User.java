@@ -66,11 +66,11 @@ public class User {
 
 
 //    @Column(name = "subscribed_mask", nullable = false)
-    private Integer subscribedMask;
+//    private Integer subscribedMask;
 
 
 //    @Column(name = "unsubscribe_token", length = 512)
-    private String unsubscribeToken;
+//    private String unsubscribeToken;
 
 
     /*
@@ -450,20 +450,20 @@ public class User {
     }
 
     public Integer getSubscribedMask() {
-        return subscribedMask;
+        return hashCode();
     }
 
     public void setSubscribedMask(int subscribed) {
-        this.subscribedMask = subscribed;
+//        this.subscribedMask = subscribed;
     }
 
 
     public String getUnsubscribeToken() {
-        return unsubscribeToken;
+        return email;
     }
 
     public void setUnsubscribeToken(String unsubscribeToken) {
-        this.unsubscribeToken = unsubscribeToken;
+//        this.unsubscribeToken = unsubscribeToken;
     }
 
     /*
