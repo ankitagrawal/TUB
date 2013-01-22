@@ -1,5 +1,6 @@
 package com.hk.store.loyalty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.hk.domain.store.Store;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.AbstractStoreProcessor;
 import com.hk.store.InvalidOrderException;
+import com.hk.store.ProductAdapter;
 import com.hk.store.ProductVariantInfo;
 import com.hk.store.SearchCriteria;
 
@@ -25,8 +27,15 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
 	@Override
-	public List<LoyaltyProduct> searchProducts(Long userId, SearchCriteria criteria) {
-		return loyaltyProgramService.listProucts(userId, criteria.getStartRow(), criteria.getMaxRows());
+	public List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria) {
+		List<LoyaltyProduct> list = loyaltyProgramService.listProucts(userId, criteria.getStartRow(), criteria.getMaxRows());
+		List<ProductAdapter> productList = new ArrayList<ProductAdapter>(list.size());
+		for (LoyaltyProduct loyaltyProduct : list) {
+			ProductAdapter adapter = new ProductAdapter();
+			adapter.setLoyaltyProduct(loyaltyProduct);
+			productList.add(adapter);
+		}
+		return productList;
 	}
 
 	@Override
@@ -46,6 +55,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Override
 	protected void validateCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException {
 		/*
+		 * TODO
 		 * accumulate the input order id points and variant price
 		 * and validate with user karma points. 
 		 * if order points are less then ok otherwise throw InvalidOrderException

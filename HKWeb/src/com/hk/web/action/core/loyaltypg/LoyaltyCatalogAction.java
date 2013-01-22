@@ -1,5 +1,6 @@
 package com.hk.web.action.core.loyaltypg;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
 import com.hk.web.action.core.auth.LoginAction;
 
@@ -33,7 +35,12 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setStartRow(0);
 		criteria.setMaxRows(0);
-		productList = getProcessor().searchProducts(getPrincipal().getId(), criteria);
+
+		List<ProductAdapter> list = getProcessor().searchProducts(getPrincipal().getId(), criteria);
+		productList = new ArrayList<LoyaltyProduct>();
+		for (ProductAdapter productAdapter : list) {
+			productList.add(productAdapter.getLoyaltyProduct());
+		}
 		productPage = new Page(productList, getPerPage(), getPageNo(), (int) productList.size());
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
