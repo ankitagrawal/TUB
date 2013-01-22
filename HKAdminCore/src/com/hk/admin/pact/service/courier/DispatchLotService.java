@@ -6,6 +6,7 @@ import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,8 @@ public interface DispatchLotService {
 	public void parseExcelAndSaveShipmentDetails(DispatchLot dispatchLot, String excelFilePath, String sheetName);
 
 	public boolean dispatchLotHasShipment(DispatchLot dispatchLot, Shipment shipment);
+
+	public File generateDispatchLotExcel(File xlsFile, List<DispatchLotHasShipment> dispatchLotHasShipmentList);
 
 	public List<Shipment> getShipmentsForDispatchLot(DispatchLot dispatchLot);
 
