@@ -75,7 +75,7 @@ public class SelectAddressAction extends BaseAction {
         email = user.getEmail();
 
         addresses = addressDao.getVisibleAddresses(user);
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         selectedAddress = order.getAddress();
         if (selectedAddress == null) {
             // get the last order address? for not selecting just first non deleted one.
@@ -98,7 +98,7 @@ public class SelectAddressAction extends BaseAction {
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
 
         deleteAddress.setDeleted(true);
         addressDao.save(deleteAddress);
@@ -122,7 +122,7 @@ public class SelectAddressAction extends BaseAction {
             user = getUserService().save(user);
         }
 
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         order.setAddress(selectedAddress);
         orderDao.save(order);
 

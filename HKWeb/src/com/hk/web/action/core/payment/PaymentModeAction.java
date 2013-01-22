@@ -65,4 +65,12 @@ public class PaymentModeAction extends BaseAction {
     public void setCardIssuers(List<Issuer> cardIssuers) {
         this.cardIssuers = cardIssuers;
     }
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 }

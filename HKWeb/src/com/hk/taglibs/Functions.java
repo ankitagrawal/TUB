@@ -27,6 +27,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -456,6 +458,10 @@ public class Functions {
 
     public static String escapeXML(String str) {
         return StringEscapeUtils.escapeXml(str.trim());
+    }
+
+    public static String stripHtml(String str) {
+        return escapeXML(Jsoup.clean(str, Whitelist.none()));
     }
 
     public static Double getApplicableOfferPrice(Object o) {

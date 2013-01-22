@@ -446,7 +446,31 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Courier> getListOfVendorCouriers() {
-        return courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
+    }
+
+    public List<Courier> getCouriersForDispatchLot() {
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.DISPATCH_LOT.getId());
+    }
+
+    public List<Warehouse> getAllWarehouse() {
+        return warehouseService.getAllWarehouses();
+    }
+
+    public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {
+        return EnumShipmentServiceType.getAllShipmentServiceType();
+    }
+
+    public List<EnumPicker> getAllPicker() {
+        return EnumPicker.getAll();
+    }
+
+    public List<EnumPacker> getAllPacker() {
+        return EnumPacker.getAll();
+    }
+
+    public List<EnumBoxSize> getAllBoxSize() {
+        return EnumBoxSize.getAllEnumBoxSize();
     }
 
     public List<ReconciliationType> getAddReconciliationTypeList() {
@@ -455,23 +479,4 @@ public class MasterDataDaoImpl implements MasterDataDao {
         reconciliationList.add(addReconType);
         return reconciliationList;
     }
-   public List<Warehouse> getAllWarehouse(){
-     return warehouseService.getAllWarehouses();
-  }
-
-  public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes(){
-   return EnumShipmentServiceType.getAllShipmentServiceType();
-  }
-
-  public List<EnumPicker> getAllPicker(){
-    return EnumPicker.getAll();
-  }
-
-  public List<EnumPacker> getAllPacker(){
-    return EnumPacker.getAll();
-  }
-
-  public List<EnumBoxSize> getAllBoxSize(){
-    return EnumBoxSize.getAllEnumBoxSize();
-  }
 }

@@ -164,4 +164,7 @@ public interface MasterDataDao
   public List<EnumPacker> getAllPacker();
 
   public List<EnumBoxSize> getAllBoxSize();
+
+	public List<Courier> getCouriersForDispatchLot();
+
 }

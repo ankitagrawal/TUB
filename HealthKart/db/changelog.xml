@@ -11146,4 +11146,29 @@
     <changeSet author="Pratham (generated)" id="1358767479539-79">
         <dropColumn columnName="disabled" tableName="courier"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1358502461101-1">
+        <addColumn tableName="dispatch_lot">
+            <column name="document_file_name" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-2">
+        <addColumn tableName="user">
+            <column name="subscribed_mask" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-3">
+        <sql>
+            update user u set subscribed_mask = 30;
+            update user u inner join email_recepient er on u.id = er.user_id set u.subscribed_mask = 1 where er.subscribed = 0;
+        </sql>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-4">
+        <addColumn tableName="user">
+            <column name="unsubscribe_token" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
