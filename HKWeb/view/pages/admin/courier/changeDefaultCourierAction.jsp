@@ -22,7 +22,7 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#generatePincodeExcel').click(function(){
-                   var warehouse = $('warehouse').val();
+                   var warehouse = $('#warehouse').val();
                     if(warehouse == null || warehouse == ""){
                         alert("Please Select Warehouse");
                         return false;
