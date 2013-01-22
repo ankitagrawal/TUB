@@ -50,7 +50,7 @@ public class SkuGroup implements java.io.Serializable {
 	@Column (name = "expiry_date", length = 10)
 	private Date expiryDate;
 
-	@JsonSkip
+
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "sku_id", nullable = false)
 	private Sku sku;
