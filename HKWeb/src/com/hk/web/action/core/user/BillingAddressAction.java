@@ -89,7 +89,6 @@ public class BillingAddressAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
-            selectedAddress.getOrders().add(order);
             selectedAddress.setUser(user);
             addressDao.save(selectedAddress);
             return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
@@ -99,6 +98,7 @@ public class BillingAddressAction extends BaseAction {
         }
     }
 
+    //todo billing address handle addition of pincode
 
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
@@ -106,10 +106,9 @@ public class BillingAddressAction extends BaseAction {
         if (order.getCartLineItems().size() == 0) {
             return new RedirectResolution(CartAction.class);
         }
-        address.getOrders().add(order);
         address.setUser(user);
         address = addressDao.save(address);
-        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
+        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddress", address);
     }
 
 

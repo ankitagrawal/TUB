@@ -103,7 +103,7 @@
             <div class='city'>${billingAddress.city}</div>
             <div class='state'>${billingAddress.state}</div>
 
-           <c:set var="countryId" value="${billingAddress.countryId}" />
+           <c:set var="countryId" value="${billingAddress.country.id}" />
               <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 

@@ -13,6 +13,7 @@ import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
@@ -42,7 +43,7 @@ public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
     private Gateway gateway;
-    private Long billingAddressId;
+    private BillingAddress billingAddress;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
 
     @Validate(required = true)
@@ -106,13 +107,13 @@ public class PaymentAction extends BaseAction {
             paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, billingAddress);
 
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, billingAddressId));
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, billingAddress.getId()));
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
@@ -151,11 +152,11 @@ public class PaymentAction extends BaseAction {
         this.gateway = gateway;
     }
 
-    public Long getBillingAddressId() {
-        return billingAddressId;
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setBillingAddressId(Long billingAddressId) {
-        this.billingAddressId = billingAddressId;
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

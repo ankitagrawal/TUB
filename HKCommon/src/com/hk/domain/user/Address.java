@@ -3,6 +3,7 @@ package com.hk.domain.user;
 
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.core.Country;
 import com.hk.domain.core.Pincode;
 import org.hibernate.annotations.SQLDelete;
 
@@ -55,12 +56,12 @@ public class Address implements java.io.Serializable {
     @Column(name = "phone", nullable = false, length = 30)
     private String phone;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")
+    private Country country;
+
     @Column(name = "deleted", nullable = false, length = 30)
     private Boolean deleted;
-
-    @Column(name = "country_id", nullable = false, length = 6)
-    private Long countryId = 80L;
-
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -167,17 +168,16 @@ public class Address implements java.io.Serializable {
         return deleted;
     }
 
-
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
 
-    public Long getCountryId() {
-        return countryId;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override

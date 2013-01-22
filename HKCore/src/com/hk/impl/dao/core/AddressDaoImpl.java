@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.payment.Payment;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -112,13 +113,22 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
     public List<BillingAddress> getVisibleBillingAddresses(User user) {
         List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
-        detachedCriteria.add(Restrictions.eq("user", user));
+        DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
+        paymentCriteria.add(Restrictions.eq("user", user));
+        //todo billing address fetch only non deleted billing address for a customer from payment table
+/*
+        paymentCriteria.createCriteria("billingaddress.deleted", false);
+        courierCriteria.add(Restrictions.in("group.name", courierGroups));
+
+        DetachedCriteria billingAddressCriteria = DetachedCriteria.forClass(BillingAddress.class);
+        billingAddressCriteria.add(Restrictions.eq("deleted",false));
+        detachedCriteria.add(billingAddressCriteria);
         List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
         for (BillingAddress billingaddress : billingAddressList) {
             if (!billingaddress.isDeleted())
                 billingAddresses.add(billingaddress);
         }
+*/
         return billingAddresses;
     }
 
