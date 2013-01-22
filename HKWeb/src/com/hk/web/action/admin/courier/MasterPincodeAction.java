@@ -146,6 +146,9 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
+  public Resolution directToPincodeRegionZone(){
+    return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+  }
     public Resolution savePincodeRegionList() {
         for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
             pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
