@@ -187,7 +187,7 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 6 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION &nbsp;LOCALITY &nbsp;DEFAULT_COURIER_ID &nbsp;ZONE)</li>
+             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 5 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION &nbsp;LOCALITY &nbsp;ZONE)</li>
                     <br>
                     <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 					</s:form>
