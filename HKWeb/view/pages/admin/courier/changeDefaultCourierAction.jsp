@@ -184,8 +184,11 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" value="${cdca.availableCouriers}">
-                                    <option value="">--Select--</option>
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier">
+                                    <s:option value="">--Select--</s:option>
+                                    <c:forEach items="${cdca.availableCouriers}" var="courier">
+                                      <s:option value="${courier.id}">${courier.name}</s:option>
+                                    </c:forEach>
                                 </s:select>
                             </td>
                             <td>
