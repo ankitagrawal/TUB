@@ -59,6 +59,7 @@ public class CourierServiceImpl implements CourierService {
         return getCourierDao().getAll(Courier.class);
     }
 
+    @Override
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
         List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
         return couriers != null && !couriers.isEmpty() ? couriers.get(0) : null;

@@ -141,15 +141,23 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
 
     public List<Courier> searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
         DetachedCriteria pincodeDefaultCourierCriteria = DetachedCriteria.forClass(PincodeDefaultCourier.class);
-        if(warehouse != null){
+        if (warehouse != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
-        if(pincode != null){
+        if (pincode != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
         }
         pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
         pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
 
-        return findByCriteria(pincodeDefaultCourierCriteria);
+        List<PincodeDefaultCourier> pincodeDefaultCouriers = findByCriteria(pincodeDefaultCourierCriteria);
+
+        List<Courier> courierList = new ArrayList<Courier>();
+        if (pincodeDefaultCouriers != null && pincodeDefaultCouriers.size() > 0) {
+            for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+                courierList.add(pincodeDefaultCourier.getCourier());
+            }
+        }
+        return courierList;
     }
 }
