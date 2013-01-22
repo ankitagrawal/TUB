@@ -65,11 +65,11 @@ public class User {
     private Date                  createDate = new Date();
 
 
-    @Column(name = "subscribed_mask", nullable = false)
+//    @Column(name = "subscribed_mask", nullable = false)
     private Integer subscribedMask;
 
 
-    @Column(name = "unsubscribe_token", length = 512)
+//    @Column(name = "unsubscribe_token", length = 512)
     private String unsubscribeToken;
 
 
