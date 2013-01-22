@@ -184,8 +184,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
             skuItem.setCreateDate(new Date());
 	        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
             skuItem = (SkuItem) getBaseDao().save(skuItem);
+            
+//    generating Barcode at Skuitem level
+            String skuItemBarCode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i+1);
+            skuItem.setBarcode(skuItemBarCode);
 
-            skuItem.setBarcode(skuItem.getId().toString());
+//            skuItem.setBarcode(skuItem.getId().toString());
             skuItem = (SkuItem) getBaseDao().save(skuItem);
 
             this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, invTxnType, 1L, txnBy);

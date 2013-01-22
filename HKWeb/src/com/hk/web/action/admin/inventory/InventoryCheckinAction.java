@@ -238,8 +238,10 @@ public class InventoryCheckinAction extends BaseAction {
 							editPVFillRate(grn);
 						}
 					}*/
-					//Barcode File
-					try {
+
+//    Barcode file generation at sku item level
+
+                    try {
 						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
 						String barcodeFilePath = null;
 						if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
@@ -256,14 +258,45 @@ public class InventoryCheckinAction extends BaseAction {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
 							date = sdf.format(expiryDate);
 						}
-						String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-								+ StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
+                      Set <SkuItem> skuItems =  skuGroup.getSkuItems();
+                        String data="";
+                          Map<Long, String > skuItemDataMap =  new HashMap <Long, String > ();
+                         for (SkuItem skuItem1 : skuItems){
+                             data = skuItem1.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                                               + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
 
-						BarcodeUtil.createBarcodeFile(barcodeFilePath, data);
+                            if (!skuItemDataMap.containsKey(skuItem1.getId())){
+                                skuItemDataMap.put(skuItem1.getId(), data);
+                            }
+                        }
+                         BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+//
+					//Barcode File
+//					try {
+//						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+//						String barcodeFilePath = null;
+//						if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+//							barcodeFilePath = barcodeGurgaon;
+//						} else {
+//							barcodeFilePath = barcodeMumbai;
+//						}
+//						barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
+//								+ StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+//						String date = "";
+//						if (expiryDate == null) {
+//							date = "NA";
+//						} else {
+//							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+//							date = sdf.format(expiryDate);
+//						}
+//						String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+//								+ StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
+
+
 
 					} catch (IOException e) {
 						logger.error("Exception while appending on barcode file", e);
-						;
+
 					}
 				} else {
 					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
