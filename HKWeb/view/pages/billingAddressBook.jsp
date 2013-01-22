@@ -107,7 +107,7 @@
               <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 
-            <div class='pin'>${billingAddress.pincode.pincode}</div>
+            <div class='pin'>${billingAddress.pin}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>
             <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
@@ -153,7 +153,7 @@
 
 //           form.find("input[type='text'][name='address.countryId']").val();
             $('select').val(countryId);
-            form.find("input[type='text'][name='address.pincode.pincode']").val(pin);
+            form.find("input[type='text'][name='pin']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
