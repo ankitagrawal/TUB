@@ -1,5 +1,6 @@
 package com.hk.admin.pact.service.courier;
 
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
@@ -36,6 +37,8 @@ public interface PincodeCourierService {
 
     public List<ShipmentServiceType> getShipmentServiceType(Set<CartLineItem> productCartLineItems, boolean checkForCod);
 
+    public List<ShipmentServiceType> getShipmentServiceTypes(List<EnumShipmentServiceType> enumShipmentServiceTypes);
+
     public ShipmentServiceType getShipmentServiceType(ShippingOrder shippingOrder);
 
 
@@ -43,7 +46,7 @@ public interface PincodeCourierService {
 
     public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier);
 
-    public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier);
+//    public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier);
 
     public List<Courier> getApplicableCouriers(Pincode pincode, boolean isCod, boolean isGround, Boolean activeCourier);
 
@@ -60,6 +63,8 @@ public interface PincodeCourierService {
 
 
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
+
+    public boolean changePincodeCourierMapping(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
 
     public Map<String,Boolean> generateDetailedAnalysis(List<PincodeCourierMapping> pincodeCourierMappings);
 

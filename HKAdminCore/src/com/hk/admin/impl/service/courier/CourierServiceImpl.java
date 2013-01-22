@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.courier;
 
+import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.PincodeCourierMappingDao;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -7,7 +8,6 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
-import com.akube.framework.dao.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,8 +45,9 @@ public class CourierServiceImpl implements CourierService {
     public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean active, Long operationBitset) {
         return courierDao.getCouriers(courierIds, courierNames, active, operationBitset);
     }
-    public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationsBitset){
-        return  courierDao.getCouriers(courierName,active,courierGroup,page,perPage, operationsBitset);
+
+    public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationsBitset) {
+        return courierDao.getCouriers(courierName, active, courierGroup, page, perPage, operationsBitset);
     }
 
     public void saveOrUpdate(Courier courier) {
@@ -58,6 +59,12 @@ public class CourierServiceImpl implements CourierService {
     }
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+        List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+        return couriers != null && !couriers.isEmpty() ? couriers.get(0) : null;
+    }
+
+    @Override
+    public List<Courier> getDefaultCouriers(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
         return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
     }
 

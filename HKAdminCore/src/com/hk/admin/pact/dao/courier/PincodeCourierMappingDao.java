@@ -35,6 +35,6 @@ public interface PincodeCourierMappingDao {
 
     PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
-    public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+    public List<Courier> searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
 }

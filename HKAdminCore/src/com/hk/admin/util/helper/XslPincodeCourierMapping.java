@@ -96,28 +96,30 @@ public class XslPincodeCourierMapping {
 
                 pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pincode, Arrays.asList(courier), null, null);
 
-                if(pincodeCourierMapping == null){
-                    pincodeCourierMapping = new PincodeCourierMapping();
-                }
-                pincodeCourierMapping.setPincode(pincode);
-                pincodeCourierMapping.setCourier(courier);
-
                 boolean isPrepaidAir = StringUtils.isNotBlank(prepaidAir) && prepaidAir.trim().toLowerCase().equals("y");
                 boolean isPrepaidGround = StringUtils.isNotBlank(prepaidGround) && prepaidGround.trim().toLowerCase().equals("y");
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
-                boolean isValidMapping = isPrepaidAir || isPrepaidGround || isCodAir || isCodGround;
-                if (isValidMapping) {
-                    pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
-                    pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
-                    pincodeCourierMapping.setCodAir(isCodAir);
-                    pincodeCourierMapping.setCodGround(isCodGround);
-                    pincodeCourierMapping.setRoutingCode(routingCode);
-                    pincodeCourierMappings.add(pincodeCourierMapping);
-                }
-            }
+                boolean isGround = isPrepaidGround || isCodGround;
+                boolean isCod = isCodAir || isCodGround;
+                boolean isValidMapping = isCod && isGround;
 
+//                if (pincodeCourierService.changePincodeCourierMapping(pincode, courier, isGround, isCod)) {
+//                    continue;
+//                }
+                if (pincodeCourierMapping == null && isValidMapping) {
+                    pincodeCourierMapping = new PincodeCourierMapping();
+                }
+                pincodeCourierMapping.setPincode(pincode);
+                pincodeCourierMapping.setCourier(courier);
+                pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
+                pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
+                pincodeCourierMapping.setCodAir(isCodAir);
+                pincodeCourierMapping.setCodGround(isCodGround);
+                pincodeCourierMapping.setRoutingCode(routingCode);
+                pincodeCourierMappings.add(pincodeCourierMapping);
+            }
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + e);
             throw new Exception("Exception @ Row:" + rowCount, e);

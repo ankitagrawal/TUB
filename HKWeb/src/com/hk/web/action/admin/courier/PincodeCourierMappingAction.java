@@ -82,8 +82,10 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution update() {
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
-            boolean isValidMapping = pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodGround();
-            if (isValidMapping) {
+            boolean isGround = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround();
+            boolean isCod = pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodAir();
+            boolean isValidMapping = isCod && isGround;
+            if(pincodeCourierService.changePincodeCourierMapping(pincode,pincodeCourierMapping.getCourier(),isGround,isCod) && isValidMapping){
                 pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         }

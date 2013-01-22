@@ -5,12 +5,16 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.web.HealthkartResponse;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +52,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<PincodeDefaultCourier> pincodeDefaultCouriers;
     private List<PincodeCourierMapping> pincodeCourierMappings;
+    private List<Courier> availableCouriers;
 
     Warehouse warehouse;
     boolean cod;
@@ -75,6 +80,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
             return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
+            availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null,null,true);
             pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
         }
@@ -83,18 +89,18 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     public Resolution save() {
         String error= "",success = "";
-         boolean bool = false;
+         boolean flag = false;
         for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
             if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
                    error += defaultCourier.getCourier().getName() + ",";
-                   bool = true;
+                   flag = true;
             }
           else{
                getBaseDao().save(defaultCourier);
                success += defaultCourier.getCourier().getName() + ",";
             }
         }
-      if(bool){
+      if(flag){
         addRedirectAlertMessage(new SimpleMessage("Mappings for pincode " + pincodeString + " are currently not serviceable for couriers " + error + "<br>Changes Saved Successfully for Couriers " + success ));
         return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
       }

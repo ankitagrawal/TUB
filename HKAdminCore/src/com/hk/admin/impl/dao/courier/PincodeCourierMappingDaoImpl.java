@@ -139,16 +139,17 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         return (PincodeCourierMapping) save(pincodeCourierMapping);
     }
 
-    public Courier searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
-        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+    public List<Courier> searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+        DetachedCriteria pincodeDefaultCourierCriteria = DetachedCriteria.forClass(PincodeDefaultCourier.class);
+        if(warehouse != null){
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
+        }
+        if(pincode != null){
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
+        }
         pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
         pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
-        PincodeDefaultCourier pincodeDefaultCourierObj = (PincodeDefaultCourier) pincodeDefaultCourierCriteria.uniqueResult();
-        if (pincodeDefaultCourierObj != null) {
-            return pincodeDefaultCourierObj.getCourier();
-        }
-        return null;
+
+        return findByCriteria(pincodeDefaultCourierCriteria);
     }
 }
