@@ -52,8 +52,9 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private List<Courier> availableCouriers;
 
     Warehouse warehouse;
-    Boolean cod;
-    Boolean ground;
+    //todo courier can we handle null here to show the whole pincode default courier list?
+    boolean cod;
+    boolean ground;
 
     @Autowired
     PincodeCourierService pincodeCourierService;
@@ -69,7 +70,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
             return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
-            availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null,null,true);
+            availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null, null, true);
             pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
         }
@@ -81,46 +82,45 @@ public class ChangeDefaultCourierAction extends BaseAction {
         boolean flag = false;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
             boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
-            if(!isDefaultCourierApplicable){
+            if (!isDefaultCourierApplicable) {
                 error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
                 flag = true;
             }
-            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping(),pincodeDefaultCourier.getWarehouse());
-            if(pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier())){
+            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
+            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier())) {
                 error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
                 flag = true;
             }
         }
 
-        if(!flag){
+        if (!flag) {
             for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
                 getBaseDao().save(pincodeDefaultCourier);
             }
             addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
             return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
-        } else{
+        } else {
             addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect"));
             return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
         }
     }
 
     @SuppressWarnings("unchecked")
-  public Resolution getPincodeJson(){
+    public Resolution getPincodeJson() {
 
-    HealthkartResponse healthkartResponse = null;
-      Map dataMap = new HashMap();
-     Pincode pincode =  pincodeService.getByPincode(pincodeString);
-      if(pincode!=null){
-        dataMap.put("pincode",pincode);
-        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Pincode",dataMap);
-        noCache();
-      }
-      else{
-        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid PinCode !!!");
-        noCache();
-      }
-    return new JsonResolution(healthkartResponse);
-  }
+        HealthkartResponse healthkartResponse = null;
+        Map dataMap = new HashMap();
+        Pincode pincode = pincodeService.getByPincode(pincodeString);
+        if (pincode != null) {
+            dataMap.put("pincode", pincode);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Pincode", dataMap);
+            noCache();
+        } else {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid PinCode !!!");
+            noCache();
+        }
+        return new JsonResolution(healthkartResponse);
+    }
 
     public Resolution generatePincodeExcel() throws Exception {
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
@@ -200,11 +200,11 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return pincodeDefaultCouriers;
     }
 
-  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
-    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
-  }
+    public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+        this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+    }
 
-  public Warehouse getWarehouse() {
+    public Warehouse getWarehouse() {
         return warehouse;
     }
 
@@ -212,19 +212,19 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.warehouse = warehouse;
     }
 
-    public Boolean getCod() {
+    public boolean isCod() {
         return cod;
     }
 
-    public void setCod(Boolean cod) {
+    public void setCod(boolean cod) {
         this.cod = cod;
     }
 
-    public Boolean getGround() {
+    public boolean isGround() {
         return ground;
     }
 
-    public void setGround(Boolean ground) {
+    public void setGround(boolean ground) {
         this.ground = ground;
     }
 
