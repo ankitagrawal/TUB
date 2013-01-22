@@ -31,7 +31,7 @@ import java.util.*;
  */
 @SuppressWarnings("NullableProblems")
 @Service
-public class PincodeCourierServiceImpl implements PincodeCourierService{
+public class PincodeCourierServiceImpl implements PincodeCourierService {
 
     @Autowired
     PincodeService pincodeService;
@@ -65,7 +65,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
         } else {
             List<ShipmentServiceType> shipmentServiceTypes = shipmentDao.getShipmentServiceTypes(EnumShipmentServiceType.getGroundEnumShipmentServiceTypes());
             return isCourierAvailable(pincode, null, shipmentServiceTypes, true);
-        }        
+        }
     }
 
     @Override
@@ -86,6 +86,11 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     }
 
     @Override
+    public List<ShipmentServiceType> getShipmentServiceTypes(List<EnumShipmentServiceType> enumShipmentServiceTypes) {
+        return shipmentDao.getShipmentServiceTypes(enumShipmentServiceTypes);
+    }
+
+    @Override
     public List<Courier> getAvailableCouriers(Order order) {
         Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean checkForCod = false;
@@ -93,7 +98,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
             checkForCod = order.isCOD();
         }
         List<ShipmentServiceType> applicableShipmentServiceType = getShipmentServiceType(cartLineItems, checkForCod);
-        Pincode pincode =order.getAddress().getPincode();
+        Pincode pincode = order.getAddress().getPincode();
         if (pincode == null) {
             return null;
         }
@@ -120,10 +125,10 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
         }
     }
 
-    @Override
+    /*@Override
     public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, couriers, Arrays.asList(shipmentServiceType), activeCourier);
-    }
+    }*/
 
     @Override
     public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier) {
@@ -132,7 +137,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
 
     @Override
     public List<PincodeCourierMapping> getApplicablePincodeCourierMappingList(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
-        return pincodeCourierMappingDao.getApplicablePincodeCourierMapping(pincode,couriers,Arrays.asList(shipmentServiceType),activeCourier);
+        return pincodeCourierMappingDao.getApplicablePincodeCourierMapping(pincode, couriers, Arrays.asList(shipmentServiceType), activeCourier);
     }
 
     @Override
@@ -157,7 +162,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
 
     @Override
     public PincodeCourierMapping getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
-        List<PincodeCourierMapping> pincodeCourierMappings = getApplicablePincodeCourierMappingList(pincode,couriers,shipmentServiceType,activeCourier);
+        List<PincodeCourierMapping> pincodeCourierMappings = getApplicablePincodeCourierMappingList(pincode, couriers, shipmentServiceType, activeCourier);
         return pincodeCourierMappings != null && !pincodeCourierMappings.isEmpty() ? pincodeCourierMappings.get(0) : null;
     }
 
@@ -184,8 +189,6 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
         return pincodeCourierMappingDao.savePincodeCourierMapping(pincodeCourierMapping);
     }
 
-
-
     @Override
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod) {
         List<Courier> couriers = pincodeCourierMappingDao.getApplicableCouriers(pincode, isCod, isGround, true);
@@ -193,13 +196,19 @@ public class PincodeCourierServiceImpl implements PincodeCourierService{
     }
 
     @Override
+    public boolean changePincodeCourierMapping(Pincode pincode, Courier courier, boolean isGround, boolean isCod) {
+        List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCod, isGround, null);
+        return !(couriers != null && !couriers.isEmpty() && couriers.contains(courier));
+    }
+
+    @Override
     public List<Courier> getApplicableCouriers(Pincode pincode, boolean isCod, boolean isGround, Boolean activeCourier) {
-      return  pincodeCourierMappingDao.getApplicableCouriers(pincode, isCod, isGround, true);
+        return pincodeCourierMappingDao.getApplicableCouriers(pincode, isCod, isGround, true);
     }
 
     @Override
     public List<PincodeCourierMapping> getApplicablePincodeCourierMappingList(Pincode pincode, boolean isCod, boolean isGround, Boolean activeCourier) {
-        return pincodeCourierMappingDao.getApplicablePincodeCourierMapping(pincode,null,Arrays.asList(pincodeCourierMappingDao.getShipmentServiceType(isCod,isGround)),activeCourier);
+        return pincodeCourierMappingDao.getApplicablePincodeCourierMapping(pincode, null, Arrays.asList(pincodeCourierMappingDao.getShipmentServiceType(isCod, isGround)), activeCourier);
     }
   public void delete(PincodeCourierMapping pincodeCourierMapping){
     pincodeCourierMappingDao.delete(pincodeCourierMapping);

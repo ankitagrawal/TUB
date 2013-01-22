@@ -82,13 +82,18 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution update() {
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
-            boolean isValidMapping = pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodGround();
+            boolean isGround = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround();
+            boolean isCod = pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodAir();
+            boolean isValidMapping = isCod && isGround;
           if (pincodeCourierMapping.getId()!=null && !isValidMapping) {
-                pincodeCourierService.delete(pincodeCourierMapping);
-            }
+            pincodeCourierService.delete(pincodeCourierMapping);
+          }
           else if(isValidMapping){
-              pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
-            }
+            pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
+          }
+          if(pincodeCourierService.changePincodeCourierMapping(pincode,pincodeCourierMapping.getCourier(),isGround,isCod) && isValidMapping){
+            pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
+          }
         }
         addRedirectAlertMessage(new SimpleMessage("changes saved in the system !!!!"));
         return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin",pin);

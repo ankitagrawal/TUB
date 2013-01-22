@@ -6,6 +6,7 @@ import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
@@ -48,6 +49,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private Pincode pincode;
     private List<PincodeDefaultCourier> pincodeDefaultCouriers;
     private List<PincodeCourierMapping> pincodeCourierMappings;
+    private List<Courier> availableCouriers;
 
     Warehouse warehouse;
     boolean cod;
@@ -75,6 +77,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
             return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
+            availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null,null,true);
             pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
         }
@@ -82,23 +85,26 @@ public class ChangeDefaultCourierAction extends BaseAction {
     }
 
     public Resolution save() {
-        String error= "",success = "";
-         boolean bool = false;
-        for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
-            if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
-                   error += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
-                   bool = true;
-            }
-          else{
-               getBaseDao().save(defaultCourier);
-               success += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
-            }
+      String error= "",success = "";
+      boolean flag = false;
+      for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
+        if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
+          error += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
+          flag = true;
         }
-      if(bool){
+        else if(defaultCourier.getCourier().getName().equals(pincodeService.searchPincodeDefaultCourier(defaultCourier.getPincode(),defaultCourier.getWarehouse(),defaultCourier.isCod(),defaultCourier.isGroundShipping()).getCourier().getName())){
+          error += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ "is Already present in the Database)-";
+        }
+        else{
+          getBaseDao().save(defaultCourier);
+          success += "(Courier:" + defaultCourier.getCourier().getName() + ",COD:" + defaultCourier.isCod() + ",GroundShipping:" + defaultCourier.isGroundShipping()+ ")-";
+        }
+      }
+      if(flag){
         addRedirectAlertMessage(new SimpleMessage("Mappings for pincode " + pincodeString + " are currently not serviceable for couriers " + error + "<br>Changes Saved Successfully for Couriers " + success ));
         return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
       }
-       return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
+      return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     @SuppressWarnings("unchecked")

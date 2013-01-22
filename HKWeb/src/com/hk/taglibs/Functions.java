@@ -481,7 +481,7 @@ public class Functions {
         PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
         PincodeService pincodeService = ServiceLocatorFactory.getService(PincodeService.class);
         Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
-        return pincodeCourierService.getApplicableCouriers(pincode, null, shippingOrder.getShipment().getShipmentServiceType(), true);
+        return pincodeCourierService.getApplicableCouriers(pincode, null, Arrays.asList(shippingOrder.getShipment().getShipmentServiceType()), true);
     }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {

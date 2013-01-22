@@ -21,6 +21,13 @@
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
             $(document).ready(function(){
+                $('#generatePincodeExcel').click(function(){
+                   var warehouse = $('warehouse').val();
+                    if(warehouse == null || warehouse == ""){
+                        alert("Please Select Warehouse");
+                        return false;
+                    }
+                });
                 $('#search').click(function(){
                     var pincode = $('#pincode').val();
                     if(pincode == "" || pincode == null){
@@ -144,7 +151,7 @@
             <label>IsGround</label>
             <s:checkbox name="ground"/>
             <label>Select WareHouse</label>
-            <s:select name="warehouse">
+            <s:select name="warehouse" id="warehouse">
                 <option value="">--Select--</option>
                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse"
                                            value="id" label="name"/>
@@ -261,6 +268,18 @@
                         </c:if>
                         <br/>
                         </fieldset>
+            <fieldset>
+                <h2>File to Upload
+                    <s:file name="fileBean" size="30"/></h2>
+                <br>
+                <s:submit name="uploadPincodeExcel" value="Upload Courier Excel"/>
+            </fieldset>
+            <div class="clear"></div>
+            <fieldset>
+                <h2>Download Pincode Courier Excel</h2>
+                <br>
+                <s:submit name="generatePincodeExcel" value="Download Courier Excel" id="generatePincodeExcel"/>
+            </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>

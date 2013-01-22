@@ -91,7 +91,7 @@ public class PreferredWarehouseDecider {
         for (Warehouse warehouse : warehouseService.getAllWarehouses()) {
             Sku sku = skuService.getSKU(productVariant, warehouse);
             Double taxIncurred = productVariant.getCostPrice() * sku.getTax().getValue();
-            List<Courier> applicableCouriers = pincodeCourierService.getApplicableCouriers(pincode,null,shipmentServiceType, true);
+            List<Courier> applicableCouriers = pincodeCourierService.getApplicableCouriers(pincode,null,Arrays.asList(shipmentServiceType), true);
 
             Double totalCost = 0D;
             Map<Courier, Double> courierCostingMap = new HashMap<Courier, Double>();
