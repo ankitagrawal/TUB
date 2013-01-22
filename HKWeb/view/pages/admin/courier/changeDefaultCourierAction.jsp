@@ -97,7 +97,7 @@
                             '<td>' + Math.round(nextIndex + 1) + '.</td>' +
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].courier">' +
-                            '<option value="">--Select--</option>' +
+                            '<option value="-1">--Select--</option>' +
                                     <c:forEach items="${cdca.availableCouriers}" var="courier">
                             '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
                                     </c:forEach>
@@ -185,7 +185,7 @@
                             </td>
                             <td>
                                 <s:select name="pincodeDefaultCouriers[${ctr.index}].courier">
-                                    <s:option value="">--Select--</s:option>
+                                    <s:option value="-1">--Select--</s:option>
                                     <c:forEach items="${cdca.availableCouriers}" var="courier">
                                       <s:option value="${courier.id}">${courier.name}</s:option>
                                     </c:forEach>

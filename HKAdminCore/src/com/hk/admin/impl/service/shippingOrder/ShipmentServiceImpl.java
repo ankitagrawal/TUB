@@ -106,23 +106,23 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
         User adminUser = getUserService().getAdminUser();
-        if (shippingOrder.getShipment() != null) {
+        if (shippingOrder.getShipment() == null) {
             Shipment shipment = validateShipment(shippingOrder);
-            shipment.setEmailSent(false);
-            shipment.setShippingOrder(shippingOrder);
-            shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
-            shippingOrder.setShipment(shipment);
-            if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+            if (shipment != null) {
+                shipment.setEmailSent(false);
+                shipment.setShippingOrder(shippingOrder);
+                shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
+                shippingOrder.setShipment(shipment);
+                if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                    shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                    shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                    shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
+                }
+                shippingOrder = shippingOrderService.save(shippingOrder);
+                String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
+                        comment);
             }
-            shippingOrder = shippingOrderService.save(shippingOrder);
-            String trackingId = shipment.getAwb().getAwbNumber();
-            String comment = shipment.getShipmentServiceType().getName() + CourierConstants.SHIPMENT_DETAILS + shipment.getAwb().getCourier().getName() + "/" + trackingId;
-
-            shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
-                    comment);
         }
         return shippingOrder.getShipment();
     }
