@@ -479,7 +479,15 @@ public class FedExCourierUtil {
 
         contactRecip.setPersonName(HKAddress.getName());// ("Recipient Name");
         contactRecip.setCompanyName("");// Recipient Company Name");//("Recipient Company Name");
-        contactRecip.setPhoneNumber(HKAddress.getPhone());// ("1234567890");
+
+		String phoneNo = HKAddress.getPhone();
+		if (phoneNo != null && phoneNo.length() >= 10) {
+			String phoneNoWith10Digits = phoneNo.substring(phoneNo.length() - 10);
+			contactRecip.setPhoneNumber(phoneNoWith10Digits);
+		} else {
+        contactRecip.setPhoneNumber(phoneNo);// ("1234567890");
+		}
+		
         recipient.setContact(contactRecip);
 
         Address addressRecip = new Address();

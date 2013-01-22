@@ -448,4 +448,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		reconciliationList.add(addReconType);
 		return reconciliationList;
 	}
+
+	public List<Courier> getCouriersForDispatchLot() {
+		return courierService.getCouriersForDispatchLot();
+	}
 }
