@@ -98,7 +98,7 @@
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].courier">' +
                             '<option value="">--Select--</option>' +
-                                    <c:forEach items="${allCourier}" var="courier">
+                                    <c:forEach items="${cdca.availableCouriers}" var="courier">
                             '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
                                     </c:forEach>
                             '</select>' +
@@ -184,10 +184,8 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier">
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" value="${cdca.availableCouriers}">
                                     <option value="">--Select--</option>
-                                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
-                                                               value="id" label="name"/>
                                 </s:select>
                             </td>
                             <td>

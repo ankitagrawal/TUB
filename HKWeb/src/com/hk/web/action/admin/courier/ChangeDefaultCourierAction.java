@@ -52,8 +52,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private List<Courier> availableCouriers;
 
     Warehouse warehouse;
-    boolean cod;
-    boolean ground;
+    Boolean cod;
+    Boolean ground;
 
     @Autowired
     PincodeCourierService pincodeCourierService;
@@ -86,7 +86,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 flag = true;
             }
             Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping(),pincodeDefaultCourier.getWarehouse());
-            if(pincodeDefaultCourierDb != null){
+            if(pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier())){
                 error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
                 flag = true;
             }
@@ -212,19 +212,19 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.warehouse = warehouse;
     }
 
-    public boolean isCod() {
+    public Boolean getCod() {
         return cod;
     }
 
-    public void setCod(boolean cod) {
+    public void setCod(Boolean cod) {
         this.cod = cod;
     }
 
-    public boolean isGround() {
+    public Boolean getGround() {
         return ground;
     }
 
-    public void setGround(boolean ground) {
+    public void setGround(Boolean ground) {
         this.ground = ground;
     }
 
@@ -234,5 +234,13 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
         this.pincodeCourierMappings = pincodeCourierMappings;
+    }
+
+    public List<Courier> getAvailableCouriers() {
+        return availableCouriers;
+    }
+
+    public void setAvailableCouriers(List<Courier> availableCouriers) {
+        this.availableCouriers = availableCouriers;
     }
 }

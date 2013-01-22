@@ -62,7 +62,7 @@ public class XslPincodeParser {
         Set<Pincode> pincodeSet = new HashSet<Pincode>();
 
         int rowCount = 1;
-        ExcelSheetParser excel = new ExcelSheetParser(objInFile.getAbsolutePath(), "Pincode", true);
+        ExcelSheetParser excel = new ExcelSheetParser(objInFile.getAbsolutePath(), "PincodeInfo", true);
         Iterator<HKRow> rowiterator = excel.parse();
 
         try {

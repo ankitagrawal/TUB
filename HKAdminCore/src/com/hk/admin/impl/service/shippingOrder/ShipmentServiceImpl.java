@@ -29,8 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.List;
 
 @SuppressWarnings("NullableProblems")
 @Service
@@ -59,80 +60,61 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Autowired
     AdminEmailManager adminEmailManager;
 
+    public Shipment validateShipment(ShippingOrder shippingOrder) {
+        Order order = shippingOrder.getBaseOrder();
+        User adminUser = getUserService().getAdminUser();
+        Pincode pincode = order.getAddress().getPincode();
+        Zone zone = pincode.getZone();
+
+        List<String> reasons = new ArrayList<String>();
+
+        ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+        boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
+        boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
+
+        Courier suggestedCourier = pincodeCourierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
+        Awb suggestedAwb = null;
+        Double weight = 0D;
+        if (suggestedCourier == null) {
+            reasons.add(CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
+        } else {
+            //todo courier need to handle replacement order ka rto courier
+            if (!pincodeCourierService.isCourierAvailable(pincode, null, Arrays.asList(shipmentServiceType), true)) {
+                reasons.add(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
+            }
+            weight = getEstimatedWeightOfShipment(shippingOrder);
+            //todo courier if it is fetched for fedex, need to delete it for fedex
+            suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weight);
+            if (suggestedAwb == null) {
+                reasons.add(CourierConstants.AWB_NOT_ASSIGNED);
+            }
+        }
+
+        for (String reason : reasons) {
+            shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
+                    reason);
+            adminEmailManager.sendNoShipmentEmail(reason, shippingOrder, shippingOrder.getBaseOrder());
+        }
+        Shipment validShipment = null;
+        if (reasons.isEmpty()) {
+            validShipment = new Shipment();
+            validShipment.setAwb(suggestedAwb);
+            validShipment.setBoxWeight(weight);
+            validShipment.setShipmentServiceType(shipmentServiceType);
+            validShipment.setZone(zone);
+        }
+        return validShipment;
+    }
+
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
+        User adminUser = getUserService().getAdminUser();
         if (shippingOrder.getShipment() == null) {
-
-            Order order = shippingOrder.getBaseOrder();
-            User adminUser = getUserService().getAdminUser();
-            Pincode pincode = order.getAddress().getPincode();
-
-            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-            boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
-            boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
-
-            Courier suggestedCourier = pincodeCourierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
-            Zone zone = pincode.getZone();
-
-/*
-        if(shippingOrder instanceof ReplacementOrder){
-            ShippingOrder parentShippingOrder = ((ReplacementOrder) shippingOrder).getRefShippingOrder();
-            if(((ReplacementOrder) shippingOrder).isRto()){
-                ReplacementOrderReason replacementOrderReason = getAdminShippingOrderService().getRTOReasonForShippingOrder(parentShippingOrder);
-                if(replacementOrderReason != null){
-                    if(EnumReplacementOrderReason.getCourierRelatedReasonForRto().contains(replacementOrderReason.getId())){
-                        if(suggestedCourier != null && parentShippingOrder.getShipment().getAwb().getCourier().getId().equals(suggestedCourier.getId())){
-                        }
-                    }
-                }
-            }
-*/
-
-            if (suggestedCourier == null) {
-                shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                        CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
-                adminEmailManager.sendNoShipmentEmail(CourierConstants.SUGGESTED_COURIER_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
-                return null;
-            } else {
-                if (!pincodeCourierService.isCourierAvailable(pincode, null, Arrays.asList(shipmentServiceType), true)) {
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
-                            CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
-                    adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
-                }
-            }
-
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                if (lineItem.getSku().getProductVariant().getProduct().isDropShipping()) {
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser,
-                            EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), CourierConstants.DROP_SHIPPED_ORDER);
-                    return null;
-                }
-            }
-
-            Double weightInKg = getEstimatedWeightOfShipment(shippingOrder);
-            Awb suggestedAwb = attachAwbToShipment(suggestedCourier, shippingOrder, weightInKg);
-
-            // If we dont have AWB , shipment will not be created
-            if (suggestedAwb == null) {
-                String msg = CourierConstants.AWB_NOT_ASSIGNED + suggestedCourier.getName();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                        msg);
-                if (!(ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId()))) {
-                    adminEmailManager.sendAwbStatusEmail(suggestedCourier, shippingOrder);
-                }
-                return null;
-            }
-
-
-            Shipment shipment = new Shipment();
+            Shipment shipment = validateShipment(shippingOrder);
             shipment.setEmailSent(false);
-            shipment.setAwb(suggestedAwb);
             shipment.setShippingOrder(shippingOrder);
-            shipment.setBoxWeight(weightInKg);
             shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
-            shipment.setShipmentServiceType(shipmentServiceType);
             shippingOrder.setShipment(shipment);
-            shipment.setZone(zone);
             if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
                 shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                 shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
@@ -140,7 +122,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
             String trackingId = shipment.getAwb().getAwbNumber();
-            String comment = shipmentServiceType.getName() + CourierConstants.SHIPMENT_DETAILS + shipment.getAwb().getCourier().getName() + "/" + trackingId;
+            String comment = shipment.getShipmentServiceType().getName() + CourierConstants.SHIPMENT_DETAILS + shipment.getAwb().getCourier().getName() + "/" + trackingId;
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
                     comment);
@@ -161,7 +143,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Transactional
-    private Awb attachAwbToShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
+    private Awb fetchAwbForShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
         boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
         Awb suggestedAwb;
@@ -176,11 +158,20 @@ public class ShipmentServiceImpl implements ShipmentService {
         return suggestedAwb;
     }
 
+    @Transactional
+    private Awb attachAwbForShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
+        Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
+        if (suggestedAwb != null) {
+            suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
+        }
+        return suggestedAwb;
+    }
+
     @Override
     public Shipment changeCourier(Shipment shipment, Courier newCourier, boolean preserveAwb) {
         ShippingOrder shippingOrder = shipment.getShippingOrder();
         Awb currentAwb = shipment.getAwb();
-        Awb suggestedAwb = attachAwbToShipment(newCourier, shippingOrder, shipment.getBoxWeight());
+        Awb suggestedAwb = attachAwbForShipment(newCourier, shippingOrder, shipment.getBoxWeight());
         if (suggestedAwb != null) {
             shipment.setAwb(suggestedAwb);
             shipment = save(shipment);

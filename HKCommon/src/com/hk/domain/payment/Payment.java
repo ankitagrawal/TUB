@@ -83,6 +83,8 @@ public class Payment implements java.io.Serializable {
     @Column(name = "email", length = 80)
     private String        email;
 
+    //todo billing address ka FK
+
     @Column(name = "billing_address_actual", length = 65535)
     private String        billingAddressActual;
 
