@@ -2,6 +2,7 @@ package com.hk.manager.payment;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
+import com.hk.domain.user.BillingAddress;
 import com.paypal.sdk.profiles.APIProfile;
 import com.paypal.sdk.profiles.ProfileFactory;
 import com.paypal.sdk.core.nvp.NVPEncoder;
@@ -102,7 +103,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
     }
 
 
-    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, Address address, String merchantTxnId, String amount , Country country) {
+    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, BillingAddress address, String merchantTxnId, String amount , Country country) {
         encoder.add("RETURNURL", return_url);
         encoder.add("CANCELURL", cancel_url);
         encoder.add("NOSHIPPING", "1");
@@ -127,7 +128,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
             encoder.add("PAYMENTREQUEST_0_SHIPTOSTATE", address.getState());
 //      Countrycode need to be discuss
             encoder.add("PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE", country.getCountryCode());
-            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPincode().getPincode());
+            encoder.add("PAYMENTREQUEST_0_SHIPTOZIP", address.getPin());
             encoder.add("EMAIL", user.getEmail());
             encoder.add("PAYMENTREQUEST_0_SHIPTOPHONENUM", address.getPhone());
         }
