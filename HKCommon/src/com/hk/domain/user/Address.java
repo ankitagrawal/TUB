@@ -61,8 +61,9 @@ public class Address implements java.io.Serializable {
   @Column(name = "deleted", nullable = false, length = 30)
   private Boolean deleted;
 
-  @Column(name = "country_id",nullable = false, length = 6)
-  private Long countryId = 80L;
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "country_id")
+  private Country country;
 
 
   @JsonSkip
@@ -173,25 +174,25 @@ public class Address implements java.io.Serializable {
   public Boolean isDeleted() {
     return deleted;
   }
-  
+
   public Boolean getDeleted() {
-      return deleted;
-    }
+    return deleted;
+  }
 
 
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
 
-    public Long getCountryId() {
-        return countryId;
-    }
+  public Country getCountry() {
+    return country;
+  }
 
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
-    }
-    
-    @Override
+  public void setCountry(Country country) {
+    this.country = country;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Address)) return false;

@@ -11003,4 +11003,40 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-3">
+        <addColumn tableName="billing_address">
+            <column name="pincode" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-4">
+        <addColumn tableName="payment">
+            <column name="billing_address_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-20">
+        <dropForeignKeyConstraint baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_base_order1"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-21">
+        <dropForeignKeyConstraint baseTableName="base_order_has_billing_address" constraintName="fk_base_order_has_billing_address_billing_address1"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-22">
+        <dropForeignKeyConstraint baseTableName="billing_address" constraintName="fk_billing_address_user1"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-27">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="address" constraintName="fk_address_country1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="country" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-31">
+        <addForeignKeyConstraint baseColumnNames="billing_address_id" baseTableName="payment" constraintName="fk_payment_billing_address1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="billing_address_id" referencedTableName="billing_address" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-37">
+        <dropColumn columnName="user_id" tableName="billing_address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-38">
+        <dropTable tableName="base_order_has_billing_address"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1358866023333-30">
+        <dropColumn columnName="billing_address_actual" tableName="payment"/>
+    </changeSet>
 </databaseChangeLog>
