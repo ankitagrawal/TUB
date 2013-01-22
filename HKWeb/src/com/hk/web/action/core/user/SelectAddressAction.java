@@ -54,7 +54,9 @@ public class SelectAddressAction extends BaseAction {
 
 	 // @Validate(required = true)
     private Order order;
-   
+
+    private boolean printAlert;
+
 	  //@ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
@@ -82,7 +84,7 @@ public class SelectAddressAction extends BaseAction {
             }
         }
 
-        return new ForwardResolution("/pages/addressBook.jsp");
+        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert",printAlert);
 
     }
 
@@ -183,4 +185,15 @@ public class SelectAddressAction extends BaseAction {
         this.roleService = roleService;
     }
 
+  public boolean isPrintAlert() {
+    return printAlert;
+  }
+
+  public boolean getPrint(){
+    return printAlert;
+  }
+
+  public void setPrintAlert(boolean printAlert) {
+    this.printAlert = printAlert;
+  }
 }

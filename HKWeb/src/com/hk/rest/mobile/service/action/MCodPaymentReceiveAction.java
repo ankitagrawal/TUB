@@ -1,28 +1,8 @@
 package com.hk.rest.mobile.service.action;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.BaseUtils;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -50,6 +30,23 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.ga.GAUtil;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Secure
 @Path("/mPayment")
@@ -79,7 +76,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
     OrderLoggingService orderLoggingService;
 
 	@Autowired
-	private CourierService courierService;
+	private PincodeCourierService pincodeCourierService;
 	@Autowired
 	private OrderManager orderManager;
 	@Autowired
@@ -160,9 +157,9 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 			String gatewayOrderId = payment.getGatewayOrderId();
 
 			Address address = order.getAddress();
-			String pin = address != null ? address.getPin() : null;
+			String pin = address != null ? address.getPincode().getPincode() : null;
 
-			if (!getCourierService().isCodAllowed(pin)) {
+			if (!pincodeCourierService.isCodAllowed(pin)) {
                 message = MHKConstants.COD_NOT_IN_PINCODE + pin;
                 status = MHKConstants.STATUS_ERROR;
                 return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(status, message, status));
@@ -213,8 +210,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 
             Long paymentStatusId = payment.getPaymentStatus() != null ? payment.getPaymentStatus().getId() : null;
 
-//            logger.info("payment success page payment status " + paymentStatusId);
-
             order = payment.getOrder();
             pricingDto = new PricingDto(order.getCartLineItems(), payment.getOrder().getAddress());
 
@@ -228,63 +223,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
                 couponCode = coupon.getCode() + "@" + offerInstance.getId();
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
-
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-/*
-            RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
-            RewardPoint prepayRewardPoints;
-            EnumRewardPointStatus rewardPointStatus;
-
-            //HttpServletRequest httpRequest = WebContext.getRequest();
-            //HttpServletResponse httpResponse = WebContext.getResponse();
-            if (request.getCookies() != null) {
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.codConverterID)) {
-                        if (cookie.getValue() != null && CryptoUtil.decrypt(cookie.getValue()).equalsIgnoreCase(order.getId().toString())) {
-                            if (rewardPointService.findByReferredOrderAndRewardMode(order, prepayOfferRewardPoint) == null) {
-                                if (EnumPaymentMode.getPrePaidPaymentModes().contains(order.getPayment().getPaymentMode().getId())) {
-                                    rewardPointStatus = EnumRewardPointStatus.APPROVED;
-                                } else {
-                                    rewardPointStatus = EnumRewardPointStatus.PENDING;
-                                }
-                                DecimalFormat df = new DecimalFormat("#.##");
-                                Double cashBack = Double.valueOf(df.format(order.getPayment().getAmount() * cashBackPercentage));
-                                prepayRewardPoints = rewardPointService.addRewardPoints(order.getUser(), null, order, cashBack, "Prepay Offer", rewardPointStatus, prepayOfferRewardPoint);
-                                referrerProgramManager.approveRewardPoints(Arrays.asList(prepayRewardPoints), new DateTime().plusMonths(3).toDate());
-                            }
-                            Set<CartLineItem>
-                                    codCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.CodCharges).filter();
-                            CartLineItem codCartLineItem = codCartLineItems != null && !codCartLineItems.isEmpty() ? codCartLineItems.iterator().next() : null;
-                            if (codCartLineItems != null && !codCartLineItems.isEmpty() && codCartLineItem != null) {
-                                Double applicableCodCharges = 0D;
-                                applicableCodCharges = codCartLineItem.getHkPrice() - codCartLineItem.getDiscountOnHkPrice();
-                                order.setAmount(order.getAmount() - (applicableCodCharges));
-                                Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-                                if (shippingOrders != null) {
-                                    for (ShippingOrder shippingOrder : shippingOrders) {
-                                        shippingOrderService.nullifyCodCharges(shippingOrder);
-                                        shipmentService.recreateShipment(shippingOrder);
-                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                                    }
-                                }
-                                Set<CartLineItem> cartLineItems = order.getCartLineItems();
-                                cartLineItems.removeAll(codCartLineItems);
-                                getBaseDao().deleteAll(codCartLineItems);
-                                order.getCartLineItems().addAll(cartLineItems);
-                                order = orderService.save(order);
-                                orderLoggingService.logOrderActivity(order, EnumOrderLifecycleActivity.Cod_Conversion);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            //Resetting value and expiring cookie
-            Cookie wantedCODCookie = new Cookie(HealthkartConstants.Cookie.codConverterID, "false");
-            wantedCODCookie.setPath("/");
-            wantedCODCookie.setMaxAge(0);
-            response.addCookie(wantedCODCookie);
-*/       
         }
 
     }
@@ -310,14 +249,6 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 
 	public void setCodContactPhone(String codContactPhone) {
 		this.codContactPhone = codContactPhone;
-	}
-
-	public CourierService getCourierService() {
-		return courierService;
-	}
-
-	public void setCourierService(CourierService courierService) {
-		this.courierService = courierService;
 	}
 
 	public OrderManager getOrderManager() {

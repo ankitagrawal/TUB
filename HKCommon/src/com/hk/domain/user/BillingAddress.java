@@ -19,13 +19,13 @@ import java.io.Serializable;
 public class BillingAddress extends Address implements Serializable {
 
   @Column(name = "pincode", nullable = false)
-  private String pincode;
+  private String pin;
 
-  public String getPincode() {
-    return pincode;
+  public String getPin() {
+    return pin;
   }
 
-  public void setPincode(String pincode) {
-    this.pincode = pincode;
+  public void setPin(String pin) {
+    this.pin = pin;
   }
 }

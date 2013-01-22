@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.order.Order;
+import com.hk.domain.core.City;
 import com.hk.domain.core.Country;
 import com.hk.pact.dao.BaseDao;
 
@@ -35,5 +37,4 @@ public interface AddressDao extends BaseDao {
     public List<Country> getAllCountry();
 
     public Country getCountry(Long countryId);
-
 }

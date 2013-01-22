@@ -648,18 +648,6 @@ public class OrderServiceImpl implements OrderService {
         this.orderLoggingService = orderLoggingService;
     }
 
-    // todo ankit, there should be one and only method to which you will pass order --- completed on AdminOrderService
-    // this function not in use
-    /*
-     * public boolean isCODAllowed(Order order) { CartLineItemFilter cartLineItemFilter = new
-     * CartLineItemFilter(order.getCartLineItems()); Set<CartLineItem> productCartLineItems =
-     * cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter(); for (CartLineItem
-     * productCartLineItem : productCartLineItems) { ProductVariant productVariant =
-     * productCartLineItem.getProductVariant(); if (productVariant != null && productVariant.getProduct() != null) {
-     * Product product = productVariant.getProduct(); if (product.isCodAllowed() != null && !product.isCodAllowed()) {
-     * return false; } } } return true; }
-     */
-
     public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
         Order baseOrder = serviceCartLineItem.getOrder();
         Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
@@ -766,7 +754,9 @@ public class OrderServiceImpl implements OrderService {
                 orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
             }
             for (ShippingOrder shippingOrder : shippingOrders) {
-                shipmentService.createShipment(shippingOrder);
+                if (!shippingOrder.isDropShipping()) {
+                    shipmentService.createShipment(shippingOrder);
+                }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {

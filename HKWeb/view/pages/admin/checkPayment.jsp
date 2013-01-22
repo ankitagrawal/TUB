@@ -109,7 +109,7 @@
             ${address.name}<br/>
             ${address.line1}<br/>
           <c:if test="${address.line2 != null}">${address.line2}</c:if>
-            ${address.city} - ${address.pin}<br/>
+            ${address.city} - ${address.pincode.pincode}<br/>
             ${address.state}<br/>
           Ph. ${address.phone}
         </li>

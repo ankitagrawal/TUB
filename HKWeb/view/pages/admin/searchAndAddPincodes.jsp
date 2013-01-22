@@ -6,27 +6,174 @@
 	<s:useActionBean beanclass="com.hk.web.action.admin.courier.MasterPincodeAction" var="mpaBean"/>
 	<s:layout-component name="heading">
 		Search and Add Pincode
+        <script type="text/javascript">
+            $('document').ready(function(){
+                $('#search').click(function(){
+                   var pincode = $('#pincodeString').val();
+                    if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
+                        alert("Pincode Value can't be left Empty or Must contain numbers and length must be 6!!");
+                        $('#pincodeString').val("");
+                        return false;
+                    }
+                });
+                $('#save').click(function(){
+                   var pincode   = $('#pincode').val();
+                   var region    = $('#region').val();
+                   var locality  = $('#locality').val();
+                   var city      = $('#city').val();
+                   var state     = $('#state').val();
+                   var zone      = $('#zone').val();
+                    if(pincode == null || pincode == "" || isNaN(pincode) || pincode.length!=6){
+                        alert("pincode can't be empty or must contain numbers only and length must be 6!!");
+                        $('#pincode').val("");
+                        return false;
+                    }
+                    if(region == null || region == "" || locality == null || locality == ""){
+                        alert("Value can't be left empty!!");
+                        return false;
+                    }
+                    if(city == null || city == "" || state == null || state == "" || zone == null || zone == ""){
+                       alert("City, State and Zone must be selected !!");
+                       return false;
+                    }
+                    $('#savePincodeString').attr('val',pincode);
+                });
+            });
+        </script>
 	</s:layout-component>
 	<s:layout-component name="content">
-		<h2>Total Pincodes in System = ${mpaBean.pincodesInSystem}</h2>
-
-
-
       <fieldset class="right_label">
         <legend>Search Pincode</legend>
-
 			<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
 							<br/><br/>
 				<s:text name="pincodeString" id="pincodeString" style="width:200px;"/>
-				<script language=javascript type=text/javascript>
-					$('#pincodeString').focus();
-				</script>
 				<br/>
 				<br/>
-				<s:submit name="search" value="Search"/>
-        <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
-			</s:form>
+				<s:submit name="search" value="Search" id="search"/>
+			 </s:form>
         </fieldset>
+        <div style="display:inline-block;">
+            <h2 style="color:red;">Pincode once saved can't be edit</h2>
+       <fieldset style="float:left;">
+         <legend>Add Pincode Or Edit Pincode Details</legend>
+			<table>
+				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
+                    <s:hidden name="pincodeString" value="${mpaBean.pincode.pincode}" id="savePincodeString" />
+					<tr>
+						<td>Pincode:</td>
+                        <td>
+                        <c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.pincode}
+                        </c:when>
+                         <c:otherwise>
+                             <s:text name="pincode" id="pincode" maxlength="6"/>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+                    <tr>
+						<td>Region:</td>
+                        <td>
+						<c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.region}
+                        </c:when>
+                         <c:otherwise>
+                             <s:text name="pincode.region" id="region"/>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+					<tr>
+						<td>Locality:</td>
+                        <td>
+						<c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.locality}
+                        </c:when>
+                         <c:otherwise>
+                             <s:text name="pincode.locality" id="locality"/>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+					<tr>
+						<td>City:</td>
+                        <td>
+                       <c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.city.name}
+                        </c:when>
+                         <c:otherwise>
+                             <s:select name="pincode.city" id="city">
+                               <s:option value="">--Select--</s:option>
+                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="cityList"
+                                               value="id" label="name"/>
+                             </s:select>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+					<tr>
+						<td>State:</td>
+						 <td>
+                       <c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.state.name}
+                        </c:when>
+                         <c:otherwise>
+                             <s:select name="pincode.state" id="state">
+                               <s:option value="">--Select--</s:option>
+                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList"
+                                               value="id" label="name"/>
+                             </s:select>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+					<tr>
+						<td>
+							<label>Zone:</label>
+								</td>
+						 <td>
+                       <c:choose>
+                        <c:when test="${mpaBean.pincode!=null}">
+						${mpaBean.pincode.zone.name}
+                        </c:when>
+                         <c:otherwise>
+                             <s:select name="pincode.zone" id="zone">
+                               <s:option value="">--Select--</s:option>
+                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allZones"
+                                               value="id" label="name"/>
+                             </s:select>
+                         </c:otherwise>
+                        </c:choose>
+                        </td>
+					</tr>
+					<tr>
+                        <c:if test="${mpaBean.pincode==null}">
+						<td><s:submit name="save" value="Save" id="save"/></td>
+                        </c:if>
+					</tr>
+				</s:form>
+			</table>
+          </fieldset>
+       <fieldset style="float:left;">
+			<table align="center" class="cont"> Available Courier Services:
+				<c:forEach items="${mpaBean.applicableShipmentServices}" var="applicableShipmentService" varStatus="ctr">
+					<tr>
+						<td>
+						${applicableShipmentService.key}
+                        </td>
+						<td>
+						${applicableShipmentService.value}
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+          </fieldset>
+		</div>
        <fieldset class="right_label">
     	   <legend>Upload Pincode List</legend>
          <ul>
@@ -40,92 +187,12 @@
 
 							<s:submit name="uploadPincodeExcel" value="Upload"/>
             <br/>
-             (Worksheet Name: PincodeInfo &nbsp&nbsp&nbsp 6 Fields: PINCODE &nbspCITY &nbspSTATE &nbspREGION &nbspLOCALITY &nbspDEFAULT_COURIER_ID &nbspZONE)</li>
+             (Worksheet Name: PincodeInfo &nbsp;&nbsp;&nbsp; 5 Fields: PINCODE &nbsp;CITY &nbsp;STATE &nbsp;REGION &nbsp;LOCALITY &nbsp;ZONE)</li>
+                    <br>
+                    <s:submit name="generatePincodeExcel"    value="Download Pincode Xls"/>
 					</s:form>
 			</ul>
           </fieldset>
-		<div style="display:inline-block;">
-       <fieldset style="float:left;">
-         <legend>Add Pincode Or Edit Picode Details</legend>
-			<table>
-				<s:form beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">
-					<s:hidden name="pincode.id" value="${mpaBean.pincode.id}"/> 					
-					<tr>
-						<td>Pincode:</td>
-						<td><s:text name="pincode.pincode" value="${mpaBean.pincode.pincode}"/></td>
-					</tr>
-                    <tr>
-						<td>Region:</td>
-						<td><s:text name="pincode.region" value="${mpaBean.pincode.region}"/></td>
-					</tr>
-					<tr>
-						<td>Locality:</td>
-						<td><s:text name="pincode.locality" value="${mpaBean.pincode.locality}"/></td>
-					</tr>
-					<tr>
-						<td>City:</td>
-						<%--<td><s:text name="pincode.city.id" value="${mpaBean.pincode.city.id}"/></td>--%>
-                        <td><s:select name="pincode.city.id" value="${mpaBean.pincode.city.id}">
-							<s:option value="">-Select-</s:option>
-						 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="cityList" value="id" label="name"/>
-						</s:select></td>
-
-					</tr>
-					<tr>
-						<td>State:</td>
-						<td><s:select name="pincode.state.id" value="${mpaBean.pincode.state.id}">
-							<s:option value="">-Select-</s:option>
-						 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList" value="id" label="name"/>
-						</s:select></td>
-					</tr>
-          <tr>
-						<td>Default Courier:</td>
-						<td><s:select name="pincode.defaultCourier" value="${mpaBean.pincode.defaultCourier.id}">
-							<s:option value="">-Select-</s:option>
-              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id" label="name"/>
-
-						</s:select></td>
-					</tr>
-					<tr>
-						<td>
-							<label>Zone:</label>
-								</td>
-						<td>
-								<s:select name="pincode.zone">
-								<s:option value="null">Select</s:option>
-									<hk:master-data-collection service="<%=MasterDataDao.class%>"
-									                           serviceProperty="allZones"
-									                           value="id"
-									                           label="name"/>
-								</s:select>
-						</td>
-					</tr>
-					<tr>
-						<td><s:submit name="save" value="Save"/></td>
-					</tr>
-				</s:form>
-			</table>
-          </fieldset>
-       <fieldset style="float:left;">
-			<table align="center" class="cont"> Available Courier Services corresponding to the entered Pincode:
-				<thead>
-				<tr>
-					<th>Courier Service</th>
-					<th>Cod Available</th>
-				</tr>
-				</thead>
-				<c:forEach items="${mpaBean.courierServiceList}" var="courierServiceList" varStatus="ctr">
-					<tr>
-						<td>${courierServiceList.courier.name}</td>
-						<td>
-							<c:if test="${courierServiceList.codAvailable}">Y</c:if>
-							<c:if test="${!courierServiceList.codAvailable}">N</c:if>
-						</td>
-					</tr>
-				</c:forEach>
-			</table>
-          </fieldset>
-		</div>
 		<div>
 			<fieldset style="display:inline-block;width:250px; padding:7px;">
 			<legend>Click Link To Add PRZ</legend>

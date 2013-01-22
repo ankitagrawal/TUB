@@ -151,9 +151,19 @@ public enum EnumShippingOrderStatus {
 	            EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus());
     }
 
-    public static List<Long> getStatusForSearchOrderAndEnterCourierInfo() {
-           return Arrays.asList(EnumShippingOrderStatus.SO_Packed.asShippingOrderStatus().getId(),
-                   EnumShippingOrderStatus.SO_CheckedOut.asShippingOrderStatus().getId());
+    public static List<EnumShippingOrderStatus> getStatusForShipmentResolution() {
+        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
+                EnumShippingOrderStatus.SO_OnHold,
+                EnumShippingOrderStatus.SO_ReadyForProcess,
+                EnumShippingOrderStatus.SO_MarkedForPrinting,
+                EnumShippingOrderStatus.SO_Packed,
+                EnumShippingOrderStatus.SO_CheckedOut);
+    }
+
+
+    public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
+           return Arrays.asList(EnumShippingOrderStatus.SO_Packed,
+                   EnumShippingOrderStatus.SO_CheckedOut);
        }
 
     public static List<EnumShippingOrderStatus> getStatusForEnteringShippingCost() {

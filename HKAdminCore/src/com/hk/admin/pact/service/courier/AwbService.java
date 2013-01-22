@@ -29,8 +29,6 @@ public interface AwbService {
 
     public Awb getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
-//    public Awb save(Awb awb);
-
     public List<Awb> getAllAwb();
 
     public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
@@ -45,11 +43,11 @@ public interface AwbService {
 
     public boolean deleteAwbForThirdPartyCourier(Courier courier, String awbNumber);
 
-    public void removeAwbForShipment(Courier courier, Awb awb);
+    public void preserveAwb(Awb awb);
 
     public void delete(Awb awb);
 
-	public Object save(Awb awb, Integer newStatus);
+	public Awb save(Awb awb, Integer newStatus);
 
     public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
 

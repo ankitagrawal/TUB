@@ -285,7 +285,7 @@
                     <c:if test="${not empty address.line2}">
                         ${address.line2},
                     </c:if>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}, <span class="upc">INDIA</span><br/>
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>

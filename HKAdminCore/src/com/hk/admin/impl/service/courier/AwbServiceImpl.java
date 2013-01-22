@@ -51,7 +51,7 @@ public class AwbServiceImpl implements AwbService {
 				thirdPartyAwbDetails.setCod(false);
 			}
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
-            thirdPartyAwbService.syncHKCourierServiceInfo(courierId, thirdPartyAwbDetails);
+            thirdPartyAwbService.syncHKCourierServiceInfo(courier, thirdPartyAwbDetails);
 
             return hkAwb;
         }
@@ -66,20 +66,16 @@ public class AwbServiceImpl implements AwbService {
         return thirdPartyAwbService.deleteThirdPartyAwb(awbNumber);
     }
 
-    public void removeAwbForShipment(Courier courier, Awb awb){
-
-        if(ThirdPartyAwbService.integratedCouriers.contains(courier.getId())){
-           deleteAwbForThirdPartyCourier(courier, awb.getAwbNumber());
-               //awbDao.delete(awb);
-        }
-        else{
-//           awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-//           awbDao.save(awb);
-	     save(awb,EnumAwbStatus.Unused.getId().intValue());
+    public void preserveAwb(Awb awb) {
+        Courier courier = awb.getCourier();
+        if (ThirdPartyAwbService.integratedCouriers.contains(courier.getId())) {
+            deleteAwbForThirdPartyCourier(courier, awb.getAwbNumber());
+        } else {
+            save(awb, EnumAwbStatus.Unused.getId().intValue());
         }
     }
 
-	public Object save(Awb awb, Integer newStatus) {
+    public Awb save(Awb awb, Integer newStatus) {
 	return awbDao.save(awb,newStatus);
 	}
 

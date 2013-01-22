@@ -39,18 +39,19 @@ public class ChangeOrderAddressAction extends BaseAction {
     @Validate(required = true)
     private Order               order;
 
-    @Validate(required = true, on = "replace")
-    private Address             address;
+
+    private Address             newAddress;
 
     @ValidateNestedProperties( {
+            @Validate(required = true, on = "replace"),
             @Validate(field = "name", maxlength = 80, required = true, on = { "save" }),
             @Validate(field = "line1", maxlength = 120, required = true, on = { "save" }),
             @Validate(field = "line2", maxlength = 120, on = { "save" }),
             @Validate(field = "city", maxlength = 60, required = true, on = { "save" }),
             @Validate(field = "state", maxlength = 50, required = true, on = { "save" }),
-            @Validate(field = "pin", maxlength = 10, required = true, on = { "save" }),
+            @Validate(field = "pincode", maxlength = 6, required = true, on = { "save" }),
             @Validate(field = "phone", maxlength = 25, required = true, on = { "save" }) })
-    private Address             newAddress;
+    private Address             address;
 
     private boolean             copyToUserAddressBook;
 
@@ -73,29 +74,28 @@ public class ChangeOrderAddressAction extends BaseAction {
     }
 
     public Resolution edit() {
-        newAddress = order.getAddress();
+        address = order.getAddress();
         return new ForwardResolution("/pages/admin/editAddress.jsp");
     }
 
     public Resolution save() {
+      if(address.getPincode()==null){
+        addRedirectAlertMessage(new SimpleMessage("We don't service to this pincode!!"));
+        return new RedirectResolution(ChangeOrderAddressAction.class).addParameter("order", order.getId());
+      }
         if (copyToUserAddressBook) {
-            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), this.newAddress); 
-        } else {
-            if (address == null) {
-                address = order.getAddress();
-            }
-            boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
-            if (!isDuplicateAddress) {
-	            newAddress.setUser(order.getUser());
-                newAddress = addressDao.save(newAddress);
-            }
+            newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), address);
         }
         if (newAddress != null) {
             order.setAddress(newAddress);
             orderDao.save(order);
             addRedirectAlertMessage(new LocalizableMessage("/ChangeOrderAddress.action.address.edited"));
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Duplicate address, it has been used in a different HK account too."));
+          address.setUser(order.getUser());
+          address = addressDao.save(address);
+          order.setAddress(address);
+          orderDao.save(order);
+          addRedirectAlertMessage(new LocalizableMessage("/ChangeOrderAddress.action.address.edited"));
         }
         return new RedirectResolution(ChangeOrderAddressAction.class).addParameter("order", order.getId());
     }

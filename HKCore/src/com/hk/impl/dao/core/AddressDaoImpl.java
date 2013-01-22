@@ -3,9 +3,10 @@ package com.hk.impl.dao.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.domain.core.City;
+import com.hk.domain.core.Pincode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,6 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
-import com.hk.domain.order.Order;
 import com.hk.domain.core.Country;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
@@ -91,8 +91,8 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a) {
-        String hqlQuery = "select a from Address a " + "where a.pin=:pin and a.phone=:phone and a.user <> :user";
-        return getSession().createQuery(hqlQuery).setParameter("pin", a.getPin()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
+        String hqlQuery = "select a from Address a " + "where a.pincode=:pin and a.phone=:phone and a.user <> :user";
+        return getSession().createQuery(hqlQuery).setParameter("pin", a.getPincode()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
     }
 
     // public List<Address> getVisibleAddressesFromAddressList(List<Address> addressList)
@@ -134,5 +134,4 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public Country getCountry(Long countryId) {
         return get(Country.class, countryId);
     }
-          
 }

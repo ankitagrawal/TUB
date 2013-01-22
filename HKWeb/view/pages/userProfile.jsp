@@ -235,7 +235,7 @@
 
             <p>${address.city}</p>
 
-            <p>${address.state} ${address.pin}</p>
+            <p>${address.state} ${address.pincode.pincode}</p>
 
             <p>Phone: ${address.phone}</p>
           </div>
