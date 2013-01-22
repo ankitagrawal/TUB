@@ -222,7 +222,7 @@
           <div class='label'>State<span class="aster">*</span></div>
           <s:text name="address.state" maxlength = "50"/>
            <div class='label'>Country<span class="aster">*</span></div>
-          <s:select name="address.countryId" style="width:310px;">
+          <s:select name="countryId" style="width:310px;">
               <s:option value="">-select-</s:option>
               <c:forEach items="${countryList}" var="country">
                   <s:option value="${country.id}">${country.name}</s:option>
@@ -235,7 +235,8 @@
             <%--</s:select>--%>
 
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pincode" class="pincode" maxlength="20"/>
+          <s:text name="pin" class="pincode" maxlength="20"/>
+          <s:hidden name="address.pincode" value="999999"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>

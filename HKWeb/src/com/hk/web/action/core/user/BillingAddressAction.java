@@ -14,6 +14,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentAction;
 import net.sourceforge.stripes.action.*;
+import com.hk.domain.core.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -51,6 +52,8 @@ public class BillingAddressAction extends BaseAction {
     private BillingAddress selectedAddress;
     private BillingAddress address;
     private Long billingAddressId;
+    private Long countryId;
+    private String pin;
     private Issuer issuer;
 
     @DefaultHandler
@@ -70,7 +73,6 @@ public class BillingAddressAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         if (billingAddressId != null) {
             deleteAddress = addressDao.getBillingAddressById(billingAddressId);
-            deleteAddress.setUser(user);
             deleteAddress.setDeleted(true);
             addressDao.save(deleteAddress);
             return new RedirectResolution(BillingAddressAction.class);
@@ -89,7 +91,6 @@ public class BillingAddressAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
-            selectedAddress.setUser(user);
             addressDao.save(selectedAddress);
             return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
         } else {
@@ -107,6 +108,9 @@ public class BillingAddressAction extends BaseAction {
             return new RedirectResolution(CartAction.class);
         }
         address.setUser(user);
+        Country country = addressDao.getCountry(countryId);
+        address.setCountry(country);
+        address.setPin(pin);
         address = addressDao.save(address);
         return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddress", address);
     }
@@ -203,5 +207,22 @@ public class BillingAddressAction extends BaseAction {
     public void setIssuer(Issuer issuer) {
         this.issuer = issuer;
     }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
+
+  public String getPin() {
+    return pin;
+  }
+
+  public void setPin(String pin) {
+    this.pin = pin;
+  }
 }
+
 
