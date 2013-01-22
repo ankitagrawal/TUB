@@ -84,14 +84,20 @@ public class MasterPincodeAction extends BaseAction {
 
     public Resolution save() {
         Pincode dbPincode = pincodeService.getByPincode(pincodeString);
-        pincode = pincodeService.save(pincode);
         if (dbPincode != null && !dbPincode.getCity().equals(pincode.getCity())) {
+            pincode = pincodeService.save(pincode);
             pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincode);
+            addRedirectAlertMessage(new SimpleMessage("Assigned Region Zone !!!!"));
             return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeString", pincode.getPincode());
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Pincode changes saved "));
-            return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
+        } else if(dbPincode==null){
+          pincode = pincodeService.save(pincode);
+          addRedirectAlertMessage(new SimpleMessage("Pincode changes saved Successfully"));
+          return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
+          }
+          else {
         }
+            addRedirectAlertMessage(new SimpleMessage("Pincode already exist in the Database!!!"));
+            return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
     }
 
     public Resolution generatePincodeExcel() throws Exception {
@@ -146,6 +152,9 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
+  public Resolution directToPincodeRegionZone(){
+    return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+  }
     public Resolution savePincodeRegionList() {
         for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
             pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
