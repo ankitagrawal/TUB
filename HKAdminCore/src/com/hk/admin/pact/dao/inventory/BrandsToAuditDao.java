@@ -11,7 +11,7 @@ import com.hk.domain.inventory.BrandsToAudit;
 
 public interface BrandsToAuditDao extends BaseDao {
 
-    public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+    public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage, Long auditStatus);
 
     public List<String> brandsToBeAudited(Warehouse warehouse);
 

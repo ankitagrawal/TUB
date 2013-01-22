@@ -22,26 +22,30 @@ import com.hk.impl.dao.BaseDaoImpl;
 @Repository
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
 
-	public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
-		DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-		if (StringUtils.isNotBlank(brand) ) {
-			auditCriteria.add(Restrictions.eq("brand", brand));
-		}
-		if (warehouse != null) {
-			auditCriteria.add(Restrictions.eq("warehouse", warehouse));
-		}
-		if (auditor != null) {
-			auditCriteria.add(Restrictions.eq("auditor", auditor));
-		}
-		if (startDate != null && endDate != null) {
-			auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
-		}
-		auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-		return list(auditCriteria, pageNo, perPage);
+    public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage, Long auditStatus) {
+         DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
+         if (StringUtils.isNotBlank(brand) ) {
+             auditCriteria.add(Restrictions.eq("brand", brand));
+         }
+         if (warehouse != null) {
+             auditCriteria.add(Restrictions.eq("warehouse", warehouse));
+         }
+         if (auditor != null) {
+             auditCriteria.add(Restrictions.eq("auditor", auditor));
+         }
+         if (startDate != null && endDate != null) {
+             auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
+         }
+         if(auditStatus != null){
+             auditCriteria.add(Restrictions.eq("auditStatus",auditStatus));
+         }
+        /*auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));*/
+         auditCriteria.addOrder(org.hibernate.criterion.Order.desc("auditDate"));
+         return list(auditCriteria, pageNo, perPage);
 
-	}
+     }
 
-	public List<String> brandsToBeAudited(Warehouse warehouse) {
+    public List<String> brandsToBeAudited(Warehouse warehouse) {
 		String queryString = "select distinct lower(trim(ba.brand)) from BrandsToAudit ba where ba.warehouse = :warehouse and ba.auditStatus = :auditStatus";
 		return (List<String>) findByNamedParams(queryString, new String[]{"warehouse", "auditStatus"}, new Object[]{warehouse, EnumAuditStatus.Pending.getId()});
 	}
