@@ -47,7 +47,7 @@
 			    data: form.serialize(),
 			    success: function( resp ) {
 			    	$( "#" + form.context.id + ' input' ).attr('class', 'btn btn-success');
-			    	$( "#" + form.context.id + ' input' ).attr('value', 'Added to Cart >>');
+			    	$( "#" + form.context.id + ' input' ).attr('value', 'Added to Cart »');
 			    	$( "#" + form.context.id + ' input' ).disabled = true;
 			    }
 			  });
