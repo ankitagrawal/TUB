@@ -11171,4 +11171,10 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham" id="22-01-2013-01">
+        <sql>
+            update courier set active = 1 where active = 0;
+            update courier set active = 0 where active = -1;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

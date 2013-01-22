@@ -16,12 +16,18 @@
     Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
+    Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
 
 
     if (isActionQueue != null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isDropShipQueue != null) {
+        pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
+    } else {
+        pageContext.setAttribute("isDropShipQueue", false);
     }
     Boolean showCourier = (Boolean) pageContext.getAttribute("showCourier");
     if (showCourier != null) {
@@ -505,9 +511,9 @@
         </c:otherwise>
     </c:choose>
 </td>
-<c:if test="${hasAction == true}">
+<c:if test="${hasAction == true || isDropShipQueue == true}">
     <td>
-        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending  || shippingOrder.shipment == null}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </td>

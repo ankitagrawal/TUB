@@ -134,7 +134,7 @@
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                   shippingOrders="${shipmentQueueBean.shippingOrderList}"/>
+                   shippingOrders="${shipmentQueueBean.shippingOrderList}" isDropShipQueue="true"/>
 
   <div id="hiddenShippingIds"></div>
   <div>
@@ -143,9 +143,10 @@
   </div>
   <div style="display:inline;float:left;">
       <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting}">
-    <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
-    <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
-              value="Re-Assign for process" style="display:none;"/>
+          <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
+          <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
+                    value="Re-Assign for process" style="display:none;"/>
+          <s:submit name="markShippingOrdersAsShipped" class="shippingOrderActionBtn" value="Mark Order as Shipped"/>
       </c:if>
       <br>
       <br>
