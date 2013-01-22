@@ -18,6 +18,8 @@ public interface ProductService {
 
     public List<Product> getProductByCategory(String category);
 
+    public List<Product> getProductByCategories(List<String> categoryNames);
+
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
      * 
