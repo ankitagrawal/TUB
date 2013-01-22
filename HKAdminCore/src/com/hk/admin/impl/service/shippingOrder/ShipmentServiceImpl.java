@@ -106,7 +106,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public Shipment createShipment(ShippingOrder shippingOrder) {
         User adminUser = getUserService().getAdminUser();
-        if (shippingOrder.getShipment() == null) {
+        if (shippingOrder.getShipment() != null) {
             Shipment shipment = validateShipment(shippingOrder);
             shipment.setEmailSent(false);
             shipment.setShippingOrder(shippingOrder);
