@@ -15,6 +15,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -161,6 +162,14 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     @Override
     public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
         return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+    }
+
+    @Override
+    public Courier getDefaultCourier(ShippingOrder shippingOrder) {
+        ShipmentServiceType shipmentServiceType = getShipmentServiceType(shippingOrder);
+        boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
+        boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
+        return getDefaultCourier(shippingOrder.getBaseOrder().getAddress().getPincode(), isCod, isGround, shippingOrder.getWarehouse());
     }
 
     @Override

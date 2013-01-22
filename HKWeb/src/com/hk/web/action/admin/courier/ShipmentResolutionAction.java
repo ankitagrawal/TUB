@@ -4,8 +4,10 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.courier.EnumAwbStatus;
+import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,6 +73,8 @@ public class ShipmentResolutionAction extends BaseAction {
     CourierGroupService courierGroupService;
     @Autowired
     private ShipmentPricingEngine shipmentPricingEngine;
+    @Autowired
+    CourierService courierService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -123,7 +128,12 @@ public class ShipmentResolutionAction extends BaseAction {
     }
 
     public Resolution generateAWB() {
-        applicableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
+        if(shippingOrder.isDropShipping()){
+            applicableCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
+        }else{
+            applicableCouriers = Arrays.asList(pincodeCourierService.getDefaultCourier(shippingOrder));
+//        applicableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
+        }
         return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp").addParameter("shippingOrder", shippingOrder.getId());
     }
 

@@ -61,18 +61,15 @@ public class ShipmentServiceImpl implements ShipmentService {
     AdminEmailManager adminEmailManager;
 
     public Shipment validateShipment(ShippingOrder shippingOrder) {
-        Order order = shippingOrder.getBaseOrder();
         User adminUser = getUserService().getAdminUser();
-        Pincode pincode = order.getAddress().getPincode();
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         Zone zone = pincode.getZone();
 
         List<String> reasons = new ArrayList<String>();
 
         ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
-        boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
-        boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
 
-        Courier suggestedCourier = pincodeCourierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
+        Courier suggestedCourier = pincodeCourierService.getDefaultCourier(shippingOrder);
         Awb suggestedAwb = null;
         Double weight = 0D;
         if (suggestedCourier == null) {
