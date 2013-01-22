@@ -85,7 +85,7 @@ public class ShipmentResolutionAction extends BaseAction {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForShipmentResolution()));
-        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
+        shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
         if (shippingOrderList.isEmpty()) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));

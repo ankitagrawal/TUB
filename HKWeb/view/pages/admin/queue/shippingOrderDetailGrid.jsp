@@ -218,10 +218,6 @@
             </shiro:hasAnyRoles>
         </c:if>
 
-        <c:if test="${shippingOrder.dropShipping}">
-             <h7> Drop Ship Product</h7>
-         </c:if>
-
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
@@ -416,7 +412,10 @@
                             <span style="margin-left:10px;color: #ff0000;">(A)</span>
                         </c:otherwise>
                     </c:choose>
-                <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
+                    <c:if test="${shippingOrder.dropShipping}">
+                        <span style="margin-left:10px;color: #ff0000;">(D)</span>
+                    </c:if>
+                    <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
 
                     <c:set var="TH" value="TH"/>
                     <c:set var="THBF" value="THBF"/>
@@ -513,7 +512,7 @@
 </td>
 <c:if test="${hasAction == true || isDropShipQueue == true}">
     <td>
-        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending  || shippingOrder.shipment == null}">
+        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending  && shippingOrder.shipment != null}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </td>
