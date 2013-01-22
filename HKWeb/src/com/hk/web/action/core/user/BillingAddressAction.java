@@ -112,7 +112,7 @@ public class BillingAddressAction extends BaseAction {
         address.setCountry(country);
         address.setPin(pin);
         address = addressDao.save(address);
-        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddress", address);
+        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
     }
 
 
