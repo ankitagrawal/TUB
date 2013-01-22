@@ -57,14 +57,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     @Autowired
     PincodeCourierService pincodeCourierService;
-    /*
-    search by pincode --> get 8 entries  --> plus show all available PDC mapping (related to
-    update either of those 8 entries
-    add a new entry
-    @validation method, that new/update entry should be in pincode courier mapping
-    download/upload pincode default courier excel
-    now when i add/update PDC, i have cod/ground, i see in PCM, if for pin, for respective cod && ground, entry exists or not
-     */
 
     @DefaultHandler
     public Resolution pre() {
@@ -78,30 +70,38 @@ public class ChangeDefaultCourierAction extends BaseAction {
             return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
             availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null,null,true);
-            pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
+            pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
             pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
         }
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
     public Resolution save() {
-        String error= "",success = "";
-         boolean flag = false;
-        for (PincodeDefaultCourier defaultCourier : pincodeDefaultCouriers) {
-            if (!pincodeCourierService.isDefaultCourierApplicable(pincode, defaultCourier.getCourier(), defaultCourier.isGroundShipping(), defaultCourier.isCod())) {
-                   error += defaultCourier.getCourier().getName() + ",";
-                   flag = true;
+        String error = "";
+        boolean flag = false;
+        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+            boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
+            if(!isDefaultCourierApplicable){
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
+                flag = true;
             }
-          else{
-               getBaseDao().save(defaultCourier);
-               success += defaultCourier.getCourier().getName() + ",";
+            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(),pincodeDefaultCourier.isGroundShipping(),pincodeDefaultCourier.getWarehouse());
+            if(pincodeDefaultCourierDb != null){
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
+                flag = true;
             }
         }
-      if(flag){
-        addRedirectAlertMessage(new SimpleMessage("Mappings for pincode " + pincodeString + " are currently not serviceable for couriers " + error + "<br>Changes Saved Successfully for Couriers " + success ));
-        return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString);
-      }
-       return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
+
+        if(!flag){
+            for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+                getBaseDao().save(pincodeDefaultCourier);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
+        } else{
+            addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect"));
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -123,7 +123,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
   }
 
     public Resolution generatePincodeExcel() throws Exception {
-        pincodeDefaultCouriers = pincodeService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
+        pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
 

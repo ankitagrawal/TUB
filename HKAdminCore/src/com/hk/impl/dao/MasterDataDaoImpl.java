@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
-import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.constants.courier.*;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -27,9 +27,6 @@ import com.hk.cache.RoleCache;
 import com.hk.cache.vo.RoleVO;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
-import com.hk.constants.courier.CourierConstants;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -451,6 +448,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<Courier> getCouriersForDispatchLot() {
         return courierService.getCouriers(null, null, null, EnumCourierOperations.DISPATCH_LOT.getId());
+    }
+
+    public List<EnumCourierChangeReason> getAllCourierChangeReason(){
+        return EnumCourierChangeReason.getAllCourierChangeReasons();
     }
 
     public List<Warehouse> getAllWarehouse() {

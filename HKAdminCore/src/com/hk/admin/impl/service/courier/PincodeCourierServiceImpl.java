@@ -8,13 +8,11 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.PincodeCourierMapping;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.ShipmentServiceType;
+import com.hk.domain.courier.*;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,6 +159,29 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     }
 
     @Override
+    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
+        return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+    }
+
+    @Override
+    public PincodeDefaultCourier createPincodeDefaultCourier(Pincode pincode, Courier courier, Warehouse warehouse, boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost) {
+        PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
+        pincodeDefaultCourier.setPincode(pincode);
+        pincodeDefaultCourier.setCourier(courier);
+        pincodeDefaultCourier.setWarehouse(warehouse);
+        pincodeDefaultCourier.setGroundShipping(isGroundShippingAvailable);
+        pincodeDefaultCourier.setCod(isCODAvailable);
+        pincodeDefaultCourier.setEstimatedShippingCost(estimatedShippingCost);
+        return pincodeDefaultCourier;
+    }
+
+    @Override
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+        List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
+        return couriers != null && !couriers.isEmpty() ? couriers.get(0) : null;
+    }
+
+    @Override
     public PincodeCourierMapping getApplicablePincodeCourierMapping(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
         List<PincodeCourierMapping> pincodeCourierMappings = getApplicablePincodeCourierMappingList(pincode, couriers, shipmentServiceType, activeCourier);
         return pincodeCourierMappings != null && !pincodeCourierMappings.isEmpty() ? pincodeCourierMappings.get(0) : null;
@@ -190,9 +211,25 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     }
 
     @Override
+    public void deletePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
+        pincodeCourierMappingDao.deletePincodeCourierMapping(pincodeCourierMapping);
+    }
+
+    @Override
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod) {
         List<Courier> couriers = pincodeCourierMappingDao.getApplicableCouriers(pincode, isCod, isGround, true);
         return couriers != null && !couriers.isEmpty() && couriers.contains(courier);
+    }
+
+    @Override
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGround) {
+        return pincodeCourierMappingDao.searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
+    }
+
+    @Override
+    public PincodeDefaultCourier getPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGround) {
+        List<PincodeDefaultCourier> pincodeDefaultCouriers = searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGround);
+        return pincodeDefaultCouriers != null && !pincodeDefaultCouriers.isEmpty() ? pincodeDefaultCouriers.get(0) : null;
     }
 
     @Override

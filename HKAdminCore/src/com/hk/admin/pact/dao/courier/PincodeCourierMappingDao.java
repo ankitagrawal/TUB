@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -36,5 +37,12 @@ public interface PincodeCourierMappingDao {
     PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
     public List<Courier> searchDefaultCourier(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse);
+
+    public void deletePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
+
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
+
+    public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
+
 
 }

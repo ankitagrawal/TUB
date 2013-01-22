@@ -24,25 +24,6 @@ public class PincodeServiceImpl implements PincodeService {
         return getPincodeDao().getByPincode(pincode);
     }
 
-    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
-        return getPincodeDao().searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
-    }
-
-    public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
-        return getPincodeDao().searchPincodeDefaultCourier(pincode, warehouse, isCod, isGroundshipping);
-    }
-
-    public PincodeDefaultCourier createPincodeDefaultCourier(Pincode pincode, Courier courier, Warehouse warehouse, boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost) {
-        PincodeDefaultCourier pincodeDefaultCourier = new PincodeDefaultCourier();
-        pincodeDefaultCourier.setPincode(pincode);
-        pincodeDefaultCourier.setCourier(courier);
-        pincodeDefaultCourier.setWarehouse(warehouse);
-        pincodeDefaultCourier.setGroundShipping(isGroundShippingAvailable);
-        pincodeDefaultCourier.setCod(isCODAvailable);
-        pincodeDefaultCourier.setEstimatedShippingCost(estimatedShippingCost);
-        return pincodeDefaultCourier;
-    }
-
     public Zone getZoneByName(String zoneName) {
         return getPincodeDao().getZoneByName(zoneName);
     }

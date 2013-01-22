@@ -71,7 +71,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             boolean isCod = ShipmentServiceMapper.isCod(shipmentServiceType);
             boolean isGround = ShipmentServiceMapper.isGround(shipmentServiceType);
 
-            Courier suggestedCourier = courierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
+            Courier suggestedCourier = pincodeCourierService.getDefaultCourier(pincode, isCod, isGround, shippingOrder.getWarehouse());
             Zone zone = pincode.getZone();
 
 /*

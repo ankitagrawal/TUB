@@ -2,6 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.courier.EnumCourierChangeReason;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -165,6 +166,5 @@ public interface MasterDataDao
 
   public List<EnumBoxSize> getAllBoxSize();
 
-	public List<Courier> getCouriersForDispatchLot();
-
+  public List<EnumCourierChangeReason> getAllCourierChangeReason();
 }

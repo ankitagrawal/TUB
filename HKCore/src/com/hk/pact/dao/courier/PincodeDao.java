@@ -14,10 +14,6 @@ public interface PincodeDao extends BaseDao {
 
     public Pincode getByPincode(String pincode);
 
-    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
-
-    public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping);
-
 	public Zone getZoneByName(String zoneName);
 
     public List<Pincode> getPincodeNotInPincodeRegionZone();

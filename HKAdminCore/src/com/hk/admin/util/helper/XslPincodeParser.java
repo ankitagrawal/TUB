@@ -254,7 +254,7 @@ public class XslPincodeParser {
                     throw new HealthkartCheckedException("the default courier being updated is not yet serviceable for the mentioned conditions at row " + rowCount);
                 }
 
-                PincodeDefaultCourier pincodeDefaultCourier = pincodeService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
+                PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
                         isCODAvailable, Double.valueOf(estimatedShippingCost));
                 pincodeDefaultCouriers.add(pincodeDefaultCourier);
                 rowCount++;

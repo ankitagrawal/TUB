@@ -19,11 +19,6 @@ public interface CourierService {
 
     public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean active, Long operationBitset);
 
-
-    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
-
-    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse);
-
     public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationsBitset);
 
     public void saveOrUpdate(Courier courier);

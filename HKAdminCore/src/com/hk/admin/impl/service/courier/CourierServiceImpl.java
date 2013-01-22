@@ -4,9 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.PincodeCourierMappingDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,17 +54,6 @@ public class CourierServiceImpl implements CourierService {
 
     public List<Courier> getAllCouriers() {
         return getCourierDao().getAll(Courier.class);
-    }
-
-    @Override
-    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
-        List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
-        return couriers != null && !couriers.isEmpty() ? couriers.get(0) : null;
-    }
-
-    @Override
-    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
-        return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
     }
 
     public CourierDao getCourierDao() {

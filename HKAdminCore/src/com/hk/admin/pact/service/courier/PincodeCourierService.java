@@ -4,10 +4,12 @@ import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.warehouse.Warehouse;
 
 import java.util.List;
 import java.util.Map;
@@ -61,11 +63,21 @@ public interface PincodeCourierService {
 
     public PincodeCourierMapping savePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
+    public void deletePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping);
 
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
+
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGround);
+
+    public PincodeDefaultCourier getPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGround);
 
     public boolean changePincodeCourierMapping(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
 
     public Map<String,Boolean> generateDetailedAnalysis(List<PincodeCourierMapping> pincodeCourierMappings);
 
+    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse);
+
+    public PincodeDefaultCourier createPincodeDefaultCourier(Pincode pincode, Courier courier, Warehouse warehouse, boolean isGroundShippingAvailable, boolean isCODAvailable, Double estimatedShippingCost);
+
+    public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 }

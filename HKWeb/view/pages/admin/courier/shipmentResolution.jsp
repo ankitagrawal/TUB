@@ -26,7 +26,7 @@
                var reasoning = $('#reasoning').val();
                var updateCourier = $('#updateCourier').val();
                 if(reasoning == null || reasoning == ""){
-                    alert("You must mention a reason to change Courier");
+                    alert("You must Select a reason to change Courier");
                     return false;
                 }
                 if(updateCourier == null || updateCourier == ""){
@@ -144,7 +144,11 @@
                   </c:forEach>
               </s:select>
                <br><br>
-              Reason for Changing the courier<s:text name="reasoning" id="reasoning"/>
+               Select Reason for Changing the courier
+               <s:select name="reasoning" id="reasoning">
+                   <s:option value="">-------Select-------</s:option>
+                   <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCourierChangeReason" value="name" label="name"/>
+                </s:select>
                <br><br>
               Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
                <br>

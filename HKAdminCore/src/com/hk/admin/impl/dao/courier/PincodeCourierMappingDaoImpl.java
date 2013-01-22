@@ -13,6 +13,8 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,21 +142,32 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         return (PincodeCourierMapping) save(pincodeCourierMapping);
     }
 
-    public List<Courier> searchDefaultCourier(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
-        DetachedCriteria pincodeDefaultCourierCriteria = DetachedCriteria.forClass(PincodeDefaultCourier.class);
-        if (warehouse != null) {
+    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
+
+        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
+
+        if (warehouse != null && StringUtils.isNotBlank(Long.toString(warehouse.getId()))) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
         }
-        if (pincode != null) {
+        if (pincode != null && StringUtils.isNotBlank(pincode.getPincode())) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
         }
-        if(isCOD != null){
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
+        if (isCod != null) {
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCod));
         }
-        if(isGroundShipping != null){
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
+        if (isGroundshipping != null) {
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundshipping));
         }
-        List<PincodeDefaultCourier> pincodeDefaultCouriers = findByCriteria(pincodeDefaultCourierCriteria);
+        return pincodeDefaultCourierCriteria.list();
+    }
+
+    public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
+        List<PincodeDefaultCourier> pincodeDefaultCouriers = searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
+        return pincodeDefaultCouriers.isEmpty() ? null : pincodeDefaultCouriers.get(0);
+    }
+
+    public List<Courier> searchDefaultCourier(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
+        List<PincodeDefaultCourier> pincodeDefaultCouriers = searchPincodeDefaultCourierList(pincode, warehouse, isCOD, isGroundShipping);
 
         List<Courier> courierList = new ArrayList<Courier>();
         if (pincodeDefaultCouriers != null && pincodeDefaultCouriers.size() > 0) {
@@ -163,5 +176,9 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
             }
         }
         return courierList;
+    }
+
+    public void deletePincodeCourierMapping(PincodeCourierMapping pincodeCourierMapping) {
+        delete(pincodeCourierMapping);
     }
 }

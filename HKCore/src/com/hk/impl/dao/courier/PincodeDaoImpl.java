@@ -26,30 +26,6 @@ public class PincodeDaoImpl extends BaseDaoImpl implements PincodeDao {
         return (Pincode) findUniqueByNamedParams(queryString, new String[]{"pincode"}, new Object[]{pincode});
     }
 
-    public List<PincodeDefaultCourier> searchPincodeDefaultCourierList(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
-
-        Criteria pincodeDefaultCourierCriteria = getSession().createCriteria(PincodeDefaultCourier.class);
-
-        if (warehouse != null && StringUtils.isNotBlank(Long.toString(warehouse.getId()))) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
-        }
-        if (pincode != null && StringUtils.isNotBlank(pincode.getPincode())) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
-        }
-        if (isCod != null) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCod));
-        }
-        if (isGroundshipping != null) {
-            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundshipping));
-        }
-        return pincodeDefaultCourierCriteria.list();
-    }
-
-    public PincodeDefaultCourier searchPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGroundshipping) {
-        List<PincodeDefaultCourier> pincodeDefaultCouriers = searchPincodeDefaultCourierList(pincode, warehouse, isCod, isGroundshipping);
-        return pincodeDefaultCouriers.isEmpty() ? null : pincodeDefaultCouriers.get(0);
-    }
-
 	public Zone getZoneByName(String zoneName) {
 		zoneName = zoneName.trim();
 		DetachedCriteria zoneCriteria = DetachedCriteria.forClass(Zone.class);
