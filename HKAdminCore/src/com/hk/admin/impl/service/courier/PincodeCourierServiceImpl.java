@@ -125,10 +125,10 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
         }
     }
 
-    @Override
+    /*@Override
     public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, ShipmentServiceType shipmentServiceType, Boolean activeCourier) {
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, couriers, Arrays.asList(shipmentServiceType), activeCourier);
-    }
+    }*/
 
     @Override
     public List<Courier> getApplicableCouriers(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier) {
