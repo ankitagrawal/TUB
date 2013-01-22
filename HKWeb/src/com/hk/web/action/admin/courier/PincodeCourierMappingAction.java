@@ -73,7 +73,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
-        availableCouriers = courierService.getDefaultCouriers(pincode, null, null, null);
+//        availableCouriers = courierService.getDefaultCouriers(pincode, null, null, null);
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
