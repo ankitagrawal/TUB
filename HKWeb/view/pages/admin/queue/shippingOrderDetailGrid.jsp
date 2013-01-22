@@ -170,7 +170,7 @@
 
          <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
            (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="pre" target="_blank">
-            <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/>
+            <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
             Create Shipment
         </s:link>)
         </c:if>
@@ -211,7 +211,7 @@
         </s:link>)
             <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
-                                     class="resolveShipment">
+                                     class="resolveShipment" target="_blank">
                 <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
                 Resolve Shipment
             </s:link>)

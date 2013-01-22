@@ -2,6 +2,8 @@ package com.hk.impl.service.order;
 
 import java.util.*;
 
+import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -756,6 +758,9 @@ public class OrderServiceImpl implements OrderService {
             for (ShippingOrder shippingOrder : shippingOrders) {
                 if (!shippingOrder.isDropShipping()) {
                     shipmentService.createShipment(shippingOrder);
+                } else {
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
+                            CourierConstants.DROP_SHIPPED_ORDER);
                 }
             }
             // auto escalate shipping orders if possible
