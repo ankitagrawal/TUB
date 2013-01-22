@@ -1,5 +1,6 @@
 package com.hk.web.action.core.accounting;
 
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -108,7 +109,8 @@ public class SOInvoiceAction extends BaseAction {
 			if (StringUtils.isNotBlank(awbBarCode)) {
 				barcodeGenerator.getBarcodePath(awbBarCode, 2.0f, 200, true);
 			}
-            if (ShipmentServiceMapper.isCod(shipment.getShipmentServiceType())) {
+            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+            if (ShipmentServiceMapper.isCod(shipmentServiceType)) {
 				String codReturnBarCode = awb.getReturnAwbBarCode();
 				if (StringUtils.isNotBlank(codReturnBarCode)) {
 					barcodeGenerator.getBarcodePath(codReturnBarCode, 2.0f, 200, true);
@@ -164,7 +166,7 @@ public class SOInvoiceAction extends BaseAction {
                     }
                 }
             }
-			if (ShipmentServiceMapper.isGround(shipment.getShipmentServiceType())) {
+			if (ShipmentServiceMapper.isGround(pincodeCourierService.getShipmentServiceType(shippingOrder))) {
 				setGroundShipped(true);
 			}
              if (shipmentService.isShippingOrderHasInstallableItem(shippingOrder)){

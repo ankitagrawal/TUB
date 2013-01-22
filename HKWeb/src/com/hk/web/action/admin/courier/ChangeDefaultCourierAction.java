@@ -100,7 +100,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
             return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
         } else {
-            addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect"));
+            addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect" + error));
             return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
         }
     }

@@ -5,12 +5,14 @@ import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -84,6 +86,9 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     ShippingOrderService shippingOrderService;
 
     @Autowired
+    PincodeCourierService pincodeCourierService;
+
+    @Autowired
     CourierGroupService courierGroupService;
 
     @Autowired
@@ -134,7 +139,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     weight = lineItem.getSku().getProductVariant().getWeight();
                 }
             }
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shippingOrder.getShipment().getShipmentServiceType())), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shippingOrder.getShipment().getShipmentServiceType())));
+            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
         }

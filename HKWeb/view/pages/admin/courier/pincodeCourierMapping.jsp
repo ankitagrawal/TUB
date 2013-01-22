@@ -129,7 +129,7 @@
                     <tr>
                         <th>S.No.</th>
                         <th>Courier Name</th>
-                        <th>Courier Disable</th>
+                        <th>Courier Active</th>
                         <th>Prepaid Air</th>
                         <th>Prepaid Ground</th>
                         <th>COD Air</th>
