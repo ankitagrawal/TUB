@@ -215,14 +215,14 @@ public class CycleCountAction extends BasePaginatedAction {
 					skuGroupListResult.add(skuGroupCheckBrand);
 				} else {
 					error = true;
-					message = hkBarcode + " does not belong to brand";
+					message = hkBarcode + "  ->  does not belong to brand";
 					return skuGroupListResult;
 				}
 
 			}
 		} else {
 			error = true;
-			message = "Invalid Hk Barcode  " + hkBarcode;
+			message =  hkBarcode +"  ->  Invalid Hk Barcode " ;
 		}
 		return skuGroupListResult;
 	}
@@ -383,10 +383,9 @@ public class CycleCountAction extends BasePaginatedAction {
 			}
 			if (hkBarcodeErrorsMap.size() > 0) {
 				error = true;
-				message = "";
-				String newLine = FormatUtils.lineSeperator;
+				message = "";			
 				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
-					message = message + hkBarcodeErrorsMap.get(hkBarcode) + newLine;
+					message = message + hkBarcodeErrorsMap.get(hkBarcode) + "   ,   ";
 				}
 			}
 		} catch (IOException e) {
@@ -395,7 +394,7 @@ public class CycleCountAction extends BasePaginatedAction {
 		}
 		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", error);
 	}
-
+	                                                                  	
 
 	private String getStringFromMap(Map<Long, Integer> cycleCountPVImap) {
 		StringBuilder stringBuilder = new StringBuilder();
