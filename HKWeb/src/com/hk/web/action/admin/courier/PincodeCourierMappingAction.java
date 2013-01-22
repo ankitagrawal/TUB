@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.helper.XslPincodeCourierMapping;
 import com.hk.constants.core.Keys;
@@ -40,6 +41,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     List<Courier> courierList;
     Courier updateCourier;
     List<PincodeCourierMapping> pincodeCourierMappings;
+    List<Courier> availableCouriers;
     Map<String, Boolean> applicableShipmentServices = new HashMap<String, Boolean>();
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -56,6 +58,9 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Autowired
     PincodeCourierService pincodeCourierService;
 
+    @Autowired
+    CourierService courierService;
+
     private static Logger logger = LoggerFactory.getLogger(PincodeCourierMappingAction.class);
 
 
@@ -68,6 +73,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
+        availableCouriers = courierService.getDefaultCouriers(pincode, null, null, null);
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
@@ -85,12 +91,12 @@ public class PincodeCourierMappingAction extends BaseAction {
             boolean isGround = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround();
             boolean isCod = pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodAir();
             boolean isValidMapping = isCod && isGround;
-            if(pincodeCourierService.changePincodeCourierMapping(pincode,pincodeCourierMapping.getCourier(),isGround,isCod) && isValidMapping){
+            if (pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod) && isValidMapping) {
                 pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         }
         addRedirectAlertMessage(new SimpleMessage("changes saved in the system !!!!"));
-        return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin",pin);
+        return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin", pin);
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
@@ -189,11 +195,19 @@ public class PincodeCourierMappingAction extends BaseAction {
         this.pin = pin;
     }
 
-  public Map<String, Boolean> getApplicableShipmentServices() {
-    return applicableShipmentServices;
-  }
+    public Map<String, Boolean> getApplicableShipmentServices() {
+        return applicableShipmentServices;
+    }
 
-  public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
-    this.applicableShipmentServices = applicableShipmentServices;
-  }
+    public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
+        this.applicableShipmentServices = applicableShipmentServices;
+    }
+
+    public List<Courier> getAvailableCouriers() {
+        return availableCouriers;
+    }
+
+    public void setAvailableCouriers(List<Courier> availableCouriers) {
+        this.availableCouriers = availableCouriers;
+    }
 }

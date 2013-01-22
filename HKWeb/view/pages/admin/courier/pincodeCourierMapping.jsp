@@ -46,7 +46,7 @@
                             '<td>' +
                             '<select class="addCouriers" name="pincodeCourierMappings[' + nextIndex + '].courier">' +
                             '<option value="">--Select--</option>' +
-                                    <c:forEach items="${allCourier}" var="courier">
+                                    <c:forEach items="${pcma.availableCouriers}" var="courier">
                             '<option value="' + ${courier.id} + '"> ' + "${courier.name}" + '</option>' +
                                     </c:forEach>
                             '</select>' +

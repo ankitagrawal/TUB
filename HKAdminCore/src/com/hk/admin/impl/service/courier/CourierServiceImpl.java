@@ -4,7 +4,6 @@ import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.admin.pact.dao.courier.PincodeCourierMappingDao;
 import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.warehouse.Warehouse;
@@ -66,7 +65,7 @@ public class CourierServiceImpl implements CourierService {
     }
 
     @Override
-    public List<Courier> getDefaultCouriers(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
         return pincodeCourierMappingDao.searchDefaultCourier(pincode, isCOD, isGroundShipping, warehouse);
     }
 

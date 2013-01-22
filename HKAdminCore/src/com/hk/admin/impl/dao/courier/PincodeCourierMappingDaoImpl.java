@@ -13,7 +13,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +140,7 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         return (PincodeCourierMapping) save(pincodeCourierMapping);
     }
 
-    public List<Courier> searchDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse) {
+    public List<Courier> searchDefaultCourier(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse) {
         DetachedCriteria pincodeDefaultCourierCriteria = DetachedCriteria.forClass(PincodeDefaultCourier.class);
         if (warehouse != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("warehouse", warehouse));
@@ -149,9 +148,12 @@ public class PincodeCourierMappingDaoImpl extends BaseDaoImpl implements Pincode
         if (pincode != null) {
             pincodeDefaultCourierCriteria.add(Restrictions.eq("pincode", pincode));
         }
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
-        pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
-
+        if(isCOD != null){
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("cod", isCOD));
+        }
+        if(isGroundShipping != null){
+            pincodeDefaultCourierCriteria.add(Restrictions.eq("groundShipping", isGroundShipping));
+        }
         List<PincodeDefaultCourier> pincodeDefaultCouriers = findByCriteria(pincodeDefaultCourierCriteria);
 
         List<Courier> courierList = new ArrayList<Courier>();

@@ -22,7 +22,7 @@ public interface CourierService {
 
     public Courier getDefaultCourier(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
 
-    public List<Courier> getDefaultCouriers(Pincode pincode, boolean isCOD, boolean isGroundShipping, Warehouse warehouse);
+    public List<Courier> getDefaultCouriers(Pincode pincode, Boolean isCOD, Boolean isGroundShipping, Warehouse warehouse);
 
     public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationsBitset);
 
