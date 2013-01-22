@@ -1,26 +1,23 @@
 package com.hk.impl.dao.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hk.domain.core.City;
-import com.hk.domain.core.Pincode;
+import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
+import com.hk.domain.catalog.Manufacturer;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.Country;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.User;
+import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.pact.dao.core.AddressDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.akube.framework.dao.Page;
-import com.akube.framework.util.BaseUtils;
-import com.hk.domain.catalog.Manufacturer;
-import com.hk.domain.catalog.category.Category;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.domain.user.BillingAddress;
-import com.hk.domain.core.Country;
-import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.pact.dao.core.AddressDao;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -96,40 +93,13 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
         return getSession().createQuery(hqlQuery).setParameter("pin", a.getPincode()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
     }
 
-    // public List<Address> getVisibleAddressesFromAddressList(List<Address> addressList)
-    // {
-    // if(addressList.size()!=0)
-    // {
-    // return getSession().createQuery("select a from Address a where a in (:addressList) and a.deleted= :deleted")
-    // .setParameter("deleted",Boolean.FALSE)
-    // .setParameterList("addressList",addressList)
-    // .list();
-    // }
-    // else
-    // return null;
-    //
-    // }
-
 
     public List<BillingAddress> getVisibleBillingAddresses(User user) {
-        List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
         DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
         paymentCriteria.add(Restrictions.eq("user", user));
-        //todo billing address fetch only non deleted billing address for a customer from payment table
-/*
-        paymentCriteria.createCriteria("billingaddress.deleted", false);
-        courierCriteria.add(Restrictions.in("group.name", courierGroups));
-
-        DetachedCriteria billingAddressCriteria = DetachedCriteria.forClass(BillingAddress.class);
-        billingAddressCriteria.add(Restrictions.eq("deleted",false));
-        detachedCriteria.add(billingAddressCriteria);
-        List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
-        for (BillingAddress billingaddress : billingAddressList) {
-            if (!billingaddress.isDeleted())
-                billingAddresses.add(billingaddress);
-        }
-*/
-        return billingAddresses;
+        DetachedCriteria billingAddressCriteria = paymentCriteria.createCriteria("billingAddress");
+        billingAddressCriteria.add(Restrictions.ne("deleted", true));
+        return (List<BillingAddress>) findByCriteria(billingAddressCriteria);
     }
 
 
