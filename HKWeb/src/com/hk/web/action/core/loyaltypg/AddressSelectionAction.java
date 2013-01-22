@@ -36,7 +36,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 		getProcessor().setShipmentAddress(orderId, selectedAddress);
 		getProcessor().makePayment(orderId, getRemoteHostAddr());
 		try {
-			getProcessor().shipOrder(orderId);
+			getProcessor().validateAndEscalateOrder(orderId);
 		} catch (InvalidOrderException e) {
 			return new RedirectResolution("/pages/loyalty/failure.jsp");
 		}

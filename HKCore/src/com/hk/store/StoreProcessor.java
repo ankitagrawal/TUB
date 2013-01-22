@@ -24,7 +24,7 @@ public interface StoreProcessor {
 	
 	Payment makePayment(Long orderId, String remoteId);
 	
-	void shipOrder(Long orderId) throws InvalidOrderException;
+	void validateAndEscalateOrder(Long orderId) throws InvalidOrderException;
 	
 	OrderStatus getOrderStatus(Long orderId);
 	

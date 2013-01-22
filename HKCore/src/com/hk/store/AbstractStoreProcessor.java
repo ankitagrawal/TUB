@@ -132,7 +132,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	}
 
 	@Override
-	public void shipOrder(Long orderId) throws InvalidOrderException {
+	public void validateAndEscalateOrder(Long orderId) throws InvalidOrderException {
 		validatePayment(orderId);
 		Order order = orderService.find(orderId);
 		orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
