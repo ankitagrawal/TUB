@@ -164,16 +164,16 @@ public class MasterPincodeAction extends BaseAction {
     }
 
     public Resolution savePincodeRegion() {
-        Pincode pincodeObj = pincodeRegionZone.getPincode();
-        if (pincodeObj == null) {
+       if(pincodeRegionZone!=null){
+        if (pincodeRegionZone.getPincode() == null) {
             addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
         } else {
             try {
-                PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincodeObj, pincodeRegionZone.getWarehouse());
+                PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
                 if (pincodeRegionZoneDb != null) {
                     pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
                 } else {
-                    pincodeRegionZone.setPincode(pincodeObj);
+                    pincodeRegionZone.setPincode(pincode);
                     pincodeRegionZoneDb = pincodeRegionZone;
                 }
                 pincodeRegionZoneService.save(pincodeRegionZoneDb);
@@ -183,6 +183,7 @@ public class MasterPincodeAction extends BaseAction {
             }
             addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
         }
+    }
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
