@@ -71,6 +71,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
   private List<RtvNoteLineItem> rtvNoteLineItems = new ArrayList<RtvNoteLineItem>();
   private List<Tax> taxList = new ArrayList<Tax>();
+  private List<ExtraInventory> extraInventories = new ArrayList<ExtraInventory>();
   private Integer defaultPerPage = 20;
   Page purchaseOrderPage;
   private Long purchaseOrderId;
@@ -180,23 +181,23 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
       }
     }
-    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-    if(extraInventory != null){
-      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-      if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-          reconciledStatus = "reconciled";
-        }
-      }
-    }
-    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-    if(purchaseOrder!=null){
-      newPurchaseOrderId = purchaseOrder.getId();
-    }
-     taxList = getMasterDataDao().getTaxList();
+//    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+//    if(extraInventory != null){
+//      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+//      if(rtvNote!=null){
+//        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+//          reconciledStatus = "reconciled";
+//        }
+//      }
+//    }
+//    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+//    if(purchaseOrder!=null){
+//      newPurchaseOrderId = purchaseOrder.getId();
+//    }
+//     taxList = getMasterDataDao().getTaxList();
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
-    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+    return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
   }
 
 @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
@@ -439,6 +440,16 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   }
 
   @SuppressWarnings("unchecked")
+  public Resolution searchExtraInventory(){
+    if(purchaseOrderId!=null){
+      purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
+    }
+    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,getPageNo(),getPerPage());
+    extraInventories  = purchaseOrderPage.getList();
+    return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
+  }
+
+  @SuppressWarnings("unchecked")
   public Resolution getSku(){
 
     HealthkartResponse healthkartResponse = null;
@@ -484,7 +495,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public Set<String> getParamSet() {
     HashSet<String> params = new HashSet<String>();
-
+    params.add("extraInventoryId");
+    params.add("purchaseOrderId");
     return params;
   }
 
@@ -662,5 +674,13 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public MasterDataDao getMasterDataDao() {
     return masterDataDao;
+  }
+
+  public List<ExtraInventory> getExtraInventories() {
+    return extraInventories;
+  }
+
+  public void setExtraInventories(List<ExtraInventory> extraInventories) {
+    this.extraInventories = extraInventories;
   }
 }

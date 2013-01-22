@@ -2,6 +2,8 @@ package com.hk.admin.pact.service.rtv;
 
 
 import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.akube.framework.dao.Page;
+import com.hk.domain.inventory.po.PurchaseOrder;
 /**
  * Created by IntelliJ IDEA.
  * User: Shrey
@@ -16,4 +18,6 @@ public interface ExtraInventoryService {
   public ExtraInventory getExtraInventoryByPoId(Long purchaseOrderId);
 
   public ExtraInventory save(ExtraInventory extraInventory);
+
+  public Page searchExtraInventory(Long extraInventoryId, PurchaseOrder purchaseOrder, int pageNo, int perPage);
 }

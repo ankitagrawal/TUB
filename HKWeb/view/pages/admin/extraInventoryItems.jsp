@@ -27,7 +27,12 @@
                     alert("Please select Line Items to create RTV / GRN");
                     return false;
                 }
+                if (confirm('Are you sure you want to delete this address?')) {
                 $(this).hide();
+                }
+                else{
+                    return false;
+                }
             });
 
             $('.variantId').live('change',function(){

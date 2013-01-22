@@ -1,8 +1,12 @@
 package com.hk.admin.impl.service.rtv;
 
+import com.akube.framework.dao.Page;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.pact.dao.BaseDao;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,19 @@ public class ExtraInventoryServiceImpl implements ExtraInventoryService{
 
   public ExtraInventory save(ExtraInventory extraInventory){
    return (ExtraInventory) getBaseDao().save(extraInventory);
+  }
+
+  public Page searchExtraInventory(Long extraInventoryId, PurchaseOrder purchaseOrder, int pageNo, int perPage){
+    DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ExtraInventory.class);
+
+    if(extraInventoryId!=null){
+      detachedCriteria.add(Restrictions.eq("id",extraInventoryId));
+    }
+    if(purchaseOrder!=null){
+      detachedCriteria.add(Restrictions.eq("purchaseOrder",purchaseOrder));
+    }
+    detachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+    return getBaseDao().list(detachedCriteria, pageNo, perPage);
   }
 
   public BaseDao getBaseDao() {
