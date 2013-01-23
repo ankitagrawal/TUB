@@ -839,8 +839,10 @@ public class XslParser {
                 Courier courier = getCourierService().getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
+				Double extraCharge = getDouble(getCellValue(ReportConstants.EXTRA_CHARGES, rowMap, headerMap));
                 shippingCharge = (shippingCharge == null ? 0.0 : shippingCharge);
                 collectionCharge = (collectionCharge == null ? 0.0 : collectionCharge);
+				extraCharge = (extraCharge == null ? 0.0 : extraCharge);
                 // System.out.println("shippingOrder->" + shippingOrder + " awb->" + awb + " courier->" + courier +
                 // "shippingcharge->" + shippingCharge + " collectionCharge->" + collectionCharge);
                 if (shippingOrder == null) { // || (awb == null && courier == null) ){
@@ -871,6 +873,7 @@ public class XslParser {
                 }
                 shipment.setCollectionCharge(collectionCharge);
                 shipment.setShipmentCharge(shippingCharge);
+				shipment.setExtraCharge(extraCharge);
                 shipment.setShippingOrder(shippingOrder);
                 shipmentService.save(shipment);
 				rowsUpdated += 1;
