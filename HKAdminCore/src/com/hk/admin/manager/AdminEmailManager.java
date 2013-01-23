@@ -93,8 +93,8 @@ public class AdminEmailManager {
     private String hkReportAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String marketingAdminEmailsString = null;
-	@Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
-	private String logisticsAdminEmails;
+	@Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+	private String logisticsOpsEmails;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -873,7 +873,7 @@ public class AdminEmailManager {
 		}
 
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
-		return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,EmailTemplateConstants.operationsTeam);
+		return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsOpsEmails,EmailTemplateConstants.operationsTeam);
 	}
 
 	public boolean sendNoShipmentEmail(String message, ShippingOrder shippingOrder, Order baseOrder){
@@ -887,7 +887,7 @@ public class AdminEmailManager {
 		valuesMap.put("message", message);
 		
 		Template freemarTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.courierShipmentFail);
-		return emailService.sendHtmlEmail(freemarTemplate, valuesMap, logisticsAdminEmails, EmailTemplateConstants.operationsTeam);
+		return emailService.sendHtmlEmail(freemarTemplate, valuesMap, logisticsOpsEmails, EmailTemplateConstants.operationsTeam);
 	}
 
     public boolean sendOrderDeliveredEmail(Order order) {
