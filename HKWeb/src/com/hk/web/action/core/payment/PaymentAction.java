@@ -122,7 +122,7 @@ public class PaymentAction extends BaseAction {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());
                 redirectResolution = new RedirectResolution(actionClass, "proceed");
                 return redirectResolution.addParameter(BasePaymentGatewayWrapper.TRANSACTION_DATA_PARAM, BasePaymentGatewayWrapper.encodeTransactionDataParam(order.getAmount(),
-                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, billingAddress.getId()));
+                        payment.getGatewayOrderId(), order.getId(), payment.getPaymentChecksum(), issuerCode, billingAddressId));
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Payment for the order is already made."));
