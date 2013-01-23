@@ -938,7 +938,7 @@ public class XslParser {
                      * logger.debug("read row " + rowCount);
                      */
             }
-		    messagePostUpdation += "No. of Rows updated successfully: "+ rowsUpdated +".<br/>";
+
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
             throw new Exception("Exception @ Row:" + rowCount, e);
@@ -947,6 +947,7 @@ public class XslParser {
                 IOUtils.closeQuietly(poiInputStream);
             }
         }
+		messagePostUpdation += "No. of Rows updated successfully: "+ rowsUpdated +".<br/>";
         logger.debug("parsing collection and shipping charges for orders  : " + objInFile.getAbsolutePath() + " completed ");
         logger.debug("message post updation " + messagePostUpdation);
         return messagePostUpdation;
