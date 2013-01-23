@@ -193,6 +193,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             awbService.preserveAwb(oldShipment.getAwb());
             newShipment = createShipment(shippingOrder);
             shippingOrder.setShipment(newShipment);
+            shippingOrder = shippingOrderService.save(shippingOrder);
             delete(oldShipment);
         }
         return newShipment;
