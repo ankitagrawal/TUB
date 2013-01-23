@@ -835,7 +835,7 @@ public class XslParser {
                  */
                 rowMap = getRowMap(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
-                String awb =  String.valueOf(getCellValue(ReportConstants.AWB, rowMap, headerMap));
+                String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
                 Courier courier = getCourierService().getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
