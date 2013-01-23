@@ -16,7 +16,7 @@
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
             $(document).ready(function(){
-                var estimatedWeight = ${cusa.estimatedWeight};
+                $('#gatewayOrderId').focus();
                 $('#search').click(function(){
                     var gateWayOrderId = $('#gatewayOrderId').val();
                     if(gateWayOrderId == "" || gateWayOrderId == null){
@@ -29,6 +29,7 @@
                     var boxWeight = $('#boxWeight').val();
                     var picker = $('#picker').val();
                     var packer = $('#packer').val();
+                    var estimatedWeight = $('#estimatedWeight').attr('value');
                     var weightDiff = 0.2;
                     var minWeight = (1-weightDiff)*estimatedWeight;
                     var maxWeight = (1+weightDiff)*estimatedWeight;
@@ -146,6 +147,7 @@
                     </tr>
                 </table>
                 <s:hidden name="shippingOrder" value="${cusa.shippingOrder.id}"/>
+                <s:hidden name="estimatedWeight" value="${cusa.estimatedWeight}" id="estimatedWeight"/>
                 <s:submit name="updateShipment" value="SAVE" id="validate"/>
             </c:if>
             </fieldset>
