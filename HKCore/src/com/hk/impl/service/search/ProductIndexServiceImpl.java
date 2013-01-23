@@ -62,11 +62,9 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     }
 
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
+        Set<String> validOptions = ProductUtil.getVariantValidOptions();
         for (ProductVariant pv : pr.getProductVariants()){
             if (!pv.getDeleted()){
-
-                Set<String> validOptions = ProductUtil.getVariantValidOptions();
-
                 if (pv.getProductOptions() != null){
                     StringBuilder sb = new StringBuilder();
                     sb.append(pr.getName());
