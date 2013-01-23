@@ -145,7 +145,7 @@
                   <td>${skuGroup.batchNumber}</td>
                   <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="yyyy-MM-dd"/></td>
                   <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="yyyy-MM-dd"/></td>
-                  <td>${skuGroup.mrp}</td>
+                  <td>${skuGroup.mrp} ${skuGroup.id}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
 	              <td>
 		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
