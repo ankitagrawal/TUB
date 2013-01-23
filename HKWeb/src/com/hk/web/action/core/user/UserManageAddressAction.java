@@ -96,7 +96,7 @@ public class UserManageAddressAction extends BaseAction {
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
-      addresses = user.getAddresses();
+      addresses = addressDao.getVisibleAddresses(user);
       if (affiliate != null) {
         mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
       }
