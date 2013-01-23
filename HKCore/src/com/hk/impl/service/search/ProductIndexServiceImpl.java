@@ -61,13 +61,14 @@ public class ProductIndexServiceImpl implements ProductIndexService {
 
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
-            if (pv.getProductOptions() != null){
+            solrProduct.getVariantNames().add(pv.getVariantName());
+            /*if (pv.getProductOptions() != null){
                 for (ProductOption po : pv.getProductOptions()){
                     if (po.getValue() != null){
                         solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
                     }
                 }
-            }
+            }*/
         }
     }
 
