@@ -61,7 +61,7 @@ public class UserManageAddressAction extends BaseAction {
     } else {
       userDao.refresh(user);
     }
-
+    addresses = addressDao.getVisibleAddresses(user);
     affiliate = affiliateDao.getAffilateByUser(user);
     return new ForwardResolution("/pages/manageUserAddresses.jsp");
   }
