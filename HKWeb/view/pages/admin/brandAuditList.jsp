@@ -64,7 +64,7 @@
         <table class="zebra_vert">
             <thead>
             <tr>
-                <th>Audit Date</th>
+                <th>Create Date</th>
                 <th>Update Date</th>
                 <th>WH</th>
                 <th>Auditor</th>
