@@ -65,6 +65,7 @@
             <thead>
             <tr>
                 <th>Audit Date</th>
+                <th>Update Date</th>
                 <th>WH</th>
                 <th>Auditor</th>
                 <th>Brand</th>
@@ -75,6 +76,7 @@
             <c:forEach items="${poa.brandsToAuditList}" var="auditBrand" varStatus="ctr">
                 <tr>
                     <td><fmt:formatDate value="${auditBrand.auditDate}" pattern="dd/MM/yyyy"/></td>
+                    <td><fmt:formatDate value="${auditBrand.updateDate}" pattern="dd/MM/yyyy"/></td>
                     <td>${auditBrand.warehouse.name}</td>
                     <td>${auditBrand.auditor.login}</td>
                     <td>${auditBrand.brand}</td>

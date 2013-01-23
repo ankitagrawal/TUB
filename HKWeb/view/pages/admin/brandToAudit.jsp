@@ -19,18 +19,14 @@
 
         <s:form beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">
             <label>Brand:</label>&nbsp;${poa.brandsToAudit.brand}<br/><br/>
-            <label>Current Audit Status:</label>     &nbsp;
+            <label>Current Audit Status:</label>&nbsp;
             <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
                 <c:if test="${poa.brandsToAudit.auditStatus == status.id}">${status.name}</c:if>
             </c:forEach> <br/><br/>
-            <%--<label>Brand*: </label><s:text id="brand-name" name="brandsToAudit.brand"/><br/>--%>
-            <label>Audit Date*: </label><s:text id="audit-date" class="date_input" formatPattern="yyyy-MM-dd"
-                                                name="brandsToAudit.auditDate"/><br/> <br/>
+            <label>Update Date*: </label><s:text id="update-date" class="date_input" formatPattern="yyyy-MM-dd"
+                                                 name="brandsToAudit.updateDate"/><br/> <br/>
             <c:if test="${poa.brandsToAudit.id ne null}">
                 <label>Audit Status</label><s:select name="brandsToAudit.auditStatus">
-                <%--<c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
-                    <s:option value="${status.id}">${status.name}</s:option>
-                </c:forEach>--%>
                 <s:option value="${poa.brandsToAudit.auditStatus}" >--Select--</s:option>
                 <c:forEach items="<%=EnumAuditStatus.getListById(poa.getBrandsToAudit().getAuditStatus())%>" var="status">
                     <s:option value="${status.id}">${status.name}</s:option>
@@ -48,10 +44,7 @@
             if ($('#brand-name').val().trim() === "") {
                 alert("Kindly enter all the necessary details!");
                 return false;
-            } /*else if ($('#audit-date').val().trim() === "") {
-             alert("Kindly enter all the necessary details!");
-             return false;
-             }*/
+            }
             return true;
         });
     });

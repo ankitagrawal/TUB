@@ -42,6 +42,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         User loggedOnUser = getPrincipalUser();
         if (warehouse == null) warehouse = loggedOnUser.getSelectedWarehouse();
         User auditor = null;
+        if(auditStatus == null) auditStatus = EnumAuditStatus.Pending.getId();
         if (StringUtils.isNotBlank(auditorLogin)) {
             auditor = getUserService().findByLogin(auditorLogin);
         }
@@ -70,8 +71,21 @@ public class BrandsToAuditAction extends BasePaginatedAction {
                 brandsToAudit.setAuditDate(new Date());
             }else{
                 Date d = new Date();
-                if(brandsToAudit.getAuditDate().getTime() < d.getTime()) {
+                if(brandsToAudit.getAuditDate().compareTo(d) > 0 ) {
                     brandsToAudit.setAuditDate(d);
+                }else{
+                    brandsToAudit.setAuditDate(brandsToAudit.getAuditDate());
+                }
+            }
+
+            if (brandsToAudit.getUpdateDate() == null) {
+                brandsToAudit.setUpdateDate(new Date());
+            }else{
+                Date d = new Date();
+                if( brandsToAudit.getUpdateDate().compareTo(brandsToAudit.getAuditDate()) > 0 ) {
+                    brandsToAudit.setUpdateDate(brandsToAudit.getUpdateDate());
+                }else{
+                    brandsToAudit.setUpdateDate(d);
                 }
             }
             /* Creating a new entry in brands to audit */
@@ -91,11 +105,8 @@ public class BrandsToAuditAction extends BasePaginatedAction {
                 brandsToAudit.setAuditor(auditor);
                 brandsToAudit.setWarehouse(warehouse);
             }
-
             getBrandsToAuditDao().save(brandsToAudit);
             addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
-
-
         }
         return new RedirectResolution(BrandsToAuditAction.class);
     }
