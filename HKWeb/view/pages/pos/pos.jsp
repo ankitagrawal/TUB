@@ -111,7 +111,7 @@
 		<div style="display: none;">
 			<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="emailLink" event="getCustomerDetailsByLogin"></s:link>
 		</div>
-
+		<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
 <table cellpadding="1" width="100%">
 	<tr class="apply-border">
 		<td>
@@ -128,7 +128,7 @@
 			<strong><%=new Date()%>
 			</strong>
 		</td>
-		<td><b>Welcome! Ajeet</b></td>
+		<td><b>Welcome!<shiro:principal property="firstName"/></b></td>
 	</tr>
 
 	<tr><td style="border:0px;">&nbsp;</td></tr>
@@ -140,7 +140,7 @@
 		<td style="font-size:.9em">Inventory</td>
 	</tr>
 	<tr><td style="border:0px;">&nbsp;</td></tr>
-	<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
+
 	<tr>
 		<td colspan="4">
 			<fieldset>
@@ -162,12 +162,12 @@
 			</fieldset>
 		</td>
 	</tr>
-	</s:form>
+
 	<tr><td style="border:0px;">&nbsp;</td></tr>
 
 	<tr>
 		<td colspan="4">
-			<s:form beanclass="com.hk.web.action.admin.pos.POSAction" >
+
 				<fieldset class="right_label">
 					<legend>Scan Barcode:</legend>
 					<ul>
@@ -178,8 +178,7 @@
 						<li></li>
 					</ul>
 				</fieldset>
-			</s:form>
-			<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
+
 			<fieldset>
 				<legend><b>Order</b></legend>
 				<table width="100%" border="1" id="orderTable">
@@ -201,9 +200,9 @@
 					<tr><td>2.</td><td><input>
 					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
 					<tr><td>3.</td><td><input>
-					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
+					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>--%>
 					<tr><td colspan="5" align="right"><b>Grand Total</b></td><td><input></td></tr>
-					<tr><td><b>Order ID</b></td><td>&nbsp;</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>--%>
+					<tr><td><b>Order ID</b></td><td>&nbsp;</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>
 				</table>
 			</fieldset>
 
@@ -214,12 +213,13 @@
 
 	<tr>
 		<s:hidden name="customer" id="customer" />
-		<td colspan="2" align="left"><input type="button" value="Cancel or Reset"/></td>
-		<td colspan="2" align="right"><s:submit name="confirmOrder" value="Confirm"/>&nbsp;<input type="button"
-		                                                                                 value="Print"/></td>
+		<%--<td colspan="2" align="left"><input type="button" value="Cancel or Reset"/></td>--%>
+		<td colspan="2" align="right"><s:submit name="confirmOrder" value="Confirm"/>
+			<%--&nbsp;<input type="button" value="Print"/></td>--%>
 	</tr>
-	</s:form>
+
 </table>
+	</s:form>
 			<div class="orderDetails info"></div>
 
 	</s:layout-component>

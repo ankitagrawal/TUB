@@ -5,6 +5,7 @@ import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
@@ -123,7 +124,8 @@ public class POSAction extends BaseAction {
 			for(POSLineItemDto posLineItemDto : posLineItems) {
 				ProductVariant productVariant = posLineItemDto.getSkuGroup().getSku().getProductVariant();
 				productVariant.setQty(posLineItemDto.getQty());
-				cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
+				CartLineItem cartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
+				cartLineItemService.save(cartLineItem);
 			}
 
 		}
