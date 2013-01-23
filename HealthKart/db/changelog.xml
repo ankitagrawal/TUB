@@ -11189,6 +11189,12 @@
             <column name="billing_address_id" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham" id="23-01-2013-02">
+        <sql>
+            update courier set operations_bitset = 2 where active = 1;
+            update courier set operations_bitset = 13 where active = 0;
+        </sql>
+    </changeSet>
     <changeSet author="Pratham" id="23-01-2013-01">
         <sql>
             update payment p inner join base_order bo on p.gateway_order_id=bo.gateway_order_id
