@@ -1,12 +1,5 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Ajeet
-  Date: 21 Dec, 2012
-  Time: 12:03:00 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="HealthKart.com Store : New Order">
@@ -30,14 +23,15 @@
 							$('#barcodeLink').attr('href'), {productVariantBarcode:productVariantBarcode},
 							function (res) {
 								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-									var existingRow = findIfBarcodeExists(productVariantBarcode);
+									var existingRow = findIfSkuGroupExists(res.data.skuGroupId);
 									if(existingRow == null) {
 										createNewRow();
 										$('.lastRow').find('.item').html(res.data.product + '<br/>' + res.data.options);
+										$('.lastRow').find('.itemHidden').val(res.data.product + '<br/>' + res.data.options);
 										$('.lastRow').find('.mrp').val(res.data.mrp);
 										$('.lastRow').find('.offerPrice').val(res.data.offerPrice);
 										$('.lastRow').find('.qty').val(1);
-										$('.lastRow').find('.barcode').val(productVariantBarcode);
+										$('.lastRow').find('.skuGroupId').val(res.data.skuGroupId);
 										$('.lastRow').find('.total').val(res.data.offerPrice);
 									} else {
 										var qty = parseInt( existingRow.find('.qty').val() );
@@ -55,12 +49,12 @@
 					$('#productVariantBarcode').val('');
 				});
 
-				function findIfBarcodeExists(productBarcode) {
+				function findIfSkuGroupExists(newSkuGroupId) {
 					var rowFound = null;
-					$('.barcode').each(function(index, value) {
+					$('.skuGroupId').each(function(index, value) {
 						var eachRow = $(value);
-						var barcodeValue = eachRow.val().trim();
-						if(barcodeValue == productBarcode.trim()) {
+						var skuGroupId = eachRow.val().trim();
+						if(skuGroupId == newSkuGroupId) {
 							rowFound = eachRow.parents('.lineItemRow');
 						}
 
@@ -79,27 +73,45 @@
 					var newRowHtml =
 							'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
 									'<td>' + Math.round(nextIndex + 1) + '.</td>' +
-									'<td class="item"/></td>' +
-									'<td><input type="text" class="mrp" readonly="readonly"/></td>' +
-									'<td><input type="text" class="offerPrice" readonly="readonly"/></td>' +
-									'<td><input type="text" class="qty" readonly="readonly"/></td>' +
-									'<td><input type="text" class="total" readonly="readonly"/></td>' +
-									'<td><input type="hidden" class="barcode"/></td>' +
+									'<td class="item"></td>' +
+									'<td><input type="text" class="mrp" name="posLineItems[' + nextIndex + '].mrp" readonly="readonly"/></td>' +
+									'<td><input type="text" class="offerPrice" name="posLineItems[' + nextIndex + '].offerPrice" readonly="readonly"/></td>' +
+									'<td><input type="text" class="qty" name="posLineItems[' + nextIndex + '].qty" readonly="readonly"/></td>' +
+									'<td><input type="text" class="total" name="posLineItems[' + nextIndex + '].total" readonly="readonly"/></td>' +
+									'<td><input type="hidden" class="skuGroupId" name="posLineItems[' + nextIndex + '].skuGroup"/></td>' +
+									'<td><input type="hidden" class="itemHidden" name="posLineItems[' + nextIndex + '].productName"/></td>' +
 									'</tr>';
 
 					$('#orderTable').append(newRowHtml);
 
 				}
+
+				$('#email').change(function() {
+					$.getJSON(
+							$('#emailLink').attr('href'), {email:$('#email').val()},
+							function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+									$('#name').val(res.data.customer.name);
+									$('#customer').val(res.data.customer.id);
+
+								} else {
+									//$('.orderDetails').html('<h2>' + res.message + '</h2>');
+								}
+							}
+					);
+				});
 			});
 		</script>
 	</s:layout-component>
 
 	<s:layout-component name="content">
 		<div style="display: none;">
-		        <s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink"
-		                event="getProductDetailsByBarcode"></s:link>
-		    </div>
-		<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
+		        <s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="getProductDetailsByBarcode"></s:link>
+		</div>
+		<div style="display: none;">
+			<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="emailLink" event="getCustomerDetailsByLogin"></s:link>
+		</div>
+
 <table cellpadding="1" width="100%">
 	<tr class="apply-border">
 		<td>
@@ -128,7 +140,7 @@
 		<td style="font-size:.9em">Inventory</td>
 	</tr>
 	<tr><td style="border:0px;">&nbsp;</td></tr>
-
+	<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
 	<tr>
 		<td colspan="4">
 			<fieldset>
@@ -137,9 +149,9 @@
 					<tr>
 						<td width="50%">
 							<table>
-								<tr><td>Phone:</td><td><s:text name="phone" /></td></tr>
-								<tr><td>Email:</td><td><s:text name="email" /></td></tr>
-								<tr><td>Name: </td><td><s:text name="name" /></td></tr>
+								<tr><td>Phone:</td><td><s:text name="phone" id="phone"/></td></tr>
+								<tr><td>Email:</td><td><s:text name="email" id="email"/></td></tr>
+								<tr><td>Name: </td><td><s:text name="name" id="name"/></td></tr>
 							</table>
 						</td>
 						<td>
@@ -150,25 +162,40 @@
 			</fieldset>
 		</td>
 	</tr>
-
+	</s:form>
 	<tr><td style="border:0px;">&nbsp;</td></tr>
 
 	<tr>
 		<td colspan="4">
-			<fieldset class="right_label">
-				<legend>Scan Barcode:</legend>
-				<ul>
-					<li>
-						<s:label name="barcode">Product Variant Barcode</s:label>
-						<s:text name="productVariantBarcode" id="productVariantBarcode"/>
-					</li>
-					<li></li>
-				</ul>
-			</fieldset>
+			<s:form beanclass="com.hk.web.action.admin.pos.POSAction" >
+				<fieldset class="right_label">
+					<legend>Scan Barcode:</legend>
+					<ul>
+						<li>
+							<s:label name="barcode">Product Variant Barcode</s:label>
+							<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+						</li>
+						<li></li>
+					</ul>
+				</fieldset>
+			</s:form>
+			<s:form beanclass="com.hk.web.action.admin.pos.POSAction">
 			<fieldset>
 				<legend><b>Order</b></legend>
 				<table width="100%" border="1" id="orderTable">
 					<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Total</th></tr>
+					<c:forEach var="posLineItemDto" items="${pos.posLineItems}" varStatus="ctr">
+					<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+						<td>${ctr.index + 1}</td>
+						<td class="item">${posLineItemDto.productName}</td>
+						<td><s:text name="posLineItems[${ctr.index}].mrp" value="${posLineItemDto.mrp}" class="mrp"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].qty" value="${posLineItemDto.mrp}" class="qty"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total"/></td>
+						<td><s:hidden class="skuGroupId" name="posLineItems[${ctr.index}].skuGroup" value="${posLineItemDto.skuGroup.id}"/></td>
+						<td><s:hidden class="itemHidden" name="posLineItems[${ctr.index}].productName" value="${posLineItemDto.productName}"/></td>
+					</tr>
+					</c:forEach>
 					<%--<tr><td>1.</td><td><input>
 					</td><td><input></td><td><input></td><td><input></td><td><input></td></tr>
 					<tr><td>2.</td><td><input>
@@ -179,18 +206,21 @@
 					<tr><td><b>Order ID</b></td><td>&nbsp;</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>--%>
 				</table>
 			</fieldset>
+
 		</td>
 	</tr>
 
 	<tr><td style="border:0px;">&nbsp;</td></tr>
 
 	<tr>
+		<s:hidden name="customer" id="customer" />
 		<td colspan="2" align="left"><input type="button" value="Cancel or Reset"/></td>
-		<td colspan="2" align="right"><input type="button" value="Confirm"/>&nbsp;<input type="button"
+		<td colspan="2" align="right"><s:submit name="confirmOrder" value="Confirm"/>&nbsp;<input type="button"
 		                                                                                 value="Print"/></td>
 	</tr>
+	</s:form>
 </table>
 			<div class="orderDetails info"></div>
-		</s:form>
+
 	</s:layout-component>
 </s:layout-render>

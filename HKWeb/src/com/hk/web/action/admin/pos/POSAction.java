@@ -1,27 +1,26 @@
 package com.hk.web.action.admin.pos;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.admin.pact.service.pos.POSService;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.sku.Sku;
+import com.hk.domain.order.Order;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
-import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.user.User;
+import com.hk.manager.OrderManager;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.taglibs.Functions;
+import com.hk.pact.service.order.CartLineItemService;
 import com.hk.web.HealthkartResponse;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,18 +41,26 @@ public class POSAction extends BaseAction {
 	private String name;
 	private String address;
 	private String productVariantBarcode;
+	private List<POSLineItemDto> posLineItems = new ArrayList<POSLineItemDto>(0);
+	private User customer;
 
 	@Autowired
 	UserService userService;
 	@Autowired
 	AdminInventoryService adminInventoryService;
-
+	@Autowired
+	OrderManager orderManager;
+	@Autowired
+	POSService posService;
+	@Autowired
+	CartLineItemService cartLineItemService;
 
 	@DefaultHandler
 	public Resolution pre() {
 		return new ForwardResolution("/pages/pos/pos.jsp");
 	}
 
+	@SuppressWarnings("unchecked")
 	public Resolution getProductDetailsByBarcode() {
 		Map dataMap = new HashMap();
 		if (productVariantBarcode != null) {
@@ -65,10 +72,11 @@ public class POSAction extends BaseAction {
 			}
 			SkuGroup skuGroup = inStockSkuItemList.get(0).getSkuGroup();
 			ProductVariant productVariant = skuGroup.getSku().getProductVariant();
+			dataMap.put("skuGroupId", skuGroup.getId());
 			dataMap.put("product", productVariant.getProduct().getName());
 			dataMap.put("options", productVariant.getOptionsCommaSeparated());
 			dataMap.put("mrp", skuGroup.getMrp());
-			dataMap.put("offerPrice", Functions.getApplicableOfferPrice(productVariant) + Functions.getPostpaidAmount(productVariant));
+			dataMap.put("offerPrice", productVariant.getHkPrice());
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
 			noCache();
 			return new JsonResolution(healthkartResponse);
@@ -79,9 +87,48 @@ public class POSAction extends BaseAction {
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", dataMap);
 		noCache();
 		return new JsonResolution(healthkartResponse);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Resolution getCustomerDetailsByLogin() {
+		Map dataMap = new HashMap();
+		if(!StringUtils.isBlank(email)) {
+			User customer = userService.findByLogin(email);
+			if(customer != null) {
+				dataMap.put("customerName", customer.getName());
+				dataMap.put("customer", customer);
+				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
+				noCache();
+				return new JsonResolution(healthkartResponse);
+			}
+		} else {
+			logger.error("Blank email is passed in POSAction");
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
 
 	}
 
+	public Resolution confirmOrder() {
+		if(posLineItems.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("Please place order for atleast one item"));
+			return new RedirectResolution(POSAction.class).addParameter("posLineItems", posLineItems);
+		}
+		if(customer == null) {
+			customer = posService.createUserForStore(email, name, null, "HK_USER");
+		}
+		if(customer != null) {
+			Order order = posService.createOrderForStore(customer);
+			for(POSLineItemDto posLineItemDto : posLineItems) {
+				ProductVariant productVariant = posLineItemDto.getSkuGroup().getSku().getProductVariant();
+				productVariant.setQty(posLineItemDto.getQty());
+				cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
+			}
+
+		}
+		return new ForwardResolution("/pages/pos/pos.jsp");
+	}
 
 	public String getPhone() {
 		return phone;
@@ -121,5 +168,21 @@ public class POSAction extends BaseAction {
 
 	public void setProductVariantBarcode(String productVariantBarcode) {
 		this.productVariantBarcode = productVariantBarcode;
+	}
+
+	public List<POSLineItemDto> getPosLineItems() {
+		return posLineItems;
+	}
+
+	public void setPosLineItems(List<POSLineItemDto> posLineItems) {
+		this.posLineItems = posLineItems;
+	}
+
+	public User getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(User customer) {
+		this.customer = customer;
 	}
 }
