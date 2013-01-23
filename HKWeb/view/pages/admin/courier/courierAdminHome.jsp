@@ -6,7 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
 
-<s:layout-component name="heading">Admin Home</s:layout-component>
+<s:layout-component name="heading">Operations</s:layout-component>
 <s:layout-component name="content">
 
 <div class="left roundBox">
@@ -231,20 +231,5 @@
 
 
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var max_ht = 0;
-        $('.roundBox').each(function () {
-            if ($(this).height() > max_ht) {
-                max_ht = $(this).height();
-            }
-
-        });
-        $('.roundBox').each(function () {
-            $(this).height(max_ht);
-        });
-    });
-</script>
 </s:layout-component>
 </s:layout-render>

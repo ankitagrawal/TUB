@@ -31,7 +31,7 @@
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search SO</s:link></li>
       <li class='lvl1 menuItem' title="">
-          <a href="${pageContext.request.contextPath}/pages/admin/courier/courierAdminHome.jsp">Couriers</a>
+          <a href="${pageContext.request.contextPath}/pages/admin/courier/courierAdminHome.jsp">OPS</a>
       </li>
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></li>
