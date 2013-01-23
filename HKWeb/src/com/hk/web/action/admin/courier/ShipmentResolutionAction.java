@@ -121,9 +121,9 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution changeShipmentServiceType() {
         String oldShipmentServiceType = shipment.getShipmentServiceType().getName();
+        shipment = shipmentService.recreateShipment(shippingOrder);
         shipment.setShipmentServiceType(EnumShipmentServiceType.getShipmentTypeFromId(shipmentServiceTypeId).asShipmentServiceType());
         shipment = shipmentService.save(shipment);
-        shipment = shipmentService.recreateShipment(shippingOrder);
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment Service Type has been changed from "+ oldShipmentServiceType +"to " + shipment.getShipmentServiceType().getName());
         addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed"));
         return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
