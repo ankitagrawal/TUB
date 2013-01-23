@@ -54,7 +54,7 @@ public class XslPincodeParser {
     @Autowired
     StateService stateService;
 
-    private static Logger logger         = LoggerFactory.getLogger(XslPincodeParser.class);
+    private static Logger logger = LoggerFactory.getLogger(XslPincodeParser.class);
 
 
     public Set<Pincode> readPincodeList(File objInFile) throws Exception {
@@ -79,7 +79,9 @@ public class XslPincodeParser {
                 if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(cityName) || StringUtils.isEmpty(stateName) || StringUtils.isEmpty(zoneName)) {
                     throw new ExcelBlankFieldException("Blank field for at row number " + rowCount);
                 }
-
+                if (pin.length() != 6) {
+                    throw new ExcelBlankFieldException("Pincode should be of 6 digits only" + rowCount);
+                }
                 Pincode pincode = pincodeService.getByPincode(pin);
                 if (pincode == null) {
                     pincode = new Pincode();
@@ -130,12 +132,11 @@ public class XslPincodeParser {
             cell = row.createCell(columnNo);
             cell.setCellStyle(style);
         }
-        setCellValue(row, 0, XslConstants.ID);
-        setCellValue(row, 1, XslConstants.PINCODE);
-        setCellValue(row, 2, XslConstants.CITY);
-        setCellValue(row, 3, XslConstants.STATE);
-        setCellValue(row, 4, XslConstants.LOCALITY);
-        setCellValue(row, 5, XslConstants.ZONE);
+        setCellValue(row, 0, XslConstants.PINCODE);
+        setCellValue(row, 1, XslConstants.CITY);
+        setCellValue(row, 2, XslConstants.STATE);
+        setCellValue(row, 3, XslConstants.LOCALITY);
+        setCellValue(row, 4, XslConstants.ZONE);
 
         int initialRowNo = 1;
         for (Pincode pincode : pincodeList) {
@@ -146,12 +147,11 @@ public class XslPincodeParser {
             }
 
             setCellValue(row, 0, pincode.getPincode());
-            setCellValue(row, 1, pincode.getPincode());
-            setCellValue(row, 2, pincode.getCity().getName());
-            setCellValue(row, 3, pincode.getState().getName());
-            setCellValue(row, 4, pincode.getLocality());
+            setCellValue(row, 1, pincode.getCity().getName());
+            setCellValue(row, 2, pincode.getState().getName());
+            setCellValue(row, 3, pincode.getLocality());
             if (pincode.getZone() != null) {
-                setCellValue(row, 5, pincode.getZone().getName());
+                setCellValue(row, 4, pincode.getZone().getName());
             }
             initialRowNo++;
         }
@@ -264,7 +264,6 @@ public class XslPincodeParser {
         }
         return pincodeDefaultCouriers;
     }
-
 
 
     private void setCellValue(Row row, int column, Double cellValue) {
