@@ -91,7 +91,6 @@ public class BillingAddressAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
-            addressDao.save(selectedAddress);
             return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));

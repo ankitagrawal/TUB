@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.address;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -42,6 +43,8 @@ public class ChangeOrderAddressAction extends BaseAction {
 
     private Address             newAddress;
 
+    private Long countryId;
+
     @ValidateNestedProperties( {
             @Validate(required = true, on = "replace"),
             @Validate(field = "name", maxlength = 80, required = true, on = { "save" }),
@@ -83,6 +86,8 @@ public class ChangeOrderAddressAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("We don't service to this pincode!!"));
         return new RedirectResolution(ChangeOrderAddressAction.class).addParameter("order", order.getId());
       }
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);      
         if (copyToUserAddressBook) {
             newAddress = addressBookManager.editAddress(order.getUser(), order.getAddress(), address);
         }
@@ -131,4 +136,12 @@ public class ChangeOrderAddressAction extends BaseAction {
     public void setCopyToUserAddressBook(boolean copyToUserAddressBook) {
         this.copyToUserAddressBook = copyToUserAddressBook;
     }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
 }

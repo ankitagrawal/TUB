@@ -3,6 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
@@ -32,6 +33,7 @@ public class UserManageAddressAction extends BaseAction {
   Boolean selected;
   Affiliate affiliate;
   User user;
+  private Long countryId;
 
   @ValidateNestedProperties({
       @Validate(field = "name", required = true, on = "saveAddress"),
@@ -81,6 +83,8 @@ public class UserManageAddressAction extends BaseAction {
          return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address",address.getId());
       }
       address.setUser(user);
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
       address = addressDao.save(address);
     }
     addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
@@ -180,5 +184,13 @@ public class UserManageAddressAction extends BaseAction {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
   }
 }

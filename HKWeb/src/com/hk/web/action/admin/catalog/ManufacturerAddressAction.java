@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -46,6 +47,7 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   Page addressPage;
   String city;
   Long manufacturerId;
+  private Long countryId;
   List<Double> latitude=new ArrayList<Double>();
   List<Double> longitude=new ArrayList<Double>();
 
@@ -79,6 +81,8 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
     return new ForwardResolution("/pages/admin/addManufacturerAddresses.jsp");
     }
     if (address.getId() == null) {
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
       address = addressDao.save(address);
       addresses = manufacturer.getAddresses();
       addresses.add(address);
@@ -86,6 +90,8 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       manufacturerDao.save(manufacturer);
     }
     else {
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
       address = addressDao.save(address);
     }
 
@@ -218,5 +224,13 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
 
   public void setLongitude(List<Double> longitude) {
     this.longitude = longitude;
+  }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
   }
 }

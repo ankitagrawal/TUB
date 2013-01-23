@@ -1,5 +1,6 @@
 package com.hk.web.action.core.user;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -57,6 +58,7 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
             @Validate(field = "phone", required = true, maxlength = 25) })
     private Address             address;
     private User                user;
+    private Long                countryId;
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
         return new ForwardResolution(SelectAddressAction.class);
@@ -88,6 +90,8 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
 
         boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
         if (!isDuplicateAddress) {
+            Country country = addressDao.getCountry(countryId);
+            address.setCountry(country);
             address = addressDao.save(address);
             Order order = orderManager.getOrCreateOrder(user);
             order.setAddress(address);
@@ -135,4 +139,11 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
         this.userService = userService;
     }
 
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
 }

@@ -11,7 +11,7 @@
   boolean isSecure = pageContext.getRequest().isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
-
+<c:set var="countryId" value="80"/>
 <s:layout-component name="htmlHead">
     <script type="text/javascript">
         var noAddress = false;
@@ -195,6 +195,7 @@
             <div class="addressContainer shipping_address">
                 <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
                     <s:layout-render name="/layouts/addressLayout.jsp" />
+                    <s:hidden name="countryId" value="${countryId}"/>
                     <s:submit name="create" value="Use this address and continue" style="margin:15px 0 0 26px;width:260px;position: static;" class="button"/>
                 </s:form>
             </div>
