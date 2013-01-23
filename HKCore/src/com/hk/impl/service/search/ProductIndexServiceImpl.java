@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -63,12 +64,15 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
             if (!pv.getDeleted()){
+
+                Set<String> validOptions = ProductUtil.getVariantValidOptions();
+
                 if (pv.getProductOptions() != null){
                     StringBuilder sb = new StringBuilder();
                     sb.append(pr.getName());
                     for (ProductOption po : pv.getProductOptions()){
                         if (po.getValue() != null){
-                            if (ProductUtil.getVariantValidOptions().contains(po.getName().toUpperCase())){
+                            if (validOptions.contains(po.getName().toUpperCase())){
                                 sb.append(", ");
                                 sb.append(po.getValue());
                             }
