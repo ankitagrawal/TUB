@@ -87,7 +87,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 flag = true;
             }
             Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
-            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier())) {
+            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId()==null) {
                 error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
                 flag = true;
             }

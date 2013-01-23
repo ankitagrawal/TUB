@@ -27,6 +27,8 @@
                 $('#validate').click(function(){
                     var boxSize = $('#boxSize').val();
                     var boxWeight = $('#boxWeight').val();
+                    var picker = $('#picker').val();
+                    var packer = $('#packer').val();
                     var weightDiff = 0.2;
                     var minWeight = (1-weightDiff)*estimatedWeight;
                     var maxWeight = (1+weightDiff)*estimatedWeight;
@@ -34,14 +36,19 @@
                         alert("Box Size or Box Weight can't be Left Empty");
                         return false;
                     }
+                    if(boxSize == "-1"){
+                        alert("Box Size can't be Migrate");
+                        return false;
+                    }
                     else if(parseFloat(boxWeight)< minWeight || parseFloat(boxWeight) > maxWeight){
                         alert("Box Weight is Out of Range");
                         return false;
                     }
-                    else if(isNaN(boxSize)){
-                        alert("Box Size must contain only numbers");
+                    else if(picker == "" || packer == "" || picker == null || packer == null){
+                        alert("You must select a Picker and Packer!!");
                         return false;
                     }
+
                 });
             });
         </script>
@@ -123,14 +130,14 @@
                             <s:text name="shipment.boxWeight" id = "boxWeight" value="${cusa.shipment.boxWeight}"/>
                         </td>
                         <td>
-                            <s:select name="shipment.packer" >
+                            <s:select name="shipment.packer" id="packer">
                                 <s:option value="">--Select</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allPacker"
                                                            value="name" label="name"/>
                             </s:select>
                         </td>
                         <td>
-                            <s:select name="shipment.picker">
+                            <s:select name="shipment.picker" id="picker">
                                 <s:option value="">--Select--</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allPicker"
                                                            value="name" label="name"/>
