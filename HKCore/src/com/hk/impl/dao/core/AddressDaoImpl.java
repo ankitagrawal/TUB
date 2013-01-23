@@ -17,7 +17,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -94,8 +96,8 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     }
 
 
-    public List<BillingAddress> getVisibleBillingAddresses(User user) {
-        List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
+    public Set<BillingAddress> getVisibleBillingAddresses(User user) {
+        Set<BillingAddress> billingAddresses = new HashSet<BillingAddress>();
         DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
         paymentCriteria.add(Restrictions.isNotNull("billingAddress"));
         DetachedCriteria orderCriteria = paymentCriteria.createCriteria("order");

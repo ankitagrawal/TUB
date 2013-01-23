@@ -1,6 +1,7 @@
 package com.hk.impl.service.core;
 
 import java.util.List;
+import java.util.Set;
 
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
@@ -86,7 +87,7 @@ public class AddressServiceImpl implements AddressService {
         return addressDao.getVisibleAddressesForManufacturer(manufacturerId, city, pageNo, perPage);
     }
 
-    public List <BillingAddress> getVisibleBillingAddress (User user){
+    public Set<BillingAddress> getVisibleBillingAddress (User user){
         return addressDao.getVisibleBillingAddresses(user);
     }
 

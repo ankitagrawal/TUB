@@ -9,6 +9,7 @@ import com.hk.domain.core.Pincode;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +28,7 @@ public interface AddressService {
 
     Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage);
 
-    List <BillingAddress> getVisibleBillingAddress (User user);
+    Set<BillingAddress> getVisibleBillingAddress (User user);
 
     public BillingAddress getBillingAddressById(Long billingAddressId);
 

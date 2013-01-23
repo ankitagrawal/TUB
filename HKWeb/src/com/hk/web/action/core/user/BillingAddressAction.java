@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +46,7 @@ public class BillingAddressAction extends BaseAction {
     @Autowired
     OrderManager orderManager;
 
-    private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(0);
+    private Set<BillingAddress> billingAddresses = new HashSet<BillingAddress>(0);
 
     BillingAddress deleteAddress;
     private String email;
@@ -114,16 +116,15 @@ public class BillingAddressAction extends BaseAction {
         return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
     }
 
+  public Set<BillingAddress> getBillingAddresses() {
+    return billingAddresses;
+  }
 
-    public List<BillingAddress> getBillingAddresses() {
-        return billingAddresses;
-    }
+  public void setBillingAddresses(Set<BillingAddress> billingAddresses) {
+    this.billingAddresses = billingAddresses;
+  }
 
-    public void setBillingAddresses(List<BillingAddress> billingAddresses) {
-        this.billingAddresses = billingAddresses;
-    }
-
-    public BillingAddress getDeleteAddress() {
+  public BillingAddress getDeleteAddress() {
         return deleteAddress;
     }
 

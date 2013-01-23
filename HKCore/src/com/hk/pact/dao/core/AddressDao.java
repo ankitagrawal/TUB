@@ -1,6 +1,7 @@
 package com.hk.pact.dao.core;
 
 import java.util.List;
+import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
@@ -30,7 +31,7 @@ public interface AddressDao extends BaseDao {
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a);
 
-    public List<BillingAddress> getVisibleBillingAddresses(User user);
+    public Set<BillingAddress> getVisibleBillingAddresses(User user);
 
     public BillingAddress getBillingAddressById(Long billingAddressId);
 
