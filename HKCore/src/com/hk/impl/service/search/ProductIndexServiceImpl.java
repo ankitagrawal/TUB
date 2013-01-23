@@ -73,7 +73,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
                     for (ProductOption po : pv.getProductOptions()){
                         if (po.getValue() != null){
                             if (validOptions.contains(po.getName().toUpperCase())){
-                                sb.append(", ");
+                                sb.append(" marut, ");
                                 sb.append(po.getValue());
                             }
                         }
