@@ -61,7 +61,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
         }
     }
 
-    private void updateExtraProperties(Product pr, SolrProduct solrProduct){
+    public void updateExtraProperties(Product pr, SolrProduct solrProduct){
         Set<String> validOptions = ProductUtil.getVariantValidOptions();
         for (ProductVariant pv : pr.getProductVariants()){
             if (!pv.getDeleted()){
@@ -71,7 +71,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
                     for (ProductOption po : pv.getProductOptions()){
                         if (po.getValue() != null){
                             if (validOptions.contains(po.getName().toUpperCase())){
-                                sb.append(" marut, ");
+                                sb.append(", ");
                                 sb.append(po.getValue());
                             }
                         }
