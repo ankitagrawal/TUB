@@ -103,9 +103,10 @@ public class ShipmentServiceImpl implements ShipmentService {
 				String pin = pincode.getPincode();
 				boolean isCodOnGroundShipped = isCodAndGroundShipped(pin, isGroundShipped);
 				if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodOnGroundShipped)) {
-					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
+					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
 							CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
 					adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
+					return null;	
 				}
 			}
 
