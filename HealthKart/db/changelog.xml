@@ -11003,14 +11003,14 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="user (generated)" id="1358859857645-1">
+    <changeSet author="Shilpa (generated)" id="1358928140364-1">
         <addColumn tableName="brands_to_audit">
-            <column defaultValueDate="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="user (generated)" id="1358859857645-2">
+    <changeSet author="Shilpa (generated)" id="1358928140364-2">
         <modifyDataType columnName="audit_date" newDataType="DATETIME" tableName="brands_to_audit"/>
     </changeSet>
 </databaseChangeLog>
