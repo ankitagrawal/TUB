@@ -73,7 +73,6 @@ public class SelectAddressAction extends BaseAction {
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
         email = user.getEmail();
-
         addresses = addressDao.getVisibleAddresses(user);
         order = orderManager.getOrCreateOrder(user);
         selectedAddress = order.getAddress();

@@ -3,7 +3,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
-
+<c:set var="countryId" value="80"/>
   <s:layout-component name="content">
 
     <s:useActionBean beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" var="addressBean" event="edit"/>
@@ -27,6 +27,7 @@
             <ul>
                 <li>
                     <s:layout-render name="/layouts/addressLayout.jsp" />
+                    <s:hidden name="countryId" value="${countryId}"/>
                     <s:hidden name="order" value="${addressBean.order.id}"/>
                     Copy This Address to user's address book <s:checkbox name="copyToUserAddressBook"/><br/>
                     <s:submit name="save" value="save"/>

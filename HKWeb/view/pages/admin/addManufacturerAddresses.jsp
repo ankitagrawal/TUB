@@ -2,7 +2,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.ManufacturerAddressAction" var="ma"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
-
+<c:set var="countryId" value="80"/>
   <s:layout-component name="htmlHead">
     <style type="text/css">
       .text {
@@ -41,6 +41,7 @@
           <div style="float: left; width:50%">
               <s:hidden name="manufacturer" value="${ma.manufacturer.id}"/>
               <s:layout-render name="/layouts/addressLayout.jsp" />
+              <s:hidden name="countryId" value="${countryId}"/>
               <s:submit name="addAddress" value="Save" class="button" style="left: 50px;"/>
         </fieldset>
       </s:form>

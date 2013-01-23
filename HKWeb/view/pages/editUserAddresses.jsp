@@ -7,7 +7,7 @@
 <s:layout-component name="lhsContent">
   <jsp:include page="myaccount-nav.jsp"/>
 </s:layout-component>
-
+<c:set var="countryId" value="80"/>
 <s:layout-component name="rhsContent">
        <c:choose>
          <c:when test="${umaa.address ==null}">
@@ -33,6 +33,7 @@
   </script>
   <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction" id="addressForm">
       <s:layout-render name="/layouts/addressLayout.jsp" />
+      <s:hidden name="countryId" value="${countryId}"/>
       <s:submit name="saveAddress" value="Save" class="button" />
   </s:form>
 </s:layout-component>
