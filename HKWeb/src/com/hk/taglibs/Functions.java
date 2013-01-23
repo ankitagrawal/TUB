@@ -18,6 +18,7 @@ import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.util.ProductUtil;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -666,9 +667,9 @@ public class Functions {
     }
 
     public static boolean showOptionOnUI(String optionType) {
-        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
-		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");
-        boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+    /*    List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");*/
+        boolean showOptionOnUI = ProductUtil.getVariantValidOptions().contains(optionType.toUpperCase());
         return showOptionOnUI;
     }
 

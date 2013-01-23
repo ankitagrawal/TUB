@@ -57,7 +57,7 @@ public class AutoCompleteAction extends BaseAction {
         // query.setTermsLower(q);
         query.setHighlight(true);
         // query.setTermsPrefix(q);
-        query.setTermsRegex(".*" + q + ".*");
+        query.setTermsRegex(".*" + q.toLowerCase() + ".*");
         // query.setTermsRegexFlag("dotall");
         query.setQueryType("/terms");
         try {

@@ -5,6 +5,11 @@ import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.catalog.product.combo.SuperSaverImage;
 import com.hk.domain.catalog.product.Product;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class ProductUtil {
 
     public static boolean isComboInStock(Combo combo) {
@@ -36,6 +41,14 @@ public class ProductUtil {
         } else {
             return true;
         }
+    }
+
+    public static Set<String> getVariantValidOptions(){
+        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+                "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");
+        Set<String> options = new HashSet<String>();
+        options.addAll(allowedOptions);
+        return options;
     }
 }
 

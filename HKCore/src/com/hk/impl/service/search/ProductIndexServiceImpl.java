@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.search.SolrProduct;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
+import com.hk.util.ProductUtil;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.slf4j.Logger;
@@ -62,15 +63,21 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     private void updateExtraProperties(Product pr, SolrProduct solrProduct){
         for (ProductVariant pv : pr.getProductVariants()){
             if (!pv.getDeleted()){
-                solrProduct.getVariantNames().add(pv.getVariantName());
-            }
-            /*if (pv.getProductOptions() != null){
-                for (ProductOption po : pv.getProductOptions()){
-                    if (po.getValue() != null){
-                        solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
+                if (pv.getProductOptions() != null){
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(pr.getName());
+                    for (ProductOption po : pv.getProductOptions()){
+                        if (po.getValue() != null){
+                            if (ProductUtil.getVariantValidOptions().contains(po.getName().toUpperCase())){
+                                sb.append(", ");
+                                sb.append(po.getValue());
+                            }
+                        }
                     }
+                    solrProduct.getVariantNames().add(sb.toString());
                 }
-            }*/
+
+            }
         }
     }
 
