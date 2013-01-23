@@ -29,7 +29,7 @@
                     var boxWeight = $('#boxWeight').val();
                     var picker = $('#picker').val();
                     var packer = $('#packer').val();
-                    var estimatedWeight = $('#estimatedWeight').val();
+                    var estimatedWeight = $('#estimatedWeight').attr('value');
                     var weightDiff = 0.2;
                     var minWeight = (1-weightDiff)*estimatedWeight;
                     var maxWeight = (1+weightDiff)*estimatedWeight;
