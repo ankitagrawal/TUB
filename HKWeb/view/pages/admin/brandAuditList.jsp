@@ -21,11 +21,7 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-
-        <%--  <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
-            Add New Brand To Audit
-        </s:link>--%>
-        <a href="#" id="button">Add Brand to Audit</a>  <br/>
+        <a href="#" id="button">Add Brand to Audit</a><br/>
         <fieldset id = "add">
             <legend>Add Brand To Audit</legend>
             <s:form beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">
@@ -104,18 +100,17 @@
     </s:layout-component>
 
 </s:layout-render>
+
 <script type="text/javascript">
     $(document).ready(function(){
         $('#add').hide();
+        if ( $('div.errorContainer').is(':visible')){
+            $('#add').show();
+        }
         $("#button").click(function(){
             $('#button').hide();
             $('#add').show(500);
         });
-    });
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
         $('#subBtn').click(function () {
             if ($('#brand-name').val().trim() === "") {
                 alert("Kindly enter all the necessary details!");
