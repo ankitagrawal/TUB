@@ -6,6 +6,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
 <%
@@ -684,13 +685,15 @@
 					height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 
 
-				<script type="text/javascript">
+				<script type="text/javascript">                                                
   var vizuryLink = "http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e400";
+  var user_hash;
   <c:forEach items="${cartAction.order.productCartLineItems}" var="cartLineItem" varStatus="liCtr">
   vizuryLink += "&pid${liCtr.count}=${cartLineItem.productVariant.product.id}&catid${liCtr.count}=${cartLineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${cartLineItem.qty}";
+  user_hash = "${user_hash}";
   </c:forEach>
   vizuryLink += "&currency=INR&section=1&level=1";
-  document.getElementById("vizuryTargeting").src = vizuryLink;
+  document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
 </s:layout-component>

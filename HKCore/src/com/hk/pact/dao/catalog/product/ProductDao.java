@@ -94,4 +94,5 @@ public interface ProductDao extends BaseDao {
 
     List<Product> getAllProductsById(List<String> productIdList);
 
+    List<Product> getProductByCategories(List<String> categoryNames);
 }
