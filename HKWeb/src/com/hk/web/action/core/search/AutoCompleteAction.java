@@ -47,7 +47,7 @@ public class AutoCompleteAction extends BaseAction {
 
         List<String> suggestedStrings = new ArrayList<String>();
         List<TermsResponse.Term> items = null;
-
+        q = q.trim();
         // escape special characters
         SolrQuery query = new SolrQuery();
         query.setQuery("*:*");
