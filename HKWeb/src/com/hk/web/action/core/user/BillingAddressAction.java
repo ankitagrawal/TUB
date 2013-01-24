@@ -93,7 +93,7 @@ public class BillingAddressAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
-            return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
+            return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer.getId()).addParameter("order", order.getId()).addParameter("billingAddressId", selectedAddress.getId());
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
             return new RedirectResolution(BillingAddressAction.class);
@@ -113,7 +113,7 @@ public class BillingAddressAction extends BaseAction {
         address.setCountry(country);
         address.setPin(pin);
         address = addressDao.save(address);
-        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
+        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer.getId()).addParameter("order", order.getId()).addParameter("billingAddressId", address.getId());
     }
 
   public Set<BillingAddress> getBillingAddresses() {

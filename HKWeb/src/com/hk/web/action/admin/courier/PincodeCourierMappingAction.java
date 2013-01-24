@@ -93,16 +93,16 @@ public class PincodeCourierMappingAction extends BaseAction {
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
             boolean isGround = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround();
             boolean isCod = pincodeCourierMapping.isCodGround() ||  pincodeCourierMapping.isCodAir();
-            boolean isValidMapping = isCod && isGround;
+            boolean isValidMapping = isCod || isGround || pincodeCourierMapping.isPrepaidAir();
             //todo courier recheck
             if(pincodeCourierMapping.getId()!=null && !isValidMapping){
                getBaseDao().delete(pincodeCourierMapping);
             }
-            else if (pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod) && isValidMapping) {
+            else if (!pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod) && isValidMapping) {
                 pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         }
-        addRedirectAlertMessage(new SimpleMessage("changes saved in the system !!!!"));
+        addRedirectAlertMessage(new SimpleMessage("changes saved in the system and if Some values didn't save then compare with Pincode Default courier"));
         return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin", pin);
     }
 
