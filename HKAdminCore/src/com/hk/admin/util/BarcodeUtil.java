@@ -45,9 +45,11 @@ public class BarcodeUtil {
 
     public static void createBarcodeFileForSkuItem(String barcodeFilePath, Map skuItemDataMap) throws IOException {
           File printBarcode = new File(barcodeFilePath);
-          if (!printBarcode.exists()) {
-              printBarcode.createNewFile();
+
+          if (printBarcode.exists()) {
+              printBarcode.delete();
           }
+            printBarcode.createNewFile();
           FileWriter fileWriter = new FileWriter(barcodeFilePath, true);
           BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 

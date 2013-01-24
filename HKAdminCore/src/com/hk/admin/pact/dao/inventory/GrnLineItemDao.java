@@ -16,4 +16,8 @@ public interface GrnLineItemDao extends BaseDao {
 
     public GrnLineItem getGrnLineItem(Long grnLineItemId);
 
+   public List<GrnLineItem> getGrnLineItemList (GoodsReceivedNote goodsReceivedNote);
+
+
+
 }

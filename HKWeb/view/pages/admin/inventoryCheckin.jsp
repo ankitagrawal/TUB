@@ -138,6 +138,10 @@
         </fieldset>
       </div>--%>
 
+        <td> <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Download All
+                  <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link></td>
+
     </div>
     <script type="text/javascript">
 	    $(document).ready(function() {

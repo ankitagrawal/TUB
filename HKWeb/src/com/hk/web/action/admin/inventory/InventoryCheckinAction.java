@@ -566,6 +566,60 @@ public class InventoryCheckinAction extends BaseAction {
       return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
     }
 
+
+
+
+    public Resolution downloadAllBarcode() {
+
+//          GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItemAgainstGrN(grn);
+//           grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
+        List<GrnLineItem> grnLineItems = getGrnLineItemDao().getGrnLineItemList(grn);
+        for (GrnLineItem grnLineItem : grnLineItems) {
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
+            ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
+            String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+            SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+            String barcodeFilePath = null;
+            Warehouse userWarehouse = null;
+            if (getUserService().getWarehouseForLoggedInUser() != null) {
+                userWarehouse = userService.getWarehouseForLoggedInUser();
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+                return new RedirectResolution(InventoryCheckinAction.class);
+            }
+            if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+                barcodeFilePath = barcodeGurgaon;
+            } else {
+                barcodeFilePath = barcodeMumbai;
+            }
+            barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "grn_" + grn.getId() + "_All_"
+                    + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+            String date = "";
+            if (expiryDate == null) {
+                date = "NA";
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+                date = sdf.format(expiryDate);
+            }
+            Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+            for (SkuItem skuItem : checkedInSkuItems) {
+                String data = skuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                        + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+                if (!skuItemDataMap.containsKey(skuItem.getId())) {
+                    skuItemDataMap.put(skuItem.getId(), data);
+                }
+            }
+            try {
+                BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+            } catch (IOException e) {
+                logger.error("Exception while appending on barcode file", e);
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+       }
+
+
     public class HTTPResponseResolution implements Resolution {
 		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 			InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));

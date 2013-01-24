@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.inventory;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -41,5 +42,12 @@ public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao{
           return get(GrnLineItem.class, grnLineItemId);
      }
 
+
+    public List<GrnLineItem> getGrnLineItemList (GoodsReceivedNote goodsReceivedNote){
+         List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>();
+         String query = "from  GrnLineItem grn where grn.goodsReceivedNote = :goodsReceivedNote";
+         grnLineItems = (List<GrnLineItem>) getSession().createQuery(query).setParameter("goodsReceivedNote", goodsReceivedNote).list();
+         return grnLineItems;
+    }
 
 }
