@@ -95,7 +95,7 @@ public class PincodeCourierMappingAction extends BaseAction {
             boolean isCod = pincodeCourierMapping.isCodGround() ||  pincodeCourierMapping.isCodAir();
             boolean isValidMapping = isCod || isGround || pincodeCourierMapping.isPrepaidAir();
           //todo courier recheck
-          if (!pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod)) {
+          if (pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod)) {
             if(pincodeCourierMapping.getId()!=null && !isValidMapping){
               getBaseDao().delete(pincodeCourierMapping);
             }
