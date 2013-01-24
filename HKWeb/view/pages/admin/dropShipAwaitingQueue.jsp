@@ -182,11 +182,7 @@
               return false;
           }
       }
-
-  });
-
-  $('.shippingOrderActionBtn').click(function() {
-      $('.shippingOrderDetailCheckbox').each(function() {
+     $('.shippingOrderDetailCheckbox').each(function() {
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
