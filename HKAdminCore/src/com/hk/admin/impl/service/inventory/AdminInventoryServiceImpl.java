@@ -327,6 +327,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
      }
 
 
+    public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem)  {
+     return   getAdminPVIDao().getCheckedinskuItemAgainstGrn(grnLineItem);
+    }
+
+
     public BaseDao getBaseDao() {
         return baseDao;
     }

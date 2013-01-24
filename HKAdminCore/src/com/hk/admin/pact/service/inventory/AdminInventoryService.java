@@ -6,10 +6,7 @@ import java.util.List;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.inventory.GrnLineItem;
-import com.hk.domain.inventory.StockTransfer;
-import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.inventory.*;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -74,4 +71,5 @@ public interface AdminInventoryService {
 
 	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
 
+    public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) ;
 }

@@ -14,5 +14,6 @@ public interface GrnLineItemDao extends BaseDao {
 
   public List<GrnLineItem> getAllGrnLineItemBySku(Sku sku);
 
+    public GrnLineItem getGrnLineItem(Long grnLineItemId);
 
 }

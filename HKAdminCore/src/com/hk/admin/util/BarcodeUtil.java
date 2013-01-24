@@ -33,13 +33,13 @@ public class BarcodeUtil {
 
 
      public static String generateBarCodeForSKuItem(Long skuGroupId, int skuItemNumber) {
-         if (skuItemNumber > 0 && skuItemNumber <10){
-          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"00" + skuItemNumber ;
-         }
-          if (skuItemNumber > 9 && skuItemNumber <100){
-          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"0" + skuItemNumber ;
-         }
-          return BARCODE_SKU_GROUP_PREFIX + skuGroupId + skuItemNumber ;
+//         if (skuItemNumber > 0 && skuItemNumber <10){
+//          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"00" + skuItemNumber ;
+//         }
+//          if (skuItemNumber > 9 && skuItemNumber <100){
+//          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"0" + skuItemNumber ;
+//         }
+          return BARCODE_SKU_GROUP_PREFIX + skuGroupId + "-" + skuItemNumber ;
     }
 
 

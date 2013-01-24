@@ -37,4 +37,9 @@ public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao{
 
 
 
+     public GrnLineItem getGrnLineItem(Long grnLineItemId){
+          return get(GrnLineItem.class, grnLineItemId);
+     }
+
+
 }

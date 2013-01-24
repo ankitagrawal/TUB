@@ -470,6 +470,7 @@ public class OrderServiceImpl implements OrderService {
                                 LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                                 shippingOrder.getLineItems().add(shippingOrderLineItem);
                             }
+                            
                             shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
                             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));

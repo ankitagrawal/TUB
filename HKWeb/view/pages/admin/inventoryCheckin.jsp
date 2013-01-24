@@ -91,6 +91,7 @@
           <th width="">UPC</th>
           <th width="">Qty</th>
           <th width="">Checked-in Qty</th>
+          <th width="">Download Barcode</th>
         </tr>
         <c:forEach items="${ica.grn.grnLineItems}" var="grnLineItem" varStatus="ctr">
           <c:set value="${grnLineItem.sku.productVariant}" var="productVariant"/>
@@ -106,6 +107,11 @@
             <td >${productVariant.upc}</td>
             <td class="chkInInfoQty">${grnLineItem.qty}</td>
             <td class="chkInQty" style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
+            <td> <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Download
+                <s:param name="grnLineItemId" value="${grnLineItem.id}"/>
+                <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link></td>
+
           </tr>
         </c:forEach>
       </table>

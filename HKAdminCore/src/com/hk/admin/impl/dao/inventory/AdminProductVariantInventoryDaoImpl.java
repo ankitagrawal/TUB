@@ -237,4 +237,11 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
          return getAll(VariantConfig.class);
      }
 
+
+    public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) {
+        List<SkuItem> skuItems = new ArrayList<SkuItem>();
+        String query = " select skuItem from ProductVariantInventory pvi where pvi.grnLineItem = :grnLineItem and pvi.qty = :checkedInQty";
+        skuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("grnLineItem", grnLineItem).setLong("checkedInQty", 1L).list();
+        return skuItems;
+    }
 }

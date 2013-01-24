@@ -47,4 +47,6 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
      public List<VariantConfig> getAllVariantConfig();
 
+    public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) ;
+
 }
