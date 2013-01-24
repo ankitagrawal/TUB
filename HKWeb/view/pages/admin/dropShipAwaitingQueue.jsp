@@ -147,7 +147,7 @@
           <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
           <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
                     value="Re-Assign for process" style="display:none;"/>
-          <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped" value="Mark Order as Shipped"/>
+          <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped shippingOrderActionBtn" value="Mark Order as Shipped"/>
       </c:if>
       <br>
       <br>
@@ -182,7 +182,11 @@
               return false;
           }
       }
-     $('.shippingOrderDetailCheckbox').each(function() {
+
+  });
+
+  $('.shippingOrderActionBtn').click(function() {
+      $('.shippingOrderDetailCheckbox').each(function() {
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
