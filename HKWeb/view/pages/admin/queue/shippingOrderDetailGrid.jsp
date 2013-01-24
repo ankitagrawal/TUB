@@ -510,9 +510,16 @@
         </c:otherwise>
     </c:choose>
 </td>
-<c:if test="${hasAction == true || isDropShipQueue == true}">
+<c:if test="${hasAction == true}">
     <td>
-        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending  && shippingOrder.shipment != null}">
+        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+            <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
+        </c:if>
+    </td>
+</c:if>
+<c:if test="${isDropShipQueue == true}">
+    <td>
+        <c:if test="${shippingOrder.shipment != null}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </td>

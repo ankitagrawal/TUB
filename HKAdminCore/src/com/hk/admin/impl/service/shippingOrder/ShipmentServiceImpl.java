@@ -198,7 +198,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             shippingOrder.setShipment(newShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
         }
-        return newShipment;
+        return shippingOrder.getShipment();
     }
 
     @Override

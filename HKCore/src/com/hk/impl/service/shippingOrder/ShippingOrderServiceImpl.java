@@ -175,6 +175,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                     return false;
                 }
+                if (shippingOrder.isDropShipping()) {
+                    String comments = "Because It is a Drop Shipped Order";
+                    logShippingOrderActivity(shippingOrder, adminUser,
+                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+                    return false;
+                }
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
                     // is after including placed order qty
@@ -186,15 +192,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         continue;
                     }
 
-
-                    if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                 //      setting shipping order Drop shipped
-                        shippingOrder.setDropShipping(true);
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
@@ -246,14 +244,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
-
-                //  dropship Shipping order now manually escalable         
-             /*         if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else        */
 
                     if (availableUnbookedInv <= 0) {
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
