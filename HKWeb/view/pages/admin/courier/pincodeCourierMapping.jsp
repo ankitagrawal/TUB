@@ -179,6 +179,54 @@
                     </c:if>
                     </c:otherwise>
                     </c:choose>
+            <div class="clear"></div>
+            <c:if test="${pcma.pincodeDefaultCouriers!=null and fn:length(pcma.pincodeDefaultCouriers)>0}">
+                <fieldset>
+                    <h2>Pincode Default Courier</h2>
+                    <br>
+                    <table class="zebra_vert">
+                        <tr>
+                            <thead>
+                            <th>S.No</th>
+                            <th>Courier Name</th>
+                            <th>WareHouseName</th>
+                            <th>Pincode</th>
+                            <th>COD</th>
+                            <th>Ground Shipping</th>
+                            <th>Estimate Shipping Cost</th>
+                            </thead>
+                        </tr>
+                        <tbody>
+                        <c:forEach items="${pcma.pincodeDefaultCouriers}" var="pincodeDefaultCourier" varStatus="ctr">
+                          <tr>
+                              <td>
+                                  ${ctr.index+1}.
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.courier.name}
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.warehouse.name}
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.pincode.pincode}
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.cod}
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.groundShipping}
+                              </td>
+                              <td>
+                                  ${pincodeDefaultCourier.estimatedShippingCost}
+                              </td>
+                          </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </c:if>
+            <div class="clear"></div>
             <fieldset>
             <h2>File to Upload
                 <s:file name="fileBean" size="30"/></h2>

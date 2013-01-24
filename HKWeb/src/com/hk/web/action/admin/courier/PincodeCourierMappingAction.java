@@ -9,6 +9,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -41,6 +42,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     List<Courier> courierList;
     Courier updateCourier;
     List<PincodeCourierMapping> pincodeCourierMappings;
+    private List<PincodeDefaultCourier> pincodeDefaultCouriers;
     List<Courier> availableCouriers;
     Map<String, Boolean> applicableShipmentServices = new HashMap<String, Boolean>();
 
@@ -73,6 +75,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
+        pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, null, null, null);
 //        availableCouriers = courierService.getDefaultCouriers(pincode, null, null, null);
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
@@ -214,4 +217,12 @@ public class PincodeCourierMappingAction extends BaseAction {
     public void setAvailableCouriers(List<Courier> availableCouriers) {
         this.availableCouriers = availableCouriers;
     }
+
+  public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
+    return pincodeDefaultCouriers;
+  }
+
+  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+  }
 }
