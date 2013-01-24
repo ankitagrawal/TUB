@@ -1,6 +1,7 @@
 package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
@@ -24,7 +25,6 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
 import com.hk.web.filter.WebContext;
@@ -101,7 +101,7 @@ public class PaymentSuccessAction extends BaseAction {
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
 
-            orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;

@@ -10913,4 +10913,94 @@
             <column name="comments" type="TEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1358238002137-2">
+        <addColumn tableName="stock_transfer_line_item">
+            <column name="checked_in_sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1358238002137-3">
+        <addColumn tableName="stock_transfer_line_item">
+            <column name="checked_out_sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1358238002137-5">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="batch_number" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1358238002137-6">
+        <dropNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="cost_price" tableName="stock_transfer_line_item"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1358238002137-7">
+        <dropNotNullConstraint columnDataType="DECIMAL(8,2)" columnName="mrp" tableName="stock_transfer_line_item"/>
+    </changeSet>
+	<changeSet author="Rohit (generated)" id="1358238002137-9">
+		<addForeignKeyConstraint baseColumnNames="checked_in_sku_group_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku_group2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Rohit (generated)" id="1358238002137-10">
+		<addForeignKeyConstraint baseColumnNames="checked_out_sku_group_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="rohit" id="2013-01-16-01">
+		<sql>
+			ALTER TABLE stock_transfer_line_item
+			DROP KEY stock_transfer_id_UNIQUE ,
+			ADD UNIQUE KEY stock_transfer_id_UNIQUE1 (stock_transfer_id,sku_id,checked_out_sku_group_id)
+		</sql>
+	</changeSet>
+	<changeSet author="rahul" id="15-01-2013-01">
+		<sql>
+			insert into warehouse(id, city, state, wh_phone, line1, line2, name, pincode,tin) values
+			(301, 'Delhi', 'Delhi', '12345', 'Shop No 15, Ground Floor, North west Avenue, Club road,',
+			'Punjabi bagh Extn', 'Punjabi Bagh Store', '110026', 'A/F')
+			 ON DUPLICATE KEY UPDATE wh_phone ='12345';
+		</sql>
+	</changeSet>
+	<changeSet author="Rahul (generated)" id="1225071974343-1">
+		<createTable tableName="warehouse_type">
+			<column name="id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="wh_type" type="VARCHAR(45)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="rahul" id="15-01-2013-02">
+		<sql>
+			alter table warehouse add column (warehouse_type_id int(11));
+		</sql>
+	</changeSet>
+
+	<changeSet author="Rahul (generated)" id="1229071974342-2">
+		<addForeignKeyConstraint baseColumnNames="warehouse_type_id" baseTableName="warehouse"  constraintName="fk_warehouse_warehouse_type" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse_type"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="rahul" id="15-01-2013-03">
+		<sql>
+			insert into warehouse_type values(10, 'STORE');
+			update warehouse set warehouse_type_id = 10 where id = 301;
+		</sql>
+	</changeSet>
+    <changeSet author="Rohit (generated)" id="1358502461101-1">
+        <addColumn tableName="dispatch_lot">
+            <column name="document_file_name" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-2">
+        <addColumn tableName="user">
+            <column name="subscribed_mask" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-3">
+        <sql>
+            update user u set subscribed_mask = 30;
+            update user u inner join email_recepient er on u.id = er.user_id set u.subscribed_mask = 1 where er.subscribed = 0;
+        </sql>
+    </changeSet>
+    <changeSet author="Marut (generated)" id="1357977084301-4">
+        <addColumn tableName="user">
+            <column name="unsubscribe_token" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

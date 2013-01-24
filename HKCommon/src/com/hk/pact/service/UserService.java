@@ -42,4 +42,8 @@ public interface UserService {
   public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
   public User findByLoginAndStoreId(String login, Long storeId);
+
+  public void subscribeUserForOffers(String login, boolean subscribe);
+
+  boolean unsubscribeUser(String unsubscribeToken);
 }

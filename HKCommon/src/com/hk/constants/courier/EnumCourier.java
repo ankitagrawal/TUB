@@ -33,11 +33,14 @@ public enum EnumCourier {
     Smile_Express_DSP(195L,"Smile Express DSP"),
     EarthMoversPune(200L, "Earth Movers Pune"),
 	IndiaOnTime(210L, "IndiaOn Time"),
+    MuditaCargo(220L,"Mudita Cargo"),
     HK_Delivery(500L, "HealthKart Delivery"),
     FedEx(600L, "FedEx"),
     FedEx_Surface(610L, "FedEx Surface"),
     Gati(650L, "Gati"),
     Star_Track(660L, "Star Track"),
+	Xpress_Logistics(661L, "Xpress Logistics"),
+	JP_CargoVan_Delhi(662L, "JP Cargo Van - Delhi"),
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -122,7 +125,9 @@ public enum EnumCourier {
                 EnumCourier.Gati,
                 EnumCourier.Safexpress,
                 EnumCourier.Star_Track ,
+                EnumCourier.MuditaCargo,
                 EnumCourier.Other
+
         );
     }
 }

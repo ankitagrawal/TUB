@@ -3,6 +3,8 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -51,6 +53,30 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
 		        .setParameter("productVariant", productVariant)
 		        .setParameter("batchNumber", batchNumber).list();
         return stockTransferLineItems != null && !stockTransferLineItems.isEmpty() ? stockTransferLineItems.get(0) : null;
+    }
+
+	public StockTransferLineItem getStockTransferLineItem(StockTransfer stockTransfer, Sku sku, SkuGroup checkedOutSkuGroup) {
+		String query = "select stli from StockTransferLineItem stli where stli.stockTransfer = :stockTransfer and stli.sku = :sku and stli.checkedOutSkuGroup = :skuGroup";
+		return (StockTransferLineItem) findUniqueByNamedParams(query, new String[]{"stockTransfer", "sku", "skuGroup"}, new Object[]{stockTransfer, sku, checkedOutSkuGroup});
+	}
+
+
+
+     public StockTransferLineItem getStockTransferLineItemForCheckedOutSkuGrp(SkuGroup checkedOutSkuGroup, StockTransfer stockTransfer){
+         DetachedCriteria  stockTransferLineItemsCriteria =   DetachedCriteria.forClass(StockTransferLineItem.class);
+         stockTransferLineItemsCriteria.add(Restrictions.eq("checkedOutSkuGroup", checkedOutSkuGroup)) ;
+         stockTransferLineItemsCriteria.add(Restrictions.eq("stockTransfer",stockTransfer));
+         List <StockTransferLineItem> stockTransferLineItems =    (List<StockTransferLineItem>) findByCriteria(stockTransferLineItemsCriteria);
+          return stockTransferLineItems == null || stockTransferLineItems.isEmpty() ? null : stockTransferLineItems.get(0);
+     }
+
+
+    public StockTransferLineItem checkinSkuGroupExists(StockTransferLineItem stockTransferLineItem ){
+              DetachedCriteria  stockTransferLineItemsCriteria =   DetachedCriteria.forClass(StockTransferLineItem.class);
+              stockTransferLineItemsCriteria.add(Restrictions.eq("id",stockTransferLineItem.getId()));
+               stockTransferLineItemsCriteria.add(Restrictions.isNotNull("checkedInSkuGroup"));
+                List <StockTransferLineItem> stockTransferLineItems =    (List<StockTransferLineItem>) findByCriteria(stockTransferLineItemsCriteria);
+               return stockTransferLineItems == null || stockTransferLineItems.isEmpty() ? null : stockTransferLineItems.get(0);
     }
 
 }

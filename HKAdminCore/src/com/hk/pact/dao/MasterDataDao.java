@@ -149,4 +149,6 @@ public interface MasterDataDao
 	public List<ReconciliationType> getAddReconciliationTypeList();
 
     public List <Courier> getListOfVendorCouriers();
+
+	public List<Courier> getCouriersForDispatchLot();
 }

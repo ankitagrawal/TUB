@@ -381,7 +381,7 @@ public class CourierStatusUpdateHelper {
 			Element element = doc.getRootElement();
 			Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
 			Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
-			Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);
+			Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);     
 			String trackStatus = header.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
 			List fields = header.getChildren();
 			if (trackStatus.equalsIgnoreCase("TRUE")) {
