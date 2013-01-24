@@ -488,15 +488,15 @@ public class DeliveryStatusUpdateManager {
 	}
 
 	public int updateCourierDeliveryStatus(ShippingOrder shippingOrder, Shipment shipment, String trackingId, Date deliveryDate) {
-
-		if (shipment != null && (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))) {
+		Long shippingOrderStatusId = shippingOrder.getOrderStatus().getId();
+		if (shipment != null && (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId()) || shippingOrderStatusId.equals((EnumShippingOrderStatus.RTO_Initiated.getId()))) ) {
 			if (shipment.getShipDate().after(deliveryDate) || deliveryDate.after(new Date())) {
 				Calendar deliveryDateAsShipDatePlusOne = Calendar.getInstance();
 				deliveryDateAsShipDatePlusOne.setTime(shipment.getShipDate());
 				deliveryDateAsShipDatePlusOne.add(Calendar.DAY_OF_MONTH, 1);
 				deliveryDate = deliveryDateAsShipDatePlusOne.getTime();
 			}
-			if (shipment != null && shipment.getAwb().getAwbNumber() != null && shipment.getAwb().getAwbNumber().equals(trackingId)) {
+			if (shipment.getAwb().getAwbNumber() != null && shipment.getAwb().getAwbNumber().equals(trackingId)) {
 				shipment.setDeliveryDate(deliveryDate);
 				getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
 				orderDeliveryCount++;
