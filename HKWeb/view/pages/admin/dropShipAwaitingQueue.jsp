@@ -157,17 +157,6 @@
   <%--</c:if>--%>
 </s:form>
 <script type="text/javascript">
-  $('.shippingOrderActionBtn').click(function() {
-    $('.shippingOrderDetailCheckbox').each(function() {
-      var shippingOrderDetailCheckbox = $(this);
-      var isChecked = shippingOrderDetailCheckbox.attr('checked');
-      if (isChecked) {
-        $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
-      }
-    });
-    return true;
-  });
-
   $("select[name='shippingOrderStatus']").change(function() {
     var selectedOrderStatus = $(this).val();
     if (selectedOrderStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>) {
@@ -195,12 +184,18 @@
       }
 
   });
+
+  $('.shippingOrderActionBtn').click(function() {
+      $('.shippingOrderDetailCheckbox').each(function() {
+          var shippingOrderDetailCheckbox = $(this);
+          var isChecked = shippingOrderDetailCheckbox.attr('checked');
+          if (isChecked) {
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+          }
+      });
+      return true;
+  });
+
 </script>
-
-
-
-
-    </script>
-
 </s:layout-component>
 </s:layout-render>
