@@ -101,14 +101,17 @@ public class XslPincodeCourierMapping {
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
-                boolean isGround = isPrepaidGround || isCodGround;
-                boolean isCod = isCodAir || isCodGround;
-                boolean isValidMapping = isCod && isGround;
 
-//                if (pincodeCourierService.changePincodeCourierMapping(pincode, courier, isGround, isCod)) {
-//                    continue;
-//                }
-                if (pincodeCourierMapping == null && isValidMapping) {
+                PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), null, null, null);
+                boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
+                if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
+                    continue;
+                }
+                if (!isValidMapping) {
+                    pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
+                    continue;
+                }
+                if (pincodeCourierMapping == null) {
                     pincodeCourierMapping = new PincodeCourierMapping();
                 }
                 pincodeCourierMapping.setPincode(pincode);

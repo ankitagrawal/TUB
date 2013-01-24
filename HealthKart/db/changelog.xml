@@ -10936,6 +10936,13 @@
             <column name="pincode_id" type="VARCHAR(6)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1358864269239-3">
+        <addColumn tableName="billing_address">
+            <column name="pincode" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-15">
         <dropForeignKeyConstraint baseTableName="pincode_courier_mapping" constraintName="fk_pincode_courier_mapping_pincode1"/>
     </changeSet>
@@ -10956,8 +10963,9 @@
           DELETE FROM courier_service_info where pincode_id=13701;
           delete from pincode_courier_mapping where pincode_id=13701;
           delete from pincode where id=13701;
-          insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (999999,'999999','.','Default',1,1,'Metros',1);
-          update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='999999', deleted =1 where pc.pincode is null;
+          update billing_address ba,address a set ba.pincode = a.pin where ba.id = a.id;
+          insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (-1,'-1','.','Default',1,1,'Metros',1);
+          update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='-1', deleted =1 where pc.pincode is null;
           update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
           update hub pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
           update pincode_courier_mapping pcm , pincode p set  pcm.pincode_id = p.pincode where pcm.pincode_id = p.id;
@@ -11177,13 +11185,6 @@
             update courier set active = 0 where active = -1;
         </sql>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1358864269239-3">
-        <addColumn tableName="billing_address">
-            <column name="pincode" type="VARCHAR(30)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1358864269239-4">
         <addColumn tableName="payment">
             <column name="billing_address_id" type="INT"/>
@@ -11192,7 +11193,8 @@
     <changeSet author="Pratham" id="23-01-2013-02">
         <sql>
             update courier set operations_bitset = 2 where active = 1;
-            update courier set operations_bitset = 13 where active = 0;
+            update courier set operations_bitset = operations_bitset * 13 where id in (70,650,170,660,220);
+            update courier set operations_bitset = operations_bitset * 11 where id in (500,661,662);
         </sql>
     </changeSet>
     <changeSet author="Pratham" id="23-01-2013-01">

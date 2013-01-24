@@ -152,19 +152,23 @@
                                     ${pCourierMap.courier.active ? 'Yes' : 'No'}
                             </td>
                             <td>
-                                <c:out value="${pCourierMap.prepaidAir}"/>
+                                <%--<c:out value="${pCourierMap.prepaidAir}"/>--%>
+                                <%--<s:checkbox name="pincodeCourierMappings[${ctr.index}].prepaidAir" disabled="${pCourierMap.prepaidAir}"/>--%>
                                 <s:checkbox name="pincodeCourierMappings[${ctr.index}].prepaidAir" />
                             </td>
                             <td>
-                                <c:out value="${pCourierMap.prepaidGround}"/>
+                                <%--<c:out value="${pCourierMap.prepaidGround}"/>--%>
+                                        <%--<s:checkbox  name="pincodeCourierMappings[${ctr.index}].prepaidGround" disabled="${pCourierMap.prepaidGround}"/>--%>
                                 <s:checkbox  name="pincodeCourierMappings[${ctr.index}].prepaidGround" />
                             </td>
                             <td>
-                                <c:out value="${pCourierMap.codAir}"/>
-                                <s:checkbox name="pincodeCourierMappings[${ctr.index}].codAir" />
+                                <%--<c:out value="${pCourierMap.codAir}"/>--%>
+                                    <%--<s:checkbox name="pincodeCourierMappings[${ctr.index}].codAir" disabled="${pCourierMap.codAir}"/>--%>
+                                    <s:checkbox name="pincodeCourierMappings[${ctr.index}].codAir" />
                             </td>
                             <td>
-                                <c:out value="${pCourierMap.codGround}" />
+                                <%--<c:out value="${pCourierMap.codGround}" />--%>
+                                <%--<s:checkbox name="pincodeCourierMappings[${ctr.index}].codGround" disabled="${pCourierMap.codGround}"/>--%>
                                 <s:checkbox name="pincodeCourierMappings[${ctr.index}].codGround" />
                                 <s:hidden name="pincodeCourierMappings[${ctr.index}].routingCode" value="${pCourierMap.routingCode}"/>
                             </td>

@@ -4,6 +4,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -146,7 +147,7 @@
           <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
           <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
                     value="Re-Assign for process" style="display:none;"/>
-          <s:submit name="markShippingOrdersAsShipped" class="shippingOrderActionBtn" value="Mark Order as Shipped"/>
+          <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped" value="Mark Order as Shipped"/>
       </c:if>
       <br>
       <br>
@@ -176,8 +177,30 @@
     }
   });
 
+  var grncheck = false;
+  $('.shipped').click(function() {
+      var con = confirm("Verify that you are saving correct information ");
+      if (con == true) {
+          grncheck = true;
+      } else {
+          return false;
+      }
+      if (grncheck) {
+          var bool = confirm("Verify that you have already created GRN ");
+          if (bool == true) {
+              return true
+          } else {
+              return false;
+          }
+      }
 
+  });
 </script>
+
+
+
+
+    </script>
 
 </s:layout-component>
 </s:layout-render>

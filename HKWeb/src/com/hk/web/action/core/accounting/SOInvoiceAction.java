@@ -1,6 +1,7 @@
 package com.hk.web.action.core.accounting;
 
-import com.hk.domain.courier.ShipmentServiceType;
+import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.domain.courier.*;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -22,9 +23,6 @@ import com.hk.admin.util.BarcodeGenerator;
 import com.hk.constants.core.Keys;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.coupon.Coupon;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.PincodeCourierMapping;
-import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
@@ -51,6 +49,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class SOInvoiceAction extends BaseAction {
@@ -79,7 +78,8 @@ public class SOInvoiceAction extends BaseAction {
 	ShippingOrderService shippingOrderService;
     @Autowired
     PincodeCourierService pincodeCourierService;
-
+    @Autowired
+    CourierService courierService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeDir + "']}")
 	String barcodeDir;
@@ -133,8 +133,9 @@ public class SOInvoiceAction extends BaseAction {
 	public Resolution pre() {
 		if (shippingOrder != null) {
 			shipment = shippingOrder.getShipment();
+            Awb awb = null;
 			if (shipment != null) {
-				Awb awb = shipment.getAwb();
+				awb = shipment.getAwb();
 				if (awb != null && awb.getAwbNumber() != null) {
 					generateBarcodesForInvoice(awb);
 				}
@@ -176,7 +177,7 @@ public class SOInvoiceAction extends BaseAction {
 
 			freebieItem = cartFreebieService.getFreebieItem(shippingOrder);
 
-			printZone = shippingOrderService.printZoneOnSOInvoice(shippingOrder);
+			printZone = printZoneOnSOInvoice(awb);
 
 			if(printZone){
 				zone = shippingOrder.getShipment().getZone().getName();
@@ -190,7 +191,12 @@ public class SOInvoiceAction extends BaseAction {
 		}
 	}
 
-	public boolean isPrintable() {
+    private boolean printZoneOnSOInvoice(Awb awb) {
+        List<Courier> dispatchLotCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.DISPATCH_LOT.getId());
+        return dispatchLotCouriers != null && !dispatchLotCouriers.isEmpty() && dispatchLotCouriers.contains(awb.getCourier());
+    }
+
+    public boolean isPrintable() {
 		return printable;
 	}
 

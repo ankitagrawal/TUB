@@ -71,7 +71,7 @@ public interface PincodeCourierService {
 
     public PincodeDefaultCourier getPincodeDefaultCourier(Pincode pincode, Warehouse warehouse, Boolean isCod, Boolean isGround);
 
-    public boolean changePincodeCourierMapping(Pincode pincode, Courier courier, boolean isGround, boolean isCod);
+    public boolean changePincodeCourierMapping(PincodeCourierMapping pincodeCourierMappingDb, PincodeCourierMapping pincodeCourierMappingSoft);
 
     public Map<String,Boolean> generateDetailedAnalysis(List<PincodeCourierMapping> pincodeCourierMappings);
 

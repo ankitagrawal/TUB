@@ -7,7 +7,9 @@ import com.hk.domain.order.ShippingOrder;
 
 public interface ShipmentService {
 
-    public Shipment createShipment(ShippingOrder shippingOrder);
+    public Shipment createShipment(ShippingOrder shippingOrder, Boolean validate);
+
+    public Shipment validateShipment(ShippingOrder shippingOrder);
 
     public Shipment save(Shipment shipment);
 

@@ -242,9 +242,32 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     }
 
     @Override
-    public boolean changePincodeCourierMapping(Pincode pincode, Courier courier, boolean isGround, boolean isCod) {
-        List<Courier> couriers = pincodeCourierMappingDao.searchDefaultCourier(pincode, isCod, isGround, null);
-        return !(couriers != null && !couriers.isEmpty() && couriers.contains(courier));
+    public boolean changePincodeCourierMapping(PincodeCourierMapping pincodeCourierMappingDb, PincodeCourierMapping pincodeCourierMappingSoft) {
+        if (pincodeCourierMappingDb.isPrepaidAir() && !pincodeCourierMappingSoft.isPrepaidAir()) {
+            List<Courier> couriers = getDefaultCouriers(pincodeCourierMappingSoft.getPincode(), false, false, null);
+            if (couriers != null && !couriers.isEmpty() && couriers.contains(pincodeCourierMappingSoft.getCourier())) {
+                return false;
+            }
+        }
+        if (pincodeCourierMappingDb.isPrepaidGround() && !pincodeCourierMappingSoft.isPrepaidGround()) {
+            List<Courier> couriers = getDefaultCouriers(pincodeCourierMappingSoft.getPincode(), false, true, null);
+            if (couriers != null && !couriers.isEmpty() && couriers.contains(pincodeCourierMappingSoft.getCourier())) {
+                return false;
+            }
+        }
+        if (pincodeCourierMappingDb.isCodAir() && !pincodeCourierMappingSoft.isCodAir()) {
+            List<Courier> couriers = getDefaultCouriers(pincodeCourierMappingSoft.getPincode(), true, false, null);
+            if (couriers != null && !couriers.isEmpty() && couriers.contains(pincodeCourierMappingSoft.getCourier())) {
+                return false;
+            }
+        }
+        if (pincodeCourierMappingDb.isCodGround() && !pincodeCourierMappingSoft.isCodGround()) {
+            List<Courier> couriers = getDefaultCouriers(pincodeCourierMappingSoft.getPincode(), true, true, null);
+            if (couriers != null && !couriers.isEmpty() && couriers.contains(pincodeCourierMappingSoft.getCourier())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

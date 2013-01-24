@@ -2,7 +2,6 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.manager.AdminEmailManager;
-import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
@@ -16,11 +15,9 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.*;
-import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
-import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -41,10 +38,6 @@ public class ShipmentServiceImpl implements ShipmentService {
     CourierService courierService;
     @Autowired
     PincodeCourierService pincodeCourierService;
-    @Autowired
-    PincodeDao pincodeDao;
-    @Autowired
-    AwbDao awbDao;
     @Autowired
     CourierGroupService courierGroupService;
     @Autowired
@@ -104,25 +97,26 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Transactional
-    public Shipment createShipment(ShippingOrder shippingOrder) {
+    public Shipment createShipment(ShippingOrder shippingOrder, Boolean validate) {
         User adminUser = getUserService().getAdminUser();
-        if (shippingOrder.getShipment() == null) {
-            Shipment shipment = validateShipment(shippingOrder);
-            if (shipment != null) {
-                shipment.setEmailSent(false);
-                shipment.setShippingOrder(shippingOrder);
-                shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
-                shippingOrder.setShipment(shipment);
-                if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                    shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
-                    shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
-                    shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
-                }
-                shippingOrder = shippingOrderService.save(shippingOrder);
-                String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
-                        comment);
+        Shipment shipment = shippingOrder.getShipment();
+        if (validate) {
+            shipment = validateShipment(shippingOrder);
+        }
+        if (shipment != null) {
+            shipment.setEmailSent(false);
+            shipment.setShippingOrder(shippingOrder);
+            shipment.setBoxSize(EnumBoxSize.MIGRATE.asBoxSize());
+            shippingOrder.setShipment(shipment);
+            if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
             }
+            shippingOrder = shippingOrderService.save(shippingOrder);
+            String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
+            shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
+                    comment);
         }
         return shippingOrder.getShipment();
     }
@@ -194,7 +188,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             delete(oldShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
             awbService.preserveAwb(oldShipment.getAwb());
-            newShipment = createShipment(shippingOrder);
+            newShipment = createShipment(shippingOrder, true);
             shippingOrder.setShipment(newShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
         }

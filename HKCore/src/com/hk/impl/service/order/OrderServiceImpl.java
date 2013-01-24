@@ -730,7 +730,9 @@ public class OrderServiceImpl implements OrderService {
             }
             for (ShippingOrder shippingOrder : shippingOrders) {
                 if (!shippingOrder.isDropShipping()) {
-                    shipmentService.createShipment(shippingOrder);
+                    if (shippingOrder.getShipment() == null) {
+                        shipmentService.createShipment(shippingOrder, true);
+                    }
                 } else {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);

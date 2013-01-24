@@ -120,12 +120,11 @@ public class ShipmentResolutionAction extends BaseAction {
     }
 
     public Resolution changeShipmentServiceType() {
-        String oldShipmentServiceType = shipment.getShipmentServiceType().getName();
-        shipment = shipmentService.recreateShipment(shippingOrder);
+        //todo courier refactor, as of now manual awb change when shipment service type is altered
         shipment.setShipmentServiceType(EnumShipmentServiceType.getShipmentTypeFromId(shipmentServiceTypeId).asShipmentServiceType());
         shipment = shipmentService.save(shipment);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment Service Type has been changed from "+ oldShipmentServiceType +"to " + shipment.getShipmentServiceType().getName());
-        addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed"));
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment Service Type changed to " + shipment.getShipmentServiceType().getName());
+        addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed, Please remember you may have to change awb/courier as per use case"));
         return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
@@ -134,14 +133,13 @@ public class ShipmentResolutionAction extends BaseAction {
             applicableCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
         }else{
             applicableCouriers = Arrays.asList(pincodeCourierService.getDefaultCourier(shippingOrder));
-//        applicableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
         }
         return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp").addParameter("shippingOrder", shippingOrder.getId());
     }
 
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipment = shipmentService.createShipment(shippingOrder);
+        shipment = shipmentService.createShipment(shippingOrder,true);
         if (shipment == null) {
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));

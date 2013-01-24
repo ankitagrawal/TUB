@@ -74,8 +74,9 @@ public class CreateUpdateShipmentAction extends BaseAction {
         shippingOrder = shippingOrderList.get(0);
         shipment = shippingOrder.getShipment();
 
+        //todo courier such condition should not occur
         if (shipment == null) {
-            shipment = shipmentService.createShipment(shippingOrder);
+            shipment = shipmentService.createShipment(shippingOrder, true);
         }
         if (shipment == null) {
             addRedirectAlertMessage(new SimpleMessage("Awb doesn't Exist for this Gateway ID, please enter below details to create the new one !!!!"));
@@ -85,12 +86,13 @@ public class CreateUpdateShipmentAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
+/*
     public Resolution createUpdateAwb() {
         if (shippingOrder != null) {
             shippingOrder = shippingOrderService.find(shippingOrder.getId());
         }
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipment = shipmentService.createShipment(shippingOrder);
+        shipment = shipmentService.createShipment(shippingOrder, true);
         if (shipment == null) {
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check below shipping order life cycle"));
@@ -99,6 +101,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
+*/
 
     public Resolution updateShipment() {
         shipmentService.save(shipment);

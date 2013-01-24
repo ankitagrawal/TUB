@@ -76,7 +76,6 @@ public class PincodeCourierMappingAction extends BaseAction {
         pincode = pincodeService.getByPincode(pin);
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, null, null, null);
-//        availableCouriers = courierService.getDefaultCouriers(pincode, null, null, null);
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
@@ -90,21 +89,25 @@ public class PincodeCourierMappingAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution update() {
+        boolean flag = true;
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
-            boolean isGround = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround();
-            boolean isCod = pincodeCourierMapping.isCodGround() ||  pincodeCourierMapping.isCodAir();
-            boolean isValidMapping = isCod || isGround || pincodeCourierMapping.isPrepaidAir();
-          //todo courier recheck
-          if (pincodeCourierService.changePincodeCourierMapping(pincode, pincodeCourierMapping.getCourier(), isGround, isCod)) {
-            if(pincodeCourierMapping.getId()!=null && !isValidMapping){
-              getBaseDao().delete(pincodeCourierMapping);
+            PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), null, null, null);
+            boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
+            if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
+                flag = false;
+                break;
             }
-            else{
-              pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
+            if (!isValidMapping) {
+                pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
+                continue;
             }
-          }
+            pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
         }
-        addRedirectAlertMessage(new SimpleMessage("changes saved in the system and if Some values didn't save then compare with Pincode Default courier"));
+        if (flag) {
+            addRedirectAlertMessage(new SimpleMessage("Mappings Updated"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Some of the mappings have dependencies in PDC, Please correct them before saving"));
+        }
         return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin", pin);
     }
 
@@ -220,11 +223,11 @@ public class PincodeCourierMappingAction extends BaseAction {
         this.availableCouriers = availableCouriers;
     }
 
-  public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
-    return pincodeDefaultCouriers;
-  }
+    public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
+        return pincodeDefaultCouriers;
+    }
 
-  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
-    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
-  }
+    public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+        this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+    }
 }
