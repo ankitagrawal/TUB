@@ -92,7 +92,6 @@ public class UserManageAddressAction extends BaseAction {
   }
 
   public Resolution manageAddresses() {
-    List<Address> addresses = new ArrayList<Address>();
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
