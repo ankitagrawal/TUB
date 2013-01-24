@@ -5,12 +5,12 @@ import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +39,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuGroupDao.getAllCheckedInBatches(sku);
 	}
 
-	public SkuGroup getSkuGroup(String barcode) {
-		return skuGroupDao.getSkuGroup(barcode);
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
+		return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
 	}
 
 	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
@@ -59,6 +59,9 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
 	}
 
+	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId){
+		return skuGroupDao.getSkuGroupsByBarcode(barcode, warehouseId);
+	}
 
 
 	//SkuItemDao Methods
@@ -69,5 +72,13 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
 	}
+
+      public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
+        return skuItemDao.getSkuItem(skuGroup,skuItemStatus);
+    }
+
+     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId){
+       return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);  
+     }
 
 }

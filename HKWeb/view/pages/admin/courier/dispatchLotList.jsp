@@ -62,7 +62,7 @@
 				<label>Courier:</label>
 				<s:select name="courier">
 					<s:option value="">-All-</s:option>
-					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList"
+					<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="couriersForDispatchLot"
 					                           value="id"
 					                           label="name"/>
 				</s:select>
@@ -139,6 +139,12 @@
 						</c:if>
 						<c:if test="${dispatchLot.dispatchLotStatus.id == inTransitDispatchLot || dispatchLot.dispatchLotStatus.id == partialReceivedDispatchLot}">
 							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="receiveLot">Receive
+								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
+							</s:link>
+							&nbsp;&nbsp;
+						</c:if>
+						<c:if test="${dispatchLot.documentFileName != null}">
+							<s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="downloadDocument">Download Document
 								<s:param name="dispatchLot" value="${dispatchLot.id}"/>
 							</s:link>
 							&nbsp;&nbsp;

@@ -83,7 +83,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;
+    ShippingOrderLifecycleService shippingOrderLifecycleService;       
 
     private Long orderId;
     private Long storeId;
@@ -103,6 +103,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     private boolean sortByPaymentDate = true;
     private boolean sortByScore = true;
+    private Boolean dropShip = null;
 
     @DontValidate
     @DefaultHandler
@@ -219,6 +220,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
         orderSearchCriteria.setCategories(categoryList);
 
+        if (dropShip != null){
+           orderSearchCriteria.setDropShip(dropShip);
+        }
+
         logger.debug("basketCategories : " + basketCategories.size());
         Set<String> basketCategoryList = new HashSet<String>();
         for (String category : basketCategories) {
@@ -247,20 +252,12 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 if (isManualEscalable) {
                     trueMessage.append(shippingOrder.getId());
                     trueMessage.append(" ");
-                    if (shippingOrder.isDropShipping()) {
-                        shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                    } else {
-                        shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                    }
+                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
                         trueMessage.append(shippingOrder.getId());
                         trueMessage.append(" ");
-                        if (shippingOrder.isDropShipping()) {
-                            shippingOrderService.escalateShippingOrderFromActionTODropQueue(shippingOrder, false);
-                        } else {
-                            shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                        }
+                        shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                     } else {
                         falseMessage.append(shippingOrder.getId());
                         falseMessage.append(" ");
@@ -268,7 +265,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 }
             }
             trueMessage.append("\n");
-            addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + " " + falseMessage.toString()));
+            addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + " / " + falseMessage.toString()));
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
@@ -410,6 +407,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("storeId");
         params.add("sortByPaymentDate");
         params.add("sortByScore");
+        params.add("dropShip");
 
         // params.add("orderLifecycleActivity");
         // params.add("shippingOrderStatus");
@@ -511,4 +509,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByScore = sortByScore;
     }
 
+    public Boolean isDropShip() {
+        return dropShip;
+    }
+
+      public Boolean getDropShip() {
+         return dropShip;
+     }
+
+    public void setDropShip(Boolean dropShip) {
+        this.dropShip = dropShip;
+    }
 }

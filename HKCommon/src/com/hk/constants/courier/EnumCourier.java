@@ -33,11 +33,14 @@ public enum EnumCourier {
     Smile_Express_DSP(195L,"Smile Express DSP"),
     EarthMoversPune(200L, "Earth Movers Pune"),
 	IndiaOnTime(210L, "IndiaOn Time"),
+    MuditaCargo(220L,"Mudita Cargo"),
     HK_Delivery(500L, "HealthKart Delivery"),
     FedEx(600L, "FedEx"),
     FedEx_Surface(610L, "FedEx Surface"),
     Gati(650L, "Gati"),
     Star_Track(660L, "Star Track"),
+	Xpress_Logistics(661L, "Xpress Logistics"),
+	JP_CargoVan_Delhi(662L, "JP Cargo Van - Delhi"),
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -81,38 +84,6 @@ public enum EnumCourier {
         return courierIds;
     }
 
-
-    public static List<EnumCourier> getCurrentlyApplicableCouriers() {
-        return Arrays.asList(
-                EnumCourier.DTDC_Plus,
-                EnumCourier.DTDC_Lite,
-                EnumCourier.DTDC_Surface,
-                EnumCourier.DTDC_COD,
-                EnumCourier.Speedpost,
-                EnumCourier.Delhivery,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.Smile_EExpress,
-                EnumCourier.Smile_Express_DSP,
-                EnumCourier.AFLWiz,
-                EnumCourier.BlueDart,
-                EnumCourier.BlueDart_COD,
-                EnumCourier.Safexpress,
-                EnumCourier.Quantium,
-                EnumCourier.HK_Delivery,
-                EnumCourier.FedEx,
-                EnumCourier.FedEx_Surface
-        );
-    }
-
-
-     public static List<EnumCourier> getCurrentlyApplicableGroundShippedCouriers() {
-        return Arrays.asList(
-                EnumCourier.DTDC_Surface,
-                EnumCourier.Delhivery_Surface,
-                EnumCourier.FedEx_Surface
-        );
-    }
-
     public static List<Long> getDTDCCouriers() {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
@@ -125,7 +96,6 @@ public enum EnumCourier {
     public static List<Long> getBlueDartCouriers() {
         List<Long> blueDartCourierIds = new ArrayList<Long>();
         blueDartCourierIds.add(EnumCourier.BlueDart.getId());
-        blueDartCourierIds.add(EnumCourier.BlueDart_COD.getId());
         return blueDartCourierIds;
     }
 
@@ -154,7 +124,10 @@ public enum EnumCourier {
                 EnumCourier.BlueDart,
                 EnumCourier.Gati,
                 EnumCourier.Safexpress,
-                EnumCourier.Star_Track
+                EnumCourier.Star_Track ,
+                EnumCourier.MuditaCargo,
+                EnumCourier.Other
+
         );
     }
 }

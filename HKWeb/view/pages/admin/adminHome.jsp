@@ -24,7 +24,7 @@
 				<s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
 					<s:option value="0">-None-</s:option>
 					<c:forEach items="${whList}" var="wh">
-						<s:option value="${wh.id}">${wh.city}</s:option>
+						<s:option value="${wh.id}">${wh.name}</s:option>
 					</c:forEach>
 				</s:select>
 				<s:submit class="button_orange" name="bindUserWithWarehouse" value="Save"/>
@@ -35,6 +35,14 @@
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
 				</shiro:hasRole>
 			</td>
+			<%--<td>
+				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
+				<shiro:hasRole name="<%=RoleConstants.GOD%>">
+					<s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
+					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
+				</shiro:hasRole>
+				</c:if>
+			</td>--%>
 		</tr>
 	</table>
 </shiro:hasAnyRoles>
@@ -71,6 +79,9 @@
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
+    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe Token </s:link></h3>
+    </shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -226,7 +237,7 @@
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 
-	<%--<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>--%>
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
 	            event="generateCourierReport">Download Courier Excel
@@ -504,5 +515,10 @@
 		});
 	});
 </script>
+
+<!-- Script to render JIRA issue collector Form -->
+<script type="text/javascript"
+        src="https://healthkart.atlassian.net/s/en_US-pg27qm-418945332/6020/74/1.3.2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=f0a8759b"></script>
+
 </s:layout-component>
 </s:layout-render>
