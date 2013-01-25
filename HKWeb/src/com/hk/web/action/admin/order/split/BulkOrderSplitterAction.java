@@ -49,14 +49,14 @@ public class BulkOrderSplitterAction extends BaseAction {
 
 		if (orderList != null) {
 			for (Order order : orderList) {
-                orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+                orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 			}
 		}
 		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
 	}
 
 	public Resolution splitSingleOrder() {
-		boolean shippingOrderExists = orderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+		boolean shippingOrderExists = orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 		String message = "";
 		if (shippingOrderExists) {
 			message = "BO has been Split into SO";

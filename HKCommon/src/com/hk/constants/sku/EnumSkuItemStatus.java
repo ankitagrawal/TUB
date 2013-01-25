@@ -11,7 +11,8 @@ import com.hk.domain.sku.SkuItemStatus;
  */
 public enum EnumSkuItemStatus {
 	Checked_IN(10L, "CHECKED IN"),
-	Checked_OUT(20L, "CHECKED OUT");
+	Checked_OUT(20L, "CHECKED OUT"),
+	Stock_Transfer_Out(30L, "Stock Transfer Out");
 
 	private Long id;
 	private String name;

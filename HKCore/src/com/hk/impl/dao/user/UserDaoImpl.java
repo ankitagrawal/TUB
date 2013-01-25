@@ -66,6 +66,13 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         return (User) getSession().getNamedQuery("user.findByLogin").setString("login", login).uniqueResult();
     }
 
+    //todo: marut - ideally store id also has to be passed here
+    public User findByUnsubscribeToken(String unsubscribeToken) {
+        Criteria criteria = getSession().createCriteria(User.class);
+        criteria.add(Restrictions.eq("unsubscribeToken", unsubscribeToken));
+        return (User) criteria.uniqueResult();
+    }
+
     public User findByLoginAndStoreId(String login, Long storeId) {
         if (storeId != null && !storeId.equals(1L)) {
             login += "||" + storeId;
@@ -220,6 +227,12 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 
         criteria.add(Restrictions.in("id", userIds));
         return list(criteria, pageNo, perPage);
+    }
+
+    public void updateUserSubscription(String login,int subscriptionMask) {
+         User user = findByLogin(login);
+         user.setSubscribedMask(subscriptionMask);
+         save(user);
     }
 
     public RoleDao getRoleDao() {
