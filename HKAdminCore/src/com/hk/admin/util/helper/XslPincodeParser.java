@@ -233,6 +233,7 @@ public class XslPincodeParser {
                 String courierId = row.getColumnValue(XslConstants.COURIER_ID);
                 String groundShippingAvailable = row.getColumnValue(XslConstants.GROUND_SHIPPING_AVAILABLE);
                 String estimatedShippingCost = row.getColumnValue(XslConstants.ESTIMATED_SHIPPING_COST);
+                Double estimatedShippingCostDouble = estimatedShippingCost!=null ? Double.valueOf(estimatedShippingCost) : null;
                 String codAvailable = row.getColumnValue(XslConstants.COD_AVAILABLE);
 
                 if (StringUtils.isEmpty(pin) || StringUtils.isEmpty(warehouseId) || StringUtils.isEmpty(courierId) || StringUtils.isEmpty(groundShippingAvailable)) {
@@ -255,7 +256,7 @@ public class XslPincodeParser {
                 }
 
                 PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
-                        isCODAvailable, Double.valueOf(estimatedShippingCost));
+                        isCODAvailable, estimatedShippingCostDouble);
                 pincodeDefaultCouriers.add(pincodeDefaultCourier);
                 rowCount++;
             }

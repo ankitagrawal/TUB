@@ -125,7 +125,7 @@ public class ShipmentResolutionAction extends BaseAction {
         shipment = shipmentService.save(shipment);
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment Service Type changed to " + shipment.getShipmentServiceType().getName());
         addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed, Please remember you may have to change awb/courier as per use case"));
-        return new RedirectResolution(ShipmentResolutionAction.class).addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+        return new RedirectResolution(ShipmentResolutionAction.class);
     }
 
     public Resolution generateAWB() {

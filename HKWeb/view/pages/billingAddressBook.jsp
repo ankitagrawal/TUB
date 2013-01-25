@@ -222,7 +222,7 @@
           </s:select>
           <div class='label'>PIN Code<span class="aster">*</span></div>
           <s:text name="pin" class="pincode" maxlength="20"/>
-          <s:hidden name="address.pincode" value="999999"/>
+          <s:hidden name="address.pincode" value="-1"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>

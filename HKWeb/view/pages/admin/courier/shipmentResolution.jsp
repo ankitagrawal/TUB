@@ -47,6 +47,7 @@
 
     <s:layout-component name="content">
      <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
+         <input type="hidden" name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
           <fieldset>
           <label>Enter SO Gateway Id</label>
           <s:text name="gatewayOrderId" id="gatewayOrderId"/>
@@ -84,7 +85,7 @@
          <div class="clear"></div>
 
          <c:choose>
-           <c:when test="${shipRes.shipment!=null}">
+           <c:when test="${shipRes.shipment!=null}">                              
                <fieldset>
                <h2>Shipment Details</h2>
                <table class="zebra_vert">
@@ -110,7 +111,6 @@
                                 <s:param name="shippingOrderId" value="${shipRes.shippingOrder.id}"/>
                                 <s:param name="shippingOrderGatewayId" value="${shipRes.shippingOrder.gatewayOrderId}"/>
                             </s:link>
-                           <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
                        </td>
                        <td>
                            ${shipRes.shippingOrder.baseOrder.address.pincode.pincode}
