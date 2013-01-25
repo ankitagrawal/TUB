@@ -100,7 +100,7 @@
       <div class="pages">
           <span class="pages_link">1</span>
           <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan80-2.jsp">2</a>
-          <a class="next"  href="${pageContext.request.contextPath}/pages/26jan80-2.jsp">Next →</a>
+          <a class="pages_link"  href="${pageContext.request.contextPath}/pages/26jan80-2.jsp">Next</a>
        </div>
   <div class="cl"></div>
 

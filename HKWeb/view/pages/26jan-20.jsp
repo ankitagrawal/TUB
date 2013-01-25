@@ -108,7 +108,7 @@
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-07.jsp">7</a>
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-08.jsp">8</a>
             <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-09.jsp">9</a>
-			<a class="next"  href="${pageContext.request.contextPath}/pages/26jan20-02.jsp">Next →</a>
+			<a class="pages_link"  href="${pageContext.request.contextPath}/pages/26jan20-02.jsp">Next</a>
          </div>
 <div class="cl"></div>
 

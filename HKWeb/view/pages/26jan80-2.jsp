@@ -85,7 +85,7 @@
 
     <div class="cl"></div>
       <div class="pages">
-          <a class="next"  href="${pageContext.request.contextPath}/pages/26jan-80.jsp">← Previous</a>
+          <a class="pages_link"  href="${pageContext.request.contextPath}/pages/26jan-80.jsp">Previous</a>
           <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan-80.jsp">1</a>
           <span class="pages_link">2</span>
        </div>

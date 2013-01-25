@@ -99,7 +99,7 @@
 
  <div class="cl"></div>
          <div class="pages">
-             <a class="next"  href="${pageContext.request.contextPath}/pages/26jan20-07.jsp">← Previous</a>
+             <a class="pages_link"  href="${pageContext.request.contextPath}/pages/26jan20-07.jsp">Previous</a>
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan-20.jsp">1</a>
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-02.jsp">2</a>
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-03.jsp">3</a>
@@ -111,7 +111,7 @@
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-07.jsp">7</a>
              <span class="pages_link">8</span>
              <a class="pages_link" href="${pageContext.request.contextPath}/pages/26jan20-09.jsp">9</a>
-             <a class="next"  href="${pageContext.request.contextPath}/pages/26jan20-09.jsp">Next →</a>
+             <a class="pages_link"  href="${pageContext.request.contextPath}/pages/26jan20-09.jsp">Next</a>
           </div>
  <div class="cl"></div>
 
