@@ -32,47 +32,6 @@
     DateTime currentDateTime = new DateTime();
     Date startOfOfferDate = new Date(new DateTime(2013, 01, 25, 19, 59, 59, 59).getMillis());
     Date endOfOfferDate = new Date(new DateTime(2013, 01, 27, 8, 59, 59, 59).getMillis());
-      if (currentDateTime.isBefore(endOfOfferDate.getTime())) {
-  %>
-  <!-- remove this after gosf -->
-  <script type="text/javascript">
-    var initSliderPaginator = function() {
-        $(window).scroll(function() {
-            var last_p = $('#pagerTrigger').offset().top;
-            var doc_height = $(window).height();
-            <%-- when reaching the element with id "last_para" we want to show the slidebox. Let's get the distance from the top to the element --%>
-            var distanceTop = last_p - doc_height;
-            if ($(window).scrollTop() > distanceTop) {
-                <%--
-                //var windowscroll = $(window).scrollTop();
-                //alert ('Window Scroll Top height is ' + windowscroll);
-                //alert ('last paragraph height from the top' + last_p);
-                //alert ('Document Height from the top' + doc_height);
-                --%>
-                $('#slidebox').animate({'right':'0px'}, 300);
-            }
-            else
-                $('#slidebox').stop(true).animate({'right':'-430px'}, 100);
-        });
-        <%-- remove the slidebox when clicking the cross --%>
-        $('#slidebox .close').bind('click', function() {
-            $(this).parent().remove();
-        });
-    };
-  </script>
-  <script type="text/javascript">$(document).ready(function () {initSliderPaginator();});</script>
-  <div id="slidebox">
-    <a class="close"></a>
-
-    <p>On popular demand, The Shopping Festival continues!! <br/><span class="gosfDisc">Over 500 products with Discounts up to <span style="font-size:1.2em;">80%</span>!</span></p>
-    <div style="color: white; background-color: #4484c4; padding: 2px; text-align: center;">Another <strong><%=Functions.periodFromNow(endOfOfferDate)%></strong> remaining</div>
-    <strong><a target="_blank" style="color:#e62580;" href="http://www.healthkart.com/online-shopping-festival?src=hk">Keep your wallets ready and your fingers on the mouse!</a></strong>
-    <a class="more" target="_blank" href="http://www.healthkart.com/online-shopping-festival?src=hk">Browse Our Range >> </a>
-</div>
-<div id="pagerTrigger"></div>
-<!-- remove this after gosf -->
-  <%
-      }
   %>
 
   <div class='topBar'>
