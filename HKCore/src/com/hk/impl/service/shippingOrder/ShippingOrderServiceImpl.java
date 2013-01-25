@@ -241,7 +241,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
 
-                    if (availableUnbookedInv <= 0) {
+                    if (availableUnbookedInv <= 0 && !shippingOrder.isDropShipping()){
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
                         logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv

@@ -518,5 +518,10 @@
 		});
 	});
 </script>
+
+<!-- Script to render JIRA issue collector Form -->
+<script type="text/javascript"
+        src="https://healthkart.atlassian.net/s/en_US-pg27qm-418945332/6020/74/1.3.2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=f0a8759b"></script>
+
 </s:layout-component>
 </s:layout-render>
