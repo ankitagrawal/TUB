@@ -119,7 +119,11 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 				cartLineItemService.remove(cartLineItem.getId());
 			}
 		}
-		return doPayment(orderId, remoteIp);
+		Payment payment = doPayment(orderId, remoteIp);
+		order.setPayment(payment);
+		order.setGatewayOrderId(payment.getGatewayOrderId());
+		orderService.save(order);
+		return payment;
 	}
 
 	@Override
@@ -139,7 +143,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	    Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
 	    order.setCategories(categories);
 		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-		orderService.save(order);
+		order = orderService.save(order);
 		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 	}
 
