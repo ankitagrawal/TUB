@@ -10963,7 +10963,7 @@
           DELETE FROM courier_service_info where pincode_id=13701;
           delete from pincode_courier_mapping where pincode_id=13701;
           delete from pincode where id=13701;
-          update billing_address ba,address a set ba.pincode = a.pin where ba.id = a.id;
+          update billing_address ba,address a set ba.pincode = a.pin where ba.billing_address_id = a.id;
           insert into `pincode` (`id`,`pincode`,`locality`,`region`,`city_id`,`state_id`,`tier`,`zone_id`) values (-1,'-1','.','Default',1,1,'Metros',1);
           update address adr left join pincode pc on adr.pin=pc.pincode set adr.pin='-1', deleted =1 where pc.pincode is null;
           update address a , pincode p set  a.pincode_id = p.pincode where a.pin = p.pincode;
