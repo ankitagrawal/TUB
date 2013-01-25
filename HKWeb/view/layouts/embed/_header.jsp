@@ -29,9 +29,10 @@
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
   <%
-    DateTime dateTime = new DateTime();
-    Date endOfOfferDate = new Date(new DateTime(2012, 12, 13, 23, 59, 59, 59).getMillis());
-      if (dateTime.isBefore(endOfOfferDate.getTime())) {
+    DateTime currentDateTime = new DateTime();
+    Date startOfOfferDate = new Date(new DateTime(2013, 01, 25, 16, 59, 59, 59).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 01, 27, 8, 59, 59, 59).getMillis());
+      if (currentDateTime.isBefore(endOfOfferDate.getTime())) {
   %>
   <!-- remove this after gosf -->
   <script type="text/javascript">
@@ -78,7 +79,9 @@
     <div class='topBarContent'>
       <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Call us on our customer care number for help regarding anything'>
           <div style="font-size: 12px; float: left;"><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">14 day return policy</a> | <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link>: 0124-4502930</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(24x7)</div>
-	        <%--<div style="font-size: 12px; float: left;"><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">14 day return policy</a> | <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link>: 0124-4502930 </div><div style="color: red; float: left; ">&nbsp;(currently down due to technical issues)</div>--%>
+	      <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())){%>
+            <div style="color: red; float: left; ">&nbsp;(customer service will not be available on 26th Jan 2013)</div>
+          <%}%>
       </div>
       <div class="message">
         <div class="arrow"></div>
