@@ -92,7 +92,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         boolean flag = true;
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
             PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), null, null, null);
-            boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
+            boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isCodAir();
             if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
                 flag = false;
                 break;
