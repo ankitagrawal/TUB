@@ -55,11 +55,13 @@ public class CartAction extends AbstractLoyaltyAction {
 	@DefaultHandler
 	public Resolution viewKart() {
 		Order order = getProcessor().getOrder(getPrincipal().getId());
-		Set<CartLineItem> cartLineItems = order.getCartLineItems();
-		for (CartLineItem cartLineItem : cartLineItems) {
-			LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
-			loyaltyProduct.setQty(cartLineItem.getQty());
-			loyaltyProductList.add(loyaltyProduct);
+		if(order != null) {
+			Set<CartLineItem> cartLineItems = order.getCartLineItems();
+			for (CartLineItem cartLineItem : cartLineItems) {
+				LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
+				loyaltyProduct.setQty(cartLineItem.getQty());
+				loyaltyProductList.add(loyaltyProduct);
+			}
 		}
 		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}

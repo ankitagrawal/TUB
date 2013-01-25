@@ -14,6 +14,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -135,6 +136,8 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	public void escalateOrder(Long orderId) throws InvalidOrderException {
 		validatePayment(orderId);
 		Order order = orderService.find(orderId);
+	    Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
+	    order.setCategories(categories);
 		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
 		orderService.save(order);
 		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
