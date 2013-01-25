@@ -172,7 +172,7 @@
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
 </c:if>
-
+<c:set var="googleProductsSelected" value=""/>
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
@@ -304,7 +304,12 @@
             </div>
               <div class="floatfix"></div>
 
-
+            <c:forEach items="${actionBean.payment.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
+                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+            </c:forEach>
+            <c:forEach items="${actionBean.payment.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
+                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+            </c:forEach>
 
         </c:when>
         <c:otherwise>
@@ -313,6 +318,11 @@
     </c:choose>
 
 </s:layout-component>
+
+<!--google remarketing-->
+<input type="hidden" id="pageType" value="cart">
+<input type="hidden" id="cartProductId" value="${googleProductsSelected}">
+<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
 
 <s:layout-component name="analytics">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
