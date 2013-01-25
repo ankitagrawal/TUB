@@ -16,7 +16,6 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-
         <s:form beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">
             <label>Brand:</label>&nbsp;${poa.brandsToAudit.brand}<br/><br/>
             <label>Current Audit Status:</label>&nbsp;
@@ -28,7 +27,7 @@
             <c:if test="${poa.brandsToAudit.id ne null}">
                 <label>Audit Status</label><s:select name="brandsToAudit.auditStatus">
                 <s:option value="${poa.brandsToAudit.auditStatus}" >--Select--</s:option>
-                <c:forEach items="<%=EnumAuditStatus.getListById(poa.getBrandsToAudit().getAuditStatus())%>" var="status">
+                <c:forEach items="<%=EnumAuditStatus.getPossibleStatuses(poa.getBrandsToAudit().getAuditStatus())%>" var="status">
                     <s:option value="${status.id}">${status.name}</s:option>
                 </c:forEach>
             </s:select><br/>
@@ -38,6 +37,7 @@
         </s:form>
     </s:layout-component>
 </s:layout-render>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#subBtn').click(function () {

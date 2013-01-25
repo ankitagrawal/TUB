@@ -15,7 +15,6 @@ import java.util.Date;
 @Table(name = "brands_to_audit")
 public class BrandsToAudit implements java.io.Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)

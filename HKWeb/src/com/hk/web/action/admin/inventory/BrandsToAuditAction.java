@@ -63,51 +63,42 @@ public class BrandsToAuditAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-        if (brandsToAudit != null) {
-            String brandName = brandsToAudit.getBrand();
-            logger.debug("brand: " + brandName);
+        Date auditDate = brandsToAudit.getAuditDate();
+        Date updateDate = brandsToAudit.getUpdateDate();
+        Date currentDate = new Date();
+        logger.debug("brand: " + brandsToAudit.getBrand());
 
-            if (brandsToAudit.getAuditDate() == null) {
-                brandsToAudit.setAuditDate(new Date());
-            }else{
-                Date d = new Date();
-                if(brandsToAudit.getAuditDate().compareTo(d) > 0 ) {
-                    brandsToAudit.setAuditDate(d);
-                }else{
-                    brandsToAudit.setAuditDate(brandsToAudit.getAuditDate());
-                }
-            }
-
-            if (brandsToAudit.getUpdateDate() == null) {
-                brandsToAudit.setUpdateDate(new Date());
-            }else{
-                Date d = new Date();
-                if( brandsToAudit.getUpdateDate().compareTo(brandsToAudit.getAuditDate()) > 0 ) {
-                    brandsToAudit.setUpdateDate(brandsToAudit.getUpdateDate());
-                }else{
-                    brandsToAudit.setUpdateDate(d);
-                }
-            }
-            /* Creating a new entry in brands to audit */
-            if (brandsToAudit.getId() == null) {
-                List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId());
-                /* Audit entry for this brand already exists in database with status pending */
-                if (!brandsToAuditInDb.isEmpty()) {
-                    addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
-                    return new RedirectResolution(BrandsToAuditAction.class);
-                }
-                brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
-            }
-
-            if (getPrincipalUser() != null) {
-                User auditor = getPrincipalUser();
-                warehouse = auditor.getSelectedWarehouse();
-                brandsToAudit.setAuditor(auditor);
-                brandsToAudit.setWarehouse(warehouse);
-            }
-            getBrandsToAuditDao().save(brandsToAudit);
-            addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
+        if (auditDate == null){
+            brandsToAudit.setAuditDate(currentDate);
+            auditDate = currentDate;
         }
+        if (updateDate == null){
+            brandsToAudit.setUpdateDate(auditDate);
+            updateDate = auditDate;
+        }
+        if( auditDate.compareTo(currentDate) > 0 || updateDate.compareTo(auditDate) < 0 || updateDate.compareTo(currentDate) > 0 ) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid date"));
+            return new RedirectResolution(BrandsToAuditAction.class);
+        }
+
+        if (brandsToAudit.getId() == null) {
+            List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId());
+            if (!brandsToAuditInDb.isEmpty()) {
+                addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
+                return new RedirectResolution(BrandsToAuditAction.class);
+            }
+            brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
+        }
+
+        if (getPrincipalUser() != null) {
+            User auditor = getPrincipalUser();
+            warehouse = auditor.getSelectedWarehouse();
+            brandsToAudit.setAuditor(auditor);
+            brandsToAudit.setWarehouse(warehouse);
+        }
+
+        getBrandsToAuditDao().save(brandsToAudit);
+        addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
         return new RedirectResolution(BrandsToAuditAction.class);
     }
 
@@ -173,7 +164,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         this.brandsToAudit = brandsToAudit;
     }
 
-    public BrandsToAuditDao getBrandsToAuditDao() {
+    public BrandsToAuditDao getBrandsToAuditDao(){
         return brandsToAuditDao;
     }
 

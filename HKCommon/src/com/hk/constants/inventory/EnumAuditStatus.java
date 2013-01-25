@@ -35,22 +35,22 @@ public enum EnumAuditStatus {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<EnumAuditStatus> getListById(Long id) {
-        if (id.equals(EnumAuditStatus.Pending.getId())) {
+    public static List<EnumAuditStatus> getPossibleStatuses(Long statusId) {
+        if (statusId.equals(EnumAuditStatus.Pending.getId())) {
             return Arrays.asList(
                     EnumAuditStatus.Done,
                     EnumAuditStatus.Invalid,
                     EnumAuditStatus.Deleted);
-        } else if (id.equals(EnumAuditStatus.Invalid.getId())) {
+        } else if (statusId.equals(EnumAuditStatus.Invalid.getId())) {
             return Arrays.asList(
                     EnumAuditStatus.Done,
                     EnumAuditStatus.Deleted);
-        } else if (id.equals(EnumAuditStatus.Deleted.getId())) {
+        } else if (statusId.equals(EnumAuditStatus.Deleted.getId())) {
             return Arrays.asList(
                     EnumAuditStatus.Done,
                     EnumAuditStatus.Invalid);
-        } else if (id.equals(EnumAuditStatus.Done.getId())) {
-            return new ArrayList<EnumAuditStatus>();
+        } else if (statusId.equals(EnumAuditStatus.Done.getId())) {
+            return Collections.EMPTY_LIST;
         }
         return Collections.EMPTY_LIST;
     }
