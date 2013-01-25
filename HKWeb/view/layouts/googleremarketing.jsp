@@ -35,9 +35,9 @@
         if(canSet){
             alert("pageType " + hkPageType + " category " + pCategory + " product " + prodId);
             var google_tag_params = {
-                pagetype: hkPageType,
                 prodid: prodId,
-                pCat: pCategory
+                pagetype: "'" + hkPageType + "'",
+                pCat: "'" + pCategory + "'"
             };
         }
     </script>
