@@ -9,7 +9,9 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
     <script type="text/javascript">
-        var pathname = window.location.pathname;
+        var pathName = window.location.pathname;
+        var pathNames = pathName.split("/");
+
         var hkPageType = $("#pageType").val();
         var prodId = '';
         var pCategory = '';
@@ -17,7 +19,24 @@
         var canSet = false;
         if(hkPageType == 'category'){
             pCategory = $("#topLevelCategory").val();
-            canSet = true;
+            if((pCategory == "beauty") || (pCategory=="sports")){
+                canSet = true;
+            }
+            if(pathNames.length > 3){
+                var thirdLevelSlug = pathNames[3];
+                //google disallowed
+                switch (thirdLevelSlug){
+                    case "rehabilitation-supports":
+                    case "personal-hygiene":
+                    case "breast-cancer-home-test":
+                    case "women-nutrition":
+                        canSet = false;
+                        break;
+                    default :
+                        break;
+                }
+            }
+
         }
         else if(hkPageType == 'product'){
             prodId = $("#googleProductId").val();
@@ -33,11 +52,11 @@
             canSet = true;
         }
         if(canSet){
-            alert("pageType " + hkPageType + " category " + pCategory + " product " + prodId);
+            alert("pageType " + "'" + hkPageType + "'" + " category " + pCategory + " product " + prodId);
             var google_tag_params = {
                 prodid: prodId,
-                pagetype: "'" + hkPageType + "'",
-                pCat: "'" + pCategory + "'"
+                pagetype: '"' + hkPageType + '"',
+                pCat: '"' + pCategory + '"'
             };
         }
     </script>
