@@ -66,16 +66,21 @@ public class ProductIndexServiceImpl implements ProductIndexService {
         for (ProductVariant pv : pr.getProductVariants()){
             if (!pv.getDeleted()){
                 if (pv.getProductOptions() != null){
+                    StringBuilder sbComma = new StringBuilder();
                     StringBuilder sb = new StringBuilder();
+                    sbComma.append(pr.getName());
                     sb.append(pr.getName());
                     for (ProductOption po : pv.getProductOptions()){
                         if (po.getValue() != null){
                             if (validOptions.contains(po.getName().toUpperCase())){
-                                sb.append(", ");
+                                sbComma.append(" ");
+                                sbComma.append(po.getValue());
+                                sb.append(" ");
                                 sb.append(po.getValue());
                             }
                         }
                     }
+                    solrProduct.getVariantCommaNames().add(sbComma.toString());
                     solrProduct.getVariantNames().add(sb.toString());
                 }
 
