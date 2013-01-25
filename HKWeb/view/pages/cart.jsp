@@ -285,7 +285,11 @@
   </div>
   <div class='floatfix'></div>
 </div>
+<c:set var="googleProductsSelected" value=""/>
+
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
+
+ <c:set var="googleProductsSelected" value="${googleProductsSelected} + '+ ${cartLineItem.productVariant.product.id} + '+,"/>
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
@@ -676,6 +680,11 @@
   });
 </script>
 </div>
+
+<!--google remarketing-->
+<input type="hidden" id="pageType" value="product">
+<input type="hidden" id="cartProductId" value="${googleProductsSelected}">
+<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 

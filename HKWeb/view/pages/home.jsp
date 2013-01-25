@@ -228,6 +228,9 @@
 
 	</s:layout-component>
 </s:layout-render>
+<input type="hidden" id="pageType" value="home">
+<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+
 
 
 <script type="text/javascript">
@@ -247,6 +250,7 @@
     width: 100%;
   }
 </style>
+
 
 
 

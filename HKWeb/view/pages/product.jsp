@@ -1100,5 +1100,11 @@
 				frameborder="0"></iframe>
 	</c:if>
 
+    <!--google remarketing-->
+    <input type="hidden" id="pageType" value="product">
+    <input type="hidden" id="googleProductId" value="${product.id}">
+    <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+
+
 </s:layout-component>
 </s:layout-render>
