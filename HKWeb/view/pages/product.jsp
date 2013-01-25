@@ -1102,8 +1102,9 @@
     <!--google remarketing-->
     <input type="hidden" id="pageType" value="product">
     <input type="hidden" id="googleProductId" value="${product.id}">
-    <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
-
+    <c:if test="${!product.googleAdDisallowed}">
+        <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+    </c:if>
 
 </s:layout-component>
 </s:layout-render>
