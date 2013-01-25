@@ -55,8 +55,8 @@
             alert("pageType " + "'" + hkPageType + "'" + " category " + pCategory + " product " + prodId);
             var google_tag_params = {
                 prodid: prodId,
-                pagetype: '"' + hkPageType + '"',
-                pCat: '"' + pCategory + '"'
+                pagetype: "'" + hkPageType + "'",
+                pCat: "'" + pCategory + "'"
             };
         }
     </script>
