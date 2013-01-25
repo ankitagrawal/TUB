@@ -67,6 +67,10 @@
       </div>
 
       <hr>
+	    <p>
+		    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${lca}"/>
+		    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${lca}"/>
+	    </p>
       <div class="row">
 	      <c:forEach items="${lca.productList}" var="lp">
 			<div class="span3">
