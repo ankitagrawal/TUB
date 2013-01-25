@@ -161,6 +161,10 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
                     addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the shipment details"));
                     return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);
                 }
+                 if(shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())){
+                    addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("So has already been marked as shipped"));
+                    return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);      
+                 }
                 String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
                 shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
                 adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
