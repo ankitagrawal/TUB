@@ -129,8 +129,11 @@ public class ShipmentResolutionAction extends BaseAction {
     }
 
     public Resolution generateAWB() {
+        List<Courier> couriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
+        applicableCouriers = Arrays.asList();
         if(shippingOrder.isDropShipping()){
             applicableCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
+            applicableCouriers.addAll(couriers);
         }else{
             applicableCouriers = Arrays.asList(pincodeCourierService.getDefaultCourier(shippingOrder));
         }
