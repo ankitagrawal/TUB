@@ -65,4 +65,5 @@ public class POSLineItemDto {
 	public void setTotal(Double total) {
 		this.total = total;
 	}
+
 }

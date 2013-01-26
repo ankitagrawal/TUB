@@ -1,7 +1,11 @@
 package com.hk.admin.pact.service.pos;
 
+import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.domain.order.Order;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,8 +16,10 @@ import com.hk.domain.user.User;
  */
 public interface POSService {
 
-	public Order createOrderForStore(User user);
+	public Order createOrderForStore(User user, Address address);
 
 	public User createUserForStore(String email, String name, String password, String roleName);
+
+	public void createCartLineItems(List<POSLineItemDto> posLineItems, Order order);
 
 }

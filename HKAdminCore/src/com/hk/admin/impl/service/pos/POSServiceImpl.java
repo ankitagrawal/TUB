@@ -1,20 +1,29 @@
 package com.hk.admin.impl.service.pos;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,14 +43,16 @@ public class POSServiceImpl implements POSService {
 	private UserService userService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private CartLineItemService cartLineItemService;
 
-	public Order createOrderForStore(User user) {
+	public Order createOrderForStore(User user, Address address) {
 		Order order = new Order();
 		order.setUser(user);
 		order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InCart));
 		order.setAmount(0D);
 		order.setSubscriptionOrder(false);
-
+		order.setAddress(address);
 		order = getOrderService().save(order);
 
 		return order;
@@ -77,7 +88,27 @@ public class POSServiceImpl implements POSService {
 		return user;
 	}
 
-	public static String generatePasswordForStoreUser() {
+	public void createCartLineItems(List<POSLineItemDto> posLineItems, Order order) {
+		Map<ProductVariant, Long> productVariantQtyMap = new HashMap<ProductVariant, Long>(0);
+
+		for (POSLineItemDto posLineItemDto : posLineItems) {
+			ProductVariant productVariant = posLineItemDto.getSkuGroup().getSku().getProductVariant();
+			Long previousQtyOfSameProductVariant = productVariantQtyMap.get(productVariant);
+			if (previousQtyOfSameProductVariant != null) {
+				productVariantQtyMap.put(productVariant, previousQtyOfSameProductVariant + posLineItemDto.getQty());
+			} else {
+				productVariantQtyMap.put(productVariant, posLineItemDto.getQty());
+			}
+			productVariant.setQty(posLineItemDto.getQty());
+		}
+		for (ProductVariant productVariant : productVariantQtyMap.keySet()) {
+			productVariant.setQty(productVariantQtyMap.get(productVariant));
+			CartLineItem cartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
+			cartLineItemService.save(cartLineItem);
+		}
+	}
+
+	private String generatePasswordForStoreUser() {
 		return BaseUtils.getRandomString(6) + BaseUtils.getCurrentTimestamp().getTime();
 	}
 
