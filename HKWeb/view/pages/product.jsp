@@ -1103,7 +1103,17 @@
     <input type="hidden" id="pageType" value="product">
     <input type="hidden" id="googleProductId" value="${product.id}">
     <c:if test="${!product.googleAdDisallowed}">
-        <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+        <c:if test = "${product.primaryCategory == 'beauty' || product.primaryCategory == 'sports'}">
+            <c:when test = "${product.secondaryCategory == 'rehabilitation-supports'
+            || product.secondaryCategory == 'personal-hygiene'
+            || product.secondaryCategory == 'breast-cancer-home-test'
+            || product.secondaryCategory == 'women-nutrition'} ">
+
+            </c:when>
+            <c:otherwise>
+                <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+            </c:otherwise>
+        </c:if>
     </c:if>
 
 </s:layout-component>

@@ -289,8 +289,21 @@
 <c:set var="googleProductsSelected" value=""/>
 
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
+    <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
+        <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+            <c:when test = "${cartLineItem.productVariant.product.secondaryCategory == 'rehabilitation-supports'
+            || cartLineItem.productVariant.product.secondaryCategory == 'personal-hygiene'
+            || cartLineItem.productVariant.product.secondaryCategory == 'breast-cancer-home-test'
+            || cartLineItem.productVariant.product.secondaryCategory == 'women-nutrition'} ">
 
- <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+            </c:when>
+            <c:otherwise>
+                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
+            </c:otherwise>
+        </c:if>
+    </c:if>
+
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 

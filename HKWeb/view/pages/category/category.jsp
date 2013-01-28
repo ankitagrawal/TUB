@@ -42,6 +42,12 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
+    <!--google remarketing page type-->
+    <c:if test = "${categoryBean.category.name == 'beauty' || categoryBean.category.name == 'sports'}">
+        <input type="hidden" id="pageType" value="category">
+        <input type="hidden" id="topLevelCategory" value="${categoryBean.category.name}">
+        <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+    </c:if>
   <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {

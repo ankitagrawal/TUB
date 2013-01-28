@@ -177,7 +177,10 @@
 <!--google remarketing page type-->
 <input type="hidden" id="pageType" value="category">
 
-<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+<c:if test = "${ca.topCategoryUrlSlug == 'beauty' || ca.topCategoryUrlSlug == 'sports'}">
+    <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
+</c:if>
+
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>

@@ -305,10 +305,36 @@
               <div class="floatfix"></div>
 
             <c:forEach items="${actionBean.payment.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
+                    <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+                        <c:when test = "${cartLineItem.productVariant.product.secondaryCategory == 'rehabilitation-supports'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'personal-hygiene'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'breast-cancer-home-test'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'women-nutrition'} ">
+
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
+                        </c:otherwise>
+                    </c:if>
+                </c:if>
             </c:forEach>
             <c:forEach items="${actionBean.payment.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
-                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
+                    <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+                        <c:when test = "${cartLineItem.productVariant.product.secondaryCategory == 'rehabilitation-supports'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'personal-hygiene'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'breast-cancer-home-test'
+                                        || cartLineItem.productVariant.product.secondaryCategory == 'women-nutrition'} ">
+
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
+                        </c:otherwise>
+                    </c:if>
+                </c:if>
             </c:forEach>
 
         </c:when>
@@ -320,7 +346,7 @@
 </s:layout-component>
 
 <!--google remarketing-->
-<input type="hidden" id="pageType" value="cart">
+<input type="hidden" id="pageType" value="purchase">
 <input type="hidden" id="cartProductId" value="${googleProductsSelected}">
 <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
 
