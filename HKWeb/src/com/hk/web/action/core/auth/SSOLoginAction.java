@@ -85,7 +85,6 @@ public class SSOLoginAction extends BaseAction{
             if(!StringUtils.isEmpty(redirectUrl) && !StringUtils.isEmpty(apiKey)){
                 try{
                     hkAuthService.isValidAppKey(apiKey);
-                    hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
                 }catch (HkInvalidApiKeyException ex){
                     logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
                     return new RedirectResolution(redirectUrl);
@@ -96,6 +95,7 @@ public class SSOLoginAction extends BaseAction{
                 return new RedirectResolution(HomeAction.class);
             }
         }
+        hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
         return new ForwardResolution("/pages/sso/singleLogin.jsp");
     }
 

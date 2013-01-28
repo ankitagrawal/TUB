@@ -15,10 +15,8 @@
 <body>
 <div id="container">
     <div class="logo_block">
-        <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140"></a>
-        <a title="go to healthkart home" href="/"><img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="25" width="140"></a>
-
-
+        <img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140">
+        <img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="25" width="140">
     </div>
 
     <div>
@@ -49,14 +47,15 @@
             </s:form>
             <div>If you don't have a healthkart account, <a id="newCustomer" class="clickHere">click here</a> to create one</div>   <br/>
             <div class="clear"></div>
-            <span class="bottom">    <c:choose>
-                <c:when test="${!empty sla.hkApiUser.terms}">
+            <span class="bottom">
+                <c:choose>
+                <c:when test="${!empty sla.hkApiUser}">
                     <a class="terms" href="${sla.hkApiUser.terms}">Terms of Use</a>
                 </c:when>
                 <c:otherwise>
-                    <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
+                    <a class="terms" href="${httpPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
-            </c:choose>| &copy; Healthkart.com</span>
+            </c:choose>| &copy; 2013 Healthkart.com</span>
         </div>
         <div id="signupbox" class="formbox" style="display: none;">
             <h3> Please enter the following details to create a new account</h3>
@@ -92,7 +91,7 @@
                 <c:otherwise>
                     <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
-            </c:choose> | &copy; Healthkart.com</span>
+            </c:choose> | &copy; 2013 Healthkart.com</span>
         </div>
         <div id="forgetbox" class="formbox" style="display: none;">
             <h3> Please enter your Email address </h3>
@@ -117,7 +116,7 @@
                 </c:choose>
 
                 
-                | &copy; Healthkart.com</span>
+                | &copy; 2013 Healthkart.com</span>
         </div>
     </div>
     <div class="footer"></div>
