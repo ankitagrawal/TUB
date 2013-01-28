@@ -1,59 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
+<%@ taglib prefix="stripes"
+	uri="http://stripes.sourceforge.net/stripes.tld"%>
 
-<s:useActionBean
-	beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
-	var="asa" />
+<stripes:layout-render name="/pages/loyalty/layout.jsp">
+	<stripes:layout-component name="contents">
+		<s:useActionBean
+			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
+			var="asa" />
 
-
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@include file="/includes/_taglibInclude.jsp"%>
-
-<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction"
-	var="ca" />
-
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<title>HealthKart | Loyalty Program</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="Deepak Chauhan">
-
-<link href="<hk:vhostJs/>/bootstrap/css/bootstrap.css" rel="stylesheet">
-
-<style type="text/css">
-body {
-	padding-top: 20px;
-	padding-bottom: 40px;
-	padding-right: 20px;
-	padding-left: 20px;
-}
-</style>
-</head>
-
-<body>
-	<script src="<hk:vhostJs/>/bootstrap/js/jquery.js"></script>
-	<script src="<hk:vhostJs/>/bootstrap/js/bootstrap.js"></script>
-	<script type="text/javascript">
-	</script>
-
-	<div class="container">
-		<div class="masthead">
-			<ul class="nav nav-pills pull-right">
-				<li class="active"><a href="">Home</a></li>
-				<li><a href="">Visit Healthkart</a></li>
-				<li><a href="core/loyaltypg/Cart.action">View Cart</a></li>
-				<li><a href="">Sign In</a></li>
-			</ul>
-			<h3 class="muted">HealthKart</h3>
-		</div>
+		<s:useActionBean
+			beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
 		<s:form
 			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
 			id="selectAddress">
-			<hr>
 			<div class="row">
 				<div class="span6">
 					<table class="table table-bordered">
@@ -99,7 +60,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.name" placeholder="Name"/>
+													<s:text name="address.name" placeholder="Name" />
 												</div>
 											</div>
 										</div>
@@ -110,7 +71,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.line1" placeholder="Line 1"/>
+													<s:text name="address.line1" placeholder="Line 1" />
 												</div>
 											</div>
 										</div>
@@ -121,7 +82,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.line2" placeholder="Line 2"/>
+													<s:text name="address.line2" placeholder="Line 2" />
 												</div>
 											</div>
 										</div>
@@ -131,7 +92,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.city" placeholder="City"/>
+													<s:text name="address.city" placeholder="City" />
 												</div>
 											</div>
 										</div>
@@ -141,7 +102,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.state" placeholder="State"/>
+													<s:text name="address.state" placeholder="State" />
 												</div>
 											</div>
 										</div>
@@ -151,7 +112,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.pin" placeholder="Pin Code"/>
+													<s:text name="address.pin" placeholder="Pin Code" />
 												</div>
 											</div>
 										</div>
@@ -161,7 +122,7 @@ body {
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.phone" placeholder="Phone"/>
+													<s:text name="address.phone" placeholder="Phone" />
 												</div>
 											</div>
 										</div>
@@ -184,10 +145,6 @@ body {
 				</div>
 			</div>
 		</s:form>
-		<hr>
-		<div class="footer">
-			<p>© Footer goes here!!</p>
-		</div>
-	</div>
-</body>
-</html>
+	</stripes:layout-component>
+</stripes:layout-render>
+
