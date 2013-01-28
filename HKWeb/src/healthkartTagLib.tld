@@ -378,6 +378,17 @@
     </function>
     <function>
         <description>
+            returns if product has any category defined in comma separated string
+        </description>
+        <name>hasProductAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean hasProductAnyCategory(java.lang.Object,java.lang.String)</function-signature>
+        <example>
+            ${hk:hasProductAnyCategory(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
             returns the list of brands of a category
         </description>
         <name>brandsInCategory</name>

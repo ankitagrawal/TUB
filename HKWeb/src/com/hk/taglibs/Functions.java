@@ -278,6 +278,16 @@ public class Functions {
         return categoryService.getTopLevelCategory((Product) o);
     }
 
+    public static boolean hasProductAnyCategory(Object product, String pipeSeparatedCategory) {
+        Product pr = (Product)product;
+        for (Category category : pr.getCategories()){
+            if (pipeSeparatedCategory.contains(category.getName())){
+                 return true;
+            }
+        }
+        return false;
+    }
+
     public static List<String> brandsInCategory(Object o) {
         Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);

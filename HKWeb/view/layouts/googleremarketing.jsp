@@ -9,22 +9,21 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
     <script type="text/javascript">
-        //var pathName = window.location.pathname;
-        //var pathNames = pathName.split("/");
+        var pathName = window.location.pathname;
+        var pathNames = pathName.split("/");
 
         var hkPageType = $("#pageType").val();
         var prodId = '';
         var pCategory = '';
         var cartProducts = new Array();
-        var canSet = false;
+        var canSet = true;
 
         if(hkPageType == 'category'){
-            alert('Hi')
-            alert($("#topLevelCategory").val())
             pCategory = $("#topLevelCategory").val();
             /*if((pCategory == "beauty") || (pCategory=="sports")){
                 canSet = true;
-            }
+            }*/
+
             if(pathNames.length > 3){
                 var thirdLevelSlug = pathNames[3];
                 //google disallowed
@@ -38,7 +37,7 @@
                     default :
                         break;
                 }
-            }*/
+            }
 
         }
         else if(hkPageType == 'product'){
@@ -52,6 +51,7 @@
             }
         }else if(hkPageType == 'home'){
         }
+        if(canSet)
         {
             alert("pageType " + "'" + hkPageType + "'" + " category " + pCategory + " product " + prodId);
             var google_tag_params = {

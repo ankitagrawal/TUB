@@ -1102,12 +1102,10 @@
     <!--google remarketing-->
     <input type="hidden" id="pageType" value="product">
     <input type="hidden" id="googleProductId" value="${product.id}">
+    <c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
     <c:if test="${!product.googleAdDisallowed}">
         <c:if test = "${product.primaryCategory == 'beauty' || product.primaryCategory == 'sports'}">
-            <c:when test = "${product.secondaryCategory == 'rehabilitation-supports'
-            || product.secondaryCategory == 'personal-hygiene'
-            || product.secondaryCategory == 'breast-cancer-home-test'
-            || product.secondaryCategory == 'women-nutrition'} ">
+            <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
 
             </c:when>
             <c:otherwise>
