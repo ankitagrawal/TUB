@@ -12,9 +12,11 @@ import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Zone;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.pact.service.shippingOrder.ShipmentService;
@@ -100,6 +102,12 @@ public class ShipmentResolutionAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 
+    public Resolution createAutoShipment() {
+        shipment = shipmentService.createShipment(shippingOrder,true);
+        return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+    }
+
+
     public Resolution changeCourier() {
         Awb currentAwb = shipment.getAwb();
         shipment = shipmentService.changeCourier(shipment, updateCourier, preserveAwb);
@@ -129,11 +137,9 @@ public class ShipmentResolutionAction extends BaseAction {
     }
 
     public Resolution generateAWB() {
-        List<Courier> couriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
         applicableCouriers = Arrays.asList();
         if(shippingOrder.isDropShipping()){
             applicableCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
-            applicableCouriers.addAll(couriers);
         }else{
             applicableCouriers = Arrays.asList(pincodeCourierService.getDefaultCourier(shippingOrder));
         }
@@ -142,7 +148,20 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
-        shipment = shipmentService.createShipment(shippingOrder,true);
+        //todo courier-refactor as drop ship scales need to evaluate a better solution
+        if (shippingOrder.isDropShipping()) {
+            Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
+            Zone zone = pincode.getZone();
+            Shipment shipmentDropShip = new Shipment();
+            shipmentDropShip.setAwb(awb);
+            shipmentDropShip.setZone(zone);
+            shipmentDropShip.setBoxWeight(-1D);
+            shipmentDropShip.setShipmentServiceType(pincodeCourierService.getShipmentServiceType(shippingOrder));
+            shippingOrder.setShipment(shipmentDropShip);
+            shipment = shipmentService.createShipment(shippingOrder, false);
+        } else {
+            shipment = shipmentService.createShipment(shippingOrder, true);
+        }
         if (shipment == null) {
             awbService.delete(awb);
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));

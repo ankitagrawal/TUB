@@ -41,9 +41,11 @@ public interface AwbService {
      */
     public Awb getAwbForThirdPartyCourier(Courier courier, ShippingOrder shippingOrder, Double weightInKg);
 
-    public boolean deleteAwbForThirdPartyCourier(Courier courier, String awbNumber);
+    public boolean deleteAwbForThirdPartyCourier(Awb awb);
 
     public void preserveAwb(Awb awb);
+
+    public void discardAwb(Awb awb);
 
     public void delete(Awb awb);
 

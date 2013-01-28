@@ -71,12 +71,12 @@ public class ShipmentServiceImpl implements ShipmentService {
             //todo courier need to handle replacement order ka rto courier
             if (!pincodeCourierService.isCourierAvailable(pincode, null, Arrays.asList(shipmentServiceType), true)) {
                 reasons.add(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
-            }
-            weight = getEstimatedWeightOfShipment(shippingOrder);
-            //todo courier if it is fetched for fedex, need to delete it for fedex
-            suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weight);
-            if (suggestedAwb == null) {
-                reasons.add(CourierConstants.AWB_NOT_ASSIGNED);
+            } else {
+                weight = getEstimatedWeightOfShipment(shippingOrder);
+                suggestedAwb = attachAwbForShipment(suggestedCourier, shippingOrder, weight);
+                if (suggestedAwb == null) {
+                    reasons.add(CourierConstants.AWB_NOT_ASSIGNED);
+                }
             }
         }
 
@@ -143,9 +143,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         } else {
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
         }
-        if (suggestedAwb != null) {
-            suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-        }
         return suggestedAwb;
     }
 
@@ -176,7 +173,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         if (preserveAwb) {
             awbService.preserveAwb(awb);
         } else {
-            awbService.save(awb, EnumAwbStatus.Used.getId().intValue());
+            awbService.discardAwb(awb);
         }
     }
 
