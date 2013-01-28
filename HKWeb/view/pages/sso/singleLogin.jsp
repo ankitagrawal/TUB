@@ -13,6 +13,9 @@
     <script type="text/javascript" src="${httpPath}/js/jquery.hkCommonPlugins.js"></script>
 </head>
 <body>
+<div class='loaderContainer'>
+    <div class='loaderCircle'></div>
+</div>
 <div id="container">
     <div class="logo_block">
         <img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140">
@@ -127,6 +130,23 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+
+    function LoadingShadow()
+    {
+        this.ele =$('.loaderContainer');
+    }
+    LoadingShadow.prototype.show = function(){
+
+        $(this.ele).css({'height':$(window).height()});
+        $(this.ele).show();
+    }
+    LoadingShadow.prototype.hide = function(){
+
+        $(this.ele).hide();
+    }
+
+    var loaderInstance=new LoadingShadow();
+
     function errorTooltip(elementId, message, leftSide){
         if(leftSide==undefined){leftSide=false;}
         var element=$("#"+elementId+"");
@@ -160,6 +180,7 @@ $(document).ready(function()
             $('.error-tooltip').fadeIn();
         }
     }
+
 
     function removeErrorTooltips(){
         $('.error-tooltip').fadeOut();
@@ -276,6 +297,13 @@ $(document).ready(function()
         var email_var=$("#email").val();
         var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if(!rege.test(email_var) || email_length==0){ errorflag=true;
+            $('#email').tooltipster({
+                content: 'please enter a valid email',
+                position: 'left',
+                speed: 200,
+                trigger: 'custom'
+            });
+            $('#email').data('plugin_tooltipster').showTooltip();
             errorTooltip('email',"Please enter a valid email. Eg: rahul@gmail.com");
         }
 
@@ -330,6 +358,13 @@ $(document).ready(function()
     function checkTermsAcceptance(){
         if(!$('#agreeToTerms').is(':checked')){
             errorflag=true;
+            $('#agreeToTerms').tooltipster({
+                content: 'please enter a valid email',
+                position: 'left',
+                speed: 200,
+                trigger: 'custom'
+            });
+            $('#agreeToTerms').data('plugin_tooltipster').showTooltip();
             errorTooltip('agreeToTerms', "please agree to our terms and conditions", true);
         }
     }
@@ -352,6 +387,7 @@ $(document).ready(function()
         checkpassword()
         if (errorflag == false) {
             disableSubmitButtons();
+            loaderInstance.show();
             $('#signin_form').submit();
         }
         else
@@ -368,6 +404,7 @@ $(document).ready(function()
         checkForgetEmail();
         if (errorflag == false) {
             disableSubmitButtons();
+            loaderInstance.show();
             $('#forget_form').submit();
         }
         else
@@ -389,6 +426,7 @@ $(document).ready(function()
         if (errorflag == false)
         {
             disableSubmitButtons();
+            loaderInstance.show();
             $('#signup_form').submit();
         }
         else
@@ -415,7 +453,7 @@ $(document).ready(function()
     function _formSubmitSuccess(res) {
         enableSubmitButtons();
         if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-
+             loaderInstance.hide();
         }else if(res.code == '<%=HealthkartResponse.STATUS_REDIRECT%>'){
             if(res.data==null){
                 window.location.href=res.message;
@@ -424,6 +462,7 @@ $(document).ready(function()
             }
         }else if(res.code == '<%=HealthkartResponse.STATUS_ERROR%>'){
             showServerErrors(res);
+            loaderInstance.hide();
         }
     }
 
