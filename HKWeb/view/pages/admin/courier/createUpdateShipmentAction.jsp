@@ -58,10 +58,13 @@
         <c:set var="userDeliveryComment" value="<%=MasterDataDao.USER_COMMENT_TYPE_DELIVERY_BASE_ORDER%>"/>
         <s:form beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">
             <fieldset>
-            <label>Enter SO Gateway Id</label>
-            <s:text name="gatewayOrderId" id="gatewayOrderId"/>
-                <br><br>
+            <div style="text-align:center;">
+            <h2><label>Enter SO Gateway Id</label></h2>
+                    <br><br><br>
+            <s:text name="gatewayOrderId" id="gatewayOrderId" style="height:40px; width:290px;"/>
+                <br><br><br>
             <s:submit name="searchShipment" value="Search" id="search"/>
+            </div>
             </fieldset>
             <div class="clear"></div>
             <fieldset>
