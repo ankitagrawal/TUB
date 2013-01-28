@@ -28,10 +28,6 @@
                         alert("Pincode must contain numbers only");
                         return false;
                     }
-                    else if(text.length!=6){
-                        alert("Pincode length must be 6");
-                        return false;
-                    }
                 });
                  $('.addRowButton').click(function () {
                      var pincode = ${pcma.pincode.pincode};
@@ -98,7 +94,7 @@
         <s:form beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">
             <fieldset>
             <label>Enter Pincode</label>
-            <s:text name="pin" id="pin"/>
+            <s:text name="pin" id="pin" maxlength="6"/>
             <br>
             <s:submit name="search" value="Basic Search" class="check"/>
             <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>
