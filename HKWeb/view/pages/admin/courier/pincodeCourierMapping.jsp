@@ -74,6 +74,11 @@
                     var bool = true;
                   $('.addCouriers').each(function(){
                       var newCourier = $(this).val();
+                      if(newCourier== null || newCourier == ""){
+                          alert("You must select a courier !!!!");
+                          bool = false;
+                          return false
+                      }
                       $('.oldCouriers').each(function(){
                          var oldCourier = $(this).val();
                           if(newCourier == oldCourier){
@@ -94,7 +99,7 @@
         <s:form beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">
             <fieldset>
             <label>Enter Pincode</label>
-            <s:text name="pin" id="pin"/>
+            <s:text name="pin" id="pin" maxlength="6"/>
             <br>
             <s:submit name="search" value="Basic Search" class="check"/>
             <s:submit name="detailedAnalysis" value="Detailed Analysis" class="check"/>

@@ -74,6 +74,10 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
+        if(pincode == null){
+          addRedirectAlertMessage(new SimpleMessage("No Pincode Exist in the System!!!"));
+          return new RedirectResolution(PincodeCourierMappingAction.class);
+        }
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, null, null, null);
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
