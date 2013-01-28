@@ -1,15 +1,23 @@
 package com.hk.web.action.core.auth;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.HkApiUserCache;
+import com.hk.domain.TempToken;
 import com.hk.domain.api.HkApiUser;
+import com.hk.domain.user.User;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
+import com.hk.manager.EmailManager;
+import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
+import com.hk.pact.dao.core.TempTokenDao;
+import com.hk.pact.service.UserService;
 import com.hk.security.HkAuthService;
 import com.hk.security.exception.HkInvalidApiKeyException;
+import com.hk.web.HealthkartResponse;
 import com.hk.web.action.HomeAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
@@ -39,7 +47,7 @@ public class SSOLoginAction extends BaseAction{
     @Validate(required = true, on = "signup")
     String userName;
 
-    @Validate(required = true, on={"signup","login"})
+    @Validate(required = true, on={"signup","login","sendResetLink"})
     String userLogin;
 
     @Validate(required = true,on={"signup","login"})
@@ -48,11 +56,9 @@ public class SSOLoginAction extends BaseAction{
     @Validate(required = true, on="signup")
     String repeatPassword;
 
-    /*@Validate(required = true, on="login")
-    String appToken;*/
-    boolean logintabselected =true;
-
     String error;
+
+    private HkApiUser hkApiUser;
 
     @Autowired
     HkAuthService hkAuthService;
@@ -60,6 +66,16 @@ public class SSOLoginAction extends BaseAction{
     UserManager userManager;
     @Autowired
     SecurityManager securityManager;
+    @Autowired
+    UserService userService;
+    @Autowired
+    EmailManager emailManager;
+    @Autowired
+    LinkManager linkManager;
+    @Autowired
+    TempTokenDao tempTokenDao;
+
+    public  static final int EXPIRY_DAYS=10;
 
     @DefaultHandler
     @DontValidate
@@ -69,6 +85,7 @@ public class SSOLoginAction extends BaseAction{
             if(!StringUtils.isEmpty(redirectUrl) && !StringUtils.isEmpty(apiKey)){
                 try{
                     hkAuthService.isValidAppKey(apiKey);
+                    hkApiUser = HkApiUserCache.getInstance().getHkApiUser(apiKey);
                 }catch (HkInvalidApiKeyException ex){
                     logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
                     return new RedirectResolution(redirectUrl);
@@ -83,8 +100,9 @@ public class SSOLoginAction extends BaseAction{
     }
 
     @HandlesEvent("login")
+    @JsonHandler
     public Resolution login(){
-        logintabselected =true;
+        HealthkartResponse healthkartResponse;
         UserLoginDto userLoginDto = null;
         try{
             if(!StringUtils.isEmpty(apiKey)){
@@ -93,64 +111,71 @@ public class SSOLoginAction extends BaseAction{
             userLoginDto = userManager.login(userLogin, password, true);
         } catch (HkInvalidApiKeyException ex){
             logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
-            return new RedirectResolution(redirectUrl);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, redirectUrl);
+            return new  JsonResolution(healthkartResponse);
         } catch (HealthkartLoginException e) {
             // Note: if the login fails, existing subject is still retained
             addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
-            return getContext().getSourcePageResolution();
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Login is not valid!");
+            return new  JsonResolution(healthkartResponse);
         }
-        /* use the following logic incase appToken is sent instead of appKey
-        try{
-            if(hkAuthService.isValidAppToken(appToken)){
-
-            }
-            HkUsernamePasswordAuthenticationToken authRequest = new HkUsernamePasswordAuthenticationToken(userName, password, apiKey);
-            HkAuthentication hkAuthentication = hkAuthService.authenticate(authRequest);
-        }catch (HkInvalidApiKeyException ex){
-            logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
-            return new RedirectResolution(redirectUrl);
-        }catch (HkInvalidAppTokenException ex){
-            logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
-            return new RedirectResolution(redirectUrl);
-        }catch (HkTokenExpiredException ex){
-            logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
-            return new RedirectResolution(redirectUrl);
-        }*/
         if(!StringUtils.isEmpty(redirectUrl)&&!StringUtils.isEmpty(apiKey)){
             redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
-            return new RedirectResolution(redirectUrl, false);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, redirectUrl);
+            return new  JsonResolution(healthkartResponse);
         } else{
-            return new RedirectResolution(HomeAction.class);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, getContext().getRequest().getContextPath());
+            return new  JsonResolution(healthkartResponse);
         }
     }
 
     @HandlesEvent("signup")
+    @JsonHandler
     public Resolution signup(){
-        logintabselected =false;
+        HealthkartResponse healthkartResponse;
         try{
             if(!StringUtils.isEmpty(apiKey)){
                 hkAuthService.isValidAppKey(apiKey);
             }
         } catch (HkInvalidApiKeyException ex){
             logger.info(ex.getMessage()+" attempted from "+getRemoteHostAddr());
-            return new RedirectResolution(redirectUrl);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, redirectUrl);
+            return new  JsonResolution(healthkartResponse);
         }
         try {
             userManager.signup(userLogin, userName, password, null);
         } catch (HealthkartSignupException e) {
-            addValidationError("e1", new LocalizableError("/Signup.action.email.id.already.exists"));
-            return new ForwardResolution(getContext().getSourcePage()).addParameter("apiKey",apiKey).addParameter("redirectUrl",redirectUrl);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "A user already exists with this email");
+            return new  JsonResolution(healthkartResponse);
         }
 
         if(!StringUtils.isEmpty(redirectUrl)&& !StringUtils.isEmpty(apiKey)){
             redirectUrl=redirectUrl.concat("?uaToken=").concat(hkAuthService.generateUserAccessToken(userLogin,apiKey));
-            return new RedirectResolution(redirectUrl, false);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, redirectUrl);
+            return new  JsonResolution(healthkartResponse);
         }else{
-            return new RedirectResolution(HomeAction.class);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, getContext().getRequest().getContextPath());
+            return new  JsonResolution(healthkartResponse);
         }
     }
 
-    @ValidationMethod(on = {"signup"})
+    @JsonHandler
+    public Resolution sendResetLink(){
+        HealthkartResponse healthkartResponse;
+        User user = userService.findByLogin(userLogin);
+        if (user == null) {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "There seems to be no such user in our system");
+            return new  JsonResolution(healthkartResponse);
+        }
+
+        TempToken tempToken = tempTokenDao.createNew(user, EXPIRY_DAYS);
+        String resetPasswordLink = linkManager.getSSOResetPasswordLink(tempToken);
+        emailManager.sendResetPasswordEmail(user, resetPasswordLink);
+        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Please check your inbox");
+        return new  JsonResolution(healthkartResponse);
+    }
+
+    @ValidationMethod(on = {"signup","sendResetLink"})
     public void isValidEmail() {
         if (!BaseUtils.isValidEmail(userLogin)) {
             getContext().getValidationErrors().add("invalidEmail", new LocalizableError("/Signup.action.InvalidEmail"));
@@ -204,13 +229,13 @@ public class SSOLoginAction extends BaseAction{
         this.password = password;
     }
 
-    /* public String getAppToken() {
-        return appToken;
+    public HkApiUser getHkApiUser() {
+        return hkApiUser;
     }
 
-    public void setAppToken(String appToken) {
-        this.appToken = appToken;
-    }*/
+    public void setHkApiUser(HkApiUser hkApiUser) {
+        this.hkApiUser = hkApiUser;
+    }
 
     public String getUserLogin() {
         return userLogin;
@@ -226,13 +251,5 @@ public class SSOLoginAction extends BaseAction{
 
     public void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
-    }
-
-    public boolean isLogintabselected() {
-        return logintabselected;
-    }
-
-    public void setLogintabselected(boolean logintabselected) {
-        this.logintabselected = logintabselected;
     }
 }
