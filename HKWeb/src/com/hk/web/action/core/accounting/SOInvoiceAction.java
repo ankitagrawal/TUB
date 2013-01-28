@@ -192,8 +192,12 @@ public class SOInvoiceAction extends BaseAction {
 	}
 
     private boolean printZoneOnSOInvoice(Awb awb) {
-        List<Courier> dispatchLotCouriers = courierService.getCouriers(null,null,null, EnumCourierOperations.DISPATCH_LOT.getId());
-        return dispatchLotCouriers != null && !dispatchLotCouriers.isEmpty() && dispatchLotCouriers.contains(awb.getCourier());
+        if (awb != null) {
+            List<Courier> dispatchLotCouriers = courierService.getCouriers(null, null, null, EnumCourierOperations.DISPATCH_LOT.getId());
+            return dispatchLotCouriers != null && !dispatchLotCouriers.isEmpty() && dispatchLotCouriers.contains(awb.getCourier());
+        } else {
+            return false;
+        }
     }
 
     public boolean isPrintable() {

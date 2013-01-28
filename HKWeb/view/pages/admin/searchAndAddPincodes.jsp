@@ -67,7 +67,7 @@
 						${mpaBean.pincode.pincode}
                         </c:when>
                          <c:otherwise>
-                             <s:text name="pincode" id="pincode" maxlength="6"/>
+                             <s:text name="pincode.pincode" id="pincode" maxlength="6"/>
                          </c:otherwise>
                         </c:choose>
                         </td>
