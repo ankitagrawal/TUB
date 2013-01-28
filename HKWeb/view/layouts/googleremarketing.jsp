@@ -25,7 +25,7 @@
         }
 
         if(pageContext.getAttribute("googleProductId") != null){
-            String productId = (Order)pageContext.getAttribute("googleProductId");
+            String productId = (String)pageContext.getAttribute("googleProductId");
             pageContext.setAttribute("googleProductId", productId);
         }
     %>
