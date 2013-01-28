@@ -18,7 +18,7 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
-              var index = -1;
+              //var index = -1;
 			$('#productVariantBarcode').keypress(function(e) {
 				if(e.which == 13) {
 					e.preventDefault();
@@ -40,25 +40,26 @@
 						$('#barcodeLink').attr('href'), {productVariantBarcode:productVariantBarcode,skuItemListToBeCheckedOut:skuItemList},
 						function (res) {
 							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-								var existingRow = findIfSkuGroupExists(res.data.skuGroupId);
-								if(existingRow == null) {
+								//var existingRow = findIfSkuGroupExists(res.data.skuGroupId);
+								//if(existingRow == null) {
 									createNewRow();
 									$('.lastRow').find('.item').html(res.data.product + '<br/>' + res.data.options);
 									$('.lastRow').find('.itemHidden').val(res.data.product + '<br/>' + res.data.options);
 									$('.lastRow').find('.mrp').val(res.data.mrp);
 									$('.lastRow').find('.offerPrice').val(res.data.offerPrice);
 									$('.lastRow').find('.qty').val(1);
-									$('.lastRow').find('.skuGroupId').val(res.data.skuGroupId);
+									$('.lastRow').find('.skuItemId').val(res.data.skuItemId);
 									$('.lastRow').find('.total').val(res.data.offerPrice);
-								} else {
+									$('.lastRow').find('.pvBarcodeHidden').val(productVariantBarcode);
+								/*} else {
 									var qty = parseInt( existingRow.find('.qty').val() );
 									var offerPrice = parseFloat( existingRow.find('.offerPrice').val() );
 									existingRow.find('.qty').val(qty + 1);
 									existingRow.find('.total').val((offerPrice * (qty + 1)).toFixed(2));
 								}
-								index++;
-								$('.skuItemSelect').append('<input type="hidden" name="skuItemListToBeCheckedOut['+ index+'].id" value="'+ res.data.skuItemHidden +'" />');
-								$('#skuItemHidden').append('<option value='+res.data.skuItemHidden+'>'+res.data.skuItemHidden+'</option>');
+								index++;*/
+								//$('.skuItemSelect').append('<input type="hidden" name="skuItemListToBeCheckedOut['+ index+'].id" value="'+ res.data.skuItemHidden +'" />');
+								$('#skuItemHidden').append('<option value='+res.data.skuItemId+'>'+res.data.skuItemId+'</option>');
 								updateTotal('.total', '.grandTotal', 0);
 
 							} else {
@@ -84,7 +85,7 @@
 				}
 			}
 
-			function findIfSkuGroupExists(newSkuGroupId) {
+			/*function findIfSkuGroupExists(newSkuGroupId) {
 				var rowFound = null;
 				$('.skuGroupId').each(function(index, value) {
 					var eachRow = $(value);
@@ -95,7 +96,7 @@
 
 				});
 				return rowFound;
-			}
+			}*/
 
 			function createNewRow() {
 				var lastIndex = $('.lastRow').attr('count');
@@ -113,8 +114,9 @@
 								'<td><input type="text" class="offerPrice" name="posLineItems[' + nextIndex + '].offerPrice" readonly="readonly"/></td>' +
 								'<td><input type="text" class="qty" name="posLineItems[' + nextIndex + '].qty" readonly="readonly"/></td>' +
 								'<td><input type="text" class="total" name="posLineItems[' + nextIndex + '].total" readonly="readonly"/></td>' +
-								'<td><input type="hidden" class="skuGroupId" name="posLineItems[' + nextIndex + '].skuGroup"/></td>' +
+								'<td><input type="hidden" class="skuItemId" name="posLineItems[' + nextIndex + '].skuItem"/></td>' +
 								'<td><input type="hidden" class="itemHidden" name="posLineItems[' + nextIndex + '].productName"/></td>' +
+								'<td><input type="hidden" class="pvBarcodeHidden" name="posLineItems[' + nextIndex + '].productVariantBarcode"/></td>' +
 								'</tr>';
 
 				$('#orderTable').append(newRowHtml);
@@ -141,6 +143,7 @@
 								$('#state').val(res.data.address.state);
 								$('#pincode').val(res.data.address.pin);
 								$('#address').val(res.data.address.id);
+								$('#phone').val(res.data.address.phone);
 							} else {
 								//$('.orderDetails').html('<h2>' + res.message + '</h2>');
 							}
@@ -200,8 +203,8 @@
 				<tr>
 					<td width="50%">
 						<table>
-							<tr><td>Phone:</td><td><s:text name="phone" id="phone"/></td></tr>
 							<tr><td>Email:</td><td><s:text name="email" id="email"/></td></tr>
+							<tr><td>Phone:</td><td><s:text name="phone" id="phone"/></td></tr>
 							<tr><td>Name: </td><td><s:text name="name" id="name"/></td></tr>
 						</table>
 					</td>
@@ -259,15 +262,16 @@
 						<td><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice"/></td>
 						<td><s:text name="posLineItems[${ctr.index}].qty" value="${posLineItemDto.mrp}" class="qty"/></td>
 						<td><s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total"/></td>
-						<td><s:hidden class="skuGroupId" name="posLineItems[${ctr.index}].skuGroup" value="${posLineItemDto.skuGroup.id}"/></td>
+						<td><s:hidden class="skuItemId" name="posLineItems[${ctr.index}].skuItem" value="${posLineItemDto.skuItem.id}"/></td>
 						<td><s:hidden class="itemHidden" name="posLineItems[${ctr.index}].productName" value="${posLineItemDto.productName}"/></td>
+						<td><s:hidden class="pvBarcodeHidden" name="posLineItems[${ctr.index}].productVariantBarcode" value="${posLineItemDto.productVariantBarcode}"/></td>
 					</tr>
 				</c:forEach>
 				</tbody>
 				<tfoot>
 				<tr>
 					<td colspan="5" align="right"><b>Grand Total</b></td>
-					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal"/></td>
+					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal" readonly="readonly"/></td>
 				</tr>
 				<tr><td><b>Order ID</b></td><td>${pos.order.id}</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>
 				</tfoot>

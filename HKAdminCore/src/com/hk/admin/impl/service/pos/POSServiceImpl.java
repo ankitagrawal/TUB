@@ -8,15 +8,23 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.exception.HealthkartSignupException;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.NoSkuException;
+import com.hk.helper.LineItemHelper;
+import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +53,10 @@ public class POSServiceImpl implements POSService {
 	private RoleService roleService;
 	@Autowired
 	private CartLineItemService cartLineItemService;
+	@Autowired
+	private SkuService skuService;
+	@Autowired
+	private ShippingOrderService shippingOrderService;
 
 	public Order createOrderForStore(User user, Address address) {
 		Order order = new Order();
@@ -65,7 +77,7 @@ public class POSServiceImpl implements POSService {
 		user.setName(name);
 		user.setLogin(email);
 		user.setEmail(email);
-		if(StringUtils.isBlank(password)) {
+		if (StringUtils.isBlank(password)) {
 			password = generatePasswordForStoreUser();
 		}
 		user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
@@ -92,7 +104,7 @@ public class POSServiceImpl implements POSService {
 		Map<ProductVariant, Long> productVariantQtyMap = new HashMap<ProductVariant, Long>(0);
 
 		for (POSLineItemDto posLineItemDto : posLineItems) {
-			ProductVariant productVariant = posLineItemDto.getSkuGroup().getSku().getProductVariant();
+			ProductVariant productVariant = posLineItemDto.getSkuItem().getSkuGroup().getSku().getProductVariant();
 			Long previousQtyOfSameProductVariant = productVariantQtyMap.get(productVariant);
 			if (previousQtyOfSameProductVariant != null) {
 				productVariantQtyMap.put(productVariant, previousQtyOfSameProductVariant + posLineItemDto.getQty());
@@ -106,6 +118,31 @@ public class POSServiceImpl implements POSService {
 			CartLineItem cartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
 			cartLineItemService.save(cartLineItem);
 		}
+	}
+
+	public ShippingOrder createSOForStore(Order order, Warehouse warehouse) {
+		ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+
+		for (CartLineItem cartLineItem : order.getCartLineItems()) {
+			ProductVariant productVariant = cartLineItem.getProductVariant();
+			Sku sku = skuService.getSKU(productVariant, warehouse);
+			if (sku != null) {
+				LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+				shippingOrder.getLineItems().add(shippingOrderLineItem);
+			} else {
+				throw new NoSkuException(productVariant, warehouse);
+			}
+		}
+		shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrder).getName());
+		//todo: Ask for below call
+		ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+		shippingOrder.setAmount(order.getAmount());
+		//shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.));
+		shippingOrder = shippingOrderService.save(shippingOrder);
+
+		shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+		shippingOrder = shippingOrderService.save(shippingOrder);
+		return shippingOrder;
 	}
 
 	private String generatePasswordForStoreUser() {

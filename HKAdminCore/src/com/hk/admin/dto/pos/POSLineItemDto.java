@@ -1,6 +1,7 @@
 package com.hk.admin.dto.pos;
 
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,19 +12,21 @@ import com.hk.domain.sku.SkuGroup;
  */
 public class POSLineItemDto {
 
+	private SkuItem skuItem;
 	private String productName;
-	private SkuGroup skuGroup;
+	private String productVariantBarcode;
+	//private SkuGroup skuGroup;
 	private Long qty;
 	private Double mrp;
 	private Double offerPrice;
 	private Double total;
 
-	public SkuGroup getSkuGroup() {
-		return skuGroup;
+	public SkuItem getSkuItem() {
+		return skuItem;
 	}
 
-	public void setSkuGroup(SkuGroup skuGroup) {
-		this.skuGroup = skuGroup;
+	public void setSkuItem(SkuItem skuItem) {
+		this.skuItem = skuItem;
 	}
 
 	public Long getQty() {
@@ -66,4 +69,11 @@ public class POSLineItemDto {
 		this.total = total;
 	}
 
+	public String getProductVariantBarcode() {
+		return productVariantBarcode;
+	}
+
+	public void setProductVariantBarcode(String productVariantBarcode) {
+		this.productVariantBarcode = productVariantBarcode;
+	}
 }

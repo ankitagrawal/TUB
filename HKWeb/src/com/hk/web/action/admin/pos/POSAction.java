@@ -10,10 +10,8 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
@@ -22,9 +20,6 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.NoSkuException;
-import com.hk.helper.LineItemHelper;
-import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
@@ -47,7 +42,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,6 +58,7 @@ import java.util.*;
 public class POSAction extends BaseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(POSAction.class);
+	@Validate(on = "confirmOrder", required = true)
 	private String phone;
 	@Validate(on = "confirmOrder", required = true)
 	private String email;
@@ -115,11 +114,11 @@ public class POSAction extends BaseAction {
 		if (productVariantBarcode != null) {
 			List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, userService.getWarehouseForLoggedInUser());
 			//exclude those sku items which have already been selected for this order
-			if(inStockSkuItemList != null) {
+			if (inStockSkuItemList != null) {
 				inStockSkuItemList.removeAll(skuItemListToBeCheckedOut);
 			}
 
-			if(inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
+			if (inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
 				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No item found for this Barcode", dataMap);
 				noCache();
 				return new JsonResolution(healthkartResponse);
@@ -128,12 +127,13 @@ public class POSAction extends BaseAction {
 			skuItemListToBeCheckedOut.add(skuItem);
 			SkuGroup skuGroup = skuItem.getSkuGroup();
 			ProductVariant productVariant = skuGroup.getSku().getProductVariant();
-			dataMap.put("skuGroupId", skuGroup.getId());
+			//dataMap.put("skuGroupId", skuGroup.getId());
 			dataMap.put("product", productVariant.getProduct().getName());
 			dataMap.put("options", productVariant.getOptionsCommaSeparated());
 			dataMap.put("mrp", skuGroup.getMrp());
 			dataMap.put("offerPrice", productVariant.getHkPrice());
-			dataMap.put("skuItemHidden", skuItem.getId());
+			//dataMap.put("skuItemHidden", skuItem.getId());
+			dataMap.put("skuItemId", skuItem.getId());
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
 			noCache();
 			return new JsonResolution(healthkartResponse);
@@ -150,14 +150,14 @@ public class POSAction extends BaseAction {
 	public Resolution getCustomerDetailsByLogin() {
 		Map dataMap = new HashMap();
 
-		if(!StringUtils.isBlank(email)) {
+		if (!StringUtils.isBlank(email)) {
 			User customer = userService.findByLogin(email);
-			if(customer != null) {
+			if (customer != null) {
 				dataMap.put("customerName", customer.getName());
 				dataMap.put("customer", customer);
 				HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
 				List<Address> addressList = addressService.getVisibleAddresses(customer);
-				if(addressList != null && addressList.size() > 0) {
+				if (addressList != null && addressList.size() > 0) {
 					//Get the last address of the user
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
@@ -175,16 +175,16 @@ public class POSAction extends BaseAction {
 	}
 
 	public Resolution confirmOrder() {
-		if(posLineItems.size() == 0) {
+		if (posLineItems.size() == 0) {
 			addRedirectAlertMessage(new SimpleMessage("Please place order for atleast one item"));
 			return new RedirectResolution(POSAction.class).addParameter("posLineItems", posLineItems);
 		}
-		if(customer == null) {
+		if (customer == null) {
 			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
-		if(customer != null) {
+		if (customer != null) {
 			order = posService.createOrderForStore(customer, address);
-			if(order == null) {
+			if (order == null) {
 				addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
 				return new ForwardResolution("/pages/pos/pos.jsp");
 			}
@@ -195,60 +195,52 @@ public class POSAction extends BaseAction {
 
 	public Resolution receivePaymentAndProcessOrder() {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		if(order == null) {
+		if (order == null) {
 			addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		Payment payment = paymentManager.createNewPayment(order, paymentService.findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
+		//todo: do I need to call CounterCashPaymentReceiveAction
+		Payment payment = paymentManager.createNewPayment(order, paymentService.findPaymentMode(EnumPaymentMode.COUNTER_CASH), BaseUtils.getRemoteIpAddrForUser(getContext()),
 				null, null);
+
+		if (payment == null) {
+			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		//todo: is payment need to be verified
+		String gatewayOrderId = payment.getGatewayOrderId();
+		payment.setPaymentMode(EnumPaymentMode.COUNTER_CASH.asPaymenMode());
+
+		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+		payment.setGatewayReferenceId(null);
+		//payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+		baseDao.save(payment);
+
+		//paymentManager.counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, EnumPaymentMode.COUNTER_CASH.getId()));
+		order.setGatewayOrderId(gatewayOrderId);
 		order.setPayment(payment);
 		//todo: should amount be set to grandTotal or else
 		order.setAmount(grandTotal);
 		orderService.save(order);
 
-		ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+		ShippingOrder shippingOrder = posService.createSOForStore(order, warehouse);
 
-		for(CartLineItem cartLineItem : order.getCartLineItems()) {
-			ProductVariant productVariant = cartLineItem.getProductVariant();
-			Sku sku = skuService.getSKU(productVariant, warehouse);
-			if (sku != null) {
-				LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-				shippingOrder.getLineItems().add(shippingOrderLineItem);
-			} else {
-				throw new NoSkuException(productVariant, warehouse);
-			}
-
-			if(sku == null) {
-				addRedirectAlertMessage(new SimpleMessage("Sku Not found"));
-				return new ForwardResolution("/pages/pos/pos.jsp");
-			}
-		}
-		shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrder).getName());
-		//todo: Ask for below call
-		//ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-		shippingOrder.setAmount(order.getAmount());
-		//shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.));
-		shippingOrder = shippingOrderService.save(shippingOrder);
-
-		shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-		shippingOrder = shippingOrderService.save(shippingOrder);
-
-		for(POSLineItemDto posLineItemDto : posLineItems) {
-			Sku posLineItemSku = posLineItemDto.getSkuGroup().getSku();
+		for (POSLineItemDto posLineItemDto : posLineItems) {
+			Sku posLineItemSku = posLineItemDto.getSkuItem().getSkuGroup().getSku();
 			int counter = 0;
-			while(counter < posLineItemDto.getQty()) {
-				SkuItem skuItem = skuGroupService.getSkuItem(posLineItemDto.getSkuGroup(), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+			while (counter < posLineItemDto.getQty()) {
+				SkuItem skuItem = skuGroupService.getSkuItem(posLineItemDto.getSkuItem().getSkuGroup(), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 				skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
 				baseDao.save(skuItem);
 				LineItem lineItemToBeInsertedInPVI = null;
-				for(LineItem lineItem : shippingOrder.getLineItems()) {
-					if(lineItem.getSku().equals(posLineItemSku)) {
+				for (LineItem lineItem : shippingOrder.getLineItems()) {
+					if (lineItem.getSku().equals(posLineItemSku)) {
 						lineItemToBeInsertedInPVI = lineItem;
 						break;
 					}
 				}
 
-				if(lineItemToBeInsertedInPVI == null) {
+				if (lineItemToBeInsertedInPVI == null) {
 					addRedirectAlertMessage(new SimpleMessage("Some error occurred, order could not be processed"));
 					logger.error("Line item not found for following Sku: " + posLineItemSku + " for POS checkout");
 					return new ForwardResolution("/pages/pos/pos.jsp");
@@ -257,15 +249,14 @@ public class POSAction extends BaseAction {
 				adminInventoryService.inventoryCheckinCheckout(posLineItemSku, skuItem, lineItemToBeInsertedInPVI, shippingOrder, null,
 						null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, userService.getLoggedInUser());
 
-				inventoryService.checkInventoryHealth(posLineItemDto.getSkuGroup().getSku().getProductVariant());
+				inventoryService.checkInventoryHealth(posLineItemDto.getSkuItem().getSkuGroup().getSku().getProductVariant());
 				counter++;
 			}
-
-			//todo: discuss SO Lifecycle
-			shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
-			shippingOrder = shippingOrderService.save(shippingOrder);
-
 		}
+		//todo: discuss SO Lifecycle
+		shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
+		shippingOrder = shippingOrderService.save(shippingOrder);
+
 		addRedirectAlertMessage(new SimpleMessage("Order processed successfully"));
 		return new ForwardResolution("/pages/pos/pos.jsp");
 	}

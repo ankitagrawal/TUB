@@ -12,6 +12,7 @@ public class OrderDateUtil {
     public static Date getTargetDispatchDateForWH(Date refDate, Long dispatchDaysOnOrder) {
         int daysForWHProcessing = 0;
         Calendar calendar = Calendar.getInstance();
+
         calendar.setTime(refDate);
 
         int hour = calendar.get(Calendar.HOUR);
