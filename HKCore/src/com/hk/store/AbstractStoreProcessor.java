@@ -131,7 +131,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		Order order = orderService.find(orderId);
 		User user = order.getUser();
 		address.setUser(user);
-		addressService.save(address);
+		address = addressService.save(address);
 		order.setAddress(address);
 		orderService.save(order);
 	}
