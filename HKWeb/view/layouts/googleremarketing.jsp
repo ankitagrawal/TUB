@@ -25,7 +25,7 @@
             }*/
 
             if(pathNames.length > 3){
-                var thirdLevelSlug = pathNames[3];
+                var thirdLevelSlug = pathNames[4];
                 //google disallowed
                 switch (thirdLevelSlug){
                     case "rehabilitation-supports":
