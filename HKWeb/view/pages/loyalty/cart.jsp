@@ -42,48 +42,58 @@
       </div>
 
       <hr>
-
-		<table class="table table-bordered">
-          <thead>
-           <tr>
-             <th style="width: 150px;">Product</th>
-             <th>Quantity</th>
-             <th>Loyalty Points</th>
-           </tr>
-          </thead>
-          <tbody>
-          <c:forEach items="${ca.loyaltyProductList}" var="lp">
-           <tr>
-             <td>
-             	<img
-						src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
-						alt="${lp.variant.product.name}" />
-				<h8>${lp.variant.product.name}</h8>
-			</td>
-			<td>
-				${lp.qty}
-			</td>
-             <td>
-             	${lp.points}
-             </td>
-           </tr>
-           </c:forEach>
-          </tbody>
-        </table>
-        
-        <div class="row">
-        	<div class="span9">
-        		
-        	</div>
-        	<div class="span3" >
-	        	<div class="pull-right">
-	        		<s:form beanclass="com.hk.web.action.core.loyaltypg.CartAction">
-							<s:submit name="checkout" value="Checkout" class="btn btn-primary"/>
-					</s:form>
-				</div>
-        	</div>
-        </div>
-        
+		<c:choose>
+			<c:when test="${not empty ca.loyaltyProductList}">
+    
+			<table class="table table-bordered">
+	          <thead>
+	           <tr>
+	             <th style="width: 150px;">Product</th>
+	             <th>Quantity</th>
+	             <th>Loyalty Points</th>
+	           </tr>
+	          </thead>
+	          <tbody>
+	          <c:forEach items="${ca.loyaltyProductList}" var="lp">
+	           <tr>
+	             <td>
+	             	<img
+							src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
+							alt="${lp.variant.product.name}" />
+					<h8>${lp.variant.product.name}</h8>
+				</td>
+				<td>
+					${lp.qty}
+				</td>
+	             <td>
+	             	${lp.points}
+	             </td>
+	           </tr>
+	           </c:forEach>
+	          </tbody>
+	        </table>
+	        
+	        <div class="row">
+	        	<div class="span9">
+	        		
+	        	</div>
+	        	<div class="span3" >
+		        	<div class="pull-right">
+		        		<s:form beanclass="com.hk.web.action.core.loyaltypg.CartAction">
+								<s:submit name="checkout" value="Checkout" class="btn btn-primary"/>
+						</s:form>
+					</div>
+	        	</div>
+	        </div>
+        	</c:when>
+        	<c:otherwise>
+       			<div class="row">
+       				<div class="span12">
+       					<h4>Cart is Empty</h4>
+       				</div>
+       			</div>
+    		</c:otherwise>
+        </c:choose>
 	  <hr>
       <div class="footer">
         <p>© Footer goes here!!</p>

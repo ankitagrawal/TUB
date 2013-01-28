@@ -15,6 +15,7 @@ import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.karmaPointStatus;
+import com.hk.domain.loyaltypg.UserOrderKey;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.exception.HealthkartRuntimeException;
@@ -26,7 +27,7 @@ import com.hk.pact.dao.order.OrderDao;
 @Service
 public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
-	int oneKarmaPoint = 100;
+	double oneKarmaPoint = 100d;
 
 	@Autowired private LoyaltyProductDao loyaltyProductDao;
 	@Autowired private OrderDao orderDao;
@@ -35,7 +36,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LoyaltyProduct> listProucts(Long userId, int startRow, int maxRows) {
-		int karmaPoints = calculateKarmaPoints(userId);
+		double karmaPoints = calculateKarmaPoints(userId);
 		
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
@@ -54,11 +55,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
-	public int calculateKarmaPoints(Long userId) {
-		Integer credits = calculatePoints(userId, TransactionType.CREDIT, karmaPointStatus.APPROVED);
-		Integer debits = calculatePoints(userId, TransactionType.DEBIT, karmaPointStatus.APPROVED);
+	public double calculateKarmaPoints(Long userId) {
+		Double credits = calculatePoints(userId, TransactionType.CREDIT, karmaPointStatus.APPROVED);
+		Double debits = calculatePoints(userId, TransactionType.DEBIT, karmaPointStatus.APPROVED);
 		if(credits == null) {
-			return 0;
+			return 0d;
 		} else if(debits == null) {
 			return credits;
 		} else {
@@ -66,12 +67,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 	}
 	
-	private Integer calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus status) {
+	private Double calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus status) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
 		criteria.setProjection(Projections.sum("karmaPints"))
 		.add(Restrictions.eq("status", status))
 		.add(Restrictions.eq("transactionType", transactionType));
-		Integer karmaPoints = (Integer) orderDao.findByCriteria(criteria).iterator().next();
+		Double karmaPoints = (Double) orderDao.findByCriteria(criteria).iterator().next();
 		return karmaPoints;
 	}
 
@@ -80,12 +81,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void creditKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		Double amount = order.getPayment().getAmount();
-		int karmaPoints = amount.intValue() / oneKarmaPoint;
+		double karmaPoints = amount / oneKarmaPoint;
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
 		profile.setStatus(karmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
 		profile.setKarmaPints(karmaPoints);
-		profile.setUser(order.getUser());
+		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
+		profile.setUserOrderKey(userOrderKey);
 		userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -93,8 +95,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void debitKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
-		int existingKarmaPoints = calculateKarmaPoints(order.getUser().getId());
-		int karmaPoints = calculateDebitPoints(orderId);
+		double existingKarmaPoints = calculateKarmaPoints(order.getUser().getId());
+		double karmaPoints = calculateDebitPoints(orderId);
 		if (existingKarmaPoints < karmaPoints) {
 			throw new HealthkartRuntimeException("Not sufficient karma points") {
 				private static final long serialVersionUID = 1L;
@@ -104,8 +106,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setStatus(karmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.DEBIT);
 		profile.setKarmaPints(karmaPoints);
-		profile.setUser(order.getUser());
-		profile.setOrder(order);
+		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
+		profile.setUserOrderKey(userOrderKey);
 		userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -134,7 +136,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
-	public int calculateDebitPoints(Long orderId) {
+	public double calculateDebitPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
 		List<LoyaltyProduct> loyaltyProducts = new ArrayList<LoyaltyProduct>();
@@ -144,7 +146,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			loyaltyProducts.add(product);
 		}
 		
-		int points = 0;
+		double points = 0;
 		for (LoyaltyProduct loyaltyProduct : loyaltyProducts) {
 			points += (loyaltyProduct.getPoints()*loyaltyProduct.getQty());
 		}
