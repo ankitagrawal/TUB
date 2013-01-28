@@ -153,7 +153,7 @@
                 }
             }else if(hkPageType == 'home'){
             }
-            if(canSet)
+            //if(canSet)
             {
                 alert( 'prodid:' + "'" + prodId + "'" + 'pagetype:' +  "'" + hkPageType + "'" + 'pCat:' +  "'" + pCategory + "'");
                 var google_tag_params = {
