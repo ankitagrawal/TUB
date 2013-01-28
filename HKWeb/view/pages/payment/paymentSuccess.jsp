@@ -21,6 +21,8 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"></s:layout-render>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -309,9 +311,6 @@
     </c:choose>
 
 </s:layout-component>
-
-<!--google remarketing-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"></s:layout-render>
 
 <s:layout-component name="analytics">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
