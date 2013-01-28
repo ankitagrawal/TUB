@@ -30,11 +30,13 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -141,7 +143,7 @@ public class InventoryCheckoutAction extends BaseAction {
     }
 
     public Resolution findSkuGroups() {
-        SkuGroup skuGroupBarcode;
+        SkuGroup skuGroupBarcode = null;
         // earlierSkuGroup = null;
         /* List<SkuGroup> inStockSkuGroupList; */
         /* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); */
@@ -150,23 +152,32 @@ public class InventoryCheckoutAction extends BaseAction {
 
         if (StringUtils.isNotBlank(upc)) {
 	        //TODO: Fetch available sku groups
-            skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
+
+//   first check for skuitem Barcode
+            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),EnumSkuItemStatus.Checked_IN.getId());
+//       SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),);
+            if (skuItemBarcode != null) {
+               skuGroupBarcode = skuItemBarcode.getSkuGroup();
+            } else {
+                skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
+            }
             if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
                 productVariant = skuGroupBarcode.getSku().getProductVariant();
                 skuGroups = new ArrayList<SkuGroup>();
                 skuGroups.add(skuGroupBarcode);
+            }
 
-                /*
-                 * inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku()); if
-                 * (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) { if (inStockSkuGroupList.size() ==
-                 * 1) { if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) { skuGroups =
-                 * inStockSkuGroupList.subList(0, 1); } else { addRedirectAlertMessage(new SimpleMessage("Selected item
-                 * not found in inventory list, please contact Admin. ")); upc = null; } } else { if
-                 * (upc.equalsIgnoreCase(inStockSkuGroupList.get(0).getBarcode())) { skuGroups =
-                 * inStockSkuGroupList.subList(0, 1); } else { earlierSkuGroup = inStockSkuGroupList.get(0);
-                 * wronglyPickedBox = true; upc = null; } } }
-                 */
-            } else {
+            /*
+            * inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku()); if
+            * (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) { if (inStockSkuGroupList.size() ==
+            * 1) { if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) { skuGroups =
+            * inStockSkuGroupList.subList(0, 1); } else { addRedirectAlertMessage(new SimpleMessage("Selected item
+            * not found in inventory list, please contact Admin. ")); upc = null; } } else { if
+            * (upc.equalsIgnoreCase(inStockSkuGroupList.get(0).getBarcode())) { skuGroups =
+            * inStockSkuGroupList.subList(0, 1); } else { earlierSkuGroup = inStockSkuGroupList.get(0);
+            * wronglyPickedBox = true; upc = null; } } }
+            */
+            else {
                 List<ProductVariant> pvList = productVariantDao.findVariantListFromUPC(upc);
                 if (pvList != null && !pvList.isEmpty()) {
                     productVariant = pvList.get(0);
@@ -184,11 +195,11 @@ public class InventoryCheckoutAction extends BaseAction {
                         skuGroups = adminInventoryService.getInStockSkuGroups(upc);
                         logger.debug("skuGroups: " + skuGroups.size());
                     }
-                } else {
+                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
                     upc = null;
                 }
-            }
+        }
 
         } else {
             addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
@@ -223,12 +234,14 @@ public class InventoryCheckoutAction extends BaseAction {
                         }
 
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
-
-                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+//      get Instock skuitem againts these sku group
+                         SkuItem  skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+//                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+//                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
+                           if (skuItem != null)  {
+                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
                                         getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
-                                binManager.removeBinAllocated(inStockSkuItems.get(0));
+                                binManager.removeBinAllocated(skuItem);
                                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
                                 String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
@@ -237,20 +250,20 @@ public class InventoryCheckoutAction extends BaseAction {
                                 addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
                             }
 
-                        } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
-                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
-                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
-                                binManager.removeBinAllocated(inStockSkuItems.get(0));
-                                addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
-
-                                String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
-                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
-                            } else {
-                                addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
-                            }
-                        } else {
+//                        } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+//                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+//                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
+//                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+//                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
+//                                binManager.removeBinAllocated(inStockSkuItems.get(0));
+//                                addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
+//
+//                                String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
+//                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
+//                            } else {
+//                                addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
+//                            }
+                       } else {
                             addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
                         }
                     }

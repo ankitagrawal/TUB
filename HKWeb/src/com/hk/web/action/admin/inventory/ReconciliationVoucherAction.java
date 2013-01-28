@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,8 @@ import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.user.User;
@@ -38,6 +41,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.exception.NoSkuException;
@@ -75,6 +79,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	SkuGroupService skuGroupService;
 	@Autowired
 	UserService userService;
+    @Autowired
+	private InventoryService inventoryService;
 
 	private ReconciliationVoucher reconciliationVoucher;
 	private List<ReconciliationVoucher> reconciliationVouchers = new ArrayList<ReconciliationVoucher>();
@@ -89,6 +95,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	private Integer askedQty;
 	private String batchNumber;
 	private String errorMessage;
+
+    private String                 upc;
 
 	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
@@ -362,6 +370,28 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	}
 
 
+    public Resolution SubtractReconciled (){
+          if (StringUtils.isNotBlank(upc)) {
+            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+              if (skuItemBarcode  != null ) {
+              adminInventoryService.inventoryCheckinCheckout(rvLineItem.getSku(), skuItemBarcode, null, null, null, rvLineItem, null,
+									inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED), -1L, userService.getLoggedInUser());
+							adminInventoryService.damageInventoryCheckin(skuItemBarcode, null);
+
+              }    else {
+                addRedirectAlertMessage(new SimpleMessage("Barcode does not exist for this skuItem"));
+              }
+
+          } else {
+             addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
+          }
+
+
+
+        return new RedirectResolution(ReconciliationVoucherAction.class);
+    }
+
+
 	public ReconciliationVoucher getReconciliationVoucher() {
 		return reconciliationVoucher;
 	}
@@ -477,4 +507,12 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	public void setAskedQty(Integer askedQty) {
 		this.askedQty = askedQty;
 	}
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
+    }
 }

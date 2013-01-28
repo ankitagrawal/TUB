@@ -107,6 +107,7 @@ public class StockTransferAction extends BasePaginatedAction {
 	}
 
 	public Resolution save() {
+        SkuItem skuItem = null;
 		if (stockTransfer == null) {
 			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
 			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -122,9 +123,16 @@ public class StockTransferAction extends BasePaginatedAction {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
 
-		List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
-		if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
-			SkuItem skuItem = inStockSkuItemList.get(0);
+        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(),EnumSkuItemStatus.Checked_IN.getId());
+        if (skuItemBarcode != null){
+              skuItem = skuItemBarcode;
+        } else {
+		  List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
+               if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+                 skuItem = inStockSkuItemList.get(0);
+             }
+       }
+		if (skuItem != null) {
 			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
 			SkuGroup skuGroup = skuItem.getSkuGroup();
 			Sku sku = skuGroup.getSku();

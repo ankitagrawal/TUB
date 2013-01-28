@@ -1,8 +1,7 @@
 package com.hk.admin.impl.service.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.text.SimpleDateFormat;
 
 import com.hk.constants.sku.EnumSkuItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
@@ -43,6 +43,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import  org.apache.commons.lang.StringUtils;
 
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
@@ -330,6 +331,32 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem)  {
      return   getAdminPVIDao().getCheckedinskuItemAgainstGrn(grnLineItem);
     }
+
+
+    public Map<Long, String> skuItemDataMap( List<SkuItem> checkedInSkuItems , Date expiryDate) {
+        int strLength = 20;
+        SkuItem skuItem = checkedInSkuItems.get(0);
+        Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+        ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+        String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+        SkuGroup skuGroup = skuItem.getSkuGroup();
+        String date = "";
+        if (expiryDate == null) {
+            date = "NA";
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            date = sdf.format(expiryDate);
+        }
+        for (SkuItem skuItem1 : checkedInSkuItems) {
+             String data = skuItem1.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+            if (!skuItemDataMap.containsKey(skuItem1.getId())) {
+                skuItemDataMap.put(skuItem1.getId(), data);
+            }
+        }
+        return skuItemDataMap;
+    }
+
 
 
     public BaseDao getBaseDao() {
