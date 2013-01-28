@@ -74,9 +74,9 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
-        if(pincode == null){
-          addRedirectAlertMessage(new SimpleMessage("No Pincode Exist in the System!!!"));
-          return new RedirectResolution(PincodeCourierMappingAction.class);
+        if (pincode == null) {
+            addRedirectAlertMessage(new SimpleMessage("No Pincode Exist in the System!!!"));
+            return new RedirectResolution(PincodeCourierMappingAction.class);
         }
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, null);
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, null, null, null);
@@ -86,7 +86,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution detailedAnalysis() {
         pincode = pincodeService.getByPincode(pin);
-        if(pincode == null){
+        if (pincode == null) {
             addRedirectAlertMessage(new SimpleMessage("No Pincode Exist in the System!!!"));
             return new RedirectResolution(PincodeCourierMappingAction.class);
         }
@@ -101,13 +101,15 @@ public class PincodeCourierMappingAction extends BaseAction {
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
             PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), Arrays.asList(pincodeCourierMapping.getCourier()), null, null);
             boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isCodAir();
-            if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
-                flag = false;
-                break;
-            }
-            if (!isValidMapping) {
-                pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
-                continue;
+            if (pincodeCourierMappingDb != null) {
+                if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
+                    flag = false;
+                    break;
+                }
+                if (!isValidMapping) {
+                    pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
+                    continue;
+                }
             }
             pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
         }
