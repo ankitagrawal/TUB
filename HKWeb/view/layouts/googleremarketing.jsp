@@ -23,7 +23,18 @@
             Order order = (Order)pageContext.getAttribute("order");
             pageContext.setAttribute("order", order);
         }
+
+        if(pageContext.getAttribute("googleProductId") != null){
+            String productId = (Order)pageContext.getAttribute("googleProductId");
+            pageContext.setAttribute("googleProductId", productId);
+        }
     %>
+
+    <input type="hidden" value="${pageType}" id="pageType">
+
+    <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
+    <input type="hidden" value="${googleProductId}" id="googleProductId">
+
     <c:set var="excludeCategories" value="rehabilitation-supports,personal-hygiene,breast-cancer-home-test,women-nutrition"/>
     <c:set var="googleProductsSelected" value=""/>
     <c:set var="canGoogleRemarket" value="false"/>
@@ -91,6 +102,9 @@
         </c:forEach>
     </c:when>
     </c:choose>
+
+    <input type="hidden" value="${googleProductsSelected}" id="cartProductId">
+
     <%--<c:otherwise>--%>
     <g:if test="${canGoogleRemarket == 'true'}">
 
