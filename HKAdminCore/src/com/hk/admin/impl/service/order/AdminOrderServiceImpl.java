@@ -435,7 +435,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 codFailureMap.put("CodAllowedOnGroundShipping", "N");
             }
         }   else if (!rtoOrders.isEmpty() && rtoOrders.size() >=2 ) {
-                codFailureMap.put("MutipleRTOs", "Y");
+          osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
+          List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
+          if (rtoOrders.size() >= totalDeliveredOrders.size())
+            codFailureMap.put("MutipleRTOs", "Y");
         }
         return codFailureMap;
     }
