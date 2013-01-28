@@ -425,6 +425,7 @@
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                title="Change Address"/> Change Address
           <s:param name="order" value="${order.id}"/>
+          <s:param name="address" value="${order.address}"/>
         </s:link></td>
       </tr>
     </c:if>
