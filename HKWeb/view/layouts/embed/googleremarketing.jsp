@@ -7,6 +7,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.domain.order.Order" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
     <%
@@ -25,15 +26,15 @@
         }
 
         if(pageContext.getAttribute("googleProductId") != null){
-            String productId = (String)pageContext.getAttribute("googleProductId");
-            pageContext.setAttribute("googleProductId", productId);
+            Product product = (Product)pageContext.getAttribute("googleProduct");
+            pageContext.setAttribute("googleProduct", product);
         }
     %>
 
     <input type="hidden" value="${pageType}" id="pageType">
 
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
-    <input type="hidden" value="${googleProductId}" id="googleProductId">
+    <input type="hidden" value="${googleProduct.id}" id="googleProductId">
 
     <c:set var="excludeCategories" value="rehabilitation-supports,personal-hygiene,breast-cancer-home-test,women-nutrition"/>
     <c:set var="googleProductsSelected" value=""/>
@@ -64,13 +65,20 @@
 
                 </c:when>
                 <c:otherwise>
-                    <c:set var="canGoogleRemarket" value="true"/>
+                    <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
+                        <c:set var="canGoogleRemarket" value="true"/>
+                    </c:if>
                 </c:otherwise>
             </c:choose>
         </c:if>
     </c:if>
 
     <c:choose>
+        <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
+            <script type="text/javascript">
+                alert('pageType')
+            </script>
+        </c:when>
     <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
         <c:forEach items="${order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
             <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
