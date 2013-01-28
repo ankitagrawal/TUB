@@ -102,7 +102,7 @@ public interface MasterDataDao
 
     public List<ReviewStatus> getReviewStatusList();
 
-    public List<String> getCourierListForDBUpdation();
+    public List<String> getCourierListForAutoDeliveryMarking();
 
     public List<RegionType> getRegionTypeList();
 
