@@ -49,7 +49,14 @@
             </s:form>
             <div>If you don't have a healthkart account, <a id="newCustomer" class="clickHere">click here</a> to create one</div>   <br/>
             <div class="clear"></div>
-            <span class="bottom"><a class="terms" href="/">Terms of Use</a> | &copy; Healthkart.com</span>
+            <span class="bottom">    <c:choose>
+                <c:when test="${!empty sla.hkApiUser.terms}">
+                    <a class="terms" href="${sla.hkApiUser.terms}">Terms of Use</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
+                </c:otherwise>
+            </c:choose>| &copy; Healthkart.com</span>
         </div>
         <div id="signupbox" class="formbox" style="display: none;">
             <h3> Please enter the following details to create a new account</h3>
@@ -78,21 +85,39 @@
                 <div>If you already have an account, <a id="oldCustomer" class="clickHere">click here</a> to login</div><br/>
             </s:form>
             <div class="clear"></div>
-            <span class="bottom"><a class="terms" href="/">Terms of Use</a> | &copy; Healthkart.com</span>
+            <span class="bottom">    <c:choose>
+                <c:when test="${!empty sla.hkApiUser.terms}">
+                    <a class="terms" href="${sla.hkApiUser.terms}">Terms of Use</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
+                </c:otherwise>
+            </c:choose> | &copy; Healthkart.com</span>
         </div>
         <div id="forgetbox" class="formbox" style="display: none;">
             <h3> Please enter your Email address </h3>
             <div class="errors"></div>
-            <s:form class="form" id="forget_form" method="post" event="login" beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction">
-                <s:text type="text" placeholder="Email" name="userLogin" id="email" tabindex="10" size="50" maxlength="50" value=""/>
-                <div class="login_block">
-                    <s:submit tabindex="30" name="sendResetLink" id="reset"  class="submit" value="Send Password"/>
-                </div>
+            <s:form class="form" id="forget_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction">
+                <s:text type="text" placeholder="Email" name="userLogin" id="forgetEmail" tabindex="10" size="50" maxlength="50" value=""/>
+                <br/>
+
+                <s:submit tabindex="30" name="sendResetLink" id="sendResetLink"  class="submit" value="Send Password"/>
 
             </s:form>
             <div>Once you reset your password, <a id="oldCustomerLogin" class="clickHere">click here</a> to Sign in</div>   <br/>
             <div class="clear"></div>
-            <span class="bottom"><a class="terms" href="/">Terms of Use</a> | &copy; Healthkart.com</span>
+            <span class="bottom">
+                <c:choose>
+                    <c:when test="${!empty sla.hkApiUser.terms}">
+                        <a class="terms" href="${sla.hkApiUser.terms}">Terms of Use</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
+                    </c:otherwise>
+                </c:choose>
+
+                
+                | &copy; Healthkart.com</span>
         </div>
     </div>
     <div class="footer"></div>
@@ -256,6 +281,19 @@ $(document).ready(function()
         }
 
     }
+
+    function checkForgetEmail(){
+
+        var email;
+        var err1=0;
+        email_length = $("#forgetEmail").val().length;
+        var email_var=$("#forgetEmail").val();
+        var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if(!rege.test(email_var) || email_length==0){ errorflag=true;
+            errorTooltip('forgetEmail',"Please enter a valid email. Eg: rahul@gmail.com");
+        }
+
+    }
     function checksignup_password(){
         var signup_password;var err=0;
         signup_password = $("#signup_password").val().length;
@@ -324,11 +362,11 @@ $(document).ready(function()
         }
     });
 
-    $('#reset').click(function(e) {
+    $('#sendResetLink').click(function(e) {
         hideServerErrors();
         removeErrorTooltips();
         errorflag = false;
-        checkemail();
+        checkForgetEmail();
         if (errorflag == false) {
             disableSubmitButtons();
             $('#forget_form').submit();

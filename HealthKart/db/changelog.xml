@@ -11003,4 +11003,9 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Pradeep (generated)" id="1359352448473-1">
+        <addColumn tableName="hk_api_user">
+            <column name="terms" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
