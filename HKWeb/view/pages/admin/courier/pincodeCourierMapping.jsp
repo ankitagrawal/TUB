@@ -74,6 +74,11 @@
                     var bool = true;
                   $('.addCouriers').each(function(){
                       var newCourier = $(this).val();
+                      if(newCourier== null || newCourier == ""){
+                          alert("You must select a courier !!!!");
+                          bool = false;
+                          return false
+                      }
                       $('.oldCouriers').each(function(){
                          var oldCourier = $(this).val();
                           if(newCourier == oldCourier){
