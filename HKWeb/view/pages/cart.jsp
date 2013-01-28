@@ -286,23 +286,7 @@
   </div>
   <div class='floatfix'></div>
 </div>
-<c:set var="googleProductsSelected" value=""/>
-<c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-    <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
-        <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
-            <c:choose>
-            <c:when test = "${hk:hasProductAnyCategory(cartLineItem.productVariant.product, excludeCategories)}">
-
-            </c:when>
-            <c:otherwise>
-                <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
-                <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
-            </c:otherwise>
-            </c:choose>
-        </c:if>
-    </c:if>
-
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
@@ -467,7 +451,6 @@
 </script>
 
 <c:forEach items="${cartAction.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr1">
-  <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
@@ -540,6 +523,9 @@
   </div>
 </c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
+<!--google remarketing-->
+<input type="hidden" id="pageType" value="cart">
+<s:layout-render name="/layouts/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"></s:layout-render>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
@@ -694,11 +680,6 @@
   });
 </script>
 </div>
-
-<!--google remarketing-->
-<input type="hidden" id="pageType" value="cart">
-<input type="hidden" id="cartProductId" value="${googleProductsSelected}">
-<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 

@@ -1100,21 +1100,8 @@
 	</c:if>
 
     <!--google remarketing-->
-    <input type="hidden" id="pageType" value="product">
     <input type="hidden" id="googleProductId" value="${product.id}">
-    <c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
-    <c:if test="${!product.googleAdDisallowed}">
-        <c:if test = "${product.primaryCategory == 'beauty' || product.primaryCategory == 'sports'}">
-            <c:choose>
-            <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
-
-            </c:when>
-            <c:otherwise>
-                <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
-            </c:otherwise>
-            </c:choose>
-        </c:if>
-    </c:if>
+    <s:layout-render name="/layouts/googleremarketing.jsp" pageType="product" googleProductId="${product.id}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"></s:layout-render>
 
 </s:layout-component>
 </s:layout-render>

@@ -246,6 +246,27 @@ public class Functions {
         return collectionContainsCollection;
     }
 
+    @SuppressWarnings("unchecked")
+    public static boolean urlContainsAnyCategory(String url, String categoryPipeSeparatedList) {
+        String[] categories = null;
+        if(categoryPipeSeparatedList.contains(",")){
+            categories = categoryPipeSeparatedList.split(",");
+        }else if (categoryPipeSeparatedList.contains("|")){
+            categories = categoryPipeSeparatedList.split(",");
+        }
+        /*
+         * for (Object o : c2) { if (collectionContains(c1, o) && collectionContains(c2, o)) { return
+         * collectionContains(c, o); } }
+         */
+
+        for (String category : categories){
+            if (url.contains(category.trim())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static Long netAvailableUnbookedInventory(Object o) {
         return netInventory(o) - bookedQty(o);
     }

@@ -322,6 +322,18 @@
     </function>
     <function>
         <description>
+            contains for collections
+        </description>
+        <name>urlContainsAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean urlContainsAnyCategory(java.lang.String,java.lang.String)
+        </function-signature>
+        <example>
+            ${hk:urlContainsAnyCategory(${str1}, ${str2})}
+        </example>
+    </function>
+    <function>
+        <description>
             contains for string
         </description>
         <name>firstStringContainsSecond</name>

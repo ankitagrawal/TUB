@@ -233,9 +233,9 @@
 
 	</s:layout-component>
 </s:layout-render>
-<input type="hidden" id="pageType" value="home">
-<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
 
+<!--google remarketing code-->
+<s:layout-render name="/layouts/googleremarketing.jsp" pageType="home"></s:layout-render>
 
 
 <script type="text/javascript">
