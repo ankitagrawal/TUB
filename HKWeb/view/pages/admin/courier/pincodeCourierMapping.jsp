@@ -28,6 +28,10 @@
                         alert("Pincode must contain numbers only");
                         return false;
                     }
+                    else if(text.length!=6){
+                        alert("Pincode length must be 6");
+                        return false;
+                    }
                 });
                  $('.addRowButton').click(function () {
                      var pincode = ${pcma.pincode.pincode};
