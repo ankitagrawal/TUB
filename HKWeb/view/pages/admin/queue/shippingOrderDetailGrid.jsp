@@ -168,12 +168,20 @@
         </s:link>)
         </shiro:hasAnyRoles>
 
-         <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
-           (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="pre" target="_blank">
-            <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
-            Create Shipment
-        </s:link>)
-        </c:if>
+        <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+            <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
+                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
+                         target="_blank">
+                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                Create Auto Shipment
+            </s:link>)
+                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="pre"
+                         target="_blank">
+                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                Create Manual Shipment
+            </s:link>)
+            </c:if>
+        </shiro:hasAnyRoles>
 
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
