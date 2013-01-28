@@ -45,7 +45,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		for (ProductAdapter productAdapter : list) {
 			productList.add(productAdapter.getLoyaltyProduct());
 		}
-		productPage = new Page(productList, getPerPage(), getPerPageDefault(), 2);
+		productPage = new Page(productList, getPerPage(), getPerPageDefault(), 4);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 	
