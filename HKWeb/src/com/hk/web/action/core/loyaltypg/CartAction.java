@@ -26,6 +26,7 @@ public class CartAction extends AbstractLoyaltyAction {
 
 	private String productVariantId;
 	private long qty;
+	private Double totalShoppingPoints = 0d;
 	
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
@@ -61,6 +62,7 @@ public class CartAction extends AbstractLoyaltyAction {
 				LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
 				loyaltyProduct.setQty(cartLineItem.getQty());
 				loyaltyProductList.add(loyaltyProduct);
+				totalShoppingPoints +=loyaltyProduct.getPoints()*loyaltyProduct.getQty();
 			}
 		}
 		return new ForwardResolution("/pages/loyalty/cart.jsp");
@@ -88,5 +90,13 @@ public class CartAction extends AbstractLoyaltyAction {
 
 	public void setQty(long qty) {
 		this.qty = qty;
+	}
+	
+	public Double getTotalShoppingPoints() {
+		return totalShoppingPoints;
+	}
+	
+	public void setTotalShoppingPoints(Double totalShoppingPoints) {
+		this.totalShoppingPoints = totalShoppingPoints;
 	}
 }

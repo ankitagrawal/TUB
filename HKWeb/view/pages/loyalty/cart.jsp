@@ -70,6 +70,16 @@
 	             </td>
 	           </tr>
 	           </c:forEach>
+	           <tr style="background-color: #f9f9f9;">
+					<td>
+						<h8>Total Shopping points</h8>
+					</td>
+					<td colspan="2">
+						<div>
+							${ca.totalShoppingPoints} Points
+						</div>
+					</td>
+				</tr>
 	          </tbody>
 	        </table>
 	        
