@@ -172,7 +172,7 @@
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
                          target="_blank">
-                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Create Auto Shipment
             </s:link>)
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
