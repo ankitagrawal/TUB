@@ -99,7 +99,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     public Resolution update() {
         boolean flag = true;
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
-            PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), null, null, null);
+            PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), Arrays.asList(pincodeCourierMapping.getCourier()), null, null);
             boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isCodAir();
             if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
                 flag = false;
