@@ -81,6 +81,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <c:set var="canGoogleRemarket" value="true"/>
                         </c:otherwise>
                     </c:choose>
                 </c:if>
@@ -95,6 +96,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <c:set var="canGoogleRemarket" value="true"/>
                         </c:otherwise>
                     </c:choose>
                 </c:if>
