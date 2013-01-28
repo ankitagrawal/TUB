@@ -85,13 +85,12 @@ public class SMSManager {
         return false;
     }
 
-  public boolean sendHKReachOutForDeliverySMS(Shipment shipment, Consignment consignment) {
+  public boolean sendHKReachOutForDeliverySMS(Shipment shipment, User agent) {
     HashMap valuesMap = new HashMap();
     ShippingOrder shippingOrder = shipment.getShippingOrder();
     Order order = shippingOrder.getBaseOrder();
     valuesMap.put("customer", order.getUser().getName());
     valuesMap.put("orderId", shippingOrder.getId());
-    User agent = consignment.getRunsheet().getAgent();
     valuesMap.put("deliveryAgent", agent.getFirstName());
     if (order.isCOD()) {
       valuesMap.put("amount", shippingOrder.getAmount());

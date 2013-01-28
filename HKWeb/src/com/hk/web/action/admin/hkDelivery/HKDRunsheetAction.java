@@ -301,14 +301,18 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
             for (Consignment consignment : consignments) {
               //Send SMS
-              try {
-                Awb awb = awbService.findByCourierAwbNumber(EnumCourier.HK_Delivery.asCourier(), consignment.getAwbNumber());
-                Shipment shipment = shipmentService.findByAwb(awb);
-                smsManager.sendHKReachOutForDeliverySMS(shipment, consignment);
-              } catch (Exception e) {
-                logger.error("Exception while sending sms: " + e.getMessage());
+              if (!consignment.getConsignmentStatus().getStatus().equals(EnumConsignmentStatus.ShipmentOutForDelivery.toString())) {
+                try {
+                  Awb awb = awbService.findByCourierAwbNumber(EnumCourier.HK_Delivery.asCourier(), consignment.getAwbNumber());
+                  Shipment shipment = shipmentService.findByAwb(awb);
+                  smsManager.sendHKReachOutForDeliverySMS(shipment, agent);
+                } catch (Exception e) {
+                  logger.error("Exception while sending sms: ", e);
+                  e.printStackTrace();
+                }
               }
               consignment.setConsignmentStatus(outForDelivery);
+
             }
               if(consignments.size()>0) {
             try {
