@@ -30,10 +30,9 @@
     <div class="container">
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-          <li><a href="">Home</a></li>
-          <li><a href="">Visit Healthkart</a></li>
+          <li><a href="<hk:vhostJs/>/loyaltypg">Home</a></li>
+          <li><a href="http://www.healthkart.com">Visit Healthkart</a></li>
           <li><a href="core/loyaltypg/Cart.action">View Cart</a></li>
-          <li><a href="">Sign In</a></li>
         </ul>
         <h3 class="muted">HealthKart</h3>
       </div>
