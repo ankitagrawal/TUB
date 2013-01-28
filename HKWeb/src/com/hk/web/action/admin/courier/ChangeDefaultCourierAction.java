@@ -163,7 +163,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 getBaseDao().save(defaultCourier);
             }
         } catch (Exception e) {
-            logger.error("Exception while reading excel sheet.", e);
+            logger.error("Exception while reading excel sheet.", e.getMessage());
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
             return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }

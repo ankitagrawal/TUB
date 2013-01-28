@@ -11229,4 +11229,11 @@
     <changeSet author="Shrey (generated)" id="1358866023333-30">
         <dropColumn columnName="billing_address_actual" tableName="payment"/>
     </changeSet>
+    <changeSet author="Pratham" id="28-01-2013-01">
+        <sql>
+            UPDATE courier SET operations_bitset = 2;
+            UPDATE courier SET operations_bitset = operations_bitset * 11 where id in (662,661);
+            UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

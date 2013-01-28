@@ -132,7 +132,7 @@ public class PincodeCourierMappingAction extends BaseAction {
                 pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
         } catch (Exception e) {
-            logger.error("Exception while uploading pincode courier mapping excel " + e);
+            logger.error("Exception while uploading pincode courier mapping excel " + e.getMessage());
         }
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }

@@ -175,7 +175,7 @@
                 <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
                 Create Auto Shipment
             </s:link>)
-                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="pre"
+                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
                          target="_blank">
                 <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
                 Create Manual Shipment
