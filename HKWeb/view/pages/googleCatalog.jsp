@@ -12,6 +12,7 @@
                 <description>Healthkart Online Health Store</description>
                 <c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
                 <c:forEach items="${googleBean.products}" var="product">
+                    <c:choose>
                     <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
 
                     </c:when>
@@ -37,6 +38,7 @@
                         </item>
                     </c:if>
                     </c:otherwise>
+                    </c:choose>
                 </c:forEach>
                 </channel>
     </rss>
