@@ -291,6 +291,7 @@
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
     <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
         <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+            <c:choose>
             <c:when test = "${hk:hasProductAnyCategory(cartLineItem.productVariant.product, excludeCategories)}">
 
             </c:when>
@@ -298,6 +299,7 @@
                 <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
                 <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
             </c:otherwise>
+            </c:choose>
         </c:if>
     </c:if>
 

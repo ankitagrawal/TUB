@@ -308,6 +308,7 @@
             <c:forEach items="${actionBean.payment.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
                 <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
                     <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+                        <c:choose>
                         <c:when test = "${hk:hasProductAnyCategory(cartLineItem.productVariant.product, excludeCategories)}">
 
                         </c:when>
@@ -315,12 +316,14 @@
                             <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
                             <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
                         </c:otherwise>
+                        </c:choose>
                     </c:if>
                 </c:if>
             </c:forEach>
             <c:forEach items="${actionBean.payment.order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
                 <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
                     <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
+                        <c:choose>
                         <c:when test = "${cartLineItem.productVariant.product.secondaryCategory == 'rehabilitation-supports'
                                         || cartLineItem.productVariant.product.secondaryCategory == 'personal-hygiene'
                                         || cartLineItem.productVariant.product.secondaryCategory == 'breast-cancer-home-test'
@@ -331,6 +334,7 @@
                             <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
                             <%--<s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>--%>
                         </c:otherwise>
+                        </c:choose>
                     </c:if>
                 </c:if>
             </c:forEach>

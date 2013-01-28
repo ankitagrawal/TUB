@@ -1105,12 +1105,14 @@
     <c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
     <c:if test="${!product.googleAdDisallowed}">
         <c:if test = "${product.primaryCategory == 'beauty' || product.primaryCategory == 'sports'}">
+            <c:choose>
             <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
 
             </c:when>
             <c:otherwise>
                 <s:layout-render name="/layouts/googleremarketing.jsp"></s:layout-render>
             </c:otherwise>
+            </c:choose>
         </c:if>
     </c:if>
 
