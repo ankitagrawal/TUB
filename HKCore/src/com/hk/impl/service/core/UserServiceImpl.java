@@ -121,6 +121,9 @@ public class UserServiceImpl implements UserService {
             if (user.getSubscribedMask() == null){
                 user.setSubscribedMask(SUBSCRIBE_ALL);//Subscribe for all
             }
+            if (user.getUnsubscribeToken() == null){
+                user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(user.getLogin()));//Subscribe for all
+            }
         }
 
         return getUserDao().save(user);

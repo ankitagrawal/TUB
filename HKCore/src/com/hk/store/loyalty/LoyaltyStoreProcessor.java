@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -47,8 +49,11 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = orderService.find(orderId);
-		loyaltyProgramService.debitKarmaPoints(orderId);
 		Payment payment = paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null);
+		loyaltyProgramService.debitKarmaPoints(orderId);
+		payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+		baseDao.saveOrUpdate(payment);
 		return payment;
 	}
 

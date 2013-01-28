@@ -22,11 +22,11 @@ public class LoyaltyProduct {
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "variant_id")
+	@JoinColumn(name = "variant_id", unique=true)
 	private ProductVariant variant;
 
 	@Column(name = "points")
-	private int points;
+	private Double points;
 	
 	@Transient
 	public String getProductUrl() {
@@ -51,11 +51,11 @@ public class LoyaltyProduct {
 		this.variant = variant;
 	}
 
-	public int getPoints() {
+	public Double getPoints() {
 		return points;
 	}
 
-	public void setPoints(int points) {
+	public void setPoints(Double points) {
 		this.points = points;
 	}
 	

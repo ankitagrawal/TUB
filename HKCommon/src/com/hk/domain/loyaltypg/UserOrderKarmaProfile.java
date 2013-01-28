@@ -3,37 +3,19 @@ package com.hk.domain.loyaltypg;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.hk.domain.order.Order;
-import com.hk.domain.user.User;
 
 @Entity
 @Table(name = "user_order_karma_profile")
 public class UserOrderKarmaProfile {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
-	private Order order;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@EmbeddedId
+	private UserOrderKey userOrderKey;
 
 	@Column(name = "creation_time", updatable = false)
 	private Date creationTime = new Date();
@@ -51,30 +33,14 @@ public class UserOrderKarmaProfile {
 	private karmaPointStatus status;
 
 	@Column(name = "points")
-	private int karmaPints;
+	private Double karmaPints;
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+	public UserOrderKey getUserOrderKey() {
+		return userOrderKey;
 	}
 	
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserOrderKey(UserOrderKey userOrderKey) {
+		this.userOrderKey = userOrderKey;
 	}
 	
 	public TransactionType getTransactionType() {
@@ -93,11 +59,11 @@ public class UserOrderKarmaProfile {
 		this.status = status;
 	}
 
-	public int getKarmaPints() {
+	public Double getKarmaPints() {
 		return karmaPints;
 	}
 
-	public void setKarmaPints(int karmaPints) {
+	public void setKarmaPints(Double karmaPints) {
 		this.karmaPints = karmaPints;
 	}
 

@@ -14,6 +14,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.OrderCategory;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -118,7 +119,11 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 				cartLineItemService.remove(cartLineItem.getId());
 			}
 		}
-		return doPayment(orderId, remoteIp);
+		Payment payment = doPayment(orderId, remoteIp);
+		order.setPayment(payment);
+		order.setGatewayOrderId(payment.getGatewayOrderId());
+		orderService.save(order);
+		return payment;
 	}
 
 	@Override
@@ -135,6 +140,10 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	public void escalateOrder(Long orderId) throws InvalidOrderException {
 		validatePayment(orderId);
 		Order order = orderService.find(orderId);
+	    Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
+	    order.setCategories(categories);
+		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
+		order = orderService.save(order);
 		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 	}
 
