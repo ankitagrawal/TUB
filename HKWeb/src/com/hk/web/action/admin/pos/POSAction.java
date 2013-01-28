@@ -6,7 +6,9 @@ import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -17,12 +19,15 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.NoSkuException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.inventory.InventoryService;
@@ -33,7 +38,9 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.store.StoreService;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.core.accounting.AccountingInvoiceAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,11 +66,11 @@ import java.util.Map;
 public class POSAction extends BaseAction {
 
 	private static Logger logger = LoggerFactory.getLogger(POSAction.class);
-	@Validate(on = "confirmOrder", required = true)
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
 	private String phone;
-	@Validate(on = "confirmOrder", required = true)
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
 	private String email;
-	@Validate(on = "confirmOrder", required = true)
+	@Validate(on = "receivePaymentAndProcessOrder", required = true)
 	private String name;
 	private String productVariantBarcode;
 	private List<POSLineItemDto> posLineItems = new ArrayList<POSLineItemDto>(0);
@@ -71,6 +79,7 @@ public class POSAction extends BaseAction {
 	private Order order;
 	private Address address;
 	private List<SkuItem> skuItemListToBeCheckedOut = new ArrayList<SkuItem>(0);
+	private ShippingOrder shippingOrderToPrint;
 
 	@Autowired
 	private UserService userService;
@@ -102,6 +111,8 @@ public class POSAction extends BaseAction {
 	private BaseDao baseDao;
 	@Autowired
 	private InventoryService inventoryService;
+	@Autowired
+	private StoreService storeService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -174,32 +185,38 @@ public class POSAction extends BaseAction {
 
 	}
 
-	public Resolution confirmOrder() {
-		if (posLineItems.size() == 0) {
-			addRedirectAlertMessage(new SimpleMessage("Please place order for atleast one item"));
-			return new RedirectResolution(POSAction.class).addParameter("posLineItems", posLineItems);
-		}
-		if (customer == null) {
-			customer = posService.createUserForStore(email, name, null, "HK_USER");
-		}
-		if (customer != null) {
-			order = posService.createOrderForStore(customer, address);
-			if (order == null) {
-				addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
-				return new ForwardResolution("/pages/pos/pos.jsp");
-			}
-			posService.createCartLineItems(posLineItems, order);
-		}
-		return new ForwardResolution("/pages/pos/pos.jsp");
-	}
-
 	public Resolution receivePaymentAndProcessOrder() {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		if (order == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
+		if (posLineItems.size() == 0) {
+			addRedirectAlertMessage(new SimpleMessage("Please place order for atleast one item"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		//todo: do I need to call CounterCashPaymentReceiveAction
+		if (customer == null) {
+			//todo: is store id need to be set for new user
+			customer = posService.createUserForStore(email, name, null, "HK_USER");
+		}
+
+		//todo : how to deal with address
+		if(address == null || address.getId() == null) {
+			address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+		}
+
+		POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
+		if(posLineItemDtoWithNonAvailableInventory != null) {
+			addRedirectAlertMessage(new SimpleMessage("Required Inventory is not available for barcode: " + posLineItemDtoWithNonAvailableInventory.getProductVariantBarcode() +
+					" and Product: " + posLineItemDtoWithNonAvailableInventory.getProductName() + ". Please scan the order again"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		Store store = storeService.getStoreById(StoreService.PUNJABI_BAGH);
+
+		order = posService.createOrderForStore(customer, address, store);
+		if (order == null) {
+			addRedirectAlertMessage(new SimpleMessage("Error occurred while creating Order"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		order.setAmount(grandTotal);
+		order = posService.createCartLineItems(posLineItems, order);
+
 		Payment payment = paymentManager.createNewPayment(order, paymentService.findPaymentMode(EnumPaymentMode.COUNTER_CASH), BaseUtils.getRemoteIpAddrForUser(getContext()),
 				null, null);
 
@@ -207,58 +224,44 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		//todo: is payment need to be verified
-		String gatewayOrderId = payment.getGatewayOrderId();
 		payment.setPaymentMode(EnumPaymentMode.COUNTER_CASH.asPaymenMode());
-
+		payment.setAmount(order.getAmount());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 		payment.setGatewayReferenceId(null);
-		//payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+		payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
 		baseDao.save(payment);
 
-		//paymentManager.counterCashSuccess(gatewayOrderId, getBaseDao().get(PaymentMode.class, EnumPaymentMode.COUNTER_CASH.getId()));
-		order.setGatewayOrderId(gatewayOrderId);
+		order.setGatewayOrderId(payment.getGatewayOrderId());
 		order.setPayment(payment);
-		//todo: should amount be set to grandTotal or else
-		order.setAmount(grandTotal);
 		orderService.save(order);
 
 		ShippingOrder shippingOrder = posService.createSOForStore(order, warehouse);
 
-		for (POSLineItemDto posLineItemDto : posLineItems) {
-			Sku posLineItemSku = posLineItemDto.getSkuItem().getSkuGroup().getSku();
-			int counter = 0;
-			while (counter < posLineItemDto.getQty()) {
-				SkuItem skuItem = skuGroupService.getSkuItem(posLineItemDto.getSkuItem().getSkuGroup(), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-				skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
-				baseDao.save(skuItem);
-				LineItem lineItemToBeInsertedInPVI = null;
-				for (LineItem lineItem : shippingOrder.getLineItems()) {
-					if (lineItem.getSku().equals(posLineItemSku)) {
-						lineItemToBeInsertedInPVI = lineItem;
-						break;
-					}
-				}
+		posService.checkoutAndUpdateInventory(posLineItems, shippingOrder);
 
-				if (lineItemToBeInsertedInPVI == null) {
-					addRedirectAlertMessage(new SimpleMessage("Some error occurred, order could not be processed"));
-					logger.error("Line item not found for following Sku: " + posLineItemSku + " for POS checkout");
-					return new ForwardResolution("/pages/pos/pos.jsp");
-				}
-
-				adminInventoryService.inventoryCheckinCheckout(posLineItemSku, skuItem, lineItemToBeInsertedInPVI, shippingOrder, null,
-						null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, userService.getLoggedInUser());
-
-				inventoryService.checkInventoryHealth(posLineItemDto.getSkuItem().getSkuGroup().getSku().getProductVariant());
-				counter++;
-			}
-		}
 		//todo: discuss SO Lifecycle
 		shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
 		shippingOrder = shippingOrderService.save(shippingOrder);
-
+		order.setOrderStatus(EnumOrderStatus.Delivered.asOrderStatus());
+		orderService.save(order);
+		shippingOrderToPrint = shippingOrder;
 		addRedirectAlertMessage(new SimpleMessage("Order processed successfully"));
 		return new ForwardResolution("/pages/pos/pos.jsp");
+	}
+
+	public Resolution print() {
+		if (order == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+		///get the first Shipping Order of the base Order
+		ShippingOrder shippingOrder = null;
+		for(ShippingOrder shippingOrderInBaseOrder : order.getShippingOrders()) {
+			shippingOrder = shippingOrderInBaseOrder;
+			break;
+		}
+
+		return new RedirectResolution(AccountingInvoiceAction.class).addParameter("shippingOrder", shippingOrder);
 	}
 
 	public String getPhone() {
@@ -339,5 +342,13 @@ public class POSAction extends BaseAction {
 
 	public void setSkuItemListToBeCheckedOut(List<SkuItem> skuItemListToBeCheckedOut) {
 		this.skuItemListToBeCheckedOut = skuItemListToBeCheckedOut;
+	}
+
+	public ShippingOrder getShippingOrderToPrint() {
+		return shippingOrderToPrint;
+	}
+
+	public void setShippingOrderToPrint(ShippingOrder shippingOrderToPrint) {
+		this.shippingOrderToPrint = shippingOrderToPrint;
 	}
 }

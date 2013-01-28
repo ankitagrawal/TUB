@@ -18,6 +18,9 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#reset').click(function() {
+				location.reload();
+			});
               //var index = -1;
 			$('#productVariantBarcode').keypress(function(e) {
 				if(e.which == 13) {
@@ -151,10 +154,6 @@
 				);
 			});
 
-			$('#confirmOrder').click(function() {
-				$('#confirmOrder').hide();
-
-			});
 		});
 	</script>
 </s:layout-component>
@@ -203,9 +202,9 @@
 				<tr>
 					<td width="50%">
 						<table>
-							<tr><td>Email:</td><td><s:text name="email" id="email"/></td></tr>
-							<tr><td>Phone:</td><td><s:text name="phone" id="phone"/></td></tr>
-							<tr><td>Name: </td><td><s:text name="name" id="name"/></td></tr>
+							<tr><td>Email:</td><td><s:text name="email" id="email" style="width:200px"/></td></tr>
+							<tr><td>Phone:</td><td><s:text name="phone" id="phone" style="width:200px"/></td></tr>
+							<tr><td>Name: </td><td><s:text name="name" id="name" style="width:200px"/></td></tr>
 						</table>
 					</td>
 					<td>
@@ -229,18 +228,18 @@
 				</tr>
 			</table>
 		</fieldset>
-
-		<fieldset class="right_label">
-			<legend>Scan Barcode:</legend>
-			<ul>
-				<li>
-					<s:label name="barcode">Product Variant Barcode</s:label>
-					<s:text name="productVariantBarcode" id="productVariantBarcode"/>
-				</li>
-				<li></li>
-			</ul>
-		</fieldset>
-
+		<c:if test="${pos.order.id == null}">
+			<fieldset class="right_label">
+				<legend>Scan Barcode:</legend>
+				<ul>
+					<li>
+						<s:label name="barcode">Product Variant Barcode</s:label>
+						<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+					</li>
+					<li></li>
+				</ul>
+			</fieldset>
+		</c:if>
 		<fieldset>
 			<legend><b>Order</b></legend>
 			<s:hidden name="customer" id="customer" />
@@ -280,13 +279,16 @@
 
 		<table cellpadding="1" width="100%">
 			<tr>
-				<%--<td colspan="2" align="right"><s:submit name="confirmOrder" value="Cancel/Reset" id="confirmOrder"/></td>--%>
-
+				<td colspan="2" align="right"><input type="button" value="Reset" id="reset"/></td>
 				<c:if test="${pos.order.id == null}">
-					<td colspan="2" align="right"><s:submit name="confirmOrder" value="Confirm Order"/></td>
+					<td colspan="2" align="right"><s:submit name="receivePaymentAndProcessOrder" value="Receive Payment"/></td>
 				</c:if>
 				<c:if test="${pos.order.id != null}">
-					<td colspan="2" align="right"><s:submit name="receivePaymentAndProcessOrder" value="Payment Received"/></td>
+					<%--<td colspan="2" align="right"><s:submit name="print" value="Print"/></td>--%>
+					<%--<input type="hidden" name="shippingOrderToPrint" value="${pos.shippingOrderToPrint}" />--%>
+					<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank">
+						Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
+					</s:link>
 					<%--<td colspan="2" align="right"><s:submit name="confirmOrder" value="Print"/></td>--%>
 				</c:if>
 			</tr>

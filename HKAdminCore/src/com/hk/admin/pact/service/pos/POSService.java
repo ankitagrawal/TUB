@@ -3,6 +3,7 @@ package com.hk.admin.pact.service.pos;
 import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -18,12 +19,18 @@ import java.util.List;
  */
 public interface POSService {
 
-	public Order createOrderForStore(User user, Address address);
+	public Order createOrderForStore(User user, Address address, Store store);
 
 	public User createUserForStore(String email, String name, String password, String roleName);
 
-	public void createCartLineItems(List<POSLineItemDto> posLineItems, Order order);
+	public Order createCartLineItems(List<POSLineItemDto> posLineItems, Order order);
 
 	public ShippingOrder createSOForStore(Order order, Warehouse warehouse);
+
+	public POSLineItemDto getPosLineItemWithNonAvailableInventory(List<POSLineItemDto> posLineItemDtoList);
+
+	public void checkoutAndUpdateInventory(List<POSLineItemDto> posLineItems, ShippingOrder shippingOrder);
+
+	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse);
 
 }
