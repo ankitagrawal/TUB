@@ -477,7 +477,7 @@ ORDER INVOICE <c:choose>
     </table>
 
   <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4502930</h6>
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4616444</h6>
    </c:if>
 
 
