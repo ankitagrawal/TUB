@@ -1101,7 +1101,7 @@
 
     <!--google remarketing-->
     <input type="hidden" id="googleProductId" value="${product.id}">
-    <s:layout-render name="/layouts/googleremarketing.jsp" pageType="product" googleProductId="${product.id}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"></s:layout-render>
+    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProductId="${product.id}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"></s:layout-render>
 
 </s:layout-component>
 </s:layout-render>

@@ -235,7 +235,7 @@
 </s:layout-render>
 
 <!--google remarketing code-->
-<s:layout-render name="/layouts/googleremarketing.jsp" pageType="home"></s:layout-render>
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"></s:layout-render>
 
 
 <script type="text/javascript">

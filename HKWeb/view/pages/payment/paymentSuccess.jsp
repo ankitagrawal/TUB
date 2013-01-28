@@ -172,8 +172,6 @@
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
 </c:if>
-<c:set var="googleProductsSelected" value=""/>
-<c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
@@ -313,7 +311,7 @@
 </s:layout-component>
 
 <!--google remarketing-->
-<s:layout-render name="/layouts/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"></s:layout-render>
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"></s:layout-render>
 
 <s:layout-component name="analytics">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
