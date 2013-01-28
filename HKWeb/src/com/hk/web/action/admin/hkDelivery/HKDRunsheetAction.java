@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.collections.CollectionUtils;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.Awb;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.UserService;
 import com.hk.admin.pact.service.courier.AwbService;
@@ -35,6 +37,7 @@ import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.manager.SMSManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -95,6 +98,8 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     HubService                            hubService;
     @Autowired
     RunSheetDao                           runSheetDao;
+    @Autowired
+    SMSManager smsManager;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -295,7 +300,15 @@ public class HKDRunsheetAction extends BasePaginatedAction {
             totalCODPackets = (Integer) runsheetCODParams.get(HKDeliveryConstants.TOTAL_COD_PKTS);
             prePaidBoxCount = Long.parseLong((totalPackets - totalCODPackets) + "");
             for (Consignment consignment : consignments) {
-                consignment.setConsignmentStatus(outForDelivery);
+              //Send SMS
+              try {
+                Awb awb = awbService.findByCourierAwbNumber(EnumCourier.HK_Delivery.asCourier(), consignment.getAwbNumber());
+                Shipment shipment = shipmentService.findByAwb(awb);
+                smsManager.sendHKReachOutForDeliverySMS(shipment, consignment);
+              } catch (Exception e) {
+                logger.error("Exception while sending sms: " + e.getMessage());
+              }
+              consignment.setConsignmentStatus(outForDelivery);
             }
               if(consignments.size()>0) {
             try {

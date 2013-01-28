@@ -1,0 +1,1 @@
+Dear ${customer}, your ${orderId} will be delivered today by ${deliveryBoy}.
