@@ -18,15 +18,17 @@ import org.slf4j.LoggerFactory;
  */
 public class FormatUtils {
 
-  private static Logger logger = LoggerFactory.getLogger(FormatUtils.class);
+	private static Logger logger = LoggerFactory.getLogger(FormatUtils.class);
 
-  public static final String defaultDateFormatPattern = "yyyy-MM-dd HH:mm";
-  public static final String currencyFormatPattern = "###,##0.00";
-  public static final String uiDateFormatPattern ="dd/MM/yyyy";
+	public static final String defaultDateFormatPattern = "yyyy-MM-dd HH:mm";
+	public static final String currencyFormatPattern = "###,##0.00";
+	public static final String uiDateFormatPattern = "dd/MM/yyyy";
 
-  private static NumberFormat currencyFormat = NumberFormat.getNumberInstance();
-  private static NumberFormat decimalFormat = NumberFormat.getNumberInstance();
-  private static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(defaultDateFormatPattern);
+	public static final String lineSeperator = System.getProperty("line.separator");
+
+	private static NumberFormat currencyFormat = NumberFormat.getNumberInstance();
+	private static NumberFormat decimalFormat = NumberFormat.getNumberInstance();
+	private static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(defaultDateFormatPattern);
 
   private static final SimpleDateFormat dateFormatForUserEnd = new SimpleDateFormat("MMM dd, yyyy");
 

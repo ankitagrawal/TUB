@@ -2,14 +2,15 @@
 <%@ page import="com.hk.constants.inventory.EnumAuditStatus" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Brand Audit List">
 	<s:useActionBean beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" var="poa"/>
-	 <%
-    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
-  %>
+	<%
+		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
+		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+	%>
 	<s:layout-component name="heading">
 		Brands Audit List
 	</s:layout-component>
@@ -25,10 +26,10 @@
 				<label>Auditor Login:</label><s:text name="auditorLogin"/>
 				<label>WH:</label><s:select name="warehouse">
 				<s:option value="">-ALL-</s:option>
-              <c:forEach items="${whList}" var="wh">
-                <s:option value="${wh.id}">${wh.name}</s:option>
-              </c:forEach>
-            </s:select>
+				<c:forEach items="${whList}" var="wh">
+					<s:option value="${wh.id}">${wh.name}</s:option>
+				</c:forEach>
+			</s:select>
 				<s:submit name="pre" value="Search"/>
 			</s:form>
 		</fieldset>
@@ -53,23 +54,58 @@
 					<td>${auditBrand.warehouse.name}</td>
 					<td>${auditBrand.auditor.login}</td>
 					<td>${auditBrand.brand}</td>
-					<td><select>
-						<c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
-							<c:choose>
-								<c:when test="${auditBrand.auditStatus == status.id}">
-									<option value="${status.id}" selected="selected">${status.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value="${status.id}">${status.name}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select></td>
 					<td>
-						<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
-							<s:param name="brandsToAudit" value="${auditBrand.id}"/>
-							Edit
-						</s:link>
+					 <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
+                            <c:if test="${auditBrand.auditStatus == status.id}">
+                                ${status.name}
+                            </c:if>
+                        </c:forEach>					
+					</td>
+					<td>
+
+						<c:choose>
+							<c:when test="${auditBrand.cycleCount != null}">
+								<c:set value="<%=EnumCycleCountStatus.InProgress.getId()%>" var="inProgress"/>
+								<c:choose>
+									<c:when test="${auditBrand.cycleCount.cycleStatus == inProgress}">
+										<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+										        event="directToCycleCount">
+											<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+											<s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
+											<span style="color:brown;">Edit Cycle Count</span>
+										</s:link>
+									</c:when>
+									<c:otherwise>
+										<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+										        event="save">
+											<s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
+											<span style="color:brown;">View Cycle Count</span>
+										</s:link>
+									</c:otherwise>
+
+								</c:choose>
+							</c:when>
+
+
+							<c:otherwise>
+								<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
+									<s:param name="brandsToAudit" value="${auditBrand.id}"/>
+									<span style="color:blue;">Edit</span>
+								</s:link>
+								<c:set value="<%= EnumAuditStatus.Pending.getId() %>" var="pending"/>
+								<c:if test="${auditBrand.auditStatus == pending}">
+								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+								        event="directToCycleCount">
+									<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+									<span style="color:brown;">Start Cycle Count</span>
+								</s:link>
+								</c:if>
+							</c:otherwise>
+
+
+						</c:choose>
+
+
 					</td>
 				</tr>
 			</c:forEach>
