@@ -7,25 +7,20 @@ import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.HttpCache;
-import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
 import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
-import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
-import com.hk.web.action.core.auth.LoginAction;
+
 
 @Component
 @UrlBinding("/loyaltypg")
-@Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
-@HttpCache(allow = false)
+//@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 	private int defaultPerPage = 10;
@@ -34,9 +29,6 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		if(getPrincipal() == null) {
-			return new RedirectResolution(LoginAction.class);
-		}
 		SearchCriteria criteria = new SearchCriteria();
 
 		int startRow = (getPageNo()-1)*getPerPage();

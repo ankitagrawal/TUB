@@ -8,6 +8,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -131,7 +132,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		Order order = orderService.find(orderId);
 		User user = order.getUser();
 		address.setUser(user);
-		addressService.save(address);
+		address = addressService.save(address);
 		order.setAddress(address);
 		orderService.save(order);
 	}

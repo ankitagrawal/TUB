@@ -49,7 +49,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = orderService.find(orderId);
-		Payment payment = paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null);
+		Payment payment = paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
 		loyaltyProgramService.debitKarmaPoints(orderId);
 		payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());

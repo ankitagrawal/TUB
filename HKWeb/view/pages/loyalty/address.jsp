@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="com.hk.constants.courier.StateList" %>
 <%@include file="/includes/_taglibInclude.jsp"%>
-<%@ taglib prefix="stripes"
-	uri="http://stripes.sourceforge.net/stripes.tld"%>
+<%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
@@ -31,7 +31,7 @@
 										<address>
 											<strong>${address.name}</strong><br> ${address.line1},
 											${address.line2}<br> ${address.city}<br>
-											${address.state}, ${address.pin}<br> <abbr title="Phone">P:</abbr>
+											${address.state}, ${address.pincode.pincode}<br> <abbr title="Phone">P:</abbr>
 											${address.phone}
 										</address>
 									</td>
@@ -102,7 +102,12 @@
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.state" placeholder="State" />
+												  <s:select  name="address.state">
+										            <s:option> </s:option>
+										            <c:forEach items="<%=StateList.stateList%>" var="state">
+										              <s:option value="${state}">${state}</s:option>
+										            </c:forEach>
+										          </s:select>
 												</div>
 											</div>
 										</div>
@@ -112,7 +117,7 @@
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.pin" placeholder="Pin Code" />
+													<s:text name="pincode" placeholder="Pin Code" />
 												</div>
 											</div>
 										</div>

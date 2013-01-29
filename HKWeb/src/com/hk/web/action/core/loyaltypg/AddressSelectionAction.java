@@ -10,17 +10,20 @@ import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.hk.domain.core.Pincode;
 import com.hk.domain.user.Address;
 import com.hk.pact.dao.core.AddressDao;
-import com.hk.store.InvalidOrderException;
+import com.hk.pact.dao.courier.PincodeDao;
 
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	private List<Address> addressList = new ArrayList<Address>();
 	private Address address;
+	private String pincode;
 	private Long selectedAddressId;
 	
 	@Autowired AddressDao addressDao;
+	@Autowired PincodeDao pincodeDao;
 	
 	@DefaultHandler
 	public Resolution viewAddressList() {
@@ -29,20 +32,17 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 	
 	
-	// TODO this action has so much responsibility. Need to split.
 	public Resolution confirm() {
 		if(address == null) {
 			address = addressDao.get(Address.class, selectedAddressId);
+		} else {
+			Pincode pin = pincodeDao.getByPincode(pincode);
+			address.setPincode(pin);
 		}
 		Long orderId = getProcessor().getOrder(getPrincipal().getId()).getId();
 		getProcessor().setShipmentAddress(orderId, address);
-		getProcessor().makePayment(orderId, getRemoteHostAddr());
-		try {
-			getProcessor().escalateOrder(orderId);
-		} catch (InvalidOrderException e) {
-			return new RedirectResolution("/pages/loyalty/failure.jsp");
-		}
-		return new RedirectResolution("/pages/loyalty/success.jsp");
+		
+		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	
 	public List<Address> getAddressList() {
@@ -67,5 +67,13 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 
 	public void setSelectedAddressId(Long selectedAddressId) {
 		this.selectedAddressId = selectedAddressId;
+	}
+	
+	public String getPincode() {
+		return pincode;
+	}
+	
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
 	}
 }

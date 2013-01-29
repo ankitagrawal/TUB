@@ -31,7 +31,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
-	private List<LoyaltyProduct> loyaltyProductList = new ArrayList<LoyaltyProduct>();
+	private List<LoyaltyProduct> loyaltyProductList;
 	
 	@JsonHandler
 	public Resolution addToCart() {
@@ -47,6 +47,7 @@ public class CartAction extends AbstractLoyaltyAction {
 		infos.add(info);
 		try {
 			getProcessor().addToCart(orderId, infos);
+			init();
 		} catch (InvalidOrderException e) {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
 		}
@@ -56,8 +57,14 @@ public class CartAction extends AbstractLoyaltyAction {
 	
 	@DefaultHandler
 	public Resolution viewKart() {
+		return new ForwardResolution("/pages/loyalty/cart.jsp");
+	}
+	
+	private void init() {
 		Order order = getProcessor().getOrder(getPrincipal().getId());
 		if(order != null) {
+			loyaltyProductList = new ArrayList<LoyaltyProduct>();
+			totalShoppingPoints = 0d;
 			Set<CartLineItem> cartLineItems = order.getCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
@@ -66,7 +73,6 @@ public class CartAction extends AbstractLoyaltyAction {
 				totalShoppingPoints +=loyaltyProduct.getPoints()*loyaltyProduct.getQty();
 			}
 		}
-		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}
 
 	@JsonHandler
@@ -95,6 +101,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	}
 
 	public List<LoyaltyProduct> getLoyaltyProductList() {
+		init();
 		return loyaltyProductList;
 	}
 	
