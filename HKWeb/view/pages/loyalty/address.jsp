@@ -144,7 +144,7 @@
 				<div class="span9"></div>
 				<div class="span3">
 					<div class="pull-right">
-						<s:submit name="confirm" value="Confirm you order"
+						<s:submit name="confirm" value="Confirm Shipping Address"
 							class="btn btn-primary" />
 					</div>
 				</div>

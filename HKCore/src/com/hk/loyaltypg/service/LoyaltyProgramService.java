@@ -1,9 +1,10 @@
 package com.hk.loyaltypg.service;
 
+import java.util.Collection;
 import java.util.List;
 
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.order.CartLineItem;
 
 public interface LoyaltyProgramService {
 	
@@ -22,5 +23,7 @@ public interface LoyaltyProgramService {
 	void debitKarmaPoints(Long orderId);
 
 	void approveKarmaPoints(Long orderId);
+
+	double calculateTotalPoints(Collection<CartLineItem> cartLineItems);
 
 }

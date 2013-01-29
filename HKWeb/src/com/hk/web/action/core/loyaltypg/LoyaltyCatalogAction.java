@@ -11,8 +11,10 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
@@ -20,7 +22,7 @@ import com.hk.store.SearchCriteria;
 
 @Component
 @UrlBinding("/loyaltypg")
-//@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 	private int defaultPerPage = 10;

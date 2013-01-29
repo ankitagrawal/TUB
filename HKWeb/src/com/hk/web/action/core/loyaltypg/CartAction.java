@@ -63,14 +63,13 @@ public class CartAction extends AbstractLoyaltyAction {
 		Order order = getProcessor().getOrder(getPrincipal().getId());
 		if(order != null) {
 			loyaltyProductList = new ArrayList<LoyaltyProduct>();
-			totalShoppingPoints = 0d;
 			Set<CartLineItem> cartLineItems = order.getCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
 				loyaltyProduct.setQty(cartLineItem.getQty());
 				loyaltyProductList.add(loyaltyProduct);
-				totalShoppingPoints +=loyaltyProduct.getPoints()*loyaltyProduct.getQty();
 			}
+			totalShoppingPoints = loyaltyProgramService.calculateDebitPoints(order.getId());
 		}
 	}
 	

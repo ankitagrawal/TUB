@@ -23,8 +23,8 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	public Resolution confirm() {
 		order = getProcessor().getOrder(getPrincipal().getId());
-		getProcessor().makePayment(order.getId(), getRemoteHostAddr());
 		try {
+			getProcessor().makePayment(order.getId(), getRemoteHostAddr());
 			getProcessor().escalateOrder(order.getId());
 		} catch (InvalidOrderException e) {
 			//Log the message

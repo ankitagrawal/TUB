@@ -21,7 +21,7 @@ public interface StoreProcessor {
 	
 	List<Address> getUserAddresses(Long userId);
 	
-	Payment makePayment(Long orderId, String remoteId);
+	Payment makePayment(Long orderId, String remoteId) throws InvalidOrderException;
 	
 	void escalateOrder(Long orderId) throws InvalidOrderException;
 	

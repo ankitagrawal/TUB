@@ -1,6 +1,7 @@
 package com.hk.store.loyalty;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
@@ -18,7 +20,6 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.AbstractStoreProcessor;
 import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductAdapter;
-import com.hk.store.ProductVariantInfo;
 import com.hk.store.SearchCriteria;
 
 @Service("loyaltyStoreProcessor")
@@ -58,22 +59,24 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	}
 
 	@Override
-	protected void validateCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException {
-		/*
-		 * TODO
-		 * accumulate the input order id points and variant price
-		 * and validate with user karma points. 
-		 * if order points are less then ok otherwise throw InvalidOrderException
-		 */
+	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException {
+		double shoppingPoints = loyaltyProgramService.calculateTotalPoints(cartLineItems);
+		double userKarmaPoints = loyaltyProgramService.calculateKarmaPoints(userId);
+		if(shoppingPoints > userKarmaPoints ) {
+			throw new InvalidOrderException("Shopping points exceed the karma points.");
+		}
 	}
 
 	@Override
 	public Double calculateDebitAmount(Long orderId) {
-		return Double.valueOf(loyaltyProgramService.calculateDebitPoints(orderId));
+		return loyaltyProgramService.calculateDebitPoints(orderId);
 	}
 
 	@Override
 	protected void validatePayment(Long orderId) throws InvalidOrderException {
-		// TODO Check whether points are debited or not.
+		Order order = orderService.find(orderId);
+		if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.asPaymenStatus().getId())) {
+			throw new InvalidOrderException("Loyalty points are not debited yet. Unsuccessfull Payment.");
+		}
 	}
 }
