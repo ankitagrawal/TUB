@@ -1,6 +1,8 @@
 package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
@@ -78,6 +80,8 @@ public class PaymentSuccessAction extends BaseAction {
     OrderService orderService;
     @Autowired
     OrderLoggingService orderLoggingService;
+	@Autowired
+	LoyaltyProgramService loyaltyProgramService;
 
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -158,6 +162,10 @@ public class PaymentSuccessAction extends BaseAction {
             wantedCODCookie.setMaxAge(0);
             httpResponse.addCookie(wantedCODCookie);
         }
+
+	    //Loyalty program
+	    loyaltyProgramService.creditKarmaPoints(order.getId());
+
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
 

@@ -2,6 +2,7 @@ package com.hk.loyaltypg.service;
 
 import java.util.List;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 
 public interface LoyaltyProgramService {
@@ -21,5 +22,5 @@ public interface LoyaltyProgramService {
 	void debitKarmaPoints(Long orderId);
 
 	void approveKarmaPoints(Long orderId);
-	
+
 }
