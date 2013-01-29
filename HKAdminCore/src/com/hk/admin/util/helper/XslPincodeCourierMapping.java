@@ -102,14 +102,16 @@ public class XslPincodeCourierMapping {
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
 
 
-                PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), null, null, null);
-                boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
-                if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
-                    continue;
-                }
-                if (!isValidMapping) {
-                    pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
-                    continue;
+                PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), Arrays.asList(pincodeCourierMapping.getCourier()), null, null);
+                if (pincodeCourierMappingDb != null) {
+                    boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
+                    if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
+                        continue;
+                    }
+                    if (!isValidMapping) {
+                        pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
+                        continue;
+                    }
                 }
                 if (pincodeCourierMapping == null) {
                     pincodeCourierMapping = new PincodeCourierMapping();
