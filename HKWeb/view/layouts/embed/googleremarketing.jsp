@@ -11,28 +11,33 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
     <%
-        String pageType = (String)pageContext.getAttribute("pageType");
-        pageContext.setAttribute("pageType", pageType);
+        if (pageContext.getAttribute("pageType") != null) {
+            String pageType = (String) pageContext.getAttribute("pageType");
+            pageContext.setAttribute("pageType", pageType);
+        }
 
-        String categories = (String)pageContext.getAttribute("categories");
-        pageContext.setAttribute("categories", categories);
+        if (pageContext.getAttribute("categories") != null) {
+            String categories = (String) pageContext.getAttribute("categories");
+            pageContext.setAttribute("categories", categories);
+        }
 
-        String topLevelCategory = (String)pageContext.getAttribute("topLevelCategory");
-        pageContext.setAttribute("topLevelCategory", topLevelCategory);
+        if (pageContext.getAttribute("topLevelCategory") != null) {
+            String topLevelCategory = (String) pageContext.getAttribute("topLevelCategory");
+            pageContext.setAttribute("topLevelCategory", topLevelCategory);
+        }
 
-        if(pageContext.getAttribute("order") != null){
-            Order order = (Order)pageContext.getAttribute("order");
+        if (pageContext.getAttribute("order") != null) {
+            Order order = (Order) pageContext.getAttribute("order");
             pageContext.setAttribute("order", order);
         }
 
-        if(pageContext.getAttribute("googleProductId") != null){
-            Product product = (Product)pageContext.getAttribute("googleProduct");
+        if (pageContext.getAttribute("googleProduct") != null) {
+            Product product = (Product) pageContext.getAttribute("googleProduct");
             pageContext.setAttribute("googleProduct", product);
         }
     %>
 
     <input type="hidden" value="${pageType}" id="pageType">
-
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
     <input type="hidden" value="${googleProduct.id}" id="googleProductId">
 
@@ -65,7 +70,7 @@
 
                 </c:when>
                 <c:otherwise>
-                    <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
+                    <c:if test="${!googleProduct.googleAdDisallowed}">
                         <c:set var="canGoogleRemarket" value="true"/>
                     </c:if>
                 </c:otherwise>
@@ -74,11 +79,11 @@
     </c:if>
 
     <c:choose>
-        <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
+       <%-- <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
             <script type="text/javascript">
-                alert('pageType')
+                alert('pageType=${pageType}');
             </script>
-        </c:when>
+        </c:when>--%>
     <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
         <c:forEach items="${order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
             <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
