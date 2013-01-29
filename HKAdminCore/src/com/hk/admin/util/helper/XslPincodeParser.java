@@ -3,6 +3,7 @@ package com.hk.admin.util.helper;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
@@ -251,8 +252,10 @@ public class XslPincodeParser {
                 boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y");
                 boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y");
 
-                if (!pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable)) {
-                    throw new HealthkartCheckedException("the default courier being updated is not yet serviceable for the mentioned conditions at row " + rowCount);
+                if (!EnumCourier.MIGRATE.getId().equals(courier.getId())) {
+                    if (!pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable)) {
+                        throw new HealthkartCheckedException("the default courier being updated is not yet serviceable for the mentioned conditions at row " + rowCount);
+                    }
                 }
 
                 PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
