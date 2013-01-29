@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.courier.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -451,5 +452,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
 	public List<Courier> getCouriersForDispatchLot() {
 		return courierService.getCouriersForDispatchLot();
+	}
+
+	public List<PaymentMode> getPaymentModeForStore() {
+		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CREDIT_CARD.asPaymenMode(), EnumPaymentMode.OFFLINE_DEBIT_CARD.asPaymenMode());
 	}
 }

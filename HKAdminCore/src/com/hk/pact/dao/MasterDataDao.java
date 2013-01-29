@@ -151,4 +151,6 @@ public interface MasterDataDao
     public List <Courier> getListOfVendorCouriers();
 
 	public List<Courier> getCouriersForDispatchLot();
+
+	public List<PaymentMode> getPaymentModeForStore();
 }

@@ -12,6 +12,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
@@ -80,6 +81,7 @@ public class POSAction extends BaseAction {
 	private Address address;
 	private List<SkuItem> skuItemListToBeCheckedOut = new ArrayList<SkuItem>(0);
 	private ShippingOrder shippingOrderToPrint;
+	private PaymentMode paymentMode;
 
 	@Autowired
 	private UserService userService;
@@ -207,6 +209,11 @@ public class POSAction extends BaseAction {
 			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
 		}
 
+		if (paymentMode == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please select a payment mode"));
+			return new ForwardResolution("/pages/pos/pos.jsp");
+		}
+
 		POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
 		if(posLineItemDtoWithNonAvailableInventory != null) {
 			addRedirectAlertMessage(new SimpleMessage("Required Inventory is not available for barcode: " + posLineItemDtoWithNonAvailableInventory.getProductVariantBarcode() +
@@ -223,14 +230,13 @@ public class POSAction extends BaseAction {
 		order.setAmount(grandTotal);
 		order = posService.createCartLineItems(posLineItems, order);
 
-		Payment payment = paymentManager.createNewPayment(order, paymentService.findPaymentMode(EnumPaymentMode.COUNTER_CASH), BaseUtils.getRemoteIpAddrForUser(getContext()),
-				null, null);
+		Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null);
 
 		if (payment == null) {
 			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		payment.setPaymentMode(EnumPaymentMode.COUNTER_CASH.asPaymenMode());
+		//payment.setPaymentMode(EnumPaymentMode.COUNTER_CASH.asPaymenMode());
 		payment.setAmount(order.getAmount());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 		payment.setGatewayReferenceId(null);
@@ -358,4 +364,11 @@ public class POSAction extends BaseAction {
 		this.shippingOrderToPrint = shippingOrderToPrint;
 	}
 
+	public PaymentMode getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(PaymentMode paymentMode) {
+		this.paymentMode = paymentMode;
+	}
 }

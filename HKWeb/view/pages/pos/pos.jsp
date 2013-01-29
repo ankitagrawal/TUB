@@ -1,6 +1,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.courier.StateList" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="HealthKart.com Store : New Order">
@@ -155,6 +156,13 @@
 			});
 
 			$('#receivePayment').click(function() {
+
+				var paymentMode = $('#paymentMode').find('option:selected');
+				if(paymentMode.text() == "-Select-") {
+					alert('Please select the payment mode');
+					return false;
+				}
+
 				if ($.trim($("#line1").val()) != '' && ($.trim($("#city").val()) == '' || $.trim($("#pincode").val()) == '') ) {
 					alert("Please fill the complete address");
 					return false;
@@ -256,6 +264,7 @@
 					<li></li>
 				</ul>
 			</fieldset>
+			<div class="orderDetails info"></div>
 		</c:if>
 		<fieldset>
 			<legend><b>Order</b></legend>
@@ -289,7 +298,18 @@
 					<td colspan="5" align="right"><b>Grand Total</b></td>
 					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal" readonly="readonly"/></td>
 				</tr>
-				<tr><td><b>Order ID</b></td><td>${pos.order.id}</td><td colspan="3" align="right"><b>Payment Mode</b></td><td><select><option>Cash</option><option>Card</option> </select></td></tr>
+				<tr><td><b>Order ID</b></td><td>${pos.order.id}</td>
+					<td colspan="3" align="right"><b>Payment Mode</b></td>
+					<td>
+					<s:select name="paymentMode" id="paymentMode">
+						<s:option value="">-Select-</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="paymentModeForStore"
+						                           value="id"
+						                           label="name"/>
+					</s:select>
+					</td>
+					<%--<td><select><option>Cash</option><option>Card</option> </select></td>--%>
+				</tr>
 				</tfoot>
 			</table>
 		</fieldset>
@@ -310,7 +330,6 @@
 			</tr>
 		</table>
 	</s:form>
-	<div class="orderDetails info"></div>
 
 </s:layout-component>
 </s:layout-render>

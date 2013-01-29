@@ -15,7 +15,9 @@ public enum EnumPaymentMode {
 	CashDeposit(30L, "Cash Deposit"),
 	COD(40L, "COD"),
 	COUNTER_CASH(50L, "Counter Cash"),
-	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment");
+	SUBSCRIPTION_PAYMENT(95L, "Subscription Payment"),
+	OFFLINE_CREDIT_CARD(100L, "Offline Credit Card"),
+	OFFLINE_DEBIT_CARD(105L, "Offline Debit Card");
 
 	private java.lang.String name;
 	private java.lang.Long id;
