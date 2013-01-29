@@ -50,7 +50,6 @@
 
                 <s:submit tabindex="30" name="login" id="login"  class="submit" value="Sign in"/>
                 <s:link beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction" id="forgotPasswordLink" tabindex="40" class="forgot_link">forgot password?</s:link>
-                <s:hidden name="logintabselected" value="true"></s:hidden>
                 <s:hidden name="login" value="login"/>
                 <s:hidden name="apiKey" value="${sla.apiKey}"/>
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
@@ -91,7 +90,6 @@
                 <br/>
                 <s:text type="password" placeholder="re-enter password" name="repeatPassword" id="passwordConfirm" tabindex="40" size="50" maxlength="50" value=""/>
                 <br/>
-                <s:hidden name="logintabselected" value="false"></s:hidden>
                 <s:hidden name="signup" value="signup"/>
                 <s:hidden name="apiKey" value="${sla.apiKey}"/>
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
@@ -131,7 +129,8 @@
 
                 <br/>
 
-                <s:submit tabindex="30" name="sendResetLink" id="sendResetLink"  class="submit" value="Send Password Reset Link"/>
+                <s:submit tabindex="30" id="sendResetLink" name="sendResetLink" value="Send Password Reset Link" class="submit" ></s:submit>
+                <s:hidden name="sendResetLink" value="sendResetLink"/>
 
             </s:form>
 
