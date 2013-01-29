@@ -173,9 +173,6 @@
   </s:layout-component>
 </c:if>
 <s:layout-component name="catalog">
-<!--google remarketing page type-->
-<input type="hidden" id="categories" value="${ca.allCategories}">
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" categories="${ca.allCategories}" topLevelCategory="${ca.topCategoryUrlSlug}"></s:layout-render>
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
@@ -440,5 +437,8 @@
 
 		<div style="height:75px"></div>
 </s:layout-component>
+<!--google remarketing page type-->
+<input type="hidden" id="categories" value="${ca.allCategories}">
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" categories="${ca.allCategories}" topLevelCategory="${ca.topCategoryUrlSlug}"></s:layout-render>
 
 </s:layout-render>
