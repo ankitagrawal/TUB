@@ -1,9 +1,9 @@
 package com.hk.rest.resource;
 
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.user.User;
-import com.hk.domain.user.UserDetail;
 import com.hk.manager.LinkManager;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -55,10 +55,15 @@ public class UserEmailResource {
             List<User> emailRecepients = adminEmailService.getMailingListByCategory(category, storeId,role);
             List<UserDto> categoryUsers = new ArrayList<UserDto>();
             for (User user : emailRecepients){
-                UserDto userDto = new UserDto();
-                userDto.email = user.getEmail();
-                userDto.name = user.getName();
-                categoryUsers.add(userDto);
+                boolean subscribePromotionalOffers = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.PROMOTIONAL_OFFERS, user.getSubscribedMask());
+                if (subscribePromotionalOffers){
+                    UserDto userDto = new UserDto();
+                    userDto.email = user.getEmail();
+                    userDto.login = user.getLogin();
+                    userDto.name = user.getName();
+                    userDto.unsubscribeToken = user.getUnsubscribeToken();
+                    categoryUsers.add(userDto);
+                }
             }
             final GenericEntity<List<UserDto>> entity = new GenericEntity<List<UserDto>>(categoryUsers){};
             response = Response.status(Response.Status.OK).entity(entity).build();
@@ -104,6 +109,7 @@ public class UserEmailResource {
             if (user != null){
                 UserDto userDto= new UserDto();
                 userDto.email = user.getEmail();
+                userDto.login = user.getLogin();
                 userDto.name = user.getName();
                 response = Response.status(Response.Status.OK).entity(userDto).build();
             }
@@ -117,5 +123,7 @@ public class UserEmailResource {
     class UserDto{
         public String email;
         public String name;
+        public String login;
+        public String unsubscribeToken;
     }
 }

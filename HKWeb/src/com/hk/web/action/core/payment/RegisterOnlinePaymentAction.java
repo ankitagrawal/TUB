@@ -118,7 +118,7 @@ public class RegisterOnlinePaymentAction extends BaseAction {
             paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, null);
 
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());

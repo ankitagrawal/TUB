@@ -51,6 +51,10 @@ public class Issuer implements java.io.Serializable {
     @Column(name = "downtime_end_date", length = 19)
     private Date downtimeEndDate;
 
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
 
     public Long getId() {
         return id;

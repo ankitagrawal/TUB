@@ -7,8 +7,15 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.shipment.EnumBoxSize;
+import com.hk.constants.shipment.EnumPacker;
+import com.hk.constants.shipment.EnumPicker;
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,9 +28,6 @@ import com.hk.cache.RoleCache;
 import com.hk.cache.vo.RoleVO;
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.core.EnumRole;
-import com.hk.constants.courier.CourierConstants;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
@@ -90,14 +94,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private RunSheetService     runsheetService;
     @Autowired
     private CourierGroupService courierGroupService;
-
     @Autowired
     private CourierService      courierService;
-	@Autowired
-	private ConsignmentService  consignmentService;
-
-	@Autowired
-	private DispatchLotService dispatchLotService;
+    @Autowired
+    private DispatchLotService dispatchLotService;
+    @Autowired
+    private WarehouseService warehouseService;
+    @Autowired
+    private ConsignmentService consignmentService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -227,15 +231,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(EmailType.class);
     }
 
-    public List<String> getCourierListForDBUpdation() {
-        List<String> courierListForDBUpdation = new ArrayList<String>();
-        courierListForDBUpdation.add(CourierConstants.AFL);
-        courierListForDBUpdation.add(CourierConstants.BLUEDART);
-        courierListForDBUpdation.add(CourierConstants.CHHOTU);
-        courierListForDBUpdation.add(CourierConstants.DELHIVERY);
-        courierListForDBUpdation.add(CourierConstants.DTDC);
-        courierListForDBUpdation.add(CourierConstants.QUANTIUM);
-        return courierListForDBUpdation;
+    public List<String> getCourierListForAutoDeliveryMarking() {
+        List<String> courierListForDeliveryMarking = new ArrayList<String>();
+        courierListForDeliveryMarking.add(CourierConstants.AFL);
+        courierListForDeliveryMarking.add(CourierConstants.BLUEDART);
+        //courierListForDeliveryMarking.add(CourierConstants.CHHOTU);
+        courierListForDeliveryMarking.add(CourierConstants.DELHIVERY);
+        courierListForDeliveryMarking.add(CourierConstants.DTDC);
+        courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
+		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+        return courierListForDeliveryMarking;
     }
 
     public BaseDao getBaseDao() {
@@ -372,12 +377,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierGroupService.getAllCourierGroup();
     }
 
-    public List<Courier> getDisableCourier() {
-        return courierService.getCouriers(null, null, true);
-    }
-
     public List<Courier> getAvailableCouriers() {
-        return courierService.getCouriers(null, null, false);
+        return courierService.getCouriers(null, null, true, EnumCourierOperations.HK_SHIPPING.getId());
     }
 
     public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover() {
@@ -419,42 +420,71 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return getBaseDao().getAll(Zone.class);
 	}
 
-	public List<String> getCustomerOnHoldReasonsForHkDelivery() {
-		return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
-	}
-
-	public List<DispatchLotStatus> getDispatchLotStatusList() {
-		return getBaseDao().getAll(DispatchLotStatus.class);
-	}
-
-	public List<String> getSourceAndDestinationListForDispatchLot() {
-		return dispatchLotService.getSourceAndDestinationListForDispatchLot();
-	}
-
-	public List<String> getShipmentStatusForDispatchLot() {
-		return dispatchLotService.getShipmentStatusForDispatchLot();
-	}
-
-	public List<AwbStatus> getAllAwbStatus() {
-		return EnumAwbStatus.getAllStatusExceptUsed();
-	}
-
-     public List<Courier> getListOfVendorCouriers(){
-        return courierService.listOfVendorCouriers();
+    public List<String> getCustomerOnHoldReasonsForHkDelivery() {
+        return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
     }
 
-	public List<ReconciliationType> getAddReconciliationTypeList() {
-		List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
-		ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
-		reconciliationList.add(addReconType);
-		return reconciliationList;
-	}
+    public List<DispatchLotStatus> getDispatchLotStatusList() {
+        return getBaseDao().getAll(DispatchLotStatus.class);
+    }
 
-	public List<Courier> getCouriersForDispatchLot() {
-		return courierService.getCouriersForDispatchLot();
-	}
+    public List<String> getSourceAndDestinationListForDispatchLot() {
+        return dispatchLotService.getSourceAndDestinationListForDispatchLot();
+    }
+
+    public List<String> getShipmentStatusForDispatchLot() {
+        return dispatchLotService.getShipmentStatusForDispatchLot();
+    }
+
+    public List<Warehouse> getServiceableWarehouses() {
+        return warehouseService.getServiceableWarehouses();
+    }
+
+    public List<AwbStatus> getAllAwbStatus() {
+        return EnumAwbStatus.getAllStatusExceptUsed();
+    }
+
+    public List<Courier> getListOfVendorCouriers() {
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.VENDOR_DROP_SHIP.getId());
+    }
+
+    public List<Courier> getCouriersForDispatchLot() {
+        return courierService.getCouriers(null, null, null, EnumCourierOperations.DISPATCH_LOT.getId());
+    }
+
+    public List<EnumCourierChangeReason> getAllCourierChangeReason(){
+        return EnumCourierChangeReason.getAllCourierChangeReasons();
+    }
+
+    public List<Warehouse> getAllWarehouse() {
+        return warehouseService.getAllWarehouses();
+    }
+
+    public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {
+        return EnumShipmentServiceType.getAllShipmentServiceType();
+    }
+
+    public List<EnumPicker> getAllPicker() {
+        return EnumPicker.getAll();
+    }
+
+    public List<EnumPacker> getAllPacker() {
+        return EnumPacker.getAll();
+    }
+
+    public List<EnumBoxSize> getAllBoxSize() {
+        return EnumBoxSize.getAllEnumBoxSize();
+    }
+
+    public List<ReconciliationType> getAddReconciliationTypeList() {
+        List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
+        ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
+        reconciliationList.add(addReconType);
+        return reconciliationList;
+    }
 
 	public List<PaymentMode> getPaymentModeForStore() {
 		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CREDIT_CARD.asPaymenMode(), EnumPaymentMode.OFFLINE_DEBIT_CARD.asPaymenMode());
 	}
+
 }
