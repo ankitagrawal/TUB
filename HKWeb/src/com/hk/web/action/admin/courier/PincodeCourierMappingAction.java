@@ -123,7 +123,6 @@ public class PincodeCourierMappingAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadExcel() {
-      boolean flag = true;
         try {
             Set<PincodeCourierMapping> pincodeCourierMappingSet = new HashSet<PincodeCourierMapping>();
             String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
@@ -131,28 +130,11 @@ public class PincodeCourierMappingAction extends BaseAction {
             excelFile.getParentFile().mkdirs();
             fileBean.save(excelFile);
             pincodeCourierMappingSet = xslPincodeCourierMapping.readPincodeCourierMappings(excelFile);
-          for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappingSet) {
-            PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), Arrays.asList(pincodeCourierMapping.getCourier()), null, null);
-            boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isCodAir();
-            if (pincodeCourierMappingDb != null) {
-              if (!pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDb, pincodeCourierMapping)) {
-                flag = false;
-                break;
-              }
-              if (!isValidMapping) {
-                pincodeCourierService.deletePincodeCourierMapping(pincodeCourierMappingDb);
-                continue;
-              }
+            for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappingSet) {
+                pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
             }
-            pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
-          }
         } catch (Exception e) {
             logger.error("Exception while uploading pincode courier mapping excel " + e.getMessage());
-        }
-         if (flag) {
-            addRedirectAlertMessage(new SimpleMessage("Mappings Updated"));
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Some of the mappings have dependencies in PDC, Please correct them before saving"));
         }
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
