@@ -100,8 +100,7 @@ public class XslPincodeCourierMapping {
                 boolean isPrepaidGround = StringUtils.isNotBlank(prepaidGround) && prepaidGround.trim().toLowerCase().equals("y");
                 boolean isCodAir = StringUtils.isNotBlank(codAir) && codAir.trim().toLowerCase().equals("y");
                 boolean isCodGround = StringUtils.isNotBlank(codGround) && codGround.trim().toLowerCase().equals("y");
-
-
+/*
                 PincodeCourierMapping pincodeCourierMappingDb = pincodeCourierService.getApplicablePincodeCourierMapping(pincodeCourierMapping.getPincode(), Arrays.asList(pincodeCourierMapping.getCourier()), null, null);
                 if (pincodeCourierMappingDb != null) {
                     boolean isValidMapping = pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodGround() || pincodeCourierMapping.isCodAir();
@@ -113,6 +112,7 @@ public class XslPincodeCourierMapping {
                         continue;
                     }
                 }
+*/
                 if (pincodeCourierMapping == null) {
                     pincodeCourierMapping = new PincodeCourierMapping();
                 }
