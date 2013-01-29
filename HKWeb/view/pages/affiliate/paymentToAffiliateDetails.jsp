@@ -34,7 +34,7 @@
           <h2>
            ${paymentAction.checkDeliveryAddress.line1} <c:if
               test="${hk:isNotBlank(paymentAction.checkDeliveryAddress.line2)}">${paymentAction.checkDeliveryAddress.line2}</c:if><br/>
-            ${paymentAction.checkDeliveryAddress.city} - ${paymentAction.checkDeliveryAddress.pin}<br/>
+            ${paymentAction.checkDeliveryAddress.city} - ${paymentAction.checkDeliveryAddress.pincode.pincode}<br/>
             ${paymentAction.checkDeliveryAddress.state}
             ${paymentAction.checkDeliveryAddress.phone}
           </h2>

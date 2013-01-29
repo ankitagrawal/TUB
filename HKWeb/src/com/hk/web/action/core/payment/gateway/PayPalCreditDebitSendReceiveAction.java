@@ -78,11 +78,8 @@ public class PayPalCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         BillingAddress address = null;
         Country country = null;
         address = addressDao.getBillingAddressById(data.getBillingAddressId());
-//        List<BillingAddress> billingAddresses = addressDao.getVisibleBillingAddresses(user);
-//        address = addressDao.getBillingAddressForOrder(order ,billingAddresses );
-
-         if (address != null) {
-            country = addressDao.getCountry(address.getCountryId());
+        if (address != null) {
+            country = address.getCountry();
         }
         String merchantTxnId = data.getGatewayOrderId();
 

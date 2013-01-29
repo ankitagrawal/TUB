@@ -1,19 +1,20 @@
 package com.hk.taglibs;
 
-import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.content.HeadingProduct;
-import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -37,10 +38,8 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -483,13 +482,13 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-	public static List<Courier> getAvailableCouriers(Object o) {
-
-		ShippingOrder shippingOrder = (ShippingOrder) o;
-		CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-		return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false, false);
-
-	}
+    public static List<Courier> getAvailableCouriers(Object o) {
+        ShippingOrder shippingOrder = (ShippingOrder) o;
+        PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
+        PincodeService pincodeService = ServiceLocatorFactory.getService(PincodeService.class);
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
+        return pincodeCourierService.getApplicableCouriers(pincode, null, Arrays.asList(shippingOrder.getShipment().getShipmentServiceType()), true);
+    }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
         return !StringUtils.isBlank(str1) && str1.equalsIgnoreCase(str2);
