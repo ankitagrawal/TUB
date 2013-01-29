@@ -304,10 +304,12 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	//cycle count by uploading notepad.
 	public Resolution uploadCycleCountNotepad() {
-		if (fileBean == null) {
-			addRedirectAlertMessage(new SimpleMessage("Choose File"));
-			return new ForwardResolution("/pages/admin/cycleCount.jsp");
+		if (fileBean == null ||(!(fileBean.getContentType().equals("text/plain")))) {
+			error = true;
+			message = "Upload notepad text file only";			
+			return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", error);
 		}
+
 		try {
 			hkBarcodeErrorsMap = new HashMap<String, String>();
 			String brand = cycleCount.getBrandsToAudit().getBrand();
