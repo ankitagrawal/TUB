@@ -24,15 +24,23 @@
 
     <div>
         <div id="loginbox" class="formbox">
-            <c:choose>
-                <c:when test="${!empty sla.hkApiUser}">
-                    <h3> You can sign in to ${sla.hkApiUser.name} using your healthkart.com account </h3>
-                </c:when>
-                <c:otherwise>
-                    <h3> Please enter the following details to sign into your account </h3>
-                </c:otherwise>
-            </c:choose>
-            <div class="errors"></div>
+
+
+            <div class="formcontainer">
+                <div class="content">
+                    <h3>
+                        Sign In
+                    </h3>
+                <c:choose>
+                    <c:when test="${!empty sla.hkApiUser}">
+                         You can sign in to ${sla.hkApiUser.name} using your healthkart.com account
+                    </c:when>
+                    <c:otherwise>
+                         Please enter the following details to sign into your account
+                    </c:otherwise>
+                </c:choose>
+                </div>
+                <div class="errors"></div>
             <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction" class="form">
 
                 <s:text type="text" placeholder="Email" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
@@ -48,8 +56,10 @@
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
 
             </s:form>
-            <div>If you don't have a healthkart account, <a id="newCustomer" class="clickHere">click here</a> to create one</div>   <br/>
+            <div class="content">If you don't have a healthkart account, <a id="newCustomer" class="clickHere">click here</a> to create one</div>   <br/>
+            </div>
             <div class="clear"></div>
+            <div class="footer">
             <span class="bottom">
                 <c:choose>
                 <c:when test="${!empty sla.hkApiUser}">
@@ -59,9 +69,16 @@
                     <a class="terms" href="${httpPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
             </c:choose>| &copy; 2013 Healthkart.com</span>
+            </div>
         </div>
         <div id="signupbox" class="formbox" style="display: none;">
-            <h3> Please enter the following details to create a new account</h3>
+            <div class="formcontainer">
+            <div class="content">
+                <h3>
+                    Registration
+                </h3>
+                Please enter the following details to create a new account in healthkart
+            </div>
 
             <div class="errors"></div>
             <s:form id="signup_form" method="post" event="signup"  beanclass="com.hk.web.action.core.auth.SSOLoginAction" class="form">
@@ -79,14 +96,17 @@
                 <s:hidden name="apiKey" value="${sla.apiKey}"/>
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
                 <div id="terms"><s:checkbox name="agreeToTerms" id="agreeToTerms"/> I agree to
-                    <a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp" class="terms">terms and conditions</a>
+                    <a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp" class="terms">terms and conditions</a>   &nbsp;
                     <s:submit tabindex="60" name="signup" id="signup" class="submit" value="Register"></s:submit>
                 </div>
 
                 <br/>
-                <div>If you already have an account, <a id="oldCustomer" class="clickHere">click here</a> to login</div><br/>
+
             </s:form>
+                <div class="content">If you already have a healthkart account, <a id="oldCustomer" class="clickHere">click here</a> to login</div><br/>
+            </div>
             <div class="clear"></div>
+            <div class="footer">
             <span class="bottom">    <c:choose>
                 <c:when test="${!empty sla.hkApiUser.terms}">
                     <a class="terms" href="${sla.hkApiUser.terms}">Terms of Use</a>
@@ -95,19 +115,30 @@
                     <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
             </c:choose> | &copy; 2013 Healthkart.com</span>
+            </div>
         </div>
         <div id="forgetbox" class="formbox" style="display: none;">
-            <h3> Please enter your Email address </h3>
+            <div class="formcontainer">
+                <div class="content">
+                    <h3>
+                        Forgot Password?
+                    </h3>
+                    Don't worry. Just enter your email address here
+                </div>
             <div class="errors"></div>
             <s:form class="form" id="forget_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction">
                 <s:text type="text" placeholder="Email" name="userLogin" id="forgetEmail" tabindex="10" size="50" maxlength="50" value=""/>
+
                 <br/>
 
-                <s:submit tabindex="30" name="sendResetLink" id="sendResetLink"  class="submit" value="Send Password"/>
+                <s:submit tabindex="30" name="sendResetLink" id="sendResetLink"  class="submit" value="Send Password Reset Link"/>
 
             </s:form>
-            <div>Once you reset your password, <a id="oldCustomerLogin" class="clickHere">click here</a> to Sign in</div>   <br/>
+
+            <div class="content">Once you reset your password, <a id="oldCustomerLogin" class="clickHere">click here</a> to Sign in</div>   <br/>
+                </div>
             <div class="clear"></div>
+            <div class="footer">
             <span class="bottom">
                 <c:choose>
                     <c:when test="${!empty sla.hkApiUser.terms}">
@@ -120,9 +151,9 @@
 
                 
                 | &copy; 2013 Healthkart.com</span>
+            </div>
         </div>
     </div>
-    <div class="footer"></div>
 </div>
 
 
@@ -297,13 +328,7 @@ $(document).ready(function()
         var email_var=$("#email").val();
         var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if(!rege.test(email_var) || email_length==0){ errorflag=true;
-            $('#email').tooltipster({
-                content: 'please enter a valid email',
-                position: 'left',
-                speed: 200,
-                trigger: 'custom'
-            });
-            $('#email').data('plugin_tooltipster').showTooltip();
+
             errorTooltip('email',"Please enter a valid email. Eg: rahul@gmail.com");
         }
 
@@ -317,7 +342,7 @@ $(document).ready(function()
         var email_var=$("#forgetEmail").val();
         var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if(!rege.test(email_var) || email_length==0){ errorflag=true;
-            errorTooltip('forgetEmail',"Please enter a valid email. Eg: rahul@gmail.com");
+            errorTooltip('forgetEmail',"Please enter a valid email.");
         }
 
     }
@@ -358,13 +383,7 @@ $(document).ready(function()
     function checkTermsAcceptance(){
         if(!$('#agreeToTerms').is(':checked')){
             errorflag=true;
-            $('#agreeToTerms').tooltipster({
-                content: 'please enter a valid email',
-                position: 'left',
-                speed: 200,
-                trigger: 'custom'
-            });
-            $('#agreeToTerms').data('plugin_tooltipster').showTooltip();
+
             errorTooltip('agreeToTerms', "please agree to our terms and conditions", true);
         }
     }
