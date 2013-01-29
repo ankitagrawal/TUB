@@ -61,7 +61,7 @@
 
       <div class="row">
         <s:label class="rowLabel" name="Pincode*"/>
-        <s:text name="address.pin" class="rowText" id="pin"/>
+        <s:text name="address.pincode.pincode" class="rowText" id="pin"/>
       </div>
 
       <div class="clear"></div>

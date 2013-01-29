@@ -1,18 +1,5 @@
 package com.hk.web.action.core.auth;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.LocalizableError;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.RoleConstants;
@@ -22,32 +9,37 @@ import com.hk.manager.UserManager;
 import com.hk.pact.dao.RoleDao;
 import com.hk.web.action.HomeAction;
 import com.hk.web.action.admin.AdminHomeAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
 
 @Component
 public class LoginAction extends BaseAction {
 
-    /* private static Logger logger = LoggerFactory.getLogger(LoginAction.class); */
+    @Validate(required = true)
+    String email;
 
     @Validate(required = true)
-    String                     email;
+    String password;
 
-    @Validate(required = true)
-    String                     password;
-
-    private String             redirectUrl;
-    private boolean            rememberMe;
-    private String             source;
+    private String redirectUrl;
+    private boolean rememberMe;
+    private String source;
 
     @SuppressWarnings("unused")
     @Session(key = HealthkartConstants.Session.userId)
-    private String             userId;
+    private String userId;
 
     public static final String SOURCE_CHECKOUT = "checkout";
 
     @Autowired
-    UserManager                userManager;
+    UserManager userManager;
     @Autowired
-    RoleDao                    roleDao;
+    RoleDao roleDao;
 
     @DefaultHandler
     @DontValidate
@@ -65,25 +57,6 @@ public class LoginAction extends BaseAction {
             return getContext().getSourcePageResolution();
         }
 
-        // // check if this account is blocked, and show an account blocked page
-        // if
-        // (userLoginDto.getLoggedUser().getRoles().contains(getRoleService().getRoleByName(RoleConstants.ITV_BLOCKED)))
-        // {
-        // // this is a blocked user.
-        // return new RedirectResolution(BlockedAccountAction.class);
-        // }
-
-        // if (userLoginDto.isTransferData()) {
-        // return new RedirectResolution(MergeUsersAction.class)
-        // .addParameter("redirectUrl", redirectUrl)
-        // .addParameter("tempUser", userLoginDto.getTempUser().getId())
-        // .addParameter("tempUserHash",
-        // userLoginDto.getTempUser().getUserHash());
-        // }
-
-        // if(userLoginDto.getLoggedUser().getPrinter() != null) {
-        // return new RedirectResolution(PrinterQueueAction.class);
-        // }
         userId = userLoginDto.getLoggedUser().getId().toString();
 
         getContext().getRequest().getSession().setAttribute(HealthkartConstants.Session.orderCountSetBoolean, false); // this will force the orderCount var to be re-set for this session
