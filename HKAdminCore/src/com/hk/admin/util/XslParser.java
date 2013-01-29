@@ -1,41 +1,11 @@
 package com.hk.admin.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import com.hk.domain.courier.Zone;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.dao.inventory.RetailLineItemDao;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.cache.CategoryCache;
 import com.hk.cache.RoleCache;
 import com.hk.constants.XslConstants;
@@ -50,17 +20,9 @@ import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.City;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.core.State;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.core.Tax;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
@@ -71,7 +33,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.ExcelBlankFieldException;
 import com.hk.exception.HealthKartCatalogUploadException;
 import com.hk.impl.dao.ReconciliationStatusDaoImpl;
@@ -83,16 +44,34 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.core.CityService;
-import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.core.StateService;
 import com.hk.pact.service.core.TaxService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @Component
 @SuppressWarnings("unchecked")
@@ -104,13 +83,6 @@ public class XslParser {
     private static Logger            logger         = LoggerFactory.getLogger(XslParser.class);
 
     public static Pattern            p              = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
-
-    // public static void main(String[] args) {
-    // Matcher matcher = p.matcher("VAT - 3.125 %");
-    // if (matcher.find()) {
-    // System.out.println(matcher.group(1));
-    // }
-    // }
 
     private Set<Product>             colProductList = null;
 
@@ -134,13 +106,9 @@ public class XslParser {
     @Autowired
     private ProductVariantService    productVariantService;
     @Autowired
-    private CourierService           courierService;
-    @Autowired
-    private PincodeService           pincodeService;
-    @Autowired
     private SkuService               skuService;
     @Autowired
-    private ShipmentService          shipmentService;
+    private ShipmentService shipmentService;
     @Autowired
     private TaxService               taxService;
     @Autowired
@@ -158,9 +126,7 @@ public class XslParser {
     @Autowired
     private InventoryService         inventoryService;
     @Autowired
-    CityService                      cityService;
-    @Autowired
-    StateService                     stateService;
+    CourierService courierService;
 
     public Set<Product> readProductList(File objInFile, User loggedOnUser) throws Exception {
 
@@ -442,166 +408,6 @@ public class XslParser {
         return colProductList;
     }
 
-    @SuppressWarnings("unchecked")
-    public Set<Pincode> readPincodeList(File objInFile) throws Exception {
-
-        logger.debug("parsing pincode info : " + objInFile.getAbsolutePath());
-
-        InputStream poiInputStream = new FileInputStream(objInFile);
-        POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
-
-        HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
-
-        // Assuming there is only one sheet, the first one only will be picked
-        HSSFSheet pincodeSheet = workbook.getSheet("PincodeInfo");
-        Iterator<Row> objRowIt = pincodeSheet.rowIterator();
-        Iterator objCellIterator = null;
-
-        // Declaring data elements
-        Map<Integer, String> headerMap;
-        Map<Integer, String> rowMap;
-        Set<Pincode> pincodeList = new HashSet<Pincode>();
-
-        int rowCount = 2;
-        headerMap = getRowMap(objRowIt);
-
-        try {
-            while (objRowIt.hasNext()) {
-                rowMap = getRowMap(objRowIt);
-                String pincodeValue = getCellValue(XslConstants.PINCODE, rowMap, headerMap).replace(".0", "");
-                if (StringUtils.isEmpty(pincodeValue)) {
-                    logger.error("Pincode cannot be null @ Row:" + rowCount);
-                    throw new NullPointerException("Pincode cannot be null @row" + rowCount);
-                }
-                Pincode pincode = getPincodeService().getByPincode(pincodeValue);
-                if (pincode == null) {
-                    pincode = new Pincode();
-                }
-                pincode.setPincode(pincodeValue);
-                City city = cityService.getCityByName(getCellValue(XslConstants.CITY, rowMap, headerMap));
-                if (city == null) {
-                    logger.error("Exception @ Row:" + rowCount);
-                    throw new Exception("City is incorrect Please check spelling @ Row:" + rowCount);
-                }
-                pincode.setCity(city);
-                State state = stateService.getStateByName(getCellValue(XslConstants.STATE, rowMap, headerMap));
-                if (state == null) {
-                    logger.error("Exception @ Row:" + rowCount);
-                    throw new Exception("City is incorrect Please check spelling @ Row:" + rowCount);
-                }
-                pincode.setState(state);
-                pincode.setLocality(getCellValue(XslConstants.LOCALITY, rowMap, headerMap));
-                pincode.setRegion(getCellValue(XslConstants.REGION, rowMap, headerMap));
-                String courierId = getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap);
-                if (StringUtils.isNotEmpty(courierId)) {
-                    Courier courier = getCourierService().getCourierById(getLong(getCellValue(XslConstants.DEFAULT_COURIER_ID, rowMap, headerMap)));
-                    if (courier == null) {
-                        logger.error("Exception @ Row:" + rowCount);
-                        throw new Exception("Courier Id is incorrect @ Row:" + rowCount);
-                    } else
-                        pincode.setDefaultCourier(courier);
-
-                }
-	            String zoneName=getCellValue(XslConstants.ZONE, rowMap, headerMap);
-	            
-	            Zone zone = getPincodeService().getZoneByName(zoneName);
-	            if(zone == null){
-		            logger.error("Exception @ Row:" + rowCount);
-					throw new Exception("Zone is incorrect @ Row:" + rowCount);
-	            }
-	            pincode.setZone(zone);
-                pincodeList.add(pincode);
-
-                logger.debug("read row " + rowCount);
-                rowCount++;
-            }
-        } finally {
-            if (poiInputStream != null) {
-                IOUtils.closeQuietly(poiInputStream);
-            }
-        }
-        return pincodeList;
-    }
-
-    public Set<PincodeDefaultCourier> readDefaultPincodeList(File objInFile) throws Exception {
-
-        logger.debug("parsing default pincode info : " + objInFile.getAbsolutePath());
-
-        InputStream poiInputStream = new FileInputStream(objInFile);
-        POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
-
-        HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
-
-        // Assuming there is only one sheet, the first one only will be picked
-        HSSFSheet defaultPincodeSheet = workbook.getSheet(XslConstants.DEFAULT_COURIER_SHEET);
-        Iterator<Row> objRowIt = defaultPincodeSheet.rowIterator();
-        Iterator objCellIterator = null;
-
-        // Declaring data elements
-        Map<Integer, String> headerMap;
-        Map<Integer, String> rowMap;
-        Set<PincodeDefaultCourier> defaultPincodeList = new HashSet<PincodeDefaultCourier>();
-
-        int rowCount = 2;
-        headerMap = getRowMap(objRowIt);
-
-        try {
-            while (objRowIt.hasNext()) {
-                rowMap = getRowMap(objRowIt);
-                String pincodeValue = getCellValue(XslConstants.PINCODE, rowMap, headerMap).replace(".0", "");
-                String wareHouseValue = getCellValue(XslConstants.WAREHOUSE, rowMap, headerMap);
-                if (StringUtils.isEmpty(pincodeValue)) {
-                    logger.error("Pincode cannot be null @ Row:" + rowCount);
-                    throw new NullPointerException("Pincode cannot be null @row" + rowCount);
-                }
-                Pincode pincode = getPincodeService().getByPincode(pincodeValue);
-                if (pincode == null) {
-                    logger.error("Pincode Does not exists @ Row:" + rowCount);
-                    throw new NullPointerException("Pincode does not exists @row" + rowCount);
-                }
-
-                if (StringUtils.isEmpty(wareHouseValue)) {
-                    logger.error("Warehouse cannot be null @ Row:" + rowCount);
-                    throw new NullPointerException("Pincode cannot be null @row" + rowCount);
-                }
-                Warehouse warehouse = getWarehouseService().getWarehouseById(getLong(wareHouseValue));
-                if (warehouse == null) {
-                    logger.error("Warehouse Does not exists @ Row:" + rowCount);
-                    throw new NullPointerException("Warehouse does not exists @row" + rowCount);
-                }
-
-                String courierId = getCellValue(XslConstants.COURIER_ID, rowMap, headerMap);
-                // String techCourierId = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
-                if (StringUtils.isNotEmpty(courierId)) {
-                    Courier courier = getCourierService().getCourierById(getLong(courierId));
-                    if (courier == null) {
-                        logger.error("Exception @ Row:" + rowCount);
-                        throw new Exception("Courier Id is incorrect @ Row:" + rowCount);
-                    }
-
-                    String codAvailable = getCellValue(XslConstants.COD_AVAILABLE, rowMap, headerMap);
-                    boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y") ? true : false;
-
-                    String groundShippingAvailable = getCellValue(XslConstants.GROUND_SHIPPING_AVAILABLE, rowMap, headerMap);
-                    boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y") ? true : false;
-
-                    Double estimatedShippingCost = getDouble(getCellValue(XslConstants.ESTIMATED_SHIPPING_COST, rowMap, headerMap));
-                    PincodeDefaultCourier pincodeDefaultCourier = pincodeService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
-                            isCODAvailable, estimatedShippingCost);
-                    defaultPincodeList.add(pincodeDefaultCourier);
-
-                    logger.debug("read row " + rowCount);
-                    rowCount++;
-                }
-            }
-        } finally {
-            if (poiInputStream != null) {
-                IOUtils.closeQuietly(poiInputStream);
-            }
-        }
-        return defaultPincodeList;
-    }
-
     public Set<SkuGroup> readAndBulkCheckinInventory(GoodsReceivedNote goodsReceivedNote, File objInFile) throws Exception {
 
         logger.debug("parsing inventory group checkin : " + objInFile.getAbsolutePath());
@@ -826,22 +632,14 @@ public class XslParser {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
                 rowCount++;
-                /*
-                 * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
-                 * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
-                 * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
-                 * totalItemsInCourier = 0L;
-                 */
                 rowMap = getRowMap(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
                 String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
-                Courier courier = getCourierService().getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
+                Courier courier = courierService.getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
                 shippingCharge = (shippingCharge == null ? 0.0 : shippingCharge);
                 collectionCharge = (collectionCharge == null ? 0.0 : collectionCharge);
-                // System.out.println("shippingOrder->" + shippingOrder + " awb->" + awb + " courier->" + courier +
-                // "shippingcharge->" + shippingCharge + " collectionCharge->" + collectionCharge);
                 if (shippingOrder == null) { // || (awb == null && courier == null) ){
                     messagePostUpdation += " shippingOrder not found for Row " + rowCount + "<br/>";
                     continue;
@@ -872,66 +670,6 @@ public class XslParser {
                 shipment.setShipmentCharge(shippingCharge);
                 shipment.setShippingOrder(shippingOrder);
                 shipmentService.save(shipment);
-
-                /*
-                 * if (courier != null) { productLineItemsByCourier =
-                 * shippingOrder.getProductLineItemByCourier(courier); } if (StringUtils.isNotBlank(awb)) {
-                 * productLineItemsByAwb = shippingOrder.getProductLineItemWithAwb(awb); }
-                 */
-
-                // productLineItemsByAwb.removeAll(Collections.singleton(null));
-                // productLineItemsByCourier.removeAll(Collections.singleton(null));
-                // productLineItems taken from awb will be preffered
-                /*
-                 * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
-                 * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
-                 * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
-                 * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> "; continue; }
-                 * for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
-                 * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
-                 * productLineItem.getQty(); }
-                 *//**
-                     * This for loop is added to distribute the shipping charges as per the weight of each product
-                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
-                     */
-                /*
-                 * for (LineItem productLineItem : productLineItems) {
-                 *//*
-                     * if (productLineItem.getProductVariant().getWeight() != null &&
-                     * productLineItem.getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
-                     * productLineItem.getProductVariant().getWeight() * productLineItem.getQty(); } else {
-                     * totalWeightDeliveredByCourier = 0.0D; break; }
-                     *//*
-                     * } for (LineItem productLineItem : productLineItems) { Double shippingChargedPerLineItem = 0.0D,
-                     * collectionChargedPerLineItem = 0.0D; retailLineItem =
-                     * retailLineItemDao.getRetailLineItem(productLineItem); if (retailLineItem == null) {
-                     * messagePostUpdation += " retail line item not found for product line item " +
-                     * productLineItem.getId() + " gateway shippingOrder id " + shippingOrder.getGatewayOrderId() + " at
-                     * Row " + rowCount + "<br/> "; continue; } if (totalWeightDeliveredByCourier == 0.0) {
-                     * shippingChargedPerLineItem = 1 / totalItemsInCourier.doubleValue() * shippingCharge; } else {
-                     * //shippingChargedPerLineItem = (productLineItem.getProductVariant().getWeight() /
-                     * totalWeightDeliveredByCourier) * shippingCharge; } collectionChargedPerLineItem =
-                     * (productLineItem.getHkPrice() / totalHkPriceDeliveredByCourier) * collectionCharge;
-                     * retailLineItem.setShippingChargedByCourier(shippingChargedPerLineItem);
-                     * retailLineItem.setCollectionChargedByCourier(collectionChargedPerLineItem);
-                     * retailLineItemDao.save(retailLineItem); }
-                     *//*
-                     * ProductVariant productVariant = productVariantDao.find(getCellValue(VARIANT_ID, rowMap,
-                     * headerMap)); if (productVariant != null) { Long qty = getLong(getCellValue(QTY, rowMap,
-                     * headerMap)); logger.debug("qty of variant - " + productVariant.getId() + " is - " + qty); if (qty !=
-                     * null && qty > 0) { Double cost = getDouble(getCellValue(COST, rowMap, headerMap)); Double mrp =
-                     * getDouble(getCellValue(MRP, rowMap, headerMap));
-                     *//**//*
-                         * RetailLineItem retailLineItem = new RetailLineItem();
-                         * retailLineItem.setPurchaseOrder(purchaseOrder); retailLineItem.setQty(qty);
-                         * retailLineItem.setProductVariant(productVariant); retailLineItem.setCostPrice(cost);
-                         * retailLineItem.setMrp(mrp); poLineItemDao.save(retailLineItem);
-                         * retailLineItemList.add(retailLineItem);
-                         *//**//*
-                         * } }
-                         *//*
-                     * logger.debug("read row " + rowCount);
-                     */
             }
 
         } catch (Exception e) {
@@ -973,25 +711,16 @@ public class XslParser {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
                 rowCount++;
-                /*
-                 * List<LineItem> productLineItems = null; List<LineItem> productLineItemsByCourier = null; List<LineItem>
-                 * productLineItemsByAwb = null; RetailLineItem retailLineItem = null; Double
-                 * totalHkPriceDeliveredByCourier = 0.0; Double totalWeightDeliveredByCourier = 0.0; Long
-                 * totalItemsInCourier = 0L;
-                 */
                 rowMap = getRowMapStringFormat(objRowIt);
                 ShippingOrder shippingOrder = getShippingOrderService().findByGatewayOrderId(getCellValue(ReportConstants.GATEWAY_ORDER_ID, rowMap, headerMap));
                 String awb = getCellValue(ReportConstants.AWB, rowMap, headerMap);
-                Courier courier = getCourierService().getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
+                Courier courier = courierService.getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingChargeFromExcel = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionChargeFromExcel = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
                 Double extraCharges = getDouble(getCellValue(ReportConstants.EXTRA_CHARGES, rowMap, headerMap));
                 shippingChargeFromExcel = (shippingChargeFromExcel == null ? 0.0 : shippingChargeFromExcel);
                 collectionChargeFromExcel = (collectionChargeFromExcel == null ? 0.0 : collectionChargeFromExcel);
                 extraCharges = (extraCharges == null ? 0.0 : extraCharges);
-                // System.out.println("shippingOrder->" + shippingOrder + " awb->" + awb + " courier->" + courier +
-                // "shippingcharge->" + shippingChargeFromExcel + " collectionChargeFromExcel->" +
-                // collectionChargeFromExcel + " extraCharges->" + extraCharges);
                 if (shippingOrder == null) { // || (awb == null && courier == null) ){
                     messagePostUpdation += " shippingOrder not found for Row " + rowCount + "<br/>";
                     continue;
@@ -1022,41 +751,6 @@ public class XslParser {
                 shipment.setEstmShipmentCharge(shippingChargeFromExcel);
                 shipment.setExtraCharge(extraCharges);
                 getShipmentService().save(shipment);
-                // this is to give preference to productlineitem list by awb in case of mismatch.
-                /*
-                 * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
-                 * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
-                 * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
-                 * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + ".<br/> ";
-                 * continue; } for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
-                 * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
-                 * productLineItem.getQty(); }
-                 *//**
-                     * This for loop is added to distribute the shipping charges as per the weight of each product
-                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
-                     */
-                /*
-                 * for (LineItem productLineItem : productLineItems) { if
-                 * (productLineItem.getSku().getProductVariant().getWeight() != null &&
-                 * productLineItem.getSku().getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
-                 * productLineItem.getSku().getProductVariant().getWeight() * productLineItem.getQty(); } else {
-                 * totalWeightDeliveredByCourier = 0.0D; break; } } for (LineItem productLineItem : productLineItems) {
-                 * retailLineItem = retailLineItemDao.getRetailLineItem(productLineItem); if (retailLineItem == null) {
-                 * messagePostUpdation += " retail line item not found for product line item " + productLineItem.getId() + "
-                 * gateway shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> ";
-                 * continue; } CourierCharge courierCharge = CourierChargeUtil.getCourierCharge(productLineItem,
-                 * totalWeightDeliveredByCourier, totalHkPriceDeliveredByCourier, totalItemsInCourier,
-                 * shippingChargeFromExcel, collectionChargeFromExcel, extraCharges);
-                 * retailLineItem.setEstimatedShippingChargedByCourier(courierCharge.getShippingCharged());
-                 * retailLineItem.setEstimatedCollectionChargedByCourier(courierCharge.getCollectionCharged());
-                 * retailLineItem.setExtraCharge(courierCharge.getExtraCharge());
-                 * retailLineItemDao.save(retailLineItem); } logger.debug("read row " + rowCount); }
-                 */
-
-                /*
-                 * ProductVariant productVariant = productVariantDao.find(getCellValue(VARIANT_ID, rowMap, headerMap)); }
-                 */
-
             }
         } catch (Exception e) {
             logger.error("Exception @ Row:" + rowCount + 1 + e.getMessage());
@@ -1072,21 +766,11 @@ public class XslParser {
     }
 
     private Tax getTaxDetails(String taxName) {
-
-        /*
-         * Matcher matcher = p.matcher(taxName); String value = "0.0"; //Fix for Null pointer error if (matcher.find()) {
-         * value = matcher.group(1); } Tax tax = new Tax(); tax.setName(taxName); double percentVal = 0; try {
-         * percentVal = Double.parseDouble(value); } catch (NumberFormatException e) { throw new
-         * RuntimeException("Invalid tax value/or unable to parse : " + taxName); } tax.setValue(percentVal / 100);
-         * return tax;
-         */
         Tax taxDb = getTaxService().findByName(taxName);
         if (taxDb == null) {
             taxDb = getTaxService().findByName("0.125");
         }
-
         return taxDb;
-
     }
 
     /**
@@ -1264,10 +948,6 @@ public class XslParser {
         String catString = "Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood Glucose Meters>GLUCOCARD01";
         XslParser xslParser = new XslParser();
         List<Category> categoryList = xslParser.getCategroyListFromCategoryString(catString);
-        for (Category category : categoryList) {
-            ;
-            // System.out.println(category.toString());
-        }
     }
 
     private String getCellValue(String header, Map<Integer, String> rowMap, Map<Integer, String> headerMap) {
@@ -1578,22 +1258,6 @@ public class XslParser {
 
     public void setProductVariantService(ProductVariantService productVariantService) {
         this.productVariantService = productVariantService;
-    }
-
-    public CourierService getCourierService() {
-        return courierService;
-    }
-
-    public void setCourierService(CourierService courierService) {
-        this.courierService = courierService;
-    }
-
-    public PincodeService getPincodeService() {
-        return pincodeService;
-    }
-
-    public void setPincodeService(PincodeService pincodeService) {
-        this.pincodeService = pincodeService;
     }
 
     public SkuService getSkuService() {

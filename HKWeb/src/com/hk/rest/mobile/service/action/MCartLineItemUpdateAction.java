@@ -127,7 +127,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                   return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(MHKConstants.STATUS_ERROR, MHKConstants.NO_STEP_UP, cartLineItem.getQty()));
                 }
             }
-            order = orderManager.trimEmptyLineItems(cartLineItem.getOrder());
+            orderManager.trimEmptyLineItems(cartLineItem.getOrder());
+            orderManager.getCartLineItemDao().refresh(order);
         }
 
 
@@ -161,7 +162,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 cartItemsList.add(cartItemResponse);
             }
         }
-        order = orderManager.trimEmptyLineItems(order);
+        orderManager.trimEmptyLineItems(order);
+        orderManager.getCartLineItemDao().refresh(order);
         Address address = order.getAddress() != null ? order.getAddress() : new Address();
         PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
         Map<String,Object> cartMap = new HashMap<String,Object>();

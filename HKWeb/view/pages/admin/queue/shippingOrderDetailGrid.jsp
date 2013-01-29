@@ -16,12 +16,18 @@
     Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
+    Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
 
 
     if (isActionQueue != null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isDropShipQueue != null) {
+        pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
+    } else {
+        pageContext.setAttribute("isDropShipQueue", false);
     }
     Boolean showCourier = (Boolean) pageContext.getAttribute("showCourier");
     if (showCourier != null) {
@@ -93,6 +99,12 @@
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
+        Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
+                <span
+                        style="margin-left:10px;"> </span>
+    </div>
+    <div class="clear" style=""></div>
+    <div class="floatleft">
         Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
     </div>
@@ -156,12 +168,20 @@
         </s:link>)
         </shiro:hasAnyRoles>
 
-         <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
-           (<s:link beanclass="com.hk.web.action.admin.shipment.CreateDropShipmentAction" event="pre" target="_blank">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Create Shipment
-        </s:link>)
-        </c:if>
+        <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+            <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
+                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
+                         target="_blank">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                Create Auto Shipment
+            </s:link>)
+                (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
+                         target="_blank">
+                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                Create Manual Shipment
+            </s:link>)
+            </c:if>
+        </shiro:hasAnyRoles>
 
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
@@ -197,16 +217,14 @@
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="delieverDropShippingOrder"
-                                 class="delieverSO">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Mark SO Delivered 
-        </s:link>)
+            <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
+                                     class="resolveShipment" target="_blank">
+                <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
+                Resolve Shipment
+            </s:link>)
+            </shiro:hasAnyRoles>
         </c:if>
-
-        <c:if test="${shippingOrder.dropShipping}">
-             <h7> Drop Ship Product</h7>
-         </c:if>
 
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
@@ -321,7 +339,7 @@
             <c:set var="baseOrderAddress" value="${baseOrder.address}"/>
             ${baseOrderAddress.name}<br/>
             ${baseOrderAddress.city}<br/>
-            ${baseOrderAddress.state} - ( ${baseOrderAddress.pin} ) - ${baseOrderAddress.phone}<br/>
+            ${baseOrderAddress.state} - ( ${baseOrderAddress.pincode.pincode} ) - ${baseOrderAddress.phone}<br/>
         </div>
         </div>
     </td>
@@ -363,7 +381,6 @@
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
                 ${productVariant.product.name}
-
                 <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
@@ -395,7 +412,18 @@
                     <%-- </span>--%>
 
                 </c:if>
-                <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
+                    <c:choose>
+                        <c:when test="${productVariant.product.groundShipping}">
+                             <span style="margin-left:10px;color: #ff0000;">(G)</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="margin-left:10px;color: #ff0000;">(A)</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:if test="${shippingOrder.dropShipping}">
+                        <span style="margin-left:10px;color: #ff0000;">(D)</span>
+                    </c:if>
+                    <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
 
                     <c:set var="TH" value="TH"/>
                     <c:set var="THBF" value="THBF"/>
@@ -421,19 +449,7 @@
 
                     </c:forEach>
                 </c:if>
-                <%--<c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">--%>
-                <%--<br/>--%>
-                <%--<span style="word-wrap:break-word">--%>
-                <%--<c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"--%>
-                <%--var="configValue"--%>
-                <%--varStatus="configCtr">--%>
-                <%--<c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>--%>
-                <%--${variantConfigOption.displayName} : ${configValue.value} ${!configCtr.last?',':''}--%>
-                <%--</c:forEach>--%>
-                <%--</span>--%>
-                <%--</c:if>--%>
-                <%--</span>--%>
-                <c:if test="${isActionQueue == true}">
+                               <c:if test="${isActionQueue == true}">
                     <%--<c:if test="${productVariant.product.jit}">--%>
                         ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
                     <%--</c:if>--%>
@@ -505,6 +521,13 @@
 <c:if test="${hasAction == true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+            <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
+        </c:if>
+    </td>
+</c:if>
+<c:if test="${isDropShipQueue == true}">
+    <td>
+        <c:if test="${shippingOrder.shipment != null}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </td>

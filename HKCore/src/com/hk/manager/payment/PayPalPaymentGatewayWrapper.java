@@ -2,17 +2,15 @@ package com.hk.manager.payment;
 
 import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.service.PaymentGatewayWrapper;
+import com.hk.domain.user.BillingAddress;
 import com.paypal.sdk.profiles.APIProfile;
 import com.paypal.sdk.profiles.ProfileFactory;
 import com.paypal.sdk.core.nvp.NVPEncoder;
-import com.paypal.sdk.core.nvp.NVPDecoder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.core.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -105,7 +103,7 @@ public class PayPalPaymentGatewayWrapper extends BasePaymentGatewayWrapper<PayPa
     }
 
 
-    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, Address address, String merchantTxnId, String amount , Country country) {
+    public NVPEncoder encodeRequestForSetExpressCheckout(NVPEncoder encoder, String return_url, String cancel_url, User user, BillingAddress address, String merchantTxnId, String amount , Country country) {
         encoder.add("RETURNURL", return_url);
         encoder.add("CANCELURL", cancel_url);
         encoder.add("NOSHIPPING", "1");

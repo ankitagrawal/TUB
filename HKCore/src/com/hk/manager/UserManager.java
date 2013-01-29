@@ -203,6 +203,7 @@ public class UserManager {
         user.setLogin(email);
         user.setEmail(email);
         user.setPasswordChecksum(BaseUtils.passwordEncrypt(password));
+        user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(email));
 
         // to prevent overwriting referredBy we are checking for null
         // if this user is already referred by any other user then we will not override
@@ -265,6 +266,7 @@ public class UserManager {
         String randomLogin = TokenUtils.generateGuestLogin();
         user.setLogin(randomLogin);
         user.setEmail(email);
+        user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(email));
         user.setPasswordChecksum(BaseUtils.passwordEncrypt(randomLogin));
         user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
         user = getUserService().save(user);

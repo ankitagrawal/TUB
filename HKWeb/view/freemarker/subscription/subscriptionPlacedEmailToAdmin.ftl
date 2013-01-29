@@ -46,7 +46,7 @@ ${subscription.address.line1}<br/>
 <#if subscription.address.line2??>
 ${subscription.address.line2}<br/>
 </#if>
-${subscription.address.city} - ${subscription.address.pin}<br/>
+${subscription.address.city} - ${subscription.address.pincode.pincode}<br/>
 ${subscription.address.state} (India)<br/>
     Ph: ${subscription.address.phone}<br/>
 </p>

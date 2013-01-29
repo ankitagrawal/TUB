@@ -1,5 +1,6 @@
 package com.hk.admin.util.drishti
 
+import com.hk.domain.core.Pincode
 import groovy.sql.Sql
 import org.slf4j.LoggerFactory
 import com.hk.domain.user.UserDetail
@@ -48,7 +49,7 @@ class PopulateUserDetail {
                     cnt++;
                     UserDetail userDetail = new UserDetail();
                     long phoneNumber = StringUtils.getUserPhone(userPhone);
-                    long id = userDetails.id;
+                    long id = Pincode.getPincode;
                     int priority = 0;
                     if (userDetails.karma_points){
                        priority = (userDetails.karma_points > UserDetailService.MIN_KARMA_POINTS ? 1 : 0);

@@ -52,7 +52,12 @@ public interface UserDao extends BaseDao {
 
   public Page getMailingList(Category category, int pageNo, int perPage);
 
+  public void updateUserSubscription(String login,int subscriptionMask);
+
   //public RoleDao getRoleDao();
 
   //public void setRoleDao(RoleDao roleDao);
+
+    //todo: marut - ideally store id also has to be passed here
+    User findByUnsubscribeToken(String unsubscribeToken);
 }

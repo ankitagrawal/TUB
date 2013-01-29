@@ -49,6 +49,7 @@ public class LatLongGenerator {
     String          lattitude;
     String          longitude;
 
+/*
     public void readCsvFile(String filePath, Manufacturer manufacturer) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filePath));
         String strLine = "";
@@ -71,6 +72,7 @@ public class LatLongGenerator {
             createLocalityMap(thyrocareAddress, manufacturer);
         }
     }
+*/
 
     public void parseXmlResponse(String city, String state) throws IOException {
         XPathFactory factory = XPathFactory.newInstance();

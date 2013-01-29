@@ -86,7 +86,6 @@ public class GenerateReconcilationReportAction extends BaseAction {
 	private Date endDate;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private String paymentProcess;
-	/*private CourierServiceInfo courierServiceInfo;*/
 
 	private Long warehouseId;
 	private Courier courier;

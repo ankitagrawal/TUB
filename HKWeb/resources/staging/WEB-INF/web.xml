@@ -247,6 +247,7 @@
 		<url-pattern>/online-shopping-festival/baby</url-pattern>
 		<url-pattern>/online-shopping-festival/beauty</url-pattern>
 		<url-pattern>/feedback</url-pattern>
+        <url-pattern>/clearance-sale</url-pattern>
 	</servlet-mapping>
 
 

@@ -3,6 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
@@ -32,13 +33,14 @@ public class UserManageAddressAction extends BaseAction {
   Boolean selected;
   Affiliate affiliate;
   User user;
+  private Long countryId;
 
   @ValidateNestedProperties({
       @Validate(field = "name", required = true, on = "saveAddress"),
       @Validate(field = "line1", required = true, on = "saveAddress"),
       @Validate(field = "city", required = true, on = "saveAddress"),
       @Validate(field = "state", required = true, on = "saveAddress"),
-      @Validate(field = "pin", required = true, on = "saveAddress"),
+      @Validate(field = "pincode", required = true, on = "saveAddress"),
       @Validate(field = "phone", required = true, on = "saveAddress")})
   @Autowired
   AffiliateDao affiliateDao;
@@ -59,7 +61,7 @@ public class UserManageAddressAction extends BaseAction {
     } else {
       userDao.refresh(user);
     }
-
+    addresses = addressDao.getVisibleAddresses(user);
     affiliate = affiliateDao.getAffilateByUser(user);
     return new ForwardResolution("/pages/manageUserAddresses.jsp");
   }
@@ -76,19 +78,24 @@ public class UserManageAddressAction extends BaseAction {
   public Resolution saveAddress() {
     user = userService.getLoggedInUser();
     if (user != null) {
+      if(address.getPincode()==null){
+         addRedirectAlertMessage(new SimpleMessage("<style=\"color:red;font-size:14px; font-weight:bold;\"> We don't Service to this Pincode, please enter again or Contact to Customer Care!!!</style>"));
+         return new ForwardResolution("/pages/editUserAddresses.jsp").addParameter("address",address.getId());
+      }
       address.setUser(user);
-      address = addressDao.save(address);                                                               
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
+      address = addressDao.save(address);
     }
     addRedirectAlertMessage(new SimpleMessage("Your changes have been saved."));
     return showAddressBook();
   }
 
   public Resolution manageAddresses() {
-    List<Address> addresses = new ArrayList<Address>();
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
-      addresses = user.getAddresses();
+      addresses = addressDao.getVisibleAddresses(user);
       if (affiliate != null) {
         mainAddressId = affiliate.getMainAddressId() != null ? affiliate.getMainAddressId().toString() : "";
       }
@@ -176,5 +183,13 @@ public class UserManageAddressAction extends BaseAction {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
   }
 }

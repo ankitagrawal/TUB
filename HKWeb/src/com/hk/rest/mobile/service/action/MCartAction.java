@@ -189,6 +189,7 @@ public class MCartAction extends MBaseAction{
 
             // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
             orderManager.trimEmptyLineItems(order);
+            orderManager.getCartLineItemDao().refresh(order);
 
             if (order != null && cartLineItems != null) {
                 itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
@@ -328,7 +329,7 @@ public class MCartAction extends MBaseAction{
             addressMap.put("line1",selectedAddress.getLine1());
             addressMap.put("line2",selectedAddress.getLine2());
             addressMap.put("state",selectedAddress.getState());
-            addressMap.put("pin",selectedAddress.getPin());
+            addressMap.put("pin",selectedAddress.getPincode());
             addressMap.put("phone",selectedAddress.getPhone());
 
             healthkartResponse = new HealthkartResponse(status, message, addressMap);
