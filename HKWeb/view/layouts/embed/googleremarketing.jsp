@@ -123,6 +123,12 @@
     <%--<c:otherwise>--%>
     <g:if test="${canGoogleRemarket == 'true'}">
 
+        <!--------------------------------------------------------
+        PLEASE INCLUDE THIS COMMENT ON THE WEB PAGE WITH THE TAG
+        Remarketing tags may not be associated with personally identifiable information
+        or placed on pages related to sensitive categories.  For more information on
+        this, see http://google.com/ads/remarketingsetup
+        ----------------------------------------------------------->
         <script type="text/javascript">
             var pathName = window.location.pathname;
             var pathNames = pathName.split("/");
@@ -172,7 +178,8 @@
                 var google_tag_params = {
                     prodid: "'" + prodId + "'" ,
                     pagetype: "'" + hkPageType + "'",
-                    pCat: "'" + pCategory + "'"
+                    pcat: "'" + pCategory + "'",
+                    use_case: 'retail'
                 };
             }
         </script>
