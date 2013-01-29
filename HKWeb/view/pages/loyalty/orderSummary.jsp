@@ -44,7 +44,7 @@
 							<strong>${pla.selectedAddress.name}</strong><br>
 							${pla.selectedAddress.line1}, ${pla.selectedAddress.line2}<br>
 							${pla.selectedAddress.city}<br>
-							${pla.selectedAddress.state}, ${pla.selectedAddress.pin}<br>
+							${pla.selectedAddress.state}, ${pla.selectedAddress.pincode.pincode}<br>
 							<abbr title="Phone">P:</abbr> ${pla.selectedAddress.phone}
 						</address>
 					</td>

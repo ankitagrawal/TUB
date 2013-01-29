@@ -31,7 +31,7 @@
 										<address>
 											<strong>${address.name}</strong><br> ${address.line1},
 											${address.line2}<br> ${address.city}<br>
-											${address.state}, ${address.pin}<br> <abbr title="Phone">P:</abbr>
+											${address.state}, ${address.pincode.pincode}<br> <abbr title="Phone">P:</abbr>
 											${address.phone}
 										</address>
 									</td>
@@ -117,7 +117,7 @@
 											</div>
 											<div class="controls">
 												<div class="pull-right">
-													<s:text name="address.pin" placeholder="Pin Code" />
+													<s:text name="pincode" placeholder="Pin Code" />
 												</div>
 											</div>
 										</div>
