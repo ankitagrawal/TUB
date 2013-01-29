@@ -252,11 +252,13 @@ public class XslPincodeParser {
                 boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y");
                 boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y");
 
+/*
                 if (!EnumCourier.MIGRATE.getId().equals(courier.getId())) {
                     if (!pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable)) {
                         throw new HealthkartCheckedException("the default courier being updated is not yet serviceable for the mentioned conditions at row " + rowCount);
                     }
                 }
+*/
 
                 PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
                         isCODAvailable, estimatedShippingCostDouble);
