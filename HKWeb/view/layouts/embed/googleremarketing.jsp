@@ -74,8 +74,13 @@
     </c:if>
 
     <c:choose>
+        <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
+            <script type="text/javascript">
+                alert('pageType')
+            </script>
+        </c:when>
     <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
-        <c:forEach items="${order.productCartLineItems}" var="cartLineItem" varStatus="ctr">
+        <c:forEach items="${order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
             <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
                 <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
                     <c:choose>
@@ -90,7 +95,7 @@
                 </c:if>
             </c:if>
         </c:forEach>
-        <%--<c:forEach items="${order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
+        <c:forEach items="${order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
             <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
                 <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'beauty' || cartLineItem.productVariant.product.primaryCategory == 'sports'}">
                     <c:choose>
@@ -104,7 +109,7 @@
                     </c:choose>
                 </c:if>
             </c:if>
-        </c:forEach>--%>
+        </c:forEach>
     </c:when>
     </c:choose>
 
