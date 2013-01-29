@@ -74,7 +74,7 @@ public class VariantPreferredWarehouseAction extends BaseAction {
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             productVariantList.add(lineItem.getSku().getProductVariant());
         }
-        wareHouseCourierCostingMap = preferredWarehouseDecider.getPreferredWareHouse(productVariantList, shippingOrder.isCOD(), shippingOrder.getBaseOrder().getAddress().getPin());
+        wareHouseCourierCostingMap = preferredWarehouseDecider.getPreferredWareHouse(productVariantList, shippingOrder.isCOD(), shippingOrder.getBaseOrder().getAddress().getPincode().getPincode());
         return new ForwardResolution("/pages/admin/shipment/variantWarehouseDecider.jsp");
     }
 

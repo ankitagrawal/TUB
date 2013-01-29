@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hk.domain.user.Address;
 import com.hk.pact.dao.core.AddressDao;
-import com.hk.store.InvalidOrderException;
 
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
@@ -29,20 +28,14 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 	
 	
-	// TODO this action has so much responsibility. Need to split.
 	public Resolution confirm() {
 		if(address == null) {
 			address = addressDao.get(Address.class, selectedAddressId);
 		}
 		Long orderId = getProcessor().getOrder(getPrincipal().getId()).getId();
 		getProcessor().setShipmentAddress(orderId, address);
-		getProcessor().makePayment(orderId, getRemoteHostAddr());
-		try {
-			getProcessor().escalateOrder(orderId);
-		} catch (InvalidOrderException e) {
-			return new RedirectResolution("/pages/loyalty/failure.jsp");
-		}
-		return new RedirectResolution("/pages/loyalty/success.jsp");
+		
+		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	
 	public List<Address> getAddressList() {

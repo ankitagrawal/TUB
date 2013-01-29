@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.domain.courier.Zone;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -94,6 +95,10 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private Date                       endDate;
   @Autowired
   private UserService                userService;
+
+  @Autowired
+  LoyaltyProgramService              loyaltyProgramService;
+	
   private Warehouse                  warehouse;
 
   private Zone zone;
@@ -147,6 +152,9 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
         shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
         adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+
+	    //loyalty program
+	    loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder().getId());
       }
       addRedirectAlertMessage(new SimpleMessage("Orders have been marked as shipped"));
     } else {

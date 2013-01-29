@@ -1,5 +1,7 @@
 package com.hk.web.action.admin.queue;
 
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
+import com.hk.helper.InvoiceNumHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,8 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    private SeekInvoiceNumService seekInvoiceNumService;
 
     private Long                       shippingOrderId;
     private Long                       baseOrderId;
@@ -62,6 +66,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
 
 
 
+    @SuppressWarnings("unchecked")
     @DontValidate
     @DefaultHandler
     @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
@@ -75,8 +80,6 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
-        // orderPage = orderDao.searchPackingAwaitingOrders(null, null, null, null, getPageNo(), getPerPage(),
-        // applicableLineItemStatus);
         if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
             logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
@@ -84,6 +87,7 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/dropShipAwaitingQueue.jsp");
     }
 
+    @SuppressWarnings("unchecked")
     @Secure(hasAnyPermissions = { PermissionConstants.VIEW_DROP_SHIPPING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution searchOrders() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
@@ -146,6 +150,29 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be assigned back for Drop ship processing"));
         }
 
+        return new RedirectResolution(DropShippingAwaitingQueueAction.class);
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution markShippingOrdersAsShipped() {
+        if (!shippingOrderList.isEmpty()) {
+            for (ShippingOrder shippingOrder : shippingOrderList) {
+                if (shippingOrder.getShipment() == null) {
+                    addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Please Enter the shipment details"));
+                    return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);
+                }
+                 if(shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())){
+                    addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("So has already been marked as shipped"));
+                    return new RedirectResolution(DropShippingAwaitingQueueAction.class).addParameter("shippingOrder", shippingOrder);      
+                 }
+                String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+                shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
+                adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
+            }
+            addRedirectAlertMessage(new net.sourceforge.stripes.action.SimpleMessage("Orders have been marked as shipped"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to be marked as shipped"));
+        }
         return new RedirectResolution(DropShippingAwaitingQueueAction.class);
     }
 

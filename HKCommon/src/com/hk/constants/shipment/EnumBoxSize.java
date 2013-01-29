@@ -2,6 +2,9 @@ package com.hk.constants.shipment;
 
 import com.hk.domain.courier.BoxSize;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EnumBoxSize {
 
     XS(10L, "XS", 100D, 8.25D,30D),
@@ -46,6 +49,10 @@ public enum EnumBoxSize {
         this.packagingCost = packagingCost;
         this.boxWeight = boxWeight;
     }
+
+  public static List<EnumBoxSize> getAllEnumBoxSize(){
+    return Arrays.asList(EnumBoxSize.XS,EnumBoxSize.S,EnumBoxSize.M,EnumBoxSize.M2,EnumBoxSize.L,EnumBoxSize.L2,EnumBoxSize.XL,EnumBoxSize.XXL,EnumBoxSize.XXXL,EnumBoxSize.MIGRATE);
+  }
 
     public Double getVolumetricWeight() {
         return volumetricWeight;

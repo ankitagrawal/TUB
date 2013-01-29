@@ -124,7 +124,7 @@ public class CreateTicketAction extends BaseAction {
         ticketDto.setAssociatedCourier(courier);
 
         String shortDescription = "Tracking id - " + trackingId + ", " + address.getCity() + ", " + FormatUtils.getFormattedDateForUserEnd(shippedDate) + " not delivered";
-        String fullDescription = "Address: \n" + address.getName() + "\n" + address.getLine1() + "\n" + address.getLine2() + "\n" + address.getCity() + " - " + address.getPin()
+        String fullDescription = "Address: \n" + address.getName() + "\n" + address.getLine1() + "\n" + address.getLine2() + "\n" + address.getCity() + " - " + address.getPincode()
                 + "\n" + address.getState() + "\n" + "Ph. " + address.getPhone();
 
         ticketDto.setShortDescription(shortDescription);

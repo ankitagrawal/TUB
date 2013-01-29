@@ -193,7 +193,7 @@ ORDER INVOICE <c:choose>
             </p>
 
             <p>
-                ${address.city} - ${address.pin}
+                ${address.city} - ${address.pincode.pincode}
                 <c:if test="${orderSummary.routingCode != null && orderSummary.routingCode != ''}">
                     <s:label name="routingCode"
                              style="font-size:1.2em; font-weight:bold;">&nbsp; &nbsp;${orderSummary.routingCode}</s:label>

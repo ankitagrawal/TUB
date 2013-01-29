@@ -7,22 +7,24 @@ import com.hk.domain.order.ShippingOrder;
 
 public interface ShipmentService {
 
-    public Shipment createShipment(ShippingOrder shippingOrder);
+    public Shipment createShipment(ShippingOrder shippingOrder, Boolean validate);
 
-    public Shipment saveShipmentDate(Shipment shipment);
+    public Shipment validateShipment(ShippingOrder shippingOrder);
 
-    public Shipment save(Shipment shipment);   
+    public Shipment save(Shipment shipment);
 
     public Shipment findByAwb(Awb awb);
 
     public void delete(Shipment shipment);
 
-	public Shipment recreateShipment(ShippingOrder shippingOrder);
+    public Shipment changeCourier(Shipment shipment, Courier newCourier, boolean preserveAwb);
 
-    public boolean isShippingOrderHasGroundShippedItem(ShippingOrder shippingOrder );
+    public Shipment recreateShipment(ShippingOrder shippingOrder);
 
-    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder );
+    public boolean isValidShipment(Shipment shipment);
 
-	public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
-    
+    public boolean isShippingOrderHasInstallableItem(ShippingOrder shippingOrder);
+
+    public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder);
+
 }

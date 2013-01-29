@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.util.BarcodeGenerator;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.Order;
@@ -46,8 +45,6 @@ public class BOInvoiceAction extends BaseAction {
   OrderManager orderManager;
   @Autowired
   PaymentModeDao paymentModeDao;
-  @Autowired
-  CourierServiceInfoDao courierServiceInfoDao;
   @Autowired
   AddressDao addressDao;
   @Autowired

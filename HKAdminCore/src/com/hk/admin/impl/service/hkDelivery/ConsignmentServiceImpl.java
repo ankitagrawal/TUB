@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,7 +124,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public String getConsignmentPaymentMode(ShippingOrder shippingOrder) {
         String paymentModeString = null;
-        if (shippingOrder.isCOD()) {
+        if (ShipmentServiceMapper.isCod(shippingOrder.getShipment().getShipmentServiceType())) {
             paymentModeString = HKDeliveryConstants.COD;
         } else {
             paymentModeString = HKDeliveryConstants.PREPAID;

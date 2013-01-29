@@ -242,7 +242,7 @@ public class HKDRunsheetManager {
             line2 = addressObj.getLine2();
             line2 = (line2 == null) ? "" : line2;
             city = addressObj.getCity();
-            pincode = addressObj.getPin();
+            pincode = addressObj.getPincode().getPincode();
             paymentAmt = consignment.getAmount();
             address = "Name:" + name + newline + "Address:" + line1 + "," + newline + line2 + "," + newline + city + "-" + pincode + newline + "Phone:" + phone;
             receivedDetails = "Name:" + newline + "Relation:" + newline + "Mobile No.:" + newline + "Received Date,Time:" + newline + "Sign";
