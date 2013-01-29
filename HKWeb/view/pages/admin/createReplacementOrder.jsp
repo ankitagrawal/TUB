@@ -102,7 +102,7 @@
                         <td>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.city}<br/>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.state}-
-                            (${replacementOrderBean.shippingOrder.baseOrder.address.pin})<br/>
+                            (${replacementOrderBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
                             Ph: ${replacementOrderBean.shippingOrder.baseOrder.address.phone}
                         </td>
                     </tr>

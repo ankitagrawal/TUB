@@ -21,6 +21,8 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -173,7 +175,6 @@
 
 </c:if>
 
-
     <c:choose>
         <c:when test="${actionBean.payment != null}">
             <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
@@ -297,15 +298,12 @@
                     <c:if test="${not empty address.line2}">
                         ${address.line2},
                     </c:if>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}, <span class="upc">INDIA</span><br/>
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
               <div class="floatfix"></div>
-
-
-
         </c:when>
         <c:otherwise>
             Invalid request!

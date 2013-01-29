@@ -234,6 +234,9 @@
 	</s:layout-component>
 </s:layout-render>
 
+<!--google remarketing code-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"/>
+
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -252,6 +255,7 @@
     width: 100%;
   }
 </style>
+
 
 
 

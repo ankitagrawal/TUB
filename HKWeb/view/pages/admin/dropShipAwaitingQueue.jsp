@@ -4,6 +4,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderStatusService" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -134,7 +135,7 @@
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                   shippingOrders="${shipmentQueueBean.shippingOrderList}"/>
+                   shippingOrders="${shipmentQueueBean.shippingOrderList}" isDropShipQueue="true"/>
 
   <div id="hiddenShippingIds"></div>
   <div>
@@ -143,9 +144,10 @@
   </div>
   <div style="display:inline;float:left;">
       <c:if test="${shipmentQueueBean.shippingOrderStatus.id == shippingOrderStatusDropShippingAwaiting}">
-    <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
-    <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
-              value="Re-Assign for process" style="display:none;"/>
+          <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
+          <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
+                    value="Re-Assign for process" style="display:none;"/>
+          <s:submit name="markShippingOrdersAsShipped" class="button_orange shipped shippingOrderActionBtn" value="Mark Order as Shipped"/>
       </c:if>
       <br>
       <br>
@@ -155,17 +157,6 @@
   <%--</c:if>--%>
 </s:form>
 <script type="text/javascript">
-  $('.shippingOrderActionBtn').click(function() {
-    $('.shippingOrderDetailCheckbox').each(function() {
-      var shippingOrderDetailCheckbox = $(this);
-      var isChecked = shippingOrderDetailCheckbox.attr('checked');
-      if (isChecked) {
-        $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
-      }
-    });
-    return true;
-  });
-
   $("select[name='shippingOrderStatus']").change(function() {
     var selectedOrderStatus = $(this).val();
     if (selectedOrderStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>) {
@@ -175,8 +166,36 @@
     }
   });
 
+  var grncheck = false;
+  $('.shipped').click(function() {
+      var con = confirm("Verify that you are saving correct information ");
+      if (con == true) {
+          grncheck = true;
+      } else {
+          return false;
+      }
+      if (grncheck) {
+          var bool = confirm("Verify that you have already created GRN ");
+          if (bool == true) {
+              return true
+          } else {
+              return false;
+          }
+      }
+
+  });
+
+  $('.shippingOrderActionBtn').click(function() {
+      $('.shippingOrderDetailCheckbox').each(function() {
+          var shippingOrderDetailCheckbox = $(this);
+          var isChecked = shippingOrderDetailCheckbox.attr('checked');
+          if (isChecked) {
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+          }
+      });
+      return true;
+  });
 
 </script>
-
 </s:layout-component>
 </s:layout-render>

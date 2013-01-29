@@ -113,22 +113,5 @@ public enum EnumCourier {
         return fedexCourierIds;
     }
 
-	public static List<Long> getDispatchLotCouriers(){
-		List<Long> dispatchLotCourierIds = new ArrayList<Long>();
-		dispatchLotCourierIds.add(EnumCourier.HK_Delivery.getId());
-		return dispatchLotCourierIds;
-	}
-
-    public static List<EnumCourier> getCurrentlyApplicableVendorCouriers() {
-        return Arrays.asList(
-                EnumCourier.BlueDart,
-                EnumCourier.Gati,
-                EnumCourier.Safexpress,
-                EnumCourier.Star_Track ,
-                EnumCourier.MuditaCargo,
-                EnumCourier.Other
-
-        );
-    }
 }
 

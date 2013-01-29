@@ -146,7 +146,7 @@ Order cancellation for  ${order.gatewayOrderId} [${order.payment.paymentMode.nam
       <#if order.address.line2??>
         ${order.address.line2}<br/>
       </#if>
-      ${order.address.city} - ${order.address.pin}<br/>
+      ${order.address.city} - ${order.address.pincode.pincode}<br/>
       ${order.address.state} (India)<br/>
     Ph: ${order.address.phone}<br/>
   </p>
