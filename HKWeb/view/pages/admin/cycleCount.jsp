@@ -6,14 +6,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <style>
-	.scannedBarcode{
+	.scannedBarcode {
 
-		width:125px
+		width: 125px
 	}
-	#heading li{
-		margin-left:0px
+
+	#heading li {
+		margin-left: 0px
 	}
-	</style>
+</style>
 </sttyle>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count">
@@ -71,29 +72,29 @@
 
 
 		<s:form id="ccform" beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-				<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-				<s:hidden name="message" value="${cycle.message}"/>
-				<s:hidden name="error" value="${cycle.error}"/>
-				<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
-		<div style="width:1200px;margin:0px auto">
-			<div style="display: inline-block;">
+			<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+			<s:hidden name="message" value="${cycle.message}"/>
+			<s:hidden name="error" value="${cycle.error}"/>
+			<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
+			<div style="width:1200px;margin:0px auto">
+				<div style="display: inline-block;">
 					Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
 				</div>
-			<table style="float: right;margin-top:0px">
-				<thead>
-				<tr>
-					<th>VariantID</th>
-					<th>Details</th>
-					<th>Hk Barcode</th>
-					<th>Mrp</th>
-					<th>Mfg Date</th>
-					<th>Expiry Date</th>
-					<th>Scanned Qty</th>
-					<th>Total Inventory</th>
+				<table style="float: right;margin-top:0px">
+					<thead>
+					<tr>
+						<th>VariantID</th>
+						<th>Details</th>
+						<th>Hk Barcode</th>
+						<th>Mrp</th>
+						<th>Mfg Date</th>
+						<th>Expiry Date</th>
+						<th>Scanned Qty</th>
+						<th>Total Inventory</th>
 
-				</tr>
-				</thead>
 
+					</tr>
+					</thead>
 
 
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
@@ -110,9 +111,19 @@
 								<td> ${cCItem.skuGroup.mrp}</td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
-								<td>${cCItem.scannedQty}</td>
+								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
+								<c:choose>
+									<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
+										<td><span style="color:red"> ${cCItem.scannedQty} </span></td>
+									</c:when>
+									<c:otherwise>
+										<td>${cCItem.scannedQty}</td>
+									</c:otherwise>
+								</c:choose>
+
+
 								<td>
-									<c:set value="${cycle.cycleCountPviMap}" var="item"/>
+
 										${item[cCItem.id]}
 								</td>
 							</tr>
@@ -120,26 +131,27 @@
 						</c:forEach>
 					</c:if>
 
-				<tr>
-					<td>
-						<div style="display:none;">
-							<input type="submit" class="saveform" name="saveScanned"/>
-						</div>
-					</td>
+					<tr>
+						<td>
+							<div style="display:none;">
+								<input type="submit" class="saveform" name="saveScanned"/>
+							</div>
+						</td>
 
-				</tr>
-			</table>
+					</tr>
+				</table>
 
-			<div style="margin-top: 60px;margin-bottom: 40px;">
-				<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
-					<s:submit name="save" value="Freeze"/>
-				</c:if>
+				<div style="margin-top: 60px;margin-bottom: 40px;">
+					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
+						<s:submit name="save" value="Freeze"/>
+					</c:if>
 
+				</div>
 			</div>
-		</div>
 		</s:form>
 
-		  <br/><br/>
+		<br/><br/>
+
 		<div style="margin:0px auto;width:1200px;margin-top: 42px;">
 			<fieldset class="right_label">
 				<legend>Upload Cycle Count Notepad</legend>

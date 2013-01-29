@@ -53,7 +53,16 @@
 							</td>
 							<c:set value="${cycle.cycleCountPviMap}" var="item"/>
 							<td>${item[cCItem.id]}</td>
-							<td>${(item[cCItem.id]) - (cCItem.scannedQty)}</td>
+
+							<c:choose>
+								<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
+									<td><span style="color:red">${(item[cCItem.id]) - (cCItem.scannedQty)} </span></td>
+								</c:when>
+								<c:otherwise>
+									<td>${(item[cCItem.id]) - (cCItem.scannedQty)}</td>
+								</c:otherwise>
+							</c:choose>
+
 						</tr>
 
 					</c:forEach>
