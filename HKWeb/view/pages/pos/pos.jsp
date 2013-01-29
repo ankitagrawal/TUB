@@ -154,6 +154,23 @@
 				);
 			});
 
+			$('#receivePayment').click(function() {
+				if ($.trim($("#line1").val()) != '' && ($.trim($("#city").val()) == '' || $.trim($("#pincode").val()) == '') ) {
+					alert("Please fill the complete address");
+					return false;
+				}
+
+				if ($.trim($("#city").val()) != '' && ($.trim($("#line1").val()) == '' || $.trim($("#pincode").val()) == '') ) {
+					alert("Please fill the complete address");
+					return false;
+				}
+
+				if ($.trim($("#pincode").val()) != '' && ($.trim($("#line1").val()) == '' || $.trim($("#city").val()) == '') ) {
+					alert("Please fill the complete address");
+					return false;
+				}
+			});
+
 		});
 	</script>
 </s:layout-component>
@@ -182,13 +199,13 @@
 					<strong><%=new Date()%>
 					</strong>
 				</td>
-				<td><b>Welcome!<shiro:principal property="firstName"/></b></td>
+				<td><b>Welcome, <shiro:principal property="firstName"/></b></td>
 			</tr>
 		</table>
 		<table cellpadding="1" width="100%">
 
 			<tr class="applyBorder" style="background:#EEE">
-				<td><b>New Order</b></td>
+				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
 				<td style="font-size:.9em">Search Order</td>
 				<td style="font-size:.9em">Order List</td>
 				<td style="font-size:.9em">Inventory</td>
@@ -279,18 +296,17 @@
 
 		<table cellpadding="1" width="100%">
 			<tr>
-				<td colspan="2" align="right"><input type="button" value="Reset" id="reset"/></td>
+				<%--<td colspan="2" align="right"><input type="button" value="Reset" id="reset"/></td>--%>
 				<c:if test="${pos.order.id == null}">
-					<td colspan="2" align="right"><s:submit name="receivePaymentAndProcessOrder" value="Receive Payment"/></td>
+					<td colspan="2" align="right"><s:submit name="receivePaymentAndProcessOrder" value="Receive Payment" id="receivePayment"/></td>
 				</c:if>
-				<c:if test="${pos.order.id != null}">
-					<%--<td colspan="2" align="right"><s:submit name="print" value="Print"/></td>--%>
-					<%--<input type="hidden" name="shippingOrderToPrint" value="${pos.shippingOrderToPrint}" />--%>
-					<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank">
-						Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
-					</s:link>
-					<%--<td colspan="2" align="right"><s:submit name="confirmOrder" value="Print"/></td>--%>
-				</c:if>
+					<c:if test="${pos.order.id != null}">
+						<td colspan="2" align="right">
+							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank" style="font-size: 2.0em; color:red">
+								Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
+							</s:link>
+						</td>
+					</c:if>
 			</tr>
 		</table>
 	</s:form>

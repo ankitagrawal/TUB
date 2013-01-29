@@ -27,6 +27,7 @@ import com.hk.helper.LineItemHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
@@ -75,6 +76,8 @@ public class POSServiceImpl implements POSService {
 	private InventoryService inventoryService;
 	@Autowired
 	private BaseDao baseDao;
+	@Autowired
+	AddressDao addressDao;
 
 	public Order createOrderForStore(User user, Address address, Store store) {
 		Order order = new Order();
@@ -223,19 +226,22 @@ public class POSServiceImpl implements POSService {
 
 	}
 
-	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse) {
-		Address address = new Address();
-		address.setLine1(warehouse.getLine1());
-		address.setLine2(warehouse.getLine2());
+	public Address createOrUpdateAddressForUser(Address address, User customer, String phone, Warehouse warehouse) {
+		if(address == null) {
+			address = new Address();
+		}
+		if(StringUtils.isBlank(address.getLine1())) {
+			address.setLine1(warehouse.getLine1());
+			address.setLine2(warehouse.getLine2());
+			address.setCity(warehouse.getCity());
+			address.setState(warehouse.getState());
+			address.setPin(warehouse.getPincode());
+		}
+
 		address.setName(customer.getName());
 		address.setPhone(phone);
 		address.setUser(customer);
-		address.setDeleted(false);
-		address.setCity(warehouse.getCity());
-		address.setState(warehouse.getState());
-		address.setPin(warehouse.getPincode());
-		address.setCreateDate(new Date());
-		address = (Address)baseDao.save(address);
+		address = addressDao.save(address);
 		return address;
 	}
 

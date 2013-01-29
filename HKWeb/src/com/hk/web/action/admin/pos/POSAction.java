@@ -196,9 +196,15 @@ public class POSAction extends BaseAction {
 			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
 
-		//todo : how to deal with address
+		if(address != null && address.getId() != null) {
+			if(StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity()) || StringUtils.isBlank(address.getPin())) {
+				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
+				return new ForwardResolution("/pages/pos/pos.jsp");
+			}
+		}
+
 		if(address == null || address.getId() == null) {
-			address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
 		}
 
 		POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
@@ -351,4 +357,5 @@ public class POSAction extends BaseAction {
 	public void setShippingOrderToPrint(ShippingOrder shippingOrderToPrint) {
 		this.shippingOrderToPrint = shippingOrderToPrint;
 	}
+
 }
