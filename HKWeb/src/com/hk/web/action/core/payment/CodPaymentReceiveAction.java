@@ -2,7 +2,7 @@ package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
@@ -36,8 +36,8 @@ import java.util.Set;
 @Component
 public class CodPaymentReceiveAction extends BaseAction {
 
-	@Autowired
-	private CourierService courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
 	@Autowired
 	private OrderManager orderManager;
 	@Autowired
@@ -91,14 +91,14 @@ public class CodPaymentReceiveAction extends BaseAction {
 			order = orderManager.recalAndUpdateAmount(order);
 			// first create a payment row, this will also cotain the payment checksum
 			Payment payment = getPaymentManager().createNewPayment(order, getPaymentService().findPaymentMode(EnumPaymentMode.COD), BaseUtils.getRemoteIpAddrForUser(getContext()),
-                    null, null);
+                    null, null, null);
 
 			String gatewayOrderId = payment.getGatewayOrderId();
 
 			Address address = order.getAddress();
-			String pin = address != null ? address.getPin() : null;
+			String pin = address != null ? address.getPincode().getPincode() : null;
 
-			if (!getCourierService().isCodAllowed(pin)) {
+            if (!pincodeCourierService.isCodAllowed(pin)) {
 				addRedirectAlertMessage(new SimpleMessage("Cod is not available for this location"));
 				return new RedirectResolution(PaymentModeAction.class);
 			} else if (order.getIsExclusivelyServiceOrder()) {
@@ -149,14 +149,6 @@ public class CodPaymentReceiveAction extends BaseAction {
 
 	public void setCodContactPhone(String codContactPhone) {
 		this.codContactPhone = codContactPhone;
-	}
-
-	public CourierService getCourierService() {
-		return courierService;
-	}
-
-	public void setCourierService(CourierService courierService) {
-		this.courierService = courierService;
 	}
 
 	public OrderManager getOrderManager() {

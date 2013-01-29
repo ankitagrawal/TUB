@@ -175,7 +175,15 @@ public class Awb implements java.io.Serializable {
 
 	}
 
-	@Override
+    @Override
+    public String toString() {
+        return "Awb{" +
+                "courier=" + courier +
+                ", awbNumber='" + awbNumber + '\'' +
+                '}';
+    }
+
+    @Override
 	public int hashCode() {
 	    return new HashCodeBuilder().append(id).toHashCode();
 		

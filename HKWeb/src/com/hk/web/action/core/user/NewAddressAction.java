@@ -1,5 +1,6 @@
 package com.hk.web.action.core.user;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -53,11 +54,11 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
             @Validate(field = "line2", maxlength = 120),
             @Validate(field = "city", required = true, maxlength = 60),
             @Validate(field = "state", required = true, maxlength = 50),
-            @Validate(field = "pin", required = true, maxlength = 6),
+            @Validate(field = "pincode", required = true, maxlength = 6),
             @Validate(field = "phone", required = true, maxlength = 25) })
     private Address             address;
-
     private User                user;
+    private Long                countryId;
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
         return new ForwardResolution(SelectAddressAction.class);
@@ -78,17 +79,23 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
      * HealthkartResponse(HealthkartResponse.STATUS_REDIRECT, "New address added!", data)); }
      */
     public Resolution create() {
+      if(address!=null){
+        if(address.getPincode()==null){
+          addRedirectAlertMessage(new SimpleMessage("We don't Service in this Pincode, please enter valid one or Call Customer Care"));
+          return new RedirectResolution(SelectAddressAction.class).addParameter("printAlert",true);
+        }
+      }
         user = getUserService().getUserById(getPrincipal().getId());
         address.setUser(user);
 
         boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
         if (!isDuplicateAddress) {
+            Country country = addressDao.getCountry(countryId);
+            address.setCountry(country);
             address = addressDao.save(address);
-
             Order order = orderManager.getOrCreateOrder(user);
             order.setAddress(address);
             orderDao.save(order);
-
             return new RedirectResolution(OrderSummaryAction.class);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Duplicate Address. It has been used in a different HK account."));
@@ -132,4 +139,11 @@ public class NewAddressAction extends BaseAction implements ValidationErrorHandl
         this.userService = userService;
     }
 
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
 }

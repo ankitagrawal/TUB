@@ -44,7 +44,7 @@
               </c:if>
               <div class='city'>${address.city}</div>
               <div class='state'>${address.state}</div>
-              <div class='pin'>${address.pin}</div>
+              <div class='pin'>${address.pincode.pincode}</div>
               <div class='phone'>${address.phone}</div>
 
               <div style="margin-top:10px;"></div>

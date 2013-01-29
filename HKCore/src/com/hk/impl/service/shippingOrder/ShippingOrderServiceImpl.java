@@ -5,12 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.hk.constants.courier.CourierConstants;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
-import com.hk.pact.service.core.PincodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +171,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
                     return false;
                 }
+                if (shippingOrder.isDropShipping()) {
+                    String comments = "Because It is a Drop Shipped Order";
+                    logShippingOrderActivity(shippingOrder, adminUser,
+                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
+                    return false;
+                }
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
                     // is after including placed order qty
@@ -186,15 +188,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                         continue;
                     }
 
-
-                    if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                 //      setting shipping order Drop shipped
-                        shippingOrder.setDropShipping(true);
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
+                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
                         String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is JIT";
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), comments);
@@ -247,16 +241,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     ProductVariant productVariant = lineItem.getSku().getProductVariant();
                     logger.debug("jit: " + productVariant.getProduct().isJit());
 
-                //  dropship Shipping order now manually escalable         
-             /*         if (productVariant.getProduct().isDropShipping()) {
-                        String comments = "Because " + lineItem.getSku().getProductVariant().getProduct().getName() + " is Drop Shipped Product";
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), comments);
-                        return false;
-                    } else        */
-
-
-                    if (availableUnbookedInv <= 0 && !shippingOrder.isDropShipping() ) {
+                    if (availableUnbookedInv <= 0 && !shippingOrder.isDropShipping()){
                         String comments = "Because availableUnbookedInv of " + lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
                                 + availableUnbookedInv;
                         logger.info("Could not manually escalate order as availableUnbookedInv of sku[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv
@@ -267,7 +252,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     }
 				}
 					if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
-						Shipment newShipment = getShipmentService().createShipment(shippingOrder);
+						Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
 						if (newShipment == null) {
 							String comments = "Because shipment has not been created";
 							logShippingOrderActivity(shippingOrder, adminUser,
@@ -319,23 +304,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
-
-   /*
-    public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-         //shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-         //shippingOrder.setLastEscDate(HKDateUtil.getNow());
-         //shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-         if (isAutoEsc) {
-             logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToDropShippingQueue);
-         } else {
-            // logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
-         }
-         //getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
-         //emailManager.sendEscalationToDropShipEmail(shippingOrder);
-         //return shippingOrder;
-     }
-     */
-
     /**
      * Creates a shipping order with basic details
      * 
@@ -411,6 +379,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false; // To change body of implemented methods use File | Settings | File Templates.
     }
 
+    //todo courier refactor
+/*
 	@Override
 	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder) {
 		Zone zone=null;
@@ -426,6 +396,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 		}
 		return false;
 	}
+*/
 
 	@Override
 	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
