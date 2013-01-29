@@ -157,18 +157,39 @@ public class ChangeDefaultCourierAction extends BaseAction {
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
+        String error = "";
+        boolean flag = false;
         try {
             Set<PincodeDefaultCourier> pincodeDefaultCourierSet = xslPincodeParser.readDefaultPincodeList(excelFile);
-            for (PincodeDefaultCourier defaultCourier : pincodeDefaultCourierSet) {
-                getBaseDao().save(defaultCourier);
+            for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierSet) {
+            boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
+            if (!isDefaultCourierApplicable) {
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
+                flag = true;
             }
+            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
+            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId()==null) {
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
+                flag = true;
+            }
+          }
+          if (!flag) {
+            for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+                getBaseDao().save(pincodeDefaultCourier);
+            }
+          }
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e.getMessage());
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
             return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }
         excelFile.delete();
-        addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+        if(!flag){
+          addRedirectAlertMessage(new SimpleMessage("Database Updated"));
+        }
+      else{
+          addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect" + error));
+        }
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
