@@ -3,6 +3,7 @@ package com.hk.admin.util.courier.thirdParty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fedex.track.stub.*;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
  * Demo of using the Track service with Axis
@@ -38,7 +39,7 @@ public class FedExTrackShipmentUtil {
 	}
 
 
-	public String trackFedExShipment(String trackingId) {
+	public ThirdPartyTrackDetails trackFedExShipment(String trackingId) {
 
 		TrackRequest request = new TrackRequest();
 
@@ -58,13 +59,13 @@ public class FedExTrackShipmentUtil {
 		packageIdentifier.setType(TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG); // Track identifier types are TRACKING_NUMBER_OR_DOORTAG, TRACKING_CONTROL_NUMBER, ....
 		request.setPackageIdentifier(packageIdentifier);
 		request.setIncludeDetailedScans(new Boolean(true));
-		String status = null;
+		ThirdPartyTrackDetails thirdPartyTrackDetails = null;
 		//
 		try {
 			// Initializing the service
 			TrackServiceLocator service;
 			TrackPortType port;
-			//
+			//                                                           
 			service = new TrackServiceLocator();
 			updateEndPoint(service);
 			port = service.getTrackServicePort();
@@ -83,10 +84,12 @@ public class FedExTrackShipmentUtil {
 					System.out.println("Status code: " + td[i].getStatusCode());
 					System.out.println("Status description: " + td[i].getStatusDescription());
 					*/
-					status = td[i].getStatusDescription();
+					thirdPartyTrackDetails.setAwbStatus(td[i].getStatusDescription());
+					thirdPartyTrackDetails.setTrackingNo(td[i].getTrackingNumber());
+					thirdPartyTrackDetails.setDeliveryDate(null);
+
 					/*
-					if(td[i].getOtherIdentifiers() != null)
-					{
+					if(td[i].getOtherIdentifiers() != null)	{
 						TrackPackageIdentifier[] tpi = td[i].getOtherIdentifiers();
 						for (int j=0; j< tpi.length; j++) {
 							System.out.println(tpi[j].getType() + " " + tpi[j].getValue());
@@ -125,7 +128,7 @@ public class FedExTrackShipmentUtil {
 				}
 
 			}
-			return status;
+			return thirdPartyTrackDetails;
 			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {

@@ -31,6 +31,7 @@ import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
 import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrack;
+import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
@@ -489,6 +490,26 @@ public class CourierStatusUpdateHelper {
 		try{
 			trackDetails = new IndiaOntimeCourierTrack().trackShipment(trackingId);
 			
+		} catch (NullPointerException npe) {
+			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+		} catch (Exception e) {
+			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+		}
+		return trackDetails;
+	}
+
+	public ThirdPartyTrackDetails updateDeliveryStatusFedex(String trackingId) throws HealthkartCheckedException {
+		ThirdPartyTrackDetails trackDetails = null;
+		courierName = EnumCourier.FedEx.getName();
+
+		//added for debugging
+		trackingId = "794136824680";
+		try{
+			trackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);
+
 		} catch (NullPointerException npe) {
 			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
 			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);

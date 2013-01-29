@@ -24,6 +24,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
@@ -162,8 +163,8 @@ public class TrackCourierAction extends BaseAction {
 			case FedEx_Surface:	
 				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
 				courierName = CourierConstants.FEDEX;
-        		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);        
-				status = thirdPartyAwbService.trackFedExShipment(trackingId);
+        		///ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+				status = new FedExTrackShipmentUtil().trackFedExShipment(trackingId).getAwbStatus();
 				if(status != null){
 				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
 				}
