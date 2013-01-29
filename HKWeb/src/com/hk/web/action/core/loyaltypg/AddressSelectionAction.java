@@ -17,7 +17,7 @@ import com.hk.store.InvalidOrderException;
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	private List<Address> addressList = new ArrayList<Address>();
-	private Address selectedAddress;
+	private Address address;
 	private Long selectedAddressId;
 	
 	@Autowired AddressDao addressDao;
@@ -31,9 +31,11 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	// TODO this action has so much responsibility. Need to split.
 	public Resolution confirm() {
-		selectedAddress = addressDao.get(Address.class, selectedAddressId);
+		if(address == null) {
+			address = addressDao.get(Address.class, selectedAddressId);
+		}
 		Long orderId = getProcessor().getOrder(getPrincipal().getId()).getId();
-		getProcessor().setShipmentAddress(orderId, selectedAddress);
+		getProcessor().setShipmentAddress(orderId, address);
 		getProcessor().makePayment(orderId, getRemoteHostAddr());
 		try {
 			getProcessor().escalateOrder(orderId);
@@ -51,12 +53,12 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 		this.addressList = addressList;
 	}
 
-	public Address getSelectedAddress() {
-		return selectedAddress;
+	public Address getAddress() {
+		return address;
 	}
-
-	public void setSelectedAddress(Address selectedAddress) {
-		this.selectedAddress = selectedAddress;
+	
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public Long getSelectedAddressId() {
