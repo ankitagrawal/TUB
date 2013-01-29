@@ -101,11 +101,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 				return null;
 			} else {
 				String pin = pincode.getPincode();
-				boolean isCodOnGroundShipped = isCodAndGroundShipped(pin, isGroundShipped);
+				boolean isCodOnGroundShipped = isCodAndGroundShipped(pin, isGroundShipped, shippingOrder.isCOD());
 				if (!courierServiceInfoDao.isCourierServiceInfoAvailable(suggestedCourier.getId(), pin, shippingOrder.isCOD(), isGroundShipped, isCodOnGroundShipped)) {
-					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_LoggedComment.asShippingOrderLifecycleActivity(),
+					shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
 							CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
 					adminEmailManager.sendNoShipmentEmail(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND, shippingOrder, shippingOrder.getBaseOrder());
+					return null;	
 				}
 			}
 
@@ -225,9 +226,9 @@ public class ShipmentServiceImpl implements ShipmentService {
         return false;
     }
 
-	public boolean isCodAndGroundShipped(String pin, boolean isGroundShipped ){
+	public boolean isCodAndGroundShipped(String pin, boolean isGroundShipped, boolean isCodOrder ){
 		Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-		return (isCodAllowedOnGroundShipping && isGroundShipped);
+		return (isCodAllowedOnGroundShipping && isGroundShipped && isCodOrder);
 	}
 
     public Double getEstimatedWeightOfShipment(ShippingOrder shippingOrder) {
