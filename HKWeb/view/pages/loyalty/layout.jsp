@@ -24,6 +24,7 @@
     </style>
   </head>
 
+
   <body>
 	<script src="<hk:vhostJs/>/bootstrap/js/jquery.js"></script>
 	<script src="<hk:vhostJs/>/bootstrap/js/bootstrap.js"></script>
@@ -32,9 +33,9 @@
         <ul class="nav nav-pills pull-right">
           <li><a href="<hk:vhostJs/>/loyaltypg">Home</a></li>
           <li><a href="http://www.healthkart.com">Visit Healthkart</a></li>
-          <li><a href="core/loyaltypg/Cart.action">View Cart</a></li>
+          <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>
         </ul>
-        <h3 class="muted">HealthKart</h3>
+        <h4 class="muted"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"> Loyalty Program</h4>
       </div>
 
       <hr>
