@@ -27,6 +27,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	private String productVariantId;
 	private long qty;
 	private Double totalShoppingPoints = 0d;
+	private CartLineItem cartLineItem;
 	
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
@@ -67,6 +68,19 @@ public class CartAction extends AbstractLoyaltyAction {
 		}
 		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}
+
+	@JsonHandler
+	public Resolution updateQuantity() {
+
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", new HashMap<Object, Object>());
+		try {
+			cartLineItem.setQty(qty);
+		} catch (Exception e) {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
+		}
+        noCache();
+		return new JsonResolution(healthkartResponse);
+	}
 	
     public Resolution checkout() {
         return new RedirectResolution(AddressSelectionAction.class);
@@ -98,5 +112,13 @@ public class CartAction extends AbstractLoyaltyAction {
 	
 	public void setTotalShoppingPoints(Double totalShoppingPoints) {
 		this.totalShoppingPoints = totalShoppingPoints;
+	}
+
+	public CartLineItem getCartLineItem() {
+		return cartLineItem;
+	}
+
+	public void setCartLineItem(CartLineItem cartLineItem) {
+		this.cartLineItem = cartLineItem;
 	}
 }

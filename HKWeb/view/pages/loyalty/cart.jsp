@@ -5,6 +5,12 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction"
 	var="ca" />
+
+<s:layout-component name="htmlHead">
+	<script type="text/javascript">
+	</script>
+</s:layout-component>
+
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
 		<c:choose>
@@ -25,7 +31,7 @@
 									src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
 									alt="${lp.variant.product.name}" /> <h8>${lp.variant.product.name}</h8>
 								</td>
-								<td>${lp.qty}</td>
+								<td><input id="${lp.id}" type=text value="${lp.qty}" style="width:30px;"/></td>
 								<td>${lp.points}</td>
 							</tr>
 						</c:forEach>
