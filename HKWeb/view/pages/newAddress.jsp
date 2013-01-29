@@ -21,7 +21,7 @@
             <li><label>Address Line 2</label> <s:text name="address.line2"/></li>
             <li><label>City<b>*</b></label> <s:text name="address.city"/></li>
             <li><label>State<b>*</b></label> <s:text name="address.state"/></li>
-            <li><label>Pin<b>*</b></label> <s:text name="address.pin"/></li>
+            <li><label>Pin<b>*</b></label> <s:text name="address.pincode.pincode"/></li>
             <li><label>Phone/Mobile<b>*</b></label> <s:text name="address.phone"/></li>
             <li><label>&nbsp;</label>
               <div class="buttons"><s:submit name="create" value="Save Address"/></div>

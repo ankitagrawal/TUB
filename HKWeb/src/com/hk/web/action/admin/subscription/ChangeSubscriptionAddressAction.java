@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.subscription;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -43,8 +44,7 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
     @Validate(required = true)
     private Subscription subscription;
 
-    @Validate(required = true, on = "replace")
-    private Address address;
+    private Address newAddress;
 
     @ValidateNestedProperties( {
             @Validate(field = "name", maxlength = 80, required = true, on = { "save" }),
@@ -52,11 +52,13 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
             @Validate(field = "line2", maxlength = 120, on = { "save" }),
             @Validate(field = "city", maxlength = 60, required = true, on = { "save" }),
             @Validate(field = "state", maxlength = 50, required = true, on = { "save" }),
-            @Validate(field = "pin", maxlength = 10, required = true, on = { "save" }),
+            @Validate(field = "pincode", maxlength = 10, required = true, on = { "save" }),
             @Validate(field = "phone", maxlength = 25, required = true, on = { "save" }) })
-    private Address             newAddress;
+    private Address             address;
 
     private boolean             copyToUserAddressBook;
+
+    private Long countryId;
 
     @Autowired
     private SubscriptionService subscriptionService;
@@ -75,19 +77,26 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
         }
         subscription.setAddress(address);
         subscriptionService.save(subscription);
-        addRedirectAlertMessage(new SimpleMessage("address replaced succuessfully"));
+        addRedirectAlertMessage(new SimpleMessage("address replaced successfully"));
         subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddressChanged);
         return new RedirectResolution(ChangeSubscriptionAddressAction.class).addParameter("subscription", subscription.getId());
     }
 
     public Resolution edit() {
-        newAddress = subscription.getAddress();
+        address = subscription.getAddress();
         return new ForwardResolution("/pages/admin/subscription/editSubscriptionAddress.jsp");
     }
 
     public Resolution save() {
+      if(address.getPincode()==null){
+        address = subscription.getAddress();
+        addRedirectAlertMessage(new SimpleMessage("We don't serve to this pincode !!!!"));
+        return new ForwardResolution("/pages/admin/subscription/editSubscriptionAddress.jsp");
+      }
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
         if (copyToUserAddressBook) {
-            newAddress = addressBookManager.editAddress(subscription.getUser(), subscription.getAddress(), this.newAddress); // here
+            address = addressBookManager.editAddress(subscription.getUser(), subscription.getAddress(), address); // here
             // edited
             // address
             // is
@@ -104,13 +113,13 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
             }
             boolean isDuplicateAddress = addressMatchScoreCalculator.isDuplicateAddress(address);
             if (!isDuplicateAddress) {
-                newAddress = addressDao.save(newAddress);
+                address = addressDao.save(address);
             }
         }
-        if (newAddress != null) {
-            subscription.setAddress(newAddress);
+        if (address != null) {
+            subscription.setAddress(address);
             subscriptionService.save(subscription);
-            addRedirectAlertMessage(new SimpleMessage("address edited succesfully"));
+            addRedirectAlertMessage(new SimpleMessage("address edited successfully"));
             subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.AddressChanged);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Duplicate address, it has been used in a different HK account too."));
@@ -165,4 +174,12 @@ public class ChangeSubscriptionAddressAction extends BaseAction {
     public void setSubscriptionLoggingService(SubscriptionLoggingService subscriptionLoggingService) {
         this.subscriptionLoggingService = subscriptionLoggingService;
     }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
 }

@@ -1,8 +1,12 @@
 package com.hk.admin.pact.dao.shipment;
 
+import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.pact.dao.BaseDao;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,6 +17,8 @@ import com.hk.pact.dao.BaseDao;
  */
 public interface ShipmentDao extends BaseDao {
 
- public Shipment findByAwb(Awb awb);  
+    public Shipment findByAwb(Awb awb);
+
+    public List<ShipmentServiceType> getShipmentServiceTypes(List<EnumShipmentServiceType> enumShipmentServiceTypes);
 
 }
