@@ -3,6 +3,7 @@ package com.hk.web.action.admin.pos;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.dto.pos.POSLineItemDto;
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.inventory.EnumInvTxnType;
@@ -13,6 +14,7 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
@@ -25,12 +27,14 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
+import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
@@ -82,6 +86,8 @@ public class POSAction extends BaseAction {
 	private List<SkuItem> skuItemListToBeCheckedOut = new ArrayList<SkuItem>(0);
 	private ShippingOrder shippingOrderToPrint;
 	private PaymentMode paymentMode;
+	private String paymentReferenceNumber;
+	private String paymentRemarks;
 
 	@Autowired
 	private UserService userService;
@@ -115,6 +121,10 @@ public class POSAction extends BaseAction {
 	private InventoryService inventoryService;
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private PincodeService pincodeService;
+	@Autowired
+	private SeekInvoiceNumService seekInvoiceNumService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -174,6 +184,7 @@ public class POSAction extends BaseAction {
 					//Get the last address of the user
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
+					dataMap.put("pincode", address.getPincode().getPincode());
 				}
 				noCache();
 				return new JsonResolution(healthkartResponse);
@@ -194,13 +205,19 @@ public class POSAction extends BaseAction {
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
 		if (customer == null) {
-			//todo: is store id need to be set for new user
 			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
 
 		if(address != null && address.getId() != null) {
-			if(StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity()) || StringUtils.isBlank(address.getPin())) {
+			if(StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
 				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
+				return new ForwardResolution("/pages/pos/pos.jsp");
+			}
+		}
+
+		if(address != null && address.getPincode() != null) {
+			if(pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
+				addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
 				return new ForwardResolution("/pages/pos/pos.jsp");
 			}
 		}
@@ -220,6 +237,7 @@ public class POSAction extends BaseAction {
 					" and Product: " + posLineItemDtoWithNonAvailableInventory.getProductName() + ". Please scan the order again"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
+
 		Store store = storeService.getStoreById(StoreService.PUNJABI_BAGH);
 
 		order = posService.createOrderForStore(customer, address, store);
@@ -230,16 +248,19 @@ public class POSAction extends BaseAction {
 		order.setAmount(grandTotal);
 		order = posService.createCartLineItems(posLineItems, order);
 
-		Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null);
+		Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
 
 		if (payment == null) {
 			addRedirectAlertMessage(new SimpleMessage("Payment could not be processed, contact Application Support"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		//payment.setPaymentMode(EnumPaymentMode.COUNTER_CASH.asPaymenMode());
 		payment.setAmount(order.getAmount());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 		payment.setGatewayReferenceId(null);
+		if(paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
+			payment.setReferenceNumber(paymentReferenceNumber);
+			payment.setRemarks(paymentRemarks);
+		}
 		payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
 		baseDao.save(payment);
 
@@ -250,6 +271,9 @@ public class POSAction extends BaseAction {
 		ShippingOrder shippingOrder = posService.createSOForStore(order, warehouse);
 
 		posService.checkoutAndUpdateInventory(posLineItems, shippingOrder);
+
+		String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+		shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
 
 		//todo: discuss SO Lifecycle
 		shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Delivered));
@@ -370,5 +394,21 @@ public class POSAction extends BaseAction {
 
 	public void setPaymentMode(PaymentMode paymentMode) {
 		this.paymentMode = paymentMode;
+	}
+
+	public String getPaymentReferenceNumber() {
+		return paymentReferenceNumber;
+	}
+
+	public void setPaymentReferenceNumber(String paymentReferenceNumber) {
+		this.paymentReferenceNumber = paymentReferenceNumber;
+	}
+
+	public String getPaymentRemarks() {
+		return paymentRemarks;
+	}
+
+	public void setPaymentRemarks(String paymentRemarks) {
+		this.paymentRemarks = paymentRemarks;
 	}
 }

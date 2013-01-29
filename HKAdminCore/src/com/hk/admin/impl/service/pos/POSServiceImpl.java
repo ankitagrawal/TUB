@@ -10,6 +10,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Country;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -31,6 +32,7 @@ import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.CartLineItemService;
@@ -78,6 +80,8 @@ public class POSServiceImpl implements POSService {
 	private BaseDao baseDao;
 	@Autowired
 	AddressDao addressDao;
+	@Autowired
+	PincodeService pincodeService;
 
 	public Order createOrderForStore(User user, Address address, Store store) {
 		Order order = new Order();
@@ -235,12 +239,13 @@ public class POSServiceImpl implements POSService {
 			address.setLine2(warehouse.getLine2());
 			address.setCity(warehouse.getCity());
 			address.setState(warehouse.getState());
-			address.setPin(warehouse.getPincode());
+			address.setPincode(pincodeService.getByPincode(warehouse.getPincode()));
 		}
 
 		address.setName(customer.getName());
 		address.setPhone(phone);
 		address.setUser(customer);
+		address.setCountry(addressDao.getCountry(80L));
 		address = addressDao.save(address);
 		return address;
 	}

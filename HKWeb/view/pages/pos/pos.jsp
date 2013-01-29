@@ -2,11 +2,12 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="HealthKart.com Store : New Order">
 <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSAction" var="pos"/>
-
+<c:set var="paymentModeCard" value="<%=EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId()%>" />
 <s:layout-component name="htmlHead">
 	<style type="text/css">
 		table tr th {
@@ -145,7 +146,7 @@
 								$('#line2').val(res.data.address.line2);
 								$('#city').val(res.data.address.city);
 								$('#state').val(res.data.address.state);
-								$('#pincode').val(res.data.address.pin);
+								$('#pincode').val(res.data.pincode);
 								$('#address').val(res.data.address.id);
 								$('#phone').val(res.data.address.phone);
 							} else {
@@ -177,6 +178,16 @@
 					alert("Please fill the complete address");
 					return false;
 				}
+
+			});
+
+			$('#paymentMode').change(function() {
+				var paymentMode = $('#paymentMode').find('option:selected');
+				if(paymentMode.val() == $('#paymentModeCard').val()) {
+					$('#paymentRemarksDiv').show();
+				} else {
+					$('#paymentRemarksDiv').hide();
+				}
 			});
 
 		});
@@ -184,6 +195,7 @@
 </s:layout-component>
 
 <s:layout-component name="content">
+	<input type="hidden" value="${paymentModeCard}" id="paymentModeCard" />
 	<div style="display: none;">
 		<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="getProductDetailsByBarcode"></s:link>
 	</div>
@@ -214,9 +226,6 @@
 
 			<tr class="applyBorder" style="background:#EEE">
 				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
-				<td style="font-size:.9em">Search Order</td>
-				<td style="font-size:.9em">Order List</td>
-				<td style="font-size:.9em">Inventory</td>
 			</tr>
 		</table>
 
@@ -247,7 +256,7 @@
 							      </s:select>
 								</td>
 							</tr>
-							<tr><td>Pincode</td><td><s:text name="address.pin" id="pincode"/></td></tr>
+							<tr><td>Pincode</td><td><s:text name="address.pincode" id="pincode"/></td></tr>
 						</table>
 					</td>
 				</tr>
@@ -298,8 +307,8 @@
 					<td colspan="5" align="right"><b>Grand Total</b></td>
 					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal" readonly="readonly"/></td>
 				</tr>
-				<tr><td><b>Order ID</b></td><td>${pos.order.id}</td>
-					<td colspan="3" align="right"><b>Payment Mode</b></td>
+				<tr><td><b>Order ID</b></td><td colspan="3">${pos.order.id}</td>
+					<td align="right"><b>Payment Mode</b></td>
 					<td>
 					<s:select name="paymentMode" id="paymentMode">
 						<s:option value="">-Select-</s:option>
@@ -308,21 +317,31 @@
 						                           label="name"/>
 					</s:select>
 					</td>
-					<%--<td><select><option>Cash</option><option>Card</option> </select></td>--%>
 				</tr>
 				</tfoot>
 			</table>
+
+			<div id="paymentRemarksDiv" style="display: none;">
+				<table>
+					<tr>
+						<td colspan="3" align="right">Payment Reference No.</td>
+						<td><s:text name="paymentReferenceNumber"/></td>
+						<td>Payment Remarks</td>
+						<td><s:textarea name="paymentRemarks" style="width:300px; height:100px" /></td>
+					</tr>
+				</table>
+			</div>
+
 		</fieldset>
 
 		<table cellpadding="1" width="100%">
 			<tr>
-				<%--<td colspan="2" align="right"><input type="button" value="Reset" id="reset"/></td>--%>
 				<c:if test="${pos.order.id == null}">
 					<td colspan="2" align="right"><s:submit name="receivePaymentAndProcessOrder" value="Receive Payment" id="receivePayment"/></td>
 				</c:if>
 					<c:if test="${pos.order.id != null}">
 						<td colspan="2" align="right">
-							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank" style="font-size: 2.0em; color:red">
+							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank" class="button_orange">
 								Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
 							</s:link>
 						</td>

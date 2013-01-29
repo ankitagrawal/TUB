@@ -11073,7 +11073,7 @@
             <column name="checked_in_sku_group_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1358238002137-3">
+    <!--<changeSet author="Rohit (generated)" id="1358238002137-3">
         <addColumn tableName="stock_transfer_line_item">
             <column name="checked_out_sku_group_id" type="INT"/>
         </addColumn>
@@ -11099,7 +11099,7 @@
 			DROP KEY stock_transfer_id_UNIQUE ,
 			ADD UNIQUE KEY stock_transfer_id_UNIQUE1 (stock_transfer_id,sku_id,checked_out_sku_group_id)
 		</sql>
-	</changeSet>
+	</changeSet>-->
 	<changeSet author="rahul" id="15-01-2013-01">
 		<sql>
 			insert into warehouse(id, city, state, wh_phone, line1, line2, name, pincode,tin) values
@@ -11236,4 +11236,10 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
+	<changeSet author="Pratham" id="23-01-2013-01">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
+			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
+		</sql>
+	</changeSet>
 </databaseChangeLog>

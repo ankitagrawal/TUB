@@ -484,7 +484,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
 	public List<PaymentMode> getPaymentModeForStore() {
-		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CREDIT_CARD.asPaymenMode(), EnumPaymentMode.OFFLINE_DEBIT_CARD.asPaymenMode());
+		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
 	}
 
 }
