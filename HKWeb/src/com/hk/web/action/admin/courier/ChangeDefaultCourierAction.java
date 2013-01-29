@@ -5,6 +5,8 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeCourierMapping;
@@ -12,6 +14,7 @@ import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
 public class ChangeDefaultCourierAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(ChangeDefaultCourierAction.class);
@@ -52,7 +54,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private List<Courier> availableCouriers;
 
     Warehouse warehouse;
-    //todo courier can we handle null here to show the whole pincode default courier list?
     boolean cod;
     boolean ground;
 
@@ -64,6 +65,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         pincode = pincodeService.getByPincode(pincodeString);
         if (pincode == null) {
@@ -77,19 +79,22 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
         String error = "";
         boolean flag = false;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
-            boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
-            if (!isDefaultCourierApplicable) {
-                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
-                flag = true;
-            }
-            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
-            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId()==null) {
-                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
-                flag = true;
+            if (!EnumCourier.MIGRATE.getId().equals(pincodeDefaultCourier.getCourier().getId())) {
+                boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
+                if (!isDefaultCourierApplicable) {
+                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
+                    flag = true;
+                }
+                Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
+                if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId() == null) {
+                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
+                    flag = true;
+                }
             }
         }
 
@@ -122,6 +127,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution generatePincodeExcel() throws Exception {
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
@@ -148,6 +154,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         };
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadPincodeExcel() throws Exception {
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));

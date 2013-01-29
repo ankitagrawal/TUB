@@ -168,7 +168,7 @@
         </s:link>)
         </shiro:hasAnyRoles>
 
-        <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+        <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
                          target="_blank">
@@ -181,7 +181,7 @@
                 Create Manual Shipment
             </s:link>)
             </c:if>
-        </shiro:hasAnyRoles>
+        </shiro:hasPermission>
 
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
@@ -217,13 +217,13 @@
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
-            <shiro:hasAnyRoles name="<%=RoleConstants.OPS_MANAGER_L3%>">
+            <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
                                      class="resolveShipment" target="_blank">
                 <s:param name="gatewayOrderId" value="${shippingOrder.gatewayOrderId}"/>
                 Resolve Shipment
             </s:link>)
-            </shiro:hasAnyRoles>
+            </shiro:hasPermission>
         </c:if>
 
         <c:if test="${isSearchShippingOrder}">
