@@ -33,6 +33,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -729,6 +730,15 @@ public class EmailManager {
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
 
     }
+
+    public void sendCallbackRequestEmail(DiscountCouponMailingList dcml) {
+          HashMap valuesMap = new HashMap();
+          valuesMap.put("dcml", dcml);
+  
+          Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
+          emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "umang.mehta@healthkart.com", "Callback Request - "+dcml.getCategory());
+          emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Callback Request - "+dcml.getCategory());
+      }
 
     public void sendCodConverterMail(Order order) {
         HashMap valuesMap = new HashMap();

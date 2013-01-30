@@ -12,6 +12,7 @@ import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
 public class MasterPincodeAction extends BaseAction {
     @Autowired
@@ -71,6 +71,7 @@ public class MasterPincodeAction extends BaseAction {
     }
 
     @DontValidate
+    @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
     public Resolution search() {
         pincode = pincodeService.getByPincode(pincodeString);
         if (pincode != null) {
@@ -82,6 +83,7 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
         Pincode dbPincode = pincodeService.getByPincode(pincodeString);
         if (dbPincode != null && !dbPincode.getCity().equals(pincode.getCity())) {
@@ -100,6 +102,7 @@ public class MasterPincodeAction extends BaseAction {
             return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution generatePincodeExcel() throws Exception {
         List<Pincode> pincodeList = baseDao.getAll(Pincode.class);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
@@ -126,6 +129,7 @@ public class MasterPincodeAction extends BaseAction {
         };
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadPincodeExcel() throws Exception {
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
@@ -163,6 +167,7 @@ public class MasterPincodeAction extends BaseAction {
         return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution savePincodeRegion() {
        if(pincodeRegionZone!=null){
         if (pincodeRegionZone.getPincode() == null) {
@@ -187,6 +192,7 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution searchPincodeRegion() {
         Pincode pincode = pincodeRegionZone.getPincode();
         if (pincode == null) {

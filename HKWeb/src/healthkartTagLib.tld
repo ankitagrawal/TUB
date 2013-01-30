@@ -322,6 +322,18 @@
     </function>
     <function>
         <description>
+            contains for collections
+        </description>
+        <name>urlContainsAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean urlContainsAnyCategory(java.lang.String,java.lang.String)
+        </function-signature>
+        <example>
+            ${hk:urlContainsAnyCategory(${str1}, ${str2})}
+        </example>
+    </function>
+    <function>
+        <description>
             contains for string
         </description>
         <name>firstStringContainsSecond</name>
@@ -374,6 +386,17 @@
         <function-signature>com.hk.domain.catalog.category.Category topLevelCategory(java.lang.Object)</function-signature>
         <example>
             ${hk:topLevelCategory(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns if product has any category defined in comma separated string
+        </description>
+        <name>hasProductAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean hasProductAnyCategory(java.lang.Object,java.lang.String)</function-signature>
+        <example>
+            ${hk:hasProductAnyCategory(${object})}
         </example>
     </function>
     <function>
