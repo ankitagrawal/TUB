@@ -74,5 +74,7 @@ public interface AdminInventoryService {
 
     public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) ;
 
+     public  List<SkuItem> getCheckedOutskuItemAgainstRVLineItem(RvLineItem rvLineItem);
+
     public Map<Long, String> skuItemDataMap (  List<SkuItem> checkedInSkuItems, Date expiryDate);
 }

@@ -102,7 +102,7 @@
           <td>
 	          <c:choose>
 		          <c:when test="${reconvoucher.reconciliationType.id == addId}">
-			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="addReconciliation">Edit
+			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="editReconciliationVoucher">Edit
 				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
 		          </c:when>
 		          <c:otherwise>

@@ -49,4 +49,8 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) ;
 
+    public  List<SkuItem> getCheckedOutskuItemAgainstRVLineItem(RvLineItem rvLineItem) ;
+
+
+
 }

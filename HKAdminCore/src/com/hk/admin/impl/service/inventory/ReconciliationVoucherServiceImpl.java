@@ -21,6 +21,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.sku.SkuGroupDao;
@@ -296,5 +297,20 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 	public void delete(ReconciliationVoucher reconciliationVoucher){
 		getBaseDao().delete(reconciliationVoucher);
 	}
+
+
+      public RvLineItem createRVLineItemWithBasicDetails (SkuGroup skuGroup , Sku sku){      
+                 RvLineItem rvLineItem = new RvLineItem();
+                    rvLineItem.setProductVariant(sku.getProductVariant());
+                    rvLineItem.setBatchNumber(skuGroup.getBatchNumber());
+                    rvLineItem.setQty(1L);
+                    rvLineItem.setMrp(skuGroup.getMrp());
+                    rvLineItem.setCostPrice(skuGroup.getCostPrice());
+                    rvLineItem.setMfgDate(skuGroup.getMfgDate());
+                    rvLineItem.setExpiryDate(skuGroup.getExpiryDate());
+                    rvLineItem.setSku(sku);
+                    rvLineItem.setSkuGroup(skuGroup);
+                return rvLineItem;
+      }
 
 }

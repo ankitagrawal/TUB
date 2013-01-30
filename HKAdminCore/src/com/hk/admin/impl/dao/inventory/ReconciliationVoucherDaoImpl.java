@@ -14,9 +14,12 @@ import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.constants.inventory.EnumInvTxnType;
 
 @Repository
 public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements ReconciliationVoucherDao {
@@ -52,5 +55,20 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
         else
             return null;
 
+    }
+
+
+
+    public RvLineItem getRvLineItems (ReconciliationVoucher reconciliationVoucher , Sku sku, SkuGroup skuGroup, ReconciliationType reconciliationType){
+         DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
+        rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher", reconciliationVoucher));
+        rvLineItemCriteria.add(Restrictions.eq("sku", sku));
+        rvLineItemCriteria.add(Restrictions.eq("skuGroup" , skuGroup));
+        rvLineItemCriteria.add(Restrictions.eq("reconciliationType", reconciliationType));
+        List<RvLineItem> rvLineItemList = (List<RvLineItem> )findByCriteria(rvLineItemCriteria);
+        if (rvLineItemList != null && rvLineItemList.size() > 0)
+            return rvLineItemList.get(0);
+        else
+            return null;
     }
 }

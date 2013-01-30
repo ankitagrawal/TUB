@@ -526,7 +526,7 @@ public class InventoryCheckinAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("There is no barcode file generated with your name."));
             return new RedirectResolution(AdminHomeAction.class);
         }
-        addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+        addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
         return new HTTPResponseResolution();
     }
 
@@ -534,14 +534,14 @@ public class InventoryCheckinAction extends BaseAction {
     public Resolution downloadBarcode() {
         grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
-        if (checkedInSkuItems == null && checkedInSkuItems.size() < 0) {
+        if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
         }
 //   getMap
-         ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
-        SkuGroup skuGroup =   checkedInSkuItems.get(0).getSkuGroup();
-        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap( checkedInSkuItems, skuGroup.getExpiryDate());
+        ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
+        SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
 
         String barcodeFilePath = null;
         Warehouse userWarehouse = null;
@@ -564,7 +564,7 @@ public class InventoryCheckinAction extends BaseAction {
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);
         }
-        addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+        addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
     }
 
@@ -579,7 +579,7 @@ public class InventoryCheckinAction extends BaseAction {
             List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                 SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-                Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap( checkedInSkuItems, skuGroup.getExpiryDate());
+                Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
                 skuItemDataMap.putAll(skuItemDataMaptemp);
                 Warehouse userWarehouse = null;
                 if (getUserService().getWarehouseForLoggedInUser() != null) {
@@ -598,6 +598,10 @@ public class InventoryCheckinAction extends BaseAction {
             }
         }
         try {
+            if (skuItemDataMap == null || skuItemDataMap.size() < 1) {
+                addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+                return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+            }
             BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);

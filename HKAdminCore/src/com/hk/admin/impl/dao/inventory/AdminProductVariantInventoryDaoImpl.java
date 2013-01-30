@@ -244,4 +244,16 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         skuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("grnLineItem", grnLineItem).setLong("checkedInQty", 1L).list();
         return skuItems;
     }
+
+
+
+
+    public  List<SkuItem> getCheckedOutskuItemAgainstRVLineItem(RvLineItem rvLineItem) {
+         List<SkuItem> skuItems = new ArrayList<SkuItem>();
+        String query = " select skuItem from ProductVariantInventory pvi where pvi.rvLineItem = :rvLineItem and pvi.qty = :checkedOutQty";
+        skuItems = (List<SkuItem>) getSession().createQuery(query).setParameter("rvLineItem", rvLineItem).setLong("checkedOutQty", -1L).list();
+        return skuItems;
+    }
+
+    
 }

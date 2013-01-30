@@ -114,6 +114,14 @@
 
           </tr>
         </c:forEach>
+          <tr>
+              <td colspan="2"> <s:link class=" button_green" style="width: 150px; height: 16px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Download All
+                  <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link>
+
+              </td>
+          </tr>
+
       </table>
       <%--<hr/>
       <div style="display:inline;float:right; width:450px">
@@ -136,11 +144,7 @@
             </div>
           </s:form>
         </fieldset>
-      </div>--%>
-
-        <td> <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Download All
-                  <s:param name="grn" value="${ica.grn.id}"/>
-            </s:link></td>
+      </div>--%>     
 
     </div>
     <script type="text/javascript">

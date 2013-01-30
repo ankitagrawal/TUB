@@ -53,7 +53,7 @@ public class BarcodeUtil {
           FileWriter fileWriter = new FileWriter(barcodeFilePath, true);
           BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-          if (!skuItemDataMap.isEmpty()) {
+          if (!skuItemDataMap.isEmpty()) {                                                                               
              Set<Long> keys = skuItemDataMap.keySet();
              for (Long key : keys) {
                bufferedWriter.append( skuItemDataMap.get(key).toString());

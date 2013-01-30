@@ -333,6 +333,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
+    public  List<SkuItem> getCheckedOutskuItemAgainstRVLineItem(RvLineItem rvLineItem) {
+         return   getAdminPVIDao().getCheckedOutskuItemAgainstRVLineItem(rvLineItem);
+    }
+
+
     public Map<Long, String> skuItemDataMap( List<SkuItem> checkedInSkuItems , Date expiryDate) {
         int strLength = 20;
         SkuItem skuItem = checkedInSkuItems.get(0);
