@@ -33,7 +33,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	@JsonHandler
 	public Resolution addToCart() {
 
-		Map responseMap = new HashMap();
+		Map<String, Object> responseMap = new HashMap<String, Object>();
 		HealthkartResponse healthkartResponse = null;
 		Long orderId = getProcessor().createOrder(getPrincipal().getId());
 		

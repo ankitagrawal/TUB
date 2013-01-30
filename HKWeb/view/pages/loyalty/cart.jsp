@@ -40,7 +40,7 @@
 						<tr>
 							<th style="width: 150px;">Product</th>
 							<th>Quantity</th>
-							<th>Loyalty Points</th>
+							<th>Loyalty Points/Item</th>
 						</tr>
 					</thead>
 					<tbody>
