@@ -11236,4 +11236,69 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
+
+	<changeSet author="DeepakC" id="20133001-01">
+		<createTable tableName="loyalty_product">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="variant_id" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-02">
+		<addForeignKeyConstraint constraintName="fk_loyalty_product_variant"
+			baseTableName="loyalty_product" baseColumnNames="variant_id"
+			referencedTableName="product_variant" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-03">
+		<createTable tableName="user_order_karma_profile">
+			<column name="order_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="creation_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="update_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="transaction_type" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-04">
+		<addForeignKeyConstraint constraintName="fk_ukarma_order"
+			baseTableName="user_order_karma_profile" baseColumnNames="order_id"
+			referencedTableName="base_order" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-05">
+		<addForeignKeyConstraint constraintName="fk_ukarma_user"
+			baseTableName="user_order_karma_profile" baseColumnNames="user_id"
+			referencedTableName="user" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-06">
+		<addUniqueConstraint tableName="user_order_karma_profile"
+			constraintName="fk_ukarma_uo" columnNames="user_id,order_id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-07">
+		<insert tableName="store">
+			<column name="id" value="4"/>
+			<column name="name" value="LOYALTYPG"/>
+			<column name="prefix" value="LP"/>
+		</insert>
+	</changeSet>
 </databaseChangeLog>
