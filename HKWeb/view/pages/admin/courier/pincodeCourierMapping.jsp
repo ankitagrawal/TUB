@@ -125,7 +125,7 @@
                     </fieldset>
                 </c:when>
                 <c:otherwise>
-                <c:if test="${pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0}">
+                <c:if test="${(pcma.pincodeCourierMappings!=null and fn:length(pcma.pincodeCourierMappings)>0) or (pcma.pincode!=null)}">
                   <fieldset>
                   <h2>Pincode Courier Mappings</h2>
                     <br>
@@ -189,7 +189,7 @@
                     </c:otherwise>
                     </c:choose>
             <div class="clear"></div>
-            <c:if test="${pcma.pincodeDefaultCouriers!=null and fn:length(pcma.pincodeDefaultCouriers)>0}">
+            <c:if test="${(pcma.pincodeDefaultCouriers!=null and fn:length(pcma.pincodeDefaultCouriers)>0) or (pcma.pincode!=null)}">
                 <fieldset>
                     <h2>Pincode Default Courier</h2>
                     <br>

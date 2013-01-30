@@ -260,8 +260,10 @@ public class XslPincodeParser {
                 }
 */
 
-                PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
-                        isCODAvailable, estimatedShippingCostDouble);
+                PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,isCODAvailable, estimatedShippingCostDouble);
+                boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable);
+                Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, isCODAvailable, isGroundShippingAvailable, warehouse);
+                if(isDefaultCourierApplicable && !(pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(courier)))
                 pincodeDefaultCouriers.add(pincodeDefaultCourier);
                 rowCount++;
             }
