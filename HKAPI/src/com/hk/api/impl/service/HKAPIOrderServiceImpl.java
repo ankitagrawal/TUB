@@ -1,36 +1,21 @@
 package com.hk.api.impl.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.akube.framework.util.BaseUtils;
 import com.hk.api.constants.EnumHKAPIErrorCode;
 import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.order.*;
 import com.hk.api.pact.service.HKAPIOrderService;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.api.HkApiUser;
-import com.hk.domain.builder.CartLineItemBuilder;
-import com.hk.domain.core.Country;
-import com.hk.domain.core.Pincode;
-import com.hk.pact.dao.core.AddressDao;
-import com.hk.pact.service.core.AddressService;
-import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.store.StoreService;
-import com.hk.security.HkAuthService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.hk.api.pact.service.HKAPIUserService;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.api.HkApiUser;
+import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -40,19 +25,27 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.api.pact.service.HKAPIUserService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.security.HkAuthService;
 import com.hk.util.json.JSONResponseBuilder;
-import com.akube.framework.util.BaseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
@@ -341,11 +334,11 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         this.orderService = orderService;
     }
 
-    public AddressService getAddressDao() {
+    public AddressDao getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressService addressDao) {
+    public void setAddressDao(AddressDao addressDao) {
         this.addressDao = addressDao;
     }
 
