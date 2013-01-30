@@ -15,6 +15,7 @@ import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.store.Store;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.AbstractStoreProcessor;
@@ -25,8 +26,6 @@ import com.hk.store.SearchCriteria;
 @Service("loyaltyStoreProcessor")
 public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
-	private static final Long storeId = 2l;
-	
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
 	@Override
@@ -43,7 +42,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	protected Store getStore() {
-		return storeService.getStoreById(storeId);
+		return EnumStore.LOYALTYPG.asStore();
 	}
 
 	@Override
