@@ -17,7 +17,7 @@ public interface UserReviewMailDao extends BaseDao {
 
     public UserReviewMail save(UserReviewMail userReviewMail);
 
-    public UserReviewMail getByOrder(Order order);
+    public UserReviewMail getUserReviewMailByOrder(Order order);
 
     public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant);
 }

@@ -1,6 +1,5 @@
 package com.hk.impl.service.review;
 
-import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -13,18 +12,13 @@ import com.hk.domain.review.UserReviewMail;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.pact.dao.email.EmailRecepientDao;
-import com.hk.pact.service.UserService;
 import com.hk.pact.service.review.ProductReviewMailService;
 import com.hk.pact.service.review.ReviewCollectionFrameworkService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.review.UserReviewMailService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -69,13 +63,10 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
 
     public void sendDueEmails(){
         List<UserReviewMail> userList = userReviewMailService.getAllUserReviewMailByDueDate(new Date());
-        UserReviewMail userReviewMail;
         UserReview userReview;
         boolean mailSent;
         if(userList != null){
-            Iterator<UserReviewMail> listIterator = userList.iterator();
-            while(listIterator.hasNext()){
-                userReviewMail = listIterator.next();
+            for(UserReviewMail userReviewMail : userList ){
                 if(emailRecepientDao.getOrCreateEmailRecepient(userReviewMail.getUser().getEmail()).isSubscribed()){
                     //if(true){
                     productReviewMail = productReviewMailService.getProductReviewMailByProduct(userReviewMail.getProductVariant().getProduct());
@@ -109,12 +100,13 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
         boolean isUserSubscribed = emailRecepientDao.getOrCreateEmailRecepient(user.getEmail()).isSubscribed();
         //boolean isUserSubscribed = true;
         if(isUserSubscribed){
-            Set cartLine = order.getCartLineItems();
+            Set<CartLineItem> cartLine = order.getCartLineItems();
             if(cartLine != null){
-                Iterator<CartLineItem> cartLineIterator = cartLine.iterator();
+                //Iterator<CartLineItem> cartLineIterator = cartLine.iterator();
                 ProductVariant productVariant;
-                while(cartLineIterator.hasNext()){
-                    productVariant = cartLineIterator.next().getProductVariant();
+                //while(cartLineIterator.hasNext()){
+                for(CartLineItem cartLineItem : cartLine){
+                    productVariant = cartLineItem.getProductVariant();
                     if(productVariant != null){
                         productReviewMail = productReviewMailService.getProductReviewMailByProduct(productVariant.getProduct());
                         userReview = reviewService.getReviewByUserAndProduct(user, productVariant.getProduct());
@@ -130,7 +122,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                                 userReviewMailService.save(userReviewMail);
                             }else{
                                 if(priorUserReviewMail.getIsMailSent()){
-                                    if(priorUserReviewMail.getSentDate().getTime() + 24*3600*1000*productReviewMail.getDaysToReviewAgain() <= BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()).getTime() ){
+                                    if(priorUserReviewMail.getSentDate().getTime() + 24*3600*1000*productReviewMail.getDaysToSendReviewMailAgain() <= BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()).getTime() ){
                                         priorUserReviewMail.setDueDate(BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()));
                                         priorUserReviewMail.setIsMailSent(false);
                                         priorUserReviewMail.setBaseOrder(order);

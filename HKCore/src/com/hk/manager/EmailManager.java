@@ -421,7 +421,7 @@ public class EmailManager {
 
         //template contents from db
         String mailTemplateContents = mail.getContent();
-        if (mailTemplateContents != null && StringUtils.isNotBlank(mailTemplateContents)) {
+        if (StringUtils.isNotEmpty(mailTemplateContents)) {
             StringBuilder finalContents = new StringBuilder(mail.getSubject());
             finalContents.append(BaseUtils.newline + mailTemplateContents);
             Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());

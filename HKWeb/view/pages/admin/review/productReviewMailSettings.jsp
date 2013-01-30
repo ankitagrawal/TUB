@@ -26,7 +26,7 @@
                     </li>
                     <li>
                         <label>Days To Review Again</label>
-                        <s:text name="productReviewMail.daysToReviewAgain"  />
+                        <s:text name="productReviewMail.daysToSendReviewMailAgain"  />
                     </li>
                     <li>
                         <label>Mail Type</label>

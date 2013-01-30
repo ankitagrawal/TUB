@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 
 @CustomPopulationStrategy(BeanFirstPopulationStrategy.class)
@@ -119,7 +118,7 @@ public class CreateMailTemplateAction extends BaseAction {
                     FileUtils.deleteQuietly(ftlFile);
                     if(contentUploaded){
                         mail.setContent(ftlContents);
-                        mail.setAmazonFileName(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
+                        mail.setAmazonFilePath(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
                         mailService.save(mail);
                     }
                     addRedirectAlertMessage(new SimpleMessage("ftl generated and upload to s3"));
@@ -140,12 +139,12 @@ public class CreateMailTemplateAction extends BaseAction {
     public Resolution saveMailTemplate(){
         editTemplate = false;
         Mail priorMail = mailService.getMailById(mail.getId());
-        mail.setAmazonFileName(priorMail.getAmazonFileName());
+        mail.setAmazonFilePath(priorMail.getAmazonFilePath());
 
         if(contentBean != null)
             return new ForwardResolution(CreateMailTemplateAction.class, "createMailTemplate");
 
-        String amazonHtmlPath = mail.getAmazonFileName();
+        String amazonHtmlPath = mail.getAmazonFilePath();
         String htmlKey = amazonHtmlPath.replaceAll("(.*\\.s3\\.amazonaws\\.com/)", "");
         File htmlFile = new File(adminUploadsPath + "/emailContentFiles/emailer.html");
         try {

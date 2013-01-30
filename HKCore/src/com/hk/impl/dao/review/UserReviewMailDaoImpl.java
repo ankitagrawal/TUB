@@ -21,7 +21,7 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
         return findByNamedParams("from UserReviewMail urm where date(urm.dueDate) <= :date AND urm.isMailSent = false", new String[]{"date"}, new Object[]{date});
     }
 
-    public UserReviewMail getByOrder(Order order){
+    public UserReviewMail getUserReviewMailByOrder(Order order){
         List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.baseOrder = :order ORDER BY urm.updateDt DESC", new String[]{"order"}, new Object[]{order});
         if(result !=  null && result.size()>0){
             return result.get(0);

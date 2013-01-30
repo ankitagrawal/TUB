@@ -2,8 +2,6 @@ package com.hk.domain.review;
 // Generated Jan 7, 2013 2:53:10 PM by Hibernate Tools 3.2.4.CR1
 
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 
 
@@ -29,8 +27,8 @@ public class Mail  implements java.io.Serializable {
     @Column(name="content")
     private String content;
 
-    @Column(name = "amazon_file_name")
-    private String amazonFileName;
+    @Column(name = "amazon_file_path")
+    private String amazonFilePath;
 
     @Column(name = "subject")
     private String subject;
@@ -58,12 +56,12 @@ public class Mail  implements java.io.Serializable {
         this.content = content;
     }
 
-    public String getAmazonFileName() {
-        return amazonFileName;
+    public String getAmazonFilePath() {
+        return amazonFilePath;
     }
 
-    public void setAmazonFileName(String amazonFileName) {
-        this.amazonFileName = amazonFileName;
+    public void setAmazonFilePath(String amazonFileName) {
+        this.amazonFilePath = amazonFileName;
     }
 
     public String getSubject() {

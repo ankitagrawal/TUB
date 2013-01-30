@@ -47,7 +47,7 @@ public class ReviewMailSettingsAction extends BaseAction {
 
    @ValidateNestedProperties( {
             @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "daysToReviewAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
     })

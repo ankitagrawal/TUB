@@ -44,8 +44,8 @@ public class ProductReviewMail  implements java.io.Serializable {
     private Long timeWindowDays;
 
 
-    @Column(name="days_to_review_again")
-    private Long daysToReviewAgain;
+    @Column(name="days_to_send_review_mail_again")
+    private Long daysToSendReviewMailAgain;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="create_dt", length=19)
@@ -93,12 +93,12 @@ public class ProductReviewMail  implements java.io.Serializable {
     public void setTimeWindowDays(Long timeWindowDays) {
         this.timeWindowDays = timeWindowDays;
     }
-    public Long getDaysToReviewAgain() {
-        return this.daysToReviewAgain;
+    public Long getDaysToSendReviewMailAgain() {
+        return this.daysToSendReviewMailAgain;
     }
 
-    public void setDaysToReviewAgain(Long daysToReviewAgain) {
-        this.daysToReviewAgain = daysToReviewAgain;
+    public void setDaysToSendReviewMailAgain(Long daysToReviewAgain) {
+        this.daysToSendReviewMailAgain = daysToReviewAgain;
     }
     public Date getCreateDt() {
         return this.createDt;
@@ -131,16 +131,8 @@ public class ProductReviewMail  implements java.io.Serializable {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
     public boolean getIsEnabled() {
         return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
     }
 
     public void setIsEnabled(boolean enabled){
