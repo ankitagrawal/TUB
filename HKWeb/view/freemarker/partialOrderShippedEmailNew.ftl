@@ -114,7 +114,7 @@ Some items of your order ${order.gatewayOrderId} have been shipped.
 
 
             You will get a separate email when these items ship. In case you have any queries, feel free to chat with
-            our Customer Care or call them at 0124-4502930 .<br/>
+            our Customer Care or call them at 0124-4616444 .<br/>
             <br/>
 
 
@@ -154,7 +154,7 @@ Some items of your order ${order.gatewayOrderId} have been shipped.
                   href="http://twitter.com/healthkart"><img src="http://img.healthkart.com/email/logos/twitter.png"
                                                             alt="twitter" width="32" height="32" border="0"/></a></td>
           <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
-                  href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: 0124-4502930
+                  href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: 0124-4616444
           </td>
         </tr>
       </table>

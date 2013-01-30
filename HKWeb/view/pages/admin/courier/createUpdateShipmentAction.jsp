@@ -41,10 +41,10 @@
                         alert("Box Size can't be Migrate");
                         return false;
                     }
-                    else if(parseFloat(boxWeight)< minWeight || parseFloat(boxWeight) > maxWeight){
-                        alert("Box Weight is Out of Range");
-                        return false;
-                    }
+//                    else if(parseFloat(boxWeight)< minWeight || parseFloat(boxWeight) > maxWeight){
+//                        alert("Box Weight is Out of Range");
+//                        return false;
+//                    }
                     else if(picker == "" || packer == "" || picker == null || packer == null){
                         alert("You must select a Picker and Packer!!");
                         return false;

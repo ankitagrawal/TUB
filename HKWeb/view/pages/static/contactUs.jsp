@@ -11,7 +11,7 @@
 
   <s:layout-component name="htmlHead">
     <meta name="Keywords" content="Customer care HealthKart.com"/>
-    <meta name="Description" content="Call: 0124-4502930, Email: info@healthkart.com - Available 7 days a week from 9am to 9pm"/>
+    <meta name="Description" content="Call: 0124-4616444, Email: info@healthkart.com - Available 7 days a week from 9am to 9pm"/>
   </s:layout-component>
 
   <s:layout-component name="left_col">
@@ -61,7 +61,7 @@
 
       <h2>Call Us</h2>
 
-      <p style="font-size: 1.2em;">0124-4502930 (24x7)</p>
+      <p style="font-size: 1.2em;">0124-4616444 (24x7)</p>
 
       <br/>
 
