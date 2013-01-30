@@ -15,7 +15,9 @@ import com.hk.api.pact.service.HKAPIOrderService;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.api.HkApiUser;
 import com.hk.domain.builder.CartLineItemBuilder;
+import com.hk.domain.core.Country;
 import com.hk.domain.core.Pincode;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.store.StoreService;
@@ -73,7 +75,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     @Autowired
     OrderService          orderService;
     @Autowired
-    AddressService        addressDao;
+    AddressDao            addressDao;
     @Autowired
     PaymentModeDao        paymentModeDao;
     @Autowired
@@ -92,6 +94,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     PincodeService pincodeService;
     @Autowired
     StoreService storeService;
+
+    public static final Long INDIA_COUNTRY_ID=80L;
 
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
@@ -146,6 +150,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         address.setPhone(hkapiAddressDTO.getPhone());
         address.setCity(hkapiAddressDTO.getCity());
         address.setUser(hkUser);
+        address.setCountry(addressDao.getCountry(INDIA_COUNTRY_ID));
         return getAddressDao().save(address);
     }
 
@@ -161,7 +166,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     public Set<CartLineItem> addCartLineItems(HKAPIOrderDetailsDTO HKAPIOrderDetailsDTO, Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (HKAPICartLineItemDTO apiCartLineItem : HKAPIOrderDetailsDTO.getHkapiCartLineItemDTOs()) {
-            if(apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.Product.getId())){
+            if(apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.Product.getId())||apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.OrderLevelDiscount.getId())){
                 ProductVariant productVariant = getProductVariantService().getVariantById(apiCartLineItem.getProductId().trim());
                 if (productVariant != null) {
                     CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
