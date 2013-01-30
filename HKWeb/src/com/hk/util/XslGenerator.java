@@ -35,7 +35,6 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.hkDelivery.Consignment;
@@ -51,38 +50,10 @@ import com.hk.util.io.HkXlsWriter;
 @Component
 public class XslGenerator {
 
-	private static Logger         logger             = Logger.getLogger(XslGenerator.class);
-
-	public static final String    ID                 = "ID";
-	public static final String    PINCODE            = "PINCODE";
-	public static final String    IS_PREFERRED       = "IS_PREFERRED";
-	public static final String    IS_PREFERRED_COD   = "IS_PREFERRED_COD";
-	public static final String    ROUTING_CODE       = "ROUTING_CODE";
-	public static final String    COD_AVAILABLE      = "COD_AVAILABLE";
-	public static final String    COURIER_ID         = "COURIER_ID";
-	public static final String    IS_DELETED         = "IS_DELETED";
-	public static final String    CITY               = "CITY";
-	public static final String    STATE              = "STATE";
-	public static final String    LOCALITY           = "LOCALITY";
-	public static final String    DEFAULT_COURIER_ID = "DEFAULT_COURIER_ID";
-	public static final String    ZONE               = "ZONE";
-
-	public static final String WAREHOUSE             = "WAREHOUSE";
-	public static final String COD_COURIER_ID        = "COD_COURIER_ID";
-	public static final String TECH_PROCESS_COURIER_ID = "TECH_PROCESS_COURIER_ID";
-//	public static final String ESTIMATED_SHIPPING_COST_COD = "ESTIMATED_SHIPPING_COST_COD";
-    public static final String ESTIMATED_SHIPPING_COST     =        "ESTIMATED_SHIPPING_COST";
-    public static final String    GROUND_SHIPPING_AVAILABLE      = "GROUND_SHIPPING_AVAILABLE";
-    public static final String    COD_ON_GROUND_SHIPPING         = "COD_ON_GROUND_SHIPPING";
-
-	@Autowired
-	private CourierService courierService;
 	@Autowired
 	private InventoryService      inventoryService;
 	@Autowired
 	private AdminInventoryService adminInventoryService;
-	/* @Autowired
-	private SkuService                    skuService;*/
 
 	private Map<String, Integer>  headerMap          = new HashMap<String, Integer>();
 
@@ -311,95 +282,6 @@ public class XslGenerator {
 		return file;
 	}
 
-	public File generateCouerierServiceInfoXsl(List<CourierServiceInfo> courierServiceInfoList, String xslFilePath) throws Exception {
-        
-		 File file = new File(xslFilePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream out = new FileOutputStream(file);
-        Workbook wb = new HSSFWorkbook();
-
-        CellStyle style = wb.createCellStyle();
-        Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 12);
-        font.setColor(Font.COLOR_NORMAL);
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        style.setFont(font);
-        Sheet sheet1 = wb.createSheet("CourierServiceInfo");
-        Row row = sheet1.createRow(0);
-        row.setHeightInPoints((short) 25);
-
-        int totalColumnNo = 10;
-
-        Cell cell;
-        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-            cell = row.createCell(columnNo);
-            cell.setCellStyle(style);
-        }
-        setCellValue(row, 0, PINCODE);
-        setCellValue(row, 1, COURIER_ID);
-        setCellValue(row, 2, COD_AVAILABLE);
-        setCellValue(row, 3, IS_PREFERRED);
-        setCellValue(row, 4, IS_PREFERRED_COD);
-        setCellValue(row, 5, ROUTING_CODE);
-        setCellValue(row, 6, IS_DELETED);
-        setCellValue(row, 7, GROUND_SHIPPING_AVAILABLE);
-        setCellValue(row, 8, COD_ON_GROUND_SHIPPING);
-
-        int initialRowNo = 1;
-        for (CourierServiceInfo courierServiceInfo : courierServiceInfoList) {
-
-            row = sheet1.createRow(initialRowNo);
-            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-                row.createCell(columnNo);
-            }
-
-            Pincode pincode = courierServiceInfo.getPincode();
-            setCellValue(row, 0, pincode.getPincode());
-            setCellValue(row, 1, courierServiceInfo.getCourier().getId());
-            setCellValue(row, 2, courierServiceInfo.isCodAvailable() ? "Y" : "N");
-            setCellValue(row, 3, courierServiceInfo.isPreferred() ? "Y" : "N");
-            setCellValue(row, 4, courierServiceInfo.isPreferredCod() ? "Y" : "N");
-            setCellValue(row, 5, courierServiceInfo.getRoutingCode());
-            setCellValue(row, 6, courierServiceInfo.isDeleted() ? "Y" : "N");
-            setCellValue(row, 7, courierServiceInfo.isGroundShippingAvailable() ? "Y" : "N");
-            setCellValue(row, 8, courierServiceInfo.isCodAvailableOnGroundShipping() ? "Y" : "N");
-
-            initialRowNo++;
-
-        }
-
-        Sheet sheet2 = wb.createSheet("Courier IDs");
-        row = sheet2.createRow(0);
-        row.setHeightInPoints((short) 25);
-
-        int totalColumnNo2 = 2;
-
-        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-            cell = row.createCell(columnNo);
-            cell.setCellStyle(style);
-        }
-        setCellValue(row, 0, "Courier");
-        setCellValue(row, 1, "ID");
-
-        int initialRowNo2 = 1;
-        List<Courier> courierList = courierService.getAllCouriers();
-        for (Courier courier : courierList) {
-            row = sheet2.createRow(initialRowNo2);
-            for (int columnNo = 0; columnNo < totalColumnNo2; columnNo++) {
-                row.createCell(columnNo);
-            }
-
-            setCellValue(row, 0, courier.getName());
-            setCellValue(row, 1, courier.getId());
-
-            initialRowNo2++;
-        }
-
-        wb.write(out);
-        out.close();
-        return file;
-	}
-
 	public File generateGRNXsl(GoodsReceivedNote goodsReceivedNote, String xslFilePath) throws Exception {
 		AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
 		File file = new File(xslFilePath);
@@ -458,121 +340,6 @@ public class XslGenerator {
 		wb.write(out);
 		out.close();
 		return file;
-	}
-
-	public File generatePincodeXsl(List<Pincode> pincodeList, String xslFilePath) throws Exception {
-
-		File file = new File(xslFilePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream out = new FileOutputStream(file);
-		Workbook wb = new HSSFWorkbook();
-
-		CellStyle style = wb.createCellStyle();
-		Font font = wb.createFont();
-		font.setFontHeightInPoints((short) 12);
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		style.setFont(font);
-		Sheet sheet1 = wb.createSheet("PincodeInfo");
-		Row row = sheet1.createRow(0);
-		row.setHeightInPoints((short) 25);
-
-		int totalColumnNo = 7;
-
-		Cell cell;
-		for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-			cell = row.createCell(columnNo);
-			cell.setCellStyle(style);
-		}
-		setCellValue(row, 0, ID);
-		setCellValue(row, 1, PINCODE);
-		setCellValue(row, 2, CITY);
-		setCellValue(row, 3, STATE);
-		setCellValue(row, 4, LOCALITY);
-		setCellValue(row, 5, DEFAULT_COURIER_ID);
-		setCellValue(row, 6, ZONE);
-
-		int initialRowNo = 1;
-		for (Pincode pincode : pincodeList) {
-
-			row = sheet1.createRow(initialRowNo);
-			for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-				row.createCell(columnNo);
-			}
-
-			setCellValue(row, 0, pincode.getId());
-			setCellValue(row, 1, pincode.getPincode());
-			setCellValue(row, 2, pincode.getCity().getName());
-			setCellValue(row, 3, pincode.getState().getName());
-			setCellValue(row, 4, pincode.getLocality());
-			setCellValue(row, 5, pincode.getDefaultCourier() != null ? pincode.getDefaultCourier().getId() : null);
-			if(pincode.getZone() != null){
-				setCellValue(row, 6, pincode.getZone().getName());
-			}
-			initialRowNo++;
-		}
-
-		wb.write(out);
-		out.close();
-		return file;
-	}
-
-	public File generatePincodeDefaultCourierXsl(List<PincodeDefaultCourier> pincodeDefaultCourierList, String xslFilePath) throws Exception {
-       File file = new File(xslFilePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream out = new FileOutputStream(file);
-        Workbook wb = new HSSFWorkbook();
-
-        CellStyle style = wb.createCellStyle();
-        Font font = wb.createFont();
-        font.setFontHeightInPoints((short) 12);
-        font.setColor(Font.COLOR_NORMAL);
-        font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        style.setFont(font);
-        Sheet sheet1 = wb.createSheet(XslConstants.DEFAULT_COURIER_SHEET);
-        Row row = sheet1.createRow(0);
-        row.setHeightInPoints((short) 25);
-
-        int totalColumnNo = 8;
-
-        Cell cell;
-        for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-            cell = row.createCell(columnNo);
-            cell.setCellStyle(style);
-        }
-        setCellValue(row, 0, PINCODE);
-        setCellValue(row, 1, WAREHOUSE);
-        setCellValue(row, 2, COURIER_ID);
-        setCellValue(row, 3, COD_AVAILABLE);
-        setCellValue(row, 4, GROUND_SHIPPING_AVAILABLE);
-        setCellValue(row, 5, ESTIMATED_SHIPPING_COST);
-
-        int initialRowNo = 1;
-        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCourierList) {
-
-            row = sheet1.createRow(initialRowNo);
-            for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
-                row.createCell(columnNo);
-            }
-
-            setCellValue(row, 0, pincodeDefaultCourier.getPincode().getPincode());
-            setCellValue(row, 1, pincodeDefaultCourier.getWarehouse().getId());
-            if(pincodeDefaultCourier.getCourier() != null){
-                setCellValue(row, 2, pincodeDefaultCourier.getCourier().getId());
-            }
-            else{
-                setCellValue(row, 2, -1L);
-            }
-            setCellValue(row, 3, pincodeDefaultCourier.isCod() ? "Y" : "N"  );
-            setCellValue(row, 4, pincodeDefaultCourier.isGroundShipping() ? "Y" : "N" );
-            setCellValue(row, 5, pincodeDefaultCourier.getEstimatedShippingCost());
-
-            initialRowNo++;
-        }
-
-        wb.write(out);
-        out.close();
-        return file;
 	}
 
 	public File generateGRNListExcel(File xlsFile, List<GoodsReceivedNote> grnList) {
@@ -818,7 +585,6 @@ public class XslGenerator {
 		return excelFile;
 
 	}
-
 
 	public File generateHKDPaymentReconciliationXls(String xslFilePath, HkdeliveryPaymentReconciliation hkdPaymentReconciliation) throws IOException {
 		File file = new File(xslFilePath);

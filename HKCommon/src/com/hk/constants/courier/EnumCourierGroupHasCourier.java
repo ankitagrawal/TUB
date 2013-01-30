@@ -20,8 +20,7 @@ public enum EnumCourierGroupHasCourier {
     Bluedart(
             EnumCourierGroup.Bluedart,
             Arrays.asList(
-                    EnumCourier.BlueDart,
-                    EnumCourier.BlueDart_COD
+                    EnumCourier.BlueDart
             )
     ),
 

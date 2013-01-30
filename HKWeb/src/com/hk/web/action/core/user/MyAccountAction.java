@@ -1,10 +1,6 @@
 package com.hk.web.action.core.user;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +27,10 @@ import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.RoleService;
 
+import java.util.List;
+
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class MyAccountAction extends BaseAction {
   private static Logger logger = LoggerFactory.getLogger(MyAccountAction.class);
 
@@ -39,6 +38,7 @@ public class MyAccountAction extends BaseAction {
   Affiliate affiliate;
   Address affiliateDefaultAddress;
   B2bUserDetails b2bUserDetails;
+  List<Address> addresses;
 
   String oldPassword;
   String newPassword;
@@ -65,6 +65,7 @@ public class MyAccountAction extends BaseAction {
     if (getPrincipal() != null) {
       user = getUserService().getUserById(getPrincipal().getId());
       affiliate = affiliateDao.getAffilateByUser(user);
+      addresses = addressDao.getVisibleAddresses(user);
       if (affiliate != null && affiliate.getMainAddressId() != null) {
         affiliateDefaultAddress = addressDao.get(Address.class,affiliate.getMainAddressId());
       }
@@ -173,5 +174,13 @@ public class MyAccountAction extends BaseAction {
 
   public void setAffiliateDefaultAddress(Address affiliateDefaultAddress) {
     this.affiliateDefaultAddress = affiliateDefaultAddress;
+  }
+
+  public List<Address> getAddresses() {
+    return addresses;
+  }
+
+  public void setAddresses(List<Address> addresses) {
+    this.addresses = addresses;
   }
 }

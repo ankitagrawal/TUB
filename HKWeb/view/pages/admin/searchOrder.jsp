@@ -22,10 +22,10 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-
+        <%--
     <%--
-    Confirm cod order
-    --%>
+        Confirm cod order
+        --%>
       $('.confirmCodLink').click(function() {
         var proceed = confirm('Are you sure?');
         if (!proceed) return false;
@@ -410,32 +410,12 @@
           ${order.address.line1}<br/>
           ${order.address.line2}<br/>
           ${order.address.city} -
-        <a href="http://www.dtdc.in/subpages/services/location_search.asp?pin=${order.address.pin}" target="_blank">
-            ${order.address.pin}
+        <a href="http://www.dtdc.in/subpages/services/location_search.asp?pin=${order.address.pincode.pincode}" target="_blank">
+            ${order.address.pincode.pincode}
         </a><br/>
           ${order.address.state}<br/>
         Ph: ${order.address.phone}<br/>
-        Default Courier:
-        <c:choose>
-          <c:when test="${order.address.courier != null}">
-            <span class="addressDefaultCourier">${order.address.courier.name}</span>
-          </c:when>
-          <c:otherwise>
-            <span class="addressDefaultCourier">Not Set</span>
-          </c:otherwise>
-        </c:choose>
         <br/>
-        <s:form beanclass="com.hk.web.action.HomeAction" autocomplete="false">
-          <s:select name="" value="${order.address.courier != null ? order.address.courier.id : '0'}" class="courierId">
-            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierList" value="id"
-                                       label="name"/>
-          </s:select>
-        </s:form>
-        <s:link
-            beanclass="com.hk.web.action.admin.courier.SetDefaultCourierAction" event="pre" class="setAsDefaultCourierLink">
-          Set as default
-          <s:param name="address" value="${order.address.id}"/>
-        </s:link>
       </td>
     </tr>
 
@@ -445,6 +425,7 @@
           <img src="<hk:vhostImage/>/images/admin/icon_edit_add.png" alt="Change Address"
                title="Change Address"/> Change Address
           <s:param name="order" value="${order.id}"/>
+          <s:param name="address" value="${order.address}"/>
         </s:link></td>
       </tr>
     </c:if>

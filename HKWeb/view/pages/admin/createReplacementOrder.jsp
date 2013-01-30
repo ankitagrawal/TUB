@@ -102,7 +102,7 @@
                         <td>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.city}<br/>
                                 ${replacementOrderBean.shippingOrder.baseOrder.address.state}-
-                            (${replacementOrderBean.shippingOrder.baseOrder.address.pin})<br/>
+                            (${replacementOrderBean.shippingOrder.baseOrder.address.pincode.pincode})<br/>
                             Ph: ${replacementOrderBean.shippingOrder.baseOrder.address.phone}
                         </td>
                     </tr>
@@ -164,7 +164,9 @@
 
                             <tr>
                                 <td>${lineItemCtr.count}</td>
-                                <td>${lineItem.cartLineItem.productVariant.product.name}</td>
+                                <td>${lineItem.cartLineItem.productVariant.product.name}<br/>
+                                Variant: ${lineItem.cartLineItem.productVariant.id}
+                                </td>
                                 <td>${lineItem.qty}</td>
                                 <td>
                                     <s:hidden name="lineItems[${lineItemCtr.index}].qty" value="${lineItem.qty}"/>
@@ -216,7 +218,8 @@
                             <tr>
                                 <td>${lineItemCtr.count}</td>
                                 <td>
-                                        ${lineItem.cartLineItem.productVariant.product.name}
+                                        ${lineItem.cartLineItem.productVariant.product.name}  <br/>
+	                                Variant: ${lineItem.cartLineItem.productVariant.id}
                                 </td>
                                 <td>${lineItem.qty}</td>
                                 <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>

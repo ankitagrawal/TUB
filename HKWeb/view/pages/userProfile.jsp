@@ -25,7 +25,7 @@
   %>
   <c:set var="productVariants" value="<%=userProfileService.getRecentlyOrderedProductVariantsForUser(maa.getUser())%>"/>
   <c:set var="recentOrders" value="<%=userProfileService.getOrdersForUserSortedByDate(maa.getUser())%>"/>
-  <c:set var="addresses" value="${maa.user.addresses}"/>
+  <c:set var="addresses" value="${maa.addresses}"/>
 
   <fieldset>
     <c:if test="${!empty productVariants}">
@@ -235,7 +235,7 @@
 
             <p>${address.city}</p>
 
-            <p>${address.state} ${address.pin}</p>
+            <p>${address.state} ${address.pincode.pincode}</p>
 
             <p>Phone: ${address.phone}</p>
           </div>

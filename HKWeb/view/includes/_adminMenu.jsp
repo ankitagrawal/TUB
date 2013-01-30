@@ -27,9 +27,12 @@
      </c:otherwise>
     </c:choose>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search Base Orders</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">Search BO</s:link></li>
     <li class='lvl1 menuItem' title="">
-      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search Shipping Orders</s:link></li>
+      <s:link class="invert" beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction">Search SO</s:link></li>
+      <li class='lvl1 menuItem' title="">
+          <a href="${pageContext.request.contextPath}/pages/admin/courier/courierAdminHome.jsp">OPS</a>
+      </li>
     <li class='lvl1 menuItem' title="">
       <s:link class="invert" beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></li>
       <li class='lvl1 menuItem' title="">
@@ -43,7 +46,7 @@
 </div>
  <c:if test="${whAction.setWarehouse != null}">
   <div align="center" class="prom yellow help" style="height:30px; font-size:20px; color:red; font-weight:bold;">
-    ATTENTION: Selected Warehouse -> ${whAction.setWarehouse.city}
+    ATTENTION: Selected Warehouse -> ${whAction.setWarehouse.name}
   </div>
  </c:if>
 <div class="right">

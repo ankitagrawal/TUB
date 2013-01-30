@@ -36,6 +36,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -130,6 +131,8 @@ public class EmailManager {
     private String              hkNoReplyName;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+	private String              logisticsOpsEmails;
 
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
@@ -756,6 +759,15 @@ public class EmailManager {
 
     }
 
+    public void sendCallbackRequestEmail(DiscountCouponMailingList dcml) {
+          HashMap valuesMap = new HashMap();
+          valuesMap.put("dcml", dcml);
+  
+          Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
+          emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "umang.mehta@healthkart.com", "Callback Request - "+dcml.getCategory());
+          emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Callback Request - "+dcml.getCategory());
+      }
+
     public void sendCodConverterMail(Order order) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
@@ -812,6 +824,16 @@ public class EmailManager {
             }
         }
         return emailRecepients;
+    }
+
+
+
+    public boolean sendEscalationToDropShipEmail(ShippingOrder shippingOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("shippingOrder", shippingOrder);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.dropShipEscalationEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsOpsEmails,
+                EmailTemplateConstants.operationsTeam);
     }
 
     /*

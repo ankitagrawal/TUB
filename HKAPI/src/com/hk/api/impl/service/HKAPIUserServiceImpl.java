@@ -6,11 +6,15 @@ import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.domain.api.HkApiUser;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
+import com.hk.dto.user.UserLoginDto;
+import com.hk.exception.HealthkartLoginException;
 import com.hk.exception.HealthkartSignupException;
 import com.hk.manager.UserManager;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.security.HkAuthService;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,8 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.api.dto.user.HKAPIUserDTO;
 import com.hk.api.pact.service.HKAPIUserService;
+
+import java.util.Date;
 
 
 /**
@@ -56,6 +62,20 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         }
     }
 
+    public HKAPIBaseDTO authenticate(String loginEmail, String password){
+        try{
+            UserLoginDto userLoginDto= userManager.login(loginEmail, password, false);
+            HKAPIUserDTO userDTO=new HKAPIUserDTO();
+            userDTO.setEmail(userLoginDto.getLoggedUser().getEmail());
+            userDTO.setName(userLoginDto.getLoggedUser().getName());
+            HKAPIBaseDTO responseDTO=new HKAPIBaseDTO();
+            responseDTO.setData(userDTO);
+            return responseDTO;
+        }catch (HealthkartLoginException e){
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.InvalidUserCredentials);
+        }
+    }
+
     public User getHKUser(User user){
         if (userExists(user)) {
             return getUser(user);
@@ -85,12 +105,18 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
     public HKAPIBaseDTO awardRewardPoints(String userAccessToken, Double rewardPoints){
         User user=hkAuthService.getUserFromAccessToken(userAccessToken);
         HkApiUser hkApiUser=hkAuthService.getApiUserFromUserAccessToken(userAccessToken);
-        //TODO allow this only for hkplus - but there is no way out here right now other than hardcoding the logic for "HealthkartPlus"
-        // as name of HkApiUser - which I am not sure as of now
-         rewardPointService.addRewardPoints(null,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
+        //TODO allow this only for hkplus - hardcoded here - probably add an is allowed to add reward points at  the db level- which inturn needs a different reward point mode
+        // probably add a column in the hk_api_user table for reward point allocation
+        if(hkApiUser.getApiKey().equals("healthkartplus")){
 
-        HKAPIBaseDTO hkapiBaseDTO =new HKAPIBaseDTO();
-        return hkapiBaseDTO;
+            RewardPoint rewardPoint=rewardPointService.addRewardPoints(user,null,null,rewardPoints,hkApiUser.getName(), EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKPLUS_POINTS.asRewardPointMode());
+            rewardPointService.createRewardPointTxnForApprovedRewardPoints(rewardPoint, new DateTime().plusMonths(3).toDate());
+
+            return new HKAPIBaseDTO();
+        }
+        else{
+            return new HKAPIBaseDTO(EnumHKAPIErrorCode.Unauthorized);
+        }
     }
 
     public HKAPIBaseDTO getUserRewardPointDetails(String userAccessToken){
@@ -111,8 +137,8 @@ public class HKAPIUserServiceImpl implements HKAPIUserService {
         try{
             user=userManager.signup(userDetail.getEmail(),userDetail.getName(), userDetail.getPassword(), null);
         } catch (HealthkartSignupException e){
-             baseDTO.setErrorCode(EnumHKAPIErrorCode.UserAlreadyExists.getId());
-             baseDTO.setMessage(EnumHKAPIErrorCode.UserAlreadyExists.getMessage());
+            baseDTO.setErrorCode(EnumHKAPIErrorCode.UserAlreadyExists.getId());
+            baseDTO.setMessage(EnumHKAPIErrorCode.UserAlreadyExists.getMessage());
             baseDTO.setStatus(HKAPIOperationStatus.ERROR);
         }
         return baseDTO;

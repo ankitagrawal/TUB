@@ -193,7 +193,7 @@ ORDER INVOICE <c:choose>
             </p>
 
             <p>
-                ${address.city} - ${address.pin}
+                ${address.city} - ${address.pincode.pincode}
                 <c:if test="${orderSummary.routingCode != null && orderSummary.routingCode != ''}">
                     <s:label name="routingCode"
                              style="font-size:1.2em; font-weight:bold;">&nbsp; &nbsp;${orderSummary.routingCode}</s:label>
@@ -477,7 +477,7 @@ ORDER INVOICE <c:choose>
     </table>
 
   <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4551666</h6>
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4616444</h6>
    </c:if>
 
 

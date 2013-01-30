@@ -99,7 +99,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                         <br/>
 
                         If you have any questions, you can chat online with our Customer Care or call them at
-                        0124-4551666 . We will send another email once your order ships.<br/>
+                        0124-4616444 . We will send another email once your order ships.<br/>
                         <br/>
 
 
@@ -143,7 +143,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                     <td align="right" valign="middle"
                         style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
                             href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-                        &nbsp;t: 0124-4551666
+                        &nbsp;t: 0124-4616444
                     </td>
                 </tr>
             </table>

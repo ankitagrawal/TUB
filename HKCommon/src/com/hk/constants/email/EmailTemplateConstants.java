@@ -44,7 +44,9 @@ public class EmailTemplateConstants {
 	public static final String dailyGoogleBannedWordReport = "/dailyGoogleBannedWordReport.ftl";
 	public static final String grnEmail = "/grnEmail.ftl";
 	public static final String awbStatusEmail = "/awbStatusEmail.ftl";
+	public static final String courierShipmentFail = "/courierShipmentFail.ftl";
 	public static final String paymentFailEmail = "/paymentFailEmail.ftl";
+  public static final String callbackRequestEmail = "/callbackRequestEmail.ftl";
 	public static final String codConverterEmail = "/codConverterEmail.ftl";
 	public static final String sixHourlyCategorySalesReport = "/sixHourlyCategorySalesReport.ftl";
 	public static final String courierCollerctionPostUpdationEmail = "/courierCollerctionPostUpdationEmail.ftl";
@@ -60,4 +62,5 @@ public class EmailTemplateConstants {
     public static final String orderInstalledEmail     = "/orderInstalledEmail.ftl";	
 	public static final String operationsTeam = "Operations Team";
 	public static final String poApprovedByWrongPerson = "/poApprovedByWrongPerson.ftl";
+    public static final String dropShipEscalationEmail = "/dropShipEscalationEmail.ftl";
 }

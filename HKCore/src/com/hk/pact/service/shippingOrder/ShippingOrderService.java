@@ -46,13 +46,11 @@ public interface ShippingOrderService {
 	 */
 	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
 
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
-
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 
-	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
 
-    public ShippingOrder escalateShippingOrderFromActionTODropQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
+	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
 	/**
 	 * Creates a shipping order with basic details
@@ -78,8 +76,6 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
-	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
-
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);   
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
 
 }

@@ -115,7 +115,7 @@
       </h3>
     </div>
   </div>
-  <c:if test="${orderSummary.order.store.id != 3}">
+  <%--<c:if test="${orderSummary.order.store.id != 3}">
   <div class="grid_4 alpha omega" style="width: 320px;">
     <div class="formatting" style="float: right;">
       <div
@@ -137,7 +137,7 @@
       </div>
     </div>
   </div>
-  </c:if>
+  </c:if>--%>
 </div>
 
 <div class="clear"></div>
@@ -157,7 +157,7 @@
         </c:if>
       </p>
 
-      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pin}</p>
+      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}</p>
 
       <p>${orderSummary.order.address.state}</p>
 

@@ -81,7 +81,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                         <br/>
                         <br/>
 
-                        If you have any questions, you can chat online with our Customer Care or call them at 0124-4551666.<br/>
+                        If you have any questions, you can chat online with our Customer Care or call them at 0124-4616444.<br/>
                         <br/>
 
 
@@ -112,7 +112,7 @@ ${subscription.address.line1}<br/>
 <#if subscription.address.line2??>
 ${subscription.address.line2}<br/>
 </#if>
-${subscription.address.city} - ${subscription.address.pin}<br/>
+${subscription.address.city} - ${subscription.address.pincode.pincode}<br/>
 ${subscription.address.state} (India)<br/>
     Ph: ${subscription.address.phone}<br/>
 </p>

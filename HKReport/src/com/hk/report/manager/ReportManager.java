@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -399,7 +400,7 @@ public class ReportManager {
                 setCellValue(row, 6, "");
                 setCellValue(row, 7, "");
                 setCellValue(row, 8, address.getCity());
-                setCellValue(row, 9, address.getPin());
+                setCellValue(row, 9, address.getPincode().getPincode());
                 setCellValue(row, 10, address.getPhone());
                 setCellValue(row, 11, address.getPhone());
 
@@ -566,7 +567,7 @@ public class ReportManager {
                 setCellValue(row, 5, address.getLine2());
             }
             setCellValue(row, 6, address.getCity() + "/" + address.getState());
-            setCellValue(row, 7, address.getPin());
+            setCellValue(row, 7, address.getPincode());
             setCellValue(row, 8, address.getPhone());
             setCellValue(row, 9, address.getPhone());
 
@@ -963,7 +964,7 @@ public class ReportManager {
             xlsWriter.addCell(rowCounter, shipment.getShipDate().toString());
             xlsWriter.addCell(rowCounter, shipment.getDeliveryDate().toString());
             xlsWriter.addCell(rowCounter, order.getAddress().getCity());
-            xlsWriter.addCell(rowCounter, order.getAddress().getPin());
+            xlsWriter.addCell(rowCounter, order.getAddress().getPincode().getPincode());
             ship_date_cal.setTime(shipment.getShipDate());
             delivery_date_cal.setTime(shipment.getDeliveryDate());
             ship_date_cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -1254,7 +1255,7 @@ public class ReportManager {
 
     }
 
-    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate) throws Exception {
+    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted) throws Exception {
 
         // return null;
         File file = new File(xlsFilePath);
@@ -1291,7 +1292,7 @@ public class ReportManager {
 
         int rowCounter = 1;
 
-        List<NotifyMe> notifyMeList = getNotifyMeDao().getNotifyMeListBetweenDate(startDate, endDate);
+        List<NotifyMe> notifyMeList = getNotifyMeDao().searchNotifyMe(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted);
 
         // System.out.println("notifyMeList: " + notifyMeList.size());
         for (NotifyMe notifyMe : notifyMeList) {

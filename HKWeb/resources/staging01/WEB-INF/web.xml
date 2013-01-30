@@ -247,6 +247,7 @@
 		<url-pattern>/online-shopping-festival/beauty</url-pattern>
 		<url-pattern>/online-shopping-festival</url-pattern>
 		<url-pattern>/feedback</url-pattern>
+        <url-pattern>/clearance-sale</url-pattern>
 	</servlet-mapping>
 
 
@@ -302,6 +303,7 @@
 		<url-pattern>/</url-pattern>
 	</filter-mapping>
 
+<!--
 	  <filter>
 		<filter-name>CampaignTrackingFilter</filter-name>
 		<filter-class>
@@ -327,6 +329,7 @@
         <url-pattern>*.jsp</url-pattern>
         <url-pattern>/</url-pattern>
     </filter-mapping>
+-->
 
 	<filter>
 		<filter-name>ServiceCityFilter</filter-name>
