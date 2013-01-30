@@ -2,6 +2,9 @@ package com.hk.domain.cycleCount;
 
 import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +27,16 @@ public class CycleCount implements java.io.Serializable {
 	private Long id;
 
 	@OneToOne
-	@JoinColumn(name = "brands_to_audit_id", unique = true, nullable = false)
+	@JoinColumn(name = "brands_to_audit_id", unique = true)
 	private BrandsToAudit brandsToAudit;
+
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
+
+	@ManyToOne
+	@JoinColumn(name = "product_variant_id")
+	private ProductVariant productVariant;
 
 
 	@ManyToOne
@@ -110,5 +121,19 @@ public class CycleCount implements java.io.Serializable {
 		this.cycleCountItems = cycleCountItems;
 	}
 
+	public Product getProduct() {
+		return product;
+	}
 
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public ProductVariant getProductVariant() {
+		return productVariant;
+	}
+
+	public void setProductVariant(ProductVariant productVariant) {
+		this.productVariant = productVariant;
+	}
 }

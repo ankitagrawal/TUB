@@ -16,7 +16,7 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
-		<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
+		<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="view">
 			Create New Cycle Count
 		</s:link>
 		<fieldset class="right_label">

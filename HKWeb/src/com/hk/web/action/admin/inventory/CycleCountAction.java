@@ -13,10 +13,16 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.core.JSONObject;
 
 import com.hk.domain.user.User;
+import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.admin.util.helper.CycleCountHelper;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
@@ -60,6 +66,12 @@ public class CycleCountAction extends BasePaginatedAction {
 	UserService userService;
 	@Autowired
 	CycleCountHelper cycleCountHelper;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	BrandsToAuditDao brandsToAuditDao;
+	@Autowired
+	ProductVariantService productVariantService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloadsPath;
@@ -81,6 +93,8 @@ public class CycleCountAction extends BasePaginatedAction {
 	private Date endDate;
 	private Integer defaultPerPage = 20;
 	FileBean fileBean;
+	private String auditBy;
+	private Integer cycleCountType;
 
 	public Resolution directToCycleCount() {
 
@@ -94,6 +108,74 @@ public class CycleCountAction extends BasePaginatedAction {
 		return view();
 
 	}
+
+
+	public Resolution createCycleCount() {
+		return new RedirectResolution("/pages/admin/createCycleCount.jsp");
+	}
+
+
+	private BrandsToAudit validateBrand() {
+		BrandsToAudit brandsToAudit = null;
+		boolean doesBrandExist = productService.doesBrandExist(auditBy);
+		if (!doesBrandExist) {
+			message = "Invalid Brand";
+		} else {
+			List<BrandsToAudit> brandsToAuditInDb = brandsToAuditDao.getBrandsToAudit(auditBy, EnumAuditStatus.Pending.getId());
+			/* Audit entry for this brand already exists in database with status pending */
+			if (!brandsToAuditInDb.isEmpty()) {
+				message = "Brand Audit Already In progress";
+			} else {
+				brandsToAudit = new BrandsToAudit();
+				brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
+				User auditor = getPrincipalUser();
+				warehouse = auditor.getSelectedWarehouse();
+				brandsToAudit.setAuditor(auditor);
+				brandsToAudit.setWarehouse(warehouse);
+				brandsToAuditDao.save(brandsToAudit);
+				addRedirectAlertMessage(new SimpleMessage("Cycle Count Created By Brand"));
+			}
+
+
+		}
+		return brandsToAudit;
+	}
+
+
+	public Resolution saveCycleCount() {
+
+		if (cycleCountType == 1) {
+			BrandsToAudit brandsToAudit = validateBrand();
+			if (brandsToAudit == null) {
+				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+			}
+			cycleCount.setBrandsToAudit(brandsToAudit);
+		} else if (cycleCountType == 2) {
+
+			Product product = productService.getProductById(auditBy);
+			if (product == null) {
+				message = "Invalid Product Id ";
+				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+
+			}
+			cycleCount.setProduct(product);
+
+		} else {
+			ProductVariant productVariant = productVariantService.getVariantById(auditBy);
+			if (productVariant == null) {
+				message = "Invalid Product Variant Id ";
+				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+			}
+			cycleCount.setProductVariant(productVariant);
+
+		}
+
+		cycleCount.setUser(userService.getLoggedInUser());
+		cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+		cycleCount = cycleCountService.save(cycleCount);
+	    return new RedirectResolution("/pages/admin/cycleCountList.jsp");
+	}
+
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -222,7 +304,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			}
 		} else {
 			error = true;
-			message =  hkBarcode +"  ->  Invalid Hk Barcode " ;
+			message = hkBarcode + "  ->  Invalid Hk Barcode ";
 		}
 		return skuGroupListResult;
 	}
@@ -304,9 +386,9 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	//cycle count by uploading notepad.
 	public Resolution uploadCycleCountNotepad() {
-		if (fileBean == null ||(!(fileBean.getContentType().equals("text/plain")))) {
+		if (fileBean == null || (!(fileBean.getContentType().equals("text/plain")))) {
 			error = true;
-			message = "Upload notepad text file only";			
+			message = "Upload notepad text file only";
 			return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", error);
 		}
 
@@ -385,7 +467,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			}
 			if (hkBarcodeErrorsMap.size() > 0) {
 				error = true;
-				message = "";			
+				message = "";
 				for (String hkBarcode : hkBarcodeErrorsMap.keySet()) {
 					message = message + hkBarcodeErrorsMap.get(hkBarcode) + "   ,   ";
 				}
@@ -396,7 +478,7 @@ public class CycleCountAction extends BasePaginatedAction {
 		}
 		return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", error);
 	}
-	                                                                  	
+
 
 	private String getStringFromMap(Map<Long, Integer> cycleCountPVImap) {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -552,5 +634,21 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	public void setCycleCountList(List<CycleCount> cycleCountList) {
 		this.cycleCountList = cycleCountList;
+	}
+
+	public String getAuditBy() {
+		return auditBy;
+	}
+
+	public void setAuditBy(String auditBy) {
+		this.auditBy = auditBy;
+	}
+
+	public Integer getCycleCountType() {
+		return cycleCountType;
+	}
+
+	public void setCycleCountType(Integer cycleCountType) {
+		this.cycleCountType = cycleCountType;
 	}
 }
