@@ -18,12 +18,14 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
+import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
@@ -52,6 +54,9 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -757,5 +762,18 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
-
+	@Override
+	public Order findCart(User user, Store store) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.InCart.getId()));
+		criteria.add(Restrictions.eq("store.id", store.getId()));
+		
+		@SuppressWarnings("unchecked")
+		List<Order> orders = baseDao.findByCriteria(criteria);
+		if(orders != null && orders.size() > 0) {
+			return orders.iterator().next();
+		}
+		return null;
+	}
 }

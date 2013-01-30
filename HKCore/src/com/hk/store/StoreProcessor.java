@@ -15,13 +15,15 @@ public interface StoreProcessor {
 
 	void addToCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException;
 	
-	Order getOrder(Long userId);
+	Order getCart(Long userId);
+	
+	Order getOrderById(Long orderId);
 	
 	Double calculateDebitAmount(Long orderId);
 	
 	List<Address> getUserAddresses(Long userId);
 	
-	Payment makePayment(Long orderId, String remoteId);
+	Payment makePayment(Long orderId, String remoteId) throws InvalidOrderException;
 	
 	void escalateOrder(Long orderId) throws InvalidOrderException;
 	

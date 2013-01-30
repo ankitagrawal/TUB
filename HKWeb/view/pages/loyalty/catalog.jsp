@@ -15,6 +15,14 @@
 	
 <script type="text/javascript">
 	 $(document).ready(function() {
+		$('#successToolTipBtn').click(function () {
+	    	$('#successToolTip').attr('style','display: none;');
+	    });
+		
+		$('#errorToolTipBtn').click(function () {
+    		$('#errorToolTip').attr('style','display: none;');
+    	});		
+		
 		$( 'form' ).submit(function( event ) {
 			  event.preventDefault();
 			  var form = $( this );
@@ -23,16 +31,41 @@
 			    url: 'core/loyaltypg/Cart.action?addToCart',
 			    data: form.serialize(),
 			    success: function( resp ) {
-			    	$( "#" + form.context.id + ' input' ).attr('class', 'btn btn-success');
-			    	$( "#" + form.context.id + ' input' ).attr('value', 'Added to Cart »');
-			    	$( "#" + form.context.id + ' input' ).disabled = true;
+			    	if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
+			    		$( "#" + form.context.id + ' input' ).attr('class', 'btn btn-success');
+				    	$( "#" + form.context.id + ' input' ).attr('value', 'Added to Cart »');
+				    	$( "#" + form.context.id + ' input' ).disabled = true;
+				    	
+				    	$('#successToolTip').attr('style','');
+				    	$('#errorToolTip').attr('style','display: none;');
+			    	} else {
+			    		$('#successToolTip').attr('style','display: none;');
+			    		document.getElementById("errorMsg").innerHTML = resp.message;
+			    		$('#errorToolTip').attr('style','');
+			    	}
 			    }
 			  });
 			});
 	});
 </script>	
-<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />
-		<hr>
+	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />
+		<div id="successToolTip" class="row" style="display: none;">
+			<div class="span12">
+				<div class="alert alert-success">
+					<button id="successToolTipBtn" type="button" class="close">×</button>
+					<strong>Product added to Cart!&nbsp;&nbsp;&nbsp;</strong><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View your Cart</a>
+				</div>
+			</div>
+		</div>
+		<div id="errorToolTip" class="row" style="display: none;">
+			<div class="span12">
+				<div class="alert alert-error">
+					<button id="errorToolTipBtn" type="button" class="close" data-dismiss="alert">×</button>
+					<strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">xxxx</span>
+				</div>
+			</div>
+		</div>
+		
 		<p>
 		    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${lca}"/>
 		    <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${lca}"/>
@@ -49,9 +82,9 @@
 					<form method="post" action="/core/loyaltypg/Cart.action"
 						id="${lp.variant.id}-cartForm">
 						<input type="hidden" value="${lp.variant.id}"
-							name="productVariantId"> <input type="hidden" value="1"
-							name="qty"> <input type="submit" class="btn"
-							name="addToCart" value="Add to Cart »">
+							name="productVariantId"> 
+							<input type="hidden" value="1" name="qty"> 
+							<input type="submit" class="btn" name="addToCart" value="Add to Cart »">
 					</form>
 					</p>
 				</div>

@@ -9,12 +9,15 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.user.Address;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.courier.PincodeDao;
 
+@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	private List<Address> addressList = new ArrayList<Address>();
@@ -39,7 +42,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 			Pincode pin = pincodeDao.getByPincode(pincode);
 			address.setPincode(pin);
 		}
-		Long orderId = getProcessor().getOrder(getPrincipal().getId()).getId();
+		Long orderId = getProcessor().getCart(getPrincipal().getId()).getId();
 		getProcessor().setShipmentAddress(orderId, address);
 		
 		return new RedirectResolution(PlaceOrderAction.class);

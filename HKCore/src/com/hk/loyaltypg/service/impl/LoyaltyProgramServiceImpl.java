@@ -1,10 +1,11 @@
 package com.hk.loyaltypg.service.impl;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LoyaltyProduct> listProucts(Long userId, int startRow, int maxRows) {
-		double karmaPoints = calculateKarmaPoints(userId);
-		
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
 		criteria.createAlias("pv.product", "p");
-		criteria.add(Restrictions.le("points", karmaPoints));
-		criteria.add(Restrictions.le("p.outOfStock", Boolean.FALSE));
+		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
 		if(maxRows == 0) {
 			return loyaltyProductDao.findByCriteria(criteria);
 		}
@@ -57,7 +55,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public double calculateKarmaPoints(Long userId) {
 		Double credits = calculatePoints(userId, TransactionType.CREDIT, karmaPointStatus.APPROVED);
-		Double debits = calculatePoints(userId, TransactionType.DEBIT, karmaPointStatus.APPROVED);
+		Double debits = calculatePoints(userId, TransactionType.DEBIT);
 		if(credits == null) {
 			return 0d;
 		} else if(debits == null) {
@@ -67,11 +65,22 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 	}
 	
-	private Double calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus status) {
+	private Double calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus... status) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.setProjection(Projections.sum("karmaPints"))
-		.add(Restrictions.eq("status", status))
-		.add(Restrictions.eq("transactionType", transactionType));
+		criteria.setProjection(Projections.sum("karmaPints"));
+		
+		if(status != null && status.length > 0) {
+			if(status.length == 1) {
+				criteria.add(Restrictions.eq("status", status[0]));
+			} else {
+				Disjunction disjunction = Restrictions.disjunction();
+				for (karmaPointStatus karmaPointStatus : status) {
+					disjunction.add(Restrictions.eq("status", karmaPointStatus));
+				}
+				criteria.add(disjunction);
+			}
+		}
+		criteria.add(Restrictions.eq("transactionType", transactionType));
 		Double karmaPoints = (Double) orderDao.findByCriteria(criteria).iterator().next();
 		return karmaPoints;
 	}
@@ -96,7 +105,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void debitKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		double existingKarmaPoints = calculateKarmaPoints(order.getUser().getId());
-		double karmaPoints = calculateDebitPoints(orderId);
+		double karmaPoints = aggregatePoints(orderId);
 		if (existingKarmaPoints < karmaPoints) {
 			throw new HealthkartRuntimeException("Not sufficient karma points") {
 				private static final long serialVersionUID = 1L;
@@ -136,19 +145,18 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
-	public double calculateDebitPoints(Long orderId) {
+	public double aggregatePoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
-		List<LoyaltyProduct> loyaltyProducts = new ArrayList<LoyaltyProduct>();
+		return aggregatePoints(cartLineItems);
+	}
+	
+	@Override
+	public double aggregatePoints(Collection<CartLineItem> cartLineItems) {
+		double points = 0d;
 		for (CartLineItem cartLineItem : cartLineItems) {
-			LoyaltyProduct product = getProductByVariantId(cartLineItem.getProductVariant().getId());
-			product.setQty(cartLineItem.getQty());
-			loyaltyProducts.add(product);
-		}
-		
-		double points = 0;
-		for (LoyaltyProduct loyaltyProduct : loyaltyProducts) {
-			points += (loyaltyProduct.getPoints()*loyaltyProduct.getQty());
+			LoyaltyProduct loyaltyProduct = getProductByVariantId(cartLineItem.getProductVariant().getId());
+			points += (loyaltyProduct.getPoints()*cartLineItem.getQty());
 		}
 		return points;
 	}

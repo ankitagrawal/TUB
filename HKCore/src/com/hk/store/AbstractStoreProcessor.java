@@ -1,7 +1,10 @@
 package com.hk.store;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -42,7 +45,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 
 	@Override
 	public Long createOrder(Long userId) {
-		Order order = getOrder(userId);
+		Order order = getCart(userId);
 		if(order != null) {
 			return order.getId();
 		}
@@ -53,16 +56,17 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		order.setAmount(0D);
 		order.setSubscriptionOrder(false);
 		orderService.save(order);
-		order = getOrder(userId);
+		order = getCart(userId);
 		return order.getId();
 	}
 
 	@Override
 	public void addToCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException {
-		validateCart(orderId, productVariants);
-	
+		Map<String, CartLineItem> cartItemMap = new HashMap<String, CartLineItem>();
+
 		Order order = orderService.find(orderId);
 		Set<CartLineItem> cartItems = order.getCartLineItems();
+		
 		List<ProductVariantInfo> processedVariants = new ArrayList<ProductVariantInfo>();
 		if (cartItems != null && cartItems.size() > 0) {
 			for (CartLineItem cartLineItem : cartItems) {
@@ -72,6 +76,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 						processedVariants.add(productVariantInfo);
 						cartLineItemService.save(cartLineItem);
 					}
+					cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 				}
 			}
 			productVariants.removeAll(processedVariants);
@@ -87,12 +92,18 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartLineItem.setHkPrice(0d);
 			cartLineItem.setDiscountOnHkPrice(0d);
 			cartLineItem.setLineItemType(EnumCartLineItemType.Product.asCartLineItemType());
+			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
+		}
+		
+		validateCart(order.getUser().getId(), cartItemMap.values());
+		
+		for (CartLineItem cartLineItem : cartItemMap.values()) {
 			cartLineItemService.save(cartLineItem);
 		}
 	}
 
 	@Override
-	public Order getOrder(Long userId) {
+	public Order getCart(Long userId) {
 		Store store = getStore();
 
 		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
@@ -109,11 +120,17 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		}
 		return null;
 	}
+	
+	@Override
+	public Order getOrderById(Long orderId) {
+		return orderService.find(orderId);
+	}
 
 	@Override
-	public Payment makePayment(Long orderId, String remoteIp) {
+	public Payment makePayment(Long orderId, String remoteIp) throws InvalidOrderException {
 		Order order = orderService.find(orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
+		validateCart(order.getUser().getId(), cartLineItems);
 		List<CartLineItem> lineItems = new ArrayList<CartLineItem>(cartLineItems);
 		for (CartLineItem cartLineItem : lineItems) {
 			if(cartLineItem.getQty() == 0l) {
@@ -163,9 +180,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 
 	protected abstract Payment doPayment(Long orderId, String remoteIp);
 
-	protected abstract void validateCart(Long orderId, List<ProductVariantInfo> productVariants)
-			throws InvalidOrderException;
+	protected abstract void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException;
 	
 	protected abstract void validatePayment(Long orderId) throws InvalidOrderException;
-
 }
