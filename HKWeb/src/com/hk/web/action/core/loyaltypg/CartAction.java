@@ -1,9 +1,6 @@
 package com.hk.web.action.core.loyaltypg;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -35,9 +32,9 @@ public class CartAction extends AbstractLoyaltyAction {
 	
 	@JsonHandler
 	public Resolution addToCart() {
-		
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", new HashMap<Object, Object>());
-		
+
+		Map responseMap = new HashMap();
+		HealthkartResponse healthkartResponse = null;
 		Long orderId = getProcessor().createOrder(getPrincipal().getId());
 		
 		ProductVariantInfo info = new ProductVariantInfo();
@@ -51,6 +48,8 @@ public class CartAction extends AbstractLoyaltyAction {
 		} catch (InvalidOrderException e) {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
 		}
+		responseMap.put("totalShoppingPoints", totalShoppingPoints);
+		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", responseMap);
         noCache();
 		return new JsonResolution(healthkartResponse);
 	}
@@ -77,15 +76,7 @@ public class CartAction extends AbstractLoyaltyAction {
 
 	@JsonHandler
 	public Resolution updateQuantity() {
-
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", new HashMap<Object, Object>());
-		try {
-			cartLineItem.setQty(qty);
-		} catch (Exception e) {
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
-		}
-        noCache();
-		return new JsonResolution(healthkartResponse);
+		return addToCart();
 	}
 	
     public Resolution checkout() {

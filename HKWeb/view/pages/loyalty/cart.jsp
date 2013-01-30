@@ -1,3 +1,4 @@
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes"
@@ -6,13 +7,31 @@
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction"
 	var="ca" />
 
-<s:layout-component name="htmlHead">
-	<script type="text/javascript">
-	</script>
-</s:layout-component>
-
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
+		 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
+		 <link href="<hk:vhostCss/>/css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.lineItemQty').blur(function(event) {
+					var qty = $(this).val();
+					var variant_id = $(this).attr("id");
+					var url = $('#update-qty-url').attr("href");
+					$.ajax({
+						type: 'POST',
+						url: url,
+						data: {qty:qty, productVariantId: variant_id},
+						success: function(resp) {
+							$('.total-shopping-points').html(resp.data.totalShoppingPoints);
+						}
+					});
+				});
+				$('.lineItemQty').jqStepper(1);
+			});
+		</script>
+		<div style="display: none;">
+			<s:link beanclass="com.hk.web.action.core.loyaltypg.CartAction" id="update-qty-url" event="updateQuantity" />
+		</div>
 		<c:choose>
 			<c:when test="${not empty ca.loyaltyProductList}">
 
@@ -31,14 +50,14 @@
 									src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
 									alt="${lp.variant.product.name}" /> <h8>${lp.variant.product.name}</h8>
 								</td>
-								<td><input id="${lp.id}" type=text value="${lp.qty}" style="width:30px;"/></td>
+								<td><input id="${lp.variant.id}" class= "lineItemQty" type=text value="${lp.qty}" style="width:30px;"/></td>
 								<td>${lp.points}</td>
 							</tr>
 						</c:forEach>
 						<tr style="background-color: #f9f9f9;">
 							<td><h8>Total Shopping points</h8></td>
 							<td colspan="2">
-								<div>${ca.totalShoppingPoints} Points</div>
+								<div class="total-shopping-points">${ca.totalShoppingPoints} Points</div>
 							</td>
 						</tr>
 					</tbody>
