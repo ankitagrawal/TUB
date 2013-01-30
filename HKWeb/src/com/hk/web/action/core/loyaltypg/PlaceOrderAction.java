@@ -2,34 +2,39 @@ package com.hk.web.action.core.loyaltypg;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
+import org.stripesstuff.plugin.security.Secure;
+
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.store.InvalidOrderException;
 
+@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	private Address selectedAddress;
 	private Order order;
+	private String errorMessage;
 	
 	@DefaultHandler
 	public Resolution summary() {
-		order = getProcessor().getOrder(getPrincipal().getId());
+		order = getProcessor().getCart(getPrincipal().getId());
 		selectedAddress = order.getAddress();
 		return new ForwardResolution("/pages/loyalty/orderSummary.jsp"); 
 	}
 	
 	public Resolution confirm() {
-		order = getProcessor().getOrder(getPrincipal().getId());
+		order = getProcessor().getCart(getPrincipal().getId());
 		try {
 			getProcessor().makePayment(order.getId(), getRemoteHostAddr());
 			getProcessor().escalateOrder(order.getId());
 		} catch (InvalidOrderException e) {
-			//Log the message
+			errorMessage = e.getMessage();
 		}
-		return new RedirectResolution("/pages/loyalty/orderStatus.jsp");
+		order = getProcessor().getOrderById(order.getId());
+		return new ForwardResolution("/pages/loyalty/orderStatus.jsp");
 	}
 	
 	public Address getSelectedAddress() {
@@ -38,5 +43,13 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	public Order getOrder() {
 		return order;
+	}
+	
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 }

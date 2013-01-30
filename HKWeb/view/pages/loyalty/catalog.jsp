@@ -82,9 +82,9 @@
 					<form method="post" action="/core/loyaltypg/Cart.action"
 						id="${lp.variant.id}-cartForm">
 						<input type="hidden" value="${lp.variant.id}"
-							name="productVariantId"> <input type="hidden" value="1"
-							name="qty"> <input type="submit" class="btn"
-							name="addToCart" value="Add to Cart »">
+							name="productVariantId"> 
+							<input type="hidden" value="1" name="qty"> 
+							<input type="submit" class="btn" name="addToCart" value="Add to Cart »">
 					</form>
 					</p>
 				</div>

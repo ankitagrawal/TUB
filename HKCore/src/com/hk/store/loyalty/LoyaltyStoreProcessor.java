@@ -60,16 +60,16 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException {
-		double shoppingPoints = loyaltyProgramService.calculateTotalPoints(cartLineItems);
+		double shoppingPoints = loyaltyProgramService.aggregatePoints(cartLineItems);
 		double userKarmaPoints = loyaltyProgramService.calculateKarmaPoints(userId);
 		if(shoppingPoints > userKarmaPoints ) {
-			throw new InvalidOrderException("Shopping points exceed the karma points.");
+			throw new InvalidOrderException("Not sufficient karma points in account to purchase the product.");
 		}
 	}
 
 	@Override
 	public Double calculateDebitAmount(Long orderId) {
-		return loyaltyProgramService.calculateDebitPoints(orderId);
+		return loyaltyProgramService.aggregatePoints(orderId);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                         <br/>
                         <br/>
 
-                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4502930. <br/>
+                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4616444. <br/>
                         <br/>
 
                         Healthy Shopping!<br/>

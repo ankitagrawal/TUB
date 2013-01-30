@@ -6,6 +6,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumShipmentServiceType;
@@ -23,11 +24,13 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +77,7 @@ public class ShipmentResolutionAction extends BaseAction {
     @Autowired
     CourierGroupService courierGroupService;
     @Autowired
+
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     CourierService courierService;
@@ -83,6 +87,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/shipmentResolution.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
@@ -107,7 +112,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
-
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_COURIER}, authActionBean = AdminPermissionAction.class)
     public Resolution changeCourier() {
         Awb currentAwb = shipment.getAwb();
         shipment = shipmentService.changeCourier(shipment, updateCourier, preserveAwb);
@@ -127,6 +132,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE}, authActionBean = AdminPermissionAction.class)
     public Resolution changeShipmentServiceType() {
         //todo courier refactor, as of now manual awb change when shipment service type is altered
         shipment.setShipmentServiceType(EnumShipmentServiceType.getShipmentTypeFromId(shipmentServiceTypeId).asShipmentServiceType());
@@ -136,6 +142,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CREATE_AWB}, authActionBean = AdminPermissionAction.class)
     public Resolution generateAWB() {
         applicableCouriers = Arrays.asList();
         if(shippingOrder.isDropShipping()){
@@ -146,6 +153,7 @@ public class ShipmentResolutionAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/createUpdateAwb.jsp").addParameter("shippingOrder", shippingOrder.getId());
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CREATE_AWB}, authActionBean = AdminPermissionAction.class)
     public Resolution createAssignAwb() {
         awb = (Awb) awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
         //todo courier-refactor as drop ship scales need to evaluate a better solution

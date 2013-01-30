@@ -13,6 +13,7 @@
     <meta name="author" content="Deepak Chauhan">
 
     <link href="<hk:vhostJs/>/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="<hk:vhostJs/>/bootstrap/css/prettify.css" rel="stylesheet">
 
 	<style type="text/css">
       body {

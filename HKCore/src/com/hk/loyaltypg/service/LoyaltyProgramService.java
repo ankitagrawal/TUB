@@ -14,16 +14,15 @@ public interface LoyaltyProgramService {
 	
 	void reconcileHistoryPurchase(Long userId);
 	
-	double calculateKarmaPoints(Long userId);
-	
-	double calculateDebitPoints(Long orderId);
-
 	void creditKarmaPoints(Long orderId);
 	
 	void debitKarmaPoints(Long orderId);
 
 	void approveKarmaPoints(Long orderId);
 
-	double calculateTotalPoints(Collection<CartLineItem> cartLineItems);
-
+	double aggregatePoints(Collection<CartLineItem> cartLineItems);
+	
+	double calculateKarmaPoints(Long userId);
+	
+	double aggregatePoints(Long orderId);
 }

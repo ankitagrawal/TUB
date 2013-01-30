@@ -37,13 +37,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LoyaltyProduct> listProucts(Long userId, int startRow, int maxRows) {
-		double karmaPoints = calculateKarmaPoints(userId);
-		
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
 		criteria.createAlias("pv.product", "p");
-		criteria.add(Restrictions.le("points", karmaPoints));
-		criteria.add(Restrictions.le("p.outOfStock", Boolean.FALSE));
+		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
 		if(maxRows == 0) {
 			return loyaltyProductDao.findByCriteria(criteria);
 		}
@@ -108,7 +105,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void debitKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		double existingKarmaPoints = calculateKarmaPoints(order.getUser().getId());
-		double karmaPoints = calculateDebitPoints(orderId);
+		double karmaPoints = aggregatePoints(orderId);
 		if (existingKarmaPoints < karmaPoints) {
 			throw new HealthkartRuntimeException("Not sufficient karma points") {
 				private static final long serialVersionUID = 1L;
@@ -148,14 +145,14 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
-	public double calculateDebitPoints(Long orderId) {
+	public double aggregatePoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
-		return calculateTotalPoints(cartLineItems);
+		return aggregatePoints(cartLineItems);
 	}
 	
 	@Override
-	public double calculateTotalPoints(Collection<CartLineItem> cartLineItems) {
+	public double aggregatePoints(Collection<CartLineItem> cartLineItems) {
 		double points = 0d;
 		for (CartLineItem cartLineItem : cartLineItems) {
 			LoyaltyProduct loyaltyProduct = getProductByVariantId(cartLineItem.getProductVariant().getId());

@@ -45,7 +45,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 
 	@Override
 	public Long createOrder(Long userId) {
-		Order order = getOrder(userId);
+		Order order = getCart(userId);
 		if(order != null) {
 			return order.getId();
 		}
@@ -56,7 +56,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		order.setAmount(0D);
 		order.setSubscriptionOrder(false);
 		orderService.save(order);
-		order = getOrder(userId);
+		order = getCart(userId);
 		return order.getId();
 	}
 
@@ -103,7 +103,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	}
 
 	@Override
-	public Order getOrder(Long userId) {
+	public Order getCart(Long userId) {
 		Store store = getStore();
 
 		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
@@ -119,6 +119,11 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			return orders.iterator().next();
 		}
 		return null;
+	}
+	
+	@Override
+	public Order getOrderById(Long orderId) {
+		return orderService.find(orderId);
 	}
 
 	@Override

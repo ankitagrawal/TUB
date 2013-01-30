@@ -127,6 +127,8 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.SUPER_LOGIN,
                     EnumPermission.VIEW_ACTION_QUEUE,
+                    EnumPermission.OPS_MANAGER_CUSA_UPDATE,
+                    EnumPermission.OPS_MANAGER_CUSA_VIEW,
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
