@@ -10,6 +10,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.BillingAddress;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
@@ -130,9 +131,10 @@ public class PaymentManager {
      * @param paymentMode
      * @param remoteAddr
      * @param gateway
-     *@param issuer @return
-	 */
-	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer) {
+     * @param issuer @return
+     * @param billingAddress
+     */
+	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
 		Payment payment = new Payment();
 		payment.setAmount(order.getAmount());
 		payment.setOrder(order);
@@ -141,8 +143,7 @@ public class PaymentManager {
         payment.setGateway(gateway);
         payment.setIssuer(issuer);
 
-		// todo can be set if available for user
-		payment.setBillingAddressActual(null);
+		payment.setBillingAddress(billingAddress);
 
 		// these two fields must be generated
 		// gateway order id is the order id passed to the payment gateway. this can be

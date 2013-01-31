@@ -2,10 +2,12 @@ package com.hk.web.action.admin.address;
 
 import java.util.List;
 
+import com.hk.pact.service.core.AddressService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -28,17 +30,20 @@ public class AdminAddressListAction extends BaseAction {
     @Validate(required = true, on="changeSubscriptionAddress")
     private Subscription subscription;
 
+    @Autowired
+    AddressService addressDao;
+
     List<Address> addressList;
     Address selectedAddress;
 
     public Resolution changeOrderAddress() {
-        addressList = order.getUser().getAddresses();
+        addressList = addressDao.getVisibleAddresses(order.getUser());
         selectedAddress = order.getAddress();
         return new ForwardResolution("/pages/admin/userAddreses.jsp");
     }
 
     public Resolution changeSubscriptionAddress(){
-        addressList = subscription.getUser().getAddresses();
+        addressList = addressDao.getVisibleAddresses(subscription.getUser());
         selectedAddress = subscription.getAddress();
         return new ForwardResolution("/pages/admin/userAddreses.jsp");
     }

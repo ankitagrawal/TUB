@@ -12,6 +12,8 @@ import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.UserService;
 import com.hk.util.AddressMatchScoreCalculator;
 
+import java.util.Date;
+
 @Component
 public class AddressBookManager {
 
@@ -41,9 +43,7 @@ public class AddressBookManager {
     @Transactional
     public Address editAddress(final User user, final Address editAddress, Address newAddress) {
 
-        newAddress.setCreateDate(editAddress.getCreateDate());
-        if (newAddress.getPin().equals(editAddress.getPin()))
-            newAddress.setCourier(editAddress.getCourier());
+        newAddress.setCreateDate(new Date());
 
         newAddress = add(user, newAddress);
 

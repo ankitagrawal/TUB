@@ -49,6 +49,25 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     @Column(name = "estimated_shipping_cost")
     private Double    estimatedShippingCost;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (!(o instanceof PincodeDefaultCourier))
+      return false;
+
+    PincodeDefaultCourier pincodeDefaultCourier = (PincodeDefaultCourier) o;
+    if (this.id != null && pincodeDefaultCourier.getId() != null) {
+      return id.equals(pincodeDefaultCourier.getId());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.id != null ? id.hashCode() : 0;
+  }
+
     public Long getId() {
         return this.id;
     }

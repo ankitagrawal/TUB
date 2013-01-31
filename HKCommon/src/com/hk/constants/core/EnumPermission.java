@@ -6,7 +6,9 @@ public enum EnumPermission {
 
   SUPER_LOGIN                                    (PermissionConstants.SUPER_LOGIN),  
   VIEW_ACTION_QUEUE                              (PermissionConstants.VIEW_ACTION_QUEUE),
-  UPDATE_ACTION_QUEUE                            (PermissionConstants.UPDATE_ACTION_QUEUE),
+    OPS_MANAGER_CUSA_UPDATE(PermissionConstants.OPS_MANAGER_CUSA_UPDATE),
+    OPS_MANAGER_CUSA_VIEW(PermissionConstants.OPS_MANAGER_CUSA_VIEW),
+    UPDATE_ACTION_QUEUE                            (PermissionConstants.UPDATE_ACTION_QUEUE),
   VIEW_DROP_SHIPPING_QUEUE                       (PermissionConstants.VIEW_DROP_SHIPPING_QUEUE),
   UPDATE_DROP_SHIPPING_QUEUE                     (PermissionConstants.UPDATE_DROP_SHIPPING_QUEUE),
   VIEW_SHIPMENT_QUEUE                            (PermissionConstants.VIEW_SHIPMENT_QUEUE),

@@ -23,7 +23,7 @@
                 ${address.line2},
               </c:if>
               <br/>
-                ${address.city} - ${address.pin},
+                ${address.city} - ${address.pincode.pincode},
                 ${address.state}<br/>
               <span class="sml lgry upc">Phone </span>${address.phone}<br/></td>
           </tr>

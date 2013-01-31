@@ -328,7 +328,7 @@ public class MCartAction extends MBaseAction{
             addressMap.put("line1",selectedAddress.getLine1());
             addressMap.put("line2",selectedAddress.getLine2());
             addressMap.put("state",selectedAddress.getState());
-            addressMap.put("pin",selectedAddress.getPin());
+            addressMap.put("pin",selectedAddress.getPincode());
             addressMap.put("phone",selectedAddress.getPhone());
 
             healthkartResponse = new HealthkartResponse(status, message, addressMap);

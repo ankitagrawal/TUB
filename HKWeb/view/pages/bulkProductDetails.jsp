@@ -57,6 +57,9 @@
                                 <s:checkbox name="toBeEditedOptions" value="productDeleted"/>IS DELETED
                                 <div style="margin-top: 10px"></div>
 
+                                <s:checkbox name="toBeEditedOptions" value="productHidden"/>IS HIDDEN
+                                <div style="margin-top: 10px"></div>
+
                                 <s:checkbox name="toBeEditedOptions" value="productMinDays"/>MIN DAYS
                                 <div style="margin-top: 10px"></div>
 

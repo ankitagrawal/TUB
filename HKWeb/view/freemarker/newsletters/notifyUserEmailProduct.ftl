@@ -15,7 +15,7 @@ You requested to be notified when ${product.name} was back in stock
   and place your order if needed.
 </p>
 
-<p style="margin-bottom:1em">For any assistance, simply give us a call on 0124-4502930 or write to us on info@healthkart.com.</p>
+<p style="margin-bottom:1em">For any assistance, simply give us a call on 0124-4616444 or write to us on info@healthkart.com.</p>
 
 <p style="margin-bottom:1em">Happy Shopping!</p>
 

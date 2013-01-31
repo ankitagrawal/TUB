@@ -33,8 +33,8 @@
 				<div style="margin-top:10px"></div>
 				<div class="row" >
 					<s:label class="rowLabel" name="Status*"/>
-					<s:radio  id="statusActive" name="courier.disabled"  value="false" checked="${cou.courier.disabled}"/>Active
-					<s:radio  id="statusInActive" name="courier.disabled" value="true" checked="${cou.courier.disabled}"/>InActive
+					<s:radio  id="statusActive" name="courier.active"  value="true" checked="${cou.courier.active}"/>Active
+					<s:radio  id="statusInActive" name="courier.active" value="false" checked="${cou.courier.active}"/>InActive
 				</div>
 				<div class="clear"></div>
 				<div style="margin-top:10px"></div>

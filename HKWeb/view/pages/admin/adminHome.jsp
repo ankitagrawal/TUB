@@ -79,6 +79,9 @@
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
+    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe Token </s:link></h3>
+    </shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -153,7 +156,7 @@
 
 	<h3>
 		<s:link
-				beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+				beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update Shipment</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
@@ -204,15 +207,21 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
 	<h3><s:link
-			beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
-
-	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">State Courier Service Info</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">Pincode Courier Mapping</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Update Shipment</s:link></h3>
+
+     <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">Shipment Resolution</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
@@ -390,9 +399,6 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
-	<h3>
-		<s:link
-				beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -512,5 +518,10 @@
 		});
 	});
 </script>
+
+<!-- Script to render JIRA issue collector Form -->
+<script type="text/javascript"
+        src="https://healthkart.atlassian.net/s/en_US-pg27qm-418945332/6020/74/1.3.2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=f0a8759b"></script>
+
 </s:layout-component>
 </s:layout-render>
