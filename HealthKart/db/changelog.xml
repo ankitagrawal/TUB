@@ -11241,9 +11241,30 @@
             <column name="shipping_order_id"/>
         </createIndex>
     </changeSet>
+<!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
             <column name="awb_id"/>
         </createIndex>
     </changeSet>
+-->
+    <changeSet author="Pratham (generated)" id="1359627218805-1">
+        <createIndex indexName="pincode_default_courier_index" tableName="pincode_default_courier" unique="true">
+            <column name="pincode_id"/>
+            <column name="warehouse_id"/>
+            <column name="cod"/>
+            <column name="ground_shipping"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1359627218805-2">
+        <createIndex indexName="pincode_region_index_new" tableName="pincode_region_zone" unique="true">
+            <column name="warehouse_id"/>
+            <column name="region_type_id"/>
+            <column name="courier_group_id"/>
+            <column name="pincode_id"/>
+        </createIndex>
+    </changeSet>
+    <!--<changeSet author="Pratham (generated)" id="1359627218805-3">-->
+        <!--<dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>-->
+    <!--</changeSet>-->
 </databaseChangeLog>
