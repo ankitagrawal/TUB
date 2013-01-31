@@ -11272,7 +11272,7 @@
         <dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="31-01-2013-0-20">
-        <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_group" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="31-01-2013-0-21">
         <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
