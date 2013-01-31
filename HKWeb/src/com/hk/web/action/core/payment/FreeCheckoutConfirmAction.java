@@ -4,7 +4,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.RoleCache;
 import com.hk.constants.core.EnumRole;
-import com.hk.constants.core.RoleConstants;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.order.Order;
@@ -97,7 +96,7 @@ public class FreeCheckoutConfirmAction extends BaseAction {
 
 		// first create a payment row, this will also cotain the payment checksum
 		Payment payment = paymentManager.createNewPayment(order, getBaseDao().get(PaymentMode.class, EnumPaymentMode.FREE_CHECKOUT.getId()),
-				BaseUtils.getRemoteIpAddrForUser(getContext()), null, null);
+				BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
 
 		paymentManager.success(payment.getGatewayOrderId());
 		// return new RedirectResolution(FreeCheckoutSuccessAction.class).addParameter("gatewayOrderId",

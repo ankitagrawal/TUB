@@ -12,7 +12,7 @@
     <s:form beanclass="com.hk.web.action.core.user.UserManageAddressAction">
       <div class='left2' style="width:100%">
         <div class="address" style="font-size: 0.813em; border: 0">
-          <c:set var="addresses" value="${userBean.user.addresses}"/>
+          <c:set var="addresses" value="${userBean.addresses}"/>
           <c:if test="${!empty addresses}">
             <c:set var="mainAddressId" value="${userBean.affiliate.mainAddressId}"/>
             <c:forEach var="address" items="${addresses}" varStatus="addressCount">
@@ -25,7 +25,7 @@
               </c:if>
               <div class='city'>${address.city}</div>
               <div class='state'>${address.state}</div>
-              <div class='pin'>${address.pin}</div>
+              <div class='pin'>${address.pincode.pincode}</div>
               <div class='phone'>${address.phone}</div>
               <p>
                 <shiro:hasAnyRoles

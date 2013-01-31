@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -53,6 +54,8 @@ public class MOrderSummaryAction extends MBaseAction {
 
     @Autowired
     private CourierService     courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
     @Autowired
     OrderManager               orderManager;
     @Autowired
@@ -149,11 +152,11 @@ public class MOrderSummaryAction extends MBaseAction {
             add.setLine2(address.getLine2());
             add.setName(address.getName());
             add.setPhone(address.getPhone());
-            add.setPin(address.getPin());
+            add.setPin(address.getPincode().getPincode());
             add.setState(address.getState());
             orderMap.put("addressSelected", add);
 
-            String pin = address != null ? address.getPin() : null;
+            String pin = address != null ? address.getPincode().getPincode() : null;
 
             codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 
@@ -188,7 +191,7 @@ public class MOrderSummaryAction extends MBaseAction {
             Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
             if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
                 groundShippedItemPresent = true;
-                groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
+                groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(pin);
             }
             orderMap.put("groundShippedItemPresent", groundShippedItemPresent);
             orderMap.put("groundShippingAllowed", groundShippingAllowed);
@@ -212,7 +215,7 @@ public class MOrderSummaryAction extends MBaseAction {
             orderMap.put("total", total);
 
             boolean courierAvailable = true;
-            availableCourierList = courierService.getAvailableCouriers(order);
+            availableCourierList = pincodeCourierService.getAvailableCouriers(order);
             if (availableCourierList != null && availableCourierList.size() == 0) {
                 courierAvailable = false;
             }

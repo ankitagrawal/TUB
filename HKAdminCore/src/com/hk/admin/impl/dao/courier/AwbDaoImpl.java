@@ -82,17 +82,23 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
     }
 
-	@Transactional
-	public Object save(Awb awb, Integer newStatus) {
-		if (awb.getId() != null) {
-			Integer originalStatus =  awb.getAwbStatus().getId().intValue();
-			String query = "UPDATE awb SET awb_status_id=? WHERE id=? AND awb_status_id=?";
-			Object[] param = {newStatus, awb.getId(),originalStatus};
-			return  executeNativeSql(query, param);
-		} else {
-			return save(awb);
-		}
-	}
+    @Transactional
+    public Awb save(Awb awb, Integer newStatus) {
+        if (awb.getId() != null) {
+            Integer originalStatus = awb.getAwbStatus().getId().intValue();
+            String query = "UPDATE awb SET awb_status_id=? WHERE id=? AND awb_status_id=?";
+            Object[] param = {newStatus, awb.getId(), originalStatus};
+            int rowsUpdate = executeNativeSql(query, param);
+            if (rowsUpdate == 1) {
+                refresh(awb);
+                return awb;
+            }
+        } else {
+            awb = (Awb) save(awb);
+            return awb;
+        }
+        return null;
+    }
 
 }
 
