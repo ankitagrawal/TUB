@@ -1,8 +1,12 @@
 package com.hk.loyaltypg.service.impl;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+
+import javax.annotation.PostConstruct;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
@@ -23,16 +28,36 @@ import com.hk.exception.HealthkartRuntimeException;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
 import com.hk.loyaltypg.dao.UserOrderKarmaProfileDao;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
+import com.hk.loyaltypg.service.UserBadgeInfo;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
 
 @Service
 public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
-	double oneKarmaPoint = 100d;
-
 	@Autowired private LoyaltyProductDao loyaltyProductDao;
 	@Autowired private OrderDao orderDao;
 	@Autowired private UserOrderKarmaProfileDao userOrderKarmaProfileDao;
+	@Autowired private BaseDao baseDao;
+	
+	private static Set<Badge> BADGES = null;
+	
+	@SuppressWarnings("unchecked")
+	@PostConstruct
+	public void init() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Badge.class);
+		
+		BADGES = new TreeSet<Badge>(new Comparator<Badge>() {
+			@Override
+			public int compare(Badge o1, Badge o2) {
+				Double o1Min = o1.getMinScore();
+				Double o2Min = o2.getMinScore();
+				return o1Min.compareTo(o2Min);
+			}
+		});
+		
+		BADGES.addAll(baseDao.findByCriteria(criteria));
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -45,11 +70,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			return loyaltyProductDao.findByCriteria(criteria);
 		}
 		return loyaltyProductDao.findByCriteria(criteria, startRow, maxRows);
-	}
-
-	@Override
-	public void reconcileHistoryPurchase(Long userId) {
-		//Logic to insert history order points in userOrderKarmaProfile.
 	}
 
 	@Override
@@ -80,6 +100,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				criteria.add(disjunction);
 			}
 		}
+		criteria.add(Restrictions.eq("userOrderKey.user.id", userId));
+		criteria.add(Restrictions.ne("userOrderKey.order.id", -1l));
 		criteria.add(Restrictions.eq("transactionType", transactionType));
 		Double karmaPoints = (Double) orderDao.findByCriteria(criteria).iterator().next();
 		return karmaPoints;
@@ -89,8 +111,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void creditKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
+		
+		UserBadgeInfo badgeInfo = getUserBadgeInfo(order.getUser().getId());
+		double loyaltyPercentage = badgeInfo.getBadge().getLoyaltyPercentage();
 		Double amount = order.getPayment().getAmount();
-		double karmaPoints = amount / oneKarmaPoint;
+		double karmaPoints = (amount* (loyaltyPercentage/100));
+		
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
 		profile.setStatus(karmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
@@ -98,6 +124,31 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
 		profile.setUserOrderKey(userOrderKey);
 		userOrderKarmaProfileDao.saveOrUpdate(profile);
+	}
+	
+	@Override
+	public UserBadgeInfo getUserBadgeInfo(Long userId) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		criteria.setProjection(Projections.sum("karmaPints"));
+		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
+		criteria.add(Restrictions.eq("status", karmaPointStatus.APPROVED));
+		criteria.add(Restrictions.eq("userOrderKey.user.id",userId));
+		
+		Double completePoints = (Double) baseDao.findByCriteria(criteria).iterator().next();
+		
+		Badge userBadge = BADGES.iterator().next();
+		for (Badge badge : BADGES) {
+			if(completePoints >= badge.getMinScore() && completePoints < badge.getMaxScore()) {
+				userBadge = badge;
+				break;
+			}
+		}
+		Double loyaltyPoints = calculateKarmaPoints(userId);
+		UserBadgeInfo badgeInfo = new UserBadgeInfo();
+		badgeInfo.setBadge(userBadge);
+		badgeInfo.setLoyaltyPoints(loyaltyPoints);
+		badgeInfo.setUserId(userId);
+		return badgeInfo;
 	}
 
 	@Override

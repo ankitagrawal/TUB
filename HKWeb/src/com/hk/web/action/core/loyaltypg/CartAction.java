@@ -44,10 +44,12 @@ public class CartAction extends AbstractLoyaltyAction {
 		infos.add(info);
 		try {
 			getProcessor().addToCart(orderId, infos);
-			init();
 		} catch (InvalidOrderException e) {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
+			noCache();
+			return new JsonResolution(healthkartResponse);
 		}
+		init();
 		responseMap.put("totalShoppingPoints", totalShoppingPoints);
 		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", responseMap);
         noCache();

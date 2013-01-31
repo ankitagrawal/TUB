@@ -12,8 +12,6 @@ public interface LoyaltyProgramService {
 	
 	LoyaltyProduct getProductByVariantId(String variantId);
 	
-	void reconcileHistoryPurchase(Long userId);
-	
 	void creditKarmaPoints(Long orderId);
 	
 	void debitKarmaPoints(Long orderId);
@@ -25,4 +23,6 @@ public interface LoyaltyProgramService {
 	double calculateKarmaPoints(Long userId);
 	
 	double aggregatePoints(Long orderId);
+	
+	UserBadgeInfo getUserBadgeInfo(Long userId);
 }
