@@ -121,7 +121,7 @@
     <input type="hidden" value="${googleProductsSelected}" id="cartProductId">
 
     <%--<c:otherwise>--%>
-    <g:if test="${canGoogleRemarket == 'true'}">
+    <c:if test="${canGoogleRemarket == 'true'}">
 
         <!--------------------------------------------------------
         PLEASE INCLUDE THIS COMMENT ON THE WEB PAGE WITH THE TAG
@@ -174,7 +174,7 @@
             }
             //if(canSet)
             {
-                //alert( 'prodid:' + "'" + prodId + "'" + 'pagetype:' +  "'" + hkPageType + "'" + 'pCat:' +  "'" + pCategory + "'");
+                alert( 'prodid:' + "'" + prodId + "'" + 'pagetype:' +  "'" + hkPageType + "'" + 'pCat:' +  "'" + pCategory + "'");
                 var google_tag_params = {
                     prodid: "'" + prodId + "'" ,
                     pagetype: "'" + hkPageType + "'",
@@ -199,6 +199,6 @@
                 <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1001307632/?value=0&amp;label=wwUqCJDx5AQQ8Pu63QM&amp;guid=ON&amp;script=0"/>
             </div>
         </noscript>
-    </g:if>
+    </c:if>
     <%--</c:otherwise>--%>
 </s:layout-definition>
