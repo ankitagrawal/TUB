@@ -127,20 +127,21 @@ ORDER INVOICE <c:choose>
 </div>
 <div class="grid_4">
     <div style="float: right;">
-        <c:choose>
-            <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
-	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
-                <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
-	            </c:if>
-	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
-                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
-	            </c:if>
-            </c:when>
-            <c:otherwise>
-                <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
-            </c:otherwise>
-        </c:choose>
-
+        <c:if test="${!hk:collectionContains(orderSummary.shippingOrder.baseOrder.user.roleStrings, b2bUser)}">
+            <c:choose>
+                <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                    <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
+                        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+                    </c:if>
+                    <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                        <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
     </div>
 </div>
 
@@ -477,7 +478,7 @@ ORDER INVOICE <c:choose>
     </table>
 
   <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4502930</h6>
+    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4616444</h6>
    </c:if>
 
 
