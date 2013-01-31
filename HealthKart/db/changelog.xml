@@ -11256,6 +11256,33 @@
             <column name="ground_shipping"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0112">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier_group1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0111">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_warehouse1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-012">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_region_type1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0122">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1359627218805-3">
+        <dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-20">
+        <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-21">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-22">
+        <addForeignKeyConstraint baseColumnNames="region_type_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_region_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="region_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-23">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1359627218805-2">
         <createIndex indexName="pincode_region_index_new" tableName="pincode_region_zone" unique="true">
             <column name="warehouse_id"/>
@@ -11264,7 +11291,4 @@
             <column name="pincode_id"/>
         </createIndex>
     </changeSet>
-    <!--<changeSet author="Pratham (generated)" id="1359627218805-3">-->
-        <!--<dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>-->
-    <!--</changeSet>-->
 </databaseChangeLog>
