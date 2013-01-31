@@ -84,7 +84,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
         String error = "";
         boolean flag = false;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
-            if (!EnumCourier.MIGRATE.getId().equals(pincodeDefaultCourier.getCourier().getId())) {
                 boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
                 if (!isDefaultCourierApplicable) {
                     error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
@@ -95,7 +94,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
                     error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
                     flag = true;
                 }
-            }
         }
 
         if (!flag) {

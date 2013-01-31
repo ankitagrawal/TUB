@@ -161,7 +161,7 @@
              </fieldset>
             <div class="clear"></div>
             <fieldset>
-            <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
+            <c:if test="${(cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0) or (cdca.pincode!=null)}">
                 <h2>Pincode Default Courier</h2>
                 <br/>
                 <table class="zebra_vert">
@@ -224,7 +224,7 @@
                     </fieldset>
                     <div class="clear"></div>
                     <fieldset>
-                    <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
+                    <c:if test="${(cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0) or (cdca.pincode!=null)}">
                        <h2>Pincode Courier Mappings</h2>
                          <table class="zebra_vert">
                     <tr>
