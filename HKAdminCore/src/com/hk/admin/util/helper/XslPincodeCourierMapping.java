@@ -110,7 +110,10 @@ public class XslPincodeCourierMapping {
                     pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
 
                 if (pincodeCourierMappingDB == null) {
-                    pincodeCourierMappings.add(pincodeCourierMapping);
+                    boolean isValidMapping = isCodGround || isPrepaidGround || isPrepaidAir || isCodAir;
+                    if (isValidMapping) {
+                        pincodeCourierMappings.add(pincodeCourierMapping);
+                    }
                 }
               else{
                  if(pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDB, pincodeCourierMapping)){
