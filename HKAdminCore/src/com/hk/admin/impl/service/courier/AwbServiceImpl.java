@@ -51,7 +51,7 @@ public class AwbServiceImpl implements AwbService {
 				thirdPartyAwbDetails.setCod(false);
 			}
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
-            thirdPartyAwbService.syncHKCourierServiceInfo(courierId, thirdPartyAwbDetails);
+            thirdPartyAwbService.syncHKCourierServiceInfo(courier, thirdPartyAwbDetails);
 
             return hkAwb;
         }
@@ -59,27 +59,32 @@ public class AwbServiceImpl implements AwbService {
 
     }
 
-    public boolean deleteAwbForThirdPartyCourier(Courier courier, String awbNumber) {
-        Long courierId = courier.getId();
+    public boolean deleteAwbForThirdPartyCourier(Awb awb) {
+        Long courierId = awb.getCourier().getId();
 
         ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
-        return thirdPartyAwbService.deleteThirdPartyAwb(awbNumber);
+        return thirdPartyAwbService.deleteThirdPartyAwb(awb.getAwbNumber());
     }
 
-    public void removeAwbForShipment(Courier courier, Awb awb){
-
-        if(ThirdPartyAwbService.integratedCouriers.contains(courier.getId())){
-           deleteAwbForThirdPartyCourier(courier, awb.getAwbNumber());
-               //awbDao.delete(awb);
-        }
-        else{
-//           awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-//           awbDao.save(awb);
-	     save(awb,EnumAwbStatus.Unused.getId().intValue());
+    public void preserveAwb(Awb awb) {
+        Courier courier = awb.getCourier();
+        if (ThirdPartyAwbService.integratedCouriers.contains(courier.getId())) {
+            deleteAwbForThirdPartyCourier(awb);
+        } else {
+            save(awb, EnumAwbStatus.Unused.getId().intValue());
         }
     }
 
-	public Object save(Awb awb, Integer newStatus) {
+    @Override
+    public void discardAwb(Awb awb) {
+        Courier courier = awb.getCourier();
+        if (ThirdPartyAwbService.integratedCouriers.contains(courier.getId())) {
+            deleteAwbForThirdPartyCourier(awb);
+        }
+        save(awb, EnumAwbStatus.Used.getId().intValue());
+    }
+
+    public Awb save(Awb awb, Integer newStatus) {
 	return awbDao.save(awb,newStatus);
 	}
 

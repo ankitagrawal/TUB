@@ -1,22 +1,25 @@
 package com.hk.admin.impl.service.courier;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.admin.util.FedExShipmentDeleteUtil;
 import com.hk.admin.util.courier.thirdParty.FedExCourierUtil;
 import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.constants.core.Keys;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.pact.service.core.PincodeService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class FedExAwbServiceImpl implements ThirdPartyAwbService {
@@ -37,7 +40,9 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
     private String                fedExServerUrl;
 
     @Autowired
-    private CourierServiceInfoDao courierServiceInfoDao;
+    private PincodeCourierService pincodeCourierService;
+    @Autowired
+    private PincodeService pincodeService;
 
     @Override
     public ThirdPartyAwbDetails getThirdPartyAwbDetails(ShippingOrder shippingOrder, Double weightInKg) {
@@ -63,25 +68,24 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
     }
 
     @Override
-    public boolean syncHKCourierServiceInfo(Long courierId, ThirdPartyAwbDetails thirdPartyAwbDetails) {
-
+    public boolean syncHKCourierServiceInfo(Courier courier, ThirdPartyAwbDetails thirdPartyAwbDetails) {
         // logic to update routing codes in hk, in case there is a change from fedex API.
-        CourierServiceInfo courierServiceInfo = courierServiceInfoDao.searchCourierServiceInfo(courierId, thirdPartyAwbDetails.getPincode(), false, false, false);
+        Pincode pincode = pincodeService.getByPincode(thirdPartyAwbDetails.getPincode());
+        PincodeCourierMapping pincodeCourierMapping = pincodeCourierService.getApplicablePincodeCourierMapping(pincode, Arrays.asList(courier), null, null);
 
         List<String> routingCode = thirdPartyAwbDetails.getRoutingCode();
-        if (courierServiceInfo != null) {
+        if (pincodeCourierMapping != null) {
             if (StringUtils.isNotBlank(routingCode.get(0))) {
                 String routingCodeForPincodeFromFedEx = routingCode.get(0);
-                String routingCodeForPincodeInHK = courierServiceInfo.getRoutingCode();
+                String routingCodeForPincodeInHK = pincodeCourierMapping.getRoutingCode();
 
                 if (StringUtils.isBlank(routingCodeForPincodeInHK)
                         || (StringUtils.isNotBlank(routingCodeForPincodeInHK) && !routingCodeForPincodeInHK.equals(routingCodeForPincodeFromFedEx))) {
-                    courierServiceInfo.setRoutingCode(routingCodeForPincodeFromFedEx);
-                    getCourierServiceInfoDao().save(courierServiceInfo);
+                    pincodeCourierMapping.setRoutingCode(routingCodeForPincodeFromFedEx);
+                    pincodeCourierService.savePincodeCourierMapping(pincodeCourierMapping);
                 }
             }
         }
-
         return false;
     }
 
@@ -97,9 +101,5 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
 		FedExTrackShipmentUtil fedExTrack = new FedExTrackShipmentUtil();
 		return fedExTrack.trackFedExShipment(trackingId);
 	}
-
-    public CourierServiceInfoDao getCourierServiceInfoDao() {
-        return courierServiceInfoDao;
-    }
 
 }

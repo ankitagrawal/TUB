@@ -76,21 +76,23 @@
   </div>
 </div>
 <div class="grid_4">
-  <div style="float: right;">
-   <c:choose>
-            <c:when test="${orderSummary.order.store.id == 2 || orderSummary.order.store.id == 3}">
-	            <c:if test="${orderSummary.order.store.id == 2}">
-                <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
-	            </c:if>
-	            <c:if test="${orderSummary.order.store.id == 3}">
-                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
-	            </c:if>
-            </c:when>
-            <c:otherwise>
-                <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
-            </c:otherwise>
-        </c:choose>
-  </div>
+    <div style="float: right;">
+        <c:if test="${!hk:collectionContains(orderSummary.order.user.roleStrings, b2bUser)}">
+            <c:choose>
+                <c:when test="${orderSummary.order.store.id == 2 || orderSummary.order.store.id == 3}">
+                    <c:if test="${orderSummary.order.store.id == 2}">
+                        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+                    </c:if>
+                    <c:if test="${orderSummary.order.store.id == 3}">
+                        <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+    </div>
 </div>
 
 <div class="clear"></div>
@@ -115,29 +117,6 @@
       </h3>
     </div>
   </div>
-  <%--<c:if test="${orderSummary.order.store.id != 3}">
-  <div class="grid_4 alpha omega" style="width: 320px;">
-    <div class="formatting" style="float: right;">
-      <div
-          style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
-        <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
-
-        <p>Your referral coupon code is</p>
-
-        <p><strong
-            style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
-
-        <p><strong>How it works: </strong></p>
-
-        <p>
-          Pass this coupon code to your friends and family. They get a <strong>5% discount on their first
-          purchase*</strong> at healthkart.com and you
-          <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
-        </p>
-      </div>
-    </div>
-  </div>
-  </c:if>--%>
 </div>
 
 <div class="clear"></div>
@@ -157,7 +136,7 @@
         </c:if>
       </p>
 
-      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pin}</p>
+      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}</p>
 
       <p>${orderSummary.order.address.state}</p>
 

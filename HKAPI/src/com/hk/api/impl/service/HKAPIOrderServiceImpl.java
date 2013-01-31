@@ -1,32 +1,21 @@
 package com.hk.api.impl.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.akube.framework.util.BaseUtils;
 import com.hk.api.constants.EnumHKAPIErrorCode;
 import com.hk.api.constants.HKAPIOperationStatus;
 import com.hk.api.dto.HKAPIBaseDTO;
 import com.hk.api.dto.order.*;
 import com.hk.api.pact.service.HKAPIOrderService;
-import com.hk.constants.payment.EnumPaymentMode;
-import com.hk.domain.api.HkApiUser;
-import com.hk.domain.builder.CartLineItemBuilder;
-import com.hk.pact.service.core.AddressService;
-import com.hk.pact.service.store.StoreService;
-import com.hk.security.HkAuthService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.hk.api.pact.service.HKAPIUserService;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.api.HkApiUser;
+import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -36,19 +25,27 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.AutomatedOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.api.pact.service.HKAPIUserService;
+import com.hk.pact.service.store.StoreService;
+import com.hk.security.HkAuthService;
 import com.hk.util.json.JSONResponseBuilder;
-import com.akube.framework.util.BaseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Pradeep Date: May 1, 2012 Time: 1:26:17 PM
@@ -71,7 +68,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     @Autowired
     OrderService          orderService;
     @Autowired
-    AddressService        addressDao;
+    AddressDao            addressDao;
     @Autowired
     PaymentModeDao        paymentModeDao;
     @Autowired
@@ -87,7 +84,11 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     @Autowired
     AutomatedOrderService automatedOrderService;
     @Autowired
+    PincodeService pincodeService;
+    @Autowired
     StoreService storeService;
+
+    public static final Long INDIA_COUNTRY_ID=80L;
 
     public HKAPIBaseDTO createOrderInHK(String appToken, HKAPIOrderDTO hkapiOrderDTO) {
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
@@ -132,15 +133,17 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         return apiUser.isOrderPlacementEnabled();
     }
     public Address createAddress(HKAPIAddressDTO hkapiAddressDTO, User hkUser) {
+        Pincode pincode = pincodeService.getByPincode(hkapiAddressDTO.getPin());
         Address address = new Address();
         address.setLine1(hkapiAddressDTO.getLine1());
         address.setLine2(hkapiAddressDTO.getLine2());
         address.setState(hkapiAddressDTO.getState());
-        address.setPin(hkapiAddressDTO.getPin());
+        address.setPincode(pincode);
         address.setName(hkapiAddressDTO.getName());
         address.setPhone(hkapiAddressDTO.getPhone());
         address.setCity(hkapiAddressDTO.getCity());
         address.setUser(hkUser);
+        address.setCountry(addressDao.getCountry(INDIA_COUNTRY_ID));
         return getAddressDao().save(address);
     }
 
@@ -156,7 +159,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     public Set<CartLineItem> addCartLineItems(HKAPIOrderDetailsDTO HKAPIOrderDetailsDTO, Order order) {
         Set<CartLineItem> cartLineItems = order.getCartLineItems();
         for (HKAPICartLineItemDTO apiCartLineItem : HKAPIOrderDetailsDTO.getHkapiCartLineItemDTOs()) {
-            if(apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.Product.getId())){
+            if(apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.Product.getId())||apiCartLineItem.getCartLineItemType().equals(EnumCartLineItemType.OrderLevelDiscount.getId())){
                 ProductVariant productVariant = getProductVariantService().getVariantById(apiCartLineItem.getProductId().trim());
                 if (productVariant != null) {
                     CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
@@ -331,11 +334,11 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
         this.orderService = orderService;
     }
 
-    public AddressService getAddressDao() {
+    public AddressDao getAddressDao() {
         return addressDao;
     }
 
-    public void setAddressDao(AddressService addressDao) {
+    public void setAddressDao(AddressDao addressDao) {
         this.addressDao = addressDao;
     }
 

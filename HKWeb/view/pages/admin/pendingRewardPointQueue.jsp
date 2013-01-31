@@ -79,7 +79,7 @@
                         ${address.name} <br/>
                         ${address.line1}<br/>
                         ${address.line2}<br/>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}<br/>
                       Ph: ${address.phone}<br/>
                     </td>
@@ -104,7 +104,7 @@
                         ${address.name} <br/>
                         ${address.line1}<br/>
                         ${address.line2}<br/>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}<br/>
                       Ph: ${address.phone}<br/>
                     </td>

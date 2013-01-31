@@ -113,7 +113,7 @@ public class MLoginAction extends MBaseAction {
 					mUserLoginJSONResponse.setLine1(address.getLine1());
 					mUserLoginJSONResponse.setLine2(address.getLine2());
 					mUserLoginJSONResponse.setPhone(address.getPhone());
-					mUserLoginJSONResponse.setPin(address.getPin());
+					mUserLoginJSONResponse.setPin(address.getPincode().getPincode());
 					mUserLoginJSONResponse.setState(address.getState());
 				}
 				mUserLoginJSONResponse.setType("Logged");
@@ -144,7 +144,7 @@ public class MLoginAction extends MBaseAction {
 					mTempUserLoginJSONResponse.setLine1(address.getLine1());
 					mTempUserLoginJSONResponse.setLine2(address.getLine2());
 					mTempUserLoginJSONResponse.setPhone(address.getPhone());
-					mTempUserLoginJSONResponse.setPin(address.getPin());
+					mTempUserLoginJSONResponse.setPin(address.getPincode().getPincode());
 					mTempUserLoginJSONResponse.setState(address.getState());
 
 				}

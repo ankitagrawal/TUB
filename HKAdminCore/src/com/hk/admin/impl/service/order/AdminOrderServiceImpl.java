@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.order;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,15 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
+import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
+import com.hk.domain.core.OrderStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -89,6 +91,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private AdminEmailManager         adminEmailManager;
     @Autowired
     private CourierService            courierService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
 	@Autowired
     private SMSManager                smsManager;
 
@@ -408,11 +412,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
 
         Address address = order.getAddress();
-        String pin = address != null ? address.getPin() : null;
+        String pin = address != null ? address.getPincode().getPincode() : null;
+
+        OrderSearchCriteria osc = new OrderSearchCriteria();
+        osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
+        List<Order> rtoOrders = getOrderService().searchOrders(osc);
 
         // Double payable = pricingDto.getGrandTotalPayable();
         //Double payable = order.getAmount();
-        if (!courierService.isCodAllowed(pin)) {
+        if (!pincodeCourierService.isCodAllowed(pin)) {
             codFailureMap.put("CodAllowedOnPin", "N");
             codFailureMap.put("Pincode", pin);
         } else if (payable < codMinAmount || payable > codMaxAmount) {
@@ -422,13 +430,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
             codFailureMap.put("CodOnSubscription", "N");
         } else if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            if (courierService.isGroundShippingAllowed(pin)) {
+            if (pincodeCourierService.isGroundShippingAllowed(pin)) {
                 codFailureMap.put("GroundShippingAllowed", "Y");
             }
-            if (!courierService.isCodAllowedOnGroundShipping(pin)) {
+            if (!pincodeCourierService.isCodAllowedOnGroundShipping(pin)) {
                 codFailureMap.put("CodAllowedOnGroundShipping", "N");
             }
-
+        } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
+          osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
+          List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
+          if (rtoOrders.size() >= totalDeliveredOrders.size())
+            codFailureMap.put("MutipleRTOs", "Y");
         }
         return codFailureMap;
     }

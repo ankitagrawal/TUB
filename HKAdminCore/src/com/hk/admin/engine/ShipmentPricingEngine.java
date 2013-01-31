@@ -12,7 +12,6 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.EnumTax;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumCourierGroup;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
@@ -23,8 +22,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.courier.PincodeDao;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -64,10 +61,8 @@ public class ShipmentPricingEngine {
             }
         }
         Order order = shippingOrder.getBaseOrder();
-        String pincode = order.getAddress().getPin();
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        Pincode pincodeObj  = order.getAddress().getPincode();
         if(pincodeObj == null)   {
-            logger.info("Illegal pincode " + pincode + "for BO order " + order.getId());
             return null;
         }
         Warehouse srcWarehouse = shippingOrder.getWarehouse();
@@ -105,10 +100,8 @@ public class ShipmentPricingEngine {
         Shipment shipment = shippingOrder.getShipment();
         Order order = shippingOrder.getBaseOrder();
         Courier courier = shipment.getAwb().getCourier();
-        String pincode = order.getAddress().getPin();
-        Pincode pincodeObj = pincodeDao.getByPincode(pincode);
+        Pincode pincodeObj = order.getAddress().getPincode();
         if(pincodeObj == null)   {
-            logger.info("Illegal pincode " + pincode + "for BO order " + order.getId());
             return null;
         }
         Warehouse srcWarehouse = shippingOrder.getWarehouse();
