@@ -50,6 +50,7 @@
         $('.cancelOrderButton').click(function(){
             var proceed = confirm('Are you sure?');
             if (!proceed) return false;
+            else $(this).hide();
         });
       $('.cancelOrderLink').click(function() {
         var proceed = confirm('Are you sure?');
@@ -320,8 +321,10 @@
           var status = res.data.orderStatus.name;
           if (status == "Cancelled") {
             alert("Base order cancelled");
+            location.reload();
           } else {
             alert("Base order cannot be cancelled");
+            location.reload();
           }
         }
       }
