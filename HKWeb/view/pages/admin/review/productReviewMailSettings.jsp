@@ -7,18 +7,18 @@
 
     <s:layout-component name="content">
         <s:messages/>
-        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction">Create Mail Template</s:link>
+
         <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">
 
             <fieldset class="right_label">
                 <legend>Create Product Mail Settings</legend>
                 <c:if test="${rmsa.editSettings}">
-                    <s:hidden name="productReviewMail.id"/>
+                    <s:hidden name="productReviewMail" value="${productReviewMail.id}"/>
                 </c:if>
                 <ul class="productList">
                     <li>
                         <label>Product ID</label>
-                        <s:text name="product" />  (eg: NUT130)  <s:submit name="editProductSettings" value="edit" />
+                        <s:text name="product" />  <%--(eg: NUT130)  <s:submit name="editProductSettings" value="edit" />--%>
                     </li>
                     <li>
                         <label>Days To Mail After</label>
@@ -54,10 +54,11 @@
                 </ul>
             </fieldset>
         </s:form>
-        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
-            <label>Product ID</label>
-            <s:text name="product" /><s:submit name= "sendTestEmail" value="Test Email" />
-            <s:submit name= "sendDueEmail" value="Send Email" />
-        </s:form>
+
+        <%--<s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
+            <label>Order ID</label>
+            <s:text name="order" /><s:submit name= "test" value="User Entry" />
+        </s:form>--%>
+
     </s:layout-component>
 </s:layout-render>

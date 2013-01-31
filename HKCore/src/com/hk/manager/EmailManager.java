@@ -419,7 +419,7 @@ public class EmailManager {
         valuesMap.put("user", user);
         valuesMap.put("product", product);
 
-        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReview=&product="+product.getId();
+        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReviewByMail=&product="+product.getId() + "&userHash="+user.getUserHash();
         valuesMap.put("review_link", review_link);
 
         //template contents from db

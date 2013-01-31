@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -34,9 +35,11 @@ import com.hk.pact.service.review.ReviewService;
 import com.hk.util.SeoManager;
 
 @Component
+@HttpCache(allow = false)
 public class ProductReviewAction extends BasePaginatedAction {
 
     private Product          product;
+    private String userHash;
     private Page             productReviewPage;
     private List<UserReview> productReviews = new ArrayList<UserReview>();
     private Integer          defaultPerPage = 10;
@@ -52,6 +55,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     private ReviewDao        userReviewDao;
     @Autowired
     private ReviewService    reviewService;
+
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -73,6 +77,12 @@ public class ProductReviewAction extends BasePaginatedAction {
         review.setPostedBy(userService.getLoggedInUser());
         // User loggedInUser = UserCache.getInstance().getLoggedInUser();
         // review.setPostedBy(loggedInUser);
+        return new ForwardResolution("/pages/postReview.jsp");
+    }
+
+    public Resolution writeNewReviewByMail(){
+        review = new UserReview();
+        review.setPostedBy(userService.findByUserHash(userHash));
         return new ForwardResolution("/pages/postReview.jsp");
     }
 
@@ -106,6 +116,14 @@ public class ProductReviewAction extends BasePaginatedAction {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getUserHash() {
+        return userHash;
+    }
+
+    public void setUserHash(String userHash) {
+        this.userHash = userHash;
     }
 
     public List<UserReview> getProductReviews() {

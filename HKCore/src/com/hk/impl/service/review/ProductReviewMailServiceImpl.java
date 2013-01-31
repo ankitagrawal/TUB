@@ -1,7 +1,9 @@
 package com.hk.impl.service.review;
 
+import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ProductReviewMail;
 import com.hk.pact.dao.review.ProductReviewMailDao;
 import com.hk.pact.service.review.ProductReviewMailService;
@@ -24,5 +26,13 @@ public class ProductReviewMailServiceImpl implements ProductReviewMailService {
         }
         productReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         return productReviewMailDao.save(productReviewMail);
+    }
+
+    public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage){
+        return productReviewMailDao.searchAllProductReviewMail(mail, pageNo, perPage);
+    }
+
+    public void delete(ProductReviewMail productReviewMail){
+        productReviewMailDao.delete(productReviewMail);
     }
 }

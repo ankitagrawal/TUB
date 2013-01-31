@@ -62,7 +62,7 @@
             $(document).ready(function() {
                 $('#btn').click(function() {
                     var name = $('#name').val();
-                    var validNameRegex = /^[A-Za-z0-9_]+$/;
+                    var validNameRegex = /^[A-Za-z0-9_ ]+$/;
                     if (!validNameRegex.test(name)) {
                         $('#error').html("Invalid Mail type name: " + name + " . Only Alphanumeric characters and underscore is allowed!");
                         return false;

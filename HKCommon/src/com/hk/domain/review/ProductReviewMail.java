@@ -147,6 +147,10 @@ public class ProductReviewMail  implements java.io.Serializable {
         this.testEmailId = testEmailId;
     }
 
+    @Override
+    public String toString() {
+        return id != null ? id.toString() : "";
+    }
 
 
 
