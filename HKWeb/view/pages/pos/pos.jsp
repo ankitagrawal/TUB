@@ -3,10 +3,17 @@
 <%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="HealthKart.com Store : New Order">
 <s:useActionBean beanclass="com.hk.web.action.admin.pos.POSAction" var="pos"/>
+<%
+    UserService userService = ServiceLocatorFactory.getService(UserService.class);
+    pageContext.setAttribute("warehouse", userService.getWarehouseForLoggedInUser());
+%>
+
 <c:set var="paymentModeCard" value="<%=EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId()%>" />
 <s:layout-component name="htmlHead">
 	<style type="text/css">
@@ -190,11 +197,17 @@
 				}
 			});
 
+			var warehouse = $('#warehouse').val();
+			$("#productselect").autocomplete({
+				url:"${pageContext.request.contextPath}/core/autocomplete/AutoComplete.action?getProductsInWarehouse=&warehouse=" + warehouse + "&q="
+			});
+
 		});
 	</script>
 </s:layout-component>
 
 <s:layout-component name="content">
+	<input type="hidden" value="${warehouse.id}" id="warehouse" />
 	<input type="hidden" value="${paymentModeCard}" id="paymentModeCard" />
 	<div style="display: none;">
 		<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="getProductDetailsByBarcode"></s:link>
@@ -223,9 +236,10 @@
 			</tr>
 		</table>
 		<table cellpadding="1" width="100%">
-
 			<tr class="applyBorder" style="background:#EEE">
 				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
+				<td>Search a Product</td>
+				<td><s:text name="paymentRemarks" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>
 			</tr>
 		</table>
 

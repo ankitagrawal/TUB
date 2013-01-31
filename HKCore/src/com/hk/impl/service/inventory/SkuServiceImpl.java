@@ -157,7 +157,9 @@ public class SkuServiceImpl implements SkuService {
         }
     }
 
-
+	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId) {
+		return skuDao.getSKUsByProductNameAndWarehouse(productName, warehouseId);
+	}
 
     public SkuDao getSkuDao() {
         return skuDao;

@@ -47,5 +47,6 @@ public interface SkuService {
 	 */
 	public void insertSKUs(Set<Sku> skuSet) throws Exception;
 
+	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId);
 
 }

@@ -17,4 +17,5 @@ public interface SkuDao extends BaseDao {
 
     public List<Sku> filterProductVariantsByWarehouse(List<ProductVariant> productVariants, Warehouse warehouse);
 
+	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId);
 }
