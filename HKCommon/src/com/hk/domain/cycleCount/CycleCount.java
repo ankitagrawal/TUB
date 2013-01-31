@@ -4,6 +4,7 @@ import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -55,6 +56,11 @@ public class CycleCount implements java.io.Serializable {
 
 	@Column(name = "cycle_status", nullable = false)
 	private Long cycleStatus;
+
+	@ManyToOne
+	@JoinColumn(name = "warehouse_id", nullable = false)
+	private Warehouse warehouse;
+
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cycleCount")
 	private List<CycleCountItem> cycleCountItems = new ArrayList<CycleCountItem>();;
@@ -135,5 +141,13 @@ public class CycleCount implements java.io.Serializable {
 
 	public void setProductVariant(ProductVariant productVariant) {
 		this.productVariant = productVariant;
+	}
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 }

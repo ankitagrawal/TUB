@@ -69,7 +69,7 @@
 								<c:choose>
 									<c:when test="${auditBrand.cycleCount.cycleStatus == inProgress}">
 										<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
-										        event="directToCycleCount">
+										        event="directToCycleCountPage">
 											<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
 											<s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
 											<span style="color:brown;">Edit Cycle Count</span>
@@ -95,7 +95,7 @@
 								<c:set value="<%= EnumAuditStatus.Pending.getId() %>" var="pending"/>
 								<c:if test="${auditBrand.auditStatus == pending}">
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
-								        event="directToCycleCount">
+								        event="directToCycleCountPage">
 									<s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
 									<span style="color:brown;">Start Cycle Count</span>
 								</s:link>

@@ -5,6 +5,10 @@ import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.akube.framework.dao.Page;
 
 import java.util.List;
@@ -30,7 +34,9 @@ public interface CycleCountService {
 
 	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup);
 
-	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+	public Page searchCycleList(String auditBy, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+
+	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList , Product product , ProductVariant productVariant, Warehouse warehouse);
 
 
 }

@@ -23,19 +23,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
 
 	public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
-		DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-		if (StringUtils.isNotBlank(brand) ) {
-			auditCriteria.add(Restrictions.eq("brand", brand));
-		}
-		if (warehouse != null) {
-			auditCriteria.add(Restrictions.eq("warehouse", warehouse));
-		}
-		if (auditor != null) {
-			auditCriteria.add(Restrictions.eq("auditor", auditor));
-		}
-		if (startDate != null && endDate != null) {
-			auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
-		}
+		DetachedCriteria auditCriteria = getBrandsToAuditCriteria(brand, warehouse, auditor, startDate, endDate, null);
 		auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 		return list(auditCriteria, pageNo, perPage);
 
@@ -68,12 +56,29 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		return false;
 	}
 
-    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus){
-        String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus ";
-        Query q =  getSession().createQuery(queryString);
-        q.setParameter("auditStatus", auditStatus);
-        q.setParameter("brand",brand);
-        return q.list();
-    }
+	public DetachedCriteria getBrandsToAuditCriteria(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, Long auditStatus) {
+	DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
+		if (StringUtils.isNotBlank(brand) ) {
+			auditCriteria.add(Restrictions.eq("brand", brand));
+		}
+		if (warehouse != null) {
+			auditCriteria.add(Restrictions.eq("warehouse", warehouse));
+		}
+		if (auditor != null) {
+			auditCriteria.add(Restrictions.eq("auditor", auditor));
+		}
+		if (startDate != null && endDate != null) {
+			auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
+		}
+		if (auditStatus != null) {
+			auditCriteria.add(Restrictions.eq("auditStatus", auditStatus));
+		}
+		return  auditCriteria;
+	}
+
+	public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus) {
+		DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, null, null, null, null, auditStatus);
+		return findByCriteria(brandDetachedCriteria);
+	}
 
 }

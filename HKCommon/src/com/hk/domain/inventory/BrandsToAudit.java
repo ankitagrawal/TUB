@@ -100,6 +100,21 @@ public class BrandsToAudit implements java.io.Serializable {
 		return id != null ? id.toString() : "";
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof BrandsToAudit))
+            return false;
+
+        BrandsToAudit brandsToAudit = (BrandsToAudit) o;
+
+        if (this.id != null && brandsToAudit.getId() != null){
+            return this.id.equals(brandsToAudit.getId());
+        }
+        return false;
+    }
+
 	public CycleCount getCycleCount() {
 		return cycleCount;
 	}

@@ -11,6 +11,7 @@
 	   </div>
 	</s:layout-component>
 	<s:layout-component name="content">
+
 		<c:set value="<%= EnumCycleCountStatus.Closed.getId()%>" var="closed"/>
 		<c:if test="${cycle.cycleCount.cycleStatus < closed }">
 		<table style="margin: 80px auto 81px;">
@@ -113,6 +114,9 @@
 			<div style="text-align: center;margin-top: 70px;">
 				<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
 					<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+					<c:if test="${cycle.cycleCount.brandsToAudit != null}">
+						<s:hidden name="cycleCountType" value="1"/>	
+					</c:if>
 					<s:submit name="closeCycleCount" value="Close"/>
 				</s:form>
 			</div>

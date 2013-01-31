@@ -55,9 +55,27 @@
 		<div id="heading" style="margin:0px auto;width:1200px;margin-bottom: 30px;">
 			<ul style="padding-left:0px">
 				<li>CYCLE COUNT # ${cycle.cycleCount.id}</li>
-				<li>BRAND : ${cycle.cycleCount.brandsToAudit.brand} </li>
+		<c:set value="" var="auditOn"/>
+		<c:set value="" var="cycleCountTypeV"/>
+		<c:if test="${cycle.cycleCount.brandsToAudit != null}">
+			<c:set value="${cycle.cycleCount.brandsToAudit.brand}" var="auditOn"/>
+			<c:set value="1" var="cycleCountTypeV"/>
+			<li>BRAND : ${auditOn} </li>
+		</c:if>
+		<c:if test="${cycle.cycleCount.product != null}">
+			<c:set value="${cycle.cycleCount.product.id}" var="auditOn"/>
+			<c:set value="2" var="cycleCountTypeV"/>
+			<li>Product : ${auditOn} </li>
+		</c:if>
+
+		<c:if test="${cycle.cycleCount.productVariant != null}">
+			<c:set value="${cycle.cycleCount.productVariant.id}" var="auditOn"/>
+			<c:set value="3" var="cycleCountTypeV"/>
+			<li>Product Variant : ${auditOn} </li>
+		</c:if>
 			</ul>
 		</div>
+
 
 		<div id="errordiv" style="font-weight: bold;font-size: 12px;margin-bottom: 30px;">
 			<c:choose>
@@ -72,9 +90,10 @@
 
 
 		<s:form id="ccform" beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+			<s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
 			<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
 			<s:hidden name="message" value="${cycle.message}"/>
-			<s:hidden name="error" value="${cycle.error}"/>
+			<s:hidden name="error" value="${cycle.error}"/>			
 			<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
@@ -158,6 +177,7 @@
 				<ul>
 					<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
 						<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+						 <s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
 						<li><label>File to Upload</label>
 							<s:file id="filebean" name="fileBean" size="30"/>
 						</li>

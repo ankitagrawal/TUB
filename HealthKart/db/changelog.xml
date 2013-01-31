@@ -10978,4 +10978,60 @@
 			update warehouse set warehouse_type_id = 10 where id = 301;
 		</sql>
 	</changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-1">
+        <createTable tableName="cycle_count">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="brands_to_audit_id" type="INT"/>
+            <column name="user_id" type="INT">
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="DATETIME"/>
+            <column name="cycle_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(20)"/>
+            <column name="product_variant_id" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-2">
+        <createTable tableName="cycle_count_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="cycle_count_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scanned_qty" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-4">
+        <addForeignKeyConstraint baseColumnNames="brands_to_audit_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_brands_to_audit1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="brands_to_audit"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-5">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-6">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-7">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-8">
+        <addForeignKeyConstraint baseColumnNames="cycle_count_id" baseTableName="cycle_count_item"  constraintName="fk_cycle_count_item_cycle_count1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cycle_count"  referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1359538271022-9">
+        <addForeignKeyConstraint baseColumnNames="sku_group_id" baseTableName="cycle_count_item"  constraintName="fk_cycle_count_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group"  referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Seema (generated)" id="1359538271022-10">
+        <createIndex indexName="brands_to_audit_id_UNIQUE" tableName="cycle_count" unique="true">
+            <column name="brands_to_audit_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

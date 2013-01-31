@@ -96,13 +96,19 @@ public class CycleCountAction extends BasePaginatedAction {
 	private String auditBy;
 	private Integer cycleCountType;
 
-	public Resolution directToCycleCount() {
-
+	public Resolution directToCycleCountPage() {
+		
 		if (cycleCount.getId() == null) {
-			cycleCount.setCreateDate(new Date());
-			cycleCount.setUser(userService.getLoggedInUser());
-			cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
-			cycleCount = cycleCountService.save(cycleCount);
+			List<BrandsToAudit> brandsToAuditList = new ArrayList<BrandsToAudit>();
+			brandsToAuditList.add(cycleCount.getBrandsToAudit());
+			List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(brandsToAuditList, null, null, userService.getWarehouseForLoggedInUser());
+			if (cycleCounts != null && cycleCounts.size() == 0) {
+				cycleCount.setCreateDate(new Date());
+				cycleCount.setUser(userService.getLoggedInUser());
+				cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+				cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
+				cycleCount = cycleCountService.save(cycleCount);
+			}
 		}
 
 		return view();
@@ -132,7 +138,9 @@ public class CycleCountAction extends BasePaginatedAction {
 				warehouse = auditor.getSelectedWarehouse();
 				brandsToAudit.setAuditor(auditor);
 				brandsToAudit.setWarehouse(warehouse);
-				brandsToAuditDao.save(brandsToAudit);
+				brandsToAudit.setBrand(auditBy);
+				brandsToAudit.setAuditDate(new Date());
+				brandsToAudit = (BrandsToAudit) brandsToAuditDao.save(brandsToAudit);
 				addRedirectAlertMessage(new SimpleMessage("Cycle Count Created By Brand"));
 			}
 
@@ -143,49 +151,61 @@ public class CycleCountAction extends BasePaginatedAction {
 
 
 	public Resolution saveCycleCount() {
-
+		boolean invalidEntry = false;
 		if (cycleCountType == 1) {
 			BrandsToAudit brandsToAudit = validateBrand();
 			if (brandsToAudit == null) {
-				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+				invalidEntry = true;
 			}
 			cycleCount.setBrandsToAudit(brandsToAudit);
 		} else if (cycleCountType == 2) {
-
 			Product product = productService.getProductById(auditBy);
 			if (product == null) {
+				invalidEntry = true;
 				message = "Invalid Product Id ";
-				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
-
+			} else {
+				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, product, null, userService.getWarehouseForLoggedInUser());
+				if (cycleCounts != null && cycleCounts.size() > 0) {
+					invalidEntry = true;
+					message = "Product Cycle Count Already In Progress";
+				}
 			}
 			cycleCount.setProduct(product);
 
 		} else {
 			ProductVariant productVariant = productVariantService.getVariantById(auditBy);
 			if (productVariant == null) {
+				invalidEntry = true;
 				message = "Invalid Product Variant Id ";
-				return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+			} else {
+				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
+				if (cycleCounts != null && cycleCounts.size() > 0) {
+					invalidEntry = true;
+					message = "Product Variant Cycle Count Already In Progress";
+				}
 			}
 			cycleCount.setProductVariant(productVariant);
 
 		}
-
+		if (invalidEntry) {
+			return new ForwardResolution("/pages/admin/createCycleCount.jsp");
+		}
 		cycleCount.setUser(userService.getLoggedInUser());
+		cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
 		cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
 		cycleCount = cycleCountService.save(cycleCount);
-	    return new RedirectResolution("/pages/admin/cycleCountList.jsp");
+		return new RedirectResolution(CycleCountAction.class, "pre");
 	}
 
 
 	@DefaultHandler
 	public Resolution pre() {
-		User loggedOnUser = getPrincipalUser();
-		if (warehouse == null) warehouse = loggedOnUser.getSelectedWarehouse();
+
 		User auditor = null;
 		if (StringUtils.isNotBlank(auditorLogin)) {
 			auditor = getUserService().findByLogin(auditorLogin);
 		}
-		cyceCountPage = cycleCountService.searchCycleList(brand, warehouse.getId(), auditor, startDate, endDate, getPageNo(), getPerPage());
+		cyceCountPage = cycleCountService.searchCycleList(auditBy, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
 		if (cyceCountPage != null) {
 			cycleCountList = cyceCountPage.getList();
 		}
@@ -228,8 +248,7 @@ public class CycleCountAction extends BasePaginatedAction {
 		message = null;
 		error = false;
 		if ((hkBarcode != null) && (!(StringUtils.isEmpty(hkBarcode.trim())))) {
-			String brand = cycleCount.getBrandsToAudit().getBrand();
-			List<SkuGroup> validSkuGroupList = findSkuGroup(brand, hkBarcode);
+			List<SkuGroup> validSkuGroupList = findSkuGroup(hkBarcode);
 			CycleCountItem validCycleCountItem = null;
 			SkuGroup validSkuGroup = null;
 			if (validSkuGroupList.size() > 0) {
@@ -279,28 +298,51 @@ public class CycleCountAction extends BasePaginatedAction {
 			} else {
 				hkBarcodeErrorsMap.put(hkBarcode, message);
 			}
+			if (message == null) {
+				message = "Sucessfully Scanned for " + hkBarcode;
+			}
 		}
-		if (message == null) {
-			message = "Sucessfully Scanned for " + hkBarcode;
-		}
+
 		return new RedirectResolution(CycleCountAction.class, "view").addParameter("message", message).addParameter("cycleCount", cycleCount.getId())
 				.addParameter("cycleCountPVImapString", cycleCountPVImapString).addParameter("error", error);
 	}
 
-	private List<SkuGroup> findSkuGroup(String brand, String hkBarcode) {
+	private List<SkuGroup> findSkuGroup(String hkBarcode) {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 		List<SkuGroup> skuGroupFromDb = skuGroupService.getSkuGroup(hkBarcode.trim(), warehouse.getId());
 		List<SkuGroup> skuGroupListResult = new ArrayList<SkuGroup>();
 		if (skuGroupFromDb != null && skuGroupFromDb.size() > 0) {
 			for (SkuGroup skuGroupCheckBrand : skuGroupFromDb) {
-				if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getBrand().equalsIgnoreCase(brand)) {
-					skuGroupListResult.add(skuGroupCheckBrand);
-				} else {
-					error = true;
-					message = hkBarcode + "  ->  does not belong to brand";
-					return skuGroupListResult;
-				}
+				if (cycleCountType == 1) {
+					String brandInAudit = cycleCount.getBrandsToAudit().getBrand();
+					if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getBrand().equalsIgnoreCase(brandInAudit)) {
+						skuGroupListResult.add(skuGroupCheckBrand);
+					} else {
+						error = true;
+						message = hkBarcode + "  ->  does not belong to brand";
+						return skuGroupListResult;
+					}
+				} else if (cycleCountType == 2) {
+					String productId = cycleCount.getProduct().getId();
+					if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getId().equalsIgnoreCase(productId)) {
+						skuGroupListResult.add(skuGroupCheckBrand);
+					} else {
+						error = true;
+						message = hkBarcode + "  ->  does not belong to Product";
+						return skuGroupListResult;
+					}
 
+				} else {
+					String productVariantId = cycleCount.getProductVariant().getId();
+					if (skuGroupCheckBrand.getSku().getProductVariant().getId().equalsIgnoreCase(productVariantId)) {
+						skuGroupListResult.add(skuGroupCheckBrand);
+					} else {
+						error = true;
+						message = hkBarcode + "  ->  does not belong to Product Variant";
+						return skuGroupListResult;
+					}
+
+				}
 			}
 		} else {
 			error = true;
@@ -345,7 +387,9 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	public Resolution closeCycleCount() {
 		cycleCount.setCycleStatus(EnumCycleCountStatus.Closed.getId());
-		cycleCount.getBrandsToAudit().setAuditStatus(EnumAuditStatus.Done.getId());
+		if (cycleCountType != null && cycleCountType == 1) {
+			cycleCount.getBrandsToAudit().setAuditStatus(EnumAuditStatus.Done.getId());
+		}
 		cycleCount = cycleCountService.save(cycleCount);
 		return new RedirectResolution(CycleCountAction.class, "pre");
 	}
@@ -394,7 +438,6 @@ public class CycleCountAction extends BasePaginatedAction {
 
 		try {
 			hkBarcodeErrorsMap = new HashMap<String, String>();
-			String brand = cycleCount.getBrandsToAudit().getBrand();
 			String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + System.currentTimeMillis() + ".txt";
 			File excelFile = new File(excelFilePath);
 			excelFile.getParentFile().mkdirs();
@@ -402,7 +445,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			Map<String, Integer> hkBarcodeQtyMap = cycleCountHelper.readCycleCountNotepad(excelFile);
 			cycleCountPviMap = new HashMap<Long, Integer>();
 			for (String hkbarcodeFromNotepad : hkBarcodeQtyMap.keySet()) {
-				List<SkuGroup> validSkuGroupList = findSkuGroup(brand, hkbarcodeFromNotepad);
+				List<SkuGroup> validSkuGroupList = findSkuGroup(hkbarcodeFromNotepad);
 				if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
 					int notepadScannedQty = hkBarcodeQtyMap.get(hkbarcodeFromNotepad);
 					for (SkuGroup skuGroup : validSkuGroupList) {

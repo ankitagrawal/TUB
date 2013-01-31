@@ -41,4 +41,13 @@ public enum EnumCycleCountStatus {
 				EnumCycleCountStatus.Closed);
 
 	}
+
+	public static List<Long> getListOfOpenCycleCountStatus() {
+		return Arrays.asList(
+				EnumCycleCountStatus.InProgress.getId(),
+				EnumCycleCountStatus.RequestForApproval.getId(),
+				EnumCycleCountStatus.Approved.getId()
+				);
+
+	}
 }

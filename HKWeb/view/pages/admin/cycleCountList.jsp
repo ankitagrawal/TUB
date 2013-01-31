@@ -16,13 +16,13 @@
 	</s:layout-component>
 
 	<s:layout-component name="content">
-		<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="view">
+		<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="createCycleCount">
 			Create New Cycle Count
 		</s:link>
 		<fieldset class="right_label">
 			<legend>Search Cycle Count List</legend>
 			<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-				<label>Brand:</label><s:text name="brand"/>
+				<label>Brand:</label><s:text name="auditBy"/>
 				<label>Auditor Login Email:</label><s:text name="auditorLogin"/>
 				<label>WH:</label><s:select name="warehouse">
 				<s:option value="">-ALL-</s:option>
@@ -44,18 +44,30 @@
 				<th>CC Start Date</th>
 				<th>WH</th>
 				<th>Auditor</th>
-				<th>Brand</th>
+				<th>Brand/Product/ProductVariant</th>
 				<th>Status</th>
 				<th>Actions</th>
 			</tr>
 			</thead>
 			<c:forEach items="${cc.cycleCountList}" var="cycleCountV" varStatus="ctr">
+				<c:set value="" var="auditOn"/>
+				<c:if test="${cycleCountV.brandsToAudit != null}">
+				 <c:set value="${cycleCountV.brandsToAudit.brand}" var="auditOn"/>
+				</c:if>
+				<c:if test="${cycleCountV.product != null}">
+				 <c:set value="${cycleCountV.product.id}" var="auditOn"/>
+				</c:if>
+
+				<c:if test="${cycleCountV.productVariant != null}">
+				  <c:set value="${cycleCountV.productVariant.id}" var="auditOn"/>
+				</c:if>
+
 				<tr>
 					<td>${cycleCountV.id}</td>
 					<td><fmt:formatDate value="${cycleCountV.createDate}" pattern="dd/MM/yyyy"/></td>
-					<td>${cycleCountV.brandsToAudit.warehouse.city}</td>
+					<td>${cycleCountV.warehouse.city}</td>
 					<td>${cycleCountV.user.login}</td>
-					<td>${cycleCountV.brandsToAudit.brand}</td>
+					<td>${auditOn}</td>
 					<td>
 						<c:forEach items="<%=EnumCycleCountStatus.getAllList()%>" var="status">
 							<c:if test="${cycleCountV.cycleStatus == status.id}">
@@ -69,7 +81,7 @@
 						<c:choose>
 							<c:when test="${cycleCountV.cycleStatus == inProgress}">
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
-								        event="directToCycleCount">
+								        event="directToCycleCountPage"> 									
 									<s:param name="cycleCount" value="${cycleCountV.id}"/>
 									<span style="color:brown;">Edit Cycle Count</span>
 								</s:link>
@@ -77,7 +89,7 @@
 							<c:otherwise>
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
 								        event="save">
-									<s:param name="cycleCount" value="${cycleCountV}"/>
+									<s:param name="cycleCount" value="${cycleCountV.id}"/>
 									<span style="color:brown;">View Cycle Count</span>
 								</s:link>
 							</c:otherwise>

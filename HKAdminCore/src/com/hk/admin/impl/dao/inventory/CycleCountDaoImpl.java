@@ -6,14 +6,23 @@ import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
+import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.Product;
 import com.hk.impl.dao.BaseDaoImpl;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.akube.framework.dao.Page;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.Expression;
+import org.hibernate.Criteria;
 
 import java.util.List;
 import java.util.Date;
+import java.util.Arrays;
 
 
 /**
@@ -52,20 +61,37 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 	}
 
 
-	private DetachedCriteria getCycleCountCriteria(String brand, Long warehouseId, User auditor, Date startDate, Date endDate) {
+	private DetachedCriteria getCycleCountCriteria(String auditBy, List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse, User auditor, Date startDate, Date endDate, List<Long> cycleStatusList) {
 		DetachedCriteria cycleCountDetachedCriteria = DetachedCriteria.forClass(CycleCount.class);
-		DetachedCriteria brandToAuditDetachedCriteria = cycleCountDetachedCriteria.createCriteria("brandsToAudit");
 
-		if (warehouseId != null) {
-			brandToAuditDetachedCriteria.add(Restrictions.eq("warehouse.id", warehouseId));
+
+		if (warehouse != null) {
+			cycleCountDetachedCriteria.add(Restrictions.eq("warehouse", warehouse));
 		}
-		if (brandToAuditDetachedCriteria != null) {
-			if (brand != null) {
-				brandToAuditDetachedCriteria.add(Restrictions.eq("brand", brand));
-			}
 
-			if (auditor != null) {
-				brandToAuditDetachedCriteria.add(Restrictions.eq("auditor", auditor));
+		if (cycleStatusList != null && cycleStatusList.size() > 0) {
+			cycleCountDetachedCriteria.add(Restrictions.in("cycleStatus", cycleStatusList));
+		}
+
+		if (auditor != null) {
+			cycleCountDetachedCriteria.add(Restrictions.eq("user", auditor));
+		}
+
+		if (product != null) {
+			cycleCountDetachedCriteria.add(Restrictions.eq("product", product));
+		}
+
+		if (productVariant != null) {
+			cycleCountDetachedCriteria.add(Restrictions.eq("productVariant", productVariant));
+		}
+
+		if ((brandsToAuditList != null) && brandsToAuditList.size() > 0) {
+			cycleCountDetachedCriteria.add(Restrictions.in("brandsToAudit", brandsToAuditList));
+		}
+
+		if (auditBy != null) {
+			if ((brandsToAuditList == null || brandsToAuditList.isEmpty()) && (product == null) && (productVariant == null)) {
+				return null;
 			}
 		}
 		if (startDate != null && endDate != null) {
@@ -75,13 +101,21 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 	}
 
 
-	public Page searchCycleList(String brand, Long warehouseId, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
+	public Page searchCycleList(String auditBy, List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
 
-		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(brand, warehouseId, auditor, startDate, endDate);
+		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(auditBy, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, null);
+		if (cyclecounDetachedCriteria == null) {
+			return null;
+		}
 		cyclecounDetachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 		return list(cyclecounDetachedCriteria, pageNo, perPage);
 
 
+	}
+
+	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse) {
+		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(null, brandsToAuditList, product, productVariant, warehouse, null, null, null, EnumCycleCountStatus.getListOfOpenCycleCountStatus());
+		return (List<CycleCount>) findByCriteria(cyclecounDetachedCriteria);
 	}
 
 }
