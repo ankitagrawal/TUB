@@ -33,9 +33,9 @@
 
             <div class="formcontainer">
                 <div class="content">
-                    <div class="heading">
+                    <h3 class="heading">
                         SIGN IN
-                    </div>
+                    </h3>
 
                 <c:choose>
                     <c:when test="${!empty sla.hkApiUser}">

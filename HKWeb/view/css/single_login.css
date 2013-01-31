@@ -82,7 +82,7 @@ margin: 10px 10px 10px 0px;
 .footer img{margin-bottom:3px;}
 .footer{
     padding: 0px 40px;
-    margin: 10px;
+    margin: 10px 0px;
     border-top:1px solid #c9e1f4;
 }
 .errors .errorList{
