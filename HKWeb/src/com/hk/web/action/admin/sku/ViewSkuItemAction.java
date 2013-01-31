@@ -28,7 +28,7 @@ public class ViewSkuItemAction  extends BaseAction {
     private AdminInventoryService adminInventoryService;
     private Long entityId;
     private RvLineItem rvLineItem;
-    private StockTransferLineItem stockTransferLineItem;
+    private StockTransferLineItem stockTransferLineItem;                          
                                                             
 
 
