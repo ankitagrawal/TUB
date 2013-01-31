@@ -43,5 +43,7 @@ public interface UserService {
 
   public User findByLoginAndStoreId(String login, Long storeId);
 
-    
+  public void subscribeUserForOffers(String login, boolean subscribe);
+
+  boolean unsubscribeUser(String unsubscribeToken);
 }

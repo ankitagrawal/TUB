@@ -1,13 +1,13 @@
 package com.hk.admin.pact.dao.courier;
 
-import java.util.List;
-
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,10 +24,10 @@ public interface PincodeRegionZoneDao extends BaseDao {
 
     public PincodeRegionZone getPincodeRegionZone(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
 
-     public List<PincodeRegionZone> getPincodeRegionZoneList(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
+    public List<PincodeRegionZone> getPincodeRegionZoneList(CourierGroup courierGroup, Pincode pincode, Warehouse warehouse);
 
-	public int assignPincodeRegionZoneToPincode(Pincode pincode,List<PincodeRegionZone> pincodeRegionZoneList);
+    public int assignPincodeRegionZoneToPincode(Pincode pincode, List<PincodeRegionZone> pincodeRegionZoneList);
 
-	public List<PincodeRegionZone> getPincodeRegionZoneList(Pincode pincode);
+    public List<PincodeRegionZone> getPincodeRegionZoneList(Pincode pincode);
 
-    }
+}

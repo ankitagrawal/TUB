@@ -5,9 +5,11 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.core.Country;
+import com.hk.domain.core.Pincode;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,13 +28,11 @@ public interface AddressService {
 
     Page getVisibleAddressesForManufacturer(Long manufacturerId, String city, int pageNo, int perPage);
 
-    List <BillingAddress> getVisibleBillingAddress (User user);
+    Set<BillingAddress> getVisibleBillingAddress (User user);
 
     public BillingAddress getBillingAddressById(Long billingAddressId);
 
      public List<Country> getAllCountry();
 
      public Country getCountry(Long countryId);
-
-
 }

@@ -1,25 +1,25 @@
 package com.hk.impl.dao.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.Criteria;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.domain.user.BillingAddress;
-import com.hk.domain.order.Order;
 import com.hk.domain.core.Country;
+import com.hk.domain.payment.Payment;
+import com.hk.domain.user.Address;
+import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.core.AddressDao;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -91,33 +91,24 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
 
     @SuppressWarnings("unchecked")
     public List<Address> getDuplicateAddresses(Address a) {
-        String hqlQuery = "select a from Address a " + "where a.pin=:pin and a.phone=:phone and a.user <> :user";
-        return getSession().createQuery(hqlQuery).setParameter("pin", a.getPin()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
+        String hqlQuery = "select a from Address a " + "where a.pincode=:pin and a.phone=:phone and a.user <> :user";
+        return getSession().createQuery(hqlQuery).setParameter("pin", a.getPincode()).setParameter("phone", a.getPhone()).setParameter("user", a.getUser()).list();
     }
 
-    // public List<Address> getVisibleAddressesFromAddressList(List<Address> addressList)
-    // {
-    // if(addressList.size()!=0)
-    // {
-    // return getSession().createQuery("select a from Address a where a in (:addressList) and a.deleted= :deleted")
-    // .setParameter("deleted",Boolean.FALSE)
-    // .setParameterList("addressList",addressList)
-    // .list();
-    // }
-    // else
-    // return null;
-    //
-    // }
 
-
-    public List<BillingAddress> getVisibleBillingAddresses(User user) {
-        List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>();
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BillingAddress.class);
-        detachedCriteria.add(Restrictions.eq("user", user));
-        List<BillingAddress> billingAddressList = (List<BillingAddress>) findByCriteria(detachedCriteria);
-        for (BillingAddress billingaddress : billingAddressList) {
-            if (!billingaddress.isDeleted())
-                billingAddresses.add(billingaddress);
+    public Set<BillingAddress> getVisibleBillingAddresses(User user) {
+        Set<BillingAddress> billingAddresses = new HashSet<BillingAddress>();
+        DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
+        paymentCriteria.add(Restrictions.isNotNull("billingAddress"));
+        DetachedCriteria orderCriteria = paymentCriteria.createCriteria("order");
+        orderCriteria.add(Restrictions.eq("user", user));
+        DetachedCriteria billingAddressCriteria = paymentCriteria.createCriteria("billingAddress");
+        billingAddressCriteria.add(Restrictions.ne("deleted", true));
+        List<Payment> payments = findByCriteria(paymentCriteria);
+        if (payments != null) {
+            for (Payment payment : payments) {
+                billingAddresses.add(payment.getBillingAddress());
+            }
         }
         return billingAddresses;
     }
@@ -134,5 +125,4 @@ public class AddressDaoImpl extends BaseDaoImpl implements AddressDao {
     public Country getCountry(Long countryId) {
         return get(Country.class, countryId);
     }
-          
 }

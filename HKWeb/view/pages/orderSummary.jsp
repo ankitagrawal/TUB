@@ -118,7 +118,7 @@
           <br/>
             ${orderSummary.order.address.state}
           <br/>
-            ${orderSummary.order.address.pin}
+            ${orderSummary.order.address.pincode.pincode}
           <br/>
             ${orderSummary.order.address.phone}
         </div>
