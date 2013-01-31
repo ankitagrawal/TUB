@@ -174,11 +174,11 @@
             }
             //if(canSet)
             {
-                alert( 'prodid:' + "'" + prodId + "'" + 'pagetype:' +  "'" + hkPageType + "'" + 'pCat:' +  "'" + pCategory + "'");
+                alert( 'prodid:' +  prodId + 'pagetype:'  + hkPageType  + 'pCat:' + pCategory);
                 var google_tag_params = {
-                    prodid: "'" + prodId + "'" ,
-                    pagetype: "'" + hkPageType + "'",
-                    pcat: "'" + pCategory + "'",
+                    prodid:  prodId,
+                    pagetype: hkPageType,
+                    pcat: pCategory,
                     use_case: 'retail'
                 };
             }
