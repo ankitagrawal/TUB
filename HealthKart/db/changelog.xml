@@ -11236,7 +11236,61 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-
+     <changeSet author="Shrey (generated)" id="29-01-2013-01">
+        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
+            <column name="shipping_order_id"/>
+        </createIndex>
+    </changeSet>
+<!--
+     <changeSet author="Shrey (generated)" id="29-01-2013-02">
+        <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
+            <column name="awb_id"/>
+        </createIndex>
+    </changeSet>
+-->
+    <changeSet author="Pratham (generated)" id="1359627218805-1">
+        <createIndex indexName="pincode_default_courier_index" tableName="pincode_default_courier" unique="true">
+            <column name="pincode_id"/>
+            <column name="warehouse_id"/>
+            <column name="cod"/>
+            <column name="ground_shipping"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0112">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier_group1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0111">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_warehouse1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-012">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_region_type1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0122">
+        <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1359627218805-3">
+        <dropIndex indexName="pincode_region_index" tableName="pincode_region_zone"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-20">
+        <addForeignKeyConstraint baseColumnNames="courier_group_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_courier_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_group" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-21">
+        <addForeignKeyConstraint baseColumnNames="pincode_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="pincode" referencedTableName="pincode" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-22">
+        <addForeignKeyConstraint baseColumnNames="region_type_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_region_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="region_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="31-01-2013-0-23">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1359627218805-2">
+        <createIndex indexName="pincode_region_index_new" tableName="pincode_region_zone" unique="true">
+            <column name="warehouse_id"/>
+            <column name="region_type_id"/>
+            <column name="courier_group_id"/>
+            <column name="pincode_id"/>
+        </createIndex>
+    </changeSet>
     <changeSet author="Ankur (generated)" id="1358841573903-1">
         <createTable tableName="mail">
             <column autoIncrement="true" name="id" type="INT">

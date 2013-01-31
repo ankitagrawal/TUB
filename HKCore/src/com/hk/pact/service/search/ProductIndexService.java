@@ -16,4 +16,6 @@ public interface ProductIndexService {
     void indexProduct(Product product);
 
     void indexProduct(List<SolrProduct> products);
+
+    void updateExtraProperties(Product pr, SolrProduct solrProduct);
 }

@@ -136,6 +136,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         } catch (Exception e) {
             logger.error("Exception while uploading pincode courier mapping excel " + e.getMessage());
         }
+        addRedirectAlertMessage(new SimpleMessage("Mapping Updated!!"));
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
