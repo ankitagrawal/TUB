@@ -10,7 +10,6 @@
     <title>Healthkart Login</title>
     <link type="text/css" rel="stylesheet" href="${httpPath}/css/single_login.css" />
     <script type="text/javascript" src="${httpPath}/js/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="${httpPath}/js/jquery.hkCommonPlugins.js"></script>
 </head>
 <body>
 <div class='loaderContainer'>
