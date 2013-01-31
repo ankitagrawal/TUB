@@ -11317,9 +11317,9 @@
 		<sql>
 			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
 			('NORMAL', 0, 1500, 0),
-			('SILVER', 1500, 3000, 1),
-			('GOLD', 3000, 6000, 2),
-			('PLATINUM', 6000, 100000, 3);
+			('SILVER', 1501, 3000, 1),
+			('GOLD', 3001, 6000, 2),
+			('PLATINUM', 6001, 100000, 3);
 		</sql>
 	</changeSet>
 </databaseChangeLog>
