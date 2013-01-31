@@ -18,8 +18,14 @@
 </div>
 <div id="container">
     <div class="logo_block">
-        <img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="40" width="140">
-        <img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="25" width="140">
+        <img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="30" width="110">
+        <img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="20" width="100">
+        <div id="newToHealthkart" class="rightcontent">
+            New to healthkart? &nbsp; <a id="newCustomer" class="yellow-button">CREATE AN ACCOUNT</a>
+        </div>
+        <div id="alreadyHaveAccount" class="rightcontent" style="display: none;">
+           Already have an account? &nbsp;<a id="oldCustomer" class="yellow-button">SIGN IN HERE</a>
+        </div>
     </div>
 
     <div>
@@ -28,12 +34,13 @@
 
             <div class="formcontainer">
                 <div class="content">
-                    <h3>
-                        Sign In
-                    </h3>
+                    <div class="heading">
+                        SIGN IN
+                    </div>
+
                 <c:choose>
                     <c:when test="${!empty sla.hkApiUser}">
-                         You can sign in to ${sla.hkApiUser.name} using your healthkart.com account
+                         You can sign in to ${sla.hkApiUser.name} using your healthkart.com account.
                     </c:when>
                     <c:otherwise>
                          Please enter the following details to sign into your account
@@ -43,19 +50,21 @@
                 <div class="errors"></div>
             <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction" class="form">
 
+                Email <br/>
                 <s:text type="text" placeholder="Email" name="userLogin" id="loginName" tabindex="10" size="50" maxlength="50" value=""/>
                 <br/>
+                Password <br/>
                 <s:text type="password" placeholder="Password" name="password" id="password"  tabindex="20" size="50" maxlength="50" value=""/>
                 <br/>
 
                 <s:submit tabindex="30" name="login" id="login"  class="submit" value="Sign in"/>
-                <s:link beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction" id="forgotPasswordLink" tabindex="40" class="forgot_link">forgot password?</s:link>
+                <s:link beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction" id="forgotPasswordLink" tabindex="40" class="yellow-button">forgot password?</s:link>
                 <s:hidden name="login" value="login"/>
                 <s:hidden name="apiKey" value="${sla.apiKey}"/>
                 <s:hidden name="redirectUrl" value="${sla.redirectUrl}"/>
 
             </s:form>
-            <div class="content">If you don't have a healthkart account, <a id="newCustomer" class="clickHere">click here</a> to create one</div>   <br/>
+
             </div>
             <div class="clear"></div>
             <div class="footer">
@@ -73,8 +82,8 @@
         <div id="signupbox" class="formbox" style="display: none;">
             <div class="formcontainer">
             <div class="content">
-                <h3>
-                    Registration
+                <h3 class="heading">
+                    REGISTRATION
                 </h3>
                 Please enter the following details to create a new account in healthkart
             </div>
@@ -82,12 +91,16 @@
             <div class="errors"></div>
             <s:form id="signup_form" method="post" event="signup"  beanclass="com.hk.web.action.core.auth.SSOLoginAction" class="form">
 
+                Name <br/>
                 <s:text placeholder="Name" name="userName" id="name" tabindex="10" size="50" maxlength="50" value=""/>
                 <br/>
+                Email <br/>
                 <s:text placeholder="Login Email" name="userLogin" id="email" tabindex="20" size="50" maxlength="50" value=""/>
                 <br/>
+                Password <br/>
                 <s:text type="password" placeholder="Password" name="password" id="signup_password" tabindex="30" size="50" maxlength="50" value=""/>
                 <br/>
+                Re-enter password <br/>
                 <s:text type="password" placeholder="re-enter password" name="repeatPassword" id="passwordConfirm" tabindex="40" size="50" maxlength="50" value=""/>
                 <br/>
                 <s:hidden name="signup" value="signup"/>
@@ -101,7 +114,7 @@
                 <br/>
 
             </s:form>
-                <div class="content">If you already have a healthkart account, <a id="oldCustomer" class="clickHere">click here</a> to login</div><br/>
+
             </div>
             <div class="clear"></div>
             <div class="footer">
@@ -118,23 +131,24 @@
         <div id="forgetbox" class="formbox" style="display: none;">
             <div class="formcontainer">
                 <div class="content">
-                    <h3>
-                        Forgot Password?
+                    <h3 class="heading">
+                        FORGOT PASSWORD?
                     </h3>
-                    Don't worry. Just enter your email address here
+                    Enter your email address and we will mail you a link to reset your password
                 </div>
             <div class="errors"></div>
             <s:form class="form" id="forget_form" method="post" event="login" beanclass="com.hk.web.action.core.auth.SSOLoginAction">
+                Email <br/>
                 <s:text type="text" placeholder="Email" name="userLogin" id="forgetEmail" tabindex="10" size="50" maxlength="50" value=""/>
 
                 <br/>
 
-                <s:submit tabindex="30" id="sendResetLink" name="sendResetLink" value="Send Password Reset Link" class="submit" ></s:submit>
+                <s:submit tabindex="30" id="sendResetLink" name="sendResetLink" value="Reset My Password" class="submit" ></s:submit>
                 <s:hidden name="sendResetLink" value="sendResetLink"/>
 
             </s:form>
 
-            <div class="content">Once you reset your password, <a id="oldCustomerLogin" class="clickHere">click here</a> to Sign in</div>   <br/>
+            <div class="content">Once you reset your password, you can &nbsp;<a id="oldCustomerLogin" class="yellow-button">sign in here</a></div>   <br/>
                 </div>
             <div class="clear"></div>
             <div class="footer">
@@ -223,10 +237,12 @@ $(document).ready(function()
         e.preventDefault();
         removeErrorTooltips();
         $('#loginbox').fadeOut();
+        $('#newToHealthkart').fadeOut();
         $('#forgetbox').fadeOut();
         $('#oldCustomer').attr('checked',false);
         setTimeout(function () {
             $('#signupbox').fadeIn();
+            $('#alreadyHaveAccount').fadeIn();
         }, 450);
         hideServerErrors();
     });
@@ -235,9 +251,11 @@ $(document).ready(function()
         e.preventDefault();
         removeErrorTooltips();
         $('#signupbox').fadeOut();
+        $('#alreadyHaveAccount').fadeOut();
         $('#forgetbox').fadeOut();
         setTimeout(function () {
             $('#loginbox').fadeIn();
+            $('#newToHealthkart').fadeIn();
         }, 450);
         hideServerErrors();
     });
@@ -249,6 +267,7 @@ $(document).ready(function()
         $('#forgetbox').fadeOut();
         setTimeout(function () {
             $('#loginbox').fadeIn();
+            $('#newToHealthkart').fadeIn();
         }, 450);
         hideServerErrors();
     });
@@ -258,6 +277,7 @@ $(document).ready(function()
         removeErrorTooltips();
         $('#signupbox').fadeOut();
         $('#loginbox').fadeOut();
+        $('#newToHealthkart').fadeOut();
         setTimeout(function () {
             $('#forgetbox').fadeIn();
         }, 450);
@@ -316,7 +336,7 @@ $(document).ready(function()
         var name_signup;var err=0;
         name_signup = $("#name").val().length;
         if (name_signup == 0){ errorflag=true;
-            errorTooltip('name',"We love to know you by name");
+            errorTooltip('name',"Enter a name");
         }
     }
     function checkemail(){
@@ -328,7 +348,7 @@ $(document).ready(function()
         var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if(!rege.test(email_var) || email_length==0){ errorflag=true;
 
-            errorTooltip('email',"Please enter a valid email. Eg: rahul@gmail.com");
+            errorTooltip('email',"Please enter a valid email address");
         }
 
     }
@@ -341,7 +361,7 @@ $(document).ready(function()
         var email_var=$("#forgetEmail").val();
         var rege = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if(!rege.test(email_var) || email_length==0){ errorflag=true;
-            errorTooltip('forgetEmail',"Please enter a valid email.");
+            errorTooltip('forgetEmail',"Please enter a valid email address");
         }
 
     }
@@ -349,7 +369,7 @@ $(document).ready(function()
         var signup_password;var err=0;
         signup_password = $("#signup_password").val().length;
         if (signup_password == 0){ errorflag=true;
-            errorTooltip('signup_password',"Password cannot be empty.")
+            errorTooltip('signup_password',"Password cannot be left empty")
         }
 
     }
@@ -359,7 +379,7 @@ $(document).ready(function()
         passwordConfirm = $("#passwordConfirm").val().length;
         if (passwordConfirm == 0){
             errorflag=true;
-            errorTooltip('passwordConfirm',"Please enter your password once more");
+            errorTooltip('passwordConfirm',"Retype the password");
         }else{
             checkrpassword();
         }
@@ -374,7 +394,7 @@ $(document).ready(function()
 
         if( checkstring!= rpass || rpass.length!=npass.length) {
             errorflag=true;
-            errorTooltip('passwordConfirm', "Passwords don't seem to match. Please check!!");
+            errorTooltip('passwordConfirm', "Passwords don't match. Please retype the correct password");
             return false;
         }
     }
@@ -383,7 +403,7 @@ $(document).ready(function()
         if(!$('#agreeToTerms').is(':checked')){
             errorflag=true;
 
-            errorTooltip('agreeToTerms', "please agree to our terms and conditions", true);
+            errorTooltip('agreeToTerms', "You have to agree to our terms and conditions", true);
         }
     }
 

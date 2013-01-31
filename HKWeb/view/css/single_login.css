@@ -1,6 +1,6 @@
 @charset "utf-8";
 html{color:#000;background:#ffffff;text-rendering:optimizelegibility;}body,div,dl,dt,dd,ul,ol,li,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
-body{background-color: #fff;margin:0;padding:0;border:0;font:16px Arial, Helvetica, sans-serif;list-style:none;outline:0 none;text-decoration:none;line-height: 18px;color: #444;}
+body{background-color: #fff;margin:0;padding:0;border:0;font:13px Arial, Helvetica, sans-serif;list-style:none;outline:0 none;text-decoration:none;line-height: 18px;color: #444;}
 #container{
     width:700px;height:auto;margin:0 auto;
     position: relative;
@@ -13,7 +13,10 @@ body{background-color: #fff;margin:0;padding:0;border:0;font:16px Arial, Helveti
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
 }
-.formbox{height:auto;padding:10px;text-align:left;}
+.formbox{height:auto;padding:10px 0px;text-align:left;}
+.heading{
+    margin: 5px 0px;
+}
 .logo_block {
     padding: 10px 40px;
     text-align:left;
@@ -21,30 +24,31 @@ body{background-color: #fff;margin:0;padding:0;border:0;font:16px Arial, Helveti
 }
 
 .formcontainer .content{
-    padding: 0px 40px 10px 40px;
+    padding: 0px 40px 15px 40px;
 }
 .form{
     padding: 10px 40px 20px 40px;
 }
 input[type="text"], input[type="password"], select, textarea {
     background: none repeat scroll 0 0 #ffffff;
-    border:  1px solid #c0c0c0;;
+    border:  1px solid rgb(70,70,70);;
     box-shadow: 1px 1px 4px #c0c0c0;
     border-radius: 3px;
    -webkit-border-radius:3px;
    -moz-border-radius:3px;
-    height: 33px;
+    height: 25px;
     padding: 5px;
     width: 300px;
     clear:both;
-    font-size:16px;
-    margin: 10px 0px 0px;
+    font-size:12px;
+    margin: 5px 0px 15px;
 
 }
 .submit
 {
 color: white;
 padding: 5px 10px;
+text-transform: uppercase;
 background-color: #4194d7;
 border-radius: 3px;
 -moz-border-radius: 3px;
@@ -55,6 +59,21 @@ height:36px;
 cursor: pointer;
 margin: 10px 10px 10px 0px;
 }
+
+.yellow-button{
+    color: rgb(9, 8, 8);
+    text-decoration: none;
+    font-size: 11px;
+    text-shadow: 0 1px rgba(0,0,0,0.1);
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-transform: uppercase;
+    height: 27px;
+    padding: 10px 8px;
+    border: 2px solid rgb(220,220,220);
+    cursor: pointer;
+}
 .disabled_button{background:none repeat scroll 0 0 #CCCCCC !important;color:#a3a1a1 !important;border:1px solid #ccc !important;}
 .footer img{margin-bottom:3px;}
 .footer{
@@ -63,9 +82,9 @@ margin: 10px 10px 10px 0px;
     border-top:1px solid #c9e1f4;
 }
 .errors .errorList{
-    background-color: #FFF1F1;
-    border: 1px solid #BA6262;
+    border: 1px solid rgb(220,220,220);
     border-radius: 3px;
+    color: rgb(100,100,100);
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     margin: 20px 40px;
@@ -75,10 +94,9 @@ margin: 10px 10px 10px 0px;
     display: inline;
 }
 .error-tooltip{
-    background-color: #FFF1F1;
-    border: 1px solid #BA6262;
+    border: 1px solid rgb(220,220,220);
+    color: rgb(100,100,100);
     border-radius: 3px 3px 3px 3px;
-    color: red;
     font-size: 12px;
     line-height: 18px;
     margin: 0 3px 0 10px;
@@ -91,7 +109,7 @@ margin: 10px 10px 10px 0px;
     position: absolute;
 }
 .error-tooltip .pointer {
-    border-color: transparent #BA6262 transparent transparent;
+    border-color: transparent rgb(220,220,220) transparent transparent;
     border-style: solid;
     border-width: 7px;
     margin-left: -20px;
@@ -106,10 +124,9 @@ margin: 10px 10px 10px 0px;
 }
 
 .error-tooltip-left{
-    background-color: #FFF1F1;
-    border: 1px solid #BA6262;
+    border: 1px solid rgb(220,220,220);
     border-radius: 3px 3px 3px 3px;
-    color: red;
+    color: rgb(100,100,100);
     font-size: 12px;
     line-height: 18px;
     margin: 0 10px 0 3px;
@@ -119,7 +136,7 @@ margin: 10px 10px 10px 0px;
     float:right;
 }
 .error-tooltip-left .pointer-left {
-    border-color: transparent transparent transparent #BA6262 ;
+    border-color: transparent transparent transparent rgb(220,220,220) ;
     border-style: solid;
     border-width: 7px;
     margin-left: 10px;
@@ -145,7 +162,15 @@ margin: 10px 10px 10px 0px;
 }
 
 .clear{
-    margin: 30px;
+    margin: 20px;
+}
+
+.rightcontent{
+    position: absolute;
+    text-align: right;
+    margin-right: 40px;
+    right: 20px;
+    top: 30px;
 }
 
 .clickHere{
