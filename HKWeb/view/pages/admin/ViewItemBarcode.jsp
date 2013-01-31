@@ -13,10 +13,10 @@
                 <table border="1">
                     <thead>
                     <tr>
-                        <th>SKU ID</th>
+                        <th>SKU ITEM ID</th>
                         <th>Item Barcode</th>
                         <th>SKU Group</th>
-                        <th> SKU Group Barcode</th>
+                        <th> Group Barcode</th>
                         <th>Status </th>
                     </tr>
                     </thead>

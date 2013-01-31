@@ -397,91 +397,17 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Either Invalid barcode or No Item found"));
             return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
-        SkuGroup skuGroup = skuItem.getSkuGroup();
-        Sku sku = skuGroup.getSku();
-//            ReconciliationType reconciliationType = rvLineItem.getReconciliationType();
 
-//            if(rvLineItem == null){
-//
-//            }
-
-
-        if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Damage.getId())) {
-            RvLineItem rvLineItem1 = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, rvLineItem.getReconciliationType());
-            if (rvLineItem1 == null) {
-                rvLineItem1 = reconciliationVoucherService.createRVLineItemWithBasicDetails(skuGroup, sku);
-            }
-            rvLineItem1.setReconciliationType(EnumReconciliationType.Damage.asReconciliationType());
-            rvLineItem1.setReconciliationVoucher(reconciliationVoucher);
-            if (rvLineItem1.getReconciledQty() != null) {
-                rvLineItem1.setReconciledQty(rvLineItem1.getReconciledQty() + 1L);
-            } else {
-                rvLineItem1.setReconciledQty(1L);
-            }
-            rvLineItem1 = (RvLineItem) getBaseDao().save(rvLineItem1);
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem1, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED), -1L, userService.getLoggedInUser());
-            adminInventoryService.damageInventoryCheckin(skuItemBarcode, null);
-        } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Lost.getId())) {
-            RvLineItem rvLineItem1 = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, rvLineItem.getReconciliationType());
-            if (rvLineItem1 == null) {
-                rvLineItem1 = reconciliationVoucherService.createRVLineItemWithBasicDetails(skuGroup, sku);
-            }
-            rvLineItem1.setReconciliationType(EnumReconciliationType.Lost.asReconciliationType());
-            rvLineItem1.setReconciliationVoucher(reconciliationVoucher);
-            if (rvLineItem1.getReconciledQty() != null) {
-                rvLineItem1.setReconciledQty(rvLineItem1.getReconciledQty() + 1L);
-            } else {
-                rvLineItem1.setReconciledQty(1L);
-            }
-            rvLineItem1 = (RvLineItem) getBaseDao().save(rvLineItem1);
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem1, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.RV_LOST_PILFERAGE), -1L, userService.getLoggedInUser());
-
-        } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Expired.getId())) {
-            RvLineItem rvLineItem1 = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup,rvLineItem.getReconciliationType());
-            if (rvLineItem1 == null) {
-                rvLineItem1 = reconciliationVoucherService.createRVLineItemWithBasicDetails(skuGroup, sku);
-            }
-
-            rvLineItem1.setReconciliationType(EnumReconciliationType.Expired.asReconciliationType());
-            rvLineItem1.setReconciliationVoucher(reconciliationVoucher);
-            if (rvLineItem1.getReconciledQty() != null) {
-                rvLineItem1.setReconciledQty(rvLineItem1.getReconciledQty() + 1L);
-            } else {
-                rvLineItem1.setReconciledQty(1L);
-            }
-            rvLineItem1 = (RvLineItem) getBaseDao().save(rvLineItem1);
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem1, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED), -1L, userService.getLoggedInUser());
-
-        } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Mismatch.getId())) {
-            RvLineItem rvLineItem1 = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup,rvLineItem.getReconciliationType());
-            if (rvLineItem1 == null) {
-                rvLineItem1 = reconciliationVoucherService.createRVLineItemWithBasicDetails(skuGroup, sku);
-            }
-
-            rvLineItem1.setReconciliationType(EnumReconciliationType.Mismatch.asReconciliationType());
-            rvLineItem1.setReconciliationVoucher(reconciliationVoucher);
-            if (rvLineItem1.getReconciledQty() != null) {
-                rvLineItem1.setReconciledQty(rvLineItem1.getReconciledQty() + 1L);
-            } else {
-                rvLineItem1.setReconciledQty(1L);
-            }
-            rvLineItem1 = (RvLineItem) getBaseDao().save(rvLineItem1);
-            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem1, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MISMATCH), -1L, userService.getLoggedInUser());
+        if (reconciliationVoucherService.reconcileSKUItems(reconciliationVoucher , rvLineItem, skuItem) == null){
+            addRedirectAlertMessage(new SimpleMessage("Error occured in saving RVLineitem"));
+            return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
+
         addRedirectAlertMessage(new SimpleMessage("DataBase Updated"));
-        return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher);
+        return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
 
-
-    public Resolution BarcodeDetails (){
-       List<SkuItem> skuItems =  adminInventoryService.getCheckedOutskuItemAgainstRVLineItem(rvLineItem);
-        return new ForwardResolution("/pages/admin/ViewItemBarcode.jsp");
-    }
-    
+        
 
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;

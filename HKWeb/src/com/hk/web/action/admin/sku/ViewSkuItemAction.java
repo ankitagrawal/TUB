@@ -3,6 +3,7 @@ package com.hk.web.action.admin.sku;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.inventory.rv.RvLineItem;
+import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.constants.sku.EnumSkuItemTransferMode;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,8 @@ public class ViewSkuItemAction  extends BaseAction {
     private AdminInventoryService adminInventoryService;
     private Long entityId;
     private RvLineItem rvLineItem;
-
+    private StockTransferLineItem stockTransferLineItem;
+                                                            
 
 
      List<SkuItem> skuItemList = new ArrayList<SkuItem>(0);
@@ -35,9 +37,13 @@ public class ViewSkuItemAction  extends BaseAction {
     public Resolution  pre(){
 
         if (entityId.equals (EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
-           skuItemList =  adminInventoryService.getCheckedOutskuItemAgainstRVLineItem(rvLineItem);
+           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,null,null, -1L);
+        } else if(entityId.equals( EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())){
+            skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(null,stockTransferLineItem,null,1L);
+        } else if (entityId.equals (EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())){
+           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,null,-1L);
         }
-       return new ForwardResolution("/pages/admin/ViewItemBarcode.jsp");
+       return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
     }
 
     public List<SkuItem> getSkuItemList() {
@@ -63,4 +69,13 @@ public class ViewSkuItemAction  extends BaseAction {
     public void setRvLineItem(RvLineItem rvLineItem) {
         this.rvLineItem = rvLineItem;
     }
+
+    public StockTransferLineItem getStockTransferLineItem() {
+        return stockTransferLineItem;
+    }
+
+    public void setStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
+        this.stockTransferLineItem = stockTransferLineItem;
+    }
 }
+

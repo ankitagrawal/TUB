@@ -333,8 +333,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-    public  List<SkuItem> getCheckedOutskuItemAgainstRVLineItem(RvLineItem rvLineItem) {
-         return   getAdminPVIDao().getCheckedOutskuItemAgainstRVLineItem(rvLineItem);
+    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,  Long transferQty) {
+         return   getAdminPVIDao().getCheckedInOrOutSkuItems( rvLineItem, stockTransferLineItem,  grnLineItem, transferQty);
     }
 
 

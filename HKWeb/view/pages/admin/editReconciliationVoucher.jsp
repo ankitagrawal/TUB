@@ -265,6 +265,7 @@
 	<s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
   <table>
    <tr>
+       <td>
 	<table>
 		<tr>
 			<td>Reconciliation Date</td>
@@ -283,10 +284,14 @@
 			</td>
 		</tr>
 	</table>
-   </tr>
+       </td>
 
-    <tr>
+       
+
+    <td>
     <table>
+
+       <tr> <td colspan="2" style="font-size:20px;"> Scan Barcode: </td> </tr>  
         <tr>
             <td> UPC (Barcode)</td>
             <td><s:text name="upc" id="upc" size="50" style="padding:5px; width:125px;"/></td>
@@ -303,20 +308,22 @@
         </tr>
         <tr>
             <td colspan="2">
-                <div style="float:left;"><s:submit name="SubtractReconciled" value="Deduct"/></div>
+                <div style="float:left;"><s:submit name="SubtractReconciled" value="Subtract"/></div>
             </td>
         </tr>
+
     </table>
-         </tr>
+         </td>
+      </tr>
     </table>
 
     <div style="width:550px">
 
-	<div class="error"
-	     style="display:none;background-color:salmon;font-size:12; margin-top: 20px; padding: 5px;width:550px;"></div>
+	<%--<div class="error"--%>
+	     <%--style="display:none;background-color:salmon;font-size:12; margin-top: 20px; padding: 5px;width:550px;"></div>--%>
 
 
-	<table border="1">
+	<table style="width:1200px;">
 		<thead>
 		<tr>
             <th>Barcode</th>
@@ -339,8 +346,8 @@
 		<c:forEach var="rvLineItem" items="${pa.reconciliationVoucher.rvLineItems}" varStatus="ctr">
 			<c:set var="productVariant" value="${rvLineItem.sku.productVariant}"/>
             <tr style="background-color:#ccff99;">
-                       <td>${rvLineItem.skuGroup.barcode}</td>
-						<td>
+                       <td style="width:80px;">${rvLineItem.skuGroup.barcode}</td>
+						<td style="width:75px;" >
 							${productVariant.id}
 						</td>
 						<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
@@ -362,7 +369,7 @@
 					   <td>${rvLineItem.reconciledQty}</td>
                         <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
 						View Item Details
-					 <s:param name="rvLineItem" value="${rvLineItem}"/>
+					 <s:param name="rvLineItem" value="${rvLineItem.id}"/>
                      <s:param name="entityId" value="${RvLineItemOut}"/>
 					</s:link> </td>
 					</tr>

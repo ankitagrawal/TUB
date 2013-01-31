@@ -30,4 +30,6 @@ public interface ReconciliationVoucherService {
 	public void delete(ReconciliationVoucher reconciliationVoucher);
 
     public RvLineItem createRVLineItemWithBasicDetails (SkuGroup skuGroup , Sku sku);
+
+    public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, RvLineItem rvLineItem, SkuItem skuItem);
 }

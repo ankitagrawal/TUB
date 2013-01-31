@@ -1,7 +1,9 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<c:set var="StockTransferOut" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
@@ -143,6 +145,7 @@
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
 				<th>Reduce Qty By 1</th>
+                <th> Item Details</th>
 			</tr>
 			</thead>
 			<tbody id="stTable">
@@ -173,6 +176,12 @@
 					<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
 					<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
 					</c:if>
+
+                     <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+						View Item Details
+					 <s:param name="stockTransferLineItem" value="${stockTransferLineItem}"/>
+                     <s:param name="entityId" value="${StockTransferOut}"/>
+					</s:link> </td>
 				</tr>
 
 			</c:forEach>

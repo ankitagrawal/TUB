@@ -1,5 +1,7 @@
+<%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<c:set var="StockTransferIn" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer Inventory Checkin">
     <jsp:useBean id="now" class="java.util.Date" scope="request"/>
@@ -82,6 +84,7 @@
                         <th>Batch Number</th>
                         <th>Mfg. Date<br/>(yyyy-MM-dd)</th>
                         <th>Exp. Date<br/>(yyyy-MM-dd)</th>
+                        <th> Item Details</th>
                     </tr>
                     </thead>
                     <tbody id="stTable">
@@ -109,6 +112,12 @@
                                 <fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
                             <td>
                                 <fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
+
+                            <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+                                View Item Details
+                                <s:param name="stockTransferLineItem" value="${stockTransferLineItem}"/>
+                                <s:param name="entityId" value="${StockTransferIn}"/>
+                            </s:link></td>
                         </tr>
 
                     </c:forEach>
