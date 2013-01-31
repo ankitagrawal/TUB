@@ -9,8 +9,7 @@
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
-		 <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
-		 <link href="<hk:vhostCss/>/css/style.css" rel="stylesheet" type="text/css" />
+		 
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('.lineItemQty').blur(function(event) {

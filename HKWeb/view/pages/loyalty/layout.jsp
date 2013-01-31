@@ -1,3 +1,5 @@
+<%@ page import="com.shiro.PrincipalImpl" %>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
@@ -5,6 +7,8 @@
 <stripes:layout-definition>
 <html lang="en">
 <head>
+<%--	<% PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
+	principal.ge%>--%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>HealthKart | Loyalty Program</title>
@@ -23,23 +27,36 @@
 		padding-left: 20px;
       }
     </style>
+	<%
+		PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
+		if(principal != null){
+	        pageContext.setAttribute("userId", principal.getId());
+		}
+		else{
+			pageContext.setAttribute("userId", null);
+		}
+	%>
   </head>
 
 
   <body>
 	<script src="<hk:vhostJs/>/bootstrap/js/jquery.js"></script>
 	<script src="<hk:vhostJs/>/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
+	<link href="<hk:vhostCss/>/css/style.css" rel="stylesheet" type="text/css" />
     <div class="container">
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
           <li><a href="<hk:vhostJs/>/loyaltypg">Home</a></li>
           <li><a href="http://www.healthkart.com">Visit Healthkart</a></li>
-          <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>
+          <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>	      
         </ul>
         <h4 class="muted"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"> Loyalty Program</h4>
       </div>
 
       <hr>
+	    <h4 class="muted">Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)} </h4>
+	    <br>
 			<stripes:layout-component name="contents"/>
 	  <hr>
       <div class="footer">
