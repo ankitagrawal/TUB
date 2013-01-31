@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
@@ -128,17 +129,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
 	@Override
 	public UserBadgeInfo getUserBadgeInfo(Long userId) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.setProjection(Projections.sum("karmaPints"));
-		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
-		criteria.add(Restrictions.eq("status", karmaPointStatus.APPROVED));
-		criteria.add(Restrictions.eq("userOrderKey.user.id",userId));
-		
-		Double completePoints = (Double) baseDao.findByCriteria(criteria).iterator().next();
-		
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.createAlias("payment", "pmt");
+		criteria.setProjection(Projections.sum("pmt.amount"));
+		criteria.add(Restrictions.eq("user.id", userId));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
+
+		Double completePurchase = (Double) baseDao.findByCriteria(criteria).iterator().next();
 		Badge userBadge = BADGES.iterator().next();
 		for (Badge badge : BADGES) {
-			if(completePoints >= badge.getMinScore() && completePoints < badge.getMaxScore()) {
+			if(completePurchase >= badge.getMinScore() && completePurchase < badge.getMaxScore()) {
 				userBadge = badge;
 				break;
 			}

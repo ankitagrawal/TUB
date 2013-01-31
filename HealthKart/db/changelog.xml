@@ -11316,19 +11316,10 @@
 	<changeSet author="DeepakC" id="20133001-09">
 		<sql>
 			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
-			('NORMAL', 0, 1000, 5 ),
-			('SILVER', 1001, 10000, 10 ),
-			('GOLD', 10001, 20000, 20 ),
-			('PLATINUM', 20000, 100000, 25);
-		</sql>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-10">
-		<sql>
-			insert into user_order_karma_profile(order_id,user_id, creation_time, update_time, transaction_type, status, points)
-			select -1 as order_id, a.user_id, CURRENT_DATE, CURRENT_DATE, 'CREDIT','APPROVED', sum(b.amount) points from base_order  a
-			inner join payment b on a.id = b.order_id
-			where a.order_status_id = 40
-			group by a.user_id;
+			('NORMAL', 0, 1500, 0),
+			('SILVER', 1500, 3000, 1),
+			('GOLD', 3000, 6000, 2),
+			('PLATINUM', 6000, 100000, 3);
 		</sql>
 	</changeSet>
 </databaseChangeLog>
