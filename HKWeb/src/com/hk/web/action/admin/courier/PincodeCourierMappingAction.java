@@ -71,7 +71,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         pincode = pincodeService.getByPincode(pin);
         if (pincode == null) {
@@ -83,7 +83,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution detailedAnalysis() {
         pincode = pincodeService.getByPincode(pin);
         if (pincode == null) {
@@ -95,7 +95,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution update() {
         boolean flag = true;
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
@@ -121,7 +121,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         return new RedirectResolution(PincodeCourierMappingAction.class, "search").addParameter("pin", pin);
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadExcel() {
         try {
             Set<PincodeCourierMapping> pincodeCourierMappingSet = new HashSet<PincodeCourierMapping>();
@@ -140,7 +140,7 @@ public class PincodeCourierMappingAction extends BaseAction {
     }
 
 
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution generateExcel() throws Exception {
         pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, Arrays.asList(updateCourier), null, null);
         String excelFilePath = adminDownloadsPath + "/courierExcelFiles/Courier_" + updateCourier.getName() + ".xls";

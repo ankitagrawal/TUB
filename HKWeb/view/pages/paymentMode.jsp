@@ -180,7 +180,13 @@
             <c:set var="codFailureMap" value="${orderSummary.codFailureMap}"/>
 
             <c:choose>
-                <c:when test='${codFailureMap["CodAllowedOnPin"] == "N" }'>
+                 <c:when test='${codFailureMap["MutipleRTOs"] == "Y"}'>
+                    ${message}
+                     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+                       <p>Due to multiple RTOs.</p>  
+                     </shiro:hasRole>
+                </c:when>
+                <c:when test='${codFailureMap["CodAllowedOnPin"] == "N"}'>
                     ${message}
                     <p>COD is not available for your delivery
                         location (Pincode : <strong> ${codFailureMap["Pincode"]}</strong>).
