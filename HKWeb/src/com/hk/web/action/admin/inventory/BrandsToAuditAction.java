@@ -68,14 +68,22 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 	        String brandName = brandsToAudit.getBrand();
 	        logger.debug("brand: " + brandName);
 	        if (brandsToAudit.getAuditDate() != null) {
-		        /* Creating a new entry in brands to audit */
+		        /* check if brand name id valid */
 		        boolean doesBrandExist = productService.doesBrandExist(brandName);
 		        if (!doesBrandExist) {
 			        addRedirectAlertMessage(new SimpleMessage("Invalid Brand Name"));
 			        return new RedirectResolution(BrandsToAuditAction.class, "view");
 		        }
+
+		          if (getPrincipalUser() != null) {
+			        User auditor = getPrincipalUser();
+			        warehouse = auditor.getSelectedWarehouse();
+			        brandsToAudit.setAuditor(auditor);
+			        brandsToAudit.setWarehouse(warehouse);
+		        }
+
 		        if (brandsToAudit.getId() == null) {
-			        List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId());
+			        List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId(),warehouse);
 			        /* Audit entry for this brand already exists in database with status pending */
 			        if (!brandsToAuditInDb.isEmpty()) {
 				        addRedirectAlertMessage(new SimpleMessage("Brand Audit is Already in progress"));
@@ -84,12 +92,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 			        brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
 		        }
 
-		        if (getPrincipalUser() != null) {
-			        User auditor = getPrincipalUser();
-			        warehouse = auditor.getSelectedWarehouse();
-			        brandsToAudit.setAuditor(auditor);
-			        brandsToAudit.setWarehouse(warehouse);
-		        }
+
 
 		        getBrandsToAuditDao().save(brandsToAudit);
 		        addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));

@@ -7,6 +7,7 @@ import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.courier.*;
@@ -169,5 +170,7 @@ public interface MasterDataDao
   public List<EnumCourierChangeReason> getAllCourierChangeReason();
 
     public List<Courier> getCouriersForDispatchLot();
+
+	public List<EnumCycleCountStatus> getAllCycleCountStatus();
 
 }

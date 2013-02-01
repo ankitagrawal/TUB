@@ -23,6 +23,7 @@ import org.hibernate.Criteria;
 import java.util.List;
 import java.util.Date;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 
 /**
@@ -101,9 +102,13 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 	}
 
 
-	public Page searchCycleList(String auditBy, List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
-
-		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(auditBy, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, null);
+	public Page searchCycleList(String auditBy, Long cycleCountStatus, List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
+		List<Long> cycleCountStatusList = null;
+		if (cycleCountStatus != null) {
+			cycleCountStatusList = new ArrayList<Long>();
+			cycleCountStatusList.add(cycleCountStatus);
+		}
+		DetachedCriteria cyclecounDetachedCriteria = getCycleCountCriteria(auditBy, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, cycleCountStatusList);
 		if (cyclecounDetachedCriteria == null) {
 			return null;
 		}

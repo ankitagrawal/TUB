@@ -28,7 +28,7 @@ public interface CycleCountDao {
 
 	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse);
 
-	public Page searchCycleList(String auditBy ,List<BrandsToAudit> brandsToAuditList, Product product , ProductVariant productVariant ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+	public Page searchCycleList(String auditBy , Long cycleCountStatus ,List<BrandsToAudit> brandsToAuditList, Product product , ProductVariant productVariant ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
 
 
 }

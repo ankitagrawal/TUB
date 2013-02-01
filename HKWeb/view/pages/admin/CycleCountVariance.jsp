@@ -119,7 +119,9 @@
 					<c:if test="${cycle.cycleCount.brandsToAudit != null}">
 						<s:hidden name="cycleCountType" value="1"/>	
 					</c:if>
-					<s:submit name="closeCycleCount" value="Close"/>
+					<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
+										<s:submit name="closeCycleCount" value="Close"/>
+										</shiro:hasPermission>
 				</s:form>
 			</div>
 		</c:if>

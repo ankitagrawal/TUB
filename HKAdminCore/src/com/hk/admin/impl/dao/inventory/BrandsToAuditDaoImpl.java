@@ -76,8 +76,8 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
 		return  auditCriteria;
 	}
 
-	public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus) {
-		DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, null, null, null, null, auditStatus);
+	public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus ,Warehouse warehouse) {
+		DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
 		return findByCriteria(brandDetachedCriteria);
 	}
 

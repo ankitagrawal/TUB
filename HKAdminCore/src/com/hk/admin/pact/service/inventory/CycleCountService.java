@@ -34,9 +34,9 @@ public interface CycleCountService {
 
 	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup);
 
-	public Page searchCycleList(String auditBy, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+	public Page searchCycleList(String auditBy,Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
 
-	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList , Product product , ProductVariant productVariant, Warehouse warehouse);
+	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList , Product product , ProductVariant productVariant, Warehouse warehouse);
 
 
 }

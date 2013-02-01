@@ -4,7 +4,6 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.util.FormatUtils;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.warehouse.Warehouse;
@@ -73,6 +72,7 @@ public class CycleCountAction extends BasePaginatedAction {
 	@Autowired
 	ProductVariantService productVariantService;
 
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloadsPath;
 
@@ -87,7 +87,6 @@ public class CycleCountAction extends BasePaginatedAction {
 	private boolean error = false;
 	private Page cyceCountPage;
 	private String brand;
-	private Warehouse warehouse;
 	private String auditorLogin;
 	private Date startDate;
 	private Date endDate;
@@ -95,14 +94,14 @@ public class CycleCountAction extends BasePaginatedAction {
 	FileBean fileBean;
 	private String auditBy;
 	private Integer cycleCountType;
+	private Long cycleCountStatus;
 
 	public Resolution directToCycleCountPage() {
 
 		if (cycleCount.getId() == null) {
-			List<BrandsToAudit> brandsToAuditList = new ArrayList<BrandsToAudit>();
-			brandsToAuditList.add(cycleCount.getBrandsToAudit());
-			List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(brandsToAuditList, null, null, userService.getWarehouseForLoggedInUser());
-			if (cycleCounts != null && cycleCounts.size() == 0) {
+			BrandsToAudit brandsToAudit = cycleCount.getBrandsToAudit();
+			boolean auditInProgress = ifBrandProductCyclecountInProgress(brandsToAudit.getBrand());
+			if (!auditInProgress) {
 				cycleCount = saveCycleCountInDb(cycleCount);
 			}
 		}
@@ -126,21 +125,61 @@ public class CycleCountAction extends BasePaginatedAction {
 	}
 
 
+	private boolean ifBrandProductCyclecountInProgress(String brandEntered) {
+		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+		/* if product of same brand in audit pending*/
+		List<Product> productList = productService.getAllProductByBrand(brandEntered);
+		if (productList != null) {
+			for (Product product : productList) {
+				List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(null, product, null, warehouse);
+				if (cycleCounts != null && cycleCounts.size() > 0) {
+					message = "Cannot Start Audit " + " becoz  Cycle Count of Product : " + product.getId() + " of brand : " + brandEntered + " Already in Progress. Plz Complete product Cycle Count first";
+					return true;
+				}
+				boolean productVariantCcInProgress = ifProductVariantsCycleCountInProgress(product, brandEntered);
+				if (productVariantCcInProgress) {
+					return true;
+				}
+			}
+		}
+		return false;
+
+	}
+
+
+	private boolean ifProductVariantsCycleCountInProgress(Product product, String brandEntered) {
+		List<ProductVariant> productVariantsList = productVariantService.getProductVariantsByProductId(product.getId());
+		if (productVariantsList != null) {
+			for (ProductVariant productVariant : productVariantsList) {
+				List<CycleCount> cycleCountsList = cycleCountService.getCycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
+				if (cycleCountsList != null && cycleCountsList.size() > 0) {
+					message = "Cannot Start Audit  becoz Cycle count of Product : " + productVariant.getId() + " of brand : " + brandEntered + " already in Progress. Plz Complete product Variant Cycle Count first";
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 	private BrandsToAudit validateBrand() {
 		BrandsToAudit brandsToAudit = null;
 		boolean doesBrandExist = productService.doesBrandExist(auditBy);
+		User auditor = getPrincipalUser();
+		Warehouse warehouse = auditor.getSelectedWarehouse();
 		if (!doesBrandExist) {
 			message = "Invalid Brand";
 		} else {
-			List<BrandsToAudit> brandsToAuditInDb = brandsToAuditDao.getBrandsToAudit(auditBy, EnumAuditStatus.Pending.getId());
-			/* Audit entry for this brand already exists in database with status pending */
-			if (!brandsToAuditInDb.isEmpty()) {
-				message = "Brand Audit Already In progress";
-			} else {
+			List<BrandsToAudit> brandsToAuditInDb = brandsToAuditDao.getBrandsToAudit(auditBy, EnumAuditStatus.Pending.getId(), warehouse);
+			/* Audit entry for this brand already exists in database with status pending in specific warehouse */
+			if (brandsToAuditInDb != null && brandsToAuditInDb.size() > 0) {
+				message = "Brand Audit Already In progress in warehouse" + warehouse.getCity();
+				return brandsToAudit;
+			}
+			boolean brandAuditInProgress = ifBrandProductCyclecountInProgress(auditBy);
+			if (!brandAuditInProgress) {
 				brandsToAudit = new BrandsToAudit();
 				brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
-				User auditor = getPrincipalUser();
-				warehouse = auditor.getSelectedWarehouse();
 				brandsToAudit.setAuditor(auditor);
 				brandsToAudit.setWarehouse(warehouse);
 				brandsToAudit.setBrand(auditBy);
@@ -148,8 +187,6 @@ public class CycleCountAction extends BasePaginatedAction {
 				brandsToAudit = (BrandsToAudit) brandsToAuditDao.save(brandsToAudit);
 				addRedirectAlertMessage(new SimpleMessage("Cycle Count Created By Brand"));
 			}
-
-
 		}
 		return brandsToAudit;
 	}
@@ -178,10 +215,15 @@ public class CycleCountAction extends BasePaginatedAction {
 				returnToCreateCountPage = true;
 				message = "Invalid Product Id ";
 			} else {
-				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, product, null, userService.getWarehouseForLoggedInUser());
+				List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(null, product, null, userService.getWarehouseForLoggedInUser());
 				if (cycleCounts != null && cycleCounts.size() > 0) {
 					returnToCycleCountListPage = true;
 					message = "Product Cycle Count Already In Progress";
+				} else {
+					boolean variantsOfProductCcInProgress = ifProductVariantsCycleCountInProgress(product, auditBy);
+					if (variantsOfProductCcInProgress) {
+						returnToCycleCountListPage = true;
+					}
 				}
 			}
 			cycleCount.setProduct(product);
@@ -192,7 +234,7 @@ public class CycleCountAction extends BasePaginatedAction {
 				returnToCreateCountPage = true;
 				message = "Invalid Product Variant Id ";
 			} else {
-				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
+				List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
 				if (cycleCounts != null && cycleCounts.size() > 0) {
 					returnToCycleCountListPage = true;
 					message = "Product Variant Cycle Count Already In Progress";
@@ -216,12 +258,12 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-
+		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 		User auditor = null;
 		if (StringUtils.isNotBlank(auditorLogin)) {
 			auditor = getUserService().findByLogin(auditorLogin);
 		}
-		cyceCountPage = cycleCountService.searchCycleList(auditBy, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
+		cyceCountPage = cycleCountService.searchCycleList(auditBy,cycleCountStatus, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
 		if (cyceCountPage != null) {
 			cycleCountList = cyceCountPage.getList();
 		}
@@ -329,9 +371,10 @@ public class CycleCountAction extends BasePaginatedAction {
 		List<SkuGroup> skuGroupListResult = new ArrayList<SkuGroup>();
 		if (skuGroupFromDb != null && skuGroupFromDb.size() > 0) {
 			for (SkuGroup skuGroupCheckBrand : skuGroupFromDb) {
+				ProductVariant productVariant = skuGroupCheckBrand.getSku().getProductVariant();
 				if (cycleCountType == 1) {
 					String brandInAudit = cycleCount.getBrandsToAudit().getBrand();
-					if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getBrand().equalsIgnoreCase(brandInAudit)) {
+					if (productVariant.getProduct().getBrand().equalsIgnoreCase(brandInAudit)) {
 						skuGroupListResult.add(skuGroupCheckBrand);
 					} else {
 						error = true;
@@ -340,7 +383,7 @@ public class CycleCountAction extends BasePaginatedAction {
 					}
 				} else if (cycleCountType == 2) {
 					String productId = cycleCount.getProduct().getId();
-					if (skuGroupCheckBrand.getSku().getProductVariant().getProduct().getId().equalsIgnoreCase(productId)) {
+					if (productVariant.getProduct().getId().equalsIgnoreCase(productId)) {
 						skuGroupListResult.add(skuGroupCheckBrand);
 					} else {
 						error = true;
@@ -350,7 +393,7 @@ public class CycleCountAction extends BasePaginatedAction {
 
 				} else {
 					String productVariantId = cycleCount.getProductVariant().getId();
-					if (skuGroupCheckBrand.getSku().getProductVariant().getId().equalsIgnoreCase(productVariantId)) {
+					if (productVariant.getId().equalsIgnoreCase(productVariantId)) {
 						skuGroupListResult.add(skuGroupCheckBrand);
 					} else {
 						error = true;
@@ -635,13 +678,6 @@ public class CycleCountAction extends BasePaginatedAction {
 		this.brand = brand;
 	}
 
-	public Warehouse getWarehouse() {
-		return warehouse;
-	}
-
-	public void setWarehouse(Warehouse warehouse) {
-		this.warehouse = warehouse;
-	}
 
 	public String getAuditorLogin() {
 		return auditorLogin;
@@ -709,5 +745,13 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	public void setCycleCountType(Integer cycleCountType) {
 		this.cycleCountType = cycleCountType;
+	}
+
+	public Long getCycleCountStatus() {
+		return cycleCountStatus;
+	}
+
+	public void setCycleCountStatus(Long cycleCountStatus) {
+		this.cycleCountStatus = cycleCountStatus;
 	}
 }

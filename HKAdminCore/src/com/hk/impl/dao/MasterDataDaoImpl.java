@@ -31,6 +31,7 @@ import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -481,4 +482,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
         reconciliationList.add(addReconType);
         return reconciliationList;
     }
+
+	public List<EnumCycleCountStatus> getAllCycleCountStatus() {
+		return EnumCycleCountStatus.getAllList();
+	}
 }

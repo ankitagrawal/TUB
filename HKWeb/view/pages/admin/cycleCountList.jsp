@@ -7,10 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count  List">
 	<s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cc"/>
-	<%
-		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
-	%>
+
 	<s:layout-component name="heading">
 		Cycle Count  List
 	</s:layout-component>
@@ -22,14 +19,14 @@
 		<fieldset class="right_label">
 			<legend>Search Cycle Count List</legend>
 			<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-				<label>Brand:</label><s:text name="auditBy"/>
+				<label>Brand/Product/ProductVariant:</label><s:text name="auditBy"/>
 				<label>Auditor Login Email:</label><s:text name="auditorLogin"/>
-				<label>WH:</label><s:select name="warehouse">
-				<s:option value="">-ALL-</s:option>
-				<c:forEach items="${whList}" var="wh">
-					<s:option value="${wh.id}">${wh.name}</s:option>
-				</c:forEach>
-			</s:select>
+				<label>Status:</label>
+				<s:select name="cycleCountStatus" id="boxSize">
+                                <s:option value="">--Select--</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCycleCountStatus"
+                                                           value="id" label="name"/>
+                            </s:select>
 				<s:submit name="pre" value="Search"/>
 			</s:form>
 		</fieldset>

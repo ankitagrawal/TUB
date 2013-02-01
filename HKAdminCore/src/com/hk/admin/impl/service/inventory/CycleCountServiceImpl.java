@@ -64,12 +64,12 @@ public class CycleCountServiceImpl implements CycleCountService {
 		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup);
 	}
 
-	public Page searchCycleList(String auditBy, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
+	public Page searchCycleList(String auditBy, Long cycleCountStatus ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
 		List<BrandsToAudit> brandsToAuditList = null;
 		Product product = null;
 		ProductVariant productVariant = null;
 		if (auditBy != null) {
-			brandsToAuditList = brandsToAuditDao.getBrandsToAudit(auditBy, null);
+			brandsToAuditList = brandsToAuditDao.getBrandsToAudit(auditBy, null,null);
 			if (brandsToAuditList.isEmpty()) {
 				product = productService.getProductById(auditBy);
 				if (product == null) {
@@ -78,10 +78,10 @@ public class CycleCountServiceImpl implements CycleCountService {
 			}
 		}
 
-		return cycleCountDao.searchCycleList(auditBy, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
+		return cycleCountDao.searchCycleList(auditBy,cycleCountStatus, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
 	}
 
-	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
+	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
 		return cycleCountDao. cycleCountInProgress(brandsToAuditList ,product , productVariant,  warehouse);
 	}
 }
