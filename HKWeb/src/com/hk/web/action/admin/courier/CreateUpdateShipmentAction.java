@@ -110,7 +110,9 @@ public class CreateUpdateShipmentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
         shipmentService.save(shipment);
-        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        if(!shippingOrder.isDropShipping()){
+            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        }
         shippingOrderService.save(shippingOrder);
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
 
