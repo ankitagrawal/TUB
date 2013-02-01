@@ -11291,4 +11291,64 @@
             <column name="pincode_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-1">
+        <createTable tableName="extra_inventory_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-2">
+        <addColumn tableName="extra_inventory">
+            <column name="extra_inventory_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-3">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="remarks" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-4">
+        <addColumn tableName="purchase_order">
+            <column defaultValue="0" name="is_extra_inventory_created" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-5">
+        <addColumn tableName="rtv_note">
+            <column name="courier_name" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-6">
+        <addColumn tableName="rtv_note">
+            <column name="destination_address" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-7">
+        <addColumn tableName="rtv_note">
+            <column name="dispatch_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-8">
+        <addColumn tableName="rtv_note">
+            <column name="docket_number" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-9">
+        <createIndex indexName="name_UNIQUE" tableName="extra_inventory_status" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-10">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_status_id" baseTableName="extra_inventory" constraintName="fk_extra_inventory_extra_inventory_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="2013-01-02-01">
+        <sql>
+            insert into extra_inventory_status values(10, 'Created'),(20, 'Sent To Category'),(40, 'Closed');
+        </sql>
+    </changeSet>
 </databaseChangeLog>
