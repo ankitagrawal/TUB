@@ -396,11 +396,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isDeleted() {
-        return deleted;
+        return deleted!=null ? deleted : false;
     }
 
     public Boolean getDeleted() {
-        return deleted;
+        return deleted!=null ? deleted : false;
     }
 
     public void setDeleted(Boolean deleted) {
@@ -428,7 +428,7 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getProductHaveColorOptions() {
-        return this.isProductHaveColorOptions();
+        return this.isProductHaveColorOptions()!=null ? this.isProductHaveColorOptions : false;
     }
 
     public void setProductHaveColorOptions(Boolean productHaveColorOptions) {
@@ -472,11 +472,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isService() {
-        return isService ? isService : false;
+        return isService!=null ? isService : false;
     }
 
     public Boolean getService() {
-        return isService ? isService : false;
+        return isService!=null ? isService : false;
     }
 
     public void setService(Boolean service) {
@@ -484,11 +484,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isGoogleAdDisallowed() {
-        return isGoogleAdDisallowed ? isGoogleAdDisallowed : false;
+        return isGoogleAdDisallowed!=null ? isGoogleAdDisallowed : false;
     }
 
     public Boolean getGoogleAdDisallowed() {
-        return isGoogleAdDisallowed ? isGoogleAdDisallowed : false;
+        return isGoogleAdDisallowed!=null ? isGoogleAdDisallowed : false;
     }
 
     public void setGoogleAdDisallowed(Boolean googleAdDisallowed) {
@@ -504,11 +504,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getHidden() {
-        return hidden ? hidden : false;
+        return hidden!=null ? hidden : false;
     }
 
     public Boolean isHidden() {
-        return hidden ? hidden : false;
+        return hidden!=null ? hidden : false;
     }
 
     public void setHidden(Boolean hidden) {
@@ -516,11 +516,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getJit() {
-        return isJit ? isJit : false;
+        return isJit!=null ? isJit : false;
     }
 
     public Boolean isJit() {
-       return isJit ? isJit : false;
+       return isJit!=null ? isJit : false;
     }
 
     public void setJit(Boolean jit) {
@@ -528,7 +528,7 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getAmazonProduct() {
-        return isAmazonProduct;
+        return isAmazonProduct!=null ? isAmazonProduct : false;
     }
 
     public void setAmazonProduct(Boolean amazonProduct) {
@@ -602,7 +602,7 @@ public class Product  implements java.io.Serializable {
      public boolean isGroundShipping() {
         return groundShipping;
     }
-    public Boolean getGroundShipping(){
+    public boolean getGroundShipping(){
          return groundShipping;
     }
 
@@ -611,11 +611,11 @@ public class Product  implements java.io.Serializable {
     }
 
 	public Boolean isCodAllowed() {
-		return codAllowed;
+		return codAllowed!=null ? codAllowed : false;
 	}
 	
 	public Boolean getCodAllowed() {
-		return codAllowed;
+		return codAllowed!=null ? codAllowed : false;
 	}  	
 
 	public void setCodAllowed(Boolean codAllowed) {
@@ -708,7 +708,7 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isInstallable() {
-        return installable;
+        return installable!=null ? installable : false;
     }
 
     public void setInstallable(Boolean installable) {
@@ -716,7 +716,7 @@ public class Product  implements java.io.Serializable {
     }
 
      public Boolean getInstallable() {
-		return installable;
+		return installable!=null ? installable : false;
 	}
 
 }
