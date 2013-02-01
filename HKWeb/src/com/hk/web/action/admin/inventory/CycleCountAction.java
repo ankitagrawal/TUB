@@ -133,7 +133,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			for (Product product : productList) {
 				List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(null, product, null, warehouse);
 				if (cycleCounts != null && cycleCounts.size() > 0) {
-					message = "Cannot Start Audit " + " becoz  Cycle Count of Product : " + product.getId() + " of brand : " + brandEntered + " Already in Progress. Plz Complete product Cycle Count first";
+					message = "OOoops !!! ERROR :  Cycle Count of Product : " + product.getId() + " of same brand : " + brandEntered + " Already in Progress. Close if first";
 					return true;
 				}
 				boolean productVariantCcInProgress = ifProductVariantsCycleCountInProgress(product, brandEntered);
@@ -153,7 +153,7 @@ public class CycleCountAction extends BasePaginatedAction {
 			for (ProductVariant productVariant : productVariantsList) {
 				List<CycleCount> cycleCountsList = cycleCountService.getCycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
 				if (cycleCountsList != null && cycleCountsList.size() > 0) {
-					message = "Cannot Start Audit  becoz Cycle count of Product : " + productVariant.getId() + " of brand : " + brandEntered + " already in Progress. Plz Complete product Variant Cycle Count first";
+					message = "OOooopss !!! ERROR :  Cycle count of PV Id : " + productVariant.getId() + " of same brand : " + brandEntered + " already in Progress. Close it first";
 					return true;
 				}
 			}
