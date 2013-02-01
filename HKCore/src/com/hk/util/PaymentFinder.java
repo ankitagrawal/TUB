@@ -33,12 +33,11 @@ public class PaymentFinder {
 
 //        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/icici.live.properties";
             String propertyLocatorFileLocation = "D:\\Projects\\HKDev\\HealthKart\\dist\\WEB-INF\\icici.live.properties";
-            Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+//            Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
-            String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
-            String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
+//            String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
 
-            oMerchant.setMerchantOnlineInquiry(merchantId
+            oMerchant.setMerchantOnlineInquiry("00007518"
                     , gatewayOrderId);
 
 //            oMerchant.setMerchantTxnSearch(merchantId
@@ -134,7 +133,7 @@ public class PaymentFinder {
     public static void main(String[] args) {
 
 
-//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
+//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691";
         Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020");
 
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
