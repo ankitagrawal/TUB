@@ -11291,11 +11291,28 @@
             <column name="pincode_id"/>
         </createIndex>
     </changeSet>
-	<changeSet author="Rohit" id="29-01-2013-01">
+	<changeSet author="Rohit" id="01-02-2013-01">
 		<sql>
 			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
 			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
 			alter table payment add column last_four_digit_card_no int(11);
 		</sql>
 	</changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-1">
+        <dropForeignKeyConstraint baseTableName="warehouse" constraintName="fk_warehouse_warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-2">
+        <dropColumn columnName="warehouse_type_id" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-3">
+        <dropTable tableName="warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-1">
+        <addColumn tableName="warehouse">
+            <column name="store_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-2">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
