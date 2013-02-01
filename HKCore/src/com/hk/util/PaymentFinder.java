@@ -126,7 +126,7 @@ public class PaymentFinder {
 
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
             System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
-            logger.debug(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
+            logger.debug(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
 
     }
