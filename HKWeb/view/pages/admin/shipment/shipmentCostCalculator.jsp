@@ -171,7 +171,8 @@
                         <div style="margin-top:15px;"></div>
                         <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
                             <s:text name="shippingOrderId" style="width:200px" class="text"/>
-                            <s:submit name="findPayment" value="Find Payment"/>
+                            <s:text name="merchantId" style="width:200px" class="text"/>
+                            <s:submit name="findIciciPayment" value="Find Icici Payment"/>
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>

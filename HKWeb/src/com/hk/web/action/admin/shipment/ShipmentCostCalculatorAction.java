@@ -59,6 +59,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     boolean cod;
 
     String shippingOrderId;
+    String merchantId;
 
     int days;
 
@@ -146,8 +147,8 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
 
-    public Resolution findPayment() {
-        Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId);
+    public Resolution findIciciPayment() {
+        Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId, merchantId);
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
             logger.info(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
@@ -290,5 +291,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     public void setOverrideHistoricalShipmentCost(boolean overrideHistoricalShipmentCost) {
         this.overrideHistoricalShipmentCost = overrideHistoricalShipmentCost;
+    }
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
     }
 }

@@ -25,30 +25,18 @@ public class PaymentFinder {
     private static Logger logger = LoggerFactory.getLogger(PaymentFinder.class);
 
 
-    public static Map<String, Object> findIciciPayment(String gatewayOrderId) {
+    public static Map<String, Object> findIciciPayment(String gatewayOrderId, String merchantId) {
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
         try {
             PostLib oPostLib = new PostLib();
 
-//        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/icici.live.properties";
-            String propertyLocatorFileLocation = "D:\\Projects\\HKDev\\HealthKart\\dist\\WEB-INF\\icici.live.properties";
-//            Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-
-//            String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
-
-            oMerchant.setMerchantOnlineInquiry("00007518"
+            oMerchant.setMerchantOnlineInquiry(merchantId
                     , gatewayOrderId);
-
-//            oMerchant.setMerchantTxnSearch(merchantId
-//                    ,"20130130"
-//                    ,"20130131"
-//            );
-
 
             PGSearchResponse oPgSearchResp = oPostLib.postStatusInquiry(oMerchant);
             ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
-            System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
+//            System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             logger.debug("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             int index = 0;
             if (oPgRespArr != null) {
@@ -64,7 +52,7 @@ public class PaymentFinder {
                     paymentResultMap.put("TxnDateTime", oPgResp.getTxnDateTime());
                     paymentResultMap.put("Cv resp Code", oPgResp.getCVRespCode());
 
-                    System.out.println("PGResponse object:" + oPgResp.toString());
+//                    System.out.println("PGResponse object:" + oPgResp.toString());
                     logger.debug("PGResponse object:" + oPgResp.toString());
 
                 }
@@ -133,8 +121,8 @@ public class PaymentFinder {
     public static void main(String[] args) {
 
 
-//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691";
-        Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020");
+        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
+//        Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020", "00007518");
 
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
             System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
