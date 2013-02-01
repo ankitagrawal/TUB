@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.courier;
 import com.hk.admin.pact.dao.courier.PincodeCourierMappingDao;
 import com.hk.admin.pact.dao.shipment.ShipmentDao;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shipment.EnumShipmentServiceType;
@@ -227,7 +228,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     @Override
     public boolean isDefaultCourierApplicable(Pincode pincode, Courier courier, boolean isGround, boolean isCod) {
         List<Courier> couriers = pincodeCourierMappingDao.getApplicableCouriers(pincode, isCod, isGround, true);
-        return couriers != null && !couriers.isEmpty() && couriers.contains(courier);
+        return couriers != null && !couriers.isEmpty() && couriers.contains(courier) || EnumCourier.MIGRATE.getId().equals(courier.getId());
     }
 
     @Override

@@ -108,8 +108,8 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
         dcml.setSubscribeMobile(subscribe);
         dcml.setRequestDate(new Date());
         dcml = (DiscountCouponMailingList)discountCouponMailingListDao.save(dcml);
-
-        emailManager.sendCallbackRequestEmail(dcml);
+        User loggedOnUser = getUserService().getLoggedInUser();
+        emailManager.sendCallbackRequestEmail(loggedOnUser, dcml);
 
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your information has been received, we will get in touch with you shortly."));
     }

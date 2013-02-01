@@ -161,7 +161,7 @@
              </fieldset>
             <div class="clear"></div>
             <fieldset>
-            <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
+            <c:if test="${(cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0) or (cdca.pincode!=null)}">
                 <h2>Pincode Default Courier</h2>
                 <br/>
                 <table class="zebra_vert">
@@ -184,13 +184,15 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier">
-                                    <s:option value="-1">--Select--</s:option>
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" class="courier">
+                                    <s:option value="-1">-Select-</s:option>
                                     <c:forEach items="${cdca.availableCouriers}" var="courier">
-                                      <s:option value="${courier.id}">${courier.name}</s:option>
+                                        <s:option value="${courier.id}">${courier.name}</s:option>
                                     </c:forEach>
                                 </s:select>
-                            </td>
+                                <script type="text/javascript">
+                                    $('.courier').val(${pincodeDefaultCourier.courier.id});
+                                </script>                            </td>
                             <td>
                                     ${pincodeDefaultCourier.warehouse.name}
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
@@ -222,7 +224,7 @@
                     </fieldset>
                     <div class="clear"></div>
                     <fieldset>
-                    <c:if test="${cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0}">
+                    <c:if test="${(cdca.pincodeDefaultCouriers!=null and fn:length(cdca.pincodeDefaultCouriers)>0) or (cdca.pincode!=null)}">
                        <h2>Pincode Courier Mappings</h2>
                          <table class="zebra_vert">
                     <tr>

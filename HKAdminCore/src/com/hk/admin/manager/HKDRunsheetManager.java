@@ -230,6 +230,9 @@ public class HKDRunsheetManager {
                 } else {
                     name = payment.getContactName();
                     phone = payment.getContactNumber();
+	                if(name == null){
+		                name = addressObj.getName();
+	                }
                 }
 
             } else {
