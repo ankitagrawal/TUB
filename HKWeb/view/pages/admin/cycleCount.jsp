@@ -97,7 +97,7 @@
 			<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
-					Scan Here <s:text name="hkBarcode" class="scannedBarcode"/>
+					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
 				</div>
 				<table style="float: right;margin-top:0px">
 					<thead>
