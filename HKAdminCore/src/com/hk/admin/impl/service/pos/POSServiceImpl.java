@@ -165,8 +165,6 @@ public class POSServiceImpl implements POSService {
 			}
 		}
 		shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrder).getName());
-		//todo: Ask for below call
-		//ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
 		shippingOrder.setAmount(order.getAmount());
 		//shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.));
 		shippingOrder = shippingOrderService.save(shippingOrder);
@@ -223,7 +221,6 @@ public class POSServiceImpl implements POSService {
 				adminInventoryService.inventoryCheckinCheckout(posLineItemSku, skuItem, lineItemToBeInsertedInPVI, shippingOrder, null,
 						null, null, inventoryService.getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, userService.getLoggedInUser());
 
-				inventoryService.checkInventoryHealth(posLineItemDto.getSkuItem().getSkuGroup().getSku().getProductVariant());
 				counter++;
 			}
 		}

@@ -108,11 +108,8 @@ public class Payment implements java.io.Serializable {
 	@JoinColumn(name = "billing_address_id")
 	private BillingAddress billingAddress;
 
-	@Column(name = "reference_number")
-	private String referenceNumber;
-
-	@Column(name = "remarks")
-	private String remarks;
+	@Column(name = "last_four_digit_card_no")
+	private Long lastFourDigitCardNo;
 
 	@Transient
 	private boolean selected;
@@ -335,20 +332,12 @@ public class Payment implements java.io.Serializable {
 		this.issuer = issuer;
 	}
 
-	public String getReferenceNumber() {
-		return referenceNumber;
+	public Long getLastFourDigitCardNo() {
+		return lastFourDigitCardNo;
 	}
 
-	public void setReferenceNumber(String referenceNumber) {
-		this.referenceNumber = referenceNumber;
-	}
-
-	public String getRemarks() {
-		return remarks;
-	}
-
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
+	public void setLastFourDigitCardNo(Long lastFourDigitCardNo) {
+		this.lastFourDigitCardNo = lastFourDigitCardNo;
 	}
 
 	public String getPaymentDetails() {

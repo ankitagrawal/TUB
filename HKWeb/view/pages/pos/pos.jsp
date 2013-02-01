@@ -28,7 +28,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#reset').click(function() {
-				location.reload();
+				window.location.href=window.location.href;
 			});
               //var index = -1;
 			$('#productVariantBarcode').keypress(function(e) {
@@ -186,6 +186,11 @@
 					return false;
 				}
 
+				if($('.amountReceived').val() == '') {
+					alert('Please fill the actual Amount Received');
+					return false;
+				}
+
 			});
 
 			$('#paymentMode').change(function() {
@@ -239,7 +244,7 @@
 			<tr class="applyBorder" style="background:#EEE">
 				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
 				<td>Search a Product</td>
-				<td><s:text name="paymentRemarks" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>
+				<td><input type="text" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>
 			</tr>
 		</table>
 
@@ -258,9 +263,9 @@
 					<td>
 						<table>
 							<tr><td colspan="2">Address:</td></tr>
-							<tr><td>Address Line1</td><td><s:text name="address.line1" id="line1"/></td></tr>
-							<tr><td>Address Line2</td><td><s:text name="address.line2" id="line2"/></td></tr>
-							<tr><td>City</td><td><s:text name="address.city" id="city"/></td></tr>
+							<tr><td>Address Line1</td><td><s:text name="address.line1" id="line1" style="width:400px"/></td></tr>
+							<tr><td>Address Line2</td><td><s:text name="address.line2" id="line2" style="width:400px"/></td></tr>
+							<tr><td>City</td><td><s:text name="address.city" id="city" style="width:400px"/></td></tr>
 							<tr>
 								<td>State</td>
 								<td><s:select name="address.state" id="state">
@@ -338,10 +343,9 @@
 			<div id="paymentRemarksDiv" style="display: none;">
 				<table>
 					<tr>
-						<td colspan="3" align="right">Payment Reference No.</td>
-						<td><s:text name="paymentReferenceNumber"/></td>
-						<td>Payment Remarks</td>
-						<td><s:textarea name="paymentRemarks" style="width:300px; height:100px" /></td>
+						<td colspan="3" align="right">Payment Reference No.</td><td><s:text name="paymentReferenceNumber"/></td>
+						<td align="right">Last four digit card No.</td><td><s:text name="lastFourDigitCardNo"/></td>
+						<td>Card/Bank Name(Remarks)</td><td><s:text name="paymentRemarks" style="width:300px; height:100px" maxlength="45" /></td>
 					</tr>
 				</table>
 			</div>

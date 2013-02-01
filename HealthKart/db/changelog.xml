@@ -11240,8 +11240,7 @@
 		<sql>
 			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
 			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
-			alter table payment add column reference_number varchar(50);
-			alter table payment add column remarks text;
+			alter table payment add column last_four_digit_card_no int(11);
 		</sql>
 	</changeSet>
 </databaseChangeLog>

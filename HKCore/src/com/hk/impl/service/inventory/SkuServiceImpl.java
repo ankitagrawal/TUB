@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,8 @@ public class SkuServiceImpl implements SkuService {
     private ProductService        productService;
     @Autowired
     private ProductVariantService productVariantService;
+	@Autowired
+	private WarehouseService      warehouseService;
 
     /**
      * this will create or return sku (instance of product variant at selected warehouses)
@@ -102,6 +105,16 @@ public class SkuServiceImpl implements SkuService {
     public List<Sku> getSKUsForProductVariant(ProductVariant productVariant) {
         return getSkuDao().getSkus(productVariant);
     }
+
+	/**
+	 * this will return a list of all sku's (instance of product variant at serviceable warehouses only)
+	 *
+	 * @param productVariant
+	 * @return
+	 */
+	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant) {
+		return getSkuDao().getSkus(productVariant, warehouseService.getServiceableWarehouses());
+	}
 
     /**
      * this will return a list of all sku's (instance of product variant at multiple warehouses) based on category.

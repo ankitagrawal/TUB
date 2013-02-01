@@ -24,7 +24,7 @@
       <c:choose>
         <c:when test="${!empty ica.availableSkuGroups}">
           <%--<h2>In-stock Batches and Units.</h2>--%>
-          Net Inventory = <strong>${hk:netInventory(ica.productVariant)}</strong>
+          Net Inventory (excluding store)= <strong>${hk:netInventoryAtServiceableWarehouses(ica.productVariant)}</strong>
           <hr/>
           <table>
             <thead>
@@ -94,7 +94,7 @@
           </table>
         </c:when>
         <c:otherwise>
-          <h2>No In-stock Batch. Net Inventory = <h2>${hk:netInventory(ica.productVariant)}</h2></h2>
+          <h2>No In-stock Batch. Net Inventory (excluding store)= <h2>${hk:netInventoryAtServiceableWarehouses(ica.productVariant)}</h2></h2>
           <br/>
         </c:otherwise>
       </c:choose>

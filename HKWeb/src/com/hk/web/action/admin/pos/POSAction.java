@@ -6,39 +6,27 @@ import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
-import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
-import com.hk.domain.core.Pincode;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.NoSkuException;
 import com.hk.helper.InvoiceNumHelper;
-import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
-import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -53,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,17 +75,14 @@ public class POSAction extends BaseAction {
 	private PaymentMode paymentMode;
 	private String paymentReferenceNumber;
 	private String paymentRemarks;
+	private Long lastFourDigitCardNo;
 
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private AdminInventoryService adminInventoryService;
 	@Autowired
-	private OrderManager orderManager;
-	@Autowired
 	private POSService posService;
-	@Autowired
-	private CartLineItemService cartLineItemService;
 	@Autowired
 	private PaymentManager paymentManager;
 	@Autowired
@@ -108,17 +92,11 @@ public class POSAction extends BaseAction {
 	@Autowired
 	private ShippingOrderStatusService shippingOrderStatusService;
 	@Autowired
-	private SkuService skuService;
-	@Autowired
 	private OrderService orderService;
 	@Autowired
 	private AddressService addressService;
 	@Autowired
-	private SkuGroupService skuGroupService;
-	@Autowired
 	private BaseDao baseDao;
-	@Autowired
-	private InventoryService inventoryService;
 	@Autowired
 	private StoreService storeService;
 	@Autowired
@@ -208,21 +186,21 @@ public class POSAction extends BaseAction {
 			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
 
-		if(address != null && address.getId() != null) {
-			if(StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
+		if (address != null && address.getId() != null) {
+			if (StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
 				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
 				return new ForwardResolution("/pages/pos/pos.jsp");
 			}
 		}
 
-		if(address != null && address.getPincode() != null) {
-			if(pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
+		if (address != null && address.getPincode() != null) {
+			if (pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
 				addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
 				return new ForwardResolution("/pages/pos/pos.jsp");
 			}
 		}
 
-		if(address == null || address.getId() == null) {
+		if (address == null || address.getId() == null) {
 			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
 		}
 
@@ -232,7 +210,7 @@ public class POSAction extends BaseAction {
 		}
 
 		POSLineItemDto posLineItemDtoWithNonAvailableInventory = posService.getPosLineItemWithNonAvailableInventory(posLineItems);
-		if(posLineItemDtoWithNonAvailableInventory != null) {
+		if (posLineItemDtoWithNonAvailableInventory != null) {
 			addRedirectAlertMessage(new SimpleMessage("Required Inventory is not available for barcode: " + posLineItemDtoWithNonAvailableInventory.getProductVariantBarcode() +
 					" and Product: " + posLineItemDtoWithNonAvailableInventory.getProductName() + ". Please scan the order again"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
@@ -256,10 +234,11 @@ public class POSAction extends BaseAction {
 		}
 		payment.setAmount(order.getAmount());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-		payment.setGatewayReferenceId(null);
-		if(paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
-			payment.setReferenceNumber(paymentReferenceNumber);
-			payment.setRemarks(paymentRemarks);
+
+		if (paymentMode.getId().equals(EnumPaymentMode.OFFLINE_CARD_PAYMENT.getId())) {
+			payment.setGatewayReferenceId(paymentReferenceNumber);
+			payment.setBankName(paymentRemarks);
+			payment.setLastFourDigitCardNo(lastFourDigitCardNo);
 		}
 		payment.setPaymentStatus(paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS));
 		baseDao.save(payment);
@@ -292,7 +271,7 @@ public class POSAction extends BaseAction {
 		}
 		///get the first Shipping Order of the base Order
 		ShippingOrder shippingOrder = null;
-		for(ShippingOrder shippingOrderInBaseOrder : order.getShippingOrders()) {
+		for (ShippingOrder shippingOrderInBaseOrder : order.getShippingOrders()) {
 			shippingOrder = shippingOrderInBaseOrder;
 			break;
 		}
@@ -410,5 +389,13 @@ public class POSAction extends BaseAction {
 
 	public void setPaymentRemarks(String paymentRemarks) {
 		this.paymentRemarks = paymentRemarks;
+	}
+
+	public Long getLastFourDigitCardNo() {
+		return lastFourDigitCardNo;
+	}
+
+	public void setLastFourDigitCardNo(Long lastFourDigitCardNo) {
+		this.lastFourDigitCardNo = lastFourDigitCardNo;
 	}
 }
