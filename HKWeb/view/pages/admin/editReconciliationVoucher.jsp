@@ -264,9 +264,11 @@
 <s:form  beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
 	<s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
   <table>
+       
    <tr>
        <td>
 	<table>
+
 		<tr>
 			<td>Reconciliation Date</td>
 			<td>
@@ -295,17 +297,21 @@
         <tr>
             <td> UPC (Barcode)</td>
             <td><s:text name="upc" id="upc" size="50" style="padding:5px; width:125px;"/></td>
-
-        </tr>
-        <tr>
-            <td>Reconciliation Type</td>
+             <td>Reconciliation Type</td>
             <td><s:select name="rvLineItem.reconciliationType"
                           value="${rvLineItem.reconciliationType.id}" class="valueChange">
                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                            serviceProperty="reconciliationTypeList" value="id"
                                            label="name"/>
             </s:select></td>
+
         </tr>
+        
+        <tr>
+            <td> Remarks </td>
+            <td> <s:textarea style="height:60px;" name="rvLineItem.remarks" value="${rvLineItem.remarks}"> </s:textarea></td>
+        </tr>
+
         <tr>
             <td colspan="2">
                 <div style="float:left;"><s:submit name="SubtractReconciled" value="Subtract"/></div>
