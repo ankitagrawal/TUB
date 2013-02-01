@@ -72,7 +72,9 @@
 					<div style="text-align: center;">
 						<c:set value="<%= EnumCycleCountStatus.RequestForApproval.getId()%>" var="pendingForApproval"/>
 						<c:if test="${cycle.cycleCount.cycleStatus == pendingForApproval}">
-							<s:submit name="saveVariance" value="Approved"/>
+							<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
+										<s:submit name="saveVariance" value="Approved"/>
+										</shiro:hasPermission>							
 						</c:if>
 					</div>
 
