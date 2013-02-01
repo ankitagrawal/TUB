@@ -54,9 +54,10 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
         return (List<Sku>) findByCriteria(criteria);
     }
 
+	@SuppressWarnings("unchecked")
 	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId) {
 		String query = "select sku from Sku sku where sku.productVariant.product.name like :productName and sku.warehouse.id = :warehouse ";
-		return (List<Sku>)getSession().createQuery(query).setParameter("productName", "%" + productName + "%").setParameter("warehouse", warehouseId).list();
+		return (List<Sku>) findByNamedParams(query, new String[]{"productName", "warehouse"}, new Object[] {"%" + productName + "%", warehouseId});
 	}
 
 }

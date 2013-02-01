@@ -37,10 +37,10 @@
 			</td>
 			<td>
 				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
-				<shiro:hasRole name="<%=RoleConstants.GOD%>">
+				<%--<shiro:hasRole name="<%=RoleConstants.GOD%>">--%>
 					<s:link beanclass="com.hk.web.action.admin.pos.POSAction"
 					        style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
-				</shiro:hasRole>
+				<%--</shiro:hasRole>--%>
 				</c:if>
 			</td>
 		</tr>

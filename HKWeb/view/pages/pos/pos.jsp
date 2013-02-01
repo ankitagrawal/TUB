@@ -27,6 +27,13 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			var paymentMode = $('#paymentMode').find('option:selected');
+			if(paymentMode.val() == $('#paymentModeCard').val()) {
+				$('#paymentRemarksDiv').show();
+			} else {
+				$('#paymentRemarksDiv').hide();
+			}
+
 			$('#reset').click(function() {
 				window.location.href=window.location.href;
 			});
@@ -345,7 +352,7 @@
 					<tr>
 						<td colspan="3" align="right">Payment Reference No.</td><td><s:text name="paymentReferenceNumber"/></td>
 						<td align="right">Last four digit card No.</td><td><s:text name="lastFourDigitCardNo"/></td>
-						<td>Card/Bank Name(Remarks)</td><td><s:text name="paymentRemarks" style="width:300px; height:100px" maxlength="45" /></td>
+						<td>Card/Bank Name(Remarks)</td><td><s:text name="paymentRemarks" style="width:300px; height:50px" maxlength="45" /></td>
 					</tr>
 				</table>
 			</div>

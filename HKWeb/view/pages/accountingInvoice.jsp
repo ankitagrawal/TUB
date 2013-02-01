@@ -177,9 +177,9 @@
     </c:forEach>
     <tr>
       <td colspan="4"><b>Total</b></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="0"/></td>
 
     </tr>
   </table>
@@ -201,7 +201,7 @@
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="0"/></td>
     </tr>
   </table>
 
@@ -251,11 +251,11 @@
     <tr>
       <td><strong>Total</strong></td>
       <td>${orderSummary.invoiceDto.totalSummaryQty}</td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryTax}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="2"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="0"/></td>
       <td><Strong><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryPayable}"
-                                    maxFractionDigits="2"/></Strong></td>
+                                    maxFractionDigits="0"/></Strong></td>
     </tr>
   </table>
 </div>
