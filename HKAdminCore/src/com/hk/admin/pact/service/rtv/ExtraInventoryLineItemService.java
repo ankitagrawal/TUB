@@ -18,4 +18,6 @@ public interface ExtraInventoryLineItemService {
   public List<ExtraInventoryLineItem> getExtraInventoryLineItemsByExtraInventoryId(Long extraInventoryId);
 
   public ExtraInventoryLineItem save(ExtraInventoryLineItem extraInventoryLineItem);
+
+  public void delete(ExtraInventoryLineItem extraInventoryLineItem);
 }

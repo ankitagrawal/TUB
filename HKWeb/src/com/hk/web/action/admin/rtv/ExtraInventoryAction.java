@@ -104,7 +104,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) ||  rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }
@@ -128,7 +128,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
           extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
             rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
             if(rtvNote!=null){
-              if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+              if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
                 reconciledStatus = "reconciled";
               }
             }
@@ -167,7 +167,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     //creating Extra Inventory Line Items
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems){
-      if(extraInventoryLineItem.getId()==null){
+      if(extraInventoryLineItem.getId()==null && extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setExtraInventory(extraInventory);
         extraInventoryLineItem.setCreateDate(new Date());
         extraInventoryLineItem.setUpdateDate(new Date());
@@ -176,9 +176,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
       }
       else{
+        if(extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setUpdateDate(new Date());
         extraInventoryLineItem.setExtraInventory(extraInventory);
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
+        }
+        else{
+          getExtraInventoryLineItemService().delete(extraInventoryLineItem);
+        }
       }
     }
 //    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
@@ -283,24 +288,24 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public Resolution editRtv(){
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
     if(rtvNote == null){
-      extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
-      if(extraInventory!=null){
-        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-        if(extraInventory != null){
-          rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-          if(rtvNote!=null){
-            if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-              reconciledStatus = "reconciled";
-            }
-          }
-        }
-        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-        if(purchaseOrder!=null){
-          newPurchaseOrderId = purchaseOrder.getId();
-        }
-      }
+//      extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
+//      if(extraInventory!=null){
+//        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+//        if(extraInventory != null){
+//          rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+//          if(rtvNote!=null){
+//            if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+//              reconciledStatus = "reconciled";
+//            }
+//          }
+//        }
+//        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+//        if(purchaseOrder!=null){
+//          newPurchaseOrderId = purchaseOrder.getId();
+//        }
+//      }
       addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
-      return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+      return new RedirectResolution(ExtraInventoryAction.class,"pre").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
     }
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     extraInventory = rtvNote.getExtraInventory();
@@ -314,7 +319,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }
@@ -345,7 +350,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }

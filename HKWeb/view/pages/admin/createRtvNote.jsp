@@ -10,6 +10,18 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.lightbox-0.5.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+               $('#save').click(function(){
+                  var rtvNoteStatus = $('#rtvNoteStatus').val();
+                   var rtvNoteStatusDB = ${rtvNote.rtvNote.rtvNoteStatus.id};
+                   if(rtvNoteStatus < rtvNoteStatusDB){
+                       alert("Rtv Note Status can't reverted back");
+                       return false;
+                   }
+               });
+            });
+        </script>
         </s:layout-component>
 
     <s:layout-component name="content">
@@ -44,7 +56,7 @@
                                <h6 style="color:blue">${rtvNote.rtvNote.rtvNoteStatus.name}(Closed)</h6>
                             </c:when>
                             <c:otherwise>
-                               <select name="rtvStatus">
+                               <select name="rtvStatus" id="rtvNoteStatus">
                                 <option value="<%=EnumRtvNoteStatus.Created%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
                                 <option value="<%=EnumRtvNoteStatus.SentToSupplier%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
                                 <option value="<%=EnumRtvNoteStatus.Reconciled%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
