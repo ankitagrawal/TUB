@@ -48,7 +48,7 @@
   <span></span>
    <a href="${pageContext.request.contextPath}/pages/14feb-suspects.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Shampoo.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/14feb-bulb.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Bulb.jpg" width="220" height="220" />  </a>
-  <a href="${pageContext.request.contextPath}/pages/14feb-stilletoes.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Stilletoes.jpg" width="220" height="220" /></a>
+  <a href="${pageContext.request.contextPath}/pages/14feb-foot.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Stilletoes.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/14feb-tape.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Measuring-tape.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/14feb-tennis.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Tennis-ball.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/14feb-balls.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Balls.jpg" width="220" height="220" /></a>
