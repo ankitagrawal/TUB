@@ -97,22 +97,27 @@ public class CycleCountAction extends BasePaginatedAction {
 	private Integer cycleCountType;
 
 	public Resolution directToCycleCountPage() {
-		
+
 		if (cycleCount.getId() == null) {
 			List<BrandsToAudit> brandsToAuditList = new ArrayList<BrandsToAudit>();
 			brandsToAuditList.add(cycleCount.getBrandsToAudit());
 			List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(brandsToAuditList, null, null, userService.getWarehouseForLoggedInUser());
 			if (cycleCounts != null && cycleCounts.size() == 0) {
-				cycleCount.setCreateDate(new Date());
-				cycleCount.setUser(userService.getLoggedInUser());
-				cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
-				cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
-				cycleCount = cycleCountService.save(cycleCount);
+				cycleCount = saveCycleCountInDb(cycleCount);
 			}
 		}
 
 		return view();
 
+	}
+
+	private CycleCount saveCycleCountInDb(CycleCount cycleCount) {
+		cycleCount.setCreateDate(new Date());
+		cycleCount.setUser(userService.getLoggedInUser());
+		cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+		cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
+		cycleCount = cycleCountService.save(cycleCount);
+		return cycleCount;
 	}
 
 
@@ -151,22 +156,31 @@ public class CycleCountAction extends BasePaginatedAction {
 
 
 	public Resolution saveCycleCount() {
-		boolean invalidEntry = false;
+		boolean returnToCreateCountPage = false;
+		boolean returnToCycleCountListPage = false;
+		if (cycleCount == null) {
+			cycleCount = new CycleCount();
+		}
 		if (cycleCountType == 1) {
 			BrandsToAudit brandsToAudit = validateBrand();
 			if (brandsToAudit == null) {
-				invalidEntry = true;
+				if (message.equals("Invalid Brand")) {
+					returnToCreateCountPage = true;
+				} else {
+					returnToCycleCountListPage = true;
+				}
+
 			}
 			cycleCount.setBrandsToAudit(brandsToAudit);
 		} else if (cycleCountType == 2) {
 			Product product = productService.getProductById(auditBy);
 			if (product == null) {
-				invalidEntry = true;
+				returnToCreateCountPage = true;
 				message = "Invalid Product Id ";
 			} else {
 				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, product, null, userService.getWarehouseForLoggedInUser());
 				if (cycleCounts != null && cycleCounts.size() > 0) {
-					invalidEntry = true;
+					returnToCycleCountListPage = true;
 					message = "Product Cycle Count Already In Progress";
 				}
 			}
@@ -175,26 +189,28 @@ public class CycleCountAction extends BasePaginatedAction {
 		} else {
 			ProductVariant productVariant = productVariantService.getVariantById(auditBy);
 			if (productVariant == null) {
-				invalidEntry = true;
+				returnToCreateCountPage = true;
 				message = "Invalid Product Variant Id ";
 			} else {
 				List<CycleCount> cycleCounts = cycleCountService.cycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
 				if (cycleCounts != null && cycleCounts.size() > 0) {
-					invalidEntry = true;
+					returnToCycleCountListPage = true;
 					message = "Product Variant Cycle Count Already In Progress";
 				}
 			}
 			cycleCount.setProductVariant(productVariant);
 
 		}
-		if (invalidEntry) {
+		if (returnToCreateCountPage) {
 			return new ForwardResolution("/pages/admin/createCycleCount.jsp");
 		}
-		cycleCount.setUser(userService.getLoggedInUser());
-		cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
-		cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
-		cycleCount = cycleCountService.save(cycleCount);
-		return new RedirectResolution(CycleCountAction.class, "pre");
+		if (returnToCycleCountListPage) {
+			addRedirectAlertMessage(new SimpleMessage(message));
+			return new RedirectResolution(CycleCountAction.class, "pre");
+		}
+		addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
+		cycleCount = saveCycleCountInDb(cycleCount);
+		return new RedirectResolution(CycleCountAction.class, "pre").addParameter(message,getMessage());
 	}
 
 

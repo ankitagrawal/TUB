@@ -22,16 +22,12 @@
 		</div>
 
 		<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+			<s:hidden name="cycleCount"  value="${cycle.cycleCount}"/>
 			<div>
 				<ul>
 					<li>
-						<label>Brand/Product/ProductVariant*: </label><s:text id="audit-by" name="auditBy"/><br/>
-					</li>
-					<li>
-						<label>Audit Date*: </label><s:text id="audit-date" class="date_input"
-						                                    formatPattern="yyyy-MM-dd"
-						                                    name="cycleCount.createDate"/><br/>
-					</li>
+						<label>Brand/ProductId/ProductVariantId*: </label><s:text id="audit-by" name="auditBy"/><br/>
+					</li>					
 					<li>
 						<label> Cycle Count Type</label>
 						<s:select id="countType" name="cycleCountType">
@@ -52,9 +48,6 @@
 		$('#subBtn').click(function () {
 			if ($('#audit-by').val().trim() === "") {
 				alert("Enter Brand/Product!");
-				return false;
-			} else if ($('#audit-date').val().trim() === "") {
-				alert("Enter Date!");
 				return false;
 			}
 			else if ($('#countType').val().trim() === "") {
