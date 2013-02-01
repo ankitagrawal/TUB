@@ -10,6 +10,7 @@ import com.hk.pact.service.image.ProductImageService;
 import com.hk.util.HKImageUtils;
 import net.sourceforge.stripes.controller.StripesFilter;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -456,10 +457,10 @@ public class ProductServiceImpl implements ProductService {
             solrProduct.setBrand(product.getBrand());
         }
         if (product.getOverview() != null){
-            solrProduct.setOverview(product.getOverview());
+            solrProduct.setOverview(StringEscapeUtils.escapeHtml(product.getOverview().trim()));
         }
         if (product.getDescription() != null){
-            solrProduct.setDescription(product.getDescription());
+            solrProduct.setDescription(StringEscapeUtils.escapeHtml(product.getDescription()));
         }
         if (seoData != null){
             if (seoData.getH1() != null){

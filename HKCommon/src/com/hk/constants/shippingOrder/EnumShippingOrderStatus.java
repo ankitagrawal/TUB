@@ -165,7 +165,8 @@ public enum EnumShippingOrderStatus {
 
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
            return Arrays.asList(EnumShippingOrderStatus.SO_Packed,
-                   EnumShippingOrderStatus.SO_CheckedOut);
+                   EnumShippingOrderStatus.SO_CheckedOut,
+                   EnumShippingOrderStatus.SO_ReadyForDropShipping);
        }
 
     public static List<EnumShippingOrderStatus> getStatusForEnteringShippingCost() {

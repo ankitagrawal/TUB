@@ -41,6 +41,25 @@ public class PincodeCourierMapping implements java.io.Serializable {
     @Column(name = "routing_code", length = 45)
     private String routingCode;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (!(o instanceof PincodeCourierMapping))
+      return false;
+
+    PincodeCourierMapping pincodeCourierMapping = (PincodeCourierMapping) o;
+    if (this.id != null && pincodeCourierMapping.getId() != null) {
+      return id.equals(pincodeCourierMapping.getId());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.id != null ? id.hashCode() : 0;
+  }
+
     public Long getId() {
         return id;
     }
