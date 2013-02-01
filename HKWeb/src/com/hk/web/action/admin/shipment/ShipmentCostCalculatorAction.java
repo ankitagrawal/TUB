@@ -149,7 +149,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     public Resolution findPayment() {
         Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId);
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
-            logger.debug(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
+            logger.info(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }

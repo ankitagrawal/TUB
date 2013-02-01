@@ -86,12 +86,12 @@
                         <li>
                             <label>Start
                                 date</label><s:text class="date_input startDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
                         </li>
                         <li>
                             <label>End
                                 date</label><s:text class="date_input endDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                         </li>
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
@@ -125,12 +125,12 @@
                     <li>
                         <label>Start
                             date</label><s:text class="date_input startDate" style="width:150px"
-                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
                     </li>
                     <li>
                         <label>End
                             date</label><s:text class="date_input endDate" style="width:150px"
-                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                     </li>
                     <div class="clear"></div>
 
