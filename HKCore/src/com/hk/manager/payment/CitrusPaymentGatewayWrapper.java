@@ -64,9 +64,10 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
 	public static String secSignature = "secSignature";
 	public static String merchantAccessKey = "merchantAccessKey";
 	public static String transactionId = "transactionId";
+    public static String MerchantId = "MerchantId";
 
 
-	public CitrusPaymentGatewayWrapper(String environmemtDir) {
+    public CitrusPaymentGatewayWrapper(String environmemtDir) {
 		this.environmemtDir = environmemtDir;
 	}
 
