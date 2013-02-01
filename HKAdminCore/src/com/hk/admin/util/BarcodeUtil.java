@@ -43,7 +43,7 @@ public class BarcodeUtil {
     }
 
 
-    public static void createBarcodeFileForSkuItem(String barcodeFilePath, Map skuItemDataMap) throws IOException {
+    public static File createBarcodeFileForSkuItem(String barcodeFilePath, Map skuItemDataMap) throws IOException {
           File printBarcode = new File(barcodeFilePath);
 
           if (printBarcode.exists()) {
@@ -61,6 +61,7 @@ public class BarcodeUtil {
              }
          }
           bufferedWriter.close();
+         return  printBarcode;
       }
 
 

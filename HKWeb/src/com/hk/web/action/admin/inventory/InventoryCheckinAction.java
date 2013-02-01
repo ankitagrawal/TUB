@@ -561,12 +561,13 @@ public class InventoryCheckinAction extends BaseAction {
                 + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
 
         try {
-            BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+          printBarcode =  BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);
         }
         addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
-        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+         return new HTTPResponseResolution();
+//        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
     }
 
 
@@ -604,12 +605,12 @@ public class InventoryCheckinAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
                 return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
             }
-            BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+        printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);
         }
         addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
-        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+        return new HTTPResponseResolution();
     }
 
 

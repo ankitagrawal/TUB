@@ -11291,4 +11291,9 @@
             <column name="pincode_id"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Ankit (generated)" id="1359711888969-1">
+        <addColumn tableName="rv_line_item">
+            <column name="sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
