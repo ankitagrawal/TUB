@@ -90,12 +90,20 @@ public class CheckPaymentAction extends BaseAction {
             if (paymentResultMap.isEmpty()) {
                 paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
             }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Invalid gateway Order Id"));
         }
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
+
+    @DontValidate
+    @Secure(hasAnyPermissions = { PermissionConstants.REFUND_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    public Resolution refundPayment() {
+        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
+        }
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsAuthPending() {
@@ -134,14 +142,6 @@ public class CheckPaymentAction extends BaseAction {
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentAssociatedToOrder), null);
 
-        /*
-         * //Auto escalation of order if unbooked inventory is positive if (order.getShippingOrders() != null &&
-         * !order.getShippingOrders().isEmpty()) { for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-         * shippingOrderService.autoEscalateShippingOrder(shippingOrder); }
-         * //orderService.escalateOrderFromActionQueue(order); } else if (order.getShippingOrders() == null &&
-         * order.getShippingOrders().isEmpty()) { orderService.splitOrder(order); }
-         */
-
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.associated"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
@@ -162,16 +162,8 @@ public class CheckPaymentAction extends BaseAction {
         orderService.sendEmailToServiceProvidersForOrder(order);
         orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
 
-        /*
-         * //Auto escalation of order if unbooked inventory is positive if (order.getShippingOrders() != null &&
-         * !order.getShippingOrders().isEmpty()) { for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-         * shippingOrderService.autoEscalateShippingOrder(shippingOrder); } } else if (order.getShippingOrders() == null &&
-         * order.getShippingOrders().isEmpty()) { orderService.splitOrder(order); }
-         */
-
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
-        // return new RedirectResolution(getPreviousBreadcrumb().getUrl(), false);
     }
 
     public Order getOrder() {

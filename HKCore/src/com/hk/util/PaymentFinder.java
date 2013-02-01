@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.citruspay.pg.exception.CitruspayException;
 import com.citruspay.pg.model.Enquiry;
 import com.citruspay.pg.model.EnquiryCollection;
+import com.hk.domain.payment.Payment;
 import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
 import com.opus.epg.sfa.java.PGResponse;
 import com.opus.epg.sfa.java.PGSearchResponse;
@@ -36,7 +37,6 @@ public class PaymentFinder {
 
             PGSearchResponse oPgSearchResp = oPostLib.postStatusInquiry(oMerchant);
             ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
-//            System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             logger.debug("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             int index = 0;
             if (oPgRespArr != null) {
@@ -51,10 +51,7 @@ public class PaymentFinder {
                     paymentResultMap.put("TxnType", oPgResp.getTxnType());
                     paymentResultMap.put("TxnDateTime", oPgResp.getTxnDateTime());
                     paymentResultMap.put("Cv resp Code", oPgResp.getCVRespCode());
-
-//                    System.out.println("PGResponse object:" + oPgResp.toString());
                     logger.debug("PGResponse object:" + oPgResp.toString());
-
                 }
             }
         } catch (Exception e) {
@@ -66,13 +63,6 @@ public class PaymentFinder {
     public static Map<String, Object> findCitrusPayment(String gatewayOrderId) {
 
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
-
-//        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
-        String propertyLocatorFileLocation = "D:\\Projects\\HKDev\\HealthKart\\dist\\WEB-INF\\citrus.live.properties";
-//        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
-
-//        String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
-//        String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
 
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
         com.citruspay.pg.util.CitruspayConstant.merchantKey = "26635c9f27d46c139c7feb3e2960ee1b1780ac28";
@@ -117,6 +107,54 @@ public class PaymentFinder {
         return paymentResultMap;
 
     }
+
+    public static Map<String, Object> refundCitrusPayment(Payment payment) {
+
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+        String gatewayOrderId = payment.getGatewayOrderId();
+
+        Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
+        com.citruspay.pg.util.CitruspayConstant.merchantKey = "26635c9f27d46c139c7feb3e2960ee1b1780ac28";
+        paymentSearchMap.put("merchantAccessKey", "6Z1PA7WZEVIRHMGKG1VG");
+        paymentSearchMap.put("pgTxnId", payment.getGatewayReferenceId());
+        paymentSearchMap.put("transactionId", gatewayOrderId);
+        paymentSearchMap.put("RRN", payment.getRrn());
+        paymentSearchMap.put("authIdCode", payment.getAuthIdCode());
+        paymentSearchMap.put("amount", payment.getAmount());
+        paymentSearchMap.put("currencyCode", "INR");
+        paymentSearchMap.put("txnType", "R");
+
+        try {
+            com.citruspay.pg.model.Refund refund = com.citruspay.pg.model.Refund
+                    .create(paymentSearchMap);
+            if (refund != null) {
+                logger.info("PGSearchResponse received from payment gateway " + refund.getRespMessage());
+                System.out.println("PGSearchResponse received from payment gateway  " + refund.getRespMessage());
+                    paymentResultMap.put("Response Code", refund.getRespCode());
+                    paymentResultMap.put("Response Message", refund.getRespMessage());
+                    paymentResultMap.put("Txn Id", refund.getMerTxnId() == null ? "" : refund
+                            .getMerTxnId());
+                    paymentResultMap.put("Epg Txn Id", refund.getPgTxnId() == null ? "" : refund
+                            .getPgTxnId());
+                    paymentResultMap.put("AuthIdCode", refund.getAuthIdCode() == null ? "" : refund
+                            .getAuthIdCode());
+                    paymentResultMap.put("Issuer Ref. No.", refund.getRRN() == null ? "" : refund.getRRN());
+                    paymentResultMap.put("Refund Amount", refund.getAmount() == null ? "" : refund
+                            .getAmount());
+            }
+
+        } catch (CitruspayException e) {
+            logger.debug("There was an exception while trying to refund payment " + gatewayOrderId, e);
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("hi" + e.getMessage());
+            logger.debug("There was an exception while trying to refund payment " + gatewayOrderId, e);
+        }
+
+        return paymentResultMap;
+
+    }
+
 
     public static void main(String[] args) {
 
