@@ -69,10 +69,10 @@ public class PaymentFinder {
 
 //        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
         String propertyLocatorFileLocation = "D:\\Projects\\HKDev\\HealthKart\\dist\\WEB-INF\\citrus.live.properties";
-        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+//        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
 
-        String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
-        String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
+//        String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
+//        String merchantId = properties.getProperty(CitrusPaymentGatewayWrapper.MerchantId);
 
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
         com.citruspay.pg.util.CitruspayConstant.merchantKey = "26635c9f27d46c139c7feb3e2960ee1b1780ac28";
