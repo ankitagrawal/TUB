@@ -21,6 +21,7 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.PaymentFinder;
 import com.hk.util.ShipmentServiceMapper;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -34,10 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -143,6 +141,15 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+        }
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+    }
+
+
+    public Resolution findPayment() {
+        Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId);
+        for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
+            logger.debug(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }

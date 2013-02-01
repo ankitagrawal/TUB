@@ -50,6 +50,7 @@ public class PaymentFinder {
             PGSearchResponse oPgSearchResp = oPostLib.postStatusInquiry(oMerchant);
             ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
             System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
+            logger.debug("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             int index = 0;
             if (oPgRespArr != null) {
                 for (index = 0; index < oPgRespArr.size(); index++) {
@@ -65,6 +66,7 @@ public class PaymentFinder {
                     paymentResultMap.put("Cv resp Code", oPgResp.getCVRespCode());
 
                     System.out.println("PGResponse object:" + oPgResp.toString());
+                    logger.debug("PGResponse object:" + oPgResp.toString());
 
                 }
             }
@@ -74,7 +76,7 @@ public class PaymentFinder {
         return paymentResultMap;
     }
 
-    public static Map<String, Object> findCitrusPayment(String gatewayOrderId, String bankName) {
+    public static Map<String, Object> findCitrusPayment(String gatewayOrderId) {
 
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
 
@@ -132,11 +134,12 @@ public class PaymentFinder {
     public static void main(String[] args) {
 
 
-//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691", "");
+//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
         Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020");
 
         for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
             System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
+            logger.debug(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
         }
 
     }

@@ -164,6 +164,17 @@
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
+                <s:form beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction">
+                    <fieldset class="top_label">
+                        <legend> Find Payment</legend>
+                        <div class="clear"></div>
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:text name="shippingOrderId" style="width:200px" class="text"/>
+                            <s:submit name="findPayment" value="Find Payment"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
             </shiro:hasAnyRoles>
 
             <div class="clear"></div>
