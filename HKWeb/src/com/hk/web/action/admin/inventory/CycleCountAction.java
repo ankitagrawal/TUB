@@ -210,7 +210,7 @@ public class CycleCountAction extends BasePaginatedAction {
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
 		cycleCount = saveCycleCountInDb(cycleCount);
-		return new RedirectResolution(CycleCountAction.class, "pre").addParameter(message,getMessage());
+		return new RedirectResolution(CycleCountAction.class, "pre");
 	}
 
 

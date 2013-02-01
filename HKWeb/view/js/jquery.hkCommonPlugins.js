@@ -1926,9 +1926,10 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
         value = result.value;
         data = result.data;
       }
-      value = String(value);
+      value = String(value)
       // Condition below means we do NOT do empty results
       if (value) {
+       value = value.trim();
         if (typeof data !== 'object') {
           data = {};
         }
@@ -1940,9 +1941,10 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
           attributes = 'i';
         }
         regex = new RegExp(pattern, attributes);
-        if (regex.test(value)) {
+          //marut- modify..we just want to display whatever comes from backend. Logic has already been taken care of
+        //if (regex.test(value)) {
           filtered.push({ value: value, data: data });
-        }
+        //}
       }
     }
 
