@@ -47,7 +47,8 @@ public class AutoCompleteAction extends BaseAction {
 
         List<String> suggestedStrings = new ArrayList<String>();
         List<TermsResponse.Term> items = null;
-
+        q = q.trim();
+        q = q.replaceAll(",","");
         // escape special characters
         SolrQuery query = new SolrQuery();
         query.setQuery("*:*");
@@ -57,7 +58,7 @@ public class AutoCompleteAction extends BaseAction {
         // query.setTermsLower(q);
         query.setHighlight(true);
         // query.setTermsPrefix(q);
-        query.setTermsRegex(".*" + q + ".*");
+        query.setTermsRegex(".*" + q.toLowerCase() + ".*");
         // query.setTermsRegexFlag("dotall");
         query.setQueryType("/terms");
         try {
