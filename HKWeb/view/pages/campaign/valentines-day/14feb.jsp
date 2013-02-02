@@ -51,14 +51,12 @@
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-foot.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Stilletoes.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-tape.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Measuring-tape.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-tennis.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Tennis-ball.jpg" width="220" height="220" /></a>
-  <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-balls.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Balls.jpg" width="220" height="220" /></a>
+  <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-balls.jsp"><img src="${pageContext.request.contextPath}/images/14feb/her-balls.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-nurse.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Nurse-cap.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-glasses.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Thick-Rimmed-Glasses.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-mascara.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Mascara.jpg" width="220" height="220" /></a>
-  <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-boxing.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Boxing-gloves.jpg" width="220" height="220" /></a>
+  <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-boxing.jsp"><img src="${pageContext.request.contextPath}/images/14feb/her-gloves.jpg" width="220" height="220" /></a>
   <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-razor.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Razor.jpg" width="220" height="220" /></a>
-  <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-dump.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Dump-her-set.jpg" width="220" height="220" /></a></div>
-
 <div class="cl"></div>
 
 
@@ -75,8 +73,6 @@
 <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-bow.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Bow.jpg" width="220" height="220" /></a>
 <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-clip.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Cloth-clip.jpg" width="220" height="220" /> </a>
 <a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-diaper.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Diaper.jpg" width="220" height="220" /></a>
-<a href="${pageContext.request.contextPath}/pages/campaign/valentines-day/14feb-dump-him.jsp"><img src="${pageContext.request.contextPath}/images/14feb/Dump-him.jpg" width="220" height="220" /></a></div>
-
 <div class="cl"></div>
 <div class="footer-ny">
 <p>© 2013 healthkart.com</p>

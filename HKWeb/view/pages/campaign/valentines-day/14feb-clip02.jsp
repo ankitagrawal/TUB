@@ -42,7 +42,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM43' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM44' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM45' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM46' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM47' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM50' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM51' />
@@ -68,9 +67,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RBK16' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RBK17' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RBK18' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPINZ1' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPINZ2' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPINZ3' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WICE1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WICE2' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WICE4' />
@@ -83,12 +79,8 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='YRDLY3' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='YRDLY4' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA1' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA2' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA3' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA4' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA6' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA3' />    
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA7' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA8' />
     
     
 

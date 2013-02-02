@@ -42,7 +42,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF029' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF030' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF031' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF032' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF033' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF034' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF035' />
@@ -54,15 +53,10 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF043' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF045' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF046' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF047' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF048' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF049' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RLF050' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RM001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RM003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RO001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RO002' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RO006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RS001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RS002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RS003' />

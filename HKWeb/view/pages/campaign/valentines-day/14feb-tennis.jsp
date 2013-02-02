@@ -79,7 +79,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1329' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1330' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1331' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1332' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1455' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1456' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT146' />

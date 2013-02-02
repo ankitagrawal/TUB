@@ -62,10 +62,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF055' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF056' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF057' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNOG33' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRDRM29' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRDRM30' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRDRM31' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ROOT35' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='RVAYR7' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SMSK11' />
@@ -77,16 +73,12 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VEDIC60' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC28' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC33' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC38' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC43' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC47' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIC51' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VIVL07' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT38' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT45' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT47' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VNCP23' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VNCP40' />
     
   
    
