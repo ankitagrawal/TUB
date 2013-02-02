@@ -61,24 +61,14 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BRESN33' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BRESN34' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BRESN38' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTQ022' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTQ023' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY038' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY447' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY448' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY449' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY450' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY460' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY543' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY591' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY749' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY753' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY754' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTYSH1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ESC01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ESC02' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ESC04' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN30' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN37' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN50' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FAC045' />

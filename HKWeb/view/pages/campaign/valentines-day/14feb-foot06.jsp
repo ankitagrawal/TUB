@@ -49,7 +49,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FARA5' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JRDNA12' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD06' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD10' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD12' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD13' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD14' />

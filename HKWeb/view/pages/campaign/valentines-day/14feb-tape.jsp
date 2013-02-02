@@ -56,20 +56,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1038' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1083' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1141' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1151' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1172' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT120' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1225' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1226' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1229' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT123' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1287' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1341' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1348' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1360' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1361' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1366' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1384' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1395' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1439' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1447' />
@@ -78,15 +65,9 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1454' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1462' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1463' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1537' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1538' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1560' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1561' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1600' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1709' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1805' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1901' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1918' />
    
 
 

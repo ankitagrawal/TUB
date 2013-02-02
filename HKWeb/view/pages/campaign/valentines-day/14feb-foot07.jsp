@@ -54,14 +54,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LAYLA2' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LAYLA4' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LKM001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL65' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL66' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL67' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL68' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL69' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL70' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL71' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LOREAL72' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN11' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN12' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MYBLN13' />

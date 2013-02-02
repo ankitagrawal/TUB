@@ -39,36 +39,15 @@
     <img class="main-banner" src="${pageContext.request.contextPath}/images/14feb/dump-him-banner.jpg"/>
 <div class="cl"></div>
 
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAC001' />
+    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VAC001' />   
+
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-PCW001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PS041' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SER071' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SER090' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-PCW001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PS041' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB163' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1908' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2068' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2074' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2075' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2079' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB339' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB340' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB925' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-BAB0382' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MOS003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-DEF01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-PEP002' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='COP001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='COP002' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='COP003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='COP004' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='COP005' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNOCK001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP001' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SER071' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SER090' />
    

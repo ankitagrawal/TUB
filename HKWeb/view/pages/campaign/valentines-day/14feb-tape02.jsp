@@ -38,10 +38,6 @@
     
     <img class="main-banner" src="${pageContext.request.contextPath}/images/14feb/tape-banner.jpg"/>
 <div class="cl"></div>
-
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1927' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1929' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1930' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2018' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2019' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT2030' />
@@ -54,14 +50,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT441' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT469' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT519' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT645' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT720' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT721' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT800' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT801' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT887' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT890' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT910' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT928' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT949' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT982' />

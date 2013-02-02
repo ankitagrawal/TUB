@@ -48,7 +48,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ZUSKA10' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1908' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2068' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2074' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2075' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB2079' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB339' />
