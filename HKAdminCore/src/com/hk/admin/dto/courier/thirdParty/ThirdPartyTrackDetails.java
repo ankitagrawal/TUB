@@ -1,5 +1,7 @@
 package com.hk.admin.dto.courier.thirdParty;
 
+import java.util.Date;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Neha
@@ -12,7 +14,8 @@ public class ThirdPartyTrackDetails {
 	private String trackingNo;
 	private String referenceNo;
 	private String awbStatus;
-	private String deliveryDate;
+	private String deliveryDateString;
+	private Date deliveryDate;
 
 	public ThirdPartyTrackDetails(){
 	}
@@ -41,11 +44,19 @@ public class ThirdPartyTrackDetails {
 		this.awbStatus = awbStatus;
 	}
 
-	public String getDeliveryDate() {
+	public String getDeliveryDateString() {
+		return deliveryDateString;
+	}
+
+	public void setDeliveryDateString(String deliveryDateString) {
+		this.deliveryDateString = deliveryDateString;
+	}
+
+	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(String deliveryDate) {
+	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 }

@@ -506,17 +506,13 @@ public class CourierStatusUpdateHelper {
 		courierName = EnumCourier.FedEx.getName();
 
 		//added for debugging
-		trackingId = "794136824680";
+		//trackingId = "794136824680";
 		try{
 			trackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);
 
-		} catch (NullPointerException npe) {
-			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
-			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
-
-		} catch (Exception e) {
-			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
-			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+		}  catch (Exception e) {
+			logger.debug(e.getMessage() + courierName + trackingId);
+			throw new HealthkartCheckedException(e.getMessage() + trackingId);
 		}
 		return trackDetails;
 	}
