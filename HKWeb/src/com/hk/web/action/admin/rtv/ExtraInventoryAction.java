@@ -8,7 +8,9 @@ import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
@@ -85,6 +87,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private RtvNote rtvNote;
   private Long rtvNoteId;
   private EnumRtvNoteStatus rtvStatus;
+  private ExtraInventoryStatus extraInventoryStatus;
   private Boolean isDebitToSupplier;
   private Boolean isReconciled;
   private String reconciledStatus;
@@ -158,11 +161,15 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         user = getUserService().getUserById(getPrincipal().getId());
       }
       extraInventory1.setCreatedBy(user);
+      extraInventory1.setExtraInventoryStatus(EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus());
       extraInventory = getExtraInventoryService().save(extraInventory1);
     }
     else{
       extraInventory.setUpdateDate(new Date());
       extraInventory.setComments(comments);
+      if(!extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName())){
+        extraInventory.setExtraInventoryStatus(extraInventoryStatus);
+      }
       extraInventory = getExtraInventoryService().save(extraInventory);
     }
     //creating Extra Inventory Line Items
@@ -687,5 +694,13 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public void setExtraInventories(List<ExtraInventory> extraInventories) {
     this.extraInventories = extraInventories;
+  }
+
+  public ExtraInventoryStatus getExtraInventoryStatus() {
+    return extraInventoryStatus;
+  }
+
+  public void setExtraInventoryStatus(ExtraInventoryStatus extraInventoryStatus) {
+    this.extraInventoryStatus = extraInventoryStatus;
   }
 }

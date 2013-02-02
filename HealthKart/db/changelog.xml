@@ -11343,12 +11343,13 @@
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1359717387729-10">
-        <addForeignKeyConstraint baseColumnNames="extra_inventory_status_id" baseTableName="extra_inventory" constraintName="fk_extra_inventory_extra_inventory_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_status" referencesUniqueColumn="false"/>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="2013-01-02-01">
         <sql>
             insert into extra_inventory_status values(10, 'Created'),(20, 'Sent To Category'),(40, 'Closed');
+            update extra_inventory set extra_inventory_status_id = 10;
         </sql>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-10">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_status_id" baseTableName="extra_inventory" constraintName="fk_extra_inventory_extra_inventory_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_status" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

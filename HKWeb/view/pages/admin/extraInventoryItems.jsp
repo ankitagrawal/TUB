@@ -2,6 +2,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.rtv.EnumExtraInventoryStatus" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Extra Inventory">
@@ -170,6 +171,10 @@ $(document).ready(function () {
                 return false;
             }
         });
+        var extraInventoryStatus = $('#extraInventoryStatus').val();
+        var extraInventoryStatusDB = ${extraInventory.extraInventory.extraInventoryStatus};
+        alert(extraInventoryStatus);
+           return false;
         if (!bool) return false;
     });
 
@@ -250,7 +255,7 @@ $(document).ready(function () {
         <h4 style="color:blue"> Create Extra Inventory Line Items </h4>
     </c:otherwise>
 </c:choose>
-
+<c:set var="exInStatus" value="<%=EnumExtraInventoryStatus.Closed.getName()%>"/>
 <div style="display: none;">
     <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" id="skuCheck" event="getSku"></s:link>
 </div>
@@ -261,6 +266,7 @@ $(document).ready(function () {
         <thead>
         <tr>
             <th>Extra Inventory Id</th>
+            <th>Status</th>
             <th>Created By</th>
             <th>Create Date</th>
             <th>Update Date</th>
@@ -272,6 +278,23 @@ $(document).ready(function () {
             <c:when test="${extraInventory.extraInventory!=null}">
                 <tr>
                     <td> ${extraInventory.extraInventory.id}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus}">
+                                <span style="color:blue;">(Closed)</span>
+                            </c:when>
+                            <c:otherwise>
+                                <s:select name="extraInventoryStatus" id="extraInventoryStatus">
+                            <s:option value="<%=EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Created.getName()%></s:option>
+                            <s:option value="<%=EnumExtraInventoryStatus.SentToCategory.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%></s:option>
+                            <s:option value="<%=EnumExtraInventoryStatus.Closed.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Closed.getName()%></s:option>
+                                </s:select>
+                                <script type="text/javascript">
+                                    $('#extraInventoryStatus').val(${extraInventory.extraInventory.extraInventoryStatus});
+                                </script>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                     <td>${extraInventory.extraInventory.createdBy.name}</td>
                     <td>${extraInventory.extraInventory.createDate}</td>
                     <td>${extraInventory.extraInventory.updateDate}</td>
@@ -310,6 +333,7 @@ $(document).ready(function () {
             <th>Cost Price</th>
             <th>Received QTY</th>
             <th>TAX</th>
+            <th>Remarks</th>
         </tr>
         </thead>
         <tbody id="poTable">
@@ -454,20 +478,30 @@ $(document).ready(function () {
                             </c:otherwise>
                         </c:choose>
                     </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                                ${eInLineItems.remarks}
+                            </c:when>
+                            <c:otherwise>
+                                <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10" style="height:60px; width:210px;"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                 </tr>
             </c:forEach>
         </c:if>
         </tbody>
     </table>
     <c:choose>
-        <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
+        <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') or !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
             <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
                 <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
                    id="addRowButton" style="font-size:1.2em">Add new row</a>
             </shiro:hasPermission>
         </c:when>
         <c:otherwise>
-            <h4 style="color:blue;">RTV Status Closed or Sent to Supplier</h4>
+            <h4 style="color:blue;">RTV Status Closed or Sent to Supplier or ExtraInventory Status Closed</h4>
         </c:otherwise>
     </c:choose>
     <br/>

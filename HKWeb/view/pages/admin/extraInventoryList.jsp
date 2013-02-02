@@ -38,6 +38,7 @@
               <tr>
                 <th>Extra Inventory ID</th>
                 <th>Purchase Order ID</th>
+                <th>Extra Inventory Status</th>
                 <th>Created By</th>
                 <th>Created Date</th>
                 <th>Comments</th>
@@ -58,6 +59,9 @@
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${extraInventory.purchaseOrder.id}
                         <s:param name="purchaseOrder" value="${extraInventory.purchaseOrder.id}"/>
                     </s:link>
+                </td>
+                <td>
+                    ${extraInventory.extraInventoryStatus.name}
                 </td>
                 <td>
                     ${extraInventory.createdBy.name}
