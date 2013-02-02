@@ -4,11 +4,13 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%
+    long date = new Date().getDate();
 response.setHeader("Cache-Control", "no-cache");
-response.setDateHeader("Expires", 0);
+response.setDateHeader("Date", date);
 %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="productBean"/>
 
