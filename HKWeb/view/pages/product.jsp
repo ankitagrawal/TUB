@@ -6,7 +6,6 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
-<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -16,9 +15,9 @@
  <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
  <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
-    long date = new Date().getDate();
-    response.setHeader("Cache-Control", "no-cache");
-    response.setDateHeader("Date", date);
+    response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+    response.setHeader("pragma", "no-cache");
+    response.setDateHeader("Expires", -1);
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
