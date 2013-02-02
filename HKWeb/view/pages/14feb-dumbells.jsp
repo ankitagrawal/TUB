@@ -36,7 +36,7 @@
 <div id="wrapper">
  <jsp:include page="../includes/_menu14feb.jsp"/>
     
-    <img class="main-banner" src="${pageContext.request.contextPath}/images/14feb/courting-her-literally.jpg"/>
+    <img class="main-banner" src="${pageContext.request.contextPath}/images/14feb/man-up-kit.jpg"/>
 <div class="cl"></div>
 
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU084' />
