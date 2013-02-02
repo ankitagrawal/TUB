@@ -27,6 +27,9 @@
   var conversionJsHost = (("https:" == document.location.protocol) ? "https://www." : "http://www.");
   document.write(unescape("%3Cscript src='" + conversionJsHost + "googleadservices.com/pagead/conversion.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
+<script type="text/javascript">
+  adroll_segments = "conversion"
+</script>
 <noscript>
   <div style="display:inline;">
 	  <c:choose>
