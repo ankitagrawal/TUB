@@ -236,7 +236,7 @@
 		<url-pattern>/services</url-pattern>
 		<url-pattern>/services/*</url-pattern>
 		<url-pattern>/facebook</url-pattern>
-		<url-pattern>/facebook/*</url-pattern>
+		<url-pattern>/facebook/*</url-pattern>             
 		<url-pattern>/sitemap.xml</url-pattern>
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
