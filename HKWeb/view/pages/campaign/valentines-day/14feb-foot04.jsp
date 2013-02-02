@@ -61,7 +61,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AUD017' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AUD018' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR16' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR18' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR20' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR21' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR22' />
@@ -69,7 +68,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR62' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR63' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR64' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR66' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR79' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR80' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BASCAR90' />

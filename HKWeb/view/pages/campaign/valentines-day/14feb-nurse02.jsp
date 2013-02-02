@@ -67,16 +67,8 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI007' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI008' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI009' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI010' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI011' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI012' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI014' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI015' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI016' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI017' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI018' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI019' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='GINNI020' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HICKS006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HICKS012' />

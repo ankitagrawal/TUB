@@ -57,8 +57,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON004' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON005' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON012' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON013' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BCKRST001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BCKRST002' />

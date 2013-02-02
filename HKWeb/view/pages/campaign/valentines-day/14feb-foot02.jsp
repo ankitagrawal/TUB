@@ -54,16 +54,10 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='H2O023' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='H2O037' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMLY15' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA14' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA31' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA51' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JSTHB19' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='KNAD80' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MKRI05' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR14' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR29' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR31' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR41' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='MNFCR47' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT002' />
@@ -78,12 +72,8 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT011' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NEAT012' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OH091' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ON013' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY09' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY10' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY11' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ORIY14' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PANAC32' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF002' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PF004' />

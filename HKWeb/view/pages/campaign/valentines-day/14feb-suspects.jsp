@@ -85,7 +85,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CZECHSPA3' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HMSPA41' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SNTPR103' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PNSNC10' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FRG056' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='JLM31' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BTY456' />

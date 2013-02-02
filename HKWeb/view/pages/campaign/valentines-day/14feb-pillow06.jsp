@@ -66,11 +66,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR051' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR053' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR054' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR055' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR058' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR063' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR064' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR066' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR067' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='TYNOR071' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='WRSTS001' />

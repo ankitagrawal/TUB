@@ -166,6 +166,10 @@
                   <s:param name="paymentId" value="${payment.id}"/>
                   Edit Payment
                 </s:link>)
+                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank" event="seekPayment">
+                    <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                    Seek Payment
+                </s:link>)
               </td>
               <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
               <td><fmt:formatNumber value="${payment.amount}" currencySymbol="Rs. " type="currency"/></td>

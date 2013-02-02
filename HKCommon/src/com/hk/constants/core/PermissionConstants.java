@@ -26,6 +26,7 @@ public class PermissionConstants {
     public static final String ADD_LINEITEM                          = "ADD_LINEITEM";
     public static final String DELETE_LINEITEM                       = "DELETE_LINEITEM";
     public static final String UPDATE_PAYMENT                        = "UPDATE_PAYMENT";
+    public static final String REFUND_PAYMENT                        = "REFUND_PAYMENT";
     public static final String CONFIRM_COD                           = "CONFIRM_COD";
     public static final String SEARCH_ORDERS                         = "SEARCH_ORDERS";
     public static final String SEARCH_USERS                          = "SEARCH_USERS";
