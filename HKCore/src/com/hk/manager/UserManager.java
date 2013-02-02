@@ -271,13 +271,13 @@ public class UserManager {
         user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
         user = getUserService().save(user);
 
-        //ADD In Cookie
-        Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
+        //ADD In Cookie  -there is no need to put this in a cookie
+        /*Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
         cookie.setPath("/");
         cookie.setMaxAge(30 * 24 * 60 * 60);
         HttpServletResponse httpResponse = WebContext.getResponse();
         httpResponse.addCookie(cookie);
-        logger.debug("Added Cookie for New Temp User="+user.getUserHash());
+        logger.debug("Added Cookie for New Temp User="+user.getUserHash());*/
         return user;
     }
 
