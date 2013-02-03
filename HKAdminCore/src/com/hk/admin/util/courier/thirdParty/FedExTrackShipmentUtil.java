@@ -88,7 +88,7 @@ public class FedExTrackShipmentUtil {
 						thirdPartyTrackDetails.setTrackingNo(td[i].getTrackingNumber());
 						if (td[i].getActualDeliveryTimestamp()!= null){
 							Date deliveryDate = td[i].getActualDeliveryTimestamp().getTime();
-							thirdPartyTrackDetails.setDeliveryDate(deliveryDate);
+							thirdPartyTrackDetails.setDeliveryDateString(deliveryDate.toString());
 						}
 
 						if (td[i].getOtherIdentifiers() != null) {

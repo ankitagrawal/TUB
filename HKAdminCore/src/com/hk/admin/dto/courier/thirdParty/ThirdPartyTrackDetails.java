@@ -15,7 +15,7 @@ public class ThirdPartyTrackDetails {
 	private String referenceNo;
 	private String awbStatus;
 	private String deliveryDateString;
-	private Date deliveryDate;
+
 
 	public ThirdPartyTrackDetails(){
 	}
@@ -50,13 +50,5 @@ public class ThirdPartyTrackDetails {
 
 	public void setDeliveryDateString(String deliveryDateString) {
 		this.deliveryDateString = deliveryDateString;
-	}
-
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
-
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
+	}	
 }
