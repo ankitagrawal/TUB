@@ -93,6 +93,9 @@ public class TrafficSourceFinder {
 		//http://www.healthkart.com/product/musclepharm-assault/NUT420?utm_source=enewsletter&utm_medium=email&utm_campaign=nov23_2012_weekend_offer-2012-11-23
 		//http://www.google.co.in/url?sa=t&rct=j&q=ovulation%20kit%20in%20india&source=web&cd=1&cad=rja&sqi=2&ved=0CD0QFjAA&url=http%3A%2F%2Fwww.healthkart.com%2Fpersonal-care%2Fwomen%2Fovul
 
+    //If referrer URL is secure and we land on insecure HK url - then the referral URL is blank.
+    //Usecase if we search google in secure mode and click on HK unpaid link we would not get the referral and treat it as Direct.
+
 
 		if (!utm_source.equals("")) {
 			if (utm_source.equals(UtmSourceConstants.ADWORDS) || utm_source.equals(UtmSourceConstants.GOOGLE)) {
