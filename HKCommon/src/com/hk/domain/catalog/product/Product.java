@@ -158,7 +158,7 @@ public class Product  implements java.io.Serializable {
     private boolean              groundShipping;
 
 	@Column(name = "cod_allowed", nullable = false, scale = 1)
-    private Boolean              codAllowed;
+    private Boolean              codAllowed = false;
 
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
