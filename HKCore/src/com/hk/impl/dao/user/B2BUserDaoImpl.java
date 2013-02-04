@@ -22,7 +22,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.user.B2BUserDao;
 
 /**
- * Author: Kani Date: Sep 1, 2008
+ * Author: pankaj pandey
  */
 @SuppressWarnings("unchecked")
 @Repository
