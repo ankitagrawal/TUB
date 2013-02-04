@@ -117,6 +117,7 @@ public class XslPincodeCourierMapping {
                 }
               else{
                  if(pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDB, pincodeCourierMapping)){
+                   pincodeCourierMapping.setId(pincodeCourierMappingDB.getId());
                    pincodeCourierMappings.add(pincodeCourierMapping);
                   }    
                 }
