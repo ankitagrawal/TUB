@@ -9,7 +9,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
-<c:set value="<%=StoreService.PUNJABI_BAGH%>" var="PunjabiBaghStore"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
 
 <s:layout-component name="heading">Admin Home</s:layout-component>
