@@ -5,9 +5,11 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
+<%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
+<c:set value="<%=StoreService.PUNJABI_BAGH%>" var="PunjabiBaghStore"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
 
 <s:layout-component name="heading">Admin Home</s:layout-component>
@@ -36,7 +38,7 @@
 				</shiro:hasRole>
 			</td>
 			<td>
-				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
+				<c:if test="${whAction.setWarehouse != null && whAction.setWarehouse.store != null}">
 				<%--<shiro:hasRole name="<%=RoleConstants.GOD%>">--%>
 					<s:link beanclass="com.hk.web.action.admin.pos.POSAction"
 					        style="color:red; font-size:1.3em; padding:3px;">Store</s:link>

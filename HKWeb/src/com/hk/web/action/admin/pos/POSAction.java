@@ -76,6 +76,7 @@ public class POSAction extends BaseAction {
 	private String paymentReferenceNumber;
 	private String paymentRemarks;
 	private Long lastFourDigitCardNo;
+	private Store store;
 
 	@Autowired
 	private UserService userService;
@@ -97,8 +98,6 @@ public class POSAction extends BaseAction {
 	private AddressService addressService;
 	@Autowired
 	private BaseDao baseDao;
-	@Autowired
-	private StoreService storeService;
 	@Autowired
 	private PincodeService pincodeService;
 	@Autowired
@@ -128,12 +127,10 @@ public class POSAction extends BaseAction {
 			skuItemListToBeCheckedOut.add(skuItem);
 			SkuGroup skuGroup = skuItem.getSkuGroup();
 			ProductVariant productVariant = skuGroup.getSku().getProductVariant();
-			//dataMap.put("skuGroupId", skuGroup.getId());
 			dataMap.put("product", productVariant.getProduct().getName());
 			dataMap.put("options", productVariant.getOptionsCommaSeparated());
 			dataMap.put("mrp", skuGroup.getMrp());
 			dataMap.put("offerPrice", productVariant.getHkPrice());
-			//dataMap.put("skuItemHidden", skuItem.getId());
 			dataMap.put("skuItemId", skuItem.getId());
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Barcode", dataMap);
 			noCache();
@@ -216,7 +213,7 @@ public class POSAction extends BaseAction {
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
 
-		Store store = storeService.getStoreById(StoreService.PUNJABI_BAGH);
+		Store store = userService.getWarehouseForLoggedInUser().getStore();
 
 		order = posService.createOrderForStore(customer, address, store);
 		if (order == null) {
@@ -397,5 +394,13 @@ public class POSAction extends BaseAction {
 
 	public void setLastFourDigitCardNo(Long lastFourDigitCardNo) {
 		this.lastFourDigitCardNo = lastFourDigitCardNo;
+	}
+
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
 	}
 }

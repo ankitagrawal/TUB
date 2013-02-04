@@ -7,14 +7,11 @@ import com.hk.admin.pact.service.pos.POSService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.Country;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
@@ -25,8 +22,6 @@ import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.helper.LineItemHelper;
-import com.hk.helper.ShippingOrderHelper;
-import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.OrderStatusService;
@@ -37,14 +32,10 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.SimpleMessage;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -143,7 +134,6 @@ public class POSServiceImpl implements POSService {
 		for (ProductVariant productVariant : productVariantQtyMap.keySet()) {
 			productVariant.setQty(productVariantQtyMap.get(productVariant));
 			CartLineItem cartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(productVariant, order);
-			//cartLineItem = cartLineItemService.save(cartLineItem);
 			cartLineItemSet.add(cartLineItem);
 		}
 		order.setCartLineItems(cartLineItemSet);
@@ -166,7 +156,6 @@ public class POSServiceImpl implements POSService {
 		}
 		shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrder).getName());
 		shippingOrder.setAmount(order.getAmount());
-		//shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.));
 		shippingOrder = shippingOrderService.save(shippingOrder);
 
 		shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
@@ -178,11 +167,11 @@ public class POSServiceImpl implements POSService {
 		List<SkuItem> bookedSkuItems = new ArrayList<SkuItem>(0);
 		for (POSLineItemDto posLineItemDto : posLineItemDtoList) {
 			List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser());
-			if(inStockSkuItemList != null) {
+			if (inStockSkuItemList != null) {
 				inStockSkuItemList.removeAll(bookedSkuItems);
 			}
 
-			if(inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
+			if (inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
 				return posLineItemDto;
 			}
 
@@ -228,10 +217,10 @@ public class POSServiceImpl implements POSService {
 	}
 
 	public Address createOrUpdateAddressForUser(Address address, User customer, String phone, Warehouse warehouse) {
-		if(address == null) {
+		if (address == null) {
 			address = new Address();
 		}
-		if(StringUtils.isBlank(address.getLine1())) {
+		if (StringUtils.isBlank(address.getLine1())) {
 			address.setLine1(warehouse.getLine1());
 			address.setLine2(warehouse.getLine2());
 			address.setCity(warehouse.getCity());
