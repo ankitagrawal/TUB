@@ -99,13 +99,11 @@ public class ReplacementOrderAction extends BaseAction {
 	public Resolution createReplacementOrder() {
 		if ((!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
 				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_RTO.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Delivered.getId()))
-				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId()))
+				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()))
 				) {
 			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() +
 					" OR <br />" + EnumShippingOrderStatus.SO_RTO.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_Shipped.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_Delivered.getName()
+					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()
 			)
 
 
