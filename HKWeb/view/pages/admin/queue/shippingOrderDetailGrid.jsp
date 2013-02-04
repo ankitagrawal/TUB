@@ -254,6 +254,7 @@
 		                    <s:option value="Damaged Product">Damaged Product</s:option>
 		                    <s:option value="Expired Product">Expired Product</s:option>
 		                    <s:option value="Wrong Product">Wrong Product</s:option>
+		                    <s:option value="Not Interested">Not Interested</s:option>
 	                    </s:select>
                         <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save" style="padding:1px;"/>
                     </s:form>
