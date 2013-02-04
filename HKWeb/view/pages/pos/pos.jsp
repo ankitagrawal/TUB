@@ -250,8 +250,8 @@
 		<table cellpadding="1" width="100%">
 			<tr class="applyBorder" style="background:#EEE">
 				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
-				<td>Search a Product</td>
-				<td><input type="text" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>
+				<%--<td>Search a Product</td>
+				<td><input type="text" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>--%>
 			</tr>
 		</table>
 
