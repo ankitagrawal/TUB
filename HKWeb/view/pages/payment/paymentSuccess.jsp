@@ -153,8 +153,11 @@
             e.async = true;
             document.getElementById('sdt-js').appendChild(e);
         }());
-    </script> 
-
+    </script>
+    <!-- Start AdRoll (FB Retargetting Conversion Tracking Code -->
+	<script type="text/javascript">
+	  adroll_segments = "conversion"
+	</script>
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
