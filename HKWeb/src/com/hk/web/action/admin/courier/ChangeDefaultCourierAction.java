@@ -54,8 +54,8 @@ public class ChangeDefaultCourierAction extends BaseAction {
     private List<Courier> availableCouriers;
 
     Warehouse warehouse;
-    boolean cod;
-    boolean ground;
+    Boolean cod;
+    Boolean ground;
 
     @Autowired
     PincodeCourierService pincodeCourierService;
@@ -74,7 +74,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         } else {
             availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null, null, true);
             pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
-            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod, ground, true);
+            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod!=null ? cod:false, ground!=null?ground:false, true);
         }
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
@@ -217,21 +217,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.warehouse = warehouse;
     }
 
-    public boolean isCod() {
-        return cod;
-    }
-
-    public void setCod(boolean cod) {
-        this.cod = cod;
-    }
-
-    public boolean isGround() {
-        return ground;
-    }
-
-    public void setGround(boolean ground) {
-        this.ground = ground;
-    }
 
     public List<PincodeCourierMapping> getPincodeCourierMappings() {
         return pincodeCourierMappings;
@@ -248,4 +233,20 @@ public class ChangeDefaultCourierAction extends BaseAction {
     public void setAvailableCouriers(List<Courier> availableCouriers) {
         this.availableCouriers = availableCouriers;
     }
+
+  public Boolean isCod() {
+    return cod;
+  }
+
+  public void setCod(Boolean cod) {
+    this.cod = cod;
+  }
+
+  public Boolean isGround() {
+    return ground;
+  }
+
+  public void setGround(Boolean ground) {
+    this.ground = ground;
+  }
 }
