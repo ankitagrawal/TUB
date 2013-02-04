@@ -41,13 +41,15 @@
 </shiro:hasAnyRoles>
 
 <shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
-<table>
-	<tr>
-		<td><s:link beanclass="com.hk.web.action.admin.pos.POSAction"
-		            style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
-		</td>
-	</tr>
-</table>
+	<c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
+		<table>
+			<tr>
+				<td><s:link beanclass="com.hk.web.action.admin.pos.POSAction"
+				            style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
+				</td>
+			</tr>
+		</table>
+	</c:if>
 </shiro:hasPermission>
 
 <div class="left roundBox">
