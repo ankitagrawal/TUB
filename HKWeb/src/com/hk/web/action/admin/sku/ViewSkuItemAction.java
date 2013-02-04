@@ -13,6 +13,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +29,7 @@ public class ViewSkuItemAction  extends BaseAction {
     private AdminInventoryService adminInventoryService;
     private Long entityId;
     private RvLineItem rvLineItem;
-    private StockTransferLineItem stockTransferLineItem;                          
+    private StockTransferLineItem stockTransferLineItem;
                                                             
 
 
@@ -41,8 +42,9 @@ public class ViewSkuItemAction  extends BaseAction {
         } else if(entityId.equals( EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())){
             skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(null,stockTransferLineItem,null,1L);
         } else if (entityId.equals (EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())){
-           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,null,-1L);
-        }
+           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(null,stockTransferLineItem,null,-1L);
+        }     
+
        return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
     }
 

@@ -1,7 +1,10 @@
- <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.hk.constants.sku.EnumSkuItemStatus" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+ <c:set var="stockTransferOutId" value="<%=EnumSkuItemStatus.Stock_Transfer_Out.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" var="viewItem"/>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="View SkuItems">
     <s:layout-component name="htmlHead"/>
 
@@ -18,6 +21,9 @@
                         <th>SKU Group</th>
                         <th> Group Barcode</th>
                         <th>Status </th>
+                         <c:if test="${viewItem.stockTransferLineItem != null}">
+                        <th> Revert </th>
+                        </c:if>
                     </tr>
                     </thead>
                     <tbody id="stTable">
@@ -28,7 +34,12 @@
                             <td>${skuItem.skuGroup.id} </td>
                             <td> ${skuItem.skuGroup.barcode}</td>
                             <td> ${skuItem.skuItemStatus.name} </td>
-
+                            <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId}">
+                            <td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">Revert it
+                                 <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
+					             <s:param name="stockTransfer" value="${viewItem.stockTransferLineItem.stockTransfer}" />
+                                 <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}" /> </s:link> </td>
+                               </c:if>
                         </tr>
 
                     </c:forEach>
@@ -36,9 +47,9 @@
                 </table>
 
 
-      <%--<span style="display:inline;float:right;"><h2><s:link--%>
-              <%--beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;--%>
-          <%--Back to Stock Transfer List</s:link></h2></span>--%>
+      <span style="display:inline;float:right;"><h2><s:link
+              beanclass="com.hk.web.action.admin.inventory.StockTransferAction">&lang;&lang;&lang;
+          Back to Stock Transfer List</s:link></h2></span>
         </div>
 
     </s:layout-component>

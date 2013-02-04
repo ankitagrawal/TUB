@@ -69,6 +69,7 @@ public class StockTransferAction extends BasePaginatedAction {
 
 	private String productVariantBarcode;
 	private StockTransferLineItem stliToBeReduced;
+    private SkuItem identifiedSkuItemToRevert;
 
 	@SuppressWarnings("unchecked")
 	@DefaultHandler
@@ -164,21 +165,24 @@ public class StockTransferAction extends BasePaginatedAction {
 	}
 
 	public Resolution revertStockTransferOut() {
-		if (stockTransfer == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
-			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
-		}
+        SkuItem skuItemToBeReverted ;
+        if (identifiedSkuItemToRevert == null){
 
-		if(stliToBeReduced == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer Item chosen"));
-			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
-		}
+            if (stockTransfer == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+                return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+            }
 
-		if(stliToBeReduced.getCheckedoutQty() == 0) {
-			addRedirectAlertMessage(new SimpleMessage("Qty is already 0, cannot reduce further"));
-			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
-		}
+            if(stliToBeReduced == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer Item chosen"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+            }
 
+            if(stliToBeReduced.getCheckedoutQty() == 0) {
+                addRedirectAlertMessage(new SimpleMessage("Qty is already 0, cannot reduce further"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+            }
+        }
 		User loggedOnUser = null;
 		if (getPrincipal() != null) {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
@@ -188,7 +192,11 @@ public class StockTransferAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("Some error occurred. SkuGroup not found"));
 			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 		}
-		SkuItem skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+        if (identifiedSkuItemToRevert != null){
+           skuItemToBeReverted  =  identifiedSkuItemToRevert;
+        } else {
+		   skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+        }
 		if(skuItemToBeReverted == null) {
 			addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));
 			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
@@ -338,4 +346,12 @@ public class StockTransferAction extends BasePaginatedAction {
 	public void setStliToBeReduced(StockTransferLineItem stliToBeReduced) {
 		this.stliToBeReduced = stliToBeReduced;
 	}
+
+    public SkuItem getIdentifiedSkuItemToRevert() {
+        return identifiedSkuItemToRevert;
+    }
+
+    public void setIdentifiedSkuItemToRevert(SkuItem identifiedSkuItemToRevert) {
+        this.identifiedSkuItemToRevert = identifiedSkuItemToRevert;
+    }
 }

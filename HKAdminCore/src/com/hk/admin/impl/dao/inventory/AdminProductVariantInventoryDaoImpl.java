@@ -261,7 +261,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
             criteria.add(Restrictions.eq("grnLineItem", grnLineItem)) ;
         }
         criteria.add(Restrictions.eq("qty", transferQty));
-        criteria.setProjection(Projections.property("skuItem"));
+        criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
         return (List<SkuItem>) findByCriteria(criteria);
 
     }
