@@ -731,9 +731,13 @@ public class EmailManager {
 
     }
 
-    public void sendCallbackRequestEmail(DiscountCouponMailingList dcml) {
+    public void sendCallbackRequestEmail(User user, DiscountCouponMailingList dcml) {
       HashMap valuesMap = new HashMap();
       valuesMap.put("dcml", dcml);
+      if (user != null)
+        valuesMap.put("userId", user.getId());
+      else
+        valuesMap.put("userId", "Guest User");
 
       Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
       List<String> emailIds = new ArrayList<String>();
