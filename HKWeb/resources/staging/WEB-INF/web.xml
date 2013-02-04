@@ -236,7 +236,7 @@
 		<url-pattern>/services</url-pattern>
 		<url-pattern>/services/*</url-pattern>
 		<url-pattern>/facebook</url-pattern>
-		<url-pattern>/facebook/*</url-pattern>
+		<url-pattern>/facebook/*</url-pattern>             
 		<url-pattern>/sitemap.xml</url-pattern>
 		<url-pattern>/sitemap.txt</url-pattern>
 		<url-pattern>/ror.xml</url-pattern>
@@ -248,6 +248,7 @@
 		<url-pattern>/online-shopping-festival/beauty</url-pattern>
 		<url-pattern>/feedback</url-pattern>
         <url-pattern>/clearance-sale</url-pattern>
+        <url-pattern>/valentines-day-2013</url-pattern>
 	</servlet-mapping>
 
 
