@@ -236,6 +236,37 @@ public class POSServiceImpl implements POSService {
 		return address;
 	}
 
+	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse) {
+		Address address = new Address();
+		address.setLine1(warehouse.getLine1());
+		address.setLine2(warehouse.getLine2());
+		address.setCity(warehouse.getCity());
+		address.setState(warehouse.getState());
+		address.setPincode(pincodeService.getByPincode(warehouse.getPincode()));
+
+		address.setName(customer.getName());
+		address.setPhone(phone);
+		address.setUser(customer);
+		address.setCountry(addressDao.getCountry(80L));
+		address = addressDao.save(address);
+		return address;
+	}
+
+	public Address createAddressForUser(String line1, String line2, String city, String state, String pincode, String phone, User customer) {
+		Address address = new Address();
+		address.setLine1(line1);
+		address.setLine2(line2);
+		address.setCity(city);
+		address.setState(state);
+		address.setPincode(pincodeService.getByPincode(pincode));
+		address.setName(customer.getName());
+		address.setPhone(phone);
+		address.setUser(customer);
+		address.setCountry(addressDao.getCountry(80L));
+		address = addressDao.save(address);
+		return address;
+	}
+
 	private String generatePasswordForStoreUser() {
 		return BaseUtils.getRandomString(6) + BaseUtils.getCurrentTimestamp().getTime();
 	}

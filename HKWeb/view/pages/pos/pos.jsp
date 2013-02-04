@@ -156,6 +156,8 @@
 							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 								$('#name').val(res.data.customer.name);
 								$('#customer').val(res.data.customer.id);
+								alert(res.data.address.id);
+								$('#address').val(res.data.address.id);
 								$('#line1').val(res.data.address.line1);
 								$('#line2').val(res.data.address.line2);
 								$('#city').val(res.data.address.city);
@@ -168,6 +170,10 @@
 							}
 						}
 				);
+			});
+
+			$('.editAddress').click(function() {
+				$('#newAddress').val(true);
 			});
 
 			$('#receivePayment').click(function() {
@@ -221,6 +227,7 @@
 <s:layout-component name="content">
 	<input type="hidden" value="${warehouse.id}" id="warehouse" />
 	<input type="hidden" value="${paymentModeCard}" id="paymentModeCard" />
+	<input type="hidden" id="address" name="address"/>
 	<div style="display: none;">
 		<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="getProductDetailsByBarcode"></s:link>
 	</div>
@@ -270,19 +277,21 @@
 					<td>
 						<table>
 							<tr><td colspan="2">Address:</td></tr>
-							<tr><td>Address Line1</td><td><s:text name="address.line1" id="line1" style="width:400px"/></td></tr>
-							<tr><td>Address Line2</td><td><s:text name="address.line2" id="line2" style="width:400px"/></td></tr>
-							<tr><td>City</td><td><s:text name="address.city" id="city" style="width:400px"/></td></tr>
+							<tr><td>Address Line1</td><td><s:text name="addressLine1" id="line1" style="width:400px"/></td></tr>
+							<tr><td>Address Line2</td><td><s:text name="addressLine2" id="line2" style="width:400px"/></td></tr>
+							<tr><td>City</td><td><s:text name="addressCity" id="city" style="width:400px"/></td></tr>
 							<tr>
 								<td>State</td>
-								<td><s:select name="address.state" id="state">
+								<td><s:select name="addressState" id="state">
 							        <c:forEach items="<%=StateList.stateList%>" var="state">
 							          <s:option value="${state}">${state}</s:option>
 							        </c:forEach>
 							      </s:select>
 								</td>
 							</tr>
-							<tr><td>Pincode</td><td><s:text name="address.pincode" id="pincode"/></td></tr>
+							<tr><td>Pincode</td><td><s:text name="addressPincode" id="pincode"/></td></tr>
+							<tr><td><input type="submit" class="editAddress" value="Edit">(edit)
+													                       </td></tr>
 						</table>
 					</td>
 				</tr>
@@ -305,7 +314,7 @@
 			<legend><b>Order</b></legend>
 			<s:hidden name="customer" id="customer" />
 			<input type="hidden" name="order" id="order" value="${pos.order.id}" />
-			<input type="hidden" name="address" value="${pos.address.id}" id="address" />
+			<%--<input type="hidden" name="address" value="${pos.address.id}" id="address" />--%>
 			<table width="100%" border="1" >
 				<thead>
 				<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Total</th></tr>

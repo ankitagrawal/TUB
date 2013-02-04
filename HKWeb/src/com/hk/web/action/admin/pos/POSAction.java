@@ -77,6 +77,13 @@ public class POSAction extends BaseAction {
 	private String paymentRemarks;
 	private Long lastFourDigitCardNo;
 	private Store store;
+	private boolean newAddress = false;
+	private String addressLine1;
+	private String addressLine2;
+	private String addressCity;
+	private String addressState;
+	private String addressPincode;
+
 
 	@Autowired
 	private UserService userService;
@@ -179,27 +186,47 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Please place order for atleast one item"));
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
-		if (customer == null) {
-			customer = posService.createUserForStore(email, name, null, "HK_USER");
-		}
 
-		if (address != null && address.getId() != null) {
-			if (StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
-				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
-				return new ForwardResolution("/pages/pos/pos.jsp");
-			}
-		}
-
-		if (address != null && address.getPincode() != null) {
-			if (pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
+		if (!StringUtils.isBlank(addressPincode)) {
+			if (pincodeService.getByPincode(addressPincode) == null) {
 				addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
 				return new ForwardResolution("/pages/pos/pos.jsp");
 			}
 		}
 
-		if (address == null || address.getId() == null) {
-			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
+		if (customer == null) {
+			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
+
+		if(address != null && address.getId() != null) {
+			if(!address.getLine1().equalsIgnoreCase(addressLine1) || !address.getLine2().equalsIgnoreCase(addressLine2)
+					|| !address.getCity().equalsIgnoreCase(addressCity) || !address.getState().equalsIgnoreCase(addressState)
+					|| !address.getPincode().getPincode().equalsIgnoreCase(addressPincode)) {
+				if (pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
+								addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
+								return new ForwardResolution("/pages/pos/pos.jsp");
+							}
+				address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
+			}
+		} else {
+			if(!StringUtils.isBlank(addressLine1)) {
+				address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
+			} else {
+				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+			}
+		}
+
+		/*if (address != null && address.getId() != null) {
+			if (StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
+				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
+				return new ForwardResolution("/pages/pos/pos.jsp");
+			}
+		}*/
+
+
+		/*if (address == null || address.getId() == null) {
+			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
+		}*/
 
 		if (paymentMode == null) {
 			addRedirectAlertMessage(new SimpleMessage("Please select a payment mode"));
@@ -402,5 +429,53 @@ public class POSAction extends BaseAction {
 
 	public void setStore(Store store) {
 		this.store = store;
+	}
+
+	public boolean isNewAddress() {
+		return newAddress;
+	}
+
+	public void setNewAddress(boolean newAddress) {
+		this.newAddress = newAddress;
+	}
+
+	public String getAddressLine1() {
+		return addressLine1;
+	}
+
+	public void setAddressLine1(String addressLine1) {
+		this.addressLine1 = addressLine1;
+	}
+
+	public String getAddressLine2() {
+		return addressLine2;
+	}
+
+	public void setAddressLine2(String addressLine2) {
+		this.addressLine2 = addressLine2;
+	}
+
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public String getAddressState() {
+		return addressState;
+	}
+
+	public void setAddressState(String addressState) {
+		this.addressState = addressState;
+	}
+
+	public String getAddressPincode() {
+		return addressPincode;
+	}
+
+	public void setAddressPincode(String addressPincode) {
+		this.addressPincode = addressPincode;
 	}
 }
