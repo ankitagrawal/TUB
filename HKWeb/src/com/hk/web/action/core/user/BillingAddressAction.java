@@ -14,11 +14,14 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.payment.PaymentAction;
 import net.sourceforge.stripes.action.*;
+import com.hk.domain.core.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +46,7 @@ public class BillingAddressAction extends BaseAction {
     @Autowired
     OrderManager orderManager;
 
-    private List<BillingAddress> billingAddresses = new ArrayList<BillingAddress>(0);
+    private Set<BillingAddress> billingAddresses = new HashSet<BillingAddress>(0);
 
     BillingAddress deleteAddress;
     private String email;
@@ -51,6 +54,8 @@ public class BillingAddressAction extends BaseAction {
     private BillingAddress selectedAddress;
     private BillingAddress address;
     private Long billingAddressId;
+    private Long countryId;
+    private String pin;
     private Issuer issuer;
 
     @DefaultHandler
@@ -70,7 +75,6 @@ public class BillingAddressAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         if (billingAddressId != null) {
             deleteAddress = addressDao.getBillingAddressById(billingAddressId);
-            deleteAddress.setUser(user);
             deleteAddress.setDeleted(true);
             addressDao.save(deleteAddress);
             return new RedirectResolution(BillingAddressAction.class);
@@ -89,16 +93,14 @@ public class BillingAddressAction extends BaseAction {
                 return new RedirectResolution(CartAction.class);
             }
             selectedAddress = addressDao.getBillingAddressById(billingAddressId);
-            selectedAddress.getOrders().add(order);
-            selectedAddress.setUser(user);
-            addressDao.save(selectedAddress);
-            return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
+            return new RedirectResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", selectedAddress.getId());
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Billing Address Exist"));
             return new RedirectResolution(BillingAddressAction.class);
         }
     }
 
+    //todo billing address handle addition of pincode
 
     public Resolution create() {
         User user = getUserService().getUserById(getPrincipal().getId());
@@ -106,22 +108,23 @@ public class BillingAddressAction extends BaseAction {
         if (order.getCartLineItems().size() == 0) {
             return new RedirectResolution(CartAction.class);
         }
-        address.getOrders().add(order);
         address.setUser(user);
+        Country country = addressDao.getCountry(countryId);
+        address.setCountry(country);
+        address.setPin(pin);
         address = addressDao.save(address);
-        return new ForwardResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
+        return new RedirectResolution(PaymentAction.class, "proceed").addParameter("issuer", issuer).addParameter("order", order).addParameter("billingAddressId", address.getId());
     }
 
+  public Set<BillingAddress> getBillingAddresses() {
+    return billingAddresses;
+  }
 
-    public List<BillingAddress> getBillingAddresses() {
-        return billingAddresses;
-    }
+  public void setBillingAddresses(Set<BillingAddress> billingAddresses) {
+    this.billingAddresses = billingAddresses;
+  }
 
-    public void setBillingAddresses(List<BillingAddress> billingAddresses) {
-        this.billingAddresses = billingAddresses;
-    }
-
-    public BillingAddress getDeleteAddress() {
+  public BillingAddress getDeleteAddress() {
         return deleteAddress;
     }
 
@@ -204,5 +207,22 @@ public class BillingAddressAction extends BaseAction {
     public void setIssuer(Issuer issuer) {
         this.issuer = issuer;
     }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
+  }
+
+  public String getPin() {
+    return pin;
+  }
+
+  public void setPin(String pin) {
+    this.pin = pin;
+  }
 }
+
 

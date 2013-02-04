@@ -176,7 +176,7 @@ public class AccountingInvoicePdfGenerator {
             customerAddressParagraph.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getLine2(), new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
         }
         customerAddressParagraph.add(new Paragraph(shippingOrder.getBaseOrder().getAddress().getCity() + "," + shippingOrder.getBaseOrder().getAddress().getState() + "-"
-                + shippingOrder.getBaseOrder().getAddress().getPin(), new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
+                + shippingOrder.getBaseOrder().getAddress().getPincode().getPincode(), new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
         customerAddressParagraph.add(new Paragraph("Ph:" + shippingOrder.getBaseOrder().getAddress().getPhone(), new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
 
         if (invoiceDto.getB2bUserDetails() != null) {

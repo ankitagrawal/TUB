@@ -109,7 +109,7 @@
             ${address.name}<br/>
             ${address.line1}<br/>
           <c:if test="${address.line2 != null}">${address.line2}</c:if>
-            ${address.city} - ${address.pin}<br/>
+            ${address.city} - ${address.pincode.pincode}<br/>
             ${address.state}<br/>
           Ph. ${address.phone}
         </li>
@@ -165,6 +165,10 @@
                 (<s:link beanclass="com.hk.web.action.admin.payment.EditPaymentAction">
                   <s:param name="paymentId" value="${payment.id}"/>
                   Edit Payment
+                </s:link>)
+                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank" event="seekPayment">
+                    <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                    Seek Payment
                 </s:link>)
               </td>
               <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>

@@ -88,7 +88,7 @@ public class SplitBaseOrderAction extends BaseAction {
 				}
 			}
 
-			Pincode pincode = pincodeService.getByPincode(baseOrder.getAddress().getPin());
+			Pincode pincode = baseOrder.getAddress().getPincode();
 			if (pincode != null) {
 				for (Map.Entry<Warehouse, Set<CartLineItem>> warehouseSetEntry : warehouseCartLineItemsMap.entrySet()) {
 

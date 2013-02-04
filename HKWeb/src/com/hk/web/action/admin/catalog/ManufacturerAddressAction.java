@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.core.Country;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -39,7 +40,6 @@ import com.hk.util.LatLongGenerator;
 @Component
 public class ManufacturerAddressAction extends BasePaginatedAction {
   private Manufacturer manufacturer;
-  private Address address;
   private List<Address> addresses = new ArrayList<Address>();
   String name;
   String mainAddressId;
@@ -47,6 +47,7 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   Page addressPage;
   String city;
   Long manufacturerId;
+  private Long countryId;
   List<Double> latitude=new ArrayList<Double>();
   List<Double> longitude=new ArrayList<Double>();
 
@@ -55,9 +56,10 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       @Validate(field = "line1", required = true, on = "addAddress"),
       @Validate(field = "city", required = true, on = "addAddress"),
       @Validate(field = "state", required = true, on = "addAddress"),
-      @Validate(field = "pin", required = true, on = "addAddress"),
+      @Validate(field = "pincode", required = true, on = "addAddress"),
       @Validate(field = "phone", required = true, on = "addAddress")
   })
+    private Address address;
 
   @Autowired
   ManufacturerDao manufacturerDao;
@@ -68,24 +70,19 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
   @Autowired
   LatLongGenerator latLongGenerator;
 
-  @ValidationMethod(on="addAddress")
-   public void validateAddress()
-    {
-      if (address == null) {
-            getContext().getValidationErrors().add("1", new SimpleError("Please enter all fields"));
-         } else if (address.getName() == null || address.getLine1() == null ||address.getLine2()==null || address.getCity() == null || address.getState() == null || address.getPin() == null || address.getPhone() == null) {
-           getContext().getValidationErrors().add("2", new SimpleError("Please enter all the fields"));
-            }
-   }
-
-
   @DefaultHandler
   public Resolution pre() {
     return new ForwardResolution("/pages/admin/manufacturerAddresses.jsp");
   }
 
   public Resolution addAddress() {
+    if(address.getPincode()==null){
+    addRedirectAlertMessage(new SimpleMessage("We don't service to this Pincode!!"));
+    return new ForwardResolution("/pages/admin/addManufacturerAddresses.jsp");
+    }
     if (address.getId() == null) {
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
       address = addressDao.save(address);
       addresses = manufacturer.getAddresses();
       addresses.add(address);
@@ -93,13 +90,15 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
       manufacturerDao.save(manufacturer);
     }
     else {
+      Country country = addressDao.getCountry(countryId);
+      address.setCountry(country);
       address = addressDao.save(address);
     }
 
       latLongGenerator.createLocalityMap(address, manufacturer);
 
     addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-    return new RedirectResolution("/pages/admin/addManufacturerAddresses.jsp");
+    return new ForwardResolution("/pages/admin/addManufacturerAddresses.jsp");
   }
 
   public Resolution remove() {
@@ -225,5 +224,13 @@ public class ManufacturerAddressAction extends BasePaginatedAction {
 
   public void setLongitude(List<Double> longitude) {
     this.longitude = longitude;
+  }
+
+  public Long getCountryId() {
+    return countryId;
+  }
+
+  public void setCountryId(Long countryId) {
+    this.countryId = countryId;
   }
 }

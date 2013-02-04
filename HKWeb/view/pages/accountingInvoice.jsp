@@ -100,7 +100,7 @@
 
       <p>
         ${address.city}, ${hk:escapeHtml(address.state)}
-        - ${address.pin},
+        - ${address.pincode.pincode},
       </p>
 
       <p>Ph: ${address.phone}</p>

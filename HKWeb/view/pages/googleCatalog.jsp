@@ -10,7 +10,13 @@
                 <title>Healthkart Google Product Feed</title>
                 <link>http://www.healthkart.com</link>
                 <description>Healthkart Online Health Store</description>
+                <c:set var="excludeCategories" value="rehabilitation-supports | rehabilitation-supports | personal-hygiene  | breast-cancer-home-test | women-nutrition "/>
                 <c:forEach items="${googleBean.products}" var="product">
+                    <c:choose>
+                    <c:when test = "${hk:hasProductAnyCategory(product, excludeCategories)}">
+
+                    </c:when>
+                    <c:otherwise>
                     <c:if test="${fn:length(product.productVariants) > 0
                             && product.mainImageId != null&& product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
                         <item>
@@ -31,6 +37,8 @@
                         </g:image_link>
                         </item>
                     </c:if>
+                    </c:otherwise>
+                    </c:choose>
                 </c:forEach>
                 </channel>
     </rss>

@@ -19,7 +19,7 @@ Your order ${order.gatewayOrderId} has been shipped.
         <#if order.address.line2??>
         ${order.address.line2},
         </#if>
-        ${order.address.city} - ${order.address.pin},
+        ${order.address.city} - ${order.address.pincode.pincode},
         ${order.address.state},
         Ph: ${order.address.phone}</p>
     <h5 style="padding:0; margin:0; margin-bottom:5px;">Shipment Details</h5>

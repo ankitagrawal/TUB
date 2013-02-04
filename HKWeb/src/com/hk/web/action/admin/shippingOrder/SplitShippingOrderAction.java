@@ -111,7 +111,7 @@ public class SplitShippingOrderAction extends BaseAction {
             newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
             newShippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(newShippingOrder);
             newShippingOrder = shippingOrderService.save(newShippingOrder);
-            shipmentService.createShipment(newShippingOrder);
+            shipmentService.createShipment(newShippingOrder, true);
 
             /**
              * Fetch previous shipping order and recalculate amount
