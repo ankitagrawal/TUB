@@ -26,6 +26,7 @@ public class PermissionConstants {
     public static final String ADD_LINEITEM                          = "ADD_LINEITEM";
     public static final String DELETE_LINEITEM                       = "DELETE_LINEITEM";
     public static final String UPDATE_PAYMENT                        = "UPDATE_PAYMENT";
+    public static final String REFUND_PAYMENT                        = "REFUND_PAYMENT";
     public static final String CONFIRM_COD                           = "CONFIRM_COD";
     public static final String SEARCH_ORDERS                         = "SEARCH_ORDERS";
     public static final String SEARCH_USERS                          = "SEARCH_USERS";
@@ -110,6 +111,25 @@ public class PermissionConstants {
 	public static final String DISPATCH_LOT_OPERATIONS               ="DISPATCH_LOT_OPERATIONS";
 
     public static final String  VIEW_DROP_SHIPPING_QUEUE             = "VIEW_DROP_SHIPPING_QUEUE";
-    public static final String  UPDATE_DROP_SHIPPING_QUEUE           = "UPDATE_DROP_SHIPPING_QUEUE"; 
-    
+    public static final String  UPDATE_DROP_SHIPPING_QUEUE           = "UPDATE_DROP_SHIPPING_QUEUE";
+
+    public static final String OPS_MANAGER_MPA_VIEW = "OPS_MANAGER_MPA_VIEW";
+    public static final String OPS_MANAGER_CDCA_VIEW = "OPS_MANAGER_CDCA_VIEW";
+    public static final String OPS_MANAGER_PCM_VIEW = "OPS_MANAGER_PCM_VIEW";
+    public static final String OPS_MANAGER_CUSA_VIEW = "OPS_MANAGER_CUSA_VIEW";
+    public static final String OPS_MANAGER_MPA_UPDATE = "OPS_MANAGER_MPA_UPDATE";
+    public static final String OPS_MANAGER_CDCA_UPDATE = "OPS_MANAGER_CDCA_UPDATE";
+    public static final String OPS_MANAGER_PCM_UPDATE = "OPS_MANAGER_PCM_UPDATE";
+    public static final String OPS_MANAGER_CUSA_UPDATE = "OPS_MANAGER_CUSA_UPDATE";
+    public static final String OPS_MANAGER_MPA_DOWNLOAD = "OPS_MANAGER_MPA_DOWNLOAD";
+    public static final String OPS_MANAGER_CDCA_DOWNLOAD = "OPS_MANAGER_CDCA_DOWNLOAD";
+    public static final String OPS_MANAGER_PCM_DOWNLOAD = "OPS_MANAGER_PCM_DOWNLOAD";
+    public static final String OPS_MANAGER_MPA_UPLOAD = "OPS_MANAGER_MPA_UPLOAD";
+    public static final String OPS_MANAGER_PCM_UPLOAD = "OPS_MANAGER_PCM_UPLOAD";
+    public static final String OPS_MANAGER_CDCA_UPLOAD = "OPS_MANAGER_CDCA_UPLOAD";
+    public static final String OPS_MANAGER_SRS_VIEW = "OPS_MANAGER_SRS_VIEW";
+    public static final String OPS_MANAGER_SRS_CREATE_AWB = "OPS_MANAGER_SRS_CREATE_AWB";
+    public static final String OPS_MANAGER_SRS_CHANGE_COURIER = "OPS_MANAGER_SRS_CHANGE_COURIER";
+    public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
+
 }

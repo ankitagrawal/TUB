@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -14,11 +15,13 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +63,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
         return new ForwardResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution searchShipment() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
@@ -103,9 +107,12 @@ public class CreateUpdateShipmentAction extends BaseAction {
     }
 */
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
         shipmentService.save(shipment);
-        shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        if(!shippingOrder.isDropShipping()){
+            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        }
         shippingOrderService.save(shippingOrder);
         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
 

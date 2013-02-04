@@ -3,6 +3,7 @@ package com.hk.admin.util.helper;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.City;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.core.State;
@@ -251,13 +252,16 @@ public class XslPincodeParser {
                 boolean isCODAvailable = StringUtils.isNotBlank(codAvailable) && codAvailable.trim().toLowerCase().equals("y");
                 boolean isGroundShippingAvailable = StringUtils.isNotBlank(groundShippingAvailable) && groundShippingAvailable.trim().toLowerCase().equals("y");
 
-                if (!pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable)) {
-                    throw new HealthkartCheckedException("the default courier being updated is not yet serviceable for the mentioned conditions at row " + rowCount);
+                PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable, isCODAvailable, estimatedShippingCostDouble);
+                boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable);
+                PincodeDefaultCourier pincodeDefaultCourierDb = pincodeCourierService.getPincodeDefaultCourier(pincode, warehouse, isGroundShippingAvailable, isCODAvailable);
+                if (pincodeDefaultCourierDb == null && isDefaultCourierApplicable) {
+                    pincodeDefaultCouriers.add(pincodeDefaultCourier);
                 }
-
-                PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable,
-                        isCODAvailable, estimatedShippingCostDouble);
-                pincodeDefaultCouriers.add(pincodeDefaultCourier);
+                if (pincodeDefaultCourierDb != null && isDefaultCourierApplicable) {
+                    pincodeDefaultCourierDb.setCourier(pincodeDefaultCourier.getCourier());
+                    pincodeDefaultCouriers.add(pincodeDefaultCourierDb);
+                }
                 rowCount++;
             }
         } catch (Exception e) {

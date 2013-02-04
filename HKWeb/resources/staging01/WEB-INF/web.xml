@@ -248,6 +248,7 @@
 		<url-pattern>/online-shopping-festival</url-pattern>
 		<url-pattern>/feedback</url-pattern>
         <url-pattern>/clearance-sale</url-pattern>
+        <url-pattern>/valentines-day-2013</url-pattern>
 	</servlet-mapping>
 
 

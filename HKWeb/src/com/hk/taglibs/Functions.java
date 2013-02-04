@@ -19,6 +19,7 @@ import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.util.ProductUtil;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -245,6 +246,27 @@ public class Functions {
         return collectionContainsCollection;
     }
 
+    @SuppressWarnings("unchecked")
+    public static boolean urlContainsAnyCategory(String url, String categoryPipeSeparatedList) {
+        String[] categories = null;
+        if(categoryPipeSeparatedList.contains(",")){
+            categories = categoryPipeSeparatedList.split(",");
+        }else if (categoryPipeSeparatedList.contains("|")){
+            categories = categoryPipeSeparatedList.split(",");
+        }
+        /*
+         * for (Object o : c2) { if (collectionContains(c1, o) && collectionContains(c2, o)) { return
+         * collectionContains(c, o); } }
+         */
+
+        for (String category : categories){
+            if (url.contains(category.trim())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static Long netAvailableUnbookedInventory(Object o) {
         return netInventory(o) - bookedQty(o);
     }
@@ -275,6 +297,16 @@ public class Functions {
     public static Category topLevelCategory(Object o) {
         CategoryService categoryService = ServiceLocatorFactory.getService(CategoryService.class);
         return categoryService.getTopLevelCategory((Product) o);
+    }
+
+    public static boolean hasProductAnyCategory(Object product, String pipeSeparatedCategory) {
+        Product pr = (Product)product;
+        for (Category category : pr.getCategories()){
+            if (pipeSeparatedCategory.contains(category.getName())){
+                 return true;
+            }
+        }
+        return false;
     }
 
     public static List<String> brandsInCategory(Object o) {
@@ -665,9 +697,9 @@ public class Functions {
     }
 
     public static boolean showOptionOnUI(String optionType) {
-        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
-		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");
-        boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+    /*    List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");*/
+        boolean showOptionOnUI = ProductUtil.getVariantValidOptions().contains(optionType.toUpperCase());
         return showOptionOnUI;
     }
 

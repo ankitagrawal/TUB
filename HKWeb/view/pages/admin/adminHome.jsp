@@ -59,6 +59,11 @@
 
 	<h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
 
+    <h3>
+    <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
+        Seek Payment
+    </s:link></h3>
+
 	<h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
 	<shiro:hasRole name="<%=RoleConstants.GOD%>">
