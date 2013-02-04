@@ -11315,7 +11315,7 @@
     <changeSet author="Rohit (generated)" id="1359722370102-2">
         <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
     </changeSet>
-	<changeSet author="Rohit" id="01-02-2013-01">
+	<changeSet author="Rohit" id="01-02-2013-02">
 		<sql>
 			update warehouse set store_id = 101 where id = 301;
 		</sql>
