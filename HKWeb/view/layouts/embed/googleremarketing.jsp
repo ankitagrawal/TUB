@@ -36,7 +36,6 @@
             pageContext.setAttribute("googleProduct", product);
         }
     %>
-
     <input type="hidden" value="${pageType}" id="pageType">
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
     <input type="hidden" value="${googleProduct.id}" id="googleProductId">
