@@ -102,7 +102,7 @@ public class Product  implements java.io.Serializable {
     private Boolean              isAmazonProduct;
 
     @Column(name = "out_of_stock")
-    private Boolean              outOfStock;
+    private Boolean              outOfStock =  false;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
