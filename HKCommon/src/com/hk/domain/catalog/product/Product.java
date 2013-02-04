@@ -78,7 +78,7 @@ public class Product  implements java.io.Serializable {
     private Long                 maxDays;
 
     @Column(name = "deleted", scale = 0)
-    private Boolean              deleted;
+    private Boolean              deleted = false;
 
     @Column(name = "main_image_id")
     private Long                 mainImageId;
