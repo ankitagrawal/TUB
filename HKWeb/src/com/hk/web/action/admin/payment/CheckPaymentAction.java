@@ -1,12 +1,11 @@
 package com.hk.web.action.admin.payment;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import com.hk.util.PaymentFinder;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,13 +61,8 @@ public class CheckPaymentAction extends BaseAction {
     @Autowired
     private PaymentManager       paymentManager;
 
-    // PaymentManager paymentManager;
-
-    // InventoryService inventoryService;
-
-    // EmailManager emailManager;
-
-    // OrderService orderService;
+    Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+    private String gatewayOrderId;
 
     @DefaultHandler
     public Resolution show() {
@@ -77,8 +71,6 @@ public class CheckPaymentAction extends BaseAction {
         payment = order.getPayment();
 
         if (EnumOrderStatus.InCart.getId().equals(order.getOrderStatus().getId())) {
-            // User user = order.getUser();
-            // OfferInstance offerInstance = order.getOfferInstance();
             pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), 0D), order.getAddress());
         } else {
             pricingDto = new PricingDto(order.getCartLineItems(), order.getAddress());
@@ -87,7 +79,33 @@ public class CheckPaymentAction extends BaseAction {
         return new ForwardResolution("/pages/admin/checkPayment.jsp");
     }
 
-	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    @DontValidate
+    public Resolution seekPayment() {
+        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            paymentResultMap = PaymentFinder.findCitrusPayment(gatewayOrderId);
+            if (paymentResultMap.isEmpty()) {
+                paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007518");
+            }
+            if (paymentResultMap.isEmpty()) {
+                paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
+            }
+        }
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+
+    @DontValidate
+    @Secure(hasAnyPermissions = { PermissionConstants.REFUND_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    public Resolution refundPayment() {
+        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        if (payment != null) {
+            paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
+        }
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsAuthPending() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -124,14 +142,6 @@ public class CheckPaymentAction extends BaseAction {
         getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentAssociatedToOrder), null);
 
-        /*
-         * //Auto escalation of order if unbooked inventory is positive if (order.getShippingOrders() != null &&
-         * !order.getShippingOrders().isEmpty()) { for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-         * shippingOrderService.autoEscalateShippingOrder(shippingOrder); }
-         * //orderService.escalateOrderFromActionQueue(order); } else if (order.getShippingOrders() == null &&
-         * order.getShippingOrders().isEmpty()) { orderService.splitOrder(order); }
-         */
-
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.associated"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
@@ -152,16 +162,8 @@ public class CheckPaymentAction extends BaseAction {
         orderService.sendEmailToServiceProvidersForOrder(order);
         orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
 
-        /*
-         * //Auto escalation of order if unbooked inventory is positive if (order.getShippingOrders() != null &&
-         * !order.getShippingOrders().isEmpty()) { for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-         * shippingOrderService.autoEscalateShippingOrder(shippingOrder); } } else if (order.getShippingOrders() == null &&
-         * order.getShippingOrders().isEmpty()) { orderService.splitOrder(order); }
-         */
-
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
-        // return new RedirectResolution(getPreviousBreadcrumb().getUrl(), false);
     }
 
     public Order getOrder() {
@@ -253,4 +255,19 @@ public class CheckPaymentAction extends BaseAction {
         this.paymentManager = paymentManager;
     }
 
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
+
+    public Map<String, Object> getPaymentResultMap() {
+        return paymentResultMap;
+    }
+
+    public void setPaymentResultMap(Map<String, Object> paymentResultMap) {
+        this.paymentResultMap = paymentResultMap;
+    }
 }

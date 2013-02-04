@@ -26,7 +26,7 @@
         content="Online Shopping, online shopping india, nutrition, healthcare products, buy health care health equipments, beauty care products, shop online, nutrition supplements, protein supplements, diabetes, skin care, eye care,  healthcart, healthkkart, healthkarts, price, india"/>
 
   <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
+  <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>--%>
 </s:layout-component>
 
 <s:layout-component name="homePageTopContent">
