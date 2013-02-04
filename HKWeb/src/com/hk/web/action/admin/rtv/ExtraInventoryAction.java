@@ -92,6 +92,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private Boolean isReconciled;
   private String reconciledStatus;
   private Long newPurchaseOrderId;
+  private String courierName;
+  private String destinationAddress;
+  private String docketNumber;
 
 
   @DefaultHandler
@@ -193,6 +196,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
     }
+
+    purchaseOrder.setExtraInventoryCreated(true);
+    purchaseOrder = getPurchaseOrderService().save(purchaseOrder);
 //    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
 //    if(extraInventory != null){
 //      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
@@ -209,7 +215,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 //     taxList = getMasterDataDao().getTaxList();
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
-    return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
+    return new RedirectResolution(ExtraInventoryAction.class,"searchExtraInventory");
   }
 
 @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
@@ -284,6 +290,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
       rtvNote.setDebitToSupplier(isDebitToSupplier);
+      if(courierName!=null || docketNumber!=null || destinationAddress!=null){
+      rtvNote.setCourierName(courierName);
+      rtvNote.setDocketNumber(docketNumber);
+      rtvNote.setDestinationAddress(destinationAddress);
+      rtvNote.setDispatchDate(new Date());
+      }
       rtvNote = getRtvNoteService().save(rtvNote);
     }
     noCache();
@@ -481,6 +493,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       if(sku!=null){
         dataMap.put("sku",sku);
         dataMap.put("productName",sku.getProductVariant().getProduct().getName());
+        dataMap.put("taxId",sku.getTax().getId());
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",dataMap);
       }
       else{
@@ -702,5 +715,29 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public void setExtraInventoryStatus(ExtraInventoryStatus extraInventoryStatus) {
     this.extraInventoryStatus = extraInventoryStatus;
+  }
+
+  public String getDocketNumber() {
+    return docketNumber;
+  }
+
+  public void setDocketNumber(String docketNumber) {
+    this.docketNumber = docketNumber;
+  }
+
+  public String getDestinationAddress() {
+    return destinationAddress;
+  }
+
+  public void setDestinationAddress(String destinationAddress) {
+    this.destinationAddress = destinationAddress;
+  }
+
+  public String getCourierName() {
+    return courierName;
+  }
+
+  public void setCourierName(String courierName) {
+    this.courierName = courierName;
   }
 }

@@ -5,6 +5,7 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Rtv Note">
  <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="rtvNote"/>
+<c:set var="createdStatus" value="<%=EnumRtvNoteStatus.Created.getName()%>"/>
     <s:layout-component name="htmlHead">
  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -18,6 +19,19 @@
                    if(rtvNoteStatus < rtvNoteStatusDB){
                        alert("Rtv Note Status can't reverted back");
                        return false;
+                   }
+                   var courierName = $('#courierName').val();
+                   var docketNumber = $('#docketNumber').val();
+                   var destinationAddress = $('#destinationAddress').val();
+                   if(rtvNoteStatus == 20){
+                       if((courierName == null || courierName == "") && (docketNumber == null || docketNumber == "")){
+                           alert("Please Enter Courier details");
+                           return false;
+                       }
+                       if(destinationAddress == null || destinationAddress == ""){
+                           alert("Please Enter Destination Address");
+                           return false;
+                       }
                    }
                });
             });
@@ -63,7 +77,6 @@
                             </select>
                             </c:otherwise>
                         </c:choose>
-
                         </td>
                     <td>${rtvNote.rtvNote.createdBy.name}</td>
                     <td>
@@ -84,7 +97,37 @@
                                 </select>
                             </c:otherwise>
                         </c:choose>
-
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="courierName" value="${rtvNote.rtvNote.courierName}" id="courierName"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.courierName}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="docketNumber" value="${rtvNote.rtvNote.docketNumber}" id="docketNumber"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.docketNumber}
+                            </c:otherwise>
+                        </c:choose>
+                    <td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.destinationAddress}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                         ${rtvNote.rtvNote.dispatchDate}
                     </td>
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>

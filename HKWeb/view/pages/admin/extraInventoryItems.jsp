@@ -48,7 +48,8 @@ $(document).ready(function () {
                     finalProName = finalProName.substring(0, 44);
                 }
                 obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
-                obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.sku.tax.id);
+                alert(res.data.taxId);
+                obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.taxId);
                 $('#checkRtvStatus').remove();
                 $('.createRtv').remove();
             }
@@ -148,7 +149,8 @@ $(document).ready(function () {
                             finalProName = finalProName.substring(0, 44);
                         }
                         obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
-                        obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.sku.tax.id);
+                        alert(res.data.taxId);
+                        obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.taxId);
                     }
                     else {
                         alert(res.message);
@@ -171,10 +173,13 @@ $(document).ready(function () {
                 return false;
             }
         });
-        var extraInventoryStatus = $('#extraInventoryStatus').val();
-        var extraInventoryStatusDB = ${extraInventory.extraInventory.extraInventoryStatus};
-        alert(extraInventoryStatus);
-           return false;
+        var extraInventoryStatus = parseFloat($('#extraInventoryStatus').val());
+        var extraInventoryStatusDB = parseFloat(${extraInventory.extraInventory.extraInventoryStatus});
+        alert(extraInventoryStatus + " " + extraInventoryStatusDB);
+        if (extraInventoryStatusDB > extraInventoryStatus) {
+            alert("Invalid ExtraInventory Status");
+            return false;
+        }
         if (!bool) return false;
     });
 
@@ -261,260 +266,266 @@ $(document).ready(function () {
 </div>
 <br><br>
 <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
-    <h2>Extra Inventory</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Extra Inventory Id</th>
-            <th>Status</th>
-            <th>Created By</th>
-            <th>Create Date</th>
-            <th>Update Date</th>
-            <th>Comments</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:choose>
-            <c:when test="${extraInventory.extraInventory!=null}">
-                <tr>
-                    <td> ${extraInventory.extraInventory.id}</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus}">
-                                <span style="color:blue;">(Closed)</span>
-                            </c:when>
-                            <c:otherwise>
-                                <s:select name="extraInventoryStatus" id="extraInventoryStatus">
-                            <s:option value="<%=EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Created.getName()%></s:option>
-                            <s:option value="<%=EnumExtraInventoryStatus.SentToCategory.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%></s:option>
-                            <s:option value="<%=EnumExtraInventoryStatus.Closed.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Closed.getName()%></s:option>
-                                </s:select>
-                                <script type="text/javascript">
-                                    $('#extraInventoryStatus').val(${extraInventory.extraInventory.extraInventoryStatus});
-                                </script>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>${extraInventory.extraInventory.createdBy.name}</td>
-                    <td>${extraInventory.extraInventory.createDate}</td>
-                    <td>${extraInventory.extraInventory.updateDate}</td>
-                    <td><textarea name="comments" rows="10" cols="10"
-                                  style="height:60px; width:210px;">${extraInventory.extraInventory.comments}</textarea>
-                    </td>
-                </tr>
-            </c:when>
-            <c:otherwise>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><textarea name="comments" rows="10" cols="10" style="height:60px; width:210px;"></textarea></td>
-                </tr>
-            </c:otherwise>
-        </c:choose>
-        </tbody>
-    </table>
-    <input type="hidden" name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
-    <br><br>
-
-    <div class="clear"></div>
-    <h2>Extra Inventory Line Items</h2>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>S.No</th>
-            <th>ID</th>
-            <th>New PO ID</th>
-            <th>SKU ID</th>
-            <th>Variant ID</th>
-            <th>Product Name</th>
-            <th>MRP</th>
-            <th>Cost Price</th>
-            <th>Received QTY</th>
-            <th>TAX</th>
-            <th>Remarks</th>
-        </tr>
-        </thead>
-        <tbody id="poTable">
-        <c:if test="${extraInventory.extraInventoryLineItems!=null}">
-            <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
-                <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-                    <td>${ctr.index+1}.</td>
-                    <td>
-                        <c:set var="bool" value="0"/>
-                        <c:if test="${eInLineItems.rtvCreated}">
-                            ${eInLineItems.id}(RTV)
-                            <s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated"
-                                      value="${eInLineItems.rtvCreated}"/>
-                            <c:set var="bool" value="1"/>
-                        </c:if>
-                        <c:if test="${eInLineItems.grnCreated}">
-                            ${eInLineItems.id}(PO)
-                            <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated"
-                                      value="${eInLineItems.grnCreated}"/>
-                            <c:set var="bool" value="1"/>
-                        </c:if>
-                        <c:if test="${bool eq '0' and eInLineItems.id !=null}">
-                            <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
-                                <s:checkbox class="checkbox1" value="${eInLineItems.id}"
-                                            name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
-                            </shiro:hasPermission>
-                        </c:if>
-                        <input type="hidden" name="extraInventoryLineItems[${ctr.index}].id"
-                               value="${eInLineItems.id}"/>
-                    </td>
-                    <td>
-                        <c:if test="${extraInventory.newPurchaseOrderId!=null and eInLineItems.grnCreated}">
-                            <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction"
-                                    event="pre">${extraInventory.newPurchaseOrderId}
-                                <s:param name="purchaseOrder" value="${extraInventory.newPurchaseOrderId}"/>
-                            </s:link>
-                        </c:if>
-                    </td>
-                    <td class="skuId">
-                        <c:choose>
-                            <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
-                                ${eInLineItems.sku.id}
-                                <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
-                                          value="${eInLineItems.sku.id}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <c:if test="${eInLineItems.sku !=null}">
-                                    ${eInLineItems.sku.id}
-                                    <s:hidden name="extraInventoryLineItems[${ctr.index}].sku" class="skus"
-                                              value="${eInLineItems.sku.id}"/>
-                                </c:if>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td class="txtSku">
-                        <c:choose>
-                            <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
-                                ${eInLineItems.sku.productVariant.id}
-                            </c:when>
-                            <c:otherwise>
-                                <c:choose>
-                                    <c:when test="${eInLineItems.sku !=null}">
-                                        <input type="text" class='variantId'
-                                               value="${eInLineItems.sku.productVariant.id}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td class="proName">
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.productName}
-                                <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
-                                          value="${eInLineItems.productName}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" class="productName" maxlength="45"
-                                       name="extraInventoryLineItems[${ctr.index}].productName"
-                                       value="${eInLineItems.productName}"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.mrp}
-                                <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
-                                          value="${eInLineItems.mrp}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" class="mrp valueChange"
-                                       name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.costPrice}
-                                <s:hidden class="costPrice valueChange"
-                                          name="extraInventoryLineItems[${ctr.index}].costPrice"
-                                          value="${eInLineItems.costPrice}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" class="costPrice valueChange"
-                                       name="extraInventoryLineItems[${ctr.index}].costPrice"
-                                       value="${eInLineItems.costPrice}"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.receivedQty}
-                                <s:hidden class="receivedQty valueChange"
-                                          name="extraInventoryLineItems[${ctr.index}].receivedQty"
-                                          value="${eInLineItems.receivedQty}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <input type="text" class="receivedQty valueChange"
-                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
-                                       value="${eInLineItems.receivedQty}"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td class="taxClass">
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.tax.name}
-                                <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
-                                       readonly="readonly" value="${eInLineItems.tax.id}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <s:select name="extraInventoryLineItems[${ctr.index}].tax" class="taxValue">
-                                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                               serviceProperty="taxList" value="id" label="name"/>
-                                </s:select>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                                ${eInLineItems.remarks}
-                            </c:when>
-                            <c:otherwise>
-                                <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10" style="height:60px; width:210px;"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                </tr>
-            </c:forEach>
-        </c:if>
-        </tbody>
-    </table>
+<h2>Extra Inventory</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Extra Inventory Id</th>
+        <th>Status</th>
+        <th>Created By</th>
+        <th>Create Date</th>
+        <th>Update Date</th>
+        <th>Comments</th>
+    </tr>
+    </thead>
+    <tbody>
     <c:choose>
-        <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') or !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
-            <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
-                <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
-                   id="addRowButton" style="font-size:1.2em">Add new row</a>
-            </shiro:hasPermission>
+        <c:when test="${extraInventory.extraInventory!=null}">
+            <tr>
+                <td> ${extraInventory.extraInventory.id}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus}">
+                            <span style="color:blue;">(Closed)</span>
+                        </c:when>
+                        <c:otherwise>
+                            <s:select name="extraInventoryStatus" id="extraInventoryStatus">
+                                <s:option
+                                        value="<%=EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Created.getName()%>
+                                </s:option>
+                                <s:option
+                                        value="<%=EnumExtraInventoryStatus.SentToCategory.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%>
+                                </s:option>
+                                <s:option
+                                        value="<%=EnumExtraInventoryStatus.Closed.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Closed.getName()%>
+                                </s:option>
+                            </s:select>
+                            <script type="text/javascript">
+                                $('#extraInventoryStatus').val(${extraInventory.extraInventory.extraInventoryStatus});
+                            </script>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>${extraInventory.extraInventory.createdBy.name}</td>
+                <td>${extraInventory.extraInventory.createDate}</td>
+                <td>${extraInventory.extraInventory.updateDate}</td>
+                <td><textarea name="comments" rows="10" cols="10"
+                              style="height:60px; width:210px;">${extraInventory.extraInventory.comments}</textarea>
+                </td>
+            </tr>
         </c:when>
         <c:otherwise>
-            <h4 style="color:blue;">RTV Status Closed or Sent to Supplier or ExtraInventory Status Closed</h4>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><textarea name="comments" rows="10" cols="10" style="height:60px; width:210px;"></textarea></td>
+            </tr>
         </c:otherwise>
     </c:choose>
-    <br/>
-    <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}"/>
-    <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}"/>
-    <s:submit name="save" value="SAVE" id="save"/>
-    <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
-        <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
-            <s:submit name="createRtv" value="Create RTV" class="createRtv"/>
-        </c:if>
-        <s:submit name="editRtv" value="Check RTV Status" id="checkRtvStatus"/>
-        <s:submit name="createPO" value="Create PO" class="createRtv"/>
-    </shiro:hasPermission>
+    </tbody>
+</table>
+<input type="hidden" name="extraInventoryId" value="${extraInventory.extraInventory.id}"/>
+<br><br>
+
+<div class="clear"></div>
+<h2>Extra Inventory Line Items</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>S.No</th>
+        <th>ID</th>
+        <th>New PO ID</th>
+        <th>SKU ID</th>
+        <th>Variant ID</th>
+        <th>Product Name</th>
+        <th>MRP</th>
+        <th>Cost Price</th>
+        <th>Received QTY</th>
+        <th>TAX</th>
+        <th>Remarks</th>
+    </tr>
+    </thead>
+    <tbody id="poTable">
+    <c:if test="${extraInventory.extraInventoryLineItems!=null}">
+        <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
+            <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+                <td>${ctr.index+1}.</td>
+                <td>
+                    <c:set var="bool" value="0"/>
+                    <c:if test="${eInLineItems.rtvCreated}">
+                        ${eInLineItems.id}(RTV)
+                        <s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated"
+                                  value="${eInLineItems.rtvCreated}"/>
+                        <c:set var="bool" value="1"/>
+                    </c:if>
+                    <c:if test="${eInLineItems.grnCreated}">
+                        ${eInLineItems.id}(PO)
+                        <s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated"
+                                  value="${eInLineItems.grnCreated}"/>
+                        <c:set var="bool" value="1"/>
+                    </c:if>
+                    <c:if test="${bool eq '0' and eInLineItems.id !=null}">
+                        <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
+                            <s:checkbox class="checkbox1" value="${eInLineItems.id}"
+                                        name="extraInventoryLineItemsSelected[${ctr.index}].id"/>${eInLineItems.id}
+                        </shiro:hasPermission>
+                    </c:if>
+                    <input type="hidden" name="extraInventoryLineItems[${ctr.index}].id"
+                           value="${eInLineItems.id}"/>
+                </td>
+                <td>
+                    <c:if test="${extraInventory.newPurchaseOrderId!=null and eInLineItems.grnCreated}">
+                        <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction"
+                                event="pre">${extraInventory.newPurchaseOrderId}
+                            <s:param name="purchaseOrder" value="${extraInventory.newPurchaseOrderId}"/>
+                        </s:link>
+                    </c:if>
+                </td>
+                <td class="skuId">
+                    <c:choose>
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                            ${eInLineItems.sku.id}
+                            <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
+                                      value="${eInLineItems.sku.id}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${eInLineItems.sku !=null}">
+                                <s:text name="extraInventoryLineItems[${ctr.index}].sku" class="skus"
+                                        value="${eInLineItems.sku.id}"/>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td class="txtSku">
+                    <c:choose>
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                            ${eInLineItems.sku.productVariant.id}
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${eInLineItems.sku !=null}">
+                                    <input type="text" class='variantId'
+                                           value="${eInLineItems.sku.productVariant.id}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" class="variants" value="${ctr.index}"> <span>check this if you know Variant Id :</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td class="proName">
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.productName}
+                            <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
+                                      value="${eInLineItems.productName}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="productName" maxlength="45"
+                                   name="extraInventoryLineItems[${ctr.index}].productName"
+                                   value="${eInLineItems.productName}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.mrp}
+                            <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
+                                      value="${eInLineItems.mrp}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="mrp valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.costPrice}
+                            <s:hidden class="costPrice valueChange"
+                                      name="extraInventoryLineItems[${ctr.index}].costPrice"
+                                      value="${eInLineItems.costPrice}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="costPrice valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].costPrice"
+                                   value="${eInLineItems.costPrice}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.receivedQty}
+                            <s:hidden class="receivedQty valueChange"
+                                      name="extraInventoryLineItems[${ctr.index}].receivedQty"
+                                      value="${eInLineItems.receivedQty}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="receivedQty valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].receivedQty"
+                                   value="${eInLineItems.receivedQty}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td class="taxClass">
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.tax.name}
+                            <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
+                                   readonly="readonly" value="${eInLineItems.tax.id}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <s:select name="extraInventoryLineItems[${ctr.index}].tax" class="taxValue">
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="taxList" value="id" label="name"/>
+                            </s:select>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                            ${eInLineItems.remarks}
+                        </c:when>
+                        <c:otherwise>
+                            <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10"
+                                        style="height:60px; width:210px;"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+            </tr>
+        </c:forEach>
+    </c:if>
+    </tbody>
+</table>
+<c:choose>
+    <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') or !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
+        <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+            <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
+               id="addRowButton" style="font-size:1.2em">Add new row</a>
+        </shiro:hasPermission>
+    </c:when>
+    <c:otherwise>
+        <h4 style="color:blue;">RTV Status Closed or Sent to Supplier or ExtraInventory Status Closed</h4>
+    </c:otherwise>
+</c:choose>
+<br/>
+<s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}"/>
+<s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}"/>
+<s:submit name="save" value="SAVE" id="save"/>
+<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
+    <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
+        <s:submit name="createRtv" value="Create RTV" class="createRtv"/>
+    </c:if>
+    <s:submit name="editRtv" value="Check RTV Status" id="checkRtvStatus"/>
+    <s:submit name="createPO" value="Create PO" class="createRtv"/>
+</shiro:hasPermission>
 </s:form>
 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
     <div align="center" style="font-weight:bold; font-size:150%">BACK</div>

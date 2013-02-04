@@ -53,9 +53,6 @@
                   </s:link>
                </td>
                 <td>
-
-                </td>
-                <td>
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${extraInventory.purchaseOrder.id}
                         <s:param name="purchaseOrder" value="${extraInventory.purchaseOrder.id}"/>
                     </s:link>
@@ -65,6 +62,9 @@
                 </td>
                 <td>
                     ${extraInventory.createdBy.name}
+                </td>
+                <td>
+                    ${extraInventory.createDate}
                 </td>
                 <td>
                     ${extraInventory.comments}

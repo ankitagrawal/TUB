@@ -96,6 +96,7 @@ public class POAction extends BasePaginatedAction {
 	private PurchaseOrderStatus purchaseOrderStatus;
 	private User approvedBy;
 	private User createdBy;
+  private Boolean extraInventoryCreated;
 
 	private Integer defaultPerPage = 20;
 
@@ -130,7 +131,7 @@ public class POAction extends BasePaginatedAction {
 			if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
 				warehouse = getPrincipalUser().getSelectedWarehouse();
 			}
-			purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse);
+			purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null);
 		}
 
 		if (purchaseOrderList != null) {
