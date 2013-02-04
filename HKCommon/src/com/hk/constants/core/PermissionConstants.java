@@ -132,4 +132,6 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CHANGE_COURIER = "OPS_MANAGER_SRS_CHANGE_COURIER";
     public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
 
+	public static final String STORE_MANAGER = "STORE_MANAGER";
+
 }

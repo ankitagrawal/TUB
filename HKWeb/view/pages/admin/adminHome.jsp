@@ -37,17 +37,19 @@
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
 				</shiro:hasRole>
 			</td>
-			<td>
-				<c:if test="${whAction.setWarehouse != null && whAction.setWarehouse.store != null}">
-				<%--<shiro:hasRole name="<%=RoleConstants.GOD%>">--%>
-					<s:link beanclass="com.hk.web.action.admin.pos.POSAction"
-					        style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
-				<%--</shiro:hasRole>--%>
-				</c:if>
-			</td>
 		</tr>
 	</table>
 </shiro:hasAnyRoles>
+
+<shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
+<table>
+	<tr>
+		<td><s:link beanclass="com.hk.web.action.admin.pos.POSAction"
+		            style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
+		</td>
+	</tr>
+</table>
+</shiro:hasPermission>
 
 <div class="left roundBox">
 
