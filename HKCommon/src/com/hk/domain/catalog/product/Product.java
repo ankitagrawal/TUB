@@ -428,7 +428,7 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getProductHaveColorOptions() {
-        return this.isProductHaveColorOptions()!=null ? this.isProductHaveColorOptions : false;
+        return isProductHaveColorOptions!=null ? isProductHaveColorOptions : false;
     }
 
     public void setProductHaveColorOptions(Boolean productHaveColorOptions) {
