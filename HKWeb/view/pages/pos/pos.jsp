@@ -318,10 +318,10 @@
 					<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 						<td>${ctr.index + 1}</td>
 						<td class="item">${posLineItemDto.productName}</td>
-						<td><s:text name="posLineItems[${ctr.index}].mrp" value="${posLineItemDto.mrp}" class="mrp"/></td>
-						<td><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice"/></td>
-						<td><s:text name="posLineItems[${ctr.index}].qty" value="${posLineItemDto.mrp}" class="qty"/></td>
-						<td><s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].mrp" value="${posLineItemDto.mrp}" class="mrp" readonly="readonly"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].offerPrice" value="${posLineItemDto.offerPrice}" class="offerPrice" readonly="readonly"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].qty" value="${posLineItemDto.mrp}" class="qty" readonly="readonly"/></td>
+						<td><s:text name="posLineItems[${ctr.index}].total" value="${posLineItemDto.total}" class="total" readonly="readonly"/></td>
 						<td><s:hidden class="skuItemId" name="posLineItems[${ctr.index}].skuItem" value="${posLineItemDto.skuItem.id}"/></td>
 						<td><s:hidden class="itemHidden" name="posLineItems[${ctr.index}].productName" value="${posLineItemDto.productName}"/></td>
 						<td><s:hidden class="pvBarcodeHidden" name="posLineItems[${ctr.index}].productVariantBarcode" value="${posLineItemDto.productVariantBarcode}"/></td>
