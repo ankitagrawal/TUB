@@ -26,10 +26,7 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class ChangeDefaultCourierAction extends BaseAction {
@@ -49,7 +46,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
 
     private String pincodeString;
     private Pincode pincode;
-    private List<PincodeDefaultCourier> pincodeDefaultCouriers;
+    private List<PincodeDefaultCourier> pincodeDefaultCouriers = new ArrayList<PincodeDefaultCourier>();
     private List<PincodeCourierMapping> pincodeCourierMappings;
     private List<Courier> availableCouriers;
 
@@ -201,15 +198,15 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.fileBean = fileBean;
     }
 
-    public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
-        return pincodeDefaultCouriers;
-    }
+  public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
+    return pincodeDefaultCouriers;
+  }
 
-    public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
-        this.pincodeDefaultCouriers = pincodeDefaultCouriers;
-    }
+  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+  }
 
-    public Warehouse getWarehouse() {
+  public Warehouse getWarehouse() {
         return warehouse;
     }
 
