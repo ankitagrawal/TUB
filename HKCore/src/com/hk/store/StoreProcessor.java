@@ -11,6 +11,8 @@ public interface StoreProcessor {
 	
 	List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria);
 	
+	int countProducts(Long userId, SearchCriteria criteria);
+	
 	Long createOrder(Long userId);
 
 	void addToCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException;

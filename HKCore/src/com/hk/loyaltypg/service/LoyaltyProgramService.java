@@ -8,7 +8,9 @@ import com.hk.domain.order.CartLineItem;
 
 public interface LoyaltyProgramService {
 	
-	List<LoyaltyProduct> listProucts(Long userId, int startRow, int maxRows);
+	List<LoyaltyProduct> listProucts(int startRow, int maxRows);
+	
+	int countProucts();
 	
 	LoyaltyProduct getProductByVariantId(String variantId);
 	

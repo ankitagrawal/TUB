@@ -39,12 +39,15 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
 
+		int count = getProcessor().countProducts(getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = getProcessor().searchProducts(getPrincipal().getId(), criteria);
 		productList = new ArrayList<LoyaltyProduct>();
 		for (ProductAdapter productAdapter : list) {
 			productList.add(productAdapter.getLoyaltyProduct());
 		}
-		productPage = new Page(productList, getPerPage(), getPerPageDefault(), 4);
+		
+		
+		productPage = new Page(productList, getPerPage(), getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 	

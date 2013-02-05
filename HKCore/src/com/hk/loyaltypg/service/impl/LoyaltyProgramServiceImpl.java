@@ -62,7 +62,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<LoyaltyProduct> listProucts(Long userId, int startRow, int maxRows) {
+	public List<LoyaltyProduct> listProucts(int startRow, int maxRows) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
 		criteria.createAlias("pv.product", "p");
@@ -210,5 +210,20 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			points += (loyaltyProduct.getPoints()*cartLineItem.getQty());
 		}
 		return points;
+	}
+
+	@Override
+	public int countProucts() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		criteria.setProjection(Projections.count("pv.id"));
+		criteria.createAlias("variant", "pv");
+		criteria.createAlias("pv.product", "p");
+		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
+		
+		Integer count = (Integer) baseDao.findByCriteria(criteria).iterator().next();
+		if(count == null) {
+			return 0;
+		}
+		return count;
 	}
 }

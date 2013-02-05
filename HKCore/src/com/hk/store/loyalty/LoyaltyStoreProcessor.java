@@ -30,7 +30,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	
 	@Override
 	public List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria) {
-		List<LoyaltyProduct> list = loyaltyProgramService.listProucts(userId, criteria.getStartRow(), criteria.getMaxRows());
+		List<LoyaltyProduct> list = loyaltyProgramService.listProucts(criteria.getStartRow(), criteria.getMaxRows());
 		List<ProductAdapter> productList = new ArrayList<ProductAdapter>(list.size());
 		for (LoyaltyProduct loyaltyProduct : list) {
 			ProductAdapter adapter = new ProductAdapter();
@@ -77,5 +77,10 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 		if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.asPaymenStatus().getId())) {
 			throw new InvalidOrderException("Loyalty points are not debited yet. Unsuccessfull Payment.");
 		}
+	}
+
+	@Override
+	public int countProducts(Long userId, SearchCriteria criteria) {
+		return loyaltyProgramService.countProucts();
 	}
 }
