@@ -1,5 +1,6 @@
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
@@ -35,6 +36,8 @@
 		else{
 			pageContext.setAttribute("userId", null);
 		}
+
+		 String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
 	%>
   </head>
 
@@ -53,10 +56,23 @@
         </ul>
         <h4 class="muted"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"> Loyalty Program</h4>
       </div>
+	     <br>
+	    <span style="float:left">
+		    Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)}s
+	    </span>
+	    
+	    <span class="pull-right">
+	    Welcome,
+	      <strong>
+                  <shiro:hasAnyRoles name="<%=roles%>">
+                    <shiro:principal property="firstName"/>
+                  </shiro:hasAnyRoles>
+                </strong>
+		    &nbsp;&nbsp;&nbsp;
+		</span>
+
 
       <hr>
-	    <h4 class="muted">Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)} </h4>
-	    <br>
 			<stripes:layout-component name="contents"/>
 	  <hr>
       <div class="footer">
