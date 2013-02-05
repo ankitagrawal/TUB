@@ -10,7 +10,7 @@
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 </head>
 <body>
-<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
+<s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
@@ -22,7 +22,7 @@
   <h4>
     <c:choose>
       <c:when test="${isB2BOrder}">
-           TAX INVOICE            
+           TAX INVOICE
       </c:when>
       <c:otherwise>
         RETAIL INVOICE
@@ -35,7 +35,7 @@
 
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
-		<div class="column">			
+		<div class="column">
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<p>Bright Lifecare Pvt. Ltd.</p>
@@ -73,16 +73,13 @@
       </p>
 
       <p><strong>Invoice
-        Date: </strong><fmt:formatDate value="${shippingOrder.shipment.shipDate}" type="both"
+        Date: </strong><fmt:formatDate value="${shippingOrder.baseOrder.createDate}" type="both"
 
                                        timeStyle="short"/></p>
 
       <p><strong>Payment Mode:</strong>${baseOrder.payment.paymentMode.name}</p>
 
-      <p><strong>Courier:</strong>${shippingOrder.shipment.awb.courier.name}</p>
-
-      <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} on <fmt:formatDate
-          value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
+      <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} </p>
     </div>
   </div>
 
@@ -107,7 +104,7 @@
 	    <c:if test="${isB2BOrder}">
 		    <p><strong>Consignee:</strong><p>
 		    <p>${baseOrder.user.name}</p>
-		    <c:if test="${b2bUserDetails != null}">			    
+		    <c:if test="${b2bUserDetails != null}">
 			    <c:if test="${b2bUserDetails.tin != null}">
 				    <p>TIN- ${b2bUserDetails.tin}</p>
 			    </c:if>
@@ -177,9 +174,9 @@
     </c:forEach>
     <tr>
       <td colspan="4"><b>Total</b></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="0"/></td>
 
     </tr>
   </table>
@@ -201,7 +198,7 @@
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="0"/></td>
     </tr>
   </table>
 
@@ -251,11 +248,11 @@
     <tr>
       <td><strong>Total</strong></td>
       <td>${orderSummary.invoiceDto.totalSummaryQty}</td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryTax}" maxFractionDigits="2"/></td>
-      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="2"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="0"/></td>
       <td><Strong><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryPayable}"
-                                    maxFractionDigits="2"/></Strong></td>
+                                    maxFractionDigits="0"/></Strong></td>
     </tr>
   </table>
 </div>

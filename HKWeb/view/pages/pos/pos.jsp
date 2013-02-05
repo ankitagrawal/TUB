@@ -375,7 +375,7 @@
 				</c:if>
 					<c:if test="${pos.order.id != null}">
 						<td colspan="2" align="right">
-							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" target="_blank" class="button_orange">
+							<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="posPrintInvoice" target="_blank" class="button_orange">
 								Print<s:param name="shippingOrder" value="${pos.shippingOrderToPrint}" />
 							</s:link>
 						</td>
