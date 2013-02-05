@@ -10958,8 +10958,9 @@
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="2013-02-04-01">
+    <changeSet author="Pratham (generated)" id="2013-02-04-02">
         <sql>
+            DROP TABLE IF EXISTS t;
             INSERT into `state` (`id`,`name`)
             values
             (1,'JAMMU &amp;amp; KASHMIR') ON DUPLICATE KEY UPDATE name = 'JAMMU &amp;amp; KASHMIR';
