@@ -6,6 +6,11 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%
+   response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+    response.setHeader("pragma", "no-cache");
+    response.setDateHeader("Expires", -1);
+%>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="productBean"/>
 
 <c:set var="productCombo" value="${productBean.product}"/>

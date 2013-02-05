@@ -2,10 +2,8 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
@@ -17,8 +15,6 @@
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
 
-
-
 <s:layout-component name="htmlHead">
   <meta name="description"
         content="Online Shopping for Nutrition, Health, Beauty & Personal Care Products in India: Buy Nutrition Supplements, Health Equipments, Diabetes supplies, Lenses, Home Devices & Other Products online at Lowest Price & Free Shipping in India – Healthkart.com"/>
@@ -26,7 +22,7 @@
         content="Online Shopping, online shopping india, nutrition, healthcare products, buy health care health equipments, beauty care products, shop online, nutrition supplements, protein supplements, diabetes, skin care, eye care,  healthcart, healthkkart, healthkarts, price, india"/>
 
   <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
+  <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>--%>
 </s:layout-component>
 
 <s:layout-component name="homePageTopContent">

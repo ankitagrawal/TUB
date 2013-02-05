@@ -26,34 +26,18 @@
       }
     </style>
     <div class="grid_18">
-      <h4>14 day return policy</h4>
+      <h4>14 Day Return Policy</h4>
 
       <p>
-        We understand that you sometimes are not satisfied with what you have bought at healthkart. That is why we offer a comprehensive 14 day return policy on our products. 
+        We offer you complete peace of mind while ordering at HealthKart - you can return all items within 14 days of receipt of goods.
       </p>
-
-        <h4>How it works</h4>
-
-      <p>
-          In case of a defective item <br/>
-          If you unfortunately were delivered a defective product, please get in touch with our customer care agents at info@healthkart.com or by calling us at 0124-4616444, within 14 days of delivery. We will take back the item from you and inspect it to confirm the damage. Once this is done, we will follow up with you and will ask you to choose from the following options.
-
-      </p>
-        <ul class="niceList">
-        <li>A  full refund</li>
-            <li>Store credits on healthkart of the same value</li>
-            <li>Another product in exchange, of the same value (note that this is subject to availability)</li>
-
-      </ul>
-
-
 
       <h4>Defective Items:</h4>
 
       <p>
-        If an item is found defective, please get in touch with our customer care at info@healthkart.com or call us on
+        If an item is found defective, please get in touch with our customer care on info@healthkart.com or call us on
         0124-4616444 within 14 days of receipt of the product. When we receive the item, we will inspect it to ensure
-        everything is present and is in its original condition. We will then issue either a full refund, Healthkart Cash
+        everything is present and is in its original condition and then issue either a full refund, Healthkart Cash
         (store credit) or a different item in exchange, as per your request.
       </p>
 
@@ -77,51 +61,55 @@
         </li>
         <li>Mail us back the product at<br/>
              Aquamarine Healthcare Pvt. Ltd. <br/>
-            T-01 MG Road, Parsvnath Arcadia, 2nd Floor  <br/>
+            T-01 MG Road, Parsvnath Arcadia, 2nd Floor<br/>
             Sector 14, Opp. Motorola Building   <br/>
             Gurgaon, Haryana – 122001
         </li>
-        
+
         <li>Once we receive the package, we will issue a refund of the purchase amount and Rs.100 for courier charges borne by you, as store credits.
             You can redeem your store credit towards future purchases from us.
             In case the return is found ineligible for refund, we will courier the product back to you.</li>
         <li>
-          We will strive to close the issue within 7 days of receiving the product. 
+          We will strive to close the issue within 7 days of receiving the product.
         </li>
       </ul>
 
       <h5>Our category specific policy is as follows</h5>
 
       <ul class="niceList">
-        <li><strong>Nutrition</strong>: Products should be sealed and in original packaging. The product will be ineligible for return otherwise.
-            For issues that include rashes, stomach upsets, flavor like/dislike, 
-            flavor difference from one brand to other etc. products would not be applicable for return. </li>
+        <li><strong>Nutrition</strong>: Products should be received in original packaging and sealed condition. Opened or used boxes will not be
+          accepted as returns. For issues like rashes, stomach upset, headache, flavor like/dislike, flavor difference from one brand
+          to other etc. products would not be applicable for return. Please consult with the doctor before buying the product</li>
         <li>
           <strong>Sports & Fitness</strong>: Return policy is applicable only in case of issues with size of the apparel or footwear.
         </li>
-        <li><strong>Diabetes</strong>: Products in this category are NOT eligible for return.</li>
-        <li><strong>Beauty</strong>: Returns will be considered for change of color requests.</li>
-        <li><strong>Health Devices</strong>: Are not eligible for return</li>
-        <li><strong>Eye</strong>: Items such as contact lenses can only be returned in sealed, unopened boxes. Lens solutions and cases are not eligible for return.</li>
+        <li><strong>Diabetes</strong>: Products in this category are NOT eligible for return</li>
+        <li><strong>Beauty</strong>: Returns will be considered for change of color requests</li>
+        <li><strong>Home Devices</strong>: Products in this category are NOT eligible for return</li>
+        <li><strong>Eye</strong>: If contact lenses are returned, they have to be returned in sealed boxes;
+          opened or used lenses will not be accepted as returns. Lens solutions, lens cases are NOT eligible for returns</li>
         <li>
-          <strong>Personal Care</strong>: Adult Diapers, Women hygiene products (sanitary napkins, tampons, panty liners), Condoms, Ovulation Kits, Toothbrushes, Toothpastes etc. are not eligible for return.
+          <strong>Personal Care</strong>: Adult Diapers, Women hygiene products (sanitary napkins, tampons, panty liners),
+           Condoms, Ovulation Kits, Toothbrushes, Toothpastes etc. are NOT eligible for returns
         </li>
-        <li><strong>Parenting</strong>: Ovulation Kits and Diapers are not eligible for return</li>
-        <li><strong>Services</strong>: Are not eligible for return</li>
+        <li><strong>Parenting</strong>: Ovulation Kits and Diapers are NOT eligible for returns</li>
+        <li><strong>Services</strong>: Products in this category are NOT eligible for returns</li>
       </ul>
 
-      <h5>The following products are eligible for return or replacement</h5>
+      <h5>Following shall NOT be eligible for return or replacement :</h5>
 
       <ul class="niceList">
-        <li>Products with damages due to misuse</li>
-        <li>Products with incidental damages due to malfunction</li>
-        <li>Tampered products or ones with missing serial numbers</li>
-        <li>Products with damages not covered under manufacturers warranty</li>
-        <li>Any product returned without all original packaging or accessories, including the box, manufacturer’s packaging if any, and all other items originally included in the packaging.</li>
+        <li>Damages due to misuse of product</li>
+        <li>Incidental damage due to malfunctioning of product</li>
+        <li>Any consumable item which has been used or installed</li>
+        <li>Products with tampered or missing serial / UPC numbers</li>
+        <li>Any damage / defect which are not covered under the manufacturer's warranty</li>
+        <li>Any product that is returned without all original packaging and accessories, including the box,
+          manufacturer's packaging if any, and all other items originally included with the product(s) delivered</li>
         <li>Some special rules for promotional offers may override "Healthkart.com's 14 Day Returns Policy"</li>
-        </ul>
+      </ul>
 
-      <p>In case of queries, please write to us at info@healthkart.com or call us at 0124-4616444</p>
+      <p>In case of any queries, please write to our customer care on info@healthkart.com or call us on 0124-4616444</p>
 
     </div>
 

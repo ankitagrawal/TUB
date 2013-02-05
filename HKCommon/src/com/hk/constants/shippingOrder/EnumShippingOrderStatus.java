@@ -21,11 +21,12 @@ public enum EnumShippingOrderStatus {
     SO_Shipped(180L, "SO Shipped"),
     SO_Delivered(190L, "SO Delivered"),
     SO_Installed(195L, "SO Installed"),
-    SO_Returned(200L, "SO Returned"),
+    RTO_Initiated(230L, "RTO Initiated"),
+    SO_RTO(200L, "SO RTO"),
     SO_Lost(210L, "SO Lost"),
-    SO_Replaced(220L, "SO Replaced"),
-    SO_Cancelled(999L, "SO Cancelled"),
-    RTO_Initiated(230L, "RTO Initiated");
+    SO_Customer_Return_Replaced(250L, "SO Customer Return and Replaced"),
+    SO_Customer_Return_Refunded(260L, "SO Customer Return and Refunded"),
+    SO_Cancelled(999L, "SO Cancelled");
 
 
     private java.lang.String name;
@@ -120,12 +121,12 @@ public enum EnumShippingOrderStatus {
     }
 
     public static List<EnumShippingOrderStatus> getStatusSearchingInDeliveryQueue() {
-        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
+        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped, EnumShippingOrderStatus.SO_RTO, EnumShippingOrderStatus.SO_Lost);
     }
 
 
     public static List<EnumShippingOrderStatus> getStatusSearchingInInstallationQueue() {
-           return Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_Returned, EnumShippingOrderStatus.SO_Lost);
+           return Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.SO_Delivered, EnumShippingOrderStatus.SO_RTO, EnumShippingOrderStatus.SO_Lost);
        }
 
     public static List<EnumShippingOrderStatus> getStatusForCRMReport() {
@@ -139,14 +140,14 @@ public enum EnumShippingOrderStatus {
 		return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus(),
 				EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
 				EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
-				EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
 				EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus());
 	}
 
     public static List<ShippingOrderStatus> getStatusForReconcilationReport() {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
-                EnumShippingOrderStatus.SO_Returned.asShippingOrderStatus(),
+                EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
 	            EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus());
     }
@@ -155,6 +156,7 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
                 EnumShippingOrderStatus.SO_OnHold,
                 EnumShippingOrderStatus.SO_ReadyForDropShipping,
+                EnumShippingOrderStatus.SO_Picking,
                 EnumShippingOrderStatus.SO_Installed,
                 EnumShippingOrderStatus.SO_ReadyForProcess,
                 EnumShippingOrderStatus.SO_MarkedForPrinting,
@@ -172,7 +174,7 @@ public enum EnumShippingOrderStatus {
     public static List<EnumShippingOrderStatus> getStatusForEnteringShippingCost() {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped,
                 EnumShippingOrderStatus.SO_Lost,
-                EnumShippingOrderStatus.SO_Returned,
+                EnumShippingOrderStatus.SO_RTO,
                 EnumShippingOrderStatus.SO_Delivered);
     }
 
