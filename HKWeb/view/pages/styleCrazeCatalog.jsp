@@ -17,7 +17,6 @@
                 <link>http://www.healthkart.com/product/${product.slug}/${product.id}</link>
                 <description>![CDATA[${hk:stripHtml(product.description)}]]</description>
                 <id>${product.id}</id>
-                <actualPrice>${product.inStockMaximumDiscountProductVariant.hkPrice} INR</actualPrice>
                 <markedPrice>${product.inStockMaximumDiscountProductVariant.markedPrice} INR</markedPrice>
                 <hkPrice>${product.inStockMaximumDiscountProductVariant.hkPrice} INR</hkPrice>
                 <image_link>

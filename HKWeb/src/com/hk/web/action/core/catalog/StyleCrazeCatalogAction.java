@@ -29,8 +29,7 @@ public class StyleCrazeCatalogAction extends BaseAction {
 
     public Resolution pre() {
         List<Product> beautyProducts = getProductService().getAllProductByCategory(CategoryConstants.BEAUTY);
-        List<Product> nutritionProducts = getProductService().getAllProductByCategory(CategoryConstants.NUTRITION);
-        beautyProducts.addAll(nutritionProducts);
+        products.addAll(beautyProducts);
         return new ForwardResolution("/pages/styleCrazeCatalog.jsp");
     }
 
