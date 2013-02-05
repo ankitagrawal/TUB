@@ -11305,9 +11305,7 @@
 			<column name="loyalty_percentage" type="DOUBLE">
 				<constraints nullable="false" />
 			</column>
-			<column name="icon_rel_url" type="VARCHAR(32)">
-				<constraints nullable="false" />
-			</column>
+			<column name="icon_rel_url" type="VARCHAR(32)" />
 		</addColumn>
 		<modifyDataType tableName="badge" columnName="min_score" newDataType="DOUBLE"/>
 		<modifyDataType tableName="badge" columnName="max_score" newDataType="DOUBLE"/>
