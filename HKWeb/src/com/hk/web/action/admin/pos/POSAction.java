@@ -6,6 +6,7 @@ import com.hk.admin.dto.pos.POSLineItemDto;
 import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
@@ -34,6 +35,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.accounting.AccountingInvoiceAction;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +57,7 @@ import java.util.Map;
  * Time: 2:02 PM
  * To change this template use File | Settings | File Templates.
  */
+@Secure(hasAnyPermissions = {PermissionConstants.STORE_MANAGER}, authActionBean = AdminPermissionAction.class)
 @Component
 public class POSAction extends BaseAction {
 
