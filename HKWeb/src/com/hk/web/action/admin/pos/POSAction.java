@@ -84,7 +84,6 @@ public class POSAction extends BaseAction {
 	private String addressState;
 	private String addressPincode;
 
-
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -187,46 +186,26 @@ public class POSAction extends BaseAction {
 			return new ForwardResolution("/pages/pos/pos.jsp");
 		}
 
-		if (!StringUtils.isBlank(addressPincode)) {
-			if (pincodeService.getByPincode(addressPincode) == null) {
-				addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
-				return new ForwardResolution("/pages/pos/pos.jsp");
-			}
-		}
-
 		if (customer == null) {
 			customer = posService.createUserForStore(email, name, null, "HK_USER");
 		}
 
-		if(address != null && address.getId() != null) {
-			if(!address.getLine1().equalsIgnoreCase(addressLine1) || !address.getLine2().equalsIgnoreCase(addressLine2)
-					|| !address.getCity().equalsIgnoreCase(addressCity) || !address.getState().equalsIgnoreCase(addressState)
-					|| !address.getPincode().getPincode().equalsIgnoreCase(addressPincode)) {
-				if (pincodeService.getByPincode(address.getPincode().getPincode()) == null) {
-								addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
-								return new ForwardResolution("/pages/pos/pos.jsp");
-							}
+		if(newAddress) {
+			if(StringUtils.isBlank(addressLine1) || StringUtils.isBlank(addressCity) || StringUtils.isBlank(addressPincode)) {
+				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
+			} else {
+				if (pincodeService.getByPincode(addressPincode) == null) {
+					addRedirectAlertMessage(new SimpleMessage("Given pincode is not defined in the system, Order could not be processed"));
+					return new ForwardResolution("/pages/pos/pos.jsp");
+				}
 				address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
 			}
+
 		} else {
-			if(!StringUtils.isBlank(addressLine1)) {
-				address = posService.createAddressForUser(addressLine1, addressLine2, addressCity, addressState, addressPincode, phone, customer);
-			} else {
+			if(address == null) {
 				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
 			}
 		}
-
-		/*if (address != null && address.getId() != null) {
-			if (StringUtils.isBlank(address.getLine1()) || StringUtils.isBlank(address.getCity())) {
-				addRedirectAlertMessage(new SimpleMessage("Please give the complete address, Order could not be processed"));
-				return new ForwardResolution("/pages/pos/pos.jsp");
-			}
-		}*/
-
-
-		/*if (address == null || address.getId() == null) {
-			address = posService.createOrUpdateAddressForUser(address, customer, phone, warehouse);
-		}*/
 
 		if (paymentMode == null) {
 			addRedirectAlertMessage(new SimpleMessage("Please select a payment mode"));

@@ -37,7 +37,7 @@
 			$('#reset').click(function() {
 				window.location.href=window.location.href;
 			});
-              //var index = -1;
+
 			$('#productVariantBarcode').keypress(function(e) {
 				if(e.which == 13) {
 					e.preventDefault();
@@ -59,25 +59,16 @@
 						$('#barcodeLink').attr('href'), {productVariantBarcode:productVariantBarcode,skuItemListToBeCheckedOut:skuItemList},
 						function (res) {
 							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-								//var existingRow = findIfSkuGroupExists(res.data.skuGroupId);
-								//if(existingRow == null) {
-									createNewRow();
-									$('.lastRow').find('.item').html(res.data.product + '<br/>' + res.data.options);
-									$('.lastRow').find('.itemHidden').val(res.data.product + '<br/>' + res.data.options);
-									$('.lastRow').find('.mrp').val(res.data.mrp);
-									$('.lastRow').find('.offerPrice').val(res.data.offerPrice);
-									$('.lastRow').find('.qty').val(1);
-									$('.lastRow').find('.skuItemId').val(res.data.skuItemId);
-									$('.lastRow').find('.total').val(res.data.offerPrice);
-									$('.lastRow').find('.pvBarcodeHidden').val(productVariantBarcode);
-								/*} else {
-									var qty = parseInt( existingRow.find('.qty').val() );
-									var offerPrice = parseFloat( existingRow.find('.offerPrice').val() );
-									existingRow.find('.qty').val(qty + 1);
-									existingRow.find('.total').val((offerPrice * (qty + 1)).toFixed(2));
-								}
-								index++;*/
-								//$('.skuItemSelect').append('<input type="hidden" name="skuItemListToBeCheckedOut['+ index+'].id" value="'+ res.data.skuItemHidden +'" />');
+								createNewRow();
+								$('.lastRow').find('.item').html(res.data.product + '<br/>' + res.data.options);
+								$('.lastRow').find('.itemHidden').val(res.data.product + '<br/>' + res.data.options);
+								$('.lastRow').find('.mrp').val(res.data.mrp);
+								$('.lastRow').find('.offerPrice').val(res.data.offerPrice);
+								$('.lastRow').find('.qty').val(1);
+								$('.lastRow').find('.skuItemId').val(res.data.skuItemId);
+								$('.lastRow').find('.total').val(res.data.offerPrice);
+								$('.lastRow').find('.pvBarcodeHidden').val(productVariantBarcode);
+
 								$('#skuItemHidden').append('<option value='+res.data.skuItemId+'>'+res.data.skuItemId+'</option>');
 								updateTotal('.total', '.grandTotal', 0);
 
@@ -104,19 +95,6 @@
 				}
 			}
 
-			/*function findIfSkuGroupExists(newSkuGroupId) {
-				var rowFound = null;
-				$('.skuGroupId').each(function(index, value) {
-					var eachRow = $(value);
-					var skuGroupId = eachRow.val().trim();
-					if(skuGroupId == newSkuGroupId) {
-						rowFound = eachRow.parents('.lineItemRow');
-					}
-
-				});
-				return rowFound;
-			}*/
-
 			function createNewRow() {
 				var lastIndex = $('.lastRow').attr('count');
 				if (!lastIndex) {
@@ -139,7 +117,6 @@
 								'</tr>';
 
 				$('#orderTable').append(newRowHtml);
-
 			}
 
 			$('#email').keypress(function(e) {
@@ -156,8 +133,6 @@
 							if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 								$('#name').val(res.data.customer.name);
 								$('#customer').val(res.data.customer.id);
-								alert(res.data.address.id);
-								$('#address').val(res.data.address.id);
 								$('#line1').val(res.data.address.line1);
 								$('#line2').val(res.data.address.line2);
 								$('#city').val(res.data.address.city);
@@ -170,10 +145,6 @@
 							}
 						}
 				);
-			});
-
-			$('.editAddress').click(function() {
-				$('#newAddress').val(true);
 			});
 
 			$('#receivePayment').click(function() {
@@ -220,6 +191,10 @@
 				url:"${pageContext.request.contextPath}/core/autocomplete/AutoComplete.action?getProductsInWarehouse=&warehouse=" + warehouse + "&q="
 			});
 
+			$('.addressClass').change(function() {
+				$('#newAddress').val(true);
+			});
+
 		});
 	</script>
 </s:layout-component>
@@ -227,7 +202,6 @@
 <s:layout-component name="content">
 	<input type="hidden" value="${warehouse.id}" id="warehouse" />
 	<input type="hidden" value="${paymentModeCard}" id="paymentModeCard" />
-	<input type="hidden" id="address" name="address"/>
 	<div style="display: none;">
 		<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="barcodeLink" event="getProductDetailsByBarcode"></s:link>
 	</div>
@@ -235,6 +209,8 @@
 		<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="emailLink" event="getCustomerDetailsByLogin"></s:link>
 	</div>
 	<s:form beanclass="com.hk.web.action.admin.pos.POSAction" id="posForm">
+		<input type="hidden" id="newAddress" name="newAddress"/>
+		<%--<input type="hidden" id="address" name="address"/>--%>
 		<table cellpadding="1" width="100%">
 			<tr class="apply-border">
 				<td>
@@ -277,21 +253,19 @@
 					<td>
 						<table>
 							<tr><td colspan="2">Address:</td></tr>
-							<tr><td>Address Line1</td><td><s:text name="addressLine1" id="line1" style="width:400px"/></td></tr>
-							<tr><td>Address Line2</td><td><s:text name="addressLine2" id="line2" style="width:400px"/></td></tr>
-							<tr><td>City</td><td><s:text name="addressCity" id="city" style="width:400px"/></td></tr>
+							<tr><td>Address Line1</td><td><s:text name="addressLine1" id="line1" style="width:400px" class="addressClass"/></td></tr>
+							<tr><td>Address Line2</td><td><s:text name="addressLine2" id="line2" style="width:400px" class="addressClass"/></td></tr>
+							<tr><td>City</td><td><s:text name="addressCity" id="city" style="width:400px" class="addressClass"/></td></tr>
 							<tr>
 								<td>State</td>
-								<td><s:select name="addressState" id="state">
+								<td><s:select name="addressState" id="state" class="addressClass">
 							        <c:forEach items="<%=StateList.stateList%>" var="state">
 							          <s:option value="${state}">${state}</s:option>
 							        </c:forEach>
 							      </s:select>
 								</td>
 							</tr>
-							<tr><td>Pincode</td><td><s:text name="addressPincode" id="pincode"/></td></tr>
-							<tr><td><input type="submit" class="editAddress" value="Edit">(edit)
-													                       </td></tr>
+							<tr><td>Pincode</td><td><s:text name="addressPincode" id="pincode" class="addressClass"/></td></tr>
 						</table>
 					</td>
 				</tr>
@@ -314,7 +288,7 @@
 			<legend><b>Order</b></legend>
 			<s:hidden name="customer" id="customer" />
 			<input type="hidden" name="order" id="order" value="${pos.order.id}" />
-			<%--<input type="hidden" name="address" value="${pos.address.id}" id="address" />--%>
+			<input type="hidden" name="address" value="${pos.address.id}" id="address" />
 			<table width="100%" border="1" >
 				<thead>
 				<tr><th>S.No.</th><th>Item</th><th>MRP</th><th>Offer Price</th><th>Qty</th><th>Total</th></tr>

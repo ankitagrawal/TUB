@@ -31,8 +31,6 @@ public interface POSService {
 
 	public void checkoutAndUpdateInventory(List<POSLineItemDto> posLineItems, ShippingOrder shippingOrder);
 
-	public Address createOrUpdateAddressForUser(Address address, User customer, String phone, Warehouse warehouse);
-
 	public Address createAddressForUser(String line1, String line2, String city, String state, String pincode, String phone, User customer);
 
 	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse);
