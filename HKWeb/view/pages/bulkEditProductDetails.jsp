@@ -79,11 +79,15 @@
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productDeleted']}">
-        <th>
-            Is Deleted
-        </th>
-    </c:if>
+        <%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
+    <th>
+        Is Deleted
+    </th>
+        <%--</c:if>--%>
+
+    <th>
+        Is Hidden
+    </th>
 
     <c:if test="${bep.toBeEditedOptions['productMinDays']}">
         <th>
@@ -211,21 +215,35 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productDeleted']}">
-    <td width="60px" align="right" class="productDeleted">
-        <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown">
-            <s:option value="${product.deleted}" selected="true">${product.deleted}</s:option>
-            <c:choose>
-                <c:when test="${product.deleted == true}">
-                    <s:option value="0" class="false">false</s:option>
-                </c:when>
-                <c:otherwise>
-                    <s:option value="1" class="true">true</s:option>
-                </c:otherwise>
-            </c:choose>
-        </s:select>
-    </td>
-</c:if>
+    <%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
+<td width="60px" align="right" class="productDeleted">
+    <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown" >
+        <s:option value="${product.deleted}" selected="true">${product.deleted}</s:option>
+        <c:choose>
+            <c:when test="${product.deleted == true}">
+                <s:option value="0" class="false">false</s:option>
+            </c:when>
+            <c:otherwise>
+                <s:option value="1" class="true">true</s:option>
+            </c:otherwise>
+        </c:choose>
+    </s:select>
+</td>
+    <%--</c:if>--%>
+
+<td width="60px" align="right" class="productHidden">
+    <s:select name="products[${ctr.index}].hidden" class="productHiddenDropDown" >
+        <s:option value="${product.hidden}" selected="true">${product.hidden}</s:option>
+        <c:choose>
+            <c:when test="${product.hidden == true}">
+                <s:option value="0" class="false">false</s:option>
+            </c:when>
+            <c:otherwise>
+                <s:option value="1" class="true">true</s:option>
+            </c:otherwise>
+        </c:choose>
+    </s:select>
+</td>
 
 <c:if test="${bep.toBeEditedOptions['productMinDays']}">
     <td valign="top">
@@ -710,7 +728,8 @@
                 }
             });
             $('.productSupplierTin').each(function() {
-                if ($(this).val().trim() === "") {
+                var isDeleted = $(this).parents('.productRow').find('.productDeletedDropDown').val();
+                if ($(this).val().trim() === "" && isDeleted == 'false') {
                     ctr = 1;
                     var productId = $(this).parents('.productRow').find('.productId').val();
                     $('.errors').append("<br/> Please enter supplier's tin number for: " + productId);
@@ -753,8 +772,8 @@
                         if (res.code == "<%=HealthkartResponse.STATUS_OK%>") {
                             variantDetailsLabel.html(
                                     res.data.product + '<br/>' +
-                                    res.data.options
-                                    );
+                                            res.data.options
+                            );
                         } else {
                             variantDetailsLabel.html(res.message).css({color:'red'});
                             variantIdText.val('');

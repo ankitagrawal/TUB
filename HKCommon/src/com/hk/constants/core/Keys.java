@@ -24,7 +24,8 @@ public class Keys {
         public static final String personalCareAdminEmails         = "personalCareAdminEmails";
         public static final String servicesAdminEmails             = "servicesAdminEmails";
         public static final String sportsAdminEmails               = "sportsAdminEmails";
-        public static final String logisticsAdminEmails            = "logisticsAdminEmails";
+
+        public static final String logisticsOpsEmails              = "logisticsOpsEmails";
         public static final String hkReportAdminEmails             = "hkReportAdminEmails";
         public static final String marketingAdminEmails            = "marketingAdminEmails";
         public static final String categoryHealthkart              = "categoryHealthkart";
@@ -109,7 +110,6 @@ public class Keys {
         public static final String dbPort                          = "dbPort";
 
         public static final String healthkartRestUrl               = "healthkartRestUrl";
-        public static final String mihRestUrl                      = "mihRestUrl";
 
         public static final String fedExServerUrl                  = "fedExServerUrl";
         public static final String fedExAuthKey                    = "fedExAuthKey";

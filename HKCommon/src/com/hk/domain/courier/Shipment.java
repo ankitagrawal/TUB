@@ -25,6 +25,11 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
     @JoinColumn(name = "shipping_order_id")
     private ShippingOrder shippingOrder;
 
+    @JsonSkip
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipment_service_type_id")
+    private ShipmentServiceType shipmentServiceType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_size_id")
     private BoxSize boxSize;
@@ -69,7 +74,7 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	private String packer;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "zone_id", nullable = true)
+	@JoinColumn(name = "zone_id", nullable = false)
 	private Zone zone;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -138,6 +143,9 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 		return isEmailSent;
 	}
 
+  public Boolean getEmailSent(){
+    return isEmailSent;
+  }
 	public void setEmailSent(Boolean emailSent) {
 		isEmailSent = emailSent;
 	}
@@ -242,4 +250,12 @@ public class Shipment implements java.io.Serializable, Comparable<Shipment> {
 	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
+
+    public ShipmentServiceType getShipmentServiceType() {
+        return shipmentServiceType;
+    }
+
+    public void setShipmentServiceType(ShipmentServiceType shipmentServiceType) {
+        this.shipmentServiceType = shipmentServiceType;
+    }
 }

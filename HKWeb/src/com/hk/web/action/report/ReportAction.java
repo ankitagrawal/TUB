@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.dto.ProductOptionDto;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -40,6 +41,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.Tax;
@@ -946,9 +948,19 @@ public class ReportAction extends BaseAction {
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
         xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
-        xlsWriter.addHeader("BASE OREDR NUMBER", "BASE OREDR NUMBER");
+        xlsWriter.addHeader("BASE ORDER NUMBER", "BASE ORDER NUMBER");
         xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
         xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
+        xlsWriter.addHeader("BABY WEIGHT","BABY WEIGHT");
+        xlsWriter.addHeader("COLOR","COLOR");
+        xlsWriter.addHeader("FLAVOR","FLAVOR");
+        xlsWriter.addHeader("FRAGRANCE","FRAGRANCE");
+        xlsWriter.addHeader("NET WEIGHT","NET WEIGHT");
+        xlsWriter.addHeader("OFFER","OFFER");
+        xlsWriter.addHeader("QUANTITY","QUANTITY");
+        xlsWriter.addHeader("SIZE","SIZE");
+        xlsWriter.addHeader("TYPE","TYPE");
+        xlsWriter.addHeader("WEIGHT","WEIGHT");
         xlsWriter.addHeader("QTY", "QTY");
         xlsWriter.addHeader("AMOUNT", "AMOUNT");
         xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
@@ -958,10 +970,24 @@ public class ReportAction extends BaseAction {
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 ProductVariant productVariant = lineItem.getSku().getProductVariant();
                 Order order = shippingOrder.getBaseOrder();
+                Map<String, String> productOptions = new HashMap<String, String>();
+                for(ProductOption productOption : productVariant.getProductOptions()){
+                  productOptions.put(productOption.getName(), productOption.getValue());
+                }
                 xlsWriter.addCell(xlsRow, shippingOrder.getId());
                 xlsWriter.addCell(xlsRow, order.getId());
                 xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
                 xlsWriter.addCell(xlsRow, productVariant.getId());
+                xlsWriter.addCell(xlsRow, productOptions.get("BABY WEIGHT"));
+                xlsWriter.addCell(xlsRow, productOptions.get("COLOR"));
+                xlsWriter.addCell(xlsRow, productOptions.get("FLAVOR"));
+                xlsWriter.addCell(xlsRow, productOptions.get("FRAGRANCE"));
+                xlsWriter.addCell(xlsRow, productOptions.get("NET WEIGHT"));
+                xlsWriter.addCell(xlsRow, productOptions.get("OFFER"));
+                xlsWriter.addCell(xlsRow, productOptions.get("QUANTITY"));
+                xlsWriter.addCell(xlsRow, productOptions.get("SIZE"));
+                xlsWriter.addCell(xlsRow, productOptions.get("TYPE"));
+                xlsWriter.addCell(xlsRow, productOptions.get("WEIGHT"));
                 xlsWriter.addCell(xlsRow, lineItem.getQty());
                 xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
                 if (order.getPayment() != null && order.getPayment().getPaymentDate() != null) {

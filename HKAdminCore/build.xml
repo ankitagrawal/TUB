@@ -35,13 +35,15 @@
         <fileset file="${lib.root.dir}/fedex/DeleteShipmentClient.jar" />
         <fileset file="${lib.root.dir}/fedex/FedExShip.jar" />
         <fileset file="${lib.root.dir}/fedex/PickupWebServiceClient.jar" />
+        <fileset file="${lib.root.dir}/fedex/TrackWebServiceClient.jar" />
 		<fileset file="${lib.root.dir}/barcode/barcode4j.jar" />
 		<fileset file="${project.common.dir}/dependencies/groovy-all-1.5.6.jar" />
 		<fileset file="${project.common.dir}/dist/hk-common.jar" />
 		<fileset file="${project.core.dir}/dist/hk-core.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/jdom-1.0.jar" />
-    <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
-    <fileset file="${lib.root.dir}/thirdParty/jets3t-0.8.1.jar"/>
+        <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/jets3t-0.8.1.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/IOTCourierTrack.jar" />
 	</path>
 
 

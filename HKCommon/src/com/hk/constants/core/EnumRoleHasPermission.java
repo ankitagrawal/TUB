@@ -16,6 +16,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_NOTIFY_LIST,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_QUEUE,
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
@@ -98,7 +100,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
 		            EnumPermission.ADD_HUB,
-		            EnumPermission.POPULATE_BUSY_DATA
+		            EnumPermission.POPULATE_BUSY_DATA,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS,
+		            EnumPermission.EDIT_GRN
             )
     ),
 
@@ -107,13 +111,15 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.GRN_CREATION,
                     EnumPermission.RECON_VOUCHER_MANAGEMENT,
-                    EnumPermission.SUPPLIER_MANAGEMENT
+                    EnumPermission.SUPPLIER_MANAGEMENT,
+		            EnumPermission.EDIT_GRN
             )),
 
     WH_MANAGER_L1(
             EnumRole.WH_MANAGER_L1,
             Arrays.asList(
-                    EnumPermission.CHANGE_WAREHOUSE
+                    EnumPermission.CHANGE_WAREHOUSE,
+		            EnumPermission.EDIT_GRN
             )),
 
     OPS_MANAGER(
@@ -121,9 +127,13 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.SUPER_LOGIN,
                     EnumPermission.VIEW_ACTION_QUEUE,
+                    EnumPermission.OPS_MANAGER_CUSA_UPDATE,
+                    EnumPermission.OPS_MANAGER_CUSA_VIEW,
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_QUEUE,
                     EnumPermission.UPDATE_SHIPMENT_QUEUE,
                     EnumPermission.VIEW_SHIPMENT_AWAITING_QUEUE,
@@ -153,7 +163,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.REPORT_ADMIN,
                     EnumPermission.ASSIGN_BIN,
                     EnumPermission.HK_EMPLOYEE,
-                    EnumPermission.CREATE_EDIT_SKU
+                    EnumPermission.CREATE_EDIT_SKU,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 
@@ -185,7 +196,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.HK_EMPLOYEE,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE
             )
     ),
 
@@ -248,6 +261,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
+                    EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_SERVICE_QUEUE,
                     EnumPermission.UPDATE_SERVICE_QUEUE,
                     EnumPermission.SEARCH_ORDERS,
@@ -432,7 +447,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.ADD_HUB
+		            EnumPermission.ADD_HUB,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
     HK_DELIVERY_HUB_MANAGER(
@@ -445,7 +461,8 @@ public enum EnumRoleHasPermission {
 
                     EnumPermission.VIEW_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+		            EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 

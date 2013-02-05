@@ -13,11 +13,14 @@ import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -36,11 +39,12 @@ import java.util.Random;
  */
 @Component
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
+@HttpCache(allow = false)
 public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
     private Gateway gateway;
-    private Long billingAddressId;
+    Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
 
     @Validate(required = true)
@@ -56,6 +60,9 @@ public class PaymentAction extends BaseAction {
     OrderManager orderManager;
 
     @Autowired
+    AddressDao addressDao;
+
+    @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
@@ -66,6 +73,11 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
+
+            BillingAddress billingAddress = null;
+            if(billingAddressId != null){
+                billingAddress = addressDao.getBillingAddressById(billingAddressId);
+            }
 
             String issuerCode = null;
             if (issuer != null) {
@@ -104,7 +116,7 @@ public class PaymentAction extends BaseAction {
             paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, billingAddress);
 
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());

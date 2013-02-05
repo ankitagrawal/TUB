@@ -29,8 +29,8 @@ public enum EnumCourierGroup {
         return getEnumIDs;
     }
 
-    public static List<Long> getValidCourierGroupsForSplitting() {
-        return getEnumIDs(Arrays.asList(EnumCourierGroup.COMMON, EnumCourierGroup.Bluedart, EnumCourierGroup.Local, EnumCourierGroup.EarthMovers));
+	public static List<Long> getValidCourierGroupsInUse() {
+        return getEnumIDs(Arrays.asList(EnumCourierGroup.COMMON, EnumCourierGroup.Bluedart, EnumCourierGroup.Local));
     }
 
 

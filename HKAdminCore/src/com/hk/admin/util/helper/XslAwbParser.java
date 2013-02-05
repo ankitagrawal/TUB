@@ -2,12 +2,9 @@ package com.hk.admin.util.helper;
 
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.hk.util.io.HkXlsWriter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +24,7 @@ import com.hk.exception.ExcelBlankFieldException;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
+import com.hk.util.io.HkXlsWriter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,7 +65,7 @@ public class XslAwbParser {
                 Awb awb = new Awb();
                 if (StringUtils.isEmpty(courierId)) {
 
-                    if ((awbNumber == null || StringUtils.isEmpty(awbNumber)) && (cod == null || cod.isEmpty()) && (warehouse == null || warehouse.isEmpty())) {
+                    if ((awbNumber == null || StringUtils.isEmpty(awbNumber)) && (cod == null || cod.isEmpty()) && (warehouse == null || warehouse.isEmpty()) ) {
                         if (awbList.size() > 0) {
                             return awbList;
                         }
@@ -88,7 +86,7 @@ public class XslAwbParser {
                 awb.setCourier(courier);
                 if (StringUtils.isEmpty(awbNumber)) {
                     logger.error("awbNumber cannot be null/empty");
-                    throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);
+                    throw new ExcelBlankFieldException("awbNumber cannot be empty " + "    ", rowCount);                         
                 }
                 if (courierWithAllAwbsInExcel.containsKey(courier)) {
                     awbNumber = awbNumber.trim();
@@ -126,8 +124,6 @@ public class XslAwbParser {
                     awb.setCod(false);
                 }
                 awbList.add(awb);
-
-
             }
 
 
@@ -147,4 +143,30 @@ public class XslAwbParser {
     public Map<Courier, List<String>> getCourierWithAllAwbsInExcel() {
         return courierWithAllAwbsInExcel;
     }
+
+	  // AWB excel Generator
+	public File generateAwbExcel(List<Awb> awbList, File xlsFile) {
+		HkXlsWriter xlsWriter = new HkXlsWriter();
+		int xlsRow = 1;
+		xlsWriter.addHeader(XslConstants.COURIER_ID, XslConstants.COURIER_ID);
+		xlsWriter.addHeader(XslConstants.AWB_NUMBER, XslConstants.AWB_NUMBER);
+		xlsWriter.addHeader(XslConstants.COD, XslConstants.COD);
+		xlsWriter.addHeader(XslConstants.WAREHOUSE, XslConstants.WAREHOUSE);
+		xlsWriter.addHeader(XslConstants.STATUS, XslConstants.STATUS);
+
+		for (Awb awb : awbList) {
+			xlsWriter.addCell(xlsRow, awb.getCourier().getId());
+			xlsWriter.addCell(xlsRow, awb.getAwbNumber());
+			String cod = "0";
+			if (awb.getCod()) {
+				cod = "1";
+			}
+			xlsWriter.addCell(xlsRow, cod);
+			xlsWriter.addCell(xlsRow, awb.getWarehouse().getId());
+			xlsWriter.addCell(xlsRow,awb.getAwbStatus().getStatus());
+			xlsRow++;
+		}
+		xlsWriter.writeData(xlsFile, "Sheet1");
+		return xlsFile;
+	}
 }

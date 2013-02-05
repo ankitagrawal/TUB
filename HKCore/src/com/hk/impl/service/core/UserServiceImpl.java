@@ -2,6 +2,7 @@ package com.hk.impl.service.core;
 
 import java.util.List;
 
+import com.hk.constants.user.EnumEmailSubscriptions;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
+import static com.hk.constants.user.EnumEmailSubscriptions.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,6 +50,17 @@ public class UserServiceImpl implements UserService {
 
     public User findByLogin(String email) {
         return getUserDao().findByLogin(email);
+    }
+
+
+    public boolean unsubscribeUser(String unsubscribeToken){
+        User user = getUserDao().findByUnsubscribeToken(unsubscribeToken);
+        if (user != null){
+            user.setSubscribedMask(EnumEmailSubscriptions.UNSUBSCRIBED.getValue());
+            userDao.save(user);
+            return true;
+        }
+        return false;
     }
 
     public User getAdminUser() {
@@ -105,7 +118,14 @@ public class UserServiceImpl implements UserService {
             if (user.getStore() == null) {
                 user.setStore(getStoreService().getDefaultStore());
             }
+            if (user.getSubscribedMask() == null){
+                user.setSubscribedMask(SUBSCRIBE_ALL);//Subscribe for all
+            }
+            if (user.getUnsubscribeToken() == null){
+                user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(user.getLogin()));//Subscribe for all
+            }
         }
+
         return getUserDao().save(user);
     }
 
@@ -122,6 +142,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByLoginAndStoreId(String login, Long storeId) {
         return getUserDao().findByLoginAndStoreId(login, storeId);
+    }
+
+    public void subscribeUserForOffers(String login, boolean subscribe) {
+        int subscriptionMask = 0;
+        if (subscribe){
+            //if user has subscribed then all the type of emails will go to him
+            subscriptionMask = EnumEmailSubscriptions.NOTIFY_ME.getValue()
+                    | EnumEmailSubscriptions.PRODUCT_REPLENISHMENT.getValue() | EnumEmailSubscriptions.PROMOTIONAL_OFFERS.getValue() | EnumEmailSubscriptions.NEWSLETTERS.getValue();
+        }else{
+            //if user has not subscribed then only this type of email will go to him
+            subscriptionMask = EnumEmailSubscriptions.NOTIFY_ME.getValue() | EnumEmailSubscriptions.PRODUCT_REPLENISHMENT.getValue();
+        }
+        getUserDao().updateUserSubscription(login, subscriptionMask);
+    }
+
+    public void subscribeUserForOffers(User user, EnumEmailSubscriptions enumEmailSubscriptions) {
+        int subscriptionMask = user.getSubscribedMask() | enumEmailSubscriptions.getValue();
+        getUserDao().updateUserSubscription(user.getLogin(), subscriptionMask);
     }
 
     // TODO: move such methods and methods getOrdersForUserSortedByDate to a user profile service

@@ -7,6 +7,8 @@ import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
+import com.hk.admin.pact.service.inventory.PoLineItemService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
@@ -69,6 +71,10 @@ public class GRNAction extends BasePaginatedAction {
 	private SupplierDao supplierDao;
 	@Autowired
 	private SkuService skuService;
+	@Autowired
+	private PoLineItemService poLineItemService;
+	@Autowired
+	private PurchaseOrderService purchaseOrderService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -95,7 +101,7 @@ public class GRNAction extends BasePaginatedAction {
 	private Sku sku;
 	public GrnStatus grnStatus;
 	public Double surcharge;
-	private Map<Sku,Boolean> skuIsNew = new HashMap<Sku,Boolean>();
+	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
 
 	private Integer defaultPerPage = 20;
 
@@ -143,10 +149,10 @@ public class GRNAction extends BasePaginatedAction {
 		if (grn != null) {
 			logger.debug("grn@view: " + grn.getId());
 			grnDto = grnManager.generateGRNDto(grn);
-			for(GrnLineItem grnlineitem : grn.getGrnLineItems()){
+			for (GrnLineItem grnlineitem : grn.getGrnLineItems()) {
 				List<GrnLineItem> grnLineItemsList = grnLineItemDao.getAllGrnLineItemBySku(grnlineitem.getSku());
-				if(grnLineItemsList != null && grnLineItemsList.size() == 1){
-					skuIsNew.put(grnlineitem.getSku(),true);
+				if (grnLineItemsList != null && grnLineItemsList.size() == 1) {
+					skuIsNew.put(grnlineitem.getSku(), true);
 				}
 			}
 
@@ -167,8 +173,8 @@ public class GRNAction extends BasePaginatedAction {
 			}
 
 			double overallDiscount = 0;
-			if(grn.getPurchaseOrder().getDiscount() != null && grn.getPurchaseOrder().getPayable() != null && grn.getPurchaseOrder().getPayable() > 0 && grn.getPayable() != null) {
-				overallDiscount = (grn.getPurchaseOrder().getDiscount()/grn.getPurchaseOrder().getPayable()) * grn.getPayable();
+			if (grn.getPurchaseOrder().getDiscount() != null && grn.getPurchaseOrder().getPayable() != null && grn.getPurchaseOrder().getPayable() > 0 && grn.getPayable() != null) {
+				overallDiscount = (grn.getPurchaseOrder().getDiscount() / grn.getPurchaseOrder().getPayable()) * grn.getPayable();
 			}
 			grn.setDiscount(overallDiscount);
 
@@ -179,14 +185,25 @@ public class GRNAction extends BasePaginatedAction {
 
 			for (GrnLineItem grnLineItem : grnLineItems) {
 				//setting sku when adding new grn line item
+				if(grnLineItem.getMrp().longValue() < grnLineItem.getCostPrice().longValue()){
+					addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for item "+grnLineItem.getSku().getProductVariant().getId()));
+					return new RedirectResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
+				}
+
+				if(grnLineItem.getCheckedInQty() != null && grnLineItem.getCheckedInQty() > 0 && grnLineItem.getQty() < grnLineItem.getCheckedInQty()){
+					addRedirectAlertMessage(new SimpleMessage("GRN qty cannot be less than checked in quantity for item "+grnLineItem.getSku().getProductVariant().getId()));
+					return new RedirectResolution(GRNAction.class, "view").addParameter("grn", grn.getId());
+				}
+
 				if (grnLineItem.getSku() == null && grnLineItem.getProductVariant() != null) {
 					grnLineItem.setSku(skuService.getSKU(grnLineItem.getProductVariant(), warehouse));
 				}
-				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null) {
+				if (grnLineItem.getQty() != null && grnLineItem.getQty() == 0 && grnLineItem.getId() != null &&
+						(grnLineItem.getCheckedInQty() == null || grnLineItem.getCheckedInQty() == 0) ) {
 					grnLineItemDao.delete(grnLineItem);
 				} else if (grnLineItem.getQty() > 0) {
-					if(grnLineItem.getPayableAmount() != null) {
-						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio ));
+					if (grnLineItem.getPayableAmount() != null) {
+						grnLineItem.setProcurementPrice((grnLineItem.getPayableAmount() / grnLineItem.getQty()) - (grnLineItem.getPayableAmount() / grnLineItem.getQty() * discountRatio));
 					}
 
 					if (grnLineItem.getId() != null) {
@@ -197,6 +214,7 @@ public class GRNAction extends BasePaginatedAction {
 					}
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
+					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);
@@ -221,6 +239,7 @@ public class GRNAction extends BasePaginatedAction {
 			goodsReceivedNoteDao.save(grn);
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
+			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -317,8 +336,9 @@ public class GRNAction extends BasePaginatedAction {
 		PurchaseInvoice purchaseInvoice = new PurchaseInvoice();
 		purchaseInvoice.setCreateDate(new Date());
 		purchaseInvoice.setCreatedBy(loggedOnUser);
-		if (grnListForPurchaseInvoice.get(0) != null && grnListForPurchaseInvoice.get(0).getEstPaymentDate() != null) {
-			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(0).getEstPaymentDate());
+		int first_index = grnListForPurchaseInvoice.size()-1;
+		if (grnListForPurchaseInvoice.get(first_index) != null && grnListForPurchaseInvoice.get(first_index).getEstPaymentDate() != null) {
+			purchaseInvoice.setEstPaymentDate(grnListForPurchaseInvoice.get(first_index).getEstPaymentDate());
 		}
 		purchaseInvoice.setPurchaseInvoiceStatus(getPurchaseInvoiceDao().get(PurchaseInvoiceStatus.class, EnumPurchaseInvoiceStatus.PurchaseInvoiceGenerated.getId()));
 		if (supplier != null) {
@@ -362,7 +382,7 @@ public class GRNAction extends BasePaginatedAction {
 
 				}
 				if (grnLineItem.getQty() != null && grnLineItem.getCostPrice() != null) {
-					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice()*discountPercentage/100));
+					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice() * discountPercentage / 100));
 					totalTaxable += taxableAmount;
 					purchaseInvoiceLineItem.setTaxableAmount(taxableAmount);
 				}
@@ -379,7 +399,7 @@ public class GRNAction extends BasePaginatedAction {
 				getPurchaseInvoiceDao().save(purchaseInvoiceLineItem);
 
 			}
-			if(grn.getDiscount() != null) {
+			if (grn.getDiscount() != null) {
 				overallDiscount += grn.getDiscount();
 			}
 			grn.setReconciled(true);
@@ -498,18 +518,6 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setGrnStatus(GrnStatus grnStatus) {
 		this.grnStatus = grnStatus;
-	}
-
-	public Set<String> getParamSet() {
-		HashSet<String> params = new HashSet<String>();
-		params.add("productVariant");
-		params.add("invoiceNumber");
-		params.add("tinNumber");
-		params.add("supplierName");
-		params.add("grn");
-		params.add("grnStatus");
-		params.add("reconciled");
-		return params;
 	}
 
 	public Double getSurcharge() {
@@ -638,5 +646,34 @@ public class GRNAction extends BasePaginatedAction {
 
 	public void setSkuIsNew(Map<Sku, Boolean> skuIsNew) {
 		this.skuIsNew = skuIsNew;
+	}
+
+	public PoLineItemService getPoLineItemService() {
+		return poLineItemService;
+	}
+
+	public void setPoLineItemService(PoLineItemService poLineItemService) {
+		this.poLineItemService = poLineItemService;
+	}
+
+	public PurchaseOrderService getPurchaseOrderService() {
+		return purchaseOrderService;
+	}
+
+	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
+		this.purchaseOrderService = purchaseOrderService;
+	}
+
+    public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("productVariant");
+		params.add("invoiceNumber");
+		params.add("tinNumber");
+		params.add("supplierName");
+		params.add("grn");
+		params.add("grnStatus");
+		params.add("reconciled");
+		params.add("warehouse");
+		return params;
 	}
 }

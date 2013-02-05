@@ -13,7 +13,7 @@
 				<a href="${pageContext.request.contextPath}/"><img class="logo" src="images/logo_hkart.png" /></a>
 				<p class="slogen"> the one stop shop for health, fitness and beauty</p>
 
-				<p class="customer"> Customer Care: +91 124 4551616</p>
+				<p class="customer"> Customer Care: +91 124 4502930</p>
 				<div class="cl"></div>
 				<!-- header close -->
 			</div>
@@ -115,7 +115,7 @@
 			</div>
 			<div class="cl"></div>
 
-			<p class="footer"> © 2012 healthkart.com </p>
+			<p class="footer"> © 2013 healthkart.com </p>
 
 
 

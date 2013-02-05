@@ -1,6 +1,10 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!-- Start of Zopim Live Chat Script -->
+<%
+    if (AnalyticsConstants.analytics) {
+%>
 <script type="text/javascript">
 window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=
 z.s=d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o
@@ -28,3 +32,26 @@ t=+new Date;z._=[];e.parentNode.insertBefore($,e)})(document,'script')
     $zopim.livechat.setEmail($('.email').html());
   });
 </script>
+
+<script id="_webengage_script_tag" type="text/javascript">
+  window.webengageWidgetInit = window.webengageWidgetInit || function(){
+    webengage.init({
+      licenseCode:"~2024c219"
+    }).onReady(function(){
+      webengage.render();
+    });
+  };
+
+  (function(d){
+    var _we = d.createElement('script');
+    _we.type = 'text/javascript';
+    _we.async = true;
+    _we.src = (d.location.protocol == 'https:' ? "//ssl.widgets.webengage.com" : "//cdn.widgets.webengage.com") + "/js/widget/webengage-min-v-3.0.js";
+    var _sNode = d.getElementById('_webengage_script_tag');
+    _sNode.parentNode.insertBefore(_we, _sNode);
+  })(document);
+</script>
+
+<%
+    }
+%>

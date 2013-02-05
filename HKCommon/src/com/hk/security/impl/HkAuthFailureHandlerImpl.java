@@ -41,7 +41,7 @@ public class HkAuthFailureHandlerImpl implements HkAuthFailureHandler {
     }
 
     public String getFailureUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/pages/single-login.html");
+        RedirectResolution redirectResolution = new RedirectResolution("/pages/singleLogin.jsp");
         return getUrlFromResolution(redirectResolution);
     }
 

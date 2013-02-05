@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.search.SolrProduct;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
+import com.hk.util.ProductUtil;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,8 +38,12 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     public void indexProduct(Product product){
         try{
             SolrProduct solrProduct = productService.createSolrProduct(product);
-            updateExtraProperties(product, solrProduct);
-            indexProduct(solrProduct);
+            if(!product.isDeleted()){
+                updateExtraProperties(product, solrProduct);
+                indexProduct(solrProduct);
+            }else{
+                deleteProduct(product);
+            }
         } catch (Exception ex) {
             logger.error(String.format("Unable to build Solr index for Product %s", product.getId()), ex);
         }
@@ -55,14 +61,24 @@ public class ProductIndexServiceImpl implements ProductIndexService {
         }
     }
 
-    private void updateExtraProperties(Product pr, SolrProduct solrProduct){
+    public void updateExtraProperties(Product pr, SolrProduct solrProduct){
+        Set<String> validOptions = ProductUtil.getVariantValidOptions();
         for (ProductVariant pv : pr.getProductVariants()){
-            if (pv.getProductOptions() != null){
-                for (ProductOption po : pv.getProductOptions()){
-                    if (po.getValue() != null){
-                        solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
+            if (!pv.getDeleted()){
+                if (pv.getProductOptions() != null){
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(pr.getName());
+                    for (ProductOption po : pv.getProductOptions()){
+                        if (po.getValue() != null){
+                            if (validOptions.contains(po.getName().toUpperCase())){
+                                sb.append(" ");
+                                sb.append(po.getValue());
+                            }
+                        }
                     }
+                    solrProduct.getVariantNames().add(sb.toString());
                 }
+
             }
         }
     }
@@ -70,6 +86,16 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     private void indexProduct(SolrProduct product){
         try{
             solr.addBean(product);
+        }catch(SolrServerException ex){
+            logger.error("Solr error during indexing the product", ex);
+        }catch(IOException ex){
+            logger.error("Solr error during indexing the product", ex);
+        }
+    }
+
+    private void deleteProduct(Product product){
+        try{
+            solr.deleteById(product.getId());
         }catch(SolrServerException ex){
             logger.error("Solr error during indexing the product", ex);
         }catch(IOException ex){

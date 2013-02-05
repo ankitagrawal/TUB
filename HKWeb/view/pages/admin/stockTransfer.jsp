@@ -1,6 +1,5 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
@@ -12,6 +11,8 @@
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+		String messageColor = request.getParameter("messageColor");
+		pageContext.setAttribute("messageColor", messageColor);
 	%>
 
 
@@ -21,150 +22,51 @@
 	<jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('.alert').hide();
 
-			var validateForm = function() {
-				var isValidated = true;
-                if($('.toWarehouse').val() == " "){
-                 alert("Select  To Warehouse");
-                     isValidated = false;
-                }
+			$('#productVariantBarcode').focus();
+			$('#productVariantBarcode').keydown(function(){
+				$('.alertST').hide();
+			});
 
-				if ($('.checkedoutQty').length > 0 && isValidated) {
-					$.each($('.checkedoutQty'), function() {
-						var checkedoutQty = $(this).val();
-						if (checkedoutQty == "" || checkedoutQty < 0 || isNaN(checkedoutQty)) {
-							alert("Enter valid checkedoutQty");
-							isValidated = false;
-							return false;
-						}
-					});
-				}
-				if ($('.costPrice').length > 0 && isValidated) {
-					$.each($('.costPrice'), function() {
-						var costPrice = $(this).val();
-						if (costPrice == "" || costPrice < 0 || isNaN(costPrice)) {
-							alert("Enter valid costPrice");
-							isValidated = false;
-							return false;
-						}
-					});
-				}
-				if ($('.mrp').length > 0 && isValidated) {
-					$.each($('.mrp'), function() {
-						var mrp = $(this).val();
-						if (mrp == "" || mrp < 0 || isNaN(mrp)) {
-							alert("Enter valid mrp");
-							isValidated = false;
-							return false;
-						}
-					});
-				}
-				if ($('.batchNumber').length > 0 && isValidated) {
-					$.each($('.batchNumber'), function() {
-						var batchNumber = $(this).val();
-						if (batchNumber == "") {
-							alert("Enter a valid batch number");
-							isValidated = false;
-							return false;
-						}
-					});
-				}
+			if($('#messageColorParam').val() == "green") {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'green');
+			} else {
+				$('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+			}
 
 
-				return isValidated;
-			};
-
-            $("#saveBtn").click(function() {
-                var isValidated = validateForm();
-                if (!isValidated) {
-                    return isValidated;
-                }
-                if (isValidated) {
-                    var fromWarehouse = $('.toWarehouse').val();
-                    if (fromWarehouse == ${fromwarehouse}) {
-                        return confirm("To Warehouse value  and  From Warehouse are  same. Click Ok To Proceed");
-                    }
-                    else {
-                        return isValidated;
-                    }
-                }
-
+            $("#createST").click(function() {
+	            if ($('.toWarehouse').val() == " ") {
+		            alert("Select  To Warehouse");
+		            return false;
+	            }
+	            var fromWarehouse = $('.toWarehouse').val();
+	            if (fromWarehouse == ${fromwarehouse}) {
+		            return confirm("To Warehouse value  and  From Warehouse are  same. Click Ok To Proceed");
+	            }
 
             });
 
-			$('.addRowButton').click(function() {
-
-				var lastIndex = $('.lastRow').attr('count');
-				if (!lastIndex) {
-					lastIndex = -1;
-				}
-				$('.lastRow').removeClass('lastRow');
-
-				var nextIndex = eval(lastIndex + "+1");
-
-
-				var newRowHtml =
-						'<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-						'  <td>' +
-						'    <input type="hidden" name="stockTransferLineItems[' + nextIndex + '].id" />' +
-						'    <input type="text" class="variant" name="stockTransferLineItems[' + nextIndex + '].productVariant"/>' +
-						'  </td>' +
-						'  <td class="pvDetails"></td>' +
-						'  <td>' +
-						'    <input type="text" name="stockTransferLineItems[' + nextIndex + '].checkedoutQty" class="checkedoutQty" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="costPrice" type="text" name="stockTransferLineItems[' + nextIndex + '].costPrice" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="mrp" type="text" name="stockTransferLineItems[' + nextIndex + '].mrp" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input type="text" name="stockTransferLineItems[' + nextIndex + '].batchNumber" class="batchNumber" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="stockTransferLineItems[' + nextIndex + '].mfgDate" />' +
-						'  </td>' +
-						'  <td>' +
-						'    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="stockTransferLineItems[' + nextIndex + '].expiryDate" />' +
-						'  </td>' +
-						'</tr>';
-
-				$('#stTable').append(newRowHtml);
-
-
-				$('.variant').live("change", function() {
-					var variantRow = $(this).parents('.lineItemRow');
-					var productVariantId = variantRow.find('.variant').val();
-					var productVariantDetails = variantRow.find('.pvDetails');
-					$.getJSON(
-							$('#pvInfoLink').attr('href'), {productVariantId: productVariantId, warehouse: ${whAction.setWarehouse.id}},
-							function(res) {
-								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-									variantRow.find('.mrp').val(res.data.variant.markedPrice);
-									variantRow.find('.costPrice').val(res.data.variant.costPrice);
-									productVariantDetails.html(
-											res.data.product + '<br/>' +
-											res.data.options
-											);
-								} else {
-									$('.variantDetails').html('<h2>' + res.message + '</h2>');
-								}
-							}
-							);
-				});
-
+			$('#productVariantBarcode').change(function() {
+				var formName = $('#stForm2');
+				var formURL = formName.attr('action');
+				formName.attr('action', formURL+"?stockTransfer=" + ${sta.stockTransfer.id} + "&save=");
+				formName.submit();
 			});
+
 		});
 	</script>
 
 </s:layout-component>
 <s:layout-component name="content">
-	<div style="display: none;">
-		<s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
-		        event="getPVDetails"></s:link>
-	</div>
-	<h2>Create/Edit Stock Transfer</h2>
+	<input type="hidden" id="messageColorParam" value="${messageColor}">
+	<c:if test="${sta.stockTransfer.id != null}">
+		<h2>Edit Stock Transfer # ${sta.stockTransfer.id}</h2>
+	</c:if>
+	<c:if test="${sta.stockTransfer.id == null}">
+		<h2>Create New Stock Transfer</h2>
+	</c:if>
 	<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm">
 		<s:hidden name="stockTransfer" value="${sta.stockTransfer.id}"/>
 		<table>
@@ -189,23 +91,49 @@
 				<td>From Warehouse :</td>
 				<td>
 					<s:hidden name="fromWarehouse" value="${whAction.setWarehouse}"/>
-						${whAction.setWarehouse.city}
+						${whAction.setWarehouse.name}
 				</td>
 				<td>
 					To Warehouse :
 				</td>
-				<td><s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
-					<s:option> </s:option>
-					<c:forEach items="${whList}" var="wh">
-						<s:option value="${wh}">${wh.city}</s:option>
-					</c:forEach>
-				</s:select></td>
+				<td><c:if test="${sta.stockTransfer.id == null}">
+					<s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
+						<s:option> </s:option>
+						<c:forEach items="${whList}" var="wh">
+							<s:option value="${wh}">${wh.name}</s:option>
+						</c:forEach>
+					</s:select>
+				</c:if>
+					<c:if test="${sta.stockTransfer.id != null}">
+						<s:hidden name="toWarehouse" value="${sta.stockTransfer.toWarehouse}"/>
+						${sta.stockTransfer.toWarehouse.name}
+					</c:if>
+				</td>
+			</tr>
+			<tr>
+				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>
 			</tr>
 		</table>
+	</s:form>
+	<div class="alertST messages"><s:messages key="generalMessages"/></div>
 
+	<c:if test="${sta.stockTransfer.id != null}">
+		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
+		<fieldset class="right_label">
+			<legend>Scan Barcode:</legend>
+			<ul>
+				<li>
+					<s:label name="barcode">Product Variant Barcode</s:label>
+					<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+				</li>
+				<li></li>
+			</ul>
+		</fieldset>
+		</s:form>
 		<table border="1">
 			<thead>
 			<tr>
+				<th>Barcode</th>
 				<th>VariantID</th>
 				<th>Details</th>
 				<th>Checkedout Qty</th>
@@ -214,13 +142,15 @@
 				<th>Batch Number</th>
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
+				<th>Reduce Qty By 1</th>
 			</tr>
 			</thead>
 			<tbody id="stTable">
 			<c:forEach var="stockTransferLineItem" items="${sta.stockTransfer.stockTransferLineItems}" varStatus="ctr">
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
-				<s:hidden name="stockTransferLineItems[${ctr.index}]" value="${stockTransferLineItem.id}"/>
+				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
+					<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
 					<td>
 							${productVariant.id}
 					</td>
@@ -228,26 +158,27 @@
 					</td>
 					<td> ${stockTransferLineItem.checkedoutQty}
 					</td>
-					<td>${stockTransferLineItem.costPrice}
+					<td>${checkedOutSkuGroup.costPrice}
 					</td>
-					<td> ${stockTransferLineItem.mrp}
+					<td> ${checkedOutSkuGroup.mrp}
 					</td>
-					<td>${stockTransferLineItem.batchNumber}</td>
+					<td>${checkedOutSkuGroup.batchNumber}</td>
 					<td>
-						<fmt:formatDate value="${stockTransferLineItem.mfgDate}" type="both"/></td>
+						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
 					<td>
-						<fmt:formatDate value="${stockTransferLineItem.expiryDate}" type="both"/></td>
+						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
+					<c:if test="${stockTransferLineItem.checkedoutQty > 0}">
+					<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
+						Reduce Qty By 1
+					<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
+					<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
+					</c:if>
 				</tr>
 
 			</c:forEach>
 			</tbody>
 		</table>
-		<div class="variantDetails info"></div>
-		<br/>
-		<a class="addRowButton" style="font-size:1.2em">Add new row</a>
-
-		<s:submit name="save" value="Save" id="saveBtn"/>
-	</s:form>
+	</c:if>
 
 </s:layout-component>
 

@@ -33,7 +33,7 @@
                     </c:forEach>
                 </s:select>
                 <label>Status</label>
-                <s:select name="affiliateMode">
+                <s:select name="affiliateStatus">
                     <option value="">Select</option>
                     <c:forEach items="<%=EnumAffiliateStatus.getAllAffiliateStatus()%>" var="aStatus">
                         <s:option value="${aStatus.id}">${aStatus.name}</s:option>
@@ -64,11 +64,12 @@
                 Plan
             </th>
             <th> Transaction</th>
-            <th></th>
+            <th>Super Login</th>
+            <th>Status</th>
             <th>CALL</th>
         </tr>
 
-        <s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" autocomplete="off">
+        <%--<s:form beanclass="com.hk.web.action.core.affiliate.AffiliatePaymentAction" autocomplete="off">--%>
             <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${paymentAction}"/>
             <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${paymentAction}"/>
             <c:forEach items="${paymentAction.affiliatePaymentDtoList}" var="affiliateDetails" varStatus="ctr">
@@ -82,8 +83,7 @@
                     <td width="100px">
                             ${affiliateDetails.affiliate.websiteName}
                     </td>
-                    <s:hidden name="affiliatePaymentDtoList[${ctr.index}].affiliate"
-                              value="${affiliateDetails.affiliate}"/>
+                    <%--&lt;%&ndash;<s:hidden name="affiliatePaymentDtoList[${ctr.index}].affiliate" value="${affiliateDetails.affiliate}"/>&ndash;%&gt;--%>
                     <td>
                         <fmt:formatNumber value=" ${affiliateDetails.amount}"
                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/>
@@ -110,6 +110,7 @@
                             [Super login]
                         </s:link>
                     </td>
+                    <td>${affiliateDetails.affiliate.affiliateStatus.name}</td>
                     <td>
                         <c:if test="${fn:length(affiliateDetails.affiliate.user.addresses) > 0}">
                             ${affiliateDetails.affiliate.user.addresses[0].phone}
@@ -119,7 +120,7 @@
             </c:forEach>
             </table>
 
-            <div class="buttons"><s:submit name="save" value="Save"/></div>
-        </s:form>
+            <%--<div class="buttons"><s:submit name="save" value="Save"/></div>--%>
+        <%--</s:form>--%>
     </s:layout-component>
 </s:layout-render>

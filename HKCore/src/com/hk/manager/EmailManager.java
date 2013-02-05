@@ -33,6 +33,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -127,6 +128,8 @@ public class EmailManager {
     private String              hkNoReplyName;
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
+    @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+	private String              logisticsOpsEmails;
 
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
@@ -728,6 +731,29 @@ public class EmailManager {
 
     }
 
+    public void sendCallbackRequestEmail(User user, DiscountCouponMailingList dcml) {
+      HashMap valuesMap = new HashMap();
+      valuesMap.put("dcml", dcml);
+      if (user != null)
+        valuesMap.put("userId", user.getId());
+      else
+        valuesMap.put("userId", "Guest User");
+
+      Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
+      List<String> emailIds = new ArrayList<String>();
+      if (dcml.getCategory() != null && dcml.getCategory().equals("nutrition")) {
+        emailIds.add("umang.mehta@healthkart.com");
+        emailIds.add("jatin.nayyar@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("eye")) {
+        emailIds.add("abhishek.mohta@healthkart.com");
+        emailIds.add("shefali.sankhyan@healthkart.com");
+      }
+      for (String emailId : emailIds) {
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, "Callback Request - " + dcml.getCategory());
+      }
+
+    }
+
     public void sendCodConverterMail(Order order) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
@@ -784,6 +810,16 @@ public class EmailManager {
             }
         }
         return emailRecepients;
+    }
+
+
+
+    public boolean sendEscalationToDropShipEmail(ShippingOrder shippingOrder) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("shippingOrder", shippingOrder);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.dropShipEscalationEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsOpsEmails,
+                EmailTemplateConstants.operationsTeam);
     }
 
     /*

@@ -3,6 +3,7 @@ package com.hk.domain.inventory.po;
 
 
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -20,6 +21,12 @@ import java.util.List;
 @Entity
 @Table (name = "purchase_order")
 /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
+
+@NamedQueries({
+    @NamedQuery(name = "getPurchaseOrderById", query = "select pc from PurchaseOrder pc where id = :purchaseOrderId"),
+    @NamedQuery(name = "getPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory = :extraInventory"),
+    @NamedQuery(name = "getAllPurchaseOrderByExtraInventory", query = "select pc from PurchaseOrder pc where extraInventory is not NULL")
+})
 public class PurchaseOrder implements java.io.Serializable {
 
 
@@ -107,6 +114,13 @@ public class PurchaseOrder implements java.io.Serializable {
 
 	@Column (name = "final_payable_amount")
 	private Double finalPayableAmount;
+
+	@Column(name = "fill_rate")
+	private Double fillRate;
+
+  @OneToOne
+  @JoinColumn (name = "extra_inventory_id")
+  private ExtraInventory extraInventory;
 
 	@Transient
 	private int noOfSku;
@@ -310,6 +324,22 @@ public class PurchaseOrder implements java.io.Serializable {
 	public void setFinalPayableAmount(Double finalPayableAmount) {
 		this.finalPayableAmount = finalPayableAmount;
 	}
+
+	public Double getFillRate() {
+		return fillRate;
+	}
+
+	public void setFillRate(Double fillRate) {
+		this.fillRate = fillRate;
+	}
+
+  public ExtraInventory getExtraInventory() {
+    return extraInventory;
+  }
+
+  public void setExtraInventory(ExtraInventory extraInventory) {
+    this.extraInventory = extraInventory;
+  }
 }
 
 

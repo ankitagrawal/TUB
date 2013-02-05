@@ -14,7 +14,7 @@ import com.hk.pact.dao.email.EmailRecepientDao;
 
 @Component
 public class UnsubscribeEmailAction extends BaseAction {
-    @Autowired
+  @Autowired
    EmailRecepientDao emailRecepientDao;
 
   @Validate(required = true)
@@ -24,7 +24,7 @@ public class UnsubscribeEmailAction extends BaseAction {
     EmailRecepient emailRecepient = emailRecepientDao.findByUnsubscribeToken(unsubscribeToken);
     if(emailRecepient == null) {
       addRedirectAlertMessage(new SimpleMessage("Invalid email."));
-    } else {
+          }else{
       emailRecepient.setSubscribed(false);
       emailRecepientDao.save(emailRecepient);
       addRedirectAlertMessage(new SimpleMessage("You have been unsubscribed successfully."));

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -31,6 +30,8 @@ import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrack;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
  * Created by IntelliJ IDEA.
@@ -380,7 +381,7 @@ public class CourierStatusUpdateHelper {
 			Element element = doc.getRootElement();
 			Element consig = element.getChild(CourierConstants.DTDC_INPUT_CONSIGNMENT);
 			Element header = consig.getChild(CourierConstants.DTDC_INPUT_CNHEADER);
-			Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);
+			Element cnTrack = header.getChild(CourierConstants.DTDC_INPUT_CNTRACK);     
 			String trackStatus = header.getChildText(CourierConstants.DTDC_INPUT_CNTRACK);
 			List fields = header.getChildren();
 			if (trackStatus.equalsIgnoreCase("TRUE")) {
@@ -477,6 +478,28 @@ public class CourierStatusUpdateHelper {
 		}
 		return xmlElement;
 	}
+
+	public ThirdPartyTrackDetails updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+
+		ThirdPartyTrackDetails trackDetails = null;
+		courierName = EnumCourier.IndiaOnTime.getName();
+
+		//added for debugging
+		//trackingId = "70004207501";
+		try{
+			trackDetails = new IndiaOntimeCourierTrack().trackShipment(trackingId);
+			
+		} catch (NullPointerException npe) {
+			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+		} catch (Exception e) {
+			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+		}
+		return trackDetails;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public String getHkDeliveryStatusForUser(String status) {

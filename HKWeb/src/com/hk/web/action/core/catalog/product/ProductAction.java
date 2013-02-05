@@ -214,7 +214,7 @@ public class ProductAction extends BaseAction {
         totalReviews = productService.getAllReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()));
         if (totalReviews != null && totalReviews > 0) {
             averageRating = getProductService().getAverageRating(product);
-            Page userReviewPage = getProductService().getProductReviews(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
+            Page userReviewPage = getProductService().getProductReviewsForCustomer(product, Arrays.asList(EnumReviewStatus.Published.getId()), 1, 5);
             if (userReviewPage != null) {
                 userReviews = userReviewPage.getList();
             }
@@ -252,6 +252,11 @@ public class ProductAction extends BaseAction {
     }
 
     public Resolution productBanner() {
+        if (product != null) {
+            if (product instanceof Combo) {
+                combo = (Combo) product;
+            }
+        }
         affiliate = affiliateDao.getAffiliateByCode(affid);
         return new ForwardResolution("/pages/affiliate/productBanner.jsp");
     }

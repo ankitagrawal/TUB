@@ -5,6 +5,9 @@
 <%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.marketing.AnalyticsConstants" %>
+<%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.hk.taglibs.Functions" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
@@ -25,10 +28,19 @@
 //    System.out.println("aattachRedirectParam="+attachRedirectParamStr);
     boolean attachRedirectParam = attachRedirectParamStr == null ? true : Boolean.getBoolean(attachRedirectParamStr);
   %>
+  <%
+    DateTime currentDateTime = new DateTime();
+    Date startOfOfferDate = new Date(new DateTime(2013, 01, 25, 19, 59, 59, 59).getMillis());
+    Date endOfOfferDate = new Date(new DateTime(2013, 01, 27, 8, 59, 59, 59).getMillis());
+  %>
+
   <div class='topBar'>
     <div class='topBarContent'>
       <div style='float: left; margin-left: 5px; margin-top: 2px; line-height: 18px;' title='Call us on our customer care number for help regarding anything'>
-          <div style="font-size: 12px; float: left;"><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">14 day return policy</a> | <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link>: 0124-4551616</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(24x7)</div>
+          <div style="font-size: 12px; float: left;"><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">14 day return policy</a> | <s:link beanclass="com.hk.web.action.pages.ContactAction">Contact Us</s:link>: 0124-4616444</div><div style="color: gray; float: left; font-size: 10px;">&nbsp;(24x7)</div>
+	      <% if (currentDateTime.isAfter(startOfOfferDate.getTime()) && currentDateTime.isBefore(endOfOfferDate.getTime())){%>
+            <div style="color: red; float: left; ">&nbsp;(not available on 26th Jan 2013)</div>
+          <%}%>
       </div>
       <div class="message">
         <div class="arrow"></div>
@@ -64,7 +76,7 @@
 			        </c:choose>
 		        </s:link>
 	        </div>
-          
+
         </div>
 
         <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">

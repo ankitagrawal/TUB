@@ -43,6 +43,11 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
 	public static String paidTxnExists = "paidTxnExists";
 
 
+	public static String addressStreet1 = "addressStreet1";
+	public static String addressCity = "addressCity";
+	public static String addressZip = "addressZip";
+	public static String addressState = "addressState";
+	public static String addressCountry = "addressCountry";
 	public static String email = "email";
 	public static String merchantTxnId = "merchantTxnId";
 	public static String orderAmount = "orderAmount";
@@ -59,9 +64,10 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
 	public static String secSignature = "secSignature";
 	public static String merchantAccessKey = "merchantAccessKey";
 	public static String transactionId = "transactionId";
+    public static String MerchantId = "MerchantId";
 
 
-	public CitrusPaymentGatewayWrapper(String environmemtDir) {
+    public CitrusPaymentGatewayWrapper(String environmemtDir) {
 		this.environmemtDir = environmemtDir;
 	}
 

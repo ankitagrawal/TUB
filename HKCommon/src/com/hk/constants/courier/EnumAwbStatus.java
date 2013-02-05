@@ -54,4 +54,9 @@ public enum EnumAwbStatus {
 	public static List<AwbStatus> getAllStatusExceptUnused(){
 		return Arrays.asList(Attach.getAsAwbStatus(),Authorization_Pending.getAsAwbStatus(),Used.getAsAwbStatus());
 	}
+
+
+	public static List<AwbStatus> getAllStatusExceptUsed(){
+		return Arrays.asList(Attach.getAsAwbStatus(),Authorization_Pending.getAsAwbStatus(),Unused.getAsAwbStatus());
+	}
 }

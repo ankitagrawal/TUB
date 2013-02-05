@@ -95,7 +95,12 @@
                       <s:link beanclass="com.hk.web.action.core.subscription.SubscriptionAction" class="addSubscriptionButton"><b>Subscribe</b>
                           <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link>
                   </c:if>
-                  <s:submit name="addToCart" value="Place Order" class="addToCartButton cta button_green"/>
+	              <s:layout-render name="/layouts/embed/preOrderMessage.jsp"
+							                 product="${product}" />
+                  <%--<s:submit name="addToCart" value="Place Order"
+				class="addToCartButton cta button_green" />--%>
+							                 
+                  
               </c:otherwise>
             </c:choose>
 

@@ -18,6 +18,8 @@ public interface ProductService {
 
     public List<Product> getProductByCategory(String category);
 
+    public List<Product> getProductByCategories(List<String> categoryNames);
+
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
      * 
@@ -86,11 +88,9 @@ public interface ProductService {
 
     public ProductOption findProductOptionByNameAndValue(String name, String value);
 
-    public List<Product> productsSortedByOrder(Long primaryCategoryHeadingId, String productReferrer);
-
     public boolean isComboInStock(Combo combo);
 
-    public Page getProductReviews(Product product, List<Long> reviewStatusList, int page, int perPage);
+    public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage);
 
     public Long getAllReviews(Product product, List<Long> reviewStatusList);
 

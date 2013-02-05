@@ -3,11 +3,7 @@ package com.hk.web.action.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.SimpleError;
 
@@ -32,6 +28,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
+@HttpCache(allow = false)
 public class SelectAddressAction extends BaseAction {
 
     //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
@@ -57,7 +54,9 @@ public class SelectAddressAction extends BaseAction {
 
 	 // @Validate(required = true)
     private Order order;
-   
+
+    private boolean printAlert;
+
 	  //@ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
@@ -74,9 +73,8 @@ public class SelectAddressAction extends BaseAction {
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
         email = user.getEmail();
-
         addresses = addressDao.getVisibleAddresses(user);
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         selectedAddress = order.getAddress();
         if (selectedAddress == null) {
             // get the last order address? for not selecting just first non deleted one.
@@ -85,7 +83,7 @@ public class SelectAddressAction extends BaseAction {
             }
         }
 
-        return new ForwardResolution("/pages/addressBook.jsp");
+        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert",printAlert);
 
     }
 
@@ -99,7 +97,7 @@ public class SelectAddressAction extends BaseAction {
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
 
         deleteAddress.setDeleted(true);
         addressDao.save(deleteAddress);
@@ -123,7 +121,7 @@ public class SelectAddressAction extends BaseAction {
             user = getUserService().save(user);
         }
 
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         order.setAddress(selectedAddress);
         orderDao.save(order);
 
@@ -186,4 +184,15 @@ public class SelectAddressAction extends BaseAction {
         this.roleService = roleService;
     }
 
+  public boolean isPrintAlert() {
+    return printAlert;
+  }
+
+  public boolean getPrint(){
+    return printAlert;
+  }
+
+  public void setPrintAlert(boolean printAlert) {
+    this.printAlert = printAlert;
+  }
 }

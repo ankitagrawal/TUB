@@ -112,6 +112,10 @@ public class BaseAction implements ActionBean {
         return getContext().getRequest().isSecure();
     }
 
+    protected String getRemoteHostAddr(){
+        return getContext().getRequest().getRemoteHost();
+    }
+
     public UserService getUserService() {
         return userService;
     }

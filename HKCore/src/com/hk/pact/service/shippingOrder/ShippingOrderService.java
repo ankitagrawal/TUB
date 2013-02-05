@@ -46,9 +46,9 @@ public interface ShippingOrderService {
 	 */
 	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
 
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
-
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
+
+	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
 
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
@@ -75,8 +75,6 @@ public interface ShippingOrderService {
 	public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
-
-	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
 
 	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
 

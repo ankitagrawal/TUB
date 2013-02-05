@@ -1,20 +1,10 @@
 package com.hk.admin.engine;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierCostCalculator;
 import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
 import com.hk.comparator.MapValueComparator;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -22,6 +12,7 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPricingEngine;
 import com.hk.domain.courier.PincodeRegionZone;
+import com.hk.domain.courier.ShipmentServiceType;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -32,6 +23,11 @@ import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,10 +44,10 @@ public class PreferredWarehouseDecider {
     CourierPricingEngineDao courierPricingEngineDao;
 
     @Autowired
-    PincodeRegionZoneDao pincodeRegionZoneDao;
+    PincodeRegionZoneService pincodeRegionZoneService;
 
     @Autowired
-    CourierService courierService;
+    PincodeCourierService pincodeCourierService;
 
     @Autowired
     SkuService skuService;
@@ -82,8 +78,9 @@ public class PreferredWarehouseDecider {
 
         // get static things
         ShippingOrder shippingOrder = lineItem.getShippingOrder();
+        ShipmentServiceType shipmentServiceType = shippingOrder.getShipment().getShipmentServiceType();
         Order order = shippingOrder.getBaseOrder();
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         boolean isCod = order.isCOD();
 
         ProductVariant productVariant = lineItem.getSku().getProductVariant();
@@ -94,11 +91,12 @@ public class PreferredWarehouseDecider {
         for (Warehouse warehouse : warehouseService.getAllWarehouses()) {
             Sku sku = skuService.getSKU(productVariant, warehouse);
             Double taxIncurred = productVariant.getCostPrice() * sku.getTax().getValue();
-            List<Courier> applicableCouriers = courierService.getAvailableCouriers(pincode.getPincode(), isCod , false , false ,false);
+            List<Courier> applicableCouriers = pincodeCourierService.getApplicableCouriers(pincode,null,Arrays.asList(shipmentServiceType), true);
+
             Double totalCost = 0D;
             Map<Courier, Double> courierCostingMap = new HashMap<Courier, Double>();
 
-            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneDao.getSortedRegionList(applicableCouriers, pincode, warehouse);
+            List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getSortedRegionList(applicableCouriers, pincode, warehouse);
             for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
                 Set<Courier> couriers = courierGroupService.getCommonCouriers(pincodeRegionZone.getCourierGroup(), applicableCouriers);
                 for (Courier courier : couriers) {
@@ -130,9 +128,13 @@ public class PreferredWarehouseDecider {
             Double weight = 0D;
             Double amount = 0D;
             Double taxIncurred = 0D;
+            boolean ground = true;
             for (ProductVariant productVariant : productVariants) {
                 amount += productVariant.getHkPrice();
                 Double wt = productVariant.getWeight();
+                if (!productVariant.getProduct().isGroundShipping()) {
+                    ground = false;
+                }
                 if (wt == null || wt == 0D) {
                     weight += 125D;
                 } else {
@@ -151,7 +153,8 @@ public class PreferredWarehouseDecider {
                 }
             }
 
-            Map<Courier, Long> courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, isCod, warehouse, amount, weight);
+            //todo courier please recheck logic
+            Map<Courier, Long> courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, isCod, warehouse, amount, weight, ground);
 
             for (Map.Entry<Courier, Long> courierCostEntry : courierCostingMap.entrySet()) {
                 courierCostEntry.setValue(courierCostEntry.getValue() + taxIncurred.longValue());

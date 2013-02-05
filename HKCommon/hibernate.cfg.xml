@@ -32,7 +32,6 @@
         <mapping class="com.hk.domain.core.Tax"/>
         <mapping class="com.hk.domain.order.Order"/>
         <mapping class="com.hk.domain.core.OrderStatus"/>
-        <mapping class="com.hk.domain.courier.CourierServiceInfo"/>
         <mapping class="com.hk.domain.offer.rewardPoint.RewardPoint"/>
         <mapping class="com.hk.domain.offer.rewardPoint.RewardPointStatus"/>
         <mapping class="com.hk.domain.offer.rewardPoint.RewardPointTxn"/>
@@ -191,11 +190,22 @@
 	    <mapping class="com.hk.domain.user.UserDetail" />
 	    <mapping class="com.hk.domain.analytics.TrafficTracking" />
 	    <mapping class="com.hk.domain.analytics.UserBrowsingHistory" />
+        <mapping class="com.hk.domain.content.HeadingProduct" />
         <mapping class="com.hk.domain.user.BillingAddress" />
         <mapping class="com.hk.domain.payment.Gateway" />
         <mapping class="com.hk.domain.payment.Issuer" />
         <mapping class="com.hk.domain.payment.GatewayIssuerMapping" />
         <mapping class="com.hk.domain.core.Country" />
         <mapping class="com.hk.domain.payment.CurrencyConverter" />
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventory"/>
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryLineItem"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNote"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNoteLineItem"/>
+        <mapping class="com.hk.domain.inventory.rtv.RtvNoteStatus" />
+	    <mapping class="com.hk.domain.sku.SkuItemStatus" />
+	    <mapping class="com.hk.domain.warehouse.WarehouseType" />
+	    <mapping class="com.hk.domain.courier.PincodeCourierMapping" />
+	    <mapping class="com.hk.domain.courier.ShipmentServiceType" />
+	    <mapping class="com.hk.domain.api.HkApiUser" />
     </session-factory>
 </hibernate-configuration>

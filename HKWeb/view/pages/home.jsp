@@ -2,8 +2,11 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ page import="org.apache.shiro.SecurityUtils" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
 <%
@@ -14,6 +17,8 @@
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
 
+
+
 <s:layout-component name="htmlHead">
   <meta name="description"
         content="Online Shopping for Nutrition, Health, Beauty & Personal Care Products in India: Buy Nutrition Supplements, Health Equipments, Diabetes supplies, Lenses, Home Devices & Other Products online at Lowest Price & Free Shipping in India – Healthkart.com"/>
@@ -21,7 +26,7 @@
         content="Online Shopping, online shopping india, nutrition, healthcare products, buy health care health equipments, beauty care products, shop online, nutrition supplements, protein supplements, diabetes, skin care, eye care,  healthcart, healthkkart, healthkarts, price, india"/>
 
   <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
+  <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>--%>
 </s:layout-component>
 
 <s:layout-component name="homePageTopContent">
@@ -120,9 +125,6 @@
       </div>
 
 
-      <%--<div class="clear"></div>--%>
-
-
       <div class="grid_24 alpha omega">
         <s:link beanclass="com.hk.web.action.core.catalog.category.CategoryAction" event="editPrimaryCategoryHeadings"
                 class="popup" style="font-size:larger; background-color:#003399; color:white;" target="_blank">
@@ -137,7 +139,7 @@
 
 
     <c:forEach var="heading" items="${homeBean.headingsWithRankingSetSortedByRanking}">
-      <c:if test="${!empty heading.products}">
+      <c:if test="${!empty hk:getHeadingProductsSortedByRank(heading.id)}">
         <div class="grid_24 alpha omega" style="width: 950px;">
           <c:choose>
             <c:when test="${hk:isNotBlank(heading.link)}">
@@ -187,9 +189,9 @@
 
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, "home-page")}' begin="0" end="5">
+          <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}'/>
             </div>
           </c:forEach>
         </div>
@@ -198,7 +200,7 @@
 
 
       <shiro:hasRole name="<%=RoleConstants.GOD%>">
-        <c:if test="${empty heading.products}">
+        <c:if test="${empty hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"
@@ -224,13 +226,16 @@
 		
 		<c:if test="${not isSecure }">
 			<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1&uid=${user_hash}"
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>
 
 	</s:layout-component>
 </s:layout-render>
+
+<!--google remarketing code-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"/>
 
 
 <script type="text/javascript">
@@ -250,6 +255,7 @@
     width: 100%;
   }
 </style>
+
 
 
 

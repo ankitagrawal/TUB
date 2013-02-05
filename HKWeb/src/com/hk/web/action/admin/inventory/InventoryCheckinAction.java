@@ -5,6 +5,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
@@ -13,17 +14,24 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.inventory.SkuGroupService;
+import com.hk.pact.dao.BaseDao;
 import com.hk.util.XslGenerator;
+import com.hk.util.HKDateUtil;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -35,81 +43,92 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+import org.jsoup.helper.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-@Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
 @Component
 public class InventoryCheckinAction extends BaseAction {
 
-	private static Logger         logger    = Logger.getLogger(InventoryCheckinAction.class);
+	private static Logger logger = Logger.getLogger(InventoryCheckinAction.class);
 	@Autowired
-	private InventoryService      inventoryService;
+	private InventoryService inventoryService;
 	@Autowired
 	private AdminInventoryService adminInventoryService;
 	@Autowired
 	private ProductVariantService productVariantService;
 	@Autowired
-	private SkuService            skuService;
+	private SkuService skuService;
 	@Autowired
-	private UserService           userService;
+	private UserService userService;
 	@Autowired
-	private GrnLineItemDao        grnLineItemDao;
+	private GrnLineItemDao grnLineItemDao;
 	@Autowired
-	private GoodsReceivedNoteDao  goodsReceivedNoteDao;
+	private GoodsReceivedNoteDao goodsReceivedNoteDao;
 	// private LowInventoryDao lowInventoryDao;
 	@Autowired
-	private XslGenerator          xslGenerator;
+	private XslGenerator xslGenerator;
 	@Autowired
-	private XslParser             xslParser;
+	private XslParser xslParser;
 	@Autowired
-	private StockTransferDao      stockTransferDao;
+	private StockTransferDao stockTransferDao;
+	@Autowired
+	private ProductVariantSupplierInfoService productVariantSupplierInfoService;
+
+    @Autowired
+	private SkuGroupService skuGroupService;
+    @Autowired
+    BaseDao baseDao;
+
+    private List<SkuGroup> skuGroupList;
 
 	// SkuGroupDao skuGroupDao;
 
 	// SkuItemDao skuItemDao;
 
 	@Validate(required = true, on = "save")
-	private String                upc;
+	private String upc;
 	@Validate(required = true, minvalue = 1.0, on = "save")
-	private Long                  qty;
+	private Long qty;
 	@Validate(required = true, on = "save")
-	private Double                costPrice;
-	private Double                mrp;
-	private String                batch;
-	private Date                  mfgDate;
-	private Date                  expiryDate;
-	private GoodsReceivedNote     grn;
-	private String                invoiceNumber;
-	private Date                  invoiceDate;
-	private StockTransfer         stockTransfer;
-	int                           strLength = 20;
-	File                          printBarcode;
+	private Double costPrice;
+	private Double mrp;
+	private String batch;
+	private Date mfgDate;
+	private Date expiryDate;
+	private GoodsReceivedNote grn;
+	private String invoiceNumber;
+	private Date invoiceDate;
+	private StockTransfer stockTransfer;
+	int strLength = 20;
+	File printBarcode;
+    private Sku sku;
+    private SkuGroup checkinSkuGroup;
+
+    private String productVariantBarcode;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-	String                        adminUploadsPath;
+	String adminUploadsPath;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-	String                        adminDownloadsPath;
+	String adminDownloadsPath;
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
-	String                        barcodeGurgaon;
+	String barcodeGurgaon;
 
 	@Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
-	String                        barcodeMumbai;
+	String barcodeMumbai;
 
 	@Validate(required = true, on = "parse")
-	private FileBean              fileBean;
+	private FileBean fileBean;
 
 	private final double TOLERANCE_LEVEL_PERCENTAGE = 10; // Max allowed percentage value for CP, MRP etc to be higher or lower than
-														// the corresponding product variant value.
+	// the corresponding product variant value.
 
 	@DefaultHandler
 	@DontValidate
@@ -118,7 +137,7 @@ public class InventoryCheckinAction extends BaseAction {
 	}
 
 	@SuppressWarnings("unchecked")
-    @JsonHandler
+	@JsonHandler
 	public Resolution validateFields() {
 		Map dataMap = new HashMap();
 		HealthkartResponse healthkartResponse = null;
@@ -128,31 +147,23 @@ public class InventoryCheckinAction extends BaseAction {
 				productVariant = getProductVariantService().getVariantById(upc);
 			}
 			if (productVariant != null) {
-				if(costPrice != null && (costPrice > productVariant.getCostPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+				if (costPrice != null && (costPrice > productVariant.getCostPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"Cost price is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +*/
 							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(costPrice != null && (costPrice < productVariant.getCostPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
+				} else if (costPrice != null && (costPrice < productVariant.getCostPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getCostPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"Cost price is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE + " %. \n" +*/
 							"Cost price of the variant in the system is Rs. " + productVariant.getCostPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(mrp != null && (mrp > productVariant.getMarkedPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+				} else if (mrp != null && (mrp > productVariant.getMarkedPrice() + TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"MRP is higher than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +*/
 							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else if(mrp != null && (mrp < productVariant.getMarkedPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
+				} else if (mrp != null && (mrp < productVariant.getMarkedPrice() - TOLERANCE_LEVEL_PERCENTAGE * productVariant.getMarkedPrice() / 100)) {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,
 							/*"MRP is lesser than the maximum permissible limit of " + TOLERANCE_LEVEL_PERCENTAGE +" %. \n" +*/
 							"MRP of the variant in the system is Rs. " + productVariant.getMarkedPrice() + "\n Do you want to continue?", dataMap);
-				}
-
-				else {
+				} else {
 					healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Cost price and MRP are within the permissible limit", dataMap);
 				}
 			} else {
@@ -204,20 +215,29 @@ public class InventoryCheckinAction extends BaseAction {
 						addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
 						return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 					}
-					SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null,null, sku);
+					SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
 					getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
 							getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
 					getInventoryService().checkInventoryHealth(productVariant);
 
-					if (grn.getGrnStatus().getId().equals(EnumGrnStatus.GoodsReceived.getId())) {
+					if (getInventoryService().allInventoryCheckedIn(grn)) {
+						grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+						editPVFillRate(grn);
+					} else {
+						grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
+						getGoodsReceivedNoteDao().save(grn);
+					}
+					/*if (grn.getGrnStatus().getId().equals(EnumGrnStatus.GoodsReceived.getId())) {
 						grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckinInProcess.getId()));
 						getGoodsReceivedNoteDao().save(grn);
 					} else if (grn.getGrnStatus().getId().equals(EnumGrnStatus.InventoryCheckinInProcess.getId())) {
 						if (getInventoryService().allInventoryCheckedIn(grn)) {
 							grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckedIn.getId()));
 							getGoodsReceivedNoteDao().save(grn);
+							editPVFillRate(grn);
 						}
-					}
+					}*/
 					//Barcode File
 					try {
 						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
@@ -245,8 +265,8 @@ public class InventoryCheckinAction extends BaseAction {
 						logger.error("Exception while appending on barcode file", e);
 						;
 					}
-				}else{
-					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->"+grnLineItem+" or Sku ->"+sku));
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
 					return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 				}
 			} else {
@@ -263,93 +283,96 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
-	public Resolution saveInventoryAgainstStockTransfer() {
-		User user = null;
-		if (getPrincipal() != null) {
-			user = getUserService().getUserById(getPrincipal().getId());
-		}
-
-		stockTransfer.setReceivedBy(user);
-		logger.debug("upc: " + upc);
-		try {
-			ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
-			if (productVariant == null) {
-				productVariant = getProductVariantService().getVariantById(upc);
+	private void editPVFillRate(GoodsReceivedNote grn) {
+		if (grn != null) {
+			Supplier supplier = grn.getPurchaseOrder().getSupplier();
+			for (GrnLineItem grnLineItem : grn.getGrnLineItems()) {
+				ProductVariantSupplierInfo productVariantSupplierInfo =
+						productVariantSupplierInfoService.getOrCreatePVSupplierInfo(grnLineItem.getSku().getProductVariant(), supplier);
+				productVariantSupplierInfoService.updatePVSupplierInfo(productVariantSupplierInfo, null, grnLineItem.getQty());
 			}
-			if (productVariant != null) {
-				Sku sku = skuService.findSKU(productVariant, stockTransfer.getToWarehouse());
-				if(sku == null){
-					addRedirectAlertMessage(new SimpleMessage("Sku doesn't exist for product  - " + productVariant.getId() + "Plz contact category manager."));
-					return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-							"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
-				}
-				Long askedQty = 0L;
-				StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItem(stockTransfer, productVariant, batch);
-				if (stockTransferLineItem != null && sku != null) {
-					askedQty = stockTransferLineItem.getCheckedoutQty();
-					Long alreadyCheckedInQty = adminInventoryService.countOfCheckedInUnitsForStockTransferLineItem(stockTransferLineItem);
-					// logger.info("Inventory Checkin ->
-					// ProductVariant="+productVariant.getId()+";askedQty="+askedQty+";alreadyCheckedInQty="+alreadyCheckedInQty+";qty="+qty);
-					if (qty > (askedQty - alreadyCheckedInQty)) {
-						addRedirectAlertMessage(new SimpleMessage("Qty mentioned - " + qty + " is exceeding required checked in qty. Plz check."));
-						return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
-								"checkinInventoryAgainstStockTransfer", stockTransfer.getId());
-					}
-
-					SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, null, null, stockTransfer, sku);
-					adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, qty, null, null, null, stockTransferLineItem,
-							inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), user);
-					inventoryService.checkInventoryHealth(productVariant);
-					stockTransferLineItem.setCheckedinQty(alreadyCheckedInQty + qty);
-					stockTransferLineItem.setBatchNumber(batch);
-					stockTransferLineItem.setMfgDate(mfgDate);
-					stockTransferLineItem.setExpiryDate(expiryDate);
-					stockTransferLineItem = (StockTransferLineItem) stockTransferDao.save(stockTransferLineItem);
-
-					try {
-						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-						String barcodeFilePath = null;
-						if (stockTransfer.getToWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
-							barcodeFilePath = barcodeGurgaon;
-						} else {
-							barcodeFilePath = barcodeMumbai;
-						}
-						barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
-								+ StringUtils.substring(stockTransfer.getToWarehouse().getCity(), 0, 3) + ".txt";
-						String date = "";
-						if (expiryDate == null) {
-							date = "NA";
-						} else {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-							date = sdf.format(expiryDate);
-						}
-						String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-								+ StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
-
-						BarcodeUtil.createBarcodeFile(barcodeFilePath, data);
-
-					} catch (IOException e) {
-						logger.error("Exception while appending on barcode file", e);
-						;
-					}
-				}
-			} else {
-				addRedirectAlertMessage(new SimpleMessage("No such UPC or Variant Id"));
-				return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-						stockTransfer.getId());
-			}
-		} catch (Exception e) {
-			logger.error("Error while stock transfer checkin : ", e);
-			addRedirectAlertMessage(new SimpleMessage("Duplicate UPC or Variants in Stock Transfer - Please fix the same."));
-			return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-					stockTransfer.getId());
 		}
-		addRedirectAlertMessage(new SimpleMessage("Inventory Checked in successfully. Qty = " + qty));
-		return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter("checkinInventoryAgainstStockTransfer",
-				stockTransfer.getId());
-
 	}
+
+
+
+    public Resolution saveStockTransfer() {
+        SkuItem skuItem;
+
+        if (stockTransfer == null) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+            return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+        }
+        if (StringUtil.isBlank(productVariantBarcode)) {
+            addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+            return new RedirectResolution(StockTransferAction.class).addParameter("stockTransfer", stockTransfer.getId()).addParameter(
+                    "checkinInventoryAgainstStockTransfer", stockTransfer.getId());
+        }
+
+        User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+
+        skuGroupList = skuGroupService.getSkuGroupsByBarcodeForStockTransfer(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
+        if (skuGroupList == null || skuGroupList.size() <= 0) {
+            addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
+        SkuGroup skuGroup = skuGroupList.get(0);
+
+        StockTransferLineItem stockTransferLineItem = stockTransferDao.getStockTransferLineItemForCheckedOutSkuGrp(skuGroup, stockTransfer);
+        if (stockTransferLineItem == null) {
+            addRedirectAlertMessage(new SimpleMessage("Wrong Barcode for this stock Transfer"));
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
+
+        StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
+        ProductVariant productVariant = skuGroup.getSku().getProductVariant();
+        Warehouse toWarehouse = stockTransfer.getToWarehouse();
+        sku = skuService.findSKU(productVariant, toWarehouse);
+
+        if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
+            checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);
+            checkinSkuGroup.setBarcode(skuGroup.getBarcode());
+            checkinSkuGroup = (SkuGroup) getBaseDao().save(checkinSkuGroup);
+        } else {
+            checkinSkuGroup = stockTransferLineItemAgainstCheckInSkuGrp.getCheckedInSkuGroup();
+        }
+
+        skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+        if (skuItem != null) {
+
+            if (stockTransferLineItem.getCheckedinQty() == null || (!stockTransferLineItem.getCheckedinQty().equals(stockTransferLineItem.getCheckedoutQty()))) {
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                skuItem.setSkuGroup(checkinSkuGroup);
+                stockTransfer.setCheckinDate(HKDateUtil.getNow());
+                stockTransfer.setReceivedBy(loggedOnUser);
+                stockTransferLineItem.setStockTransfer(stockTransfer);
+                stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
+                if (stockTransferLineItem.getCheckedinQty() != null) {
+                    stockTransferLineItem.setCheckedinQty(stockTransferLineItem.getCheckedinQty() + 1L);
+                } else {
+                    stockTransferLineItem.setCheckedinQty(1L);
+                }
+                baseDao.update(stockTransferLineItem);
+//           adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, 1L, loggedOnUser, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, stockTransferLineItem, getInventoryService().getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
+                getInventoryService().checkInventoryHealth(sku.getProductVariant());
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in against this stock transfer "));
+                return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+            }
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("All Sku Item has already been checked in agianst sku group :" + skuGroup.getId()));
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
+
+        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
+    }
+
 
 	public Resolution generateGRNExcel() throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -395,7 +418,7 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
+	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution clearPrintBarcodeFile() {
 		User user = null;
 		if (getPrincipal() != null) {
@@ -432,7 +455,7 @@ public class InventoryCheckinAction extends BaseAction {
 		return new RedirectResolution(AdminHomeAction.class);
 	}
 
-	@Secure(hasAnyPermissions = { PermissionConstants.GRN_CREATION }, authActionBean = AdminPermissionAction.class)
+	@Secure(hasAnyPermissions = {PermissionConstants.GRN_CREATION}, authActionBean = AdminPermissionAction.class)
 	public Resolution downloadPrintBarcodeFile() {
 		User user = null;
 		if (getPrincipal() != null) {
@@ -650,4 +673,13 @@ public class InventoryCheckinAction extends BaseAction {
 	public void setMrp(Double mrp) {
 		this.mrp = mrp;
 	}
+
+    public String getProductVariantBarcode() {
+        return productVariantBarcode;
+    }
+
+    public void setProductVariantBarcode(String productVariantBarcode) {
+        this.productVariantBarcode = productVariantBarcode;
+    }
+
 }

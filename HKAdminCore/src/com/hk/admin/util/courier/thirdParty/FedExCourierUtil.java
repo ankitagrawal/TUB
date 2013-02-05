@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.util.ShipmentServiceMapper;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
 import org.apache.commons.lang.StringUtils;
@@ -63,8 +65,7 @@ import com.fedex.ship.stub.WebAuthenticationDetail;
 import com.fedex.ship.stub.Weight;
 import com.fedex.ship.stub.WeightUnits;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.cache.UserCache;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
@@ -100,7 +101,8 @@ public class FedExCourierUtil {
 
     private String               fedExServerUrl;
 
-    private ShipmentService      shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
+    private ShipmentService shipmentService          = ServiceLocatorFactory.getService(ShipmentService.class);
+    private PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
 
     private ShippingOrderService shippingOrderService     = ServiceLocatorFactory.getService(ShippingOrderService.class);
     private UserService          userService              = ServiceLocatorFactory.getService(UserService.class);
@@ -160,7 +162,7 @@ public class FedExCourierUtil {
                     thirdPartyAwbDetails.setBarcodeList(setBarCodeList(reply, shippingOrder));
                     thirdPartyAwbDetails.setRoutingCode(setRoutingCode(reply));
                     thirdPartyAwbDetails.setCod(shippingOrder.isCOD());
-                    thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPin());
+                    thirdPartyAwbDetails.setPincode(shippingOrder.getBaseOrder().getAddress().getPincode().getPincode());
                 } else {
                     logger.debug("FedEx awb number could not be generated");
                 }
@@ -207,7 +209,7 @@ public class FedExCourierUtil {
         requestedShipment.setShipTimestamp(Calendar.getInstance()); // Ship date and time
         requestedShipment.setDropoffType(DropoffType.REGULAR_PICKUP);
 
-        if (shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder)) {
+        if (ShipmentServiceMapper.isGround(pincodeCourierService.getShipmentServiceType(shippingOrder))) {
             requestedShipment.setServiceType(ServiceType.FEDEX_EXPRESS_SAVER);
         } else {
             requestedShipment.setServiceType(ServiceType.STANDARD_OVERNIGHT);
@@ -480,7 +482,15 @@ public class FedExCourierUtil {
 
         contactRecip.setPersonName(HKAddress.getName());// ("Recipient Name");
         contactRecip.setCompanyName("");// Recipient Company Name");//("Recipient Company Name");
-        contactRecip.setPhoneNumber(HKAddress.getPhone());// ("1234567890");
+
+		String phoneNo = HKAddress.getPhone();
+		if (phoneNo != null && phoneNo.length() >= 10) {
+			String phoneNoWith10Digits = phoneNo.substring(phoneNo.length() - 10);
+			contactRecip.setPhoneNumber(phoneNoWith10Digits);
+		} else {
+        contactRecip.setPhoneNumber(phoneNo);// ("1234567890");
+		}
+		
         recipient.setContact(contactRecip);
 
         Address addressRecip = new Address();
@@ -495,7 +505,7 @@ public class FedExCourierUtil {
         addressRecip.setStateOrProvinceCode(HKAddress.getState());// ("DL");
         // addressRecip.setStateOrProvinceCode(HKAddress.getState());//("DL");
 
-        addressRecip.setPostalCode(HKAddress.getPin());// ("110010");
+        addressRecip.setPostalCode(HKAddress.getPincode().getPincode());// ("110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
         addressRecip.setResidential(new Boolean(true));
@@ -522,10 +532,10 @@ public class FedExCourierUtil {
         // addressRecip.setStreetLines(new String[] { "1 RECIPIENT STREET" });
         addressRecip.setCity(HKAddress.getCity());// "NEWDELHI");
         addressRecip.setStateOrProvinceCode(HKAddress.getState());// "DL");
-        addressRecip.setPostalCode(HKAddress.getPin());// "110010");
+        addressRecip.setPostalCode(HKAddress.getPincode().getPincode());// "110010");
         addressRecip.setCountryCode("IN");
         addressRecip.setCountryName("INDIA");
-        addressRecip.setResidential(new Boolean(true));
+        addressRecip.setResidential(true);
         contactAndAddress.setAddress(addressRecip);
         return contactAndAddress;
     }

@@ -26,7 +26,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.Keys;
@@ -75,7 +75,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     @Autowired
     private              AwbService                  awbService;
     @Autowired
-    private              ShipmentService             shipmentService;
+    private ShipmentService shipmentService;
 
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -135,7 +135,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                 amount = shipmentObj.getShippingOrder().getAmount();
                 cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
                 address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
-                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPin();
+                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
                 paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                 // Creating consignment object and adding to consignmentList.
                 consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));
@@ -150,7 +150,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             //fetching the consignments just created above.
             consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
             //creating consignmentTrackingList
-            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus);
+            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
             //saving it.
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
             addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));

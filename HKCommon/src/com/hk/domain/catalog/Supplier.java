@@ -83,6 +83,8 @@ public class Supplier implements java.io.Serializable {
 	@Column (name = "active", nullable = false)
 	private Boolean active;
 
+	@Column (name = "comments")
+	private String comments;
 
 	public Long getId() {
 		return id;
@@ -265,6 +267,14 @@ public class Supplier implements java.io.Serializable {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
 	@Override

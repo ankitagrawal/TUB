@@ -1,28 +1,7 @@
 package com.hk.web.action.core.payment;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Set;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.util.CryptoUtil;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
 import com.hk.constants.discount.EnumRewardPointMode;
@@ -49,41 +28,56 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
 import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.util.CryptoUtil;
+import net.sourceforge.stripes.validation.Validate;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Set;
 
 @Component
 public class PaymentSuccessAction extends BaseAction {
 
-    private static Logger        logger       = LoggerFactory.getLogger(PaymentSuccessAction.class);
+    private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);
 
     @Validate(required = true, encrypted = true)
-    private String               gatewayOrderId;
+    private String gatewayOrderId;
 
-    private Payment              payment;
-    private Order                order;
-    private PricingDto           pricingDto;
-    private EnumPaymentMode      paymentMode;
-    private String               purchaseDate;
-    private String               couponCode;
-    private int                  couponAmount = 0;
+    private Payment payment;
+    private Order order;
+    private PricingDto pricingDto;
+    private EnumPaymentMode paymentMode;
+    private String purchaseDate;
+    private String couponCode;
+    private int couponAmount = 0;
 
     @Autowired
-    private PaymentDao           paymentDao;
+    private PaymentDao paymentDao;
     @Autowired
-    UserDao                      userDao;
-    @Autowired
-    private OrderService         orderService;
+    UserDao userDao;
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
-    ShipmentService              shipmentService;
+    ShipmentService shipmentService;
     @Autowired
-    RewardPointService           rewardPointService;
+    RewardPointService rewardPointService;
     @Value("#{hkEnvProps['" + Keys.Env.cashBackPercentage + "']}")
-    private Double               cashBackPercentage;
+    private Double cashBackPercentage;
     @Autowired
-    AdminOrderService            adminOrderService;
+    OrderService orderService;
     @Autowired
-    OrderLoggingService          orderLoggingService;
+    OrderLoggingService orderLoggingService;
 
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -107,7 +101,7 @@ public class PaymentSuccessAction extends BaseAction {
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
 
-            adminOrderService.splitBOEscalateSOCreateShipmentAndRelatedTasks(order);
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;
@@ -142,9 +136,10 @@ public class PaymentSuccessAction extends BaseAction {
                                     for (ShippingOrder shippingOrder : shippingOrders) {
                                         shippingOrderService.nullifyCodCharges(shippingOrder);
                                         shipmentService.recreateShipment(shippingOrder);
-                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                                        shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
                                     }
                                 }
+
                                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                                 cartLineItems.removeAll(codCartLineItems);
                                 getBaseDao().deleteAll(codCartLineItems);

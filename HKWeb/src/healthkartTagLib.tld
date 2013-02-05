@@ -322,6 +322,18 @@
     </function>
     <function>
         <description>
+            contains for collections
+        </description>
+        <name>urlContainsAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean urlContainsAnyCategory(java.lang.String,java.lang.String)
+        </function-signature>
+        <example>
+            ${hk:urlContainsAnyCategory(${str1}, ${str2})}
+        </example>
+    </function>
+    <function>
+        <description>
             contains for string
         </description>
         <name>firstStringContainsSecond</name>
@@ -374,6 +386,17 @@
         <function-signature>com.hk.domain.catalog.category.Category topLevelCategory(java.lang.Object)</function-signature>
         <example>
             ${hk:topLevelCategory(${object})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns if product has any category defined in comma separated string
+        </description>
+        <name>hasProductAnyCategory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>boolean hasProductAnyCategory(java.lang.Object,java.lang.String)</function-signature>
+        <example>
+            ${hk:hasProductAnyCategory(${object})}
         </example>
     </function>
     <function>
@@ -646,6 +669,19 @@
 
     <function>
         <description>
+            removes html from text
+        </description>
+        <name>stripHtml</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String stripHtml(java.lang.String)</function-signature>
+        <example>
+            ${hk:stripHtml(${str)}
+        </example>
+    </function>
+
+
+    <function>
+        <description>
             returns applicable offer price based on logged on user ie. General User, B2B User, Preferred User etc.
         </description>
         <name>getApplicableOfferPrice</name>
@@ -749,17 +785,17 @@
             ${hk:getMatchingSku(${object})}
         </example>
     </function>
-    <function>
-        <description>
-            product list for a primary heading in a sorted order.
-        </description>
-        <name>getCategoryHeadingProductsSortedByOrder</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>
-        <example>
-            ${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}
-        </example>
-    </function>
+    <!--<function>-->
+        <!--<description>-->
+            <!--product list for a primary heading in a sorted order.-->
+        <!--</description>-->
+        <!--<name>getCategoryHeadingProductsSortedByOrder</name>-->
+        <!--<function-class>com.hk.taglibs.Functions</function-class>-->
+        <!--<function-signature>java.util.List getCategoryHeadingProductsSortedByOrder(java.lang.Long,java.lang.String)</function-signature>-->
+        <!--<example>-->
+            <!--${hk:getCategoryHeadingProductsSortedByOrder(${id}, ${str})}-->
+        <!--</example>-->
+    <!--</function>-->
     <function>
         <description>
             returns surcharge based on supplier and warehouse state
@@ -1011,6 +1047,17 @@
 
      <function>
         <description>
+            returns Heading Products based on rank
+        </description>
+        <name>getHeadingProductsSortedByRank</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getHeadingProductsSortedByRank(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getHeadingProductsSortedByRank(${id})}
+        </example>
+    </function>
+    <function>
+    <description>
             returns a encrypted orderId
         </description>
         <name>encryptOrderId</name>
@@ -1042,5 +1089,26 @@
             <!--${hk:isOrderForDiscretePackaging(${id})}-->
         </example>
     </function>
-
+	<function>
+		<description>
+			returns ProductVariantSupplierInfo
+		</description>
+		<name>getPVSupplierInfo</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>com.hk.domain.catalog.ProductVariantSupplierInfo getPVSupplierInfo(com.hk.domain.catalog.Supplier,com.hk.domain.catalog.product.ProductVariant)</function-signature>
+		<example>
+			${hk:getPVSupplierInfo(${supplier, productVariant})}
+		</example>
+	</function>
+	<function>
+		<description>
+			returns true if filter heads need to be hidden
+		</description>
+		<name>hideFilterHeads</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>boolean hideFilterHeads(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+		<example>
+			${hk:hideFilterHeads(${o1, o2, o3})}
+		</example>
+	</function>
 </taglib>

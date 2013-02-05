@@ -12,6 +12,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CategoryAction" var="categoryBean" event="pre"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
@@ -41,6 +42,8 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
+  <!--google remarketing page type-->
+  <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
@@ -151,7 +154,7 @@
       <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
            class="small_banner"/>
     </a>
-    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="Free shipping and COD"
+    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_300.jpg" alt="Free shipping and COD"
          class="small_banner"/>
   </div>
 
@@ -187,7 +190,7 @@
     </shiro:hasPermission>
 
     <c:forEach var="heading" items="${categoryBean.headingsWithRankingSetSortedByRanking}">
-      <c:if test="${!empty heading.products}">
+      <c:if test="${!empty hk:getHeadingProductsSortedByRank(heading.id)}">
         <div class="grid_24 alpha omega" style="width: 950px;">
           <c:choose>
             <c:when test="${hk:isNotBlank(heading.link)}">
@@ -227,9 +230,9 @@
         </shiro:hasPermission>
 
         <div class="grid_24" style="width: 950px;">
-          <c:forEach var="product" items='${hk:getCategoryHeadingProductsSortedByOrder(heading.id, categoryBean.category.name)}' begin="0" end="5">
+          <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${product}'/>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}'/>
             </div>
           </c:forEach>
         </div>
@@ -238,7 +241,7 @@
       </c:if>
 
       <shiro:hasPermission name="<%=PermissionConstants.UPLOAD_PRODUCT_CATALOG%>">
-        <c:if test="${empty heading.products}">
+        <c:if test="${empty hk:getHeadingProductsSortedByRank(heading.id)}">
           <div class="grid_24 alpha omega" style="width: 950px;">
             <s:link beanclass="com.hk.web.action.core.catalog.category.PrimaryCategoryHeadingAction"
                     event="addPrimaryCategoryHeadingProducts"
@@ -270,7 +273,7 @@
 		</c:when>
 		<c:otherwise>
 			<iframe
-					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
 					scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 					frameborder="0"></iframe>
 		</c:otherwise>

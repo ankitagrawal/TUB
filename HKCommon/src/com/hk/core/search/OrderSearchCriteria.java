@@ -40,6 +40,8 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date                      paymentStartDate;
     private Date                      paymentEndDate;
 
+    private Boolean                  dropShip;
+
     /**
      * shipping order fields
      */
@@ -118,6 +120,8 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
+
+
 
         if (orderStatusList != null && orderStatusList.size() > 0) {
             criteria.add(Restrictions.in("orderStatus", orderStatusList));
@@ -222,7 +226,18 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         } if (sortByScore) {
             criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         }
-        
+
+        if(dropShip != null  )  {
+             shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
+         }
         return criteria;
+    }
+
+    public Boolean isDropShip() {
+        return dropShip;
+    }
+
+    public void setDropShip(Boolean dropShip) {
+        this.dropShip = dropShip;
     }
 }

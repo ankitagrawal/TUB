@@ -33,7 +33,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
     String shippingOrderClause       = "" ;
     String allSOstatusForReconReport = "";
 
-	  String hqlQuery = "select so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, adr.pin as pincode, "
+	  String hqlQuery = "select so as shippingOrder, so.gatewayOrderId as invoiceId, p.paymentDate as orderDate, user.name as name, adr.city as city, adr.pincode.pincode as pincode, "
 			  + " pm.name as payment, so.amount as total,  aw.courier as courier, aw.awbNumber as awb, ship.shipDate as shipmentDate,"
 			  + " ship.deliveryDate as deliveryDate, coalesce(opr.reconciled, false) as reconciled, os.name as orderStatus, ship.boxWeight as boxWeight,"
 			  + " bs.name as boxSize, so.warehouse as warehouse" + " from OrderPaymentReconciliation opr right join opr.shippingOrder so join so.baseOrder bo join bo.payment p join bo.user user join bo.address adr "
@@ -55,7 +55,7 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
       }
       if (shippingOrderStatusId == null) {
           allSOstatusForReconReport= EnumShippingOrderStatus.SO_Delivered.getId()+","+EnumShippingOrderStatus.SO_Returned.getId()+","
-                  + EnumShippingOrderStatus.SO_Lost.getId()+","+ EnumShippingOrderStatus.SO_Shipped.getId();
+                  + EnumShippingOrderStatus.SO_Lost.getId()+","+ EnumShippingOrderStatus.SO_Shipped.getId()+","+EnumShippingOrderStatus.RTO_Initiated.getId();
           shippingOrderClause = " and os.id in (" + allSOstatusForReconReport+")";
       } else {
           shippingOrderClause = " and os.id = " + shippingOrderStatusId;

@@ -1,12 +1,8 @@
 package com.hk.admin.impl.service.shippingOrder;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import com.hk.domain.order.ReplacementOrderReason;
+import com.hk.domain.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +15,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
@@ -27,9 +23,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
@@ -42,6 +35,7 @@ import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
 
 @Service
@@ -70,6 +64,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
+	@Autowired
+	UserService userService;
 //	@Autowired
 //	SMSManager smsManager;
 
@@ -82,21 +78,21 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
-            }
             getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
+                awbService.preserveAwb(awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
 	            shipmentService.delete(shipmentToDelete);
 	            //shippingOrderService.save(shippingOrder);
             }
 			getShippingOrderService().save(shippingOrder);
+        }
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
         }
     }
 
@@ -158,10 +154,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
+			//shipmentService.createShipment(shippingOrder);
 	        // auto escalate shipping orders if possible
-	        shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+	        //getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
 
-	        shipmentService.createShipment(shippingOrder);
+			orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(baseOrder);
             return shippingOrder;
         }
         return null;
@@ -200,6 +197,19 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 //	    smsManager.sendOrderDeliveredSMS(shippingOrder);
 	    return shippingOrder;
     }
+
+    @Transactional
+       public ShippingOrder markShippingOrderAsInstalled(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Installed));
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Installed);
+           Order order = shippingOrder.getBaseOrder();
+           getAdminOrderService().markOrderAsCompletedWithInstallation(order);
+//	    smsManager.sendOrderDeliveredSMS(shippingOrder);
+           return shippingOrder;
+       }
+
+
 
     @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
@@ -246,7 +256,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         if (shipment != null) {
             shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-            getShipmentService().saveShipmentDate(shipment);
+            shipment.setShipDate(new Date());
+            getShipmentService().save(shipment);
         }
 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
@@ -301,6 +312,40 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         return shippingOrder;
     }
+
+    @Transactional
+       public ShippingOrder moveShippingOrderBackToDropShippingQueue(ShippingOrder shippingOrder) {
+           shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
+//           getAdminInventoryService().reCheckInInventory(shippingOrder);
+           getShippingOrderService().save(shippingOrder);
+           getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_BackToDropShippingQueue);
+           return shippingOrder;
+       }
+
+	public ReplacementOrderReason getRTOReasonForShippingOrder(ShippingOrder shippingOrder) {
+		String rtoReason = null;
+		ReplacementOrderReason replacementOrderReason = null;
+		for (ShippingOrderLifecycle shippingOrderLifecycle : shippingOrder.getShippingOrderLifecycles()){
+			if(shippingOrderLifecycle.getShippingOrderLifeCycleActivity().getId().equals(EnumShippingOrderLifecycleActivity.RTO_Initiated.getId())){
+				if(shippingOrderLifecycle.getComments() != null){
+					replacementOrderReason = getReplacementOrderReasonByName(shippingOrderLifecycle.getComments());
+				}
+			}
+		}
+		return replacementOrderReason;
+	}
+
+	public ReplacementOrderReason getReplacementOrderReasonByName(String replacementOrderReasonString) {
+		List<ReplacementOrderReason> replacementOrderReasonList = getAdminShippingOrderDao().getAll(ReplacementOrderReason.class);
+		for(ReplacementOrderReason replacementOrderReason : replacementOrderReasonList){
+			if(replacementOrderReasonString.contains(replacementOrderReason.getName())){
+				return replacementOrderReason;
+			}
+		}
+		return null;
+	}
+
+
 
     public ShippingOrderService getShippingOrderService() {
         return shippingOrderService;
@@ -385,4 +430,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         this.orderService = orderService;
     }
 
+	public UserService getUserService() {
+		return userService;
+	}
 }

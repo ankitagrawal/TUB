@@ -2,6 +2,7 @@ package com.hk.admin.impl.task.dbmaster;
 
 import com.hk.db.seed.courier.*;
 import com.hk.db.seed.order.*;
+import com.hk.db.seed.sku.SkuItemStatusSeedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,6 +149,10 @@ public class MasterDataService {
     ConsignmentLifecycleStatusSeedData consignmentLifecycleStatusSeedData;
 	@Autowired
 	ReplacementOrderReasonSeedData replacementOrderReasonSeedData;
+	@Autowired
+	DispatchLotStatusSeedData dispatchLotStatusSeedData;
+	@Autowired
+	SkuItemStatusSeedData skuItemStatusSeedData;
 
 	public void insert() {
 
@@ -304,5 +309,11 @@ public class MasterDataService {
 
 	    logger.debug("inserting consignment Replacement order reasons");
         replacementOrderReasonSeedData.invokeInsert();
-    }
+
+		logger.debug("inserting Dispatch Lot Status");
+		dispatchLotStatusSeedData.invokeInsert();
+
+		logger.debug("inserting Sku Item Status");
+		skuItemStatusSeedData.invokeInsert();
+	}
 }

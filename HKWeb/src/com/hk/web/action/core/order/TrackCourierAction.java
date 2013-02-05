@@ -1,9 +1,11 @@
-	package com.hk.web.action.core.order;
+package com.hk.web.action.core.order;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentTracking;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -16,13 +18,16 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.courier.EnumQuantiumCourierCodes;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.exception.HealthkartCheckedException;
 
@@ -30,6 +35,7 @@ import com.hk.exception.HealthkartCheckedException;
  * User: rahul
  * Time: 15 Feb, 2010 5:38:57 PM
  */
+@Component
 public class TrackCourierAction extends BaseAction {
 
     private static            Logger                      logger                 = LoggerFactory.getLogger(TrackCourierAction.class);
@@ -53,6 +59,9 @@ public class TrackCourierAction extends BaseAction {
 	@Autowired
 	ConsignmentService consignmentService;
 
+	@Autowired
+	ThirdPartyAwbService thirdPartyAwbService;
+
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -70,8 +79,9 @@ public class TrackCourierAction extends BaseAction {
                 resolution = new RedirectResolution("http://trackntrace.aflwiz.com/aflwizhtmltrack", false).addParameter("shpntnum", trackingId);
                 break;
             case Speedpost:
-                resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
-                break;
+                //resolution = new RedirectResolution("/pages/indiaPostCourier.jsp");
+                resolution = new RedirectResolution("http://services.ptcmysore.gov.in/Speednettracking/Track.aspx", false).addParameter("articlenumber", trackingId);
+				break;
             case FirstFLight:
                 resolution = new RedirectResolution("http://www.firstflight.net/n_contrac_new.asp", false).addParameter("tracking1", trackingId);
                 break;
@@ -89,6 +99,7 @@ public class TrackCourierAction extends BaseAction {
                 break;
 
             case Delhivery:
+			case Delhivery_Surface:
                 courierName = CourierConstants.DELHIVERY;
                 JsonObject jsonObject = null;
                 try {
@@ -108,18 +119,17 @@ public class TrackCourierAction extends BaseAction {
                 }
                 break;
             case BlueDart:
-            case BlueDart_COD:
                 courierName = CourierConstants.BLUEDART;
-                Element ele = null;
+                Element xmlElement = null;
                 try {
-                    ele = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
+                    xmlElement = courierStatusUpdateHelper.updateDeliveryStatusBlueDart(trackingId);
                 } catch (HealthkartCheckedException hce) {
                     logger.debug("Exception occurred in TrackCourierAction");
                 }
-                if (ele != null) {
-                    String responseStatus = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                if (xmlElement != null) {
+                    String responseStatus = xmlElement.getChildText(CourierConstants.BLUEDART_STATUS);
                     if (!responseStatus.equals(CourierConstants.BLUEDART_ERROR_MSG)) {
-                        status = ele.getChildText(CourierConstants.BLUEDART_STATUS);
+                        status = xmlElement.getChildText(CourierConstants.BLUEDART_STATUS);
                     }
                     resolution = new ForwardResolution("/pages/courierDetails.jsp");
                 } else {
@@ -148,6 +158,19 @@ public class TrackCourierAction extends BaseAction {
                     resolution = new RedirectResolution("/pages/trackShipment.jsp");
                 }
                 break;
+			case FedEx:
+			case FedEx_Surface:	
+				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
+				courierName = CourierConstants.FEDEX;
+        		ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);        
+				status = thirdPartyAwbService.trackFedExShipment(trackingId);
+				if(status != null){
+				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
+				}
+				else {
+                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+                }
+				break;
 
 	        case HK_Delivery:
 		        if (trackingId != null) {
@@ -164,12 +187,41 @@ public class TrackCourierAction extends BaseAction {
 		        }
 	            
 	            break;
+
+			case Quantium:
+				courierName = CourierConstants.QUANTIUM;
+				resolution = getStatusForQuantium();
+				break;
+
+			case IndiaOnTime:
+				courierName = CourierConstants.INDIAONTIME;
+				resolution = new RedirectResolution("http://www.indiaontime.com/track-awb.php", false).addParameter("awbno", trackingId);
+				break;
+			
             default:
                 resolution = new RedirectResolution("/pages/trackShipment.jsp");
 
         }
         return resolution;
     }
+
+	Resolution getStatusForQuantium(){
+		Element xmlElement = null;
+		try {
+			xmlElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
+		} catch (HealthkartCheckedException hce) {
+			logger.debug("Exception occurred in TrackCourierAction");
+		}
+		if (xmlElement != null) {
+			String courierDeliveryStatus = xmlElement.getChildText(CourierConstants.QUANTIUM_STATUS);
+			if (courierDeliveryStatus != null) {
+				status = EnumQuantiumCourierCodes.valueOf(courierDeliveryStatus).getName();				
+			}
+			return new ForwardResolution("/pages/courierDetails.jsp");
+		} else {
+			return new RedirectResolution("/pages/trackShipment.jsp");
+		}
+	}	
 
     public String getTrackingId() {
         return trackingId;

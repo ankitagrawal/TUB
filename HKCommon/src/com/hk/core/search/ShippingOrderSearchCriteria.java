@@ -2,6 +2,7 @@ package com.hk.core.search;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
@@ -20,25 +21,28 @@ import com.hk.domain.order.ShippingOrderStatus;
  */
 public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
-    private List<Awb>                                awbList;
-    private List<Courier>                            courierList;
-    private Long                                     warehouseId;
-    private boolean                                  isServiceOrder    = false;
-    private Date                                     activityStartDate;
-    private Date                                     activityEndDate;
-    private String                                   basketCategory;
-    private Long                                     baseOrderId;
-    private String                                   baseGatewayOrderId;
-    private Date                                     shipmentStartDate;
-    private Date                                     shipmentEndDate;
+    private List<Awb> awbList;
+    private List<Courier> courierList;
+    private Long warehouseId;
+    private boolean isServiceOrder = false;
+    private Date activityStartDate;
+    private Date activityEndDate;
+    private String basketCategory;
+    private Long baseOrderId;
+    private String baseGatewayOrderId;
+    private Date shipmentStartDate;
+    private Date shipmentEndDate;
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
-    private List<ShippingOrderStatus>                shippingOrderStatusList;
+    private List<ShippingOrderStatus> shippingOrderStatusList;
 
-    private boolean                                  searchForPrinting = false;
-	private Date                                     lastEscStartDate;
-	private Date                                     lastEscEndDate;
-	private Zone                                     zone;
+    private boolean searchForPrinting = false;
+    private Date lastEscStartDate;
+    private Date lastEscEndDate;
+    private Zone zone;
+    private Set<String> shippingOrderCategories;
+    private boolean dropShipping = false;
+    private boolean installable = false;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
         this.searchForPrinting = searchForPrinting;
@@ -123,44 +127,50 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-	public ShippingOrderSearchCriteria setShipmentZone(Zone zone) {
-		this.zone = zone;
-		return this;
-	}
+    public ShippingOrderSearchCriteria setShipmentZone(Zone zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+        this.shippingOrderCategories = shippingOrderCategories;
+        return this;
+    }
+
 
     protected DetachedCriteria buildSearchCriteriaFromBaseCriteria() {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
-		if(lastEscStartDate != null && lastEscEndDate != null) {
-			criteria.add(Restrictions.between("lastEscDate", lastEscStartDate, lastEscEndDate));
-		}
+        if (lastEscStartDate != null && lastEscEndDate != null) {
+            criteria.add(Restrictions.between("lastEscDate", lastEscStartDate, lastEscEndDate));
+        }
 
         if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0) {
             criteria.add(Restrictions.in("shippingOrderStatus", shippingOrderStatusList));
         }
 
-	    DetachedCriteria shipmentCriteria = null;
-	    if (awbList != null && awbList.size() > 0) {
-		    shipmentCriteria = criteria.createCriteria("shipment");
+        DetachedCriteria shipmentCriteria = null;
+        if (awbList != null && awbList.size() > 0) {
+            shipmentCriteria = criteria.createCriteria("shipment");
 
-		    shipmentCriteria.add(Restrictions.in("awb", awbList));
-	    }
+            shipmentCriteria.add(Restrictions.in("awb", awbList));
+        }
 
-	    if(zone != null){
-		    if(shipmentCriteria == null){
-			     shipmentCriteria = criteria.createCriteria("shipment");
-		    }
-		    shipmentCriteria.add(Restrictions.eq("zone.id", zone.getId()));
-	    }
+        if (zone != null) {
+            if (shipmentCriteria == null) {
+                shipmentCriteria = criteria.createCriteria("shipment");
+            }
+            shipmentCriteria.add(Restrictions.eq("zone.id", zone.getId()));
+        }
 
-	    DetachedCriteria awbCriteria = null;
-	    if (courierList != null && !courierList.isEmpty()) {
-		    if (shipmentCriteria == null) {
-			    shipmentCriteria = criteria.createCriteria("shipment");
-		    }
-		    awbCriteria = shipmentCriteria.createCriteria("awb");
-		    awbCriteria.add(Restrictions.in("courier", courierList));
-	    }
+        DetachedCriteria awbCriteria = null;
+        if (courierList != null && !courierList.isEmpty()) {
+            if (shipmentCriteria == null) {
+                shipmentCriteria = criteria.createCriteria("shipment");
+            }
+            awbCriteria = shipmentCriteria.createCriteria("awb");
+            awbCriteria.add(Restrictions.in("courier", courierList));
+        }
 
         if (shipmentStartDate != null && shipmentEndDate != null) {
             if (shipmentCriteria == null) {
@@ -220,36 +230,74 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             if (sortByScore) {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             }
-        }else{
+        } else {
             criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
             baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
-        
+
+
+        if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
+            criteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
+        }
+
+
+        DetachedCriteria lineItemsCriteria = null;
+        DetachedCriteria skuCriteria = null;
+        DetachedCriteria productVariantCriteria = null;
+        DetachedCriteria productCriteria = null;
+
+        if (isDropShipping()) {
+            criteria.add(Restrictions.eq("isDropShipping", dropShipping));
+        }
+
+         if (isInstallable()){
+                lineItemsCriteria = criteria.createCriteria("lineItems");
+                skuCriteria = lineItemsCriteria.createCriteria("sku");
+                productVariantCriteria = skuCriteria.createCriteria("productVariant");
+                productCriteria = productVariantCriteria.createCriteria("product");
+                productCriteria.add(Restrictions.eq("installable", true));
+            }
 
         /*
-         * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-         * baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
-         */
+        * paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
+        * baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+        */
 
         return criteria;
     }
 
-	public Date getLastEscStartDate() {
-		return lastEscStartDate;
-	}
+    public Date getLastEscStartDate() {
+        return lastEscStartDate;
+    }
 
-	public ShippingOrderSearchCriteria setLastEscStartDate(Date lastEscStartDate) {
-		this.lastEscStartDate = lastEscStartDate;
-		return this;
-	}
+    public boolean isDropShipping() {
+        return dropShipping;
+    }
 
-	public Date getLastEscEndDate() {
-		return lastEscEndDate;
-	}
+    public void setDropShipping(boolean dropShipping) {
+        this.dropShipping = dropShipping;
+    }
 
-	public ShippingOrderSearchCriteria setLastEscEndDate(Date lastEscEndDate) {
-		this.lastEscEndDate = lastEscEndDate;
-		return this;
-	}
+    public ShippingOrderSearchCriteria setLastEscStartDate(Date lastEscStartDate) {
+        this.lastEscStartDate = lastEscStartDate;
+        return this;
+    }
+
+    public Date getLastEscEndDate() {
+        return lastEscEndDate;
+    }
+
+    public ShippingOrderSearchCriteria setLastEscEndDate(Date lastEscEndDate) {
+        this.lastEscEndDate = lastEscEndDate;
+        return this;
+    }
+
+    public boolean isInstallable() {
+        return installable;
+    }
+
+    public void setInstallable(boolean installable) {
+        this.installable = installable;
+    }
 }

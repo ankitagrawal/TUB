@@ -11,6 +11,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -110,6 +111,12 @@ public class EditPurchaseOrderAction extends BaseAction {
 							}
 						}
 					}
+					if(purchaseOrder != null) {
+						ProductVariantSupplierInfo productVariantSupplierInfo = Functions.getPVSupplierInfo(purchaseOrder.getSupplier(), pv);
+						if(productVariantSupplierInfo != null) {
+							dataMap.put("historicalFillRate", productVariantSupplierInfo.getFillRate());
+						}
+					}
 					dataMap.put("product", pv.getProduct().getName());
 					dataMap.put("options", pv.getOptionsCommaSeparated());
 					HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
@@ -156,7 +163,11 @@ public class EditPurchaseOrderAction extends BaseAction {
 				discountRatio = purchaseOrder.getDiscount() / purchaseOrder.getPayable();
 			}
 			for (PoLineItem poLineItem : poLineItems) {
-				if (poLineItem.getQty() != null) {
+					if (poLineItem.getQty() != null) {
+					if(poLineItem.getMrp() < poLineItem.getCostPrice()){
+						addRedirectAlertMessage(new SimpleMessage("MRP cannot be less than cost price for variant " + poLineItem.getProductVariant().getId()));
+						return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+					}
 					if (poLineItem.getQty() == 0 && poLineItem.getId() != null) {
 						getBaseDao().delete(poLineItem);
 					} else if (poLineItem.getQty() > 0) {

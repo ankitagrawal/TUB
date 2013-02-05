@@ -93,8 +93,8 @@ public class AdminEmailManager {
     private String hkReportAdminEmailsString = null;
     @Value("#{hkEnvProps['" + Keys.Env.marketingAdminEmails + "']}")
     private String marketingAdminEmailsString = null;
-	@Value("#{hkEnvProps['" + Keys.Env.logisticsAdminEmails + "']}")
-	private String logisticsAdminEmails;
+	@Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
+	private String logisticsOpsEmails;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
@@ -872,9 +872,22 @@ public class AdminEmailManager {
 			valuesMap.put("cod", "No");
 		}
 
-	Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
-	return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsAdminEmails,
-	EmailTemplateConstants.operationsTeam);
+		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.awbStatusEmail);
+		return emailService.sendHtmlEmail(freemarkerTemplate,valuesMap,logisticsOpsEmails,EmailTemplateConstants.operationsTeam);
+	}
+
+	public boolean sendNoShipmentEmail(String message, ShippingOrder shippingOrder, Order baseOrder){
+		HashMap valuesMap = new HashMap();
+		if(shippingOrder != null){
+			valuesMap.put("orderId", shippingOrder.getGatewayOrderId());
+		}
+		else{
+			valuesMap.put("orderId", baseOrder.getGatewayOrderId());
+		}
+		valuesMap.put("message", message);
+		
+		Template freemarTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.courierShipmentFail);
+		return emailService.sendHtmlEmail(freemarTemplate, valuesMap, logisticsOpsEmails, EmailTemplateConstants.operationsTeam);
 	}
 
     public boolean sendOrderDeliveredEmail(Order order) {
@@ -895,6 +908,13 @@ public class AdminEmailManager {
 
         valuesMap.put(EmailMapKeyConstants.feedbackPage, feedbackPageUrl);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderDeliveredEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
+    }
+
+     public boolean sendOrderInstalltionEmail(Order order) {
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("order", order);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderInstalledEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 
@@ -923,6 +943,8 @@ public class AdminEmailManager {
 		Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.poApprovedEmail);
 		return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, purchaseOrder.getCreatedBy().getEmail(), purchaseOrder.getCreatedBy().getName());
 	}
+
+
 
     static enum Product_Status{
 

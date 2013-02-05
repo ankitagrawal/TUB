@@ -5,6 +5,8 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.EnumPermission" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -196,6 +198,19 @@
 					return false;
 				}
 
+				var invoiceDateString = $('#invoice-date').val();
+				var dateValues = invoiceDateString.split("-");
+				var invoiceDate = new Date();
+
+				invoiceDate.setYear(parseInt(dateValues[0]));
+				invoiceDate.setMonth(parseInt(dateValues[1]) - 1);
+				invoiceDate.setDate(parseInt(dateValues[2]));
+				if (invoiceDate > new Date()) {
+					alert("Invoice date cannot be in future");
+					return false;
+				}
+
+
 				var returnFalse = false;
 				$.each($('.receivedQuantity'), function(index, value){
 					var valueChangeRow = $(this).parents('.lineItemRow');
@@ -272,7 +287,7 @@
 	</tr>
 	<tr>
 		<td>Invoice Date <em class="mandatory">*</em></td>
-		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.invoiceDate"/></td>
+		<td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="grn.invoiceDate" id="invoice-date"/></td>
 		<td>Invoice Number <em class="mandatory">*</em></td>
 		<td><s:text name="grn.invoiceNumber" class="invoiceNumber"/></td>
 		<td></td>
@@ -330,7 +345,7 @@
 		<th>Tax</th>
 		<th>Surcharge</th>
 		<th>Payable</th>
-		<th>Weight</th>
+		<th>Weight <br/>(in gms)</th>
 		<th>Length</th>
 		<th>Breadth</th>
 		<th>Height</th>
@@ -476,8 +491,9 @@
 <div class="variantDetails info"></div>
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
-<s:submit name="save" value="Save" class="requiredFieldValidator"/>
-<%--todo rahul: need to remove this add new row button added for finace team on 29-Nov-2012--%>
+<shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
+	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
+</shiro:hasPermission>
 <%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>

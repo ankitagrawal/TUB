@@ -43,84 +43,63 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
                 <#--${productLineItem.qty/pricingDto.shippingLineCount}-->
                 ${productLineItem.qty}
             </td>
-            <td><span
-                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span> ${productLineItem.hkPrice}
-            </td>
+            <td>
+				<#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
+				<span
+					style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+				</#if>
+				${productLineItem.hkPrice}
+			</td>
             <td> ${productLineItem.hkPrice * productLineItem.qty} </td>
         </tr>
         </#list>
     </table>
-    <#--<#if pricingDto.totalDiscount &gt; 0 >-->
-    <#--<h3>Discounts </h3>-->
-    <#--</#if>-->
-    <#--<table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">-->
-    <#--<#list pricingDto.productLineItems as productLineItem>-->
-    <#--<#if productLineItem.discountOnHkPrice &gt; 0>-->
-    <#--<tr>-->
-    <#--<td width="150">${productLineItem.productVariant.product.name}<br/>-->
-    <#--<em style="font-size:0.9em; color:#666"><#list productLineItem.productVariant.productOptions as productOption>-->
-    <#--${productOption.name} ${productOption.value}-->
-    <#--</#list></em>-->
-    <#--</td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50">${productLineItem.discountOnHkPrice}</td>-->
-    <#--</tr>-->
-    <#--</#if>-->
-    <#--</#list>-->
-    <#--<#if pricingDto.orderLevelDiscount &gt; 0>-->
-    <#--<tr>-->
-    <#--<td width="150">Order Discount</td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50">${-pricingDto.orderLevelDiscount}</td>-->
-    <#--</tr>-->
-    <#--</#if>-->
-    <#--<#if pricingDto.shippingDiscount &gt; 0>-->
-    <#--<tr>-->
-    <#--<td width="150">Shipping Discount</td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50"></td>-->
-    <#--<td width="50">${pricingDto.shippingDiscount}</td>-->
-    <#--</tr>-->
-    <#--</#if>-->
-    <#--</table>-->
+    
 </div>
 
+
 <div>
-    <h3>Order Summary</h3>
-    <table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
-        <tr>
-            <td>Item Total</td>
-            <td>
-                ${pricingDto.productsHkSubTotal}
-            </td>
-        </tr>
-        <tr>
-            <td>Shipping</td>
-            <td>
-                ${pricingDto.shippingSubTotal - pricingDto.shippingDiscount}
-                <#if pricingDto.shippingLineCount &gt; 1>
-                (${pricingDto.shippingLineCount} addresses)
-                </#if>
-            </td>
-        </tr>
-        <tr>
-            <td>Discount</td>
-            <td>
-                ${pricingDto.totalDiscount - pricingDto.shippingDiscount}
-                <#if pricingDto.shippingLineCount &gt; 1>
-                (${pricingDto.shippingLineCount} addresses)
-                </#if>
-            </td>
-        </tr>
-        <tr>
-            <td><strong>Grand Total</strong></td>
-            <td>
-                <strong>${pricingDto.grandTotalPayable}</strong>
-            </td>
-        </tr>
-    </table>
+	<h3>Order Summary</h3>
+	<table cellpadding="5" cellspacing="0" border="1" style="font-size:12px;">
+		<tr>
+			<td>Item Total</td>
+			<td>
+				${pricingDto.productsHkSubTotal}
+			</td>
+		</tr>
+		<tr>
+			<td>Discount</td>
+			<td>
+				${pricingDto.totalDiscount - pricingDto.shippingDiscount}
+			</td>
+		</tr>
+		<tr>
+			<td>Redeemed Reward Points</td>
+			<td>
+				${pricingDto.rewardPointTotal}
+			</td>
+		</tr>
+		<tr>
+			<td>Shipping Charges</td>
+			<td>
+				${pricingDto.shippingSubTotal - pricingDto.shippingDiscount}
+			</td>
+		</tr>
+		<#if order.payment.paymentMode.id = 40>
+		<tr>
+			<td>COD Charges</td>
+			<td>
+				${pricingDto.codSubTotal - pricingDto.codDiscount}
+			</td>
+		</tr>
+		</#if>
+		<tr>
+			<td><strong>Grand Total</strong></td>
+			<td>
+				<strong>${pricingDto.grandTotalPayable}</strong>
+			</td>
+		</tr>
+	</table>
 </div>
 
 <div>
@@ -159,7 +138,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     <#if order.address.line2??>
     ${order.address.line2}<br/>
     </#if>
-    ${order.address.city} - ${order.address.pin}<br/>
+    ${order.address.city} - ${order.address.pincode.pincode}<br/>
     ${order.address.state} (India)<br/>
     Ph: ${order.address.phone}<br/>
 </p>

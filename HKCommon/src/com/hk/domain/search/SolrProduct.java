@@ -66,6 +66,10 @@ public class SolrProduct {
 
     @Field
     private
+    List<String> variantCommaNames = new ArrayList<String>();
+
+    @Field
+    private
     String h1;
 
     @Field
@@ -172,6 +176,14 @@ public class SolrProduct {
     @Field
     private
     boolean isCODAllowed;
+
+    @Field
+    private
+    String productUrl;
+
+    @Field
+    private
+    String smallImageUrl;
 
 
     public
@@ -446,6 +458,30 @@ public class SolrProduct {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public String getSmallImageUrl() {
+        return smallImageUrl;
+    }
+
+    public void setSmallImageUrl(String smallImageUrl) {
+        this.smallImageUrl = smallImageUrl;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
+    }
+
+    public List<String> getVariantCommaNames() {
+        return variantCommaNames;
+    }
+
+    public void setVariantCommaNames(List<String> variantCommaNames) {
+        this.variantCommaNames = variantCommaNames;
     }
 
     public SolrProduct(){

@@ -1,25 +1,19 @@
 package com.hk.web.action.admin.courier;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.FileBean;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.pact.service.courier.PincodeRegionZoneService;
+import com.hk.admin.util.helper.XslPincodeParser;
+import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.domain.core.Pincode;
+import com.hk.domain.courier.PincodeCourierMapping;
+import com.hk.domain.courier.PincodeRegionZone;
+import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,103 +21,95 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.util.XslParser;
-import com.hk.constants.core.Keys;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.CourierServiceInfo;
-import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.util.XslGenerator;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Secure(hasAnyPermissions = { PermissionConstants.SEARCH_ORDERS })
 @Component
 public class MasterPincodeAction extends BaseAction {
     @Autowired
-    PincodeDao                       pincodeDao;
+    CourierService courierService;
     @Autowired
-    CourierServiceInfoDao            courierServiceInfoDao;
+    PincodeRegionZoneService pincodeRegionZoneService;
     @Autowired
-    CourierService                   courierService;
+    PincodeService pincodeService;
     @Autowired
-    XslGenerator                     xslGenerator;
+    BaseDao baseDao;
+    @Autowired
+    XslPincodeParser xslPincodeParser;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                           adminDownloadsPath;
-
-    // @Named(Keys.Env.adminUploads)
+    String adminDownloadsPath;
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                           adminUploadsPath;
+    String adminUploadsPath;
+
+    FileBean fileBean;
+
+    private static Logger logger = LoggerFactory.getLogger(MasterPincodeAction.class);
+    private String pincodeString;
+    private Pincode pincode;
+    private PincodeRegionZone pincodeRegionZone;
+    private List<PincodeRegionZone> pincodeRegionZoneList = null;
+    private List<Pincode> pincodeList;
+
+
+    List<PincodeCourierMapping> pincodeCourierMappings;
+    Map<String, Boolean> applicableShipmentServices = new HashMap<String, Boolean>();
 
     @Autowired
-    XslParser                        xslParser;
+    PincodeCourierService pincodeCourierService;
 
-    FileBean                         fileBean;
-
-    private static Logger            logger             = LoggerFactory.getLogger(MasterPincodeAction.class);
-    private Long                     pincodesInSystem   = 0L;
-    private String                   pincodeString;
-    private Pincode                  pincode;
-    private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
 
     @DefaultHandler
+    @DontValidate
     public Resolution pre() {
-        try {
-            pincodesInSystem = Long.valueOf(pincodeDao.getAll(Pincode.class).size());
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
+        return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+    }
+
+    @DontValidate
+    @Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
+    public Resolution search() {
+        pincode = pincodeService.getByPincode(pincodeString);
+        if (pincode != null) {
+            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, null, null, true);
+            applicableShipmentServices = pincodeCourierService.generateDetailedAnalysis(pincodeCourierMappings);
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
         }
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
-    public Resolution search() {
-        try {
-            pincode = pincodeDao.getByPincode(pincodeString);
-            if (pincode != null) {
-                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false,null);
-                return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-            }
-            // return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-        }
-        addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
-        return new RedirectResolution(MasterPincodeAction.class);
-    }
-
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
-        if (pincode == null || StringUtils.isBlank(pincode.getPincode()) || pincode.getCity() == null ||pincode.getState() == null
-                || pincode.getPincode().length() < 6 || (!StringUtils.isNumeric(pincode.getPincode()))) {
-            addRedirectAlertMessage(new SimpleMessage("Enter values correctly."));
-            return new RedirectResolution(MasterPincodeAction.class);
+        Pincode dbPincode = pincodeService.getByPincode(pincodeString);
+        if (dbPincode != null && !dbPincode.getCity().equals(pincode.getCity())) {
+            pincode = pincodeService.save(pincode);
+            pincodeRegionZoneService.assignPincodeRegionZoneToPincode(pincode);
+            addRedirectAlertMessage(new SimpleMessage("Assigned Region Zone !!!!"));
+            return new RedirectResolution(MasterPincodeAction.class, "searchPincodeRegion").addParameter("pincodeString", pincode.getPincode());
+        } else if(dbPincode==null){
+          pincode = pincodeService.save(pincode);
+          addRedirectAlertMessage(new SimpleMessage("Pincode changes saved Successfully"));
+          return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
+          }
+          else {
         }
-        Pincode pincodeByCode = pincodeDao.getByPincode(pincode.getPincode());
-        if (pincodeByCode != null && pincode.getId() == null) {
-            pincodeByCode.setLocality(pincode.getLocality());
-            pincodeByCode.setCity(pincode.getCity());
-            pincodeByCode.setState(pincode.getState());
-            pincodeByCode.setRegion(pincode.getRegion());
-            pincodeByCode.setDefaultCourier(pincode.getDefaultCourier());
-            pincodeDao.save(pincodeByCode);
-        } else {
-            pincodeDao.save(pincode);
-        }
-        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        return new RedirectResolution(CourierServiceInfoAction.class).addParameter("pincode", pincode.getPincode());
+            addRedirectAlertMessage(new SimpleMessage("Pincode already exist in the Database!!!"));
+            return new RedirectResolution(MasterPincodeAction.class, "search").addParameter("pincodeString", pincode.getPincode());
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution generatePincodeExcel() throws Exception {
-        List<Pincode> pincodeList = new ArrayList<Pincode>();
-
-        pincodeList = pincodeDao.getAll(Pincode.class);
-
+        List<Pincode> pincodeList = baseDao.getAll(Pincode.class);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
 
-        xslGenerator.generatePincodeXsl(pincodeList, excelFilePath);
-        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+        xslPincodeParser.generatePincodeXsl(pincodeList, excelFilePath);
+        addRedirectAlertMessage(new SimpleMessage("Download Complete"));
         return new Resolution() {
 
             public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -143,25 +129,24 @@ public class MasterPincodeAction extends BaseAction {
         };
     }
 
-	public Resolution uploadPincodeExcel() throws Exception {
-		if (fileBean == null) {
-			addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
-			return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
-		}
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPLOAD}, authActionBean = AdminPermissionAction.class)
+    public Resolution uploadPincodeExcel() throws Exception {
+        if (fileBean == null) {
+            addRedirectAlertMessage(new SimpleMessage("Choose File to Upload "));
+            return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
+        }
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/pincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
 
         try {
-            Set<Pincode> pincodeSet = xslParser.readPincodeList(excelFile);
+            Set<Pincode> pincodeSet = xslPincodeParser.readPincodeList(excelFile);
             for (Pincode pincode : pincodeSet) {
-                if (pincode != null)
-                    pincodeDao.save(pincode);
-                logger.info("inserting or updating:" + pincode.getPincode());
+                pincodeService.save(pincode);
             }
         } catch (Exception e) {
-            logger.error("Exception while reading excel sheet.", e);
+            logger.error("Exception while reading excel sheet.", e.getMessage());
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
             return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
         }
@@ -171,8 +156,59 @@ public class MasterPincodeAction extends BaseAction {
         return new ForwardResolution("/pages/admin/searchAndAddPincodes.jsp");
     }
 
-    public Long getPincodesInSystem() {
-        return pincodesInSystem;
+  public Resolution directToPincodeRegionZone(){
+    return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+  }
+    public Resolution savePincodeRegionList() {
+        for (PincodeRegionZone pincodeRegionZone : pincodeRegionZoneList) {
+            pincodeRegionZoneService.saveOrUpdate(pincodeRegionZone);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Pincode Region saved"));
+        return new RedirectResolution("/pages/admin/addPincodeRegionZone.jsp");
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_UPDATE}, authActionBean = AdminPermissionAction.class)
+    public Resolution savePincodeRegion() {
+       if(pincodeRegionZone!=null){
+        if (pincodeRegionZone.getPincode() == null) {
+            addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
+        } else {
+            try {
+                PincodeRegionZone pincodeRegionZoneDb = pincodeRegionZoneService.getPincodeRegionZone(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
+                if (pincodeRegionZoneDb != null) {
+                    pincodeRegionZoneDb.setRegionType(pincodeRegionZone.getRegionType());
+                } else {
+                    pincodeRegionZone.setPincode(pincode);
+                    pincodeRegionZoneDb = pincodeRegionZone;
+                }
+                pincodeRegionZoneService.save(pincodeRegionZoneDb);
+            } catch (Exception ex) {
+                addRedirectAlertMessage(new SimpleMessage("EXCEPTION IN SAVING" + ex.getMessage()));
+                return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+            }
+            addRedirectAlertMessage(new SimpleMessage("Pincode region saved"));
+        }
+    }
+        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_MPA_VIEW}, authActionBean = AdminPermissionAction.class)
+    public Resolution searchPincodeRegion() {
+        Pincode pincode = pincodeRegionZone.getPincode();
+        if (pincode == null) {
+            addRedirectAlertMessage(new SimpleMessage("Pincode does not exist in System"));
+        } else {
+            pincodeRegionZoneList = pincodeRegionZoneService.getPincodeRegionZoneList(pincodeRegionZone.getCourierGroup(), pincode, pincodeRegionZone.getWarehouse());
+            if (pincodeRegionZoneList == null) {
+                addRedirectAlertMessage(new SimpleMessage("Pincode Region zone does not exist for Pincode"));
+            }
+        }
+        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
+    }
+
+    public Resolution showRemainingPrz() {
+        pincodeList = pincodeService.getPincodeNotInPincodeRegionZone();
+        return new ForwardResolution("/pages/admin/addPincodeRegionZone.jsp");
     }
 
     public String getPincodeString() {
@@ -191,10 +227,6 @@ public class MasterPincodeAction extends BaseAction {
         this.pincode = pincode;
     }
 
-    public List<CourierServiceInfo> getCourierServiceList() {
-        return courierServiceList;
-    }
-
     public FileBean getFileBean() {
         return fileBean;
     }
@@ -210,4 +242,40 @@ public class MasterPincodeAction extends BaseAction {
     public void setCourierService(CourierService courierService) {
         this.courierService = courierService;
     }
+
+    public PincodeRegionZone getPincodeRegionZone() {
+        return pincodeRegionZone;
+    }
+
+    public void setPincodeRegionZone(PincodeRegionZone pincodeRegionZone) {
+        this.pincodeRegionZone = pincodeRegionZone;
+    }
+
+    public List<PincodeRegionZone> getPincodeRegionZoneList() {
+        return pincodeRegionZoneList;
+    }
+
+    public void setPincodeRegionZoneList(List<PincodeRegionZone> pincodeRegionZoneList) {
+        this.pincodeRegionZoneList = pincodeRegionZoneList;
+    }
+
+    public List<Pincode> getPincodeList() {
+        return pincodeList;
+    }
+
+  public List<PincodeCourierMapping> getPincodeCourierMappings() {
+    return pincodeCourierMappings;
+  }
+
+  public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
+    this.pincodeCourierMappings = pincodeCourierMappings;
+  }
+
+  public Map<String, Boolean> getApplicableShipmentServices() {
+    return applicableShipmentServices;
+  }
+
+  public void setApplicableShipmentServices(Map<String, Boolean> applicableShipmentServices) {
+    this.applicableShipmentServices = applicableShipmentServices;
+  }
 }

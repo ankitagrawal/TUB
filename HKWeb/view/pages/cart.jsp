@@ -6,6 +6,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
 <%
@@ -33,8 +34,8 @@
               if(responseData.code == '<%=HealthkartResponse.STATUS_OK%>'){
               _updateTotals(responseData);
               _updateLineItem(responseData, lineItemRow);
-              document.getElementById("freebieBanner").src = responseData.message;
-              $(".freebieBanner").attr("src", responseData.message);
+              //document.getElementById("freebieBanner").src = responseData.message;
+              //$(".freebieBanner").attr("src", responseData.message);
               }else{
                 elm.val(responseData.data);
               }
@@ -94,11 +95,11 @@
           $('#numProdTitle').html(count - 1);
           $('.cartButton').glow('#f99', 500, 10);
           _updateTotals(responseData);
-          if(responseData.message){
+          /*if(responseData.message){
              $(".freebieBanner").attr("src", responseData.message);
           }else{
              $(".freebieBanner").attr("src", "");
-          }
+          }*/
         });
         return false;
       });
@@ -521,7 +522,9 @@
     <div class="floatfix"></div>
   </div>
 </c:forEach>
-<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>
+<%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
@@ -684,13 +687,15 @@
 					height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
 
 
-				<script type="text/javascript">
+				<script type="text/javascript">                                                
   var vizuryLink = "http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e400";
+  var user_hash;
   <c:forEach items="${cartAction.order.productCartLineItems}" var="cartLineItem" varStatus="liCtr">
   vizuryLink += "&pid${liCtr.count}=${cartLineItem.productVariant.product.id}&catid${liCtr.count}=${cartLineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${cartLineItem.qty}";
+  user_hash = "${user_hash}";
   </c:forEach>
   vizuryLink += "&currency=INR&section=1&level=1";
-  document.getElementById("vizuryTargeting").src = vizuryLink;
+  document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
 </s:layout-component>

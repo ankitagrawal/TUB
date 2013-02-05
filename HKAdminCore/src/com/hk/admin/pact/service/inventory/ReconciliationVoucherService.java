@@ -3,8 +3,11 @@ package com.hk.admin.pact.service.inventory;
 import com.hk.domain.user.User;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,5 +18,13 @@ import java.util.List;
  */
 public interface ReconciliationVoucherService {
 
-    public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+	public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+
+	public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher);
+
+	public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+
+	public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList);
+
+	public void delete(ReconciliationVoucher reconciliationVoucher);
 }

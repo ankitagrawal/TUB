@@ -76,16 +76,23 @@
   </div>
 </div>
 <div class="grid_4">
-  <div style="float: right;">
-   <c:choose>
-      <c:when test="${orderSummary.order.user.login == 'support@madeinhealth.com' || orderSummary.order.store.id == 2}">
-        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
-      </c:when>
-      <c:otherwise>
-        <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
-      </c:otherwise>
-    </c:choose>
-  </div>
+    <div style="float: right;">
+        <c:if test="${!hk:collectionContains(orderSummary.order.user.roleStrings, b2bUser)}">
+            <c:choose>
+                <c:when test="${orderSummary.order.store.id == 2 || orderSummary.order.store.id == 3}">
+                    <c:if test="${orderSummary.order.store.id == 2}">
+                        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+                    </c:if>
+                    <c:if test="${orderSummary.order.store.id == 3}">
+                        <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+    </div>
 </div>
 
 <div class="clear"></div>
@@ -110,27 +117,6 @@
       </h3>
     </div>
   </div>
-  <div class="grid_4 alpha omega" style="width: 320px;">
-    <div class="formatting" style="float: right;">
-      <div
-          style="float:right; width: 300px; padding: 10px; font-size: .7em; outline: 1px dotted gray; font-family: sans-serif;">
-        <p style="margin-bottom: 4px;">Introducing the <strong>Refer and Earn</strong> program</p>
-
-        <p>Your referral coupon code is</p>
-
-        <p><strong
-            style="text-transform:uppercase; font-size: 1.2em;">${orderSummary.coupon.code}</strong></p>
-
-        <p><strong>How it works: </strong></p>
-
-        <p>
-          Pass this coupon code to your friends and family. They get a <strong>5% discount on their first
-          purchase*</strong> at healthkart.com and you
-          <strong>get reward points worth Rs. 100</strong> in your account for your referral*.
-        </p>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="clear"></div>
@@ -150,7 +136,7 @@
         </c:if>
       </p>
 
-      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pin}</p>
+      <p>${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}</p>
 
       <p>${orderSummary.order.address.state}</p>
 
@@ -243,8 +229,9 @@
 								var="configValue" varStatus="configValueCtr">
 								<c:set var="additinalParam"
 									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:set var="side" value="${configValue.variantConfigOption.name}"/>
 								<c:if
-									test="${configValueCtr.index %2 ==0 && !( additinalParam == TH || additinalParam == THBF 
+									test="${ fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF 
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF) }">
 									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
@@ -257,8 +244,9 @@
 								var="configValue" varStatus="configValueCtr">
 								<c:set var="additinalParam"
 									value="${configValue.variantConfigOption.additionalParam}" />
+								<c:set var="side" value="${configValue.variantConfigOption.name}"/>
 								<c:if
-									test="${configValueCtr.index %2 !=0 && !( additinalParam == TH || additinalParam == THBF 
+									test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
 								|| additinalParam == BRANDTHBF)}">
 									<td><b>${configValue.variantConfigOption.displayName}:${configValue.value}</b></td>
@@ -378,8 +366,7 @@
 <div style="margin-top: 5px;"></div>
 
 <div class="grid_12">
-  <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous
-    material.
+  <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
   </div>
   <hr/>
   <c:choose>

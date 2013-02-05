@@ -1,44 +1,41 @@
 package com.hk.web.action.admin.shipment;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TreeMap;
-
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.engine.ShipmentPricingEngine;
+import com.hk.admin.pact.service.courier.CourierCostCalculator;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.EnumCourierOperations;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.courier.ShipmentServiceType;
+import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.PaymentFinder;
+import com.hk.util.ShipmentServiceMapper;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.engine.ShipmentPricingEngine;
-import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.admin.pact.service.courier.CourierCostCalculator;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.pact.dao.courier.PincodeDao;
-import com.hk.pact.dao.shippingOrder.ShippingOrderDao;
-import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.util.CustomDateTypeConvertor;
-import com.hk.web.action.error.AdminPermissionAction;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -62,6 +59,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     boolean cod;
 
     String shippingOrderId;
+    String merchantId;
 
     int days;
 
@@ -72,19 +70,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(ShipmentCostCalculatorAction.class);
 
     @Autowired
-    PincodeDao pincodeDao;
-
-    @Autowired
     ShipmentPricingEngine shipmentPricingEngine;
-
-    @Autowired
-    ShippingOrderDao shippingOrderDao;
 
     @Autowired
     CourierCostCalculator courierCostCalculator;
 
     @Autowired
-    ShipmentService shipmentService;
+	ShipmentService shipmentService;
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
@@ -93,10 +85,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     ShippingOrderService shippingOrderService;
 
     @Autowired
+    PincodeCourierService pincodeCourierService;
+
+    @Autowired
     CourierGroupService courierGroupService;
 
     @Autowired
-    CourierDao courierDao;
+    CourierService courierService;
 
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
     List<Courier> applicableCourierList;
@@ -107,7 +102,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution saveActualShippingCostForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Shipment shipment = shippingOrder.getShipment();
             if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
@@ -125,12 +120,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
     public Resolution calculateViaPincode() {
-        courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight);
+        //todo courier set as false by default, take input from screen
+        courierCostingMap = courierCostCalculator.getCourierCostingMap(pincode, cod, srcWarehouse, amount, weight, false);
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
     public Resolution calculateCourierCostingForShippingOrder() {
-        ShippingOrder shippingOrder = shippingOrderDao.findByGatewayOrderId(shippingOrderId);
+        ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
             Order order = shippingOrder.getBaseOrder();
             Shipment shipment = shippingOrder.getShipment();
@@ -142,9 +138,19 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     weight = lineItem.getSku().getProductVariant().getWeight();
                 }
             }
-            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPin(), shippingOrder.getCOD(), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight);
+            ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
+            courierCostingMap = courierCostCalculator.getCourierCostingMap(order.getAddress().getPincode().getPincode(),(ShipmentServiceMapper.isCod(shipmentServiceType)), shippingOrder.getWarehouse(), shippingOrder.getAmount(), weight, (ShipmentServiceMapper.isGround(shipmentServiceType)));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No SO found for the corresponding gateway order id"));
+        }
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+    }
+
+
+    public Resolution findIciciPayment() {
+        Map<String, Object> paymentResultMap = PaymentFinder.findIciciPayment(shippingOrderId, merchantId);
+        for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
+            logger.info(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
@@ -158,7 +164,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             }
         }
         if (courierList.size() == 0) {
-            courierList = courierDao.getCouriers(null,null,false);
+            courierList = courierService.getCouriers(null,null,true, EnumCourierOperations.HK_SHIPPING.getId());
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForEnteringShippingCost()));
@@ -285,5 +291,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     public void setOverrideHistoricalShipmentCost(boolean overrideHistoricalShipmentCost) {
         this.overrideHistoricalShipmentCost = overrideHistoricalShipmentCost;
+    }
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
     }
 }
