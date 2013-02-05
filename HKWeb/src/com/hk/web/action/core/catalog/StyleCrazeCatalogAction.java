@@ -9,6 +9,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class StyleCrazeCatalogAction extends BaseAction {
     @Autowired
     private ProductService productService;
 
-    private List<Product> products;
+    private List<Product> products = new ArrayList<Product>();
 
 
     public Resolution pre() {
