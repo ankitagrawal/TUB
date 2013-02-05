@@ -52,8 +52,8 @@ public class MasterDataService {
     RoleSeedData                           roleSeedData;
     @Autowired
     PermissionSeedData                     permissionSeedData;
-    @Autowired
-    RoleHasPermissionSeedData              roleHasPermissionSeedData;
+//    @Autowired
+//    RoleHasPermissionSeedData              roleHasPermissionSeedData;
 //    @Autowired
 //    CourierSeedData                        courierSeedData;
     /* CartLineItemTypeSeedData lineItemStatusSeedData; */
@@ -160,8 +160,8 @@ public class MasterDataService {
         logger.debug("inserting permissions");
         permissionSeedData.invokeInsert();
 
-        logger.debug("inserting role has permissions");
-        roleHasPermissionSeedData.invokeInsert();
+//        logger.debug("inserting role has permissions");
+//        roleHasPermissionSeedData.invokeInsert();
 
 //        logger.debug("inserting couriers");
 //        courierSeedData.invokeInsert();
