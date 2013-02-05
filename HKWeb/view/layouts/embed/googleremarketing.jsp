@@ -36,7 +36,6 @@
             pageContext.setAttribute("googleProduct", product);
         }
     %>
-
     <input type="hidden" value="${pageType}" id="pageType">
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
     <input type="hidden" value="${googleProduct.id}" id="googleProductId">
@@ -176,7 +175,7 @@
             {
                 //alert( 'prodid:' +  prodId + 'pagetype:'  + hkPageType  + 'pCat:' + pCategory);
                 var google_tag_params = {
-                    prodid:  prodId,
+                    prodid:  prodId.split(','),
                     pagetype: hkPageType,
                     pcat: pCategory,
                     use_case: 'retail'
