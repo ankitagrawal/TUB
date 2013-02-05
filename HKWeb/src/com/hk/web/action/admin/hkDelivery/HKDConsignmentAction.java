@@ -135,7 +135,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                 amount = shipmentObj.getShippingOrder().getAmount();
                 cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
                 address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
-                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPin();
+                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
                 paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                 // Creating consignment object and adding to consignmentList.
                 consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));

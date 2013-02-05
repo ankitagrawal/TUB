@@ -3,7 +3,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/modal.jsp">
   <s:layout-component name="heading">
-    Request advice from experts
+    <b>Request advice from experts</b>
   </s:layout-component>
 
   <s:layout-component name="content">
@@ -22,7 +22,8 @@
           <div class='label'>Email</div>
           <s:text name="email" placeholder="Your email" value="${sdcActionBean.email}"/>
           <br/><br/>
-          <s:checkbox name="subscribe" checked="checked" id="subscribeCheckbox"/> I would like to receive offer updates in the future
+          <s:checkbox name="subscribe" checked="checked" id="subscribeCheckbox"/>
+          I would like to receive updates/ new offers from HealthKart.com in future through Phone/SMS/E-Mails.
 
           <s:hidden name="srcUrl" value="${sdcActionBean.srcUrl}"/>
           <s:hidden name="topLevelCategory" value="${sdcActionBean.topLevelCategory}"/>

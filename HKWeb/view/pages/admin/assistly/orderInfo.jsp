@@ -24,11 +24,8 @@
 
     <div>
       Address: ${orderSummary.order.address.name}, ${orderSummary.order.address.line1},
-      <c:if test="${not empty orderSummary.order.address.line2}">${orderSummary.order.address.line2}, </c:if>${orderSummary.order.address.city} - ${orderSummary.order.address.pin}, ${orderSummary.order.address.state}<br/>
+      <c:if test="${not empty orderSummary.order.address.line2}">${orderSummary.order.address.line2}, </c:if>${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}, ${orderSummary.order.address.state}<br/>
       Ph: ${orderSummary.order.address.phone}<br/>
-      <c:if test="${orderSummary.order.address.courier != null}">
-        <b>Courier: ${orderSummary.order.address.courier.name}</b>
-      </c:if>
     </div>
 
     <hr/>

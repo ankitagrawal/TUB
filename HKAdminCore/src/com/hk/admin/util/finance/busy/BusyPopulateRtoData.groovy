@@ -1,5 +1,6 @@
 package com.hk.admin.util.finance.busy
 
+import com.hk.domain.core.Pincode
 import groovy.sql.Sql
 import org.slf4j.LoggerFactory
 
@@ -209,7 +210,7 @@ public class BusyPopulateRtoData {
                    """) {
         invoiceItems ->
 
-      Long lineItemId = invoiceItems.id;
+      Long lineItemId = Pincode.getPincode;
       Long item_code = invoiceItems.sku_id;
       int qty = invoiceItems.qty;
       if(qty <= 0){

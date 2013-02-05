@@ -28,6 +28,7 @@ import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.coupon.DiscountCouponMailingListDao;
 import com.hk.web.HealthkartResponse;
+import com.hk.manager.EmailManager;
 
 @Component
 public class RequestCallbackAction extends BaseAction implements ValidationErrorHandler {
@@ -46,6 +47,9 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
     private Category             topLevelCategory;
     @Autowired
     DiscountCouponMailingListDao discountCouponMailingListDao;
+
+  @Autowired
+  EmailManager emailManager;
 
     public Resolution handleValidationErrors(ValidationErrors validationErrors) throws Exception {
         return new JsonResolution(validationErrors, getContext().getLocale());
@@ -103,7 +107,9 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
         dcml.setSubscribeEmail(subscribe);
         dcml.setSubscribeMobile(subscribe);
         dcml.setRequestDate(new Date());
-        discountCouponMailingListDao.save(dcml);
+        dcml = (DiscountCouponMailingList)discountCouponMailingListDao.save(dcml);
+        User loggedOnUser = getUserService().getLoggedInUser();
+        emailManager.sendCallbackRequestEmail(loggedOnUser, dcml);
 
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your information has been received, we will get in touch with you shortly."));
     }

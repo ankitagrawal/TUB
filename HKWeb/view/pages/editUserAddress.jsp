@@ -64,7 +64,7 @@
 
         <div class="row">
           <s:label class="rowLabel" name="Pin*"/>
-          <s:text name="address.pin" value="${address.pin}" class="rowText" id="pin"/>
+          <s:text name="address.pin" value="${address.pincode.pincode}" class="rowText" id="pin"/>
         </div>
 
         <div class="clear"></div>

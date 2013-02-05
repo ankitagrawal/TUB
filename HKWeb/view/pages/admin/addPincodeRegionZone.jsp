@@ -75,7 +75,7 @@
 						<table align="center">
 							<tr>
 								<td><label>Pincode</label></td>
-								<td><s:text name="pincodeRegionZone.pincode.pincode"   id="pin"/></td>
+								<td><s:text name="pincodeRegionZone.pincode"   id="pin"/></td>
 								<td><s:submit name="searchPincodeRegion" class="pinsearch" value="Search"/></td>
 							</tr>
 							<tr>
@@ -134,7 +134,7 @@
 						<c:forEach items="${mpa.pincodeRegionZoneList}" var="prz" varStatus="ctr">
 							<s:hidden name="pincodeRegionZoneList[${ctr.index}].id" value="${prz.id}"/>
 							<input type="hidden" name="pincodeRegionZoneList[${ctr.index}].pincode"
-							       value="${prz.pincode.id}"/>
+							       value="${prz.pincode.pincode}"/>
 							<tr class="przlist">
 								<td>${prz.pincode.pincode}</td>
 

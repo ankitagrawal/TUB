@@ -12,7 +12,9 @@ public enum EnumReconciliationType {
 	Damage(30L, "Damage"),
 	Expired(40L, "Expired"),
 	Lost(50L, "Lost"),
-	Mismatch(60L,"Mismatch");
+	BatchMismatch(60L,"Batch Mismatch"),
+	MrpMismatch(70L,"Mrp Mismatch"),
+	NonMoving(80L,"Non Moving");
 
   private java.lang.String name;
   private java.lang.Long id;

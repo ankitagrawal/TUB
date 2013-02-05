@@ -93,7 +93,7 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.city, address.getCity());
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.state, address.getState());
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.phone, address.getPhone());
-		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.postal_code, address.getPin());
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.postal_code, address.getPincode().getPincode());
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.name, address.getName());
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.email, address.getUser().getEmail());
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.return_url, return_url);

@@ -25,7 +25,7 @@
                                  ${orderBean.order.address.name}<br/>
                                  ${orderBean.order.address.line1}<br/>
                                  ${orderBean.order.address.line2}<br/>
-                                 ${orderBean.order.address.city} - ${orderBean.order.address.pin}<br/>
+                                 ${orderBean.order.address.city} - ${orderBean.order.address.pincode.pincode}<br/>
                                  ${orderBean.order.address.state}<br/>
                              Ph: ${orderBean.order.address.phone}<br/>
                          </td>

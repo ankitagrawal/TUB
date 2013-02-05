@@ -57,7 +57,7 @@ public class CounterCashPaymentReceiveAction extends BaseAction {
 			// recalculate the pricing before creating a payment.
 			order = getOrderManager().recalAndUpdateAmount(order);
 			// first create a payment row, this will also cotain the payment checksum
-			Payment payment = paymentManager.createNewPayment(order, getPaymentService().findPaymentMode(paymentMode), BaseUtils.getRemoteIpAddrForUser(getContext()), null, null);
+			Payment payment = paymentManager.createNewPayment(order, getPaymentService().findPaymentMode(paymentMode), BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
 			String gatewayOrderId = payment.getGatewayOrderId();
 			try {
 				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
