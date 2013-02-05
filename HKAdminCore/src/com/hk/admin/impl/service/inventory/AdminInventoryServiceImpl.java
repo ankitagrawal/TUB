@@ -150,8 +150,9 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 //        skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
          SkuGroup skuGroup = createSkuGroupWithoutBarcode(batch,mfgDate,expiryDate,costPrice,mrp,goodsReceivedNote,reconciliationVoucher,stockTransfer,sku );
         if (skuGroup != null && skuGroup.getId() != null) {
-            String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
-            skuGroup.setBarcode(skuGroupBarCode);
+            skuGroup.setBarcode(skuGroup.getId().toString());
+//            String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
+//            skuGroup.setBarcode(skuGroupBarCode);
             skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
         }
 

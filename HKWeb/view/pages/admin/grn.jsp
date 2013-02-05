@@ -395,12 +395,15 @@
 			</div>
 		</td>
 		<td>
+            <c:if test="${grnLineItemDto.grnLineItem.checkedInQty > 0}">
+                <c:set var="itemCheckedin" value="true" />
                 <ul>
                      <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Barcode
                 <s:param name="grnLineItemId" value="${grnLineItemDto.grnLineItem.id}"/>
                 <s:param name="grn" value="${pa.grn.id}"/>
-            </s:link>
+                 </s:link>
                 </ul>
+            </c:if>
             <ul>
 				${productVariant.id}
 			<s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
@@ -502,10 +505,11 @@
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 </shiro:hasPermission>
-
-  <s:link class=" button_green" style="width: 150px; height: 16px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Download Barcodes
-                  <s:param name="grn" value="${pa.grn.id}"/>
-  </s:link>
+    <c:if test='${itemCheckedin}'>
+     <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="grn" value="${pa.grn.id}"/>
+    </s:link>
+</c:if>
 
 <%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">

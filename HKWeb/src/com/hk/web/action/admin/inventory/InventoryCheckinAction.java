@@ -217,7 +217,8 @@ public class InventoryCheckinAction extends BaseAction {
                         addRedirectAlertMessage(new SimpleMessage("MRP is required. Plz check."));
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
-                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
+//                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
+                      SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);

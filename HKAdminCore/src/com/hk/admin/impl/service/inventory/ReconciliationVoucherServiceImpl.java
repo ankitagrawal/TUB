@@ -102,7 +102,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
                     if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                         // Create batch and checkin inv
-                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
+//                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
+                         SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
                         adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, EnumInvTxnType.RV_CHECKIN.asInvTxnType(), loggedOnUser);
                         rvLineItem.setSkuGroup(skuGroup);
                     }

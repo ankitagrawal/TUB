@@ -13,6 +13,7 @@ import java.util.*;
 public class BarcodeUtil {
 
     public static final String BARCODE_SKU_GROUP_PREFIX = "HK-INVN-";
+    public static final String BARCODE_SKU_ITEM_PREFIX = "HK-INV-";
 
     public static String generateBarCodeForSKuGroup(Long skuGroupId) {
         return BARCODE_SKU_GROUP_PREFIX + skuGroupId;
@@ -32,13 +33,7 @@ public class BarcodeUtil {
 
 
      public static String generateBarCodeForSKuItem(Long skuGroupId, int skuItemNumber) {
-//         if (skuItemNumber > 0 && skuItemNumber <10){
-//          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"00" + skuItemNumber ;
-//         }
-//          if (skuItemNumber > 9 && skuItemNumber <100){
-//          return BARCODE_SKU_GROUP_PREFIX + skuGroupId +"0" + skuItemNumber ;
-//         }
-          return BARCODE_SKU_GROUP_PREFIX + skuGroupId + "-" + skuItemNumber ;
+          return BARCODE_SKU_ITEM_PREFIX + skuGroupId + "-" + skuItemNumber ;
     }
 
 
