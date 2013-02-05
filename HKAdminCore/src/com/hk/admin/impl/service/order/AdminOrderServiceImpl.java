@@ -412,7 +412,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             codFailureMap.put("CodOnSubscription", "N");
         } else if (!codAllowedonProduct) {
             codFailureMap.put("CodAllowedOnProduct", "N");
-        } else if (pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
+        } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
             codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
             osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
