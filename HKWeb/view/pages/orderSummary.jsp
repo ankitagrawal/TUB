@@ -407,7 +407,7 @@
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
-                                                       ${cartLineItem.productVariant.variantName}
+                                                       ${cartLineItem.productVariant.product.name}
                                                   </c:otherwise>
                                                </c:choose>
                                        </td>

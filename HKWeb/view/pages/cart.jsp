@@ -72,6 +72,7 @@
 
       $('.removeLink').click(function() {
         clearTimeout(timeout);
+          alert("inside");
         var itemContainer = $(this).parents('.product');
         var lineItemId = itemContainer.find('.lineItemId').val();
         var lineItemStyleId = itemContainer.find('.lineItemId').attr('id');
@@ -789,7 +790,7 @@
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
-                                                       ${cartLineItem.productVariant.variantName}
+                                                       ${cartLineItem.productVariant.product.name}
                                                   </c:otherwise>
                                                </c:choose>
                                        </td>
