@@ -2,13 +2,11 @@ package com.hk.web.action.core.discount;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Arrays;
 
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.coupon.CouponType;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -28,6 +26,7 @@ import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.BaseDao;
@@ -35,6 +34,7 @@ import com.hk.pact.dao.coupon.CouponDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.web.action.core.cart.CartAction;
 
 /**
  * User: rahul Time: 8 Jan, 2010 6:19:28 PM
@@ -169,6 +169,12 @@ public class ApplyCouponAction extends BaseAction {
                 coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
                 couponDao.save(coupon);
                 success = true;
+
+              ProductVariant freeVariant = coupon.getOffer().getOfferAction().getFreeVariant();
+              if (freeVariant != null && !freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
+                return new RedirectResolution(CartAction.class);
+              }
 
                 message = new LocalizableMessage("/ApplyCoupon.action.coupon.successfully.applied").getMessage(getContext().getLocale());
             }
