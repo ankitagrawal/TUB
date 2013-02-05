@@ -27,7 +27,6 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
-import com.hk.domain.core.OrderStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -304,7 +303,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Transactional
     public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Returned, EnumOrderStatus.RTO);
+        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {

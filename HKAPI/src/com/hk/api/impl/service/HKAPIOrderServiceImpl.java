@@ -217,7 +217,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
                 if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Shipped.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Delivered.getId()
-                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_RTO.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Lost.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Cancelled.getId()) {
 
