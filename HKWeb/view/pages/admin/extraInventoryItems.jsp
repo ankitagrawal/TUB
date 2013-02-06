@@ -25,10 +25,10 @@ $(document).ready(function () {
             }
         });
         if (bool) {
-            alert("Please select Line Items to create RTV / GRN");
+            alert("Please select Line Items to create RTV / PO");
             return false;
         }
-        if (confirm('Are you sure you want to create RTV / GRN for selected items?')) {
+        if (confirm('Are you sure you want to create RTV / PO for selected items?')) {
             $(this).hide();
         }
         else {
@@ -48,7 +48,6 @@ $(document).ready(function () {
                     finalProName = finalProName.substring(0, 44);
                 }
                 obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
-                alert(res.data.taxId);
                 obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.taxId);
                 $('#checkRtvStatus').remove();
                 $('.createRtv').remove();
@@ -149,7 +148,6 @@ $(document).ready(function () {
                             finalProName = finalProName.substring(0, 44);
                         }
                         obj.parent().parent().children('td.proName').children('.productName').val(finalProName);
-                        alert(res.data.taxId);
                         obj.parent().parent().children('td.taxClass').children('.taxValue').val(res.data.taxId);
                     }
                     else {
@@ -175,9 +173,9 @@ $(document).ready(function () {
         });
         var extraInventoryStatus = parseFloat($('#extraInventoryStatus').val());
         var extraInventoryStatusDB = parseFloat(${extraInventory.extraInventory.extraInventoryStatus});
-        alert(extraInventoryStatus + " " + extraInventoryStatusDB);
         if (extraInventoryStatusDB > extraInventoryStatus) {
             alert("Invalid ExtraInventory Status");
+            saveObj.show();
             return false;
         }
         if (!bool) return false;
@@ -289,15 +287,15 @@ $(document).ready(function () {
                             <span style="color:blue;">(Closed)</span>
                         </c:when>
                         <c:otherwise>
-                            <s:select name="extraInventoryStatus" id="extraInventoryStatus">
+                            <s:select name="extraInventoryStatusId" id="extraInventoryStatus">
                                 <s:option
-                                        value="<%=EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Created.getName()%>
+                                        value="<%=EnumExtraInventoryStatus.Created.getId()%>"><%=EnumExtraInventoryStatus.Created.getName()%>
                                 </s:option>
                                 <s:option
-                                        value="<%=EnumExtraInventoryStatus.SentToCategory.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%>
+                                        value="<%=EnumExtraInventoryStatus.SentToCategory.getId()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%>
                                 </s:option>
                                 <s:option
-                                        value="<%=EnumExtraInventoryStatus.Closed.asEnumExtraInventoryStatus()%>"><%=EnumExtraInventoryStatus.Closed.getName()%>
+                                        value="<%=EnumExtraInventoryStatus.Closed.getId()%>"><%=EnumExtraInventoryStatus.Closed.getName()%>
                                 </s:option>
                             </s:select>
                             <script type="text/javascript">

@@ -14,8 +14,8 @@
         <script type="text/javascript">
             $(document).ready(function(){
                $('#save').click(function(){
-                  var rtvNoteStatus = $('#rtvNoteStatus').val();
-                   var rtvNoteStatusDB = ${rtvNote.rtvNote.rtvNoteStatus.id};
+                  var rtvNoteStatus = parseFloat($('#rtvNoteStatus').val());
+                   var rtvNoteStatusDB = parseFloat(${rtvNote.rtvNote.rtvNoteStatus.id});
                    if(rtvNoteStatus < rtvNoteStatusDB){
                        alert("Rtv Note Status can't reverted back");
                        return false;
@@ -23,7 +23,7 @@
                    var courierName = $('#courierName').val();
                    var docketNumber = $('#docketNumber').val();
                    var destinationAddress = $('#destinationAddress').val();
-                   if(rtvNoteStatus == 20){
+                   if(rtvNoteStatus == 20 && rtvNoteStatusDB == 10){
                        if((courierName == null || courierName == "") && (docketNumber == null || docketNumber == "")){
                            alert("Please Enter Courier details");
                            return false;
@@ -49,13 +49,16 @@
             <thead>
             <tr>
                 <th>Rtv Note Id</th>
-                <th>Extra Inventory Id</th>
                 <th>Rtv Note Status</th>
                 <th>Created By</th>
                 <th>Is debit to Supplier</th>
                 <th>Reconciled</th>
                 <th>Create Date</th>
                 <th>Update Date</th>
+                <th>Courier Name</th>
+                <th>Docket Number</th>
+                <th>Destination Address</th>
+                <th>Dispatch Date</th>
                 <th>Remarks</th>
             </tr>
             </thead>
@@ -63,18 +66,17 @@
             <c:if test="${rtvNote.rtvNote!=null}">
                 <tr>
                     <td> ${rtvNote.rtvNote.id}</td>
-                    <td>${rtvNote.rtvNote.extraInventory.id}</td>
                     <td>
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.id eq reconciled}">
                                <h6 style="color:blue">${rtvNote.rtvNote.rtvNoteStatus.name}(Closed)</h6>
                             </c:when>
                             <c:otherwise>
-                               <select name="rtvStatus" id="rtvNoteStatus">
-                                <option value="<%=EnumRtvNoteStatus.Created%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
-                                <option value="<%=EnumRtvNoteStatus.SentToSupplier%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
-                                <option value="<%=EnumRtvNoteStatus.Reconciled%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
-                            </select>
+                               <select name="rtvStatusId" id="rtvNoteStatus">
+                                <option value="<%=EnumRtvNoteStatus.Created.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
+                                <option value="<%=EnumRtvNoteStatus.SentToSupplier.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
+                                <option value="<%=EnumRtvNoteStatus.Reconciled.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
+                               </select>
                             </c:otherwise>
                         </c:choose>
                         </td>
@@ -98,6 +100,8 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
+                    <td>${rtvNote.rtvNote.createDate}</td>
+                    <td>${rtvNote.rtvNote.updateDate}</td>
                     <td>
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
@@ -108,6 +112,7 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
+                    <td>
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
                                 <s:text name="docketNumber" value="${rtvNote.rtvNote.docketNumber}" id="docketNumber"/>
@@ -116,6 +121,7 @@
                                   ${rtvNote.rtvNote.docketNumber}
                             </c:otherwise>
                         </c:choose>
+                    </td>
                     <td>
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
@@ -129,8 +135,6 @@
                     <td>
                          ${rtvNote.rtvNote.dispatchDate}
                     </td>
-                    <td>${rtvNote.rtvNote.createDate}</td>
-                    <td>${rtvNote.rtvNote.updateDate}</td>
                     <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${rtvNote.rtvNote.remarks}</textarea></td>
                 </tr>
             </c:if>

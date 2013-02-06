@@ -23,7 +23,7 @@
     <s:layout-component name="content">
         <fieldset class="right_label">
               <legend>Search ExtraInventory</legend>
-              <s:form beanclass="com.hk.web.action.admin.rtv.RTVAction">
+              <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
                 <label>ExtraInventory ID:</label><input type="text" name="extraInventoryId"/>
                 <label>Purchase Order ID:</label><input type="text" name="purchaseOrderId"/>
                 <s:submit name="searchExtraInventory" value="Search ExtraInventory"/>

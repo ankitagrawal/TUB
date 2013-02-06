@@ -11,6 +11,7 @@ import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
+import com.hk.manager.EmailManager;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
@@ -68,6 +69,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   PoLineItemService poLineItemService;
   @Autowired
   MasterDataDao masterDataDao;
+  @Autowired
+  EmailManager emailManager;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -86,8 +89,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private User user;
   private RtvNote rtvNote;
   private Long rtvNoteId;
-  private EnumRtvNoteStatus rtvStatus;
-  private ExtraInventoryStatus extraInventoryStatus;
+  private Long rtvStatusId;
+  private Long extraInventoryStatusId;
   private Boolean isDebitToSupplier;
   private Boolean isReconciled;
   private String reconciledStatus;
@@ -170,8 +173,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     else{
       extraInventory.setUpdateDate(new Date());
       extraInventory.setComments(comments);
+      ExtraInventoryStatus extraInventoryStatus = EnumExtraInventoryStatus.asEnumExtraInventoryStatusByID(extraInventoryStatusId);
       if(!extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName())){
         extraInventory.setExtraInventoryStatus(extraInventoryStatus);
+        if(extraInventoryStatus.getName().equals(EnumExtraInventoryStatus.SentToCategory.getName()) && !extraInventory.isEmailSent()){
+          getEmailManager().
+        }
       }
       extraInventory = getExtraInventoryService().save(extraInventory);
     }
@@ -192,6 +199,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
         }
         else{
+          extraInventoryLineItem.setExtraInventory(extraInventory);
           getExtraInventoryLineItemService().delete(extraInventoryLineItem);
         }
       }
@@ -279,14 +287,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     extraInventory = rtvNote.getExtraInventory();
     if(rtvNote !=null){
       rtvNote.setRemarks(comments);
-      if(rtvStatus!=null && isReconciled!=null){
-        if(rtvStatus.getName().equalsIgnoreCase("reconciled") || isReconciled){
+      if(rtvStatusId !=null && isReconciled!=null){
+        if(EnumRtvNoteStatus.asRtvNoteStatusById(rtvStatusId).getName().equalsIgnoreCase("reconciled") || isReconciled){
           rtvNote.setReconciled(true);
           rtvNote.setRtvNoteStatus(EnumRtvNoteStatus.Reconciled.asRtvNoteStatus());
         }
         else{
           rtvNote.setReconciled(isReconciled);
-          rtvNote.setRtvNoteStatus(rtvStatus.asRtvNoteStatus());
+          rtvNote.setRtvNoteStatus(EnumRtvNoteStatus.asRtvNoteStatusById(rtvStatusId));
         }
       }
       rtvNote.setDebitToSupplier(isDebitToSupplier);
@@ -645,12 +653,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     this.rtvNoteId = rtvNoteId;
   }
 
-  public EnumRtvNoteStatus getRtvStatus() {
-    return rtvStatus;
+  public Long getRtvStatusId() {
+    return rtvStatusId;
   }
 
-  public void setRtvStatus(EnumRtvNoteStatus rtvStatus) {
-    this.rtvStatus = rtvStatus;
+  public void setRtvStatusId(Long rtvStatusId) {
+    this.rtvStatusId = rtvStatusId;
   }
 
   public Boolean isReconciled() {
@@ -709,12 +717,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     this.extraInventories = extraInventories;
   }
 
-  public ExtraInventoryStatus getExtraInventoryStatus() {
-    return extraInventoryStatus;
+  public Long getExtraInventoryStatusId() {
+    return extraInventoryStatusId;
   }
 
-  public void setExtraInventoryStatus(ExtraInventoryStatus extraInventoryStatus) {
-    this.extraInventoryStatus = extraInventoryStatus;
+  public void setExtraInventoryStatusId(Long extraInventoryStatusId) {
+    this.extraInventoryStatusId = extraInventoryStatusId;
   }
 
   public String getDocketNumber() {
@@ -739,5 +747,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public void setCourierName(String courierName) {
     this.courierName = courierName;
+  }
+
+  public EmailManager getEmailManager() {
+    return emailManager;
   }
 }

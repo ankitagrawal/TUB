@@ -31,6 +31,15 @@ public enum EnumExtraInventoryStatus {
     return id;
   }
 
+  public static ExtraInventoryStatus  asEnumExtraInventoryStatusByID(Long extraInventoryStatusId){
+    for(EnumExtraInventoryStatus extraInventoryStatus : values()){
+      if(extraInventoryStatus.getId().equals(extraInventoryStatusId)){
+        return extraInventoryStatus.asEnumExtraInventoryStatus();
+      }
+    }
+    return null;
+  }
+
    public ExtraInventoryStatus asEnumExtraInventoryStatus() {
     ExtraInventoryStatus extraInventoryStatus = new ExtraInventoryStatus();
     extraInventoryStatus.setId(this.getId());
