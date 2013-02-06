@@ -466,6 +466,8 @@ public enum EnumRoleHasPermission {
 
 	PAYMENT_MANAGER(EnumRole.PAYMENT_MANAGER, Arrays.asList(EnumPermission.UPDATE_PAYMENT)),
 
+	STORE_MANAGER(EnumRole.STORE_MANAGER, Arrays.asList(EnumPermission.STORE_MANAGER)),
+
 	HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE));
 
 	EnumRole enumRole;
