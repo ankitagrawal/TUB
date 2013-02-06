@@ -147,9 +147,17 @@
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
             <label>IsCod</label>
-            <s:checkbox name="cod"/>
+            <s:select name="cod">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>IsGround</label>
-            <s:checkbox name="ground"/>
+            <s:select name="ground">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>Select WareHouse</label>
             <s:select name="warehouse" id="warehouse">
                 <option value="">--Select--</option>
