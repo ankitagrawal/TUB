@@ -61,7 +61,7 @@ public class AwbServiceImpl implements AwbService {
 
     public boolean deleteAwbForThirdPartyCourier(Awb awb) {
         Long courierId = awb.getCourier().getId();
-        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyCourierServiceFactory.getThirdPartyAwbService(courierId);
         return thirdPartyAwbService.deleteThirdPartyAwb(awb.getAwbNumber());
     }
 
