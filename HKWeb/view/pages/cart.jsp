@@ -702,7 +702,7 @@
 </s:layout-component>
 </c:if>
 <c:set var="comboInstanceIds"  value=""/>
-<s:layout-component name="htmlHead">
+<%--<s:layout-component name="htmlHead">--%>
 <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
         <script type="text/javascript">
           $(document).ready(function () {
@@ -733,7 +733,7 @@
           });
     </script>
      </c:if>
-</s:layout-component>
+<%--</s:layout-component>--%>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>
