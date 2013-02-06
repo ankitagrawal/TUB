@@ -58,7 +58,7 @@
       </div>
 	     <br>
 	    <span style="float:left">
-		    Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)}s
+		    Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)}
 	    </span>
 	    
 	    <span class="pull-right">

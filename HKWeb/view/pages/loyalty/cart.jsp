@@ -14,6 +14,8 @@
 			$(document).ready(function() {
 				$('.lineItemQty').blur(function(event) {
 					var qty = $(this).val();
+					var qty_box = $(this);
+					var error_message = $(this).parent().parent().find('.error-message');
 					var variant_id = $(this).attr("id");
 					var url = $('#update-qty-url').attr("href");
 					$.ajax({
@@ -21,7 +23,13 @@
 						url: url,
 						data: {qty:qty, productVariantId: variant_id},
 						success: function(resp) {
-							$('.total-shopping-points').html(resp.data.totalShoppingPoints);
+							if(resp.code == "error"){
+								qty_box.val(qty-1);
+								error_message.slideDown().delay(5000).slideUp();
+							}
+							else{
+								$('.total-shopping-points').html(resp.data.totalShoppingPoints);
+							}
 						}
 					});
 				});
@@ -45,11 +53,19 @@
 					<tbody>
 						<c:forEach items="${ca.loyaltyProductList}" var="lp">
 							<tr>
-								<td><img
+								<td width="50%"><img
 									src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
 									alt="${lp.variant.product.name}" /> <h8>${lp.variant.product.name}</h8>
 								</td>
-								<td><input id="${lp.variant.id}" class= "lineItemQty" type=text value="${lp.qty}" style="width:30px;"/></td>
+								<td width="30%">
+
+									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}"
+								           style="width:30px;"/>
+									<br/>
+									<span class="error-message" style="font-size:12px; color:red; font-weight:200; margin-left: -30px; display:none">
+										Not enough karma points to increase the quantity.
+									</span>
+								</td>
 								<td>${lp.points}</td>
 							</tr>
 						</c:forEach>
