@@ -19,6 +19,8 @@ public interface LoyaltyProgramService {
 	void debitKarmaPoints(Long orderId);
 
 	void approveKarmaPoints(Long orderId);
+	
+	void cancelKarmaPoints(Long orderId);
 
 	double aggregatePoints(Collection<CartLineItem> cartLineItems);
 	

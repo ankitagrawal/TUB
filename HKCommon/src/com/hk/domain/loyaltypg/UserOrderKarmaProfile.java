@@ -30,7 +30,7 @@ public class UserOrderKarmaProfile {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private karmaPointStatus status;
+	private KarmaPointStatus status;
 
 	@Column(name = "points")
 	private Double karmaPints;
@@ -51,11 +51,11 @@ public class UserOrderKarmaProfile {
 		this.transactionType = transactionType;
 	}
 
-	public karmaPointStatus getStatus() {
+	public KarmaPointStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(karmaPointStatus status) {
+	public void setStatus(KarmaPointStatus status) {
 		this.status = status;
 	}
 
@@ -83,8 +83,8 @@ public class UserOrderKarmaProfile {
 		this.updateTime = updateTime;
 	}
 
-	public static enum karmaPointStatus {
-		APPROVED, PENDING, EXPIRED;
+	public static enum KarmaPointStatus {
+		APPROVED, PENDING, EXPIRED, CANCELED;
 	}
 	
 	public static enum TransactionType {

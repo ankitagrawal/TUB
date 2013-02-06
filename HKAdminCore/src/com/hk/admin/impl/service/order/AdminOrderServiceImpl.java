@@ -34,6 +34,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
@@ -101,6 +102,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double                    codMaxAmount;
+    
+    @Autowired LoyaltyProgramService loyaltyProgramService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -162,6 +165,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
+            
+            loyaltyProgramService.cancelKarmaPoints(order.getId());
+            
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                 emailManager.sendOrderCancelEmailToUser(order);
