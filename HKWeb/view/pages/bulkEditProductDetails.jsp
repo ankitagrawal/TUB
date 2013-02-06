@@ -583,7 +583,7 @@
 <c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
     <td width="100px" align="right">
         <s:link beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory" target="_blank">
-            <strong>${hk:netInventory(variant)}</strong>
+            <strong>${hk:netInventoryAtServiceableWarehouses(variant)}</strong>
             <s:param name="upc" value="${variant.id}"/>
         </s:link>
     </td>

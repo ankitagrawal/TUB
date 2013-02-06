@@ -221,7 +221,7 @@ public class XslGenerator {
 					setCellValue(row, this.getColumnIndex(XslConstants.AVAILABILITY), productVariant.isOutOfStock() ? "N" : "Y");
 					setCellValue(row, this.getColumnIndex(XslConstants.MANUFACTURER_CODE), "");
 					setCellValue(row, this.getColumnIndex(XslConstants.DELETED), productVariant.isDeleted() ? "Y" : "N");
-					Long inventory = getAdminInventoryService().getNetInventory(productVariant);
+					Long inventory = getAdminInventoryService().getNetInventoryAtServiceableWarehouses(productVariant);
 					setCellValue(row, this.getColumnIndex(XslConstants.INVENTORY), inventory);
 					Long cutoffInventory = inventoryService.getAggregateCutoffInventory(productVariant);
 					setCellValue(row, this.getColumnIndex(XslConstants.CUTOFF_INVENTORY), cutoffInventory);
