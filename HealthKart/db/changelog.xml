@@ -10811,6 +10811,39 @@
     <changeSet author="Tarun (generated)" id="1356676742452-2">
         <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
     </changeSet>
+	<changeSet author="Pradeep (5-1-2103)" id="05-01-2013-01">
+        <sql>
+            INSERT INTO store(id, name, prefix, callback_rest_url)
+            SELECT * FROM (SELECT 3, 'FitnessPro', 'FP', 'http://fitnesspro.healthkart.com/rest/api') AS tmp
+            WHERE NOT EXISTS (
+            SELECT name FROM store WHERE id = 3
+            ) LIMIT 1;
+
+            INSERT INTO store(id, name, prefix, callback_rest_url)
+            SELECT * FROM (SELECT 2, 'MadeInHealth', 'MIH', 'http://www.madeinhealth.com/rest/api') AS tmp
+            WHERE NOT EXISTS (
+            SELECT name FROM store WHERE id = 2
+            ) LIMIT 1;
+
+            update store set callback_rest_url='http://www.madeinhealth.com/rest/api' where id=2;
+        </sql>
+    </changeSet>
+    <changeSet author="Pradeep (6-1-2103)" id="06-01-2013-01">
+    <sql>
+        TRUNCATE hk_api_user;
+
+        ALTER TABLE hk_api_user DROP COLUMN id;
+
+        ALTER TABLE hk_api_user ADD COLUMN id INT(11) NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY id(id);
+
+        INSERT INTO hk_api_user(name, api_key, login_success_redirect_url, home_url, default_auth_token_expiry, enabled, create_dt, order_placement_enabled, secret_key)
+        VALUES('FitnessPro','fitnesspro','http://fitnesspro.healthkart.com', 'http://fitnesspro.healthkart.com', 10, 1, CURRENT_TIMESTAMP, 1, '7rq8tlhrdubs');
+
+        INSERT INTO hk_api_user(name, api_key, login_success_redirect_url, home_url, default_auth_token_expiry, enabled, create_dt, order_placement_enabled, secret_key)
+        VALUES('HealthkartPlus','healthkartplus','http://www.healthkartplus.com', 'http://www.healthkartplus.com', 10, 1, CURRENT_TIMESTAMP, 0, 'aeu7adfj3kl!');
+    </sql>
+    </changeSet>
+
 	   <changeSet author="Seema (generated)" id="1357322001110-1">
         <addColumn tableName="reconciliation_voucher">
             <column name="reconciliation_type_id" type="INT">
@@ -11384,4 +11417,42 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-01">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
+			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
+			alter table payment add column last_four_digit_card_no int(11);
+		</sql>
+	</changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-1">
+        <dropForeignKeyConstraint baseTableName="warehouse" constraintName="fk_warehouse_warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-2">
+        <dropColumn columnName="warehouse_type_id" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-3">
+        <dropTable tableName="warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-1">
+        <addColumn tableName="warehouse">
+            <column name="store_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-2">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-02">
+		<sql>
+			update warehouse set store_id = 101 where id = 301;
+		</sql>
+	</changeSet>
+	<changeSet author="Rohit" id="01-02-2013-03">
+		<sql>
+
+			insert into role values ('STORE_MANAGER');
+			insert into permission values ('STORE_MANAGER');
+			insert into role_has_permission values ('STORE_MANAGER','STORE_MANAGER');
+
+		</sql>
+	</changeSet>
 </databaseChangeLog>

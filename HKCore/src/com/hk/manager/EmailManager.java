@@ -828,7 +828,7 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("extraInventory", extraInventory);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
-            return emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryHealthkart);
+            return emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryHealthkart,EmailTemplateConstants.categoryTeam);
   }
 
     /*

@@ -105,7 +105,8 @@ public enum EnumPermission {
   EDIT_PAYMENT_HISTORY                           (PermissionConstants.EDIT_PAYMENT_HISTORY),
   POPULATE_BUSY_DATA                             (PermissionConstants.POPULATE_BUSY_DATA),
   DISPATCH_LOT_OPERATIONS                        (PermissionConstants.DISPATCH_LOT_OPERATIONS),
-  EDIT_GRN	                                     (PermissionConstants.EDIT_GRN);
+  EDIT_GRN	                                     (PermissionConstants.EDIT_GRN),
+  STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER);
 
   String permissionName;
 

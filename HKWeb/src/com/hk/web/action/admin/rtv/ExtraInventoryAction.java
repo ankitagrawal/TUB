@@ -177,7 +177,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       if(!extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName())){
         extraInventory.setExtraInventoryStatus(extraInventoryStatus);
         if(extraInventoryStatus.getName().equals(EnumExtraInventoryStatus.SentToCategory.getName()) && !extraInventory.isEmailSent()){
-          getEmailManager().
+          getEmailManager().sendExtraInventoryMail(extraInventory);
+          extraInventory.setEmailSent(true);
         }
       }
       extraInventory = getExtraInventoryService().save(extraInventory);
