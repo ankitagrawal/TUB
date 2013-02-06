@@ -10958,6 +10958,32 @@
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-02-04-02">
+        <sql>
+            DROP TABLE IF EXISTS t;
+            INSERT into `state` (`id`,`name`)
+            values
+            (1,'JAMMU &amp;amp; KASHMIR') ON DUPLICATE KEY UPDATE name = 'JAMMU &amp;amp; KASHMIR';
+            INSERT into `city` (`id`,`name`)
+            values
+            (1,'NICOBAR') ON DUPLICATE KEY UPDATE name = 'NICOBAR';
+            INSERT into `zone` (`id`,`name`)
+            values
+            (1,'NORTH') ON DUPLICATE KEY UPDATE name = 'NORTH';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (10,'prepaidAir') ON DUPLICATE KEY UPDATE name = 'prepaidAir';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (20,'prepaidGround') ON DUPLICATE KEY UPDATE name = 'prepaidGround';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (30,'codAir') ON DUPLICATE KEY UPDATE name = 'codAir';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (40,'codGround') ON DUPLICATE KEY UPDATE name = 'codGround';
+        </sql>
+    </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-60">
         <sql>
             DELETE FROM courier_service_info where pincode_id=13701;
