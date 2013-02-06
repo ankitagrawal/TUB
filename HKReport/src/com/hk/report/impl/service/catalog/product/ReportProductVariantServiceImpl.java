@@ -112,7 +112,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
     }
 
     public List<RTOReportDto> getRTOProductsDetail(Date startDate, Date endDate, Warehouse warehouse) {
-        List<ShippingOrder> shippingOrderList = reportProductVariantDao.getShippingOrdersByReturnDate(startDate, endDate, EnumShippingOrderStatus.SO_Returned, warehouse);
+        List<ShippingOrder> shippingOrderList = reportProductVariantDao.getShippingOrdersByReturnDate(startDate, endDate, EnumShippingOrderStatus.SO_RTO, warehouse);
         Iterator<ShippingOrder> iteratorShippingOrder = shippingOrderList.iterator();
         List<RTOReportDto> rtoReportDtoList = new ArrayList<RTOReportDto>();
         RTOReportDto rtoReportDto;
