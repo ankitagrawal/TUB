@@ -26,6 +26,7 @@ import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.courier.EnumQuantiumCourierCodes;
@@ -164,8 +165,9 @@ public class TrackCourierAction extends BaseAction {
 				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
 				courierName = CourierConstants.FEDEX;
         		///ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
-				status = new FedExTrackShipmentUtil().trackFedExShipment(trackingId).getAwbStatus();
-				if(status != null){
+				ThirdPartyTrackDetails thirdPartyTrackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);				
+				if(thirdPartyTrackDetails != null){
+				  status = thirdPartyTrackDetails.getAwbStatus();
 				  resolution = new ForwardResolution("/pages/courierDetails.jsp");
 				}
 				else {
