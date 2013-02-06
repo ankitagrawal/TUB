@@ -174,9 +174,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void approveKarmaPoints(Long orderId) {
-		String queryStr = "from UserOrderKarmaProfile u where u.orderId=:orderId";
-		Object[] params = {orderId};
-		UserOrderKarmaProfile profile = (UserOrderKarmaProfile) userOrderKarmaProfileDao.findByQuery(queryStr, params).get(0);
+		Order order = orderDao.get(Order.class, orderId);
+		UserOrderKey uOKey = new UserOrderKey();
+		uOKey.setOrder(order);
+		uOKey.setUser(order.getUser());
+		UserOrderKarmaProfile profile = userOrderKarmaProfileDao.get(UserOrderKarmaProfile.class, uOKey);
 		profile.setStatus(karmaPointStatus.APPROVED);
 		userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
