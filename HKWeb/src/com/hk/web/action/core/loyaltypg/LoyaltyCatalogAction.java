@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.loyaltypg.Badge;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -28,6 +29,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private int defaultPerPage = 10;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
+	private List<Badge> badgeList;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -49,6 +51,11 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		
 		productPage = new Page(productList, getPerPage(), getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
+	}
+
+	public Resolution aboutLoyaltyProgram(){
+
+		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}
 	
 	@Override
@@ -73,5 +80,13 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	
 	public List<LoyaltyProduct> getProductList() {
 		return productList;
+	}
+
+	public List<Badge> getBadgeList() {
+		return badgeList;
+	}
+
+	public void setBadgeList(List<Badge> badgeList) {
+		this.badgeList = badgeList;
 	}
 }

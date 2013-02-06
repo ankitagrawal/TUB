@@ -153,6 +153,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
+	public List<Badge> getAllBadges() {
+		return baseDao.getAll(Badge.class);
+	}
+
+	@Override
 	@Transactional
 	public void debitKarmaPoints(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);

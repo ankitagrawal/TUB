@@ -3,6 +3,7 @@ package com.hk.loyaltypg.service;
 import java.util.Collection;
 import java.util.List;
 
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 
@@ -29,4 +30,6 @@ public interface LoyaltyProgramService {
 	double aggregatePoints(Long orderId);
 	
 	UserBadgeInfo getUserBadgeInfo(Long userId);
+
+	List<Badge> getAllBadges();
 }
