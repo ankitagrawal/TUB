@@ -26,18 +26,23 @@
 						</thead>
 						<tbody>
 							<c:forEach items="${asa.addressList}" var="address">
+
 								<tr>
 									<td>
 										<address>
-											<strong>${address.name}</strong><br> ${address.line1},
-											${address.line2}<br> ${address.city}<br>
-											${address.state}, ${address.pincode.pincode}<br> <abbr title="Phone">P:</abbr>
-											${address.phone}
+											<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
+											        event="confirm" style="font-size:15px; text-decoration: none;">
+												<s:param name="selectedAddressId" value="${address.id}"/>
+												<strong>${address.name}</strong><br> ${address.line1},
+												${address.line2}<br> ${address.city}<br>
+												${address.state}, ${address.pincode.pincode}<br> <abbr
+													title="Phone">P:</abbr>
+												${address.phone}
+											</s:link>
 										</address>
 									</td>
-									<td><s:radio name="selectedAddressId"
-											value="${address.id}" /></td>
 								</tr>
+
 							</c:forEach>
 						</tbody>
 					</table>

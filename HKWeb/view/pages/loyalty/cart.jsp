@@ -53,9 +53,27 @@
 					<tbody>
 						<c:forEach items="${ca.loyaltyProductList}" var="lp">
 							<tr>
-								<td width="50%"><img
-									src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
-									alt="${lp.variant.product.name}" /> <h8>${lp.variant.product.name}</h8>
+								<td width="50%">
+									<table>
+										<tr>
+											<td width="20%"><img
+													src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
+													alt="${lp.variant.product.name}"/>
+											</td>
+											<td width="80%">
+												<h8>${lp.variant.product.name}</h8>
+												<ul>
+													<c:forEach items="${lp.variant.productOptions}" var="productOption"
+													           varStatus="ctr">
+													<li style="font-size:12px;">${productOption.name}:${productOption.value}
+														</c:forEach>
+												</ul>
+											</td>
+										</tr>
+
+									</table>
+
+
 								</td>
 								<td width="30%">
 

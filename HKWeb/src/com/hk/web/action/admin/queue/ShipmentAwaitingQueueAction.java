@@ -95,9 +95,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private Date                       endDate;
   @Autowired
   private UserService                userService;
-
-  @Autowired
-  LoyaltyProgramService              loyaltyProgramService;
 	
   private Warehouse                  warehouse;
 
@@ -152,9 +149,6 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
         String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
         shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
         adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
-
-	    //loyalty program
-	    loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder().getId());
       }
       addRedirectAlertMessage(new SimpleMessage("Orders have been marked as shipped"));
     } else {

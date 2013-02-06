@@ -60,6 +60,7 @@
 	    <span style="float:left">
 		    Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)}
 	    </span>
+	    <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
 	    
 	    <span class="pull-right">
 	    Welcome,
@@ -68,7 +69,7 @@
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
                 </strong>
-		    &nbsp;&nbsp;&nbsp;
+		    &nbsp;&nbsp;&nbsp; (${badge.badgeName})
 		</span>
 
 
