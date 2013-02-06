@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.order;
 import java.util.*;
 
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,12 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
-import com.hk.domain.core.OrderStatus;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
@@ -97,13 +96,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	@Autowired
     private SMSManager                smsManager;
 
+	@Autowired
+	private LoyaltyProgramService loyaltyProgramService;
+
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double                    codMinAmount;
 
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double                    codMaxAmount;
-    
-    @Autowired LoyaltyProgramService loyaltyProgramService;
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -165,9 +165,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
-            
-            loyaltyProgramService.cancelKarmaPoints(order.getId());
-            
+
+	        loyaltyProgramService.cancelKarmaPoints(order.getId());
+	        
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                 emailManager.sendOrderCancelEmailToUser(order);
@@ -310,7 +310,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Transactional
     public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Returned, EnumOrderStatus.RTO);
+        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
             logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {
@@ -398,55 +398,33 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         boolean codAllowedonProduct = true;
-        // boolean codAllowed = false;
 
         for (CartLineItem productCartLineItem : productCartLineItems) {
-            ProductVariant productVariant = productCartLineItem.getProductVariant();
-            if (productVariant != null && productVariant.getProduct() != null) {
-                Product product = productVariant.getProduct();
-                if (product.isCodAllowed() != null && !product.isCodAllowed()) {
-                    codFailureMap.put("ProductName", product.getName());
-                    codAllowedonProduct = false;
-
-                }
-                if (product.isGroundShipping()) {
-                    codFailureMap.put("GroundShipProduct", product.getName());
-                }
+            Product product = productCartLineItem.getProductVariant().getProduct();
+            if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+                codAllowedonProduct = false;
+                break;
             }
         }
-
-        Address address = order.getAddress();
-        String pin = address != null ? address.getPincode().getPincode() : null;
 
         OrderSearchCriteria osc = new OrderSearchCriteria();
         osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
         List<Order> rtoOrders = getOrderService().searchOrders(osc);
 
-        // Double payable = pricingDto.getGrandTotalPayable();
-        //Double payable = order.getAmount();
-        if (!pincodeCourierService.isCodAllowed(pin)) {
-            codFailureMap.put("CodAllowedOnPin", "N");
-            codFailureMap.put("Pincode", pin);
-        } else if (payable < codMinAmount || payable > codMaxAmount) {
+        if (payable < codMinAmount || payable > codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
-        } else if (!codAllowedonProduct) {
-            codFailureMap.put("CodAllowedOnProduct", "N");
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
             codFailureMap.put("CodOnSubscription", "N");
-        } else if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            if (pincodeCourierService.isGroundShippingAllowed(pin)) {
-                codFailureMap.put("GroundShippingAllowed", "Y");
-            }
-            if (!pincodeCourierService.isCodAllowedOnGroundShipping(pin)) {
-                codFailureMap.put("CodAllowedOnGroundShipping", "N");
-            }
+        } else if (!codAllowedonProduct) {
+            codFailureMap.put("CodAllowedOnProduct", "N");
+        } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
+            codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
-          osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
-          List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
-          if (rtoOrders.size() >= totalDeliveredOrders.size())
-            codFailureMap.put("MutipleRTOs", "Y");
+            osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
+            List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
+            if (rtoOrders.size() >= totalDeliveredOrders.size())
+                codFailureMap.put("MutipleRTOs", "Y");
         }
         return codFailureMap;
     }

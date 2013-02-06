@@ -362,7 +362,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Returned, EnumOrderStatus.RTO);
+        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
             getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {

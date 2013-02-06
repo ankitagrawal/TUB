@@ -366,6 +366,17 @@
             ${hk:netInventory(${object})}
         </example>
     </function>
+	<function>
+		<description>
+			returns the net inventory  of product variant or sku
+		</description>
+		<name>netInventoryAtServiceableWarehouses</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>java.lang.Long netInventoryAtServiceableWarehouses(java.lang.Object)</function-signature>
+		<example>
+			${hk:netInventoryAtServiceableWarehouses(${object})}
+		</example>
+	</function>
     <function>
         <description>
             returns the net available unbooked inventory of product variant or sku

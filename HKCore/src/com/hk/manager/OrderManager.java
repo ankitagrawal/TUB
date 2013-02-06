@@ -590,7 +590,8 @@ public class OrderManager {
                         if (product.isJit() != null && product.isJit())
                             isJit = true;
                         if (!isJit && !isService) {
-                            List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+                            //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+	                        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
                             if (skuList != null && !skuList.isEmpty()) {
                                 Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
                                 if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
@@ -661,7 +662,8 @@ public class OrderManager {
         if (product.isJit() != null && product.isJit())
             isJit = true;
         if (!isJit && !isService) {
-            Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+            //Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariant(productVariant));
+	        Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
             if (unbookedInventory != null && unbookedInventory > 0 && unbookedInventory < cartLineItem.getQty()) {
                 return false;
             }
