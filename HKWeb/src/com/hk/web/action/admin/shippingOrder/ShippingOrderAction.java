@@ -6,6 +6,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -15,8 +16,11 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +42,8 @@ public class ShippingOrderAction extends BaseAction {
 	SkuService skuService;
 
 	private ReplacementOrderReason rtoReason;
+
+  private String customerReturnReason;
 
 	public Resolution flipWarehouse() {
 		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
@@ -64,6 +70,12 @@ public class ShippingOrderAction extends BaseAction {
 		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
 		return new JsonResolution(healthkartResponse);
+	}
+
+  public Resolution markOrderCustomerReturn() {
+    getBaseDao().save(shippingOrder);
+    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Return, customerReturnReason);
+		return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderId", shippingOrder.getId());
 	}
 
 	@JsonHandler
@@ -150,4 +162,8 @@ public class ShippingOrderAction extends BaseAction {
 	public void setRtoReason(ReplacementOrderReason rtoReason) {
 		this.rtoReason = rtoReason;
 	}
+
+  public void setCustomerReturnReason(String customerReturnReason) {
+    this.customerReturnReason = customerReturnReason;
+  }
 }

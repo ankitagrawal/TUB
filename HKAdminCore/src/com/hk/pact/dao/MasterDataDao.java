@@ -170,4 +170,6 @@ public interface MasterDataDao
 
     public List<Courier> getCouriersForDispatchLot();
 
+	public List<PaymentMode> getPaymentModeForStore();
+
 }

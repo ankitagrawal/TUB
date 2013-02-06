@@ -2,10 +2,8 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
@@ -16,8 +14,6 @@
 
 <s:layout-render name="/layouts/genericG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
-
-
 
 <s:layout-component name="htmlHead">
   <meta name="description"

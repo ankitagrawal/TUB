@@ -58,7 +58,8 @@ public class BinGenerator {
     }
 
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList);
         }

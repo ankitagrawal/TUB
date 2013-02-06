@@ -3,10 +3,9 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
-<c:set var="shippingOrderStatusDelivrd" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
+<c:set var="shippingOrderStatusCustomerReturn" value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"/>
 <c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
-<c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create Replacement Order">
     <s:useActionBean beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction"
@@ -114,10 +113,9 @@
                             ${replacementOrderBean.shippingOrder.orderStatus.name}
                         </td>
                         <td>
-                            <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusDelivrd
-                            || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusShipped}">
+                            <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerReturn}">
                                 <a href="#" id="is-replacement-radio">
-                                    <h5>Create RO<br />for replacement</h5>
+                                    <h5>Create RO<br />for Customer Return</h5>
                                 </a>
                             </c:if>
                         </td>
@@ -126,7 +124,7 @@
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusRTO_instantiated
                             || replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusSO_returned}">
                                 <a href="#" id="is-rto-radio">
-                                    <h5>Create RO<br />for Returned Goods</h5>
+                                    <h5>Create RO<br />for RTO</h5>
                                 </a>
                             </c:if>
                         </td>
