@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
-<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <%
   int lineItemGlobalCtr = 0;
 %>

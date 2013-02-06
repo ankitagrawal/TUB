@@ -140,6 +140,9 @@ public class ShipmentServiceImpl implements ShipmentService {
         Awb suggestedAwb;
         if (ThirdPartyAwbService.integratedCouriers.contains(suggestedCourier.getId())) {
             suggestedAwb = awbService.getAwbForThirdPartyCourier(suggestedCourier, shippingOrder, weightInKg);
+            if(suggestedAwb != null){
+                suggestedAwb = awbService.save(suggestedAwb,EnumAwbStatus.Unused.getId().intValue());
+            }
         } else {
             suggestedAwb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(suggestedCourier, null, shippingOrder.getWarehouse(), isCod, EnumAwbStatus.Unused.getAsAwbStatus());
         }
@@ -151,9 +154,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
         if (suggestedAwb != null) {
             suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-            if (suggestedAwb == null) {
-                return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
-            }
+        } else {
+            return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
         }
         return suggestedAwb;
     }
