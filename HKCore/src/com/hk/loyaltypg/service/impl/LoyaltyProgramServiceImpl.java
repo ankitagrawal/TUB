@@ -21,7 +21,7 @@ import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
-import com.hk.domain.loyaltypg.UserOrderKarmaProfile.karmaPointStatus;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
 import com.hk.domain.loyaltypg.UserOrderKey;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -75,7 +75,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double calculateKarmaPoints(Long userId) {
-		Double credits = calculatePoints(userId, TransactionType.CREDIT, karmaPointStatus.APPROVED);
+		Double credits = calculatePoints(userId, TransactionType.CREDIT, KarmaPointStatus.APPROVED);
 		Double debits = calculatePoints(userId, TransactionType.DEBIT);
 		if(credits == null) {
 			return 0d;
@@ -86,7 +86,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 	}
 	
-	private Double calculatePoints(Long userId, TransactionType transactionType, karmaPointStatus... status) {
+	private Double calculatePoints(Long userId, TransactionType transactionType, KarmaPointStatus... status) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
 		criteria.setProjection(Projections.sum("karmaPints"));
 		
@@ -95,12 +95,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				criteria.add(Restrictions.eq("status", status[0]));
 			} else {
 				Disjunction disjunction = Restrictions.disjunction();
-				for (karmaPointStatus karmaPointStatus : status) {
+				for (KarmaPointStatus karmaPointStatus : status) {
 					disjunction.add(Restrictions.eq("status", karmaPointStatus));
 				}
 				criteria.add(disjunction);
 			}
 		}
+		criteria.add(Restrictions.ne("status", KarmaPointStatus.CANCELED));
 		criteria.add(Restrictions.eq("userOrderKey.user.id", userId));
 		criteria.add(Restrictions.ne("userOrderKey.order.id", -1l));
 		criteria.add(Restrictions.eq("transactionType", transactionType));
@@ -119,7 +120,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		double karmaPoints = (amount* (loyaltyPercentage/100));
 		
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
-		profile.setStatus(karmaPointStatus.PENDING);
+		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
 		profile.setKarmaPints(karmaPoints);
 		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
@@ -163,7 +164,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			};
 		}
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
-		profile.setStatus(karmaPointStatus.PENDING);
+		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.DEBIT);
 		profile.setKarmaPints(karmaPoints);
 		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
@@ -174,13 +175,18 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void approveKarmaPoints(Long orderId) {
+		UserOrderKarmaProfile profile = getUserOrderKarmaProfile(orderId);
+		profile.setStatus(KarmaPointStatus.APPROVED);
+		userOrderKarmaProfileDao.saveOrUpdate(profile);
+	}
+
+	private UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
 		Order order = orderDao.get(Order.class, orderId);
 		UserOrderKey uOKey = new UserOrderKey();
 		uOKey.setOrder(order);
 		uOKey.setUser(order.getUser());
 		UserOrderKarmaProfile profile = userOrderKarmaProfileDao.get(UserOrderKarmaProfile.class, uOKey);
-		profile.setStatus(karmaPointStatus.APPROVED);
-		userOrderKarmaProfileDao.saveOrUpdate(profile);
+		return profile;
 	}
 	
 	@Override
@@ -227,5 +233,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			return 0;
 		}
 		return count;
+	}
+
+	@Override
+	public void cancelKarmaPoints(Long orderId) {
+		UserOrderKarmaProfile profile = getUserOrderKarmaProfile(orderId);
+		profile.setStatus(KarmaPointStatus.CANCELED);
+		userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 }
