@@ -481,4 +481,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
         reconciliationList.add(addReconType);
         return reconciliationList;
     }
+
+	public List<EnumCourierOperations> getAllCourierOperations(){
+		return EnumCourierOperations.getAllCourierOperations();
+	}
 }
