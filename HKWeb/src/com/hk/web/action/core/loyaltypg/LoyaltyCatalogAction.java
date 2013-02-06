@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.loyaltypg.Badge;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -30,6 +32,9 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private List<Badge> badgeList;
+
+	@Autowired
+	LoyaltyProgramService loyaltyProgramService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -54,7 +59,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	}
 
 	public Resolution aboutLoyaltyProgram(){
-
+		badgeList = loyaltyProgramService.getAllBadges();
 		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}
 	

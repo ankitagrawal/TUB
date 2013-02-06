@@ -54,7 +54,9 @@
           <li><a href="http://www.healthkart.com">Visit Healthkart</a></li>
           <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>	      
         </ul>
+	      <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram" style="text-decoration:none;">
         <h4 class="muted"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"> Loyalty Program</h4>
+	      </s:link>
       </div>
 	     <br>
 	    <span style="float:left">
