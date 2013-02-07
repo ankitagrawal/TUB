@@ -11350,6 +11350,148 @@
             <column name="pincode_id"/>
         </createIndex>
     </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-01">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
+			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
+			alter table payment add column last_four_digit_card_no int(11);
+		</sql>
+	</changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-1">
+        <dropForeignKeyConstraint baseTableName="warehouse" constraintName="fk_warehouse_warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-2">
+        <dropColumn columnName="warehouse_type_id" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-3">
+        <dropTable tableName="warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-1">
+        <addColumn tableName="warehouse">
+            <column name="store_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-2">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-02">
+		<sql>
+			update warehouse set store_id = 101 where id = 301;
+		</sql>
+	</changeSet>
+	<changeSet author="Rohit" id="01-02-2013-03">
+		<sql>
+
+			insert into role values ('STORE_MANAGER');
+			insert into permission values ('STORE_MANAGER');
+			insert into role_has_permission values ('STORE_MANAGER','STORE_MANAGER');
+
+		</sql>
+	</changeSet>
+
+	<changeSet author="Seema (generated)" id="1359698681938-1">
+	       <createTable tableName="cycle_count">
+	           <column autoIncrement="true" name="id" type="INT">
+	               <constraints nullable="false" primaryKey="true"/>
+	           </column>
+	           <column name="brands_to_audit_id" type="INT"/>
+	           <column name="user_id" type="INT">
+	               <constraints nullable="false"/>
+	           </column>
+	           <column name="create_dt" type="DATETIME">
+	               <constraints nullable="false"/>
+	           </column>
+	           <column name="end_date" type="DATETIME"/>
+	           <column name="cycle_status" type="INT">
+	               <constraints nullable="false"/>
+	           </column>
+	           <column name="product_id" type="VARCHAR(20)"/>
+	           <column name="product_variant_id" type="VARCHAR(20)"/>
+	           <column name="warehouse_id" type="INT">
+	               <constraints nullable="false"/>
+	           </column>
+	       </createTable>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-2">
+	       <createTable tableName="cycle_count_item">
+	           <column autoIncrement="true" name="id" type="INT">
+	               <constraints nullable="false" primaryKey="true"/>
+	           </column>
+	           <column name="cycle_count_id" type="INT">
+	               <constraints nullable="false"/>
+	           </column>
+	           <column name="sku_group_id" type="INT">
+	               <constraints nullable="false"/>
+	           </column>
+	           <column name="scanned_qty" type="INT"/>
+	       </createTable>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-3">
+	       <addForeignKeyConstraint baseColumnNames="brands_to_audit_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_brands_to_audit1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="brands_to_audit"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-4">
+	       <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-5">
+	       <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-6">
+	       <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-7">
+	       <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="cycle_count"  constraintName="fk_cycle_count_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-8">
+	       <addForeignKeyConstraint baseColumnNames="cycle_count_id" baseTableName="cycle_count_item"  constraintName="fk_cycle_count_item_cycle_count1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="cycle_count"  referencesUniqueColumn="false"/>
+	   </changeSet>
+	   <changeSet author="Seema (generated)" id="1359698681938-9">
+	       <addForeignKeyConstraint baseColumnNames="sku_group_id" baseTableName="cycle_count_item"  constraintName="fk_cycle_count_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group"  referencesUniqueColumn="false"/>
+	   </changeSet>
+
+    <changeSet author="Pradeep (generated)" id="1359352448473-1">
+        <addColumn tableName="hk_api_user">
+            <column name="terms" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep " id="07-02-2013">
+       <sql>
+           update hk_api_user set  terms='http://www.healthkartplus.com/tnc' where api_key='healthkartplus';
+       </sql>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-1">
+        <createTable tableName="courier_pickup_detail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pickup_confirmation_no" type="VARCHAR(70)"/>
+            <column name="tracking_no" type="VARCHAR(70)"/>
+            <column name="pickup_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pickup_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-2">
+        <createTable tableName="pickup_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>            
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-3">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-4">
+        <addForeignKeyConstraint baseColumnNames="pickup_status_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_pickup_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pickup_status" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-1">
         <createTable tableName="extra_inventory_status">
             <column name="id" type="INT">
@@ -11416,77 +11558,5 @@
         <addColumn tableName="extra_inventory">
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
-    </changeSet>
-	<changeSet author="Rohit" id="01-02-2013-01">
-		<sql>
-			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
-			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
-			alter table payment add column last_four_digit_card_no int(11);
-		</sql>
-	</changeSet>
-    <changeSet author="Rohit (generated)" id="1359720145849-1">
-        <dropForeignKeyConstraint baseTableName="warehouse" constraintName="fk_warehouse_warehouse_type"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1359720145849-2">
-        <dropColumn columnName="warehouse_type_id" tableName="warehouse"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1359720145849-3">
-        <dropTable tableName="warehouse_type"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1359722370102-1">
-        <addColumn tableName="warehouse">
-            <column name="store_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1359722370102-2">
-        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
-    </changeSet>
-	<changeSet author="Rohit" id="01-02-2013-02">
-		<sql>
-			update warehouse set store_id = 101 where id = 301;
-		</sql>
-	</changeSet>
-	<changeSet author="Rohit" id="01-02-2013-03">
-		<sql>
-
-			insert into role values ('STORE_MANAGER');
-			insert into permission values ('STORE_MANAGER');
-			insert into role_has_permission values ('STORE_MANAGER','STORE_MANAGER');
-
-		</sql>
-	</changeSet>
-    <changeSet author="Neha (generated)" id="1360226539319-1">
-        <createTable tableName="courier_pickup_detail">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="pickup_confirmation_no" type="VARCHAR(70)"/>
-            <column name="tracking_no" type="VARCHAR(70)"/>
-            <column name="pickup_date" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="courier_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="pickup_status_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360226539319-2">
-        <createTable tableName="pickup_status">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(45)">
-                <constraints nullable="false"/>            
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360226539319-3">
-        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360226539319-4">
-        <addForeignKeyConstraint baseColumnNames="pickup_status_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_pickup_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pickup_status" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
