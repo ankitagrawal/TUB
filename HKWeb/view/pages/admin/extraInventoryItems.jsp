@@ -183,7 +183,13 @@ $(document).ready(function () {
                 alert("Extra Inventory Status can't be closed until all ExtraInventoryLineItems is RTV or PO.");
                 bool  = false;
                 saveObj.show();
+                return false;
           });
+        }
+        if(extraInventoryStatusDB==10 && extraInventoryStatus == 40){
+            alert("Status can't directly change from created to closed.");
+            saveObj.show();
+            return false;
         }
         if (!bool) return false;
     });
