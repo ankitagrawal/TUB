@@ -44,7 +44,7 @@ public class IndiaOntimeCourierTrack {
 				thirdPartyTrackDetails.setAwbStatus(status.getStatusDescription());
 				thirdPartyTrackDetails.setReferenceNo(status.getREF_NO());
 				thirdPartyTrackDetails.setTrackingNo(status.getAWBNo());
-				thirdPartyTrackDetails.setDeliveryDate(status.getStatusDate());
+				thirdPartyTrackDetails.setDeliveryDateString(status.getStatusDate());
 				return thirdPartyTrackDetails;
 			} 			
 		}

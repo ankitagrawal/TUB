@@ -151,8 +151,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each
         // warehouse
         for (CartLineItem cartLineItem : productCartLineItems) {
-            List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-
+            //List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
@@ -270,8 +270,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each
         // warehouse
         for (CartLineItem cartLineItem : productCartLineItems) {
-            List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-
+            //List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
@@ -430,8 +430,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         for (CartLineItem lineItem : productCartLineItems) {
             List<Sku> skuList = new ArrayList<Sku>();
-            skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
-
+            //skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
+	        skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(lineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();

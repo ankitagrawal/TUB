@@ -104,6 +104,10 @@ public class PincodeDefaultCourier implements java.io.Serializable {
         return cod;
     }
 
+  public boolean getCod(){
+    return cod;
+  }
+
     public void setCod(boolean cod) {
         this.cod = cod;
     }
@@ -111,6 +115,10 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     public boolean isGroundShipping() {
         return groundShipping;
     }
+
+  public boolean getGroundShipping(){
+    return groundShipping;
+  }
 
     public void setGroundShipping(boolean groundShipping) {
         this.groundShipping = groundShipping;

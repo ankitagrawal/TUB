@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @SuppressWarnings ("serial")
 @Entity
-@Table(name = "courier_pickup_details")
+@Table(name = "courier_pickup_detail")
 public class CourierPickupDetail {
 
 	@Id
@@ -25,10 +25,10 @@ public class CourierPickupDetail {
     @JoinColumn(name = "courier_id", nullable = false)
     private Courier courier;
 
-	@Column(name = "pickup_confirmation_no")
+	@Column(name = "pickup_confirmation_no", length = 70)
 	private String pickupConfirmationNo;
 
-	@Column(name = "tracking_no")
+	@Column(name = "tracking_no", length = 70)
 	private String trackingNo;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -79,11 +79,11 @@ public class CourierPickupDetail {
 		this.pickupStatus = pickupStatus;
 	}
 
-	public ReconciliationStatus getReconciliationStatus() {
-		return reconciliationStatus;
+	public String getTrackingNo() {
+		return trackingNo;
 	}
 
-	public void setReconciliationStatus(ReconciliationStatus reconciliationStatus) {
-		this.reconciliationStatus = reconciliationStatus;
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 }

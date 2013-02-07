@@ -56,7 +56,7 @@
 <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
-<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
@@ -252,10 +252,46 @@
             </s:link>)
                 
             </shiro:hasAnyRoles>
+            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
+                    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+                        <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
+                        <b>Customer Return:</b>
+                        <s:select name="shippingOrder.orderStatus">
+                            <s:option
+                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
+                            </s:option>
+                            <s:option
+                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                            </s:option>
+                        </s:select>
+                        <br/><b>Customer Return Reason:</b> 
+                        <s:select name="customerReturnReason" id="return-reason">
+		                    <s:option value="null">-Select Reason-</s:option>
+		                    <s:option value="Damaged Product">Damaged Product</s:option>
+		                    <s:option value="Expired Product">Expired Product</s:option>
+		                    <s:option value="Wrong Product">Wrong Product</s:option>
+		                    <s:option value="Not Interested">Not Interested</s:option>
+	                    </s:select>
+                        <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save" style="padding:1px;"/>
+                    </s:form>
+                    <script type="text/javascript">
+                        $('.markOrderCustomerReturnButton').click(function() {
+	                        if($('#return-reason').val()=="null"){
+		                        alert("Please select a reason for Customer Return !");
+		                        return false;
+	                        }
+                            var proceed = confirm('Are you sure?');
+                            if (!proceed) return false;
+                        });
+                       
+                    </script>
+                </shiro:hasAnyRoles>
+            </c:if>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
                 <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
                 <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusDelivered || shippingOrderStatusId == shippingOrderStatusLost}">
+                        test="${shippingOrderStatusId == shippingOrderStatusShipped || shippingOrderStatusId == shippingOrderStatusLost}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
@@ -289,9 +325,7 @@
                         }
                     </script>
                 </c:if>
-            </shiro:hasAnyRoles>
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_LOGISTICS_ADMIN%>">
-                <c:set var="shippingOrderStatusId" value="${shippingOrder.orderStatus.id}"/>
+
                 <c:if
                         test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
