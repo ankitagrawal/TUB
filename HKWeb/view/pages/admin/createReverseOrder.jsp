@@ -34,9 +34,9 @@
         <s:form beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction">
           <s:errors/>
           <h4>Reverse Order Items:</h4>
-          <c:forEach items="${reverseOrderAction.}" varStatus="ctr">
+          <c:forEach var="shippingOrder" items="${reverseOrderAction.shippingOrder}" varStatus="ctr">
               <li>
-                  
+                 }
               </li>
           </c:forEach>
 

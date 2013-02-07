@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.fedex.pickup.stub.*;
 
 import com.hk.domain.order.ShippingOrder;
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.constants.courier.CourierConstants;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.akube.framework.util.StringUtils;
 
 /**
@@ -91,7 +91,7 @@ public class FedExPickupServiceUtil {
 	    address.setStreetLines(street);
 	    address.setCity(HKAddress.getCity());//"Foster City");
 	    address.setStateOrProvinceCode(HKAddress.getState());//"CA");
-	    address.setPostalCode(HKAddress.getPin());//"94404");
+	    address.setPostalCode(HKAddress.getPincode().getPincode());//"94404");
 	    address.setCountryCode("IN");//"US");
 	    party.setAddress(address);
 	    PickupOriginDetail.setPickupLocation(party);

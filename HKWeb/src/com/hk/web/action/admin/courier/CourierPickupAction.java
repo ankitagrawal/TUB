@@ -4,14 +4,15 @@ import com.akube.framework.stripes.action.BaseAction;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 
-import com.hk.admin.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.constants.courier.CourierConstants;
@@ -56,7 +57,7 @@ public class CourierPickupAction extends BaseAction {
 	@Autowired
 	CourierService courierService;
 	@Autowired
-	CourierServiceInfoDao courierServiceInfoDao;
+	PincodeCourierService pincodeCourierService;
 	@Autowired
 	ShipmentService shipmentService;
 	@Autowired
@@ -96,11 +97,12 @@ public class CourierPickupAction extends BaseAction {
 	public Resolution submit() {
 		if (shippingOrderId != null && pickupDate != null) {
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
-			String pin = shippingOrder.getBaseOrder().getAddress().getPin();
+			String pin = shippingOrder.getBaseOrder().getAddress().getPincode().getPincode();
 			Courier courier = EnumCourier.getEnumCourierFromCourierId(courierId).asCourier();
 			//Boolean isCodAllowedOnGroundShipping = courierService.isCodAllowedOnGroundShipping(pin);
-			Boolean isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
-			if (courierServiceInfoDao.isCourierServiceInfoAvailable(courierId, pin, false, isGroundShipped, false)) {
+			//Boolean isGroundShipped = shipmentService.isShippingOrderHasGroundShippedItem(shippingOrder);
+			// TODO : get all applicable couriers
+			//if (pincodeCourierService.get(courierId, pin, false, isGroundShipped, false)) {
 				ThirdPartyPickupService thirdPartyPickupService = ThirdPartyCourierServiceFactory.getThirdPartyPickupService(courierId);
 				List<String> pickupReply = thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate);
 				if (pickupReply != null) {
@@ -111,15 +113,17 @@ public class CourierPickupAction extends BaseAction {
 						User loggedOnUser = getUserService().getLoggedInUser();
 						reversePickupDao.savePickupRequest(shippingOrder, courier, confirmationNo,pickupDate,
 								EnumPickupStatus.OPEN.asPickupStatus(), EnumReconciliationStatus.PENDING.asReconciliationStatus(), loggedOnUser);
+						return new RedirectResolution(CreateReverseOrderAction.class).addParameter("shippingOrder", shippingOrder);
 					}else{
 						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
 					}
 				} else {
 					addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request."));
 				}
-			} else {
-				addRedirectAlertMessage(new SimpleMessage("The selected courier does not service the pincode"));
-			}
+
+//			else {
+//				addRedirectAlertMessage(new SimpleMessage("The selected courier does not service the pincode"));
+//			}
 		}
 		return new ForwardResolution("/pages/admin/reversePickup.jsp");
 	}

@@ -14,7 +14,7 @@ import java.util.Date;
 @SuppressWarnings ("serial")
 @Entity
 @Table(name = "courier_pickup_detail")
-public class CourierPickupDetail {
+public class CourierPickupDetail implements java.io.Serializable{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)

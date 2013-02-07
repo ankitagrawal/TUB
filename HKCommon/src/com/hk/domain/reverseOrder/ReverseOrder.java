@@ -11,7 +11,10 @@ import javax.persistence.*;
  * Created by IntelliJ IDEA. * User: Neha * Date: Feb 6, 2013 * Time: 1:07:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ReverseOrder {
+@SuppressWarnings ("serial")
+@Entity
+@Table(name = "reverse_order")
+public class ReverseOrder implements java.io.Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
