@@ -184,15 +184,16 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" class="courier">
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" id="courier${ctr.index}">
                                     <s:option value="-1">-Select-</s:option>
                                     <c:forEach items="${cdca.availableCouriers}" var="courier">
                                         <s:option value="${courier.id}">${courier.name}</s:option>
                                     </c:forEach>
                                 </s:select>
                                 <script type="text/javascript">
-                                    $('.courier').val(${pincodeDefaultCourier.courier.id});
-                                </script>                            </td>
+                                    $('#courier${ctr.index}').val(${pincodeDefaultCourier.courier.id});
+                                </script>
+                            </td>
                             <td>
                                     ${pincodeDefaultCourier.warehouse.name}
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>

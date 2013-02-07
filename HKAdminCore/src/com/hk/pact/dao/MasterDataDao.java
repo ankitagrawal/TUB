@@ -171,6 +171,8 @@ public interface MasterDataDao
 
     public List<Courier> getCouriersForDispatchLot();
 
-	public List<EnumCycleCountStatus> getAllCycleCountStatus();
+	public List<PaymentMode> getPaymentModeForStore();
+
+ public List<EnumCycleCountStatus> getAllCycleCountStatus();
 
 }
