@@ -67,7 +67,8 @@ public class OfferAction implements java.io.Serializable {
 	@Column (name = "reward_point_redeem_within_days")
   private Integer rewardPointRedeemWithinDays;
 
-  @Column(name = "free_variant_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "free_variant_id")
   private ProductVariant freeVariant;
 
   public Long getId() {

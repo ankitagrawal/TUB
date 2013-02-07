@@ -24,6 +24,7 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferEmailDomain;
+import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -35,6 +36,8 @@ import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.core.cart.CartAction;
+import com.hk.dto.pricing.PricingDto;
+import com.hk.util.OfferTriggerMatcher;
 
 /**
  * User: rahul Time: 8 Jan, 2010 6:19:28 PM
@@ -75,6 +78,8 @@ public class ApplyCouponAction extends BaseAction {
     public static final String error_alreadyApplied     = "error_alreadyApplied";
     public static final String error_alreadyReferrer    = "error_alreadyReferrer";
     public static final String error_referralNotAllowed = "error_referralNotAllowed";
+    public static final String error_couponExpired      = "error_couponExpired";
+    public static final String error_freeVariantStockOver    = "error_freeVariantStockOver";
 
     private OfferInstance      offerInstance;
 
@@ -116,6 +121,7 @@ public class ApplyCouponAction extends BaseAction {
                 }
             } else if (!coupon.isValid()) {
                 message = new LocalizableMessage("/ApplyCoupon.action.expired.coupon").getMessage(getContext().getLocale());
+                error = error_couponExpired;
             } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                 error = error_role;
 	            Offer offer = coupon.getOffer();
@@ -171,12 +177,19 @@ public class ApplyCouponAction extends BaseAction {
                 success = true;
 
               ProductVariant freeVariant = coupon.getOffer().getOfferAction().getFreeVariant();
-              if (freeVariant != null && !freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
-                orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
-                return new RedirectResolution(CartAction.class);
-              }
-
+              if (freeVariant != null) {
+                //OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(coupon.getOffer().getOfferTrigger(), order.getCartLineItems());
+                //&& offerTriggerMatcher.hasEasyMatch(false)
+                if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                  orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
+                  message = "Free variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh<a> your cart.";
+                } else {
+                  message = "Oops! Offer is over.";
+                  error = error_freeVariantStockOver;
+                }
+              } else {
                 message = new LocalizableMessage("/ApplyCoupon.action.coupon.successfully.applied").getMessage(getContext().getLocale());
+              }
             }
         }
 
