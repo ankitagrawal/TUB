@@ -36,7 +36,6 @@
             pageContext.setAttribute("googleProduct", product);
         }
     %>
-
     <input type="hidden" value="${pageType}" id="pageType">
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
     <input type="hidden" value="${googleProduct.id}" id="googleProductId">
@@ -93,7 +92,7 @@
 
                         </c:when>
                         <c:otherwise>
-                            <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <c:set var="googleProductsSelected" value="${googleProductsSelected},${cartLineItem.productVariant.product.id}"/>
                             <c:set var="canGoogleRemarket" value="true"/>
                         </c:otherwise>
                     </c:choose>
@@ -108,7 +107,7 @@
 
                         </c:when>
                         <c:otherwise>
-                            <c:set var="googleProductsSelected" value="${googleProductsSelected},'${cartLineItem.productVariant.product.id}'"/>
+                            <c:set var="googleProductsSelected" value="${googleProductsSelected},${cartLineItem.productVariant.product.id}"/>
                             <c:set var="canGoogleRemarket" value="true"/>
                         </c:otherwise>
                     </c:choose>
@@ -121,7 +120,7 @@
     <input type="hidden" value="${googleProductsSelected}" id="cartProductId">
 
     <%--<c:otherwise>--%>
-    <g:if test="${canGoogleRemarket == 'true'}">
+    <c:if test="${canGoogleRemarket == 'true'}">
 
         <!--------------------------------------------------------
         PLEASE INCLUDE THIS COMMENT ON THE WEB PAGE WITH THE TAG
@@ -174,11 +173,11 @@
             }
             //if(canSet)
             {
-                //alert( 'prodid:' + "'" + prodId + "'" + 'pagetype:' +  "'" + hkPageType + "'" + 'pCat:' +  "'" + pCategory + "'");
+                //alert( 'prodid:' +  prodId + 'pagetype:'  + hkPageType  + 'pCat:' + pCategory);
                 var google_tag_params = {
-                    prodid: "'" + prodId + "'" ,
-                    pagetype: "'" + hkPageType + "'",
-                    pcat: "'" + pCategory + "'",
+                    prodid:  prodId.split(','),
+                    pagetype: hkPageType,
+                    pcat: pCategory,
                     use_case: 'retail'
                 };
             }
@@ -186,8 +185,8 @@
 
         <script type="text/javascript">
             /* <![CDATA[ */
-            var google_conversion_id = 1001307632;
-            var google_conversion_label = "wwUqCJDx5AQQ8Pu63QM";
+            var google_conversion_id = 992091386;
+            var google_conversion_label = "NUAUCK7figQQ-rmI2QM";
             var google_custom_params = window.google_tag_params;
             var google_remarketing_only = true;
             /* ]]> */
@@ -196,9 +195,9 @@
         </script>
         <noscript>
             <div style="display:inline;">
-                <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1001307632/?value=0&amp;label=wwUqCJDx5AQQ8Pu63QM&amp;guid=ON&amp;script=0"/>
+                <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/992091386/?value=0&amp;label=NUAUCK7figQQ-rmI2QM&amp;guid=ON&amp;script=0"/>
             </div>
         </noscript>
-    </g:if>
+    </c:if>
     <%--</c:otherwise>--%>
 </s:layout-definition>

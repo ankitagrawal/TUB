@@ -123,6 +123,10 @@ public class PincodeCourierMappingAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadExcel() {
+      if(fileBean==null){
+        addRedirectAlertMessage(new SimpleMessage("Please Select a File!!"));
+        return new RedirectResolution(PincodeCourierMappingAction.class,"search").addParameter("pin",pin);
+      }
         try {
             Set<PincodeCourierMapping> pincodeCourierMappingSet = new HashSet<PincodeCourierMapping>();
             String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";
@@ -136,6 +140,7 @@ public class PincodeCourierMappingAction extends BaseAction {
         } catch (Exception e) {
             logger.error("Exception while uploading pincode courier mapping excel " + e.getMessage());
         }
+        addRedirectAlertMessage(new SimpleMessage("Mapping Updated!!"));
         return new ForwardResolution("/pages/admin/courier/pincodeCourierMapping.jsp");
     }
 

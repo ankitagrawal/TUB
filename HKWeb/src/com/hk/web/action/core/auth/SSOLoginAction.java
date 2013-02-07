@@ -24,7 +24,6 @@ import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.mgt.SecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +63,6 @@ public class SSOLoginAction extends BaseAction{
     HkAuthService hkAuthService;
     @Autowired
     UserManager userManager;
-    @Autowired
-    SecurityManager securityManager;
     @Autowired
     UserService userService;
     @Autowired

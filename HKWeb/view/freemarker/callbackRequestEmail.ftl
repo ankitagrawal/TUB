@@ -7,13 +7,15 @@ Callback Request(Non-Paid) - ${dcml.category}
 
 <#include "header.ftl">
 
-<p>Category:${dcml.category}</p>
+<p><strong>Category: </strong>${dcml.category}</p>
 
-<p>Name:${dcml.name}</p>
+<p><strong>UserId: </strong>${userId}</p>
 
-<p>Email:${dcml.email}</p>
+<p><strong>Name: </strong>${dcml.name}</p>
 
-<p>Mobile:${dcml.mobile}</p>
+<p><strong>Email: </strong>${dcml.email}</p>
+
+<p><strong>Mobile: </strong>${dcml.mobile}</p>
 
 
 <p>- HealthKart Admin</p>

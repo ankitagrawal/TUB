@@ -100,7 +100,7 @@ HealthKart.com <br />
     <td align="center" valign="middle" style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
 
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-    &copy; 2011 HealthKart.com. All Rights Reserved. </td>
+    &copy; 2013 HealthKart.com. All Rights Reserved. </td>
   </tr>
 </table>
 </body>

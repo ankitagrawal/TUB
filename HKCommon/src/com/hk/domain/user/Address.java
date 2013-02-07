@@ -32,7 +32,7 @@ public class Address implements java.io.Serializable {
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pincode_id")
+    @JoinColumn(name = "pincode_id", nullable = false)
     private Pincode pincode;
 
     @Column(name = "name", nullable = false, length = 150)
@@ -57,7 +57,7 @@ public class Address implements java.io.Serializable {
     private String phone;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
     @Column(name = "deleted", nullable = false, length = 30)

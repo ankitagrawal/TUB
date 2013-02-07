@@ -75,7 +75,8 @@
                         <c:forEach items="${splitter.order.productCartLineItems}" var="cartLineItem">
                             <%
                                 CartLineItem cartLineItem= (CartLineItem) pageContext.getAttribute("cartLineItem");
-                                List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+                                //List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	                            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
                                 pageContext.setAttribute("skus", skus);
                             %>
                             <tr>

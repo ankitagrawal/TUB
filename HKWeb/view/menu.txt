@@ -148,6 +148,12 @@
 --/sports/fitness-accessories/miscellaneous-accessories
 --/sports/fitness-accessories/sklz : SKLZ
 -/sports/fitness-equipment
+--/sports/fitness-equipment/premium-fitness-equipments
+---/sports/fitness-equipment/premium-fitness-equipments/treadmills
+---/sports/fitness-equipment/premium-fitness-equipments/crosstrainers
+---/sports/fitness-equipment/premium-fitness-equipments/exercise-bikes
+---/sports/fitness-equipment/premium-fitness-equipments/home-gyms
+---/sports/fitness-equipment/premium-fitness-equipments/miscellaneous-equipments
 --/sports/fitness-equipment/treadmills
 ---/sports/fitness-equipment/treadmills/home
 ---/sports/fitness-equipment/treadmills/commercial
@@ -241,6 +247,7 @@
 --/sports/apparel/bags
 --/sports/apparel/caps
 --/sports/apparel/socks
+--/sports/apparel/tracksuits
 --/sports/apparel/bottles-shakers : Bottles & Shakers
 --/sports/apparel/miscellaneous
 -/sports/footwear
