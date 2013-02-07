@@ -11388,6 +11388,7 @@
 
 		</sql>
 	</changeSet>
+
 	<changeSet author="Seema (generated)" id="1359698681938-1">
 	       <createTable tableName="cycle_count">
 	           <column autoIncrement="true" name="id" type="INT">
@@ -11446,4 +11447,17 @@
 	   <changeSet author="Seema (generated)" id="1359698681938-9">
 	       <addForeignKeyConstraint baseColumnNames="sku_group_id" baseTableName="cycle_count_item"  constraintName="fk_cycle_count_item_sku_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_group"  referencesUniqueColumn="false"/>
 	   </changeSet> 	
+
+    <changeSet author="Pradeep (generated)" id="1359352448473-1">
+        <addColumn tableName="hk_api_user">
+            <column name="terms" type="VARCHAR(500)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pradeep " id="07-02-2013">
+       <sql>
+           update hk_api_user set  terms='http://www.healthkartplus.com/tnc' where api_key='healthkartplus';
+       </sql>
+    </changeSet>
+
+
 </databaseChangeLog>
