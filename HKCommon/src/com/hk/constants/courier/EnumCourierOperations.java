@@ -1,5 +1,9 @@
 package com.hk.constants.courier;
 
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Pratham
@@ -46,4 +50,22 @@ public enum  EnumCourierOperations {
         this.id = id;
         this.name = name;
     }
+
+
+
+	public  static List<EnumCourierOperations> getAllCourierOperations() {
+		return Arrays.asList(HK_SHIPPING, CUSTOMER_RETURNS, COLLECT_FROM_SUPPLIER, DEBIT_NOTE, DISPATCH_LOT, VENDOR_DROP_SHIP);
+
+	}
+
+	public static List<Long> getFactorsOfOperationBit(Long number) {
+		List<Long> operationBitSetIdList = new ArrayList<Long>();
+		for (EnumCourierOperations courierOperations : getAllCourierOperations()) {
+			if (((number.longValue()) % (courierOperations.getId().longValue())) == 0) {
+				operationBitSetIdList.add(courierOperations.getId());
+			}
+		}
+		return operationBitSetIdList;
+
+	}
 }

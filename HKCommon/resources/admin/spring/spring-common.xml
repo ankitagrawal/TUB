@@ -94,6 +94,9 @@
             definition and
          2) even know which Shiro objects require these methods to be
             called. -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
     <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
