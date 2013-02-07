@@ -10811,6 +10811,39 @@
     <changeSet author="Tarun (generated)" id="1356676742452-2">
         <addForeignKeyConstraint baseColumnNames="runsheet_id" baseTableName="consignment_tracking" constraintName="fk_consignment_tracking_runsheet1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="runsheet" referencesUniqueColumn="false"/>
     </changeSet>
+	<changeSet author="Pradeep (5-1-2103)" id="05-01-2013-01">
+        <sql>
+            INSERT INTO store(id, name, prefix, callback_rest_url)
+            SELECT * FROM (SELECT 3, 'FitnessPro', 'FP', 'http://fitnesspro.healthkart.com/rest/api') AS tmp
+            WHERE NOT EXISTS (
+            SELECT name FROM store WHERE id = 3
+            ) LIMIT 1;
+
+            INSERT INTO store(id, name, prefix, callback_rest_url)
+            SELECT * FROM (SELECT 2, 'MadeInHealth', 'MIH', 'http://www.madeinhealth.com/rest/api') AS tmp
+            WHERE NOT EXISTS (
+            SELECT name FROM store WHERE id = 2
+            ) LIMIT 1;
+
+            update store set callback_rest_url='http://www.madeinhealth.com/rest/api' where id=2;
+        </sql>
+    </changeSet>
+    <changeSet author="Pradeep (6-1-2103)" id="06-01-2013-01">
+    <sql>
+        TRUNCATE hk_api_user;
+
+        ALTER TABLE hk_api_user DROP COLUMN id;
+
+        ALTER TABLE hk_api_user ADD COLUMN id INT(11) NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY id(id);
+
+        INSERT INTO hk_api_user(name, api_key, login_success_redirect_url, home_url, default_auth_token_expiry, enabled, create_dt, order_placement_enabled, secret_key)
+        VALUES('FitnessPro','fitnesspro','http://fitnesspro.healthkart.com', 'http://fitnesspro.healthkart.com', 10, 1, CURRENT_TIMESTAMP, 1, '7rq8tlhrdubs');
+
+        INSERT INTO hk_api_user(name, api_key, login_success_redirect_url, home_url, default_auth_token_expiry, enabled, create_dt, order_placement_enabled, secret_key)
+        VALUES('HealthkartPlus','healthkartplus','http://www.healthkartplus.com', 'http://www.healthkartplus.com', 10, 1, CURRENT_TIMESTAMP, 0, 'aeu7adfj3kl!');
+    </sql>
+    </changeSet>
+
 	   <changeSet author="Seema (generated)" id="1357322001110-1">
         <addColumn tableName="reconciliation_voucher">
             <column name="reconciliation_type_id" type="INT">
@@ -10957,6 +10990,32 @@
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-17">
         <dropForeignKeyConstraint baseTableName="pincode_region_zone" constraintName="fk_pincode_region_zone_pincode1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-02-04-02">
+        <sql>
+            DROP TABLE IF EXISTS t;
+            INSERT into `state` (`id`,`name`)
+            values
+            (1,'JAMMU &amp;amp; KASHMIR') ON DUPLICATE KEY UPDATE name = 'JAMMU &amp;amp; KASHMIR';
+            INSERT into `city` (`id`,`name`)
+            values
+            (1,'NICOBAR') ON DUPLICATE KEY UPDATE name = 'NICOBAR';
+            INSERT into `zone` (`id`,`name`)
+            values
+            (1,'NORTH') ON DUPLICATE KEY UPDATE name = 'NORTH';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (10,'prepaidAir') ON DUPLICATE KEY UPDATE name = 'prepaidAir';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (20,'prepaidGround') ON DUPLICATE KEY UPDATE name = 'prepaidGround';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (30,'codAir') ON DUPLICATE KEY UPDATE name = 'codAir';
+            INSERT into `shipment_service_type` (`id`,`name`)
+            values
+            (40,'codGround') ON DUPLICATE KEY UPDATE name = 'codGround';
+        </sql>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1358322252952-60">
         <sql>
@@ -11290,5 +11349,144 @@
             <column name="courier_group_id"/>
             <column name="pincode_id"/>
         </createIndex>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-1">
+        <createTable tableName="extra_inventory_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-2">
+        <addColumn tableName="extra_inventory">
+            <column name="extra_inventory_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-3">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="remarks" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-4">
+        <addColumn tableName="purchase_order">
+            <column defaultValue="0" name="is_extra_inventory_created" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-5">
+        <addColumn tableName="rtv_note">
+            <column name="courier_name" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-6">
+        <addColumn tableName="rtv_note">
+            <column name="destination_address" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-7">
+        <addColumn tableName="rtv_note">
+            <column name="dispatch_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-8">
+        <addColumn tableName="rtv_note">
+            <column name="docket_number" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-9">
+        <createIndex indexName="name_UNIQUE" tableName="extra_inventory_status" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="2013-01-02-01">
+        <sql>
+            insert into extra_inventory_status values(10, 'Created'),(20, 'Sent To Category'),(40, 'Closed');
+            update extra_inventory set extra_inventory_status_id = 10;
+            update purchase_order po join extra_inventory ei on po.id = ei.purchase_order_id set po.is_extra_inventory_created = 1;
+        </sql>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1359717387729-10">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_status_id" baseTableName="extra_inventory" constraintName="fk_extra_inventory_extra_inventory_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Shrey (generated)" id="1360156689574-1">
+        <addColumn tableName="extra_inventory">
+            <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-01">
+		<sql>
+			insert into seek_invoice_num (warehouse_id,invoice_num,prefix,description) values(301,1,'R','Retail Invoice 2013');
+			insert into store(id, name, prefix) values(101,'Punjabi Bagh','PB');
+			alter table payment add column last_four_digit_card_no int(11);
+		</sql>
+	</changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-1">
+        <dropForeignKeyConstraint baseTableName="warehouse" constraintName="fk_warehouse_warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-2">
+        <dropColumn columnName="warehouse_type_id" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359720145849-3">
+        <dropTable tableName="warehouse_type"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-1">
+        <addColumn tableName="warehouse">
+            <column name="store_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1359722370102-2">
+        <addForeignKeyConstraint baseColumnNames="store_id" baseTableName="warehouse" constraintName="fk_warehouse_store1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="store" referencesUniqueColumn="false"/>
+    </changeSet>
+	<changeSet author="Rohit" id="01-02-2013-02">
+		<sql>
+			update warehouse set store_id = 101 where id = 301;
+		</sql>
+	</changeSet>
+	<changeSet author="Rohit" id="01-02-2013-03">
+		<sql>
+
+			insert into role values ('STORE_MANAGER');
+			insert into permission values ('STORE_MANAGER');
+			insert into role_has_permission values ('STORE_MANAGER','STORE_MANAGER');
+
+		</sql>
+	</changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-1">
+        <createTable tableName="courier_pickup_detail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="pickup_confirmation_no" type="VARCHAR(70)"/>
+            <column name="tracking_no" type="VARCHAR(70)"/>
+            <column name="pickup_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pickup_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-2">
+        <createTable tableName="pickup_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-3">
+        <addForeignKeyConstraint baseColumnNames="courier_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_courier1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1360226539319-4">
+        <addForeignKeyConstraint baseColumnNames="pickup_status_id" baseTableName="courier_pickup_detail" constraintName="fk_courier_pickup_detail_pickup_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pickup_status" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
