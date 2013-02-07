@@ -159,12 +159,15 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return findByCriteria(skuGroupCriteria);
 	}
 
-	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId) {
-		List<SkuGroup> skuGroups = getSession().
-						createQuery("from SkuGroup sg where sg.barcode = :barcode and sg.sku.warehouse.id = :warehouseId").
-				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
-		return skuGroups;
 
+	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
+		DetachedCriteria skuGroupCriteria = getSkuGroupCriteria(null, barcode, null, null);
+		skuGroupCriteria.createCriteria("sku", "sk");
+		if(warehouseId != null){
+		skuGroupCriteria.add(Restrictions.eq("sk.warehouse.id", warehouseId));
+		}
+		List<SkuGroup> skuGroupList = findByCriteria(skuGroupCriteria);
+		return skuGroupList;
 	}
 
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
@@ -174,7 +177,6 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 				setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
 		return skuGroups;
     }
-
 
 
 
