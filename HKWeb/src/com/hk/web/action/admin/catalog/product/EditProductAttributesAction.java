@@ -182,10 +182,6 @@ public class EditProductAttributesAction extends BaseAction {
         product.setSupplier(supplier);
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
-        if(product.getGroundShipping()) {
-            product.setCodAllowed(Boolean.TRUE);
-        }
-
 
         logger.debug( "actual save call start ");
         getProductService().save(product);

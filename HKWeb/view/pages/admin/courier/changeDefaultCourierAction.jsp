@@ -147,9 +147,17 @@
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
             <label>IsCod</label>
-            <s:checkbox name="cod"/>
+            <s:select name="cod">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>IsGround</label>
-            <s:checkbox name="ground"/>
+            <s:select name="ground">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>Select WareHouse</label>
             <s:select name="warehouse" id="warehouse">
                 <option value="">--Select--</option>
@@ -184,15 +192,16 @@
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
-                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" class="courier">
+                                <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" id="courier${ctr.index}">
                                     <s:option value="-1">-Select-</s:option>
                                     <c:forEach items="${cdca.availableCouriers}" var="courier">
                                         <s:option value="${courier.id}">${courier.name}</s:option>
                                     </c:forEach>
                                 </s:select>
                                 <script type="text/javascript">
-                                    $('.courier').val(${pincodeDefaultCourier.courier.id});
-                                </script>                            </td>
+                                    $('#courier${ctr.index}').val(${pincodeDefaultCourier.courier.id});
+                                </script>
+                            </td>
                             <td>
                                     ${pincodeDefaultCourier.warehouse.name}
                                 <s:hidden name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>

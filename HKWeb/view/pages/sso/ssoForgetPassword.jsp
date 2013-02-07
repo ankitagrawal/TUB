@@ -24,7 +24,7 @@
     <s:errors/>
     <div id="panel">
         <h1 class="login-header">Welcome to the Healthkart Network</h1>
-        <div id="loginbox">
+        <div id="forgetbox">
             <s:form id="signin_form" method="post" event="login" beanclass="com.hk.web.action.core.user.SSOForgotPasswordAction">
 
                 <s:text type="text" placeholder="enter your login email" name="email" id="email" tabindex="10" size="50" maxlength="50" value=""/>

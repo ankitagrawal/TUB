@@ -391,55 +391,33 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
         Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         boolean codAllowedonProduct = true;
-        // boolean codAllowed = false;
 
         for (CartLineItem productCartLineItem : productCartLineItems) {
-            ProductVariant productVariant = productCartLineItem.getProductVariant();
-            if (productVariant != null && productVariant.getProduct() != null) {
-                Product product = productVariant.getProduct();
-                if (product.isCodAllowed() != null && !product.isCodAllowed()) {
-                    codFailureMap.put("ProductName", product.getName());
-                    codAllowedonProduct = false;
-
-                }
-                if (product.isGroundShipping()) {
-                    codFailureMap.put("GroundShipProduct", product.getName());
-                }
+            Product product = productCartLineItem.getProductVariant().getProduct();
+            if (product.isCodAllowed() != null && !product.isCodAllowed()) {
+                codAllowedonProduct = false;
+                break;
             }
         }
-
-        Address address = order.getAddress();
-        String pin = address != null ? address.getPincode().getPincode() : null;
 
         OrderSearchCriteria osc = new OrderSearchCriteria();
         osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
         List<Order> rtoOrders = getOrderService().searchOrders(osc);
 
-        // Double payable = pricingDto.getGrandTotalPayable();
-        //Double payable = order.getAmount();
-        if (!pincodeCourierService.isCodAllowed(pin)) {
-            codFailureMap.put("CodAllowedOnPin", "N");
-            codFailureMap.put("Pincode", pin);
-        } else if (payable < codMinAmount || payable > codMaxAmount) {
+        if (payable < codMinAmount || payable > codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
-        } else if (!codAllowedonProduct) {
-            codFailureMap.put("CodAllowedOnProduct", "N");
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
             codFailureMap.put("CodOnSubscription", "N");
-        } else if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            if (pincodeCourierService.isGroundShippingAllowed(pin)) {
-                codFailureMap.put("GroundShippingAllowed", "Y");
-            }
-            if (!pincodeCourierService.isCodAllowedOnGroundShipping(pin)) {
-                codFailureMap.put("CodAllowedOnGroundShipping", "N");
-            }
+        } else if (!codAllowedonProduct) {
+            codFailureMap.put("CodAllowedOnProduct", "N");
+        } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
+            codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
-          osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
-          List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
-          if (rtoOrders.size() >= totalDeliveredOrders.size())
-            codFailureMap.put("MutipleRTOs", "Y");
+            osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
+            List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
+            if (rtoOrders.size() >= totalDeliveredOrders.size())
+                codFailureMap.put("MutipleRTOs", "Y");
         }
         return codFailureMap;
     }
