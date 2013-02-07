@@ -4,6 +4,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
 <%
@@ -21,7 +22,7 @@
         content="Online Shopping, online shopping india, nutrition, healthcare products, buy health care health equipments, beauty care products, shop online, nutrition supplements, protein supplements, diabetes, skin care, eye care,  healthcart, healthkkart, healthkarts, price, india"/>
 
   <link href="<hk:vhostCss/>/css/960.24.css" rel="stylesheet" type="text/css"/>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>
+  <%--<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.responsiveslides.min.js"></script>--%>
 </s:layout-component>
 
 <s:layout-component name="homePageTopContent">
@@ -221,13 +222,16 @@
 		
 		<c:if test="${not isSecure }">
 			<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1"
+				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e100&section=1&level=1&uid=${user_hash}"
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>
 
 	</s:layout-component>
 </s:layout-render>
+
+<!--google remarketing code-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"/>
 
 
 <script type="text/javascript">
@@ -247,6 +251,7 @@
     width: 100%;
   }
 </style>
+
 
 
 

@@ -30,7 +30,7 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_EscalatedToShipmentQueue(635L, "SO Escalated To Shipment Queue"),
   SO_EscalatedBackToActionQueue(640L, "SO Escalated Back To Action Queue"),
   SO_Packed(650L, "SO Packed"),
-  SO_ShipmentDetailSaved(652L, "Shipment Details saved"),  
+  SO_ShipmentDetailSaved(652L, "Shipment Details saved"),
   SO_Shipped(655L, "SO Shipped"),
   SO_ShippedEmailFired(658L, "SO Shipped Email Fired"),
   SO_Delivered(660L, "SO Delivered"),
@@ -51,8 +51,10 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_PaymentUpdated(715L, "SO Order Payment Updated"),
   SO_RewardPointLineItemAdded(716L, "SO Reward Point Line Item Added"),
   SO_StatusChanged(750L,"SO Status changed"),
+  SO_Customer_Return(755L,"SO Customer Return"),
   RTO_Initiated(760L,"RTO Initiated for SO"),
   RO_Created(770L, "Replacement Order Created for shipping order"),
+  SHIPMENT_RESOLUTION_ACTIVITY(800L, "SHIPMENT RESOLUTION ACTIVITY"),
   SO_Cancelled(999L, "SO  Cancelled");
 
 
@@ -104,4 +106,9 @@ public enum EnumShippingOrderLifecycleActivity {
 			 SO_CouldNotBeManuallyEscalatedToProcessingQueue,
 			 SO_ShipmentNotCreated);
   }
+
+    public static List<Long> getActivitiesForShipmentResolutionQueue() {
+        return Arrays.asList(SO_ShipmentNotCreated.getId(), SO_Shipment_Auto_Created.getId(), SHIPMENT_RESOLUTION_ACTIVITY.getId());
+    }
+
 }

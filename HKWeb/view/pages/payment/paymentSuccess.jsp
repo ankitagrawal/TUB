@@ -8,6 +8,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
@@ -20,6 +21,8 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -150,7 +153,58 @@
             e.async = true;
             document.getElementById('sdt-js').appendChild(e);
         }());
-    </script> 
+    </script>
+    <!-- Start AdRoll (FB Retargetting Conversion Tracking Code -->
+	<script type="text/javascript">
+	  adroll_segments = "conversion"
+	</script>	
+	<!-- Start MicroAd Blade conversion Code  -->
+	<script type="text/javascript">
+		<!--
+		var blade_co_account_id='4184';
+		var blade_group_id='convtrack14344';
+		
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+		
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+		
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+		-->
+	</script>	
+	<!--Begin: Tracking code for MicroAd Blade-->
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='';	
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+		
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+		
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<!--End: Tracking code for MicroAd Blade-->		
+	<!-- Start Visual Website Optimizer Asynchronous Code -->
+	<script type='text/javascript'>
+		var _vwo_code=(function(){
+		var account_id=34756,
+		settings_tolerance=2000,
+		library_tolerance=1500,
+		use_existing_jquery=false,
+		// DO NOT EDIT BELOW THIS LINE
+		f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
+	</script>
+	<!-- End Visual Website Optimizer Asynchronous Code -->
 
   <%
     }
@@ -159,7 +213,6 @@
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
 </c:if>
-
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
@@ -238,7 +291,7 @@
 
             <h2 class="paymentH2">Customer Support</h2>
 
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4502930</p>
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4616444</p>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
@@ -284,15 +337,12 @@
                     <c:if test="${not empty address.line2}">
                         ${address.line2},
                     </c:if>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}, <span class="upc">INDIA</span><br/>
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
               <div class="floatfix"></div>
-
-
-
         </c:when>
         <c:otherwise>
             Invalid request!
@@ -304,7 +354,7 @@
 <s:layout-component name="analytics">
     <iframe src="" id="vizuryTargeting" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0"></iframe>
     <script type="text/javascript">
-        var vizuryLink = "https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e500&orderid=${actionBean.gatewayOrderId}&orderprice=${actionBean.payment.amount}";
+        var vizuryLink = "https://ssl.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e500&orderid=${actionBean.gatewayOrderId}&orderprice=${actionBean.payment.amount}&uid=${user_hash}";
         <c:forEach items="${actionBean.payment.order.cartLineItems}" var="lineItem" varStatus="liCtr">
         vizuryLink += "&pid${liCtr.count}=${lineItem.productVariant.product.id}&catid${liCtr.count}=${lineItem.productVariant.product.primaryCategory.name}&quantity${liCtr.count}=${lineItem.qty}";
         </c:forEach>

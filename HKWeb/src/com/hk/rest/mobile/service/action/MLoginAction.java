@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +114,7 @@ public class MLoginAction extends MBaseAction {
 					mUserLoginJSONResponse.setLine1(address.getLine1());
 					mUserLoginJSONResponse.setLine2(address.getLine2());
 					mUserLoginJSONResponse.setPhone(address.getPhone());
-					mUserLoginJSONResponse.setPin(address.getPin());
+					mUserLoginJSONResponse.setPin(address.getPincode().getPincode());
 					mUserLoginJSONResponse.setState(address.getState());
 				}
 				mUserLoginJSONResponse.setType("Logged");
@@ -144,7 +145,7 @@ public class MLoginAction extends MBaseAction {
 					mTempUserLoginJSONResponse.setLine1(address.getLine1());
 					mTempUserLoginJSONResponse.setLine2(address.getLine2());
 					mTempUserLoginJSONResponse.setPhone(address.getPhone());
-					mTempUserLoginJSONResponse.setPin(address.getPin());
+					mTempUserLoginJSONResponse.setPin(address.getPincode().getPincode());
 					mTempUserLoginJSONResponse.setState(address.getState());
 
 				}
@@ -172,7 +173,7 @@ public class MLoginAction extends MBaseAction {
 		String status = MHKConstants.STATUS_OK;
 		try {
 			request.getSession().removeAttribute("userName");
-			getSecurityManager().getSubject().logout();
+			SecurityUtils.getSubject().logout();
 		} catch (Exception e) {
 			message = MHKConstants.STATUS_ERROR;
 			status = MHKConstants.STATUS_ERROR;

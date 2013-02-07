@@ -39,6 +39,8 @@ public enum EnumCourier {
     FedEx_Surface(610L, "FedEx Surface"),
     Gati(650L, "Gati"),
     Star_Track(660L, "Star Track"),
+	Xpress_Logistics(661L, "Xpress Logistics"),
+	JP_CargoVan_Delhi(662L, "JP Cargo Van - Delhi"),
 
     MIGRATE(-1L, "MIGRATE");
 
@@ -111,22 +113,5 @@ public enum EnumCourier {
         return fedexCourierIds;
     }
 
-	public static List<Long> getDispatchLotCouriers(){
-		List<Long> dispatchLotCourierIds = new ArrayList<Long>();
-		dispatchLotCourierIds.add(EnumCourier.HK_Delivery.getId());
-		return dispatchLotCourierIds;
-	}
-
-    public static List<EnumCourier> getCurrentlyApplicableVendorCouriers() {
-        return Arrays.asList(
-                EnumCourier.BlueDart,
-                EnumCourier.Gati,
-                EnumCourier.Safexpress,
-                EnumCourier.Star_Track ,
-                EnumCourier.MuditaCargo,
-                EnumCourier.Other
-
-        );
-    }
 }
 

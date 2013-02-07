@@ -20,6 +20,6 @@ public interface AwbDao extends BaseDao {
 
      public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
 
-	public Object save(Awb awb, Integer newStatus);
+	public Awb save(Awb awb, Integer newStatus);
 
 }

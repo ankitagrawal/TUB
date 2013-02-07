@@ -70,6 +70,27 @@ public class AccountingInvoiceAction extends BaseAction {
         }
     }
 
+	public Resolution posPrintInvoice() {
+		if (shippingOrder != null) {
+			String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
+			if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
+				b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+			}
+			ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
+
+			if(replacementOrder != null){
+				invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+			}
+			else{
+				invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+			}
+			return new ForwardResolution("/pages/pos/posAccountingInvoice.jsp");
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+			return new ForwardResolution("pages/admin/adminHome.jsp");
+		}
+	}
+
     @DontValidate
     public Resolution oldAccountingInvoice() {
         // TODO: # warehouse fix this

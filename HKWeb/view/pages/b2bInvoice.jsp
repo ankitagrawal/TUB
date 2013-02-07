@@ -106,7 +106,7 @@
         ${orderSummary.accountingInvoice.order.address.line2}<br/>
       </c:if>
       ${orderSummary.accountingInvoice.order.address.city}, ${orderSummary.accountingInvoice.order.address.state}
-      - ${orderSummary.accountingInvoice.order.address.pin},
+      - ${orderSummary.accountingInvoice.order.address.pincode.pincode},
       <br/>
       Ph: ${orderSummary.accountingInvoice.order.address.phone}
       <br/>

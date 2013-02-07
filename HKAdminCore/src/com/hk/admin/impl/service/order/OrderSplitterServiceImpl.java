@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.dao.courier.CourierPricingEngineDao;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
 import com.hk.admin.pact.dao.courier.PincodeRegionZoneDao;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.util.helper.OrderSplitterHelper;
@@ -65,9 +64,6 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
     @Autowired
     PincodeRegionZoneDao         pincodeRegionZoneDao;
-
-    @Autowired
-    CourierServiceInfoDao        courierServiceInfoDao;
 
     @Autowired
     SkuService                   skuService;
@@ -134,7 +130,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order, Set<CartLineItem> productCartLineItems) {
 
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         if (pincode == null) {
             String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
@@ -155,8 +151,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each
         // warehouse
         for (CartLineItem cartLineItem : productCartLineItems) {
-            List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-
+            //List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
@@ -254,7 +250,7 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     public TreeMap<List<DummyOrder>, Long> splitBOPractically(Order order) {
 
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         if (pincode == null) {
             String comments = "Pincode does not exist in our system, Please get in touch with OPS or customer care";
             orderLoggingService.logOrderActivityByAdmin(order, EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit, comments);
@@ -274,8 +270,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
         // iterate over product line items, make a map for the sku available (i.e having inventory as well) for each
         // warehouse
         for (CartLineItem cartLineItem : productCartLineItems) {
-            List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
-
+            //List<Sku> skuList = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();
@@ -385,10 +381,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
     @SuppressWarnings("unchecked")
     public TreeMap<List<DummyOrder>, Long> splitBOIdeally(Order order, Warehouse ggnWarehouse, Warehouse mumWarehouse) {
         // get static things
-        Pincode pincode = pincodeDao.getByPincode(order.getAddress().getPin());
+        Pincode pincode = order.getAddress().getPincode();
         Payment payment = order.getPayment();
         if (pincode == null) {
-            logger.info("illegal pincode entry for pincode " + order.getAddress().getPin() + " for " + order.getId());
             return null;
         }
 
@@ -435,8 +430,8 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         for (CartLineItem lineItem : productCartLineItems) {
             List<Sku> skuList = new ArrayList<Sku>();
-            skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
-
+            //skuList = skuService.getSKUsForProductVariant(lineItem.getProductVariant());
+	        skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(lineItem.getProductVariant());
             Set<Warehouse> applicableWarehousesForLineItem = null;
             if (!skuList.isEmpty()) {
                 applicableWarehousesForLineItem = new HashSet<Warehouse>();

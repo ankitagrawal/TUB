@@ -12,6 +12,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<%@ include file="/layouts/_userData.jsp" %>
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CategoryAction" var="categoryBean" event="pre"/>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.category.CatalogAction" var="ca"/>
@@ -41,6 +42,8 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
+  <!--google remarketing page type-->
+  <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
@@ -270,7 +273,7 @@
 		</c:when>
 		<c:otherwise>
 			<iframe
-					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
 					scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 					frameborder="0"></iframe>
 		</c:otherwise>

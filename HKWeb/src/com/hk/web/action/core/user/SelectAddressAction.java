@@ -54,7 +54,9 @@ public class SelectAddressAction extends BaseAction {
 
 	 // @Validate(required = true)
     private Order order;
-   
+
+    private boolean printAlert;
+
 	  //@ValidationMethod(on = "checkout")
     public void validate() {
         Role tempUserRole = getRoleService().getRoleByName(RoleConstants.TEMP_USER);
@@ -71,9 +73,8 @@ public class SelectAddressAction extends BaseAction {
     public Resolution pre() {
         User user = getUserService().getUserById(getPrincipal().getId());
         email = user.getEmail();
-
         addresses = addressDao.getVisibleAddresses(user);
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         selectedAddress = order.getAddress();
         if (selectedAddress == null) {
             // get the last order address? for not selecting just first non deleted one.
@@ -82,7 +83,7 @@ public class SelectAddressAction extends BaseAction {
             }
         }
 
-        return new ForwardResolution("/pages/addressBook.jsp");
+        return new ForwardResolution("/pages/addressBook.jsp").addParameter("printAlert",printAlert);
 
     }
 
@@ -96,7 +97,7 @@ public class SelectAddressAction extends BaseAction {
 
     public Resolution remove() {
         User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
 
         deleteAddress.setDeleted(true);
         addressDao.save(deleteAddress);
@@ -120,7 +121,7 @@ public class SelectAddressAction extends BaseAction {
             user = getUserService().save(user);
         }
 
-        Order order = orderManager.getOrCreateOrder(user);
+        order = orderManager.getOrCreateOrder(user);
         order.setAddress(selectedAddress);
         orderDao.save(order);
 
@@ -183,4 +184,15 @@ public class SelectAddressAction extends BaseAction {
         this.roleService = roleService;
     }
 
+  public boolean isPrintAlert() {
+    return printAlert;
+  }
+
+  public boolean getPrint(){
+    return printAlert;
+  }
+
+  public void setPrintAlert(boolean printAlert) {
+    this.printAlert = printAlert;
+  }
 }

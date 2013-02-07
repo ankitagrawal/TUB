@@ -53,7 +53,7 @@
 					<s:label name="courier" class="label">Courier</s:label>
 					<s:select name="dispatchLot.courier" class="text">
 					<s:option value="">-Select-</s:option>
-						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers"
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="couriersForDispatchLot"
 						                           value="id"
 						                           label="name"/>
 					</s:select>
@@ -91,7 +91,6 @@
 						                           serviceProperty="sourceAndDestinationListForDispatchLot"
 								/>
 					</s:select>
-						<%--<s:text name="dispatchLot.destination" style="width:200px" class="text"/>--%>
 					<span class="aster">*</span>
 
 					<div class="clear"></div>
@@ -106,38 +105,31 @@
 
 					<div class="clear"></div>
 
-						<%--<s:label name="dispatchDate" class="label">Dispatch Date</s:label>
-																		<s:text class="date_input text" style="width:150px"
-																				formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="dispatchLot.dispatchDate"/>
-
-																	<div class="clear"></div>--%>
-
 					<s:label name="remarks" class="label">Remarks</s:label>
 						<s:textarea name="dispatchLot.remarks" class="text"/>
 
 					<div class="clear"></div>
-						<%--<s:label name="noOfShipmentsSent" class="label">No. of Shipments Sent</s:label>
-							<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text"
-							        readonly="readonly"/>
+					<s:label name="noOfShipmentsSent" class="label">No. Of Shipments Sent</s:label>
+						<s:text name="dispatchLot.noOfShipmentsSent" style="width:200px" class="text" disabled="disabled"/>
 
-						<div class="clear"></div>--%>
+					<div class="clear"></div>
+						<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
 					<c:if test="${dispatch.dispatchLot.id == null || dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 						<s:submit name="save" value="Save"/>
 					</c:if>
-
 
 			</div>
 			<div style="float: right; width: 30%">
 				<c:if test="${dispatch.dispatchLot.id != null && dispatch.dispatchLot.dispatchLotStatus.id == dispatchLotGenerated}">
 					<div class="reportBox">
+						<c:if test="${dispatch.dispatchLot.noOfShipmentsSent == null || dispatch.dispatchLot.noOfShipmentsSent == 0}">
 						<fieldset class="right_label">
 							<legend>Update Shipment Details In Dispatch Lot</legend>
 							<br>
 							<span class="large">(SHIPPERS REFERENCE NUMBER) as excel header</span>
 							<ul>
 								<li>
-									<h3>File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
-
+									<h3>Shipment Details File to Upload: <s:file name="fileBean" size="30" id="uploadFile"/></h3>
 								</li>
 								<li>
 									<s:submit name="parse" value="Upload Shipment Details"/>
@@ -145,7 +137,28 @@
 								</li>
 							</ul>
 						</fieldset>
+						</c:if>
+						<fieldset class="right_label">
+							<legend>Upload POD for Dispatch Lot</legend>
+							<ul>
+								<li>
+									<h3>Upload POD :<s:file name="uploadDocumentFileBean" size="30"
+									                        id="uploadDocument"/></h3>
+								</li>
+								<li>
+									<s:param name="dispatchLot" value="${dispatch.dispatchLot.id}"/>
+									<s:submit name="uploadDocument" value="Upload Document"/>
+								</li>
+							</ul>
+						</fieldset>
 					</div>
+					<div class="clear"></div>
+				<c:if test="${dispatch.dispatchLot.noOfShipmentsSent != null && dispatch.dispatchLot.noOfShipmentsSent > 0}">
+					<div>
+						<br><br>
+						<s:submit name="markLotAsInTransit" value="Mark Lot As 'In Transit'" />
+					</div>
+				</c:if>
 				</c:if>
 			</div>
 

@@ -19,6 +19,7 @@ public class RoleConstants {
     public static final String COD_BLOCKED                   = "CODBLOCKED";
     public static final String OPS_MANAGER_L1                = "OPS_MANAGER_L1";
     public static final String OPS_MANAGER_L2                = "OPS_MANAGER_L2";
+    public static final String OPS_MANAGER_L3                = "OPS_MANAGER_L3";
     public static final String OPS_MANAGER                   = "OPS_MANAGER";
     public static final String WH_EMPLOYEE                   = "WH_EMPLOYEE";
     public static final String WH_MANAGER                    = "WH_MANAGER";
@@ -70,4 +71,6 @@ public class RoleConstants {
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
 	public static final String REWARD_POINT_MANAGER_L1       = "REWARD_POINT_MANAGER_L1";
 	public static final String REWARD_POINT_MANAGER_L2       = "REWARD_POINT_MANAGER_L2";
+
+	public static final String STORE_MANAGER                 = "STORE_MANAGER";
 }

@@ -61,7 +61,7 @@
                 <div class="box" style="width:100%">
                     <STRONG>Order Details</STRONG>
                     <div class="clear"></div>
-                    Order Amount: ${splitter.order.amount}  &nbsp; &nbsp; IsCod: ${splitter.order.COD} &nbsp; &nbsp; Pincode: ${splitter.order.address.pin}
+                    Order Amount: ${splitter.order.amount}  &nbsp; &nbsp; IsCod: ${splitter.order.COD} &nbsp; &nbsp; Pincode: ${splitter.order.address.pincode.pincode}
                     <div class="clear"></div>
                     <table style="border:0px;">
                         <tr>
@@ -75,7 +75,8 @@
                         <c:forEach items="${splitter.order.productCartLineItems}" var="cartLineItem">
                             <%
                                 CartLineItem cartLineItem= (CartLineItem) pageContext.getAttribute("cartLineItem");
-                                List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+                                //List<Sku> skus = skuService.getSKUsForProductVariant(cartLineItem.getProductVariant());
+	                            List<Sku> skus = skuService.getSKUsForProductVariantAtServiceableWarehouses(cartLineItem.getProductVariant());
                                 pageContext.setAttribute("skus", skus);
                             %>
                             <tr>
