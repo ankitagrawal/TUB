@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+import org.apache.shiro.SecurityUtils;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -109,8 +110,6 @@ public class MCartAction extends MBaseAction{
     private AddressBookManager addressManager;
     @Autowired
     private CartFreebieService cartFreebieService;
-    @Autowired
-    private org.apache.shiro.mgt.SecurityManager securityManager;
 
     boolean verifyMessage = false;
 
@@ -128,8 +127,8 @@ public class MCartAction extends MBaseAction{
         List<MCartLineItemsJSONResponse> cartItemsList = new ArrayList<MCartLineItemsJSONResponse>();
         MCartLineItemsJSONResponse cartItemResponse;
         User user = null;
-        if (securityManager.getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((Principal) securityManager.getSubject().getPrincipal()).getId());
+        if (SecurityUtils.getSubject().getPrincipal() != null) {
+            user = getUserService().getUserById(((Principal) SecurityUtils.getSubject().getPrincipal()).getId());
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -249,8 +248,8 @@ public class MCartAction extends MBaseAction{
     @DontValidate
     public Resolution getCartItems() {
         User user = null;
-        if (securityManager.getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((Principal) securityManager.getSubject().getPrincipal()).getId());
+        if (SecurityUtils.getSubject().getPrincipal() != null) {
+            user = getUserService().getUserById(((Principal) SecurityUtils.getSubject().getPrincipal()).getId());
         }
         if (user != null) {
             order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);

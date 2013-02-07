@@ -70,7 +70,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
         }else{
@@ -83,7 +84,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public Long getAggregateCutoffInventory(ProductVariant productVariant) {
-        List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         return this.getAggregateCutoffInventory(skuList);
     }
 
@@ -258,7 +260,8 @@ public class InventoryServiceImpl implements InventoryService {
 		if (productVariant != null) {
 			Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
 			logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
-			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			//Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
 			logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}

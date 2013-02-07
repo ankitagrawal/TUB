@@ -8,6 +8,7 @@ import java.util.List;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.courier.*;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -239,6 +240,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         courierListForDeliveryMarking.add(CourierConstants.DTDC);
         courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
 		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+		courierListForDeliveryMarking.add(CourierConstants.FEDEX);
         return courierListForDeliveryMarking;
     }
 
@@ -481,4 +483,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
         reconciliationList.add(addReconType);
         return reconciliationList;
     }
+
+	public List<PaymentMode> getPaymentModeForStore() {
+		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
+	}
+
 }
