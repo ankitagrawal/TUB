@@ -52,9 +52,6 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     @Autowired
     ReviewCollectionFrameworkService reviewCollectionFrameworkService;
 
-    @Autowired
-    EmailRecepientDao emailRecepientDao;
-
     private Order order;
 
    @ValidateNestedProperties( {

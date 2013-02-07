@@ -92,7 +92,7 @@ public class CreateMailTemplateAction extends BaseAction {
                     if (htmlFiles != null) {
                         if (htmlFiles.length == 1) {
                             htmlPath = htmlFiles[0].getAbsolutePath();
-                            logger.debug(htmlFiles[0].getAbsolutePath());
+                            logger.info(htmlFiles[0].getAbsolutePath());
                         } else if (htmlFiles.length > 1) {
                             addRedirectAlertMessage(new SimpleMessage("The zip folder contains multiple .html files for the email campaign. Kindly check into the same"));
                             return new ForwardResolution(CreateMailTemplateAction.class,"pre");
@@ -110,8 +110,8 @@ public class CreateMailTemplateAction extends BaseAction {
                     ftlGenerated = Boolean.TRUE;
                     logger.info("ftl generated");
 
-                    //contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
-                    contentUploaded = true;
+                    contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
+                    //contentUploaded = true;
                     logger.info("uploaded email content to s3.");
                     FileUtils.deleteDirectory(contentFolder);
                     FileUtils.deleteQuietly(contentZipFolder);
@@ -130,7 +130,7 @@ public class CreateMailTemplateAction extends BaseAction {
             }
             return new ForwardResolution(CreateMailTemplateAction.class, "pre");
         } catch (IOException ioe) {
-            logger.error("ftl generation failed: " + ioe);
+            logger.info("ftl generation failed: " + ioe);
         }
         addRedirectAlertMessage(new SimpleMessage("Error generating ftl"));
         return new ForwardResolution(CreateMailTemplateAction.class, "pre");
@@ -156,7 +156,7 @@ public class CreateMailTemplateAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("changes to the mail template: " + mail.getName() + " have been saved."));
             return new RedirectResolution(CreateMailTemplateAction.class);
         } catch (IOException ioe) {
-            logger.error("Error writing contents to html file: " + ioe);
+            logger.info("Error writing contents to html file: " + ioe);
         } finally {
             FileUtils.deleteQuietly(htmlFile);
         }

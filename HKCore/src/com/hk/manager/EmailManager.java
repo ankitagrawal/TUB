@@ -433,7 +433,7 @@ public class EmailManager {
             else
                 return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
         } else {
-            logger.error("Email Template Content is not present");
+            logger.info(mail.getName()+" Template Content is not present");
             return false;
         }
     }

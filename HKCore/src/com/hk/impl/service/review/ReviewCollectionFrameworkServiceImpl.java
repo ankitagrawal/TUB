@@ -1,6 +1,7 @@
 package com.hk.impl.service.review;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
@@ -55,7 +56,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
         if(productReviewMail.getIsEnabled()){
             return getEmailManager().sendProductReviewEmail(user, product, productReviewMail.getMail(),productReviewMail.getTestEmailId());
         }else{
-            logger.error("Review for this product is not enabled");
+            logger.info("Emails not enabled for" + productReviewMail.getProduct());
         }
         return false;
     }
@@ -67,8 +68,8 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
         boolean mailSent;
         if(userList != null){
             for(UserReviewMail userReviewMail : userList ){
-                if(emailRecepientDao.getOrCreateEmailRecepient(userReviewMail.getUser().getEmail()).isSubscribed()){
-                    //if(true){
+                boolean isUserUnsubscribed = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.UNSUBSCRIBED , userReviewMail.getUser().getSubscribedMask());
+                if(!isUserUnsubscribed){
                     productReviewMail = productReviewMailService.getProductReviewMailByProduct(userReviewMail.getProductVariant().getProduct());
                     userReview = reviewService.getReviewByUserAndProduct(userReviewMail.getUser(), userReviewMail.getProductVariant().getProduct());
                     if(userReview == null){
@@ -81,15 +82,15 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                                 userReviewMailService.save(userReviewMail);
                             }
                         }else{
-                            logger.error("Emails not enabled for" + productReviewMail.getProduct());
+                            logger.info("Emails not enabled for" + productReviewMail.getProduct());
                         }
                     }
                 }else{
-                    logger.error(userReviewMail.getUser() +"is not subscribed");
+                    logger.info(userReviewMail.getUser() + "is not subscribed");
                 }
             }
         }else{
-            logger.error("No user to email today");
+            logger.info("No user to email today");
         }
     }
 
@@ -97,14 +98,12 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
     public void doUserEntryForReviewMail(Order order){
         User user = order.getUser();
         userReviewMail = new UserReviewMail();
-        boolean isUserSubscribed = emailRecepientDao.getOrCreateEmailRecepient(user.getEmail()).isSubscribed();
-        //boolean isUserSubscribed = true;
-        if(isUserSubscribed){
+        //boolean isUserSubscribed = emailRecepientDao.getOrCreateEmailRecepient(user.getEmail()).isSubscribed();
+        boolean isUserUnsubscribed = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.UNSUBSCRIBED , user.getSubscribedMask());
+        if(!isUserUnsubscribed){
             Set<CartLineItem> cartLine = order.getCartLineItems();
             if(cartLine != null){
-                //Iterator<CartLineItem> cartLineIterator = cartLine.iterator();
                 ProductVariant productVariant;
-                //while(cartLineIterator.hasNext()){
                 for(CartLineItem cartLineItem : cartLine){
                     productVariant = cartLineItem.getProductVariant();
                     if(productVariant != null){
@@ -127,20 +126,13 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                                         priorUserReviewMail.setIsMailSent(false);
                                         priorUserReviewMail.setBaseOrder(order);
                                         userReviewMailService.save(priorUserReviewMail);
-                                        logger.info("Updated entry for this user and product variant");
                                     }
-
                                 }
-                                logger.info("Entry for this user and product variant already exist");
                             }
-                        } else
-                            logger.info("User has already reviewed this product");
+                        }
                     }
                 }
             }
-        }else{
-            logger.info("User not Subscribed");
-
         }
     }
 

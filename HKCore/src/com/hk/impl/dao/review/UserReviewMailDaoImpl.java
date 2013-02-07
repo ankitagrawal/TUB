@@ -33,7 +33,7 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
     }
 
     public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant){
-        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant = :productVariant", new String[]{"user", "productVariant"}, new Object[]{user, productVariant});
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant = :productVariant ORDER BY urm.updateDt DESC", new String[]{"user", "productVariant"}, new Object[]{user, productVariant});
         if(result !=null && result.size()>0){
             return result.get(0);
         }else

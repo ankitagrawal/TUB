@@ -22,10 +22,10 @@ public class ProductReviewMailDaoImpl extends BaseDaoImpl implements ProductRevi
     }
 
     public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage){
-        return list(getPurchaseOrderCriteria(mail),pageNo,perPage);
+        return list(getProductReviewMailCriteria(mail),pageNo,perPage);
     }
 
-    private DetachedCriteria getPurchaseOrderCriteria(Mail mail) {
+    private DetachedCriteria getProductReviewMailCriteria(Mail mail) {
         DetachedCriteria productReviewMailCriteria = DetachedCriteria.forClass(ProductReviewMail.class);
 
         if (mail != null) {
