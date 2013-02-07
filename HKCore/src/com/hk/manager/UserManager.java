@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +66,6 @@ public class UserManager {
     @Autowired
     private RoleService      roleService;
     @Autowired
-    private SecurityManager  securityManager;
-    @Autowired
     private EmailManager     emailManager;
     @Autowired
     private LinkManager      linkManager;
@@ -110,7 +108,7 @@ public class UserManager {
         usernamePasswordToken.setRememberMe(rememberMe);
 
         try {
-            getSecurityManager().login(null, usernamePasswordToken);
+            SecurityUtils.getSubject().login(usernamePasswordToken);
         } catch (AuthenticationException e) {
             // Note: if the login fails, existing subject is still retained
             throw new HealthkartLoginException(e);
@@ -148,7 +146,7 @@ public class UserManager {
     }
 
     private PrincipalImpl getPrincipal() {
-        return (PrincipalImpl) getSecurityManager().getSubject().getPrincipal();
+        return (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     }
 
     @SuppressWarnings("deprecation")
@@ -232,7 +230,7 @@ public class UserManager {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(email, password);
         usernamePasswordToken.setRememberMe(true);
 
-        getSecurityManager().login(null, usernamePasswordToken);
+        SecurityUtils.getSubject().login(usernamePasswordToken);
 
         user.setPassword(password); // is required by the email template.
 
@@ -258,7 +256,7 @@ public class UserManager {
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getLogin(), user.getLogin());
         usernamePasswordToken.setRememberMe(true);
 
-        getSecurityManager().login(null, usernamePasswordToken);
+        SecurityUtils.getSubject().login(usernamePasswordToken);
         return user;
     }
 
@@ -273,13 +271,13 @@ public class UserManager {
         user.getRoles().add(getRoleService().getRoleByName(RoleConstants.TEMP_USER));
         user = getUserService().save(user);
 
-        //ADD In Cookie
-        Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
+        //ADD In Cookie  -there is no need to put this in a cookie
+        /*Cookie cookie = new Cookie(HealthkartConstants.Cookie.tempHealthKartUser, user.getUserHash());
         cookie.setPath("/");
         cookie.setMaxAge(30 * 24 * 60 * 60);
         HttpServletResponse httpResponse = WebContext.getResponse();
         httpResponse.addCookie(cookie);
-        logger.debug("Added Cookie for New Temp User="+user.getUserHash());
+        logger.debug("Added Cookie for New Temp User="+user.getUserHash());*/
         return user;
     }
 
@@ -381,14 +379,6 @@ public class UserManager {
 
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
-    }
-
-    public SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 
     public EmailManager getEmailManager() {

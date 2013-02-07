@@ -123,6 +123,10 @@ public class PincodeCourierMappingAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_PCM_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadExcel() {
+      if(fileBean==null){
+        addRedirectAlertMessage(new SimpleMessage("Please Select a File!!"));
+        return new RedirectResolution(PincodeCourierMappingAction.class,"search").addParameter("pin",pin);
+      }
         try {
             Set<PincodeCourierMapping> pincodeCourierMappingSet = new HashSet<PincodeCourierMapping>();
             String excelFilePath = adminUploadsPath + "/courierFiles/" + System.currentTimeMillis() + ".xls";

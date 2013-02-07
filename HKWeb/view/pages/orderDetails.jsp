@@ -6,7 +6,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.order.OrderDetailsAction" event="pre" var="oa"/>
 <c:set var="shippingOrderStatus_shipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
 <c:set var="shippingOrderStatus_delivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
-<c:set var="shippingOrderStatus_returned" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatus_returned" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <c:set var="shippingOrderStatus_lost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="shippingOrderStatus_cancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
 

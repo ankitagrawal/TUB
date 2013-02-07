@@ -2,6 +2,9 @@ package com.hk.web.action.core.autocomplete;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.domain.sku.Sku;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
 import com.hk.pact.service.core.CityService;
 import com.hk.domain.core.City;
@@ -33,9 +36,12 @@ public class AutoCompleteAction extends BaseAction {
 	PincodeService pincodeService;
 	@Autowired
 	AddressService addressService;
+	@Autowired
+	SkuService skuService;
 
 	private String q = "";
 	private String pincode;
+	private Warehouse warehouse;
 
 	@DontValidate
 	@JsonHandler
@@ -71,6 +77,31 @@ public class AutoCompleteAction extends BaseAction {
 		return new JsonResolution(healthkartResponse);
 	}
 
+	@SuppressWarnings("unchecked")
+	@JsonHandler
+	public Resolution getProductsInWarehouse() {
+		HealthkartResponse healthkartResponse = null;
+		Map dataMap = new HashMap();
+
+		if (warehouse == null) {
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid warehouse !!");
+		}else{
+			List<Sku> skuList = skuService.getSKUsByProductNameAndWarehouse(q, warehouse.getId());
+			List<Long> skuIdList = new ArrayList<Long>(0);
+
+			List<String> productDetailList = new ArrayList<String>(0);
+			for (Sku sku : skuList) {
+				String productDetail = sku.getProductVariant().getProduct().getName() + " " + sku.getProductVariant().getOptionsCommaSeparated();
+				productDetailList.add(productDetail);
+				skuIdList.add(sku.getId());
+			}
+//			dataMap.put("skuIdList", skuIdList);
+			//dataMap.put("productDetailList", productDetailList);
+			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Warehouse", productDetailList);
+		}
+		return new JsonResolution(healthkartResponse);
+	}
+
 	public String getQ() {
 		return q;
 	}
@@ -86,5 +117,12 @@ public class AutoCompleteAction extends BaseAction {
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
-  
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
 }
