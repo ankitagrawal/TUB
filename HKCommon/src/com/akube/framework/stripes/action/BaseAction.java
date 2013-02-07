@@ -13,7 +13,7 @@ import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationError;
 import net.sourceforge.stripes.validation.ValidationErrors;
 
-import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,9 +33,6 @@ public class BaseAction implements ActionBean {
     private ActionBeanContext context;
 
     @Autowired
-    private SecurityManager   securityManager;
-
-    @Autowired
     private UserService       userService;
 
     @Autowired
@@ -50,10 +47,6 @@ public class BaseAction implements ActionBean {
 
     public void setContext(ActionBeanContext context) {
         this.context = context;
-    }
-
-    public org.apache.shiro.mgt.SecurityManager getSecurityManager() {
-        return securityManager;
     }
 
     protected void addValidationError(String key, SimpleError localizableError) {
@@ -75,7 +68,7 @@ public class BaseAction implements ActionBean {
     }
 
     public PrincipalImpl getPrincipal() {
-        return (PrincipalImpl) securityManager.getSubject().getPrincipal();
+        return (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
     }
 
     public User getPrincipalUser() {
@@ -85,7 +78,7 @@ public class BaseAction implements ActionBean {
     }
 
     public Subject getSubject() {
-        return securityManager.getSubject();
+        return SecurityUtils.getSubject();
     }
 
     public BreadcrumbInterceptor.Crumb getPreviousBreadcrumb() {
@@ -122,10 +115,6 @@ public class BaseAction implements ActionBean {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 
     public BaseDao getBaseDao() {
