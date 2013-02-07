@@ -34,7 +34,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class CreateUpdateShipmentAction extends BaseAction {
+    public class CreateUpdateShipmentAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(CreateUpdateShipmentAction.class);
 
