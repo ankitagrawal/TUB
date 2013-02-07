@@ -139,7 +139,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		Double completePurchase = (Double) baseDao.findByCriteria(criteria).iterator().next();
 		Badge userBadge = BADGES.iterator().next();
 		for (Badge badge : BADGES) {
-			if(completePurchase >= badge.getMinScore() && completePurchase < badge.getMaxScore()) {
+			if(completePurchase != null && (completePurchase >= badge.getMinScore() && completePurchase < badge.getMaxScore())) {
 				userBadge = badge;
 				break;
 			}
