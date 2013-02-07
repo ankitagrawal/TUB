@@ -1,8 +1,6 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.akube.framework.dao.Page;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.admin.pact.service.courier.CourierService;
@@ -13,7 +11,6 @@ import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.ReversePickup;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.util.CustomDateTypeConvertor;
@@ -44,9 +41,9 @@ import java.util.List;
  */
 @Secure(hasAnyPermissions = {PermissionConstants.CREATE_REVERSE_PICKUP_ORDER}, authActionBean = AdminPermissionAction.class)        
 @Component
-public class CourierPickupServiceAction extends BaseAction {
+public class CourierPickupAction extends BaseAction {
 
-	private static Logger logger = LoggerFactory.getLogger(CourierPickupServiceAction.class);
+	private static Logger logger = LoggerFactory.getLogger(CourierPickupAction.class);
 
 	private static final int maxPossibleDays = 14;
 	private Date pickupDate;

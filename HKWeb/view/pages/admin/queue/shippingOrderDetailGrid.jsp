@@ -526,7 +526,7 @@
         <div class="clear"></div>
         <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
             <div class="floatleft">
-                <s:link beanclass="com.hk.web.action.admin.courier.CourierPickupServiceAction"
+                <s:link beanclass="com.hk.web.action.admin.courier.CourierPickupAction"
                         target="_blank">
                     <s:param name="shippingOrderId" value="${shippingOrder.gatewayOrderId}"/>Reverse Pickup</s:link>
             </div>

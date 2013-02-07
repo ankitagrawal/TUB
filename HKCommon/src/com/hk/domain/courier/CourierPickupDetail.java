@@ -39,12 +39,6 @@ public class CourierPickupDetail {
     @JoinColumn(name = "pickup_status_id", nullable = false)
 	private PickupStatus pickupStatus;
 
-	@ManyToOne
-	@JoinColumn(name = "reconciliation_status_id", nullable = false)
-    private ReconciliationStatus reconciliationStatus;
-
-
-
 	public Long getId() {
 		return id;
 	}

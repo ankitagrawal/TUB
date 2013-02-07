@@ -3,6 +3,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="fedEx" value="<%=EnumCourier.FedEx.asCourier()%>"/>
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.asCourier()%>"/>
+<c:set var="pickupNotValid" value="${pickupService.exceededPolicyLimit}"/>
 <%
 
     String shippingOrderId = request.getParameter("shippingOrderId");
@@ -10,8 +11,8 @@
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.CourierPickupServiceAction" event="pre" var="pickupService"/>
-<c:set var="pickupNotValid" value="${pickupService.exceededPolicyLimit}"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.CourierPickupAction" event="pre" var="pickupService"/>
+
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pickup Service">
 
     <s:layout-component name="htmlHead">
@@ -34,7 +35,7 @@
 
     <s:layout-component name="heading">Reverse Pickup Service</s:layout-component>
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.courier.CourierPickupServiceAction">
+        <s:form beanclass="com.hk.web.action.admin.courier.CourierPickupAction">
           <s:errors/>
         <fieldset>
             <ul>
