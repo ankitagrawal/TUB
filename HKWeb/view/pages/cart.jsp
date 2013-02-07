@@ -698,10 +698,7 @@
   document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
-</s:layout-component>
-</c:if>
-<c:set var="comboInstanceIds"  value=""/>
-<%--<s:layout-component name="htmlHead">--%>
+
 <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
         <script type="text/javascript">
           $(document).ready(function () {
@@ -726,13 +723,15 @@
           function HideDialog()
           {
 
-              $("#overlay2").hide();
+              $("#overlay2").hide();                       
               $("#dialog2").fadeOut(300);
           }
           });
     </script>
      </c:if>
-<%--</s:layout-component>--%>
+</s:layout-component>
+<c:set var="comboInstanceIds"  value=""/>
+</c:if>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>

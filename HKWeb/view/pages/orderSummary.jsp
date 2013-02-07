@@ -224,9 +224,6 @@
               $("#overlay").hide();
               $("#dialog").fadeOut(300);
           }
-
-
-
       </script>
      </c:when>
       <c:otherwise>
