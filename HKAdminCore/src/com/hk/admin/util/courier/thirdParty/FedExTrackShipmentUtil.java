@@ -3,6 +3,9 @@ package com.hk.admin.util.courier.thirdParty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fedex.track.stub.*;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
+import org.apache.commons.lang.StringUtils;
+import java.util.Date;
 
 /**
  * Demo of using the Track service with Axis
@@ -38,7 +41,7 @@ public class FedExTrackShipmentUtil {
 	}
 
 
-	public String trackFedExShipment(String trackingId) {
+	public ThirdPartyTrackDetails trackFedExShipment(String trackingId) {
 
 		TrackRequest request = new TrackRequest();
 
@@ -58,13 +61,13 @@ public class FedExTrackShipmentUtil {
 		packageIdentifier.setType(TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG); // Track identifier types are TRACKING_NUMBER_OR_DOORTAG, TRACKING_CONTROL_NUMBER, ....
 		request.setPackageIdentifier(packageIdentifier);
 		request.setIncludeDetailedScans(new Boolean(true));
-		String status = null;
+
 		//
 		try {
 			// Initializing the service
 			TrackServiceLocator service;
 			TrackPortType port;
-			//
+			//                                                           
 			service = new TrackServiceLocator();
 			updateEndPoint(service);
 			port = service.getTrackServicePort();
@@ -74,58 +77,60 @@ public class FedExTrackShipmentUtil {
 			if (isResponseOk(reply.getHighestSeverity())) // check if the call was successful
 			{
 				TrackDetail td[] = reply.getTrackDetails();
-				for (int i = 0; i < td.length; i++) { // package detail information
-					/*
-						System.out.println("Package # : " + td[i].getPackageSequenceNumber()
-								+ " and Package count: " + td[i].getPackageCount());
-					System.out.println("Tracking number: " + td[i].getTrackingNumber()
-								+ " and Tracking number unique identifier: " + td[i].getTrackingNumberUniqueIdentifier());
-					System.out.println("Status code: " + td[i].getStatusCode());
-					System.out.println("Status description: " + td[i].getStatusDescription());
-					*/
-					status = td[i].getStatusDescription();
-					/*
-					if(td[i].getOtherIdentifiers() != null)
-					{
-						TrackPackageIdentifier[] tpi = td[i].getOtherIdentifiers();
-						for (int j=0; j< tpi.length; j++) {
-							System.out.println(tpi[j].getType() + " " + tpi[j].getValue());
+				if(td != null) {
+					ThirdPartyTrackDetails thirdPartyTrackDetails = new ThirdPartyTrackDetails();
+					for (int i = 0; i < td.length; i++) { // package detail information
+						/*
+					 System.out.println("Tracking number: " + td[i].getTrackingNumber()
+								 + " and Tracking number unique identifier: " + td[i].getTrackingNumberUniqueIdentifier()); 					
+					 */
+						thirdPartyTrackDetails.setAwbStatus(td[i].getStatusDescription());
+						thirdPartyTrackDetails.setTrackingNo(td[i].getTrackingNumber());
+						if (td[i].getActualDeliveryTimestamp()!= null){
+							Date deliveryDate = td[i].getActualDeliveryTimestamp().getTime();
+							thirdPartyTrackDetails.setDeliveryDateString(deliveryDate.toString());
 						}
-					}
-					print("Packaging", td[i].getPackaging());
-					printWeight("Package weight", td[i].getPackageWeight());
-					printWeight("Shipment weight", td[i].getShipmentWeight());
 
-					print("Ship date & time", td[i].getShipTimestamp().getTime());
-
-					//System.out.println("Destination: " + td[i].getDestinationAddress().getCity()
-					//		+ " " + td[i].getDestinationAddress().getPostalCode()
-					//		+ " " + td[i].getDestinationAddress().getCountryCode());
-
-
-					TrackEvent[] trackEvents = td[i].getEvents();
-					if (trackEvents != null) {
-						System.out.println("Events:");
-						for (int k = 0; k < trackEvents.length; k++) {
-							System.out.println("  Event no.: " + (k+1));
-							TrackEvent trackEvent = trackEvents[k];
-							if (trackEvent != null) {
-								print("    Timestamp", trackEvent.getTimestamp().getTime());
-								print("    Description", trackEvent.getEventDescription());
-								Address address = trackEvent.getAddress();
-								if (address != null) {
-									System.out.println(address.getCity());
-									print("    City", address.getCity());
-									print("    State", address.getStateOrProvinceCode());
+						if (td[i].getOtherIdentifiers() != null) {
+							TrackPackageIdentifier[] tpi = td[i].getOtherIdentifiers();
+							for (int j = 0; j < tpi.length; j++) {
+								if (tpi[j].getType().equals(TrackIdentifierType.SHIPPER_REFERENCE)) {
+									thirdPartyTrackDetails.setReferenceNo(tpi[j].getValue());
 								}
 							}
 						}
-					}
-					*/
-				}
 
+						/*
+					 printWeight("Package weight", td[i].getPackageWeight());
+					 printWeight("Shipment weight", td[i].getShipmentWeight());
+					 print("Ship date & time", td[i].getShipTimestamp().getTime());
+					 //System.out.println("Destination: " + td[i].getDestinationAddress().getCity()
+					 //		+ " " + td[i].getDestinationAddress().getPostalCode()
+					 //		+ " " + td[i].getDestinationAddress().getCountryCode());
+					 TrackEvent[] trackEvents = td[i].getEvents();
+					 if (trackEvents != null) {
+						 System.out.println("Events:");
+						 for (int k = 0; k < trackEvents.length; k++) {
+							 System.out.println("  Event no.: " + (k+1));
+							 TrackEvent trackEvent = trackEvents[k];
+							 if (trackEvent != null) {
+								 print("    Timestamp", trackEvent.getTimestamp().getTime());
+								 print("    Description", trackEvent.getEventDescription());
+								 Address address = trackEvent.getAddress();
+								 if (address != null) {
+									 System.out.println(address.getCity());
+									 print("    City", address.getCity());
+									 print("    State", address.getStateOrProvinceCode());
+								 }
+							 }
+						 }
+					 }
+					 */
+					}
+					return thirdPartyTrackDetails;
+				}
 			}
-			return status;
+
 			//printNotifications(reply.getNotifications());
 
 		} catch (Exception e) {
