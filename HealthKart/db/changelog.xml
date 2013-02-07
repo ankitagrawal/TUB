@@ -11393,4 +11393,10 @@
             <column name="terms" type="VARCHAR(500)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pradeep " id="07-02-2013">
+       <sql>
+           update hk_api_user set  terms='http://www.healthkartplus.com/tnc' where api_key='healthkartplus';
+       </sql>
+    </changeSet>
+
 </databaseChangeLog>
