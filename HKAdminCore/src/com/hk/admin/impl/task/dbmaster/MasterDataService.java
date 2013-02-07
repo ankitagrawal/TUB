@@ -151,6 +151,8 @@ public class MasterDataService {
 	DispatchLotStatusSeedData dispatchLotStatusSeedData;
 	@Autowired
 	SkuItemStatusSeedData skuItemStatusSeedData;
+	@Autowired
+	CourierPickupStatusSeedData courierPickupStatusSeedData;
 
 	public void insert() {
 
@@ -310,5 +312,8 @@ public class MasterDataService {
 
 		logger.debug("inserting Sku Item Status");
 		skuItemStatusSeedData.invokeInsert();
+
+		logger.debug("inserting courier pickup status");
+		courierPickupStatusSeedData.invokeInsert();
 	}
 }
