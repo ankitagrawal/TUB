@@ -98,10 +98,10 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 getBaseDao().save(pincodeDefaultCourier);
             }
             addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
-            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect" + error));
-            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString);
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
         }
     }
 
@@ -171,7 +171,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         }
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
+        return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString).addParameter("cod",cod).addParameter("ground",ground);
     }
 
     public String getPincodeString() {
