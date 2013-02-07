@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.rtv.EnumRtvNoteStatus" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Rtv Note">
  <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="rtvNote"/>
@@ -20,12 +23,17 @@
                        alert("Rtv Note Status can't reverted back");
                        return false;
                    }
-                   var courierName = $('#courierName').val();
-                   var docketNumber = $('#docketNumber').val();
+                   var courier = $('#courier').val();
+                   var pickupStatus = $('#pickupStatus').val();
                    var destinationAddress = $('#destinationAddress').val();
+                   var pickupDate = $('#pickupDate').val();
                    if(rtvNoteStatus == 20 && rtvNoteStatusDB == 10){
-                       if((courierName == null || courierName == "") && (docketNumber == null || docketNumber == "")){
-                           alert("Please Enter Courier details");
+                       if((courier == null || courier == "") || (pickupStatus == null || pickupStatus == "")){
+                           alert("Please Select a Courier and pickup status");
+                           return false;
+                       }
+                       if(pickupDate == null || pickupDate == ""){
+                           alert("Please Enter Pickup Date");
                            return false;
                        }
                        if(destinationAddress == null || destinationAddress == ""){
@@ -55,10 +63,6 @@
                 <th>Reconciled</th>
                 <th>Create Date</th>
                 <th>Update Date</th>
-                <th>Courier Name</th>
-                <th>Docket Number</th>
-                <th>Destination Address</th>
-                <th>Dispatch Date</th>
                 <th>Remarks</th>
             </tr>
             </thead>
@@ -70,6 +74,7 @@
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.id eq reconciled}">
                                <h6 style="color:blue">${rtvNote.rtvNote.rtvNoteStatus.name}(Closed)</h6>
+                                <s:hidden name="rtvStatusId" value="<%=EnumRtvNoteStatus.Reconciled.getId()%>" />
                             </c:when>
                             <c:otherwise>
                                <select name="rtvStatusId" id="rtvNoteStatus">
@@ -102,42 +107,88 @@
                     </td>
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
-                                <s:text name="courierName" value="${rtvNote.rtvNote.courierName}" id="courierName"/>
-                            </c:when>
-                            <c:otherwise>
-                                  ${rtvNote.rtvNote.courierName}
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
-                                <s:text name="docketNumber" value="${rtvNote.rtvNote.docketNumber}" id="docketNumber"/>
-                            </c:when>
-                            <c:otherwise>
-                                  ${rtvNote.rtvNote.docketNumber}
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
-                                <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress"/>
-                            </c:when>
-                            <c:otherwise>
-                                  ${rtvNote.rtvNote.destinationAddress}
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                         ${rtvNote.rtvNote.dispatchDate}
-                    </td>
                     <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${rtvNote.rtvNote.remarks}</textarea></td>
                 </tr>
             </c:if>
+            </tbody>
+        </table>
+        <br><br>
+        <div class="clear"></div>
+        <h2>Courier Details</h2>
+        <table border="1">
+            <thead>
+              <tr>
+                  <th>Courier</th>
+                  <th>Pickup Confirmation No.</th>
+                  <th>Tracking No.</th>
+                  <th>PickUp Status</th>
+                  <th>Pickup Date</th>
+                  <th>Destination Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <td>
+                      <input type="hidden" name="courierPickupDetail.id" value="${rtvNote.courierPickupDetail.id}" >
+                      <c:choose>
+                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.courier!=null}">
+                              ${rtvNote.courierPickupDetail.courier.name}
+                              <s:hidden name="courierPickupDetail.courier" value="${rtvNote.courierPickupDetail.courier.id}" />
+                          </c:when>
+                          <c:otherwise>
+                     <s:select name="courierPickupDetail.courier" id="courier">
+                         <s:option value="">--Select--</s:option>
+                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
+                                                           serviceProperty="courierList" value="id" label="name"/>
+                            </s:select>
+                          </c:otherwise>
+                      </c:choose>
+                  </td>
+                  <td>
+                      <c:choose>
+                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.pickupConfirmationNo!=null}">
+                               ${rtvNote.courierPickupDetail.pickupConfirmationNo}
+                              <s:hidden name="courierPickupDetail.pickupConfirmationNo" value="${rtvNote.courierPickupDetail.pickupConfirmationNo}" />
+                          </c:when>
+                          <c:otherwise>
+                               <s:text name="courierPickupDetail.pickupConfirmationNo" />
+                          </c:otherwise>
+                      </c:choose>
+                  </td>
+                  <td>
+                      <c:choose>
+                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.trackingNo!=null}">
+                               ${rtvNote.courierPickupDetail.trackingNo}
+                              <s:hidden name="courierPickupDetail.trackingNo" value="${rtvNote.courierPickupDetail.trackingNo}" />
+                          </c:when>
+                          <c:otherwise>
+                              <s:text name="courierPickupDetail.trackingNo" />
+                          </c:otherwise>
+                      </c:choose>
+                  </td>
+                  <td>
+                      <s:select name="pickupStatusId" id="pickupStatus">
+                          <s:option value="">--Select--</s:option>
+                          <s:option value="<%=EnumPickupStatus.OPEN.getId()%>"><%=EnumPickupStatus.OPEN.getName()%></s:option>
+                          <s:option value="<%=EnumPickupStatus.CLOSE.getId()%>"><%=EnumPickupStatus.CLOSE.getName()%></s:option>
+                      </s:select>
+                      <script type="text/javascript">
+                          $('#pickupStatus').val(${rtvNote.courierPickupDetail.pickupStatus.id});
+                      </script>
+                  </td>
+                  <td><s:text class="date_input" id="pickupDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
+                  <td>
+                      <c:choose>
+                          <c:when test="${rtvNote.rtvNote.destinationAddress==null}">
+                              <s:text name="destinationAddress" id="destinationAddress"/>
+                          </c:when>
+                          <c:otherwise>
+                              ${rtvNote.rtvNote.destinationAddress}
+                              <s:hidden name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" />
+                          </c:otherwise>
+                      </c:choose>
+                  </td>
+              </tr>
             </tbody>
         </table>
         <s:hidden name="rtvNoteId" value="${rtvNote.rtvNote.id}"/>

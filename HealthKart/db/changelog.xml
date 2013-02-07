@@ -11519,25 +11519,19 @@
             <column defaultValue="0" name="is_extra_inventory_created" type="TINYINT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1359717387729-5">
-        <addColumn tableName="rtv_note">
-            <column name="courier_name" type="VARCHAR(45)"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-6">
         <addColumn tableName="rtv_note">
             <column name="destination_address" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1359717387729-7">
+    <changeSet author="Shrey (generated)" id="1360256175267-1">
         <addColumn tableName="rtv_note">
-            <column name="dispatch_date" type="DATETIME"/>
+            <column name="courier_pickup_detail_id" type="INT">
+            </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Shrey (generated)" id="1359717387729-8">
-        <addColumn tableName="rtv_note">
-            <column name="docket_number" type="VARCHAR(50)"/>
-        </addColumn>
+    <changeSet author="Shrey (generated)" id="1360256175267-2">
+        <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="rtv_note" constraintName="fk_rtv_note_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-9">
         <createIndex indexName="name_UNIQUE" tableName="extra_inventory_status" unique="true">
