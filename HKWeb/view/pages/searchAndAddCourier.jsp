@@ -49,8 +49,8 @@
 					&nbsp; &nbsp;
 					<label>Status:</label><s:select name="status">
 					<s:option value="">-ALL-</s:option>
-					<s:option value="false">Active</s:option>
-					<s:option value="true">Inactive</s:option>
+					<s:option value="true">Active</s:option>
+					<s:option value="false">Inactive</s:option>
 				</s:select>
 					&nbsp; &nbsp;
 					<label>Courier Operations:</label>
