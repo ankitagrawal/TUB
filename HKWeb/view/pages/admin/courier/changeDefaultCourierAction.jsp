@@ -189,7 +189,7 @@
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
                                     ${ctr.index+1}.
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
                                 <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" id="courier${ctr.index}">
@@ -204,7 +204,7 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.warehouse.name}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.pincode.pincode}
@@ -212,15 +212,15 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.cod}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].cod" value="${pincodeDefaultCourier.cod}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].cod" value="${pincodeDefaultCourier.cod}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.groundShipping}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].groundShipping" value="${pincodeDefaultCourier.groundShipping}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].groundShipping" value="${pincodeDefaultCourier.groundShipping}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.estimatedShippingCost}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].estimatedShippingCost" value="${pincodeDefaultCourier.estimatedShippingCost}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].estimatedShippingCost" value="${pincodeDefaultCourier.estimatedShippingCost}"/>
                             </td>
                         </tr>
                     </c:forEach>
