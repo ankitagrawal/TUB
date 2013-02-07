@@ -72,7 +72,6 @@
 
       $('.removeLink').click(function() {
         clearTimeout(timeout);
-          alert("inside");
         var itemContainer = $(this).parents('.product');
         var lineItemId = itemContainer.find('.lineItemId').val();
         var lineItemStyleId = itemContainer.find('.lineItemId').attr('id');
