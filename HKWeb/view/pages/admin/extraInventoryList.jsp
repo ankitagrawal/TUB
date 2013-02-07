@@ -9,7 +9,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
-    <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="extraInventory"/>
+    <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="extraInventoryAction"/>
     <s:layout-component name="htmlHead">
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -30,8 +30,8 @@
               </s:form>
             </fieldset>
 
-            <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${extraInventory}"/>
-            <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${extraInventory}"/>
+            <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${extraInventoryAction}"/>
+            <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${extraInventoryAction}"/>
 
         <table class="zebra_vert">
               <thead>
@@ -44,7 +44,7 @@
                 <th>Comments</th>
               </tr>
               </thead>
-            <c:forEach items="${extraInventory.extraInventories}" var="extraInventory">
+            <c:forEach items="${extraInventoryAction.extraInventories}" var="extraInventory">
             <tr>
                <td>
                   <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="pre" >${extraInventory.id}

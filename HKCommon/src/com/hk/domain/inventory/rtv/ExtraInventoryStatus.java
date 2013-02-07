@@ -16,7 +16,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "rtv_note_status")
+@Table(name = "extra_inventory_status")
 
 public class ExtraInventoryStatus implements Serializable{
 

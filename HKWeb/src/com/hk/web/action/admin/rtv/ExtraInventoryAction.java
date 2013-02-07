@@ -169,12 +169,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       extraInventory1.setCreatedBy(user);
       extraInventory1.setExtraInventoryStatus(EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus());
       extraInventory = getExtraInventoryService().save(extraInventory1);
+      purchaseOrder.setExtraInventoryCreated(true);
+      purchaseOrder = getPurchaseOrderService().save(purchaseOrder);
     }
     else{
       extraInventory.setUpdateDate(new Date());
       extraInventory.setComments(comments);
       ExtraInventoryStatus extraInventoryStatus = EnumExtraInventoryStatus.asEnumExtraInventoryStatusByID(extraInventoryStatusId);
-      if(!extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName())){
+      if(!(extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName()))){
         extraInventory.setExtraInventoryStatus(extraInventoryStatus);
         if(extraInventoryStatus.getName().equals(EnumExtraInventoryStatus.SentToCategory.getName()) && !extraInventory.isEmailSent()){
           getEmailManager().sendExtraInventoryMail(extraInventory);
@@ -205,9 +207,6 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
     }
-
-    purchaseOrder.setExtraInventoryCreated(true);
-    purchaseOrder = getPurchaseOrderService().save(purchaseOrder);
 //    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
 //    if(extraInventory != null){
 //      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());

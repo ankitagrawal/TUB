@@ -11406,7 +11406,7 @@
         <sql>
             insert into extra_inventory_status values(10, 'Created'),(20, 'Sent To Category'),(40, 'Closed');
             update extra_inventory set extra_inventory_status_id = 10;
-            <!--update purchase_order po join extra_inventory ei on po.id = ei.purchase_order_id set po.is_extra_inventory_created = 1;-->
+            update purchase_order po join extra_inventory ei on po.id = ei.purchase_order_id set po.is_extra_inventory_created = 1;
         </sql>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-10">

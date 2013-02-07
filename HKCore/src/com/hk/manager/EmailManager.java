@@ -131,8 +131,6 @@ public class EmailManager {
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
 	  private String              logisticsOpsEmails;
-    @Value("#{hkEnvProps['" + Keys.Env.categoryHealthkart + "']}")
-    private String categoryHealthkart;
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
      */
@@ -828,7 +826,11 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("extraInventory", extraInventory);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
-            return emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryHealthkart,EmailTemplateConstants.categoryTeam);
+        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getProductVariant().getProduct().getPrimaryCategory();
+        for(String categoryAdminEmail : this.categoryAdmins(category)){
+            emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryAdminEmail,category.getDisplayName());
+        }
+    return true;
   }
 
     /*

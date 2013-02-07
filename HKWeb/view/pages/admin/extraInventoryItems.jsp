@@ -178,6 +178,13 @@ $(document).ready(function () {
             saveObj.show();
             return false;
         }
+        if(extraInventoryStatus == 40 && extraInventoryStatusDB!=40){
+            $('.checkbox1').each(function() {
+                alert("Extra Inventory Status can't be closed until all ExtraInventoryLineItems is RTV or PO.");
+                bool  = false;
+                saveObj.show();
+          });
+        }
         if (!bool) return false;
     });
 
@@ -503,7 +510,7 @@ $(document).ready(function () {
     </tbody>
 </table>
 <c:choose>
-    <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') or !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
+    <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') && !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
             <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
                id="addRowButton" style="font-size:1.2em">Add new row</a>
