@@ -240,6 +240,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         courierListForDeliveryMarking.add(CourierConstants.DTDC);
         courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
 		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+		courierListForDeliveryMarking.add(CourierConstants.FEDEX);
         return courierListForDeliveryMarking;
     }
 

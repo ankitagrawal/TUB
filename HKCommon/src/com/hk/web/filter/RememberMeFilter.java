@@ -9,7 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.shiro.web.DefaultWebSecurityManager;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.stereotype.Component;
 
 import com.hk.service.ServiceLocatorFactory;
@@ -19,15 +20,16 @@ import com.shiro.PrincipalImpl;
 public class RememberMeFilter implements Filter {
 
     private DefaultWebSecurityManager securityManager;
+    private SecurityUtils securityUtils;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         securityManager = (DefaultWebSecurityManager) ServiceLocatorFactory.getService("SecurityManager");
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (getSecurityManager().getSubject().isRemembered()) {
+        if (getSecurityUtils().getSubject().isRemembered()) {
             @SuppressWarnings("unused")
-            PrincipalImpl principal = (PrincipalImpl) securityManager.getSubject().getPrincipal();
+            PrincipalImpl principal = (PrincipalImpl) securityUtils.getSubject().getPrincipal();
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -43,4 +45,11 @@ public class RememberMeFilter implements Filter {
         this.securityManager = securityManager;
     }
 
+    public SecurityUtils getSecurityUtils() {
+        return securityUtils;
+    }
+
+    public void setSecurityUtils(SecurityUtils securityUtils) {
+        this.securityUtils = securityUtils;
+    }
 }
