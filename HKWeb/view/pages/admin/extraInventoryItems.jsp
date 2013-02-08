@@ -301,6 +301,7 @@ $(document).ready(function () {
                     <c:choose>
                         <c:when test="${extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus}">
                             <span style="color:blue;">(Closed)</span>
+                            <s:hidden name="extraInventoryStatusId" value="<%=EnumExtraInventoryStatus.Closed.getId()%>" />
                         </c:when>
                         <c:otherwise>
                             <s:select name="extraInventoryStatusId" id="extraInventoryStatus">
@@ -518,7 +519,7 @@ $(document).ready(function () {
     </tbody>
 </table>
 <c:choose>
-    <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') && !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
+    <c:when test="${!(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus) &&  !(extraInventory.reconciledStatus!=null and extraInventory.reconciledStatus eq 'reconciled')}">
         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
             <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
                id="addRowButton" style="font-size:1.2em">Add new row</a>
