@@ -27,6 +27,7 @@
                    var pickupStatus = $('#pickupStatus').val();
                    var destinationAddress = $('#destinationAddress').val();
                    var pickupDate = $('#pickupDate').val();
+                   alert(pickupDate);
                    if(rtvNoteStatus == 20 && rtvNoteStatusDB == 10){
                        if((courier == null || courier == "") || (pickupStatus == null || pickupStatus == "")){
                            alert("Please Select a Courier and pickup status");
@@ -157,7 +158,7 @@
                   </td>
                   <td><s:text class="date_input" id="pickupDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
                   <td>
-                      <s:hidden name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" />
+                      <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" />
                   </td>
               </tr>
             </tbody>

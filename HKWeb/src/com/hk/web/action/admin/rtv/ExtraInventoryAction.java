@@ -302,7 +302,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
       rtvNote.setDebitToSupplier(isDebitToSupplier);
-      if(courierPickupDetail!=null){
+      if(courierPickupDetail!=null && pickupStatusId!=null && courierPickupDetail.getCourier()!=null && courierPickupDetail.getPickupDate()!=null){
         courierPickupDetail.setPickupStatus(EnumPickupStatus.asPickupStatusById(pickupStatusId));
         courierPickupDetail = getCourierPickupService().save(courierPickupDetail);
         rtvNote.setCourierPickupDetail(courierPickupDetail);

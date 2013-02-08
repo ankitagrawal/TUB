@@ -826,7 +826,7 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("extraInventory", extraInventory);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
-        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getProductVariant().getProduct().getPrimaryCategory();
+        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
         for(String categoryAdminEmail : this.categoryAdmins(category)){
             emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryAdminEmail,category.getDisplayName());
         }
