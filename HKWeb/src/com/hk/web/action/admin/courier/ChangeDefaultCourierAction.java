@@ -171,7 +171,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         }
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new RedirectResolution(ChangeDefaultCourierAction.class,"search").addParameter("pincodeString",pincodeString).addParameter("cod",cod).addParameter("ground",ground);
+        return new RedirectResolution(ChangeDefaultCourierAction.class);
     }
 
     public String getPincodeString() {
