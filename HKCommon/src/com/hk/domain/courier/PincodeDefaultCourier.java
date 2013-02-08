@@ -57,8 +57,8 @@ public class PincodeDefaultCourier implements java.io.Serializable {
       return false;
 
     PincodeDefaultCourier pincodeDefaultCourier = (PincodeDefaultCourier) o;
-    if (this.pincode != null && this.courier!=null && this.warehouse!=null && pincodeDefaultCourier.getPincode() != null && pincodeDefaultCourier.getCourier()!=null && pincodeDefaultCourier.getWarehouse()!=null) {
-      return (this.pincode.equals(pincodeDefaultCourier.getPincode()) && this.courier.equals(pincodeDefaultCourier.getCourier()) && this.warehouse.equals(pincodeDefaultCourier.getWarehouse()) && this.cod == pincodeDefaultCourier.getCod() && this.groundShipping == pincodeDefaultCourier.getGroundShipping());
+    if (this.pincode != null && this.warehouse!=null && pincodeDefaultCourier.getPincode() != null && pincodeDefaultCourier.getWarehouse()!=null) {
+      return (this.pincode.equals(pincodeDefaultCourier.getPincode()) && this.warehouse.equals(pincodeDefaultCourier.getWarehouse()) && this.cod == pincodeDefaultCourier.getCod() && this.groundShipping == pincodeDefaultCourier.getGroundShipping());
     }
     return false;
   }
