@@ -77,8 +77,13 @@ public class InventoryServiceImpl implements InventoryService {
         }else{
             //all variants without sku marked out of stock
             //todo check for product oos as well
-            productVariant.setOutOfStock(true);
-            productVariantService.save(productVariant);
+	          List<Sku> skuListToMarkProductOOS = getSkuService().getSKUsForMarkingProductOOS(productVariant);
+	          if(skuListToMarkProductOOS == null || skuListToMarkProductOOS.isEmpty()) {
+		          if (!productVariant.isOutOfStock()) {
+			          productVariant.setOutOfStock(true);
+			          productVariantService.save(productVariant);
+		          }
+	          }
         }
     }
 
