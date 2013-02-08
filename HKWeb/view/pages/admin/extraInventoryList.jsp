@@ -49,15 +49,13 @@
                 <th>Created By</th>
                 <th>Created Date</th>
                 <th>Comments</th>
+                <th>Action</th>
               </tr>
               </thead>
             <c:forEach items="${extraInventoryAction.extraInventories}" var="extraInventory">
             <tr>
                <td>
-                  <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="pre" >${extraInventory.id}
-                     <s:param name="purchaseOrderId" value="${extraInventory.purchaseOrder.id}"/>
-                     <s:param name="wareHouseId" value="${extraInventory.purchaseOrder.warehouse.id}"/>
-                  </s:link>
+                   ${extraInventory.id}
                </td>
                 <td>
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${extraInventory.purchaseOrder.id}
@@ -75,6 +73,12 @@
                 </td>
                 <td>
                     ${extraInventory.comments}
+                </td>
+                <td>
+                    <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="pre" >Edit ExtraInventory
+                     <s:param name="purchaseOrderId" value="${extraInventory.purchaseOrder.id}"/>
+                     <s:param name="wareHouseId" value="${extraInventory.purchaseOrder.warehouse.id}"/>
+                  </s:link>
                 </td>
             </tr>
             </c:forEach>

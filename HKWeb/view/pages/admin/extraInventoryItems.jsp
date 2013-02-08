@@ -237,6 +237,9 @@ $(document).ready(function () {
                         </c:forEach>
                 '</select>' +
                 '</td>' +
+                '<td>' +
+                '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
+                '</td>' +
                 '</tr>';
 
         $('#poTable').append(newRowHtml);
@@ -505,8 +508,7 @@ $(document).ready(function () {
                             ${eInLineItems.remarks}
                         </c:when>
                         <c:otherwise>
-                            <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10"
-                                        style="height:60px; width:210px;"/>
+                            <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10" style="height:60px; width:210px;"/>
                         </c:otherwise>
                     </c:choose>
                 </td>
