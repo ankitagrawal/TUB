@@ -564,7 +564,7 @@ public class OrderManager {
       for (CartLineItem lineItem : cartLineItems) {
           ProductVariant productVariant = lineItem.getProductVariant();
           Product product = productVariant.getProduct();
-          List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+          List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
 
           if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock() || lineItem.getQty() <= 0) {
               lineItem.setQty(0L);
