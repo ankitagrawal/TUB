@@ -123,7 +123,7 @@ public class SkuServiceImpl implements SkuService {
 	 * @return
 	 */
 	public List<Sku> getSKUsForMarkingProductOOS(ProductVariant productVariant) {
-		return getSkuDao().getSkus(productVariant, warehouseService.getServiceableWarehouses());
+		return getSkuDao().getSkus(productVariant, warehouseService.getWarehousesToMarkOOS());
 	}
 
     /**
