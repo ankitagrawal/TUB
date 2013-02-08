@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.CategoryCache;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
@@ -129,8 +130,7 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
-	private String              logisticsOpsEmails;
-
+	  private String              logisticsOpsEmails;
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
      */
@@ -821,6 +821,17 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsOpsEmails,
                 EmailTemplateConstants.operationsTeam);
     }
+
+  public boolean sendExtraInventoryMail(ExtraInventory extraInventory){
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("extraInventory", extraInventory);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
+        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getProductVariant().getProduct().getPrimaryCategory();
+        for(String categoryAdminEmail : this.categoryAdmins(category)){
+            emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryAdminEmail,category.getDisplayName());
+        }
+    return true;
+  }
 
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();

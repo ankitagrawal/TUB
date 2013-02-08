@@ -50,6 +50,19 @@ public class RtvNote implements Serializable{
   @Column (name = "remarks")
   private String remarks;
 
+  @Column (name = "docket_number")
+  private String docketNumber;
+
+  @Column (name = "courier_name")
+  private String courierName;
+
+  @Column (name = "destination_address")
+  private String destinationAddress;
+
+  @Temporal (TemporalType.TIMESTAMP)
+  @Column (name = "dispatch_date")
+  private Date dispatchDate = new Date();
+
   @Temporal (TemporalType.TIMESTAMP)
   @Column (name = "create_dt", nullable = false, length = 19)
   private Date createDate = new Date();
@@ -136,5 +149,37 @@ public class RtvNote implements Serializable{
 
   public void setCreatedBy(User createdBy) {
     this.createdBy = createdBy;
+  }
+
+  public String getDocketNumber() {
+    return docketNumber;
+  }
+
+  public void setDocketNumber(String docketNumber) {
+    this.docketNumber = docketNumber;
+  }
+
+  public String getCourierName() {
+    return courierName;
+  }
+
+  public void setCourierName(String courierName) {
+    this.courierName = courierName;
+  }
+
+  public String getDestinationAddress() {
+    return destinationAddress;
+  }
+
+  public void setDestinationAddress(String destinationAddress) {
+    this.destinationAddress = destinationAddress;
+  }
+
+  public Date getDispatchDate() {
+    return dispatchDate;
+  }
+
+  public void setDispatchDate(Date dispatchDate) {
+    this.dispatchDate = dispatchDate;
   }
 }

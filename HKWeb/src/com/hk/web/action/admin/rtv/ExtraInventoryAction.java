@@ -8,7 +8,10 @@ import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
+import com.hk.manager.EmailManager;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
@@ -66,11 +69,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   PoLineItemService poLineItemService;
   @Autowired
   MasterDataDao masterDataDao;
+  @Autowired
+  EmailManager emailManager;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
   private List<RtvNoteLineItem> rtvNoteLineItems = new ArrayList<RtvNoteLineItem>();
   private List<Tax> taxList = new ArrayList<Tax>();
+  private List<ExtraInventory> extraInventories = new ArrayList<ExtraInventory>();
   private Integer defaultPerPage = 20;
   Page purchaseOrderPage;
   private Long purchaseOrderId;
@@ -83,11 +89,15 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private User user;
   private RtvNote rtvNote;
   private Long rtvNoteId;
-  private EnumRtvNoteStatus rtvStatus;
+  private Long rtvStatusId;
+  private Long extraInventoryStatusId;
   private Boolean isDebitToSupplier;
   private Boolean isReconciled;
   private String reconciledStatus;
   private Long newPurchaseOrderId;
+  private String courierName;
+  private String destinationAddress;
+  private String docketNumber;
 
 
   @DefaultHandler
@@ -103,7 +113,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) ||  rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }
@@ -127,7 +137,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
           extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
             rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
             if(rtvNote!=null){
-              if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+              if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
                 reconciledStatus = "reconciled";
               }
             }
@@ -157,16 +167,27 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         user = getUserService().getUserById(getPrincipal().getId());
       }
       extraInventory1.setCreatedBy(user);
+      extraInventory1.setExtraInventoryStatus(EnumExtraInventoryStatus.Created.asEnumExtraInventoryStatus());
       extraInventory = getExtraInventoryService().save(extraInventory1);
+      purchaseOrder.setExtraInventoryCreated(true);
+      purchaseOrder = getPurchaseOrderService().save(purchaseOrder);
     }
     else{
       extraInventory.setUpdateDate(new Date());
       extraInventory.setComments(comments);
+      ExtraInventoryStatus extraInventoryStatus = EnumExtraInventoryStatus.asEnumExtraInventoryStatusByID(extraInventoryStatusId);
+      if(!(extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName()))){
+        extraInventory.setExtraInventoryStatus(extraInventoryStatus);
+        if(extraInventoryStatus.getName().equals(EnumExtraInventoryStatus.SentToCategory.getName()) && !extraInventory.isEmailSent()){
+          getEmailManager().sendExtraInventoryMail(extraInventory);
+          extraInventory.setEmailSent(true);
+        }
+      }
       extraInventory = getExtraInventoryService().save(extraInventory);
     }
     //creating Extra Inventory Line Items
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems){
-      if(extraInventoryLineItem.getId()==null){
+      if(extraInventoryLineItem.getId()==null && extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setExtraInventory(extraInventory);
         extraInventoryLineItem.setCreateDate(new Date());
         extraInventoryLineItem.setUpdateDate(new Date());
@@ -175,28 +196,34 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
       }
       else{
+        if(extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setUpdateDate(new Date());
         extraInventoryLineItem.setExtraInventory(extraInventory);
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
-      }
-    }
-    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-    if(extraInventory != null){
-      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-      if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-          reconciledStatus = "reconciled";
+        }
+        else{
+          extraInventoryLineItem.setExtraInventory(extraInventory);
+          getExtraInventoryLineItemService().delete(extraInventoryLineItem);
         }
       }
     }
-    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-    if(purchaseOrder!=null){
-      newPurchaseOrderId = purchaseOrder.getId();
-    }
-     taxList = getMasterDataDao().getTaxList();
+//    extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+//    if(extraInventory != null){
+//      rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+//      if(rtvNote!=null){
+//        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+//          reconciledStatus = "reconciled";
+//        }
+//      }
+//    }
+//    purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+//    if(purchaseOrder!=null){
+//      newPurchaseOrderId = purchaseOrder.getId();
+//    }
+//     taxList = getMasterDataDao().getTaxList();
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
-    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+    return new RedirectResolution(ExtraInventoryAction.class,"searchExtraInventory");
   }
 
 @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
@@ -260,17 +287,23 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     extraInventory = rtvNote.getExtraInventory();
     if(rtvNote !=null){
       rtvNote.setRemarks(comments);
-      if(rtvStatus!=null && isReconciled!=null){
-        if(rtvStatus.getName().equalsIgnoreCase("reconciled") || isReconciled){
+      if(rtvStatusId !=null && isReconciled!=null){
+        if(EnumRtvNoteStatus.asRtvNoteStatusById(rtvStatusId).getName().equalsIgnoreCase("reconciled") || isReconciled){
           rtvNote.setReconciled(true);
           rtvNote.setRtvNoteStatus(EnumRtvNoteStatus.Reconciled.asRtvNoteStatus());
         }
         else{
           rtvNote.setReconciled(isReconciled);
-          rtvNote.setRtvNoteStatus(rtvStatus.asRtvNoteStatus());
+          rtvNote.setRtvNoteStatus(EnumRtvNoteStatus.asRtvNoteStatusById(rtvStatusId));
         }
       }
       rtvNote.setDebitToSupplier(isDebitToSupplier);
+      if(courierName!=null || docketNumber!=null || destinationAddress!=null){
+      rtvNote.setCourierName(courierName);
+      rtvNote.setDocketNumber(docketNumber);
+      rtvNote.setDestinationAddress(destinationAddress);
+      rtvNote.setDispatchDate(new Date());
+      }
       rtvNote = getRtvNoteService().save(rtvNote);
     }
     noCache();
@@ -282,24 +315,24 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public Resolution editRtv(){
     rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventoryId);
     if(rtvNote == null){
-      extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
-      if(extraInventory!=null){
-        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-        if(extraInventory != null){
-          rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
-          if(rtvNote!=null){
-            if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
-              reconciledStatus = "reconciled";
-            }
-          }
-        }
-        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
-        if(purchaseOrder!=null){
-          newPurchaseOrderId = purchaseOrder.getId();
-        }
-      }
+//      extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
+//      if(extraInventory!=null){
+//        extraInventoryLineItems = getExtraInventoryLineItemService().getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+//        if(extraInventory != null){
+//          rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
+//          if(rtvNote!=null){
+//            if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+//              reconciledStatus = "reconciled";
+//            }
+//          }
+//        }
+//        purchaseOrder = getPurchaseOrderService().getPurchaseOrderByExtraInventory(extraInventory);
+//        if(purchaseOrder!=null){
+//          newPurchaseOrderId = purchaseOrder.getId();
+//        }
+//      }
       addRedirectAlertMessage(new SimpleMessage("No RTV Exist !!!! "));
-      return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+      return new RedirectResolution(ExtraInventoryAction.class,"pre").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
     }
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     extraInventory = rtvNote.getExtraInventory();
@@ -313,7 +346,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }
@@ -344,7 +377,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
-        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.isReconciled()){
+        if(rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.Reconciled.getId()) || rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId()) || rtvNote.isReconciled()){
           reconciledStatus = "reconciled";
         }
       }
@@ -439,6 +472,16 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   }
 
   @SuppressWarnings("unchecked")
+  public Resolution searchExtraInventory(){
+    if(purchaseOrderId!=null){
+      purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
+    }
+    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,getPageNo(),getPerPage());
+    extraInventories  = purchaseOrderPage.getList();
+    return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
+  }
+
+  @SuppressWarnings("unchecked")
   public Resolution getSku(){
 
     HealthkartResponse healthkartResponse = null;
@@ -458,6 +501,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       if(sku!=null){
         dataMap.put("sku",sku);
         dataMap.put("productName",sku.getProductVariant().getProduct().getName());
+        dataMap.put("taxId",sku.getTax().getId());
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant",dataMap);
       }
       else{
@@ -484,7 +528,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public Set<String> getParamSet() {
     HashSet<String> params = new HashSet<String>();
-
+    params.add("extraInventoryId");
+    params.add("purchaseOrderId");
     return params;
   }
 
@@ -608,12 +653,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     this.rtvNoteId = rtvNoteId;
   }
 
-  public EnumRtvNoteStatus getRtvStatus() {
-    return rtvStatus;
+  public Long getRtvStatusId() {
+    return rtvStatusId;
   }
 
-  public void setRtvStatus(EnumRtvNoteStatus rtvStatus) {
-    this.rtvStatus = rtvStatus;
+  public void setRtvStatusId(Long rtvStatusId) {
+    this.rtvStatusId = rtvStatusId;
   }
 
   public Boolean isReconciled() {
@@ -662,5 +707,49 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   public MasterDataDao getMasterDataDao() {
     return masterDataDao;
+  }
+
+  public List<ExtraInventory> getExtraInventories() {
+    return extraInventories;
+  }
+
+  public void setExtraInventories(List<ExtraInventory> extraInventories) {
+    this.extraInventories = extraInventories;
+  }
+
+  public Long getExtraInventoryStatusId() {
+    return extraInventoryStatusId;
+  }
+
+  public void setExtraInventoryStatusId(Long extraInventoryStatusId) {
+    this.extraInventoryStatusId = extraInventoryStatusId;
+  }
+
+  public String getDocketNumber() {
+    return docketNumber;
+  }
+
+  public void setDocketNumber(String docketNumber) {
+    this.docketNumber = docketNumber;
+  }
+
+  public String getDestinationAddress() {
+    return destinationAddress;
+  }
+
+  public void setDestinationAddress(String destinationAddress) {
+    this.destinationAddress = destinationAddress;
+  }
+
+  public String getCourierName() {
+    return courierName;
+  }
+
+  public void setCourierName(String courierName) {
+    this.courierName = courierName;
+  }
+
+  public EmailManager getEmailManager() {
+    return emailManager;
   }
 }

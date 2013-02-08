@@ -5,11 +5,37 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Rtv Note">
  <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="rtvNote"/>
+<c:set var="createdStatus" value="<%=EnumRtvNoteStatus.Created.getName()%>"/>
     <s:layout-component name="htmlHead">
  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.lightbox-0.5.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+               $('#save').click(function(){
+                  var rtvNoteStatus = parseFloat($('#rtvNoteStatus').val());
+                   var rtvNoteStatusDB = parseFloat(${rtvNote.rtvNote.rtvNoteStatus.id});
+                   if(rtvNoteStatus < rtvNoteStatusDB){
+                       alert("Rtv Note Status can't reverted back");
+                       return false;
+                   }
+                   var courierName = $('#courierName').val();
+                   var docketNumber = $('#docketNumber').val();
+                   var destinationAddress = $('#destinationAddress').val();
+                   if(rtvNoteStatus == 20 && rtvNoteStatusDB == 10){
+                       if((courierName == null || courierName == "") && (docketNumber == null || docketNumber == "")){
+                           alert("Please Enter Courier details");
+                           return false;
+                       }
+                       if(destinationAddress == null || destinationAddress == ""){
+                           alert("Please Enter Destination Address");
+                           return false;
+                       }
+                   }
+               });
+            });
+        </script>
         </s:layout-component>
 
     <s:layout-component name="content">
@@ -23,13 +49,16 @@
             <thead>
             <tr>
                 <th>Rtv Note Id</th>
-                <th>Extra Inventory Id</th>
                 <th>Rtv Note Status</th>
                 <th>Created By</th>
                 <th>Is debit to Supplier</th>
                 <th>Reconciled</th>
                 <th>Create Date</th>
                 <th>Update Date</th>
+                <th>Courier Name</th>
+                <th>Docket Number</th>
+                <th>Destination Address</th>
+                <th>Dispatch Date</th>
                 <th>Remarks</th>
             </tr>
             </thead>
@@ -37,21 +66,19 @@
             <c:if test="${rtvNote.rtvNote!=null}">
                 <tr>
                     <td> ${rtvNote.rtvNote.id}</td>
-                    <td>${rtvNote.rtvNote.extraInventory.id}</td>
                     <td>
                         <c:choose>
                             <c:when test="${rtvNote.rtvNote.rtvNoteStatus.id eq reconciled}">
                                <h6 style="color:blue">${rtvNote.rtvNote.rtvNoteStatus.name}(Closed)</h6>
                             </c:when>
                             <c:otherwise>
-                               <select name="rtvStatus">
-                                <option value="<%=EnumRtvNoteStatus.Created%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
-                                <option value="<%=EnumRtvNoteStatus.SentToSupplier%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
-                                <option value="<%=EnumRtvNoteStatus.Reconciled%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
-                            </select>
+                               <select name="rtvStatusId" id="rtvNoteStatus">
+                                <option value="<%=EnumRtvNoteStatus.Created.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 10 ? 'selected':''}>Created</option>
+                                <option value="<%=EnumRtvNoteStatus.SentToSupplier.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 20 ? 'selected':''}>Sent To Supplier</option>
+                                <option value="<%=EnumRtvNoteStatus.Reconciled.getId()%>" ${rtvNote.rtvNote.rtvNoteStatus.id eq 40 ? 'selected':''}>Reconciled</option>
+                               </select>
                             </c:otherwise>
                         </c:choose>
-
                         </td>
                     <td>${rtvNote.rtvNote.createdBy.name}</td>
                     <td>
@@ -72,10 +99,42 @@
                                 </select>
                             </c:otherwise>
                         </c:choose>
-
                     </td>
                     <td>${rtvNote.rtvNote.createDate}</td>
                     <td>${rtvNote.rtvNote.updateDate}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="courierName" value="${rtvNote.rtvNote.courierName}" id="courierName"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.courierName}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="docketNumber" value="${rtvNote.rtvNote.docketNumber}" id="docketNumber"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.docketNumber}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${rtvNote.rtvNote.rtvNoteStatus.name eq createdStatus}">
+                                <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress"/>
+                            </c:when>
+                            <c:otherwise>
+                                  ${rtvNote.rtvNote.destinationAddress}
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                         ${rtvNote.rtvNote.dispatchDate}
+                    </td>
                     <td><textarea name = "comments" rows="10" cols="10" style="height:60px; width:210px;">${rtvNote.rtvNote.remarks}</textarea></td>
                 </tr>
             </c:if>
