@@ -571,7 +571,7 @@ public class OrderManager {
               continue;
           }
 
-          if (!product.isJit() || !product.isService()) {
+          if (!(product.isJit() || product.isService())) {
               Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
