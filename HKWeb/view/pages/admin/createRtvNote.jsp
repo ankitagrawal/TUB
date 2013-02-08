@@ -32,7 +32,7 @@
                            alert("Please Select a Courier and pickup status");
                            return false;
                        }
-                       if(pickupDate == null || pickupDate == ""){
+                       if(pickupDate == null || pickupDate == "" || pickupDate == "yyyy-mm-dd"){
                            alert("Please Enter Pickup Date");
                            return false;
                        }
@@ -130,41 +130,20 @@
               <tr>
                   <td>
                       <input type="hidden" name="courierPickupDetail.id" value="${rtvNote.courierPickupDetail.id}" >
-                      <c:choose>
-                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.courier!=null}">
-                              ${rtvNote.courierPickupDetail.courier.name}
-                              <s:hidden name="courierPickupDetail.courier" value="${rtvNote.courierPickupDetail.courier.id}" />
-                          </c:when>
-                          <c:otherwise>
                      <s:select name="courierPickupDetail.courier" id="courier">
                          <s:option value="">--Select--</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="courierList" value="id" label="name"/>
-                            </s:select>
-                          </c:otherwise>
-                      </c:choose>
+                      </s:select>
+                      <script type="text/javascript">
+                          $('#courier').val(${rtvNote.courierPickupDetail.courier.id});
+                      </script>
                   </td>
                   <td>
-                      <c:choose>
-                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.pickupConfirmationNo!=null}">
-                               ${rtvNote.courierPickupDetail.pickupConfirmationNo}
-                              <s:hidden name="courierPickupDetail.pickupConfirmationNo" value="${rtvNote.courierPickupDetail.pickupConfirmationNo}" />
-                          </c:when>
-                          <c:otherwise>
-                               <s:text name="courierPickupDetail.pickupConfirmationNo" />
-                          </c:otherwise>
-                      </c:choose>
+                       <s:text name="courierPickupDetail.pickupConfirmationNo" value="${rtvNote.courierPickupDetail.pickupConfirmationNo}"/>
                   </td>
                   <td>
-                      <c:choose>
-                          <c:when test="${rtvNote.courierPickupDetail!=null && rtvNote.courierPickupDetail.trackingNo!=null}">
-                               ${rtvNote.courierPickupDetail.trackingNo}
-                              <s:hidden name="courierPickupDetail.trackingNo" value="${rtvNote.courierPickupDetail.trackingNo}" />
-                          </c:when>
-                          <c:otherwise>
-                              <s:text name="courierPickupDetail.trackingNo" />
-                          </c:otherwise>
-                      </c:choose>
+                      <s:text name="courierPickupDetail.trackingNo" value="${rtvNote.courierPickupDetail.trackingNo}"/>
                   </td>
                   <td>
                       <s:select name="pickupStatusId" id="pickupStatus">
@@ -178,15 +157,7 @@
                   </td>
                   <td><s:text class="date_input" id="pickupDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
                   <td>
-                      <c:choose>
-                          <c:when test="${rtvNote.rtvNote.destinationAddress==null}">
-                              <s:text name="destinationAddress" id="destinationAddress"/>
-                          </c:when>
-                          <c:otherwise>
-                              ${rtvNote.rtvNote.destinationAddress}
-                              <s:hidden name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" />
-                          </c:otherwise>
-                      </c:choose>
+                      <s:hidden name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" />
                   </td>
               </tr>
             </tbody>
