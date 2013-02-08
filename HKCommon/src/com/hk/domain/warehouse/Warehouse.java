@@ -65,6 +65,25 @@ public class Warehouse implements java.io.Serializable {
 	@JoinColumn(name = "store_id")
 	private Store store;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Warehouse))
+            return false;
+
+        Warehouse warehouse = (Warehouse) o;
+        if (this.id != null && warehouse.getId() != null) {
+            return id.equals(warehouse.getId());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id != null ? id.hashCode() : 0;
+    }
+
 
 	public Long getId() {
 		return this.id;
