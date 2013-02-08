@@ -31,6 +31,8 @@ public interface WarehouseService {
 
     public List<Warehouse> getServiceableWarehouses();
 
+	public List<Warehouse> getWarehousesToMarkOOS();
+
     public Warehouse getCorporateOffice();
 
     /**
