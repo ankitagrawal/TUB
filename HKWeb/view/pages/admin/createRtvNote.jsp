@@ -41,6 +41,14 @@
                            return false;
                        }
                    }
+                   else{
+                       if((courier!=null && courier!="")|| (pickupStatus!=null && pickupStatus!="") || (destinationAddress!=null && destinationAddress!="")){
+                           if(courier==null || courier == "" || pickupStatus==null || pickupStatus == "" || destinationAddress==null || destinationAddress == ""){
+                               alert("Please Enter Courier, PickUp status and destination address!!");
+                               return false;
+                           }
+                       }
+                   }
                });
             });
         </script>
