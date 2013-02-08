@@ -118,7 +118,7 @@ public class OrderSummaryAction extends BaseAction {
         order = (Order) getBaseDao().save(order);
         if (order.getAddress() == null) {
             return new RedirectResolution(SelectAddressAction.class);
-        } else if (pricingDto.getProductLineCount() == 0) {
+        } else if (pricingDto.getProductLineCount() == 0 && (trimCartLineItems==null || trimCartLineItems.size()==0)) {
             addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
             return new RedirectResolution(CartAction.class);
         }
