@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.rtv.EnumExtraInventoryStatus" %>
 <%--
   Created by IntelliJ IDEA.
   User: Shrey
@@ -26,6 +27,12 @@
               <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
                 <label>ExtraInventory ID:</label><input type="text" name="extraInventoryId"/>
                 <label>Purchase Order ID:</label><input type="text" name="purchaseOrderId"/>
+                <label>Status:</label><select name="extraInventoryStatusId">
+                  <option value="">--Select--</option>
+                  <option value="<%=EnumExtraInventoryStatus.Created.getId()%>"><%=EnumExtraInventoryStatus.Created.getName()%></option>
+                  <option value="<%=EnumExtraInventoryStatus.SentToCategory.getId()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%></option>
+                  <option value="<%=EnumExtraInventoryStatus.Closed.getId()%>"><%=EnumExtraInventoryStatus.Closed.getName()%></option>
+                </select>
                 <s:submit name="searchExtraInventory" value="Search ExtraInventory"/>
               </s:form>
             </fieldset>

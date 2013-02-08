@@ -476,13 +476,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     courierPickupDetail = rtvNote.getCourierPickupDetail();
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
   }
-
+                                                            
   @SuppressWarnings("unchecked")
   public Resolution searchExtraInventory(){
     if(purchaseOrderId!=null){
       purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     }
-    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,getPageNo(),getPerPage());
+    ExtraInventoryStatus extraInventoryStatus = EnumExtraInventoryStatus.asEnumExtraInventoryStatusByID(extraInventoryStatusId);
+    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,extraInventoryStatus, getPageNo(),getPerPage());
     extraInventories  = purchaseOrderPage.getList();
     return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
   }

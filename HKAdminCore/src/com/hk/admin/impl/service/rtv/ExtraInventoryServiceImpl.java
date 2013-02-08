@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.rtv;
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
 import com.hk.pact.dao.BaseDao;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import org.hibernate.criterion.DetachedCriteria;
@@ -35,7 +36,7 @@ public class ExtraInventoryServiceImpl implements ExtraInventoryService{
    return (ExtraInventory) getBaseDao().save(extraInventory);
   }
 
-  public Page searchExtraInventory(Long extraInventoryId, PurchaseOrder purchaseOrder, int pageNo, int perPage){
+  public Page searchExtraInventory(Long extraInventoryId, PurchaseOrder purchaseOrder, ExtraInventoryStatus extraInventoryStatus, int pageNo, int perPage){
     DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ExtraInventory.class);
 
     if(extraInventoryId!=null){
@@ -43,6 +44,9 @@ public class ExtraInventoryServiceImpl implements ExtraInventoryService{
     }
     if(purchaseOrder!=null){
       detachedCriteria.add(Restrictions.eq("purchaseOrder",purchaseOrder));
+    }
+    if(extraInventoryStatus!=null){
+      detachedCriteria.add(Restrictions.eq("extraInventoryStatus",extraInventoryStatus));
     }
     detachedCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
     return getBaseDao().list(detachedCriteria, pageNo, perPage);
