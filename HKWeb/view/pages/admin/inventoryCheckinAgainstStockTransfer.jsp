@@ -46,6 +46,26 @@
                     formName.submit();
                 });
 
+	           /* $('.lineItemRow').each(function() {
+		            var checkedOutQty = $('.lineItemRow').find('.checkedOutQty').html();
+		            alert(checkedOutQty);
+	            });*/
+	            updateTotal('.checkedOutQty', '.totalcheckedOutQty', 1);
+	            function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+		            var total = 0;
+		            $.each($(fromTotalClass), function (index, value) {
+			            var eachRow = $(value);
+			            var eachRowValue = eachRow.val().trim();
+			            total += parseFloat(eachRowValue);
+		            });
+		            if (toHtml == 1) {
+			            $(toTotalClass).html(total);
+		            } else {
+			            $(toTotalClass).val(total.toFixed(2));
+		            }
+	            }
+
+
             });
         </script>
     </s:layout-component>
@@ -104,7 +124,7 @@
                             </td>
                             <td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
                             </td>
-                            <td> ${stockTransferLineItem.checkedoutQty}
+                            <td class="checkedOutQty"> ${stockTransferLineItem.checkedoutQty}
                             </td>
                             <td> ${stockTransferLineItem.checkedinQty}
                             </td>
@@ -121,6 +141,13 @@
 
                     </c:forEach>
                     </tbody>
+	                <tfoot>
+	                <tr>
+		                <td colspan="2">Total</td>
+		                <td id="totalCheckedOutQty"></td>
+		                <td id="totalCheckedInQty"></td>
+	                </tr>
+	                </tfoot>
                 </table>
             </c:if>
 
