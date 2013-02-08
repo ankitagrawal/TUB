@@ -181,6 +181,7 @@
                         <th>Pincode</th>
                         <th>COD</th>
                         <th>Ground Shipping</th>
+                        <th>Mapping Name</th>
                         <th>Estimate Shipping Cost</th>
                         </thead>
                     </tr>
@@ -217,6 +218,20 @@
                             <td>
                                     ${pincodeDefaultCourier.groundShipping}
                                 <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].groundShipping" value="${pincodeDefaultCourier.groundShipping}"/>
+                            </td>
+                            <td>
+                                <c:if test="${pincodeDefaultCourier.cod == false and pincodeDefaultCourier.groundShipping == false}">
+                                    Prepaid Air
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == true and pincodeDefaultCourier.groundShipping == false}">
+                                    Cod Air
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == false and pincodeDefaultCourier.groundShipping == true}">
+                                    Prepaid Ground
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == true and pincodeDefaultCourier.groundShipping == true}">
+                                    Cod Ground
+                                </c:if>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.estimatedShippingCost}
