@@ -1,6 +1,6 @@
 package com.hk.web.action.admin.inventory;
 
-import java.io.File;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -24,9 +24,11 @@ import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.ReconciliationVoucherParser;
+import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.courier.StateList;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.user.User;
@@ -44,6 +46,9 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.exception.NoSkuException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Secure(hasAnyPermissions = {PermissionConstants.RECON_VOUCHER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -94,6 +99,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     private Integer askedQty;
     private String batchNumber;
     private String errorMessage;
+    File printBarcode;
 
     private String upc;
 
@@ -102,6 +108,12 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
+    String barcodeGurgaon;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
+    String barcodeMumbai;
 
     @SuppressWarnings("unchecked")
     @DefaultHandler
@@ -395,7 +407,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
 
-        if (reconciliationVoucherService.reconcileSKUItems(reconciliationVoucher , rvLineItem, skuItem) == null){
+        if (reconciliationVoucherService.reconcileSKUItems(reconciliationVoucher, rvLineItem, skuItem) == null) {
             addRedirectAlertMessage(new SimpleMessage("Error occured in saving RVLineitem"));
             return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
@@ -404,7 +416,49 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
 
-        
+
+    public Resolution downloadBarcode() {
+
+        if (rvLineItem == null) {
+            return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+        }
+//        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
+        if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
+            addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+            return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+        }
+//   getMap
+        ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
+        SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
+
+        String barcodeFilePath = null;
+        Warehouse userWarehouse = null;
+        if (getUserService().getWarehouseForLoggedInUser() != null) {
+            userWarehouse = userService.getWarehouseForLoggedInUser();
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+            return new RedirectResolution(ReconciliationVoucherAction.class);
+        }
+        if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+            barcodeFilePath = barcodeGurgaon;
+        } else {
+            barcodeFilePath = barcodeMumbai;
+        }
+        barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "rv_" + rvLineItem.getReconciliationVoucher().getId() + "_" + productVariant.getId() + "_"
+                + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+        try {
+            printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+        } catch (IOException e) {
+            logger.error("Exception while appending on barcode file", e);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+        return new HTTPResponseResolution();
+//        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+    }
+
 
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
@@ -528,5 +582,28 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     public void setUpc(String upc) {
         this.upc = upc;
+    }
+
+
+    public class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));
+            res.setContentType("text/plain");
+            res.setCharacterEncoding("UTF-8");
+            res.setContentLength((int) printBarcode.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + printBarcode.getName() + "\";");
+            OutputStream out = res.getOutputStream();
+
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
+            in.close();
+            out.flush();
+            out.close();
+        }
+
     }
 }
