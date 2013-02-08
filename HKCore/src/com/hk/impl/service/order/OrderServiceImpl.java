@@ -25,6 +25,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
@@ -756,6 +757,11 @@ public class OrderServiceImpl implements OrderService {
 
         return shippingOrderAlreadyExists;
     }
+
+	@Transactional
+	public void saveUserCodCallStatus(UserCodCall userCodCall){
+		baseDao.save(userCodCall);
+	}
 
 
 }
