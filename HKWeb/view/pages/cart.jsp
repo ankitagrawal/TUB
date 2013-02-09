@@ -248,6 +248,7 @@
       </c:otherwise>
     </c:choose>
   </h2>
+    
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
     <a href="/" class="back"> &larr; go back to add more products</a>
   </c:if>
@@ -525,6 +526,48 @@
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+
+<c:if test="${fn:length(cartAction.applicableOffers) > 0}">
+  <br/>
+  <div class="applicableOffersDiv">
+    <h3>Applicable Offers for your Cart</h3>
+    <table class="offerTable">
+      <thead>
+      <tr>
+        <th>Description</th>
+        <th>Valid till</th>
+        <th></th>
+      </tr>
+      </thead>
+        <c:forEach items="${cartAction.applicableOffers}" var="offer" varStatus="offerCount">
+          <tr>
+            <td width="200">
+              <strong>${offer.description}</strong>
+              <c:if test="${hk:isNotBlank(offer.terms)}">
+                <br/>
+                <strong>Terms:</strong>
+                ${hk:convertNewLineToBr(offer.terms)}
+              </c:if>
+            </td>
+            <td width="150"><fmt:formatDate value="${offer.endDate}"/></td>
+            <td>
+              <s:form beanclass="com.hk.web.action.core.discount.ApplyCouponAction">
+              <s:hidden name="offer" value="${offer}"/>
+              <c:choose>
+              <c:when test="${cartAction.order.offerInstance.offer.id == offer.id}">
+                <s:submit name="removeOffer" value="Remove" style="padding:1px;background:orange"/>
+              </c:when>
+              <c:otherwise>
+                <s:submit name="applyOffer" value="Apply" style="padding:1px;"/>
+              </c:otherwise>
+              </c:choose>
+              </s:form>
+          </tr>
+        </c:forEach>
+    </table>
+    <br/>
+  </div>
+</c:if>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>

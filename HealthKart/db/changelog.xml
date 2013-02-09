@@ -11407,4 +11407,11 @@
         <addForeignKeyConstraint baseColumnNames="free_variant_id" baseTableName="offer_action" constraintName="fk_offer_action_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
 
+    <changeSet author="Ajeet (generated)" id="1360415137386-1">
+        <addColumn tableName="offer">
+            <column defaultValue="0" name="show_promptly" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
