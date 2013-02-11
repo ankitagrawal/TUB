@@ -54,6 +54,8 @@ public interface AdminInventoryService {
 
     public Long getNetInventory(ProductVariant productVariant);
 
+	public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant);
+
     public void adjustInventory(SkuGroup skuGroup, Long qty);
 
     public void damageInventoryCheckin(SkuItem skuItem, LineItem lineItem);

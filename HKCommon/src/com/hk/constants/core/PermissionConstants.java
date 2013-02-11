@@ -26,6 +26,7 @@ public class PermissionConstants {
     public static final String ADD_LINEITEM                          = "ADD_LINEITEM";
     public static final String DELETE_LINEITEM                       = "DELETE_LINEITEM";
     public static final String UPDATE_PAYMENT                        = "UPDATE_PAYMENT";
+    public static final String REFUND_PAYMENT                        = "REFUND_PAYMENT";
     public static final String CONFIRM_COD                           = "CONFIRM_COD";
     public static final String SEARCH_ORDERS                         = "SEARCH_ORDERS";
     public static final String SEARCH_USERS                          = "SEARCH_USERS";
@@ -130,5 +131,7 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CREATE_AWB = "OPS_MANAGER_SRS_CREATE_AWB";
     public static final String OPS_MANAGER_SRS_CHANGE_COURIER = "OPS_MANAGER_SRS_CHANGE_COURIER";
     public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
+
+	public static final String STORE_MANAGER = "STORE_MANAGER";
 
 }

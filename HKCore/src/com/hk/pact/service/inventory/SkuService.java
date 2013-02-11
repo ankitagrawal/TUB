@@ -32,6 +32,10 @@ public interface SkuService {
 	 */
 	public List<Sku> getSKUsForProductVariant(ProductVariant productVariant);
 
+	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant);
+
+	public List<Sku> getSKUsForMarkingProductOOS(ProductVariant productVariant);
+
 	/**
 	 * this will return a list of all sku's (instance of product variant at multiple warehouses) based on category.
 	 *
@@ -47,5 +51,6 @@ public interface SkuService {
 	 */
 	public void insertSKUs(Set<Sku> skuSet) throws Exception;
 
+	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId);
 
 }

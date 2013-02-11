@@ -16,6 +16,8 @@ public interface SkuItemDao extends BaseDao {
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
 
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
+
     public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus);
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);

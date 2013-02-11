@@ -50,15 +50,15 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     private Double    estimatedShippingCost;
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
+  public boolean equals(Object o) {                                                                              
+    if (this == o) return true;                                              
 
     if (!(o instanceof PincodeDefaultCourier))
       return false;
 
     PincodeDefaultCourier pincodeDefaultCourier = (PincodeDefaultCourier) o;
-    if (this.id != null && pincodeDefaultCourier.getId() != null) {
-      return id.equals(pincodeDefaultCourier.getId());
+    if (this.pincode != null && this.warehouse!=null && pincodeDefaultCourier.getPincode() != null && pincodeDefaultCourier.getWarehouse()!=null) {
+      return (this.pincode.equals(pincodeDefaultCourier.getPincode()) && this.warehouse.equals(pincodeDefaultCourier.getWarehouse()) && this.cod == pincodeDefaultCourier.getCod() && this.groundShipping == pincodeDefaultCourier.getGroundShipping());
     }
     return false;
   }
@@ -104,6 +104,10 @@ public class PincodeDefaultCourier implements java.io.Serializable {
         return cod;
     }
 
+  public boolean getCod(){
+    return cod;
+  }
+
     public void setCod(boolean cod) {
         this.cod = cod;
     }
@@ -111,6 +115,10 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     public boolean isGroundShipping() {
         return groundShipping;
     }
+
+  public boolean getGroundShipping(){
+    return groundShipping;
+  }
 
     public void setGroundShipping(boolean groundShipping) {
         this.groundShipping = groundShipping;

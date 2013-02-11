@@ -7,6 +7,7 @@ import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
+
 import java.util.List;
 
 /**
@@ -18,34 +19,37 @@ import java.util.List;
  */
 public interface SkuGroupService {
 
-    //SkuGroupDao method
-    public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
+	//SkuGroupDao method
+	public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant);
 
-    public List<SkuGroup> getAllCheckedInBatches(Sku sku);
+	public List<SkuGroup> getAllCheckedInBatches(Sku sku);
 
-    public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
+	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId);
 
-    public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
+	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku);
 
-    public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
+	public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku);
 
-    public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
+	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku);
 
-    public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
-    public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId);
+	public List<SkuGroup> getSkuGroup(String barcode,  Long warehouseId);
+    
 
+	//SkuItemDao Methods
 
-    //SkuItemDao Methods
+	public List<SkuGroup> getInStockSkuGroups(Sku sku);
 
-    public List<SkuGroup> getInStockSkuGroups(Sku sku);
+	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
 
-    public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-    public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
 
-    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+	public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
-     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+
 
 }

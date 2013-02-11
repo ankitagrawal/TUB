@@ -213,7 +213,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Returned));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
         shippingOrder.getShipment().setReturnDate(new Date());
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);

@@ -27,7 +27,7 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
 
     public Courier getPreferredCourierForState(String state) {
-        return (Courier) getSession().createQuery("select scs.courier from StateCourierService scs where lower(scs.state) = :state").setParameter("state", state.toLowerCase()).uniqueResult();
+        return (Courier) getSession().createQuery("select scs.courier from StateCourierService scs where lower(scs.state.name) = :state").setParameter("state", state.toLowerCase()).uniqueResult();
     }	
 
 

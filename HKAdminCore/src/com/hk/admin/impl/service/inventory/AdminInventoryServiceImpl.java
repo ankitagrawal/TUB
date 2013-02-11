@@ -100,7 +100,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
     public Long getBookedInventory(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
             Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
@@ -119,6 +120,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         Long netInventory = getProductVariantInventoryDao().getNetInventory(variantSkus);
         return netInventory;
     }
+
+	public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant) {
+		List<Sku> variantSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+		Long netInventory = getProductVariantInventoryDao().getNetInventory(variantSkus);
+		return netInventory;
+	}
 
     public void adjustInventory(SkuGroup skuGroup, Long qty) {
         int counter = 0;

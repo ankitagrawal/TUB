@@ -629,6 +629,7 @@ public class XslParser {
         Map<Integer, String> rowMap;
         Set<RetailLineItem> retailLineItemList = new HashSet<RetailLineItem>();
         int rowCount = 0;
+		int rowsUpdated = 0;
         try {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
@@ -639,8 +640,12 @@ public class XslParser {
                 Courier courier = courierService.getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
+				Double extraCharge = getDouble(getCellValue(ReportConstants.EXTRA_CHARGES, rowMap, headerMap));
                 shippingCharge = (shippingCharge == null ? 0.0 : shippingCharge);
                 collectionCharge = (collectionCharge == null ? 0.0 : collectionCharge);
+				extraCharge = (extraCharge == null ? 0.0 : extraCharge);
+                // System.out.println("shippingOrder->" + shippingOrder + " awb->" + awb + " courier->" + courier +
+                // "shippingcharge->" + shippingCharge + " collectionCharge->" + collectionCharge);
                 if (shippingOrder == null) { // || (awb == null && courier == null) ){
                     messagePostUpdation += " shippingOrder not found for Row " + rowCount + "<br/>";
                     continue;
@@ -669,8 +674,70 @@ public class XslParser {
                 }
                 shipment.setCollectionCharge(collectionCharge);
                 shipment.setShipmentCharge(shippingCharge);
+				shipment.setExtraCharge(extraCharge);
                 shipment.setShippingOrder(shippingOrder);
                 shipmentService.save(shipment);
+				rowsUpdated += 1;
+
+                /*
+                 * if (courier != null) { productLineItemsByCourier =
+                 * shippingOrder.getProductLineItemByCourier(courier); } if (StringUtils.isNotBlank(awb)) {
+                 * productLineItemsByAwb = shippingOrder.getProductLineItemWithAwb(awb); }
+                 */
+
+                // productLineItemsByAwb.removeAll(Collections.singleton(null));
+                // productLineItemsByCourier.removeAll(Collections.singleton(null));
+                // productLineItems taken from awb will be preffered
+                /*
+                 * if (productLineItemsByAwb != null && !productLineItemsByAwb.isEmpty()) { productLineItems =
+                 * productLineItemsByAwb; } else { productLineItems = productLineItemsByCourier; } if (productLineItems ==
+                 * null || productLineItems.isEmpty()) { messagePostUpdation += " no products delivered with gateway
+                 * shippingOrder id " + shippingOrder.getGatewayOrderId() + " at Row " + rowCount + "<br/> "; continue; }
+                 * for (LineItem productLineItem : productLineItems) { totalHkPriceDeliveredByCourier +=
+                 * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
+                 * productLineItem.getQty(); }
+                 *//**
+                     * This for loop is added to distribute the shipping charges as per the weight of each product
+                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
+                     */
+                /*
+                 * for (LineItem productLineItem : productLineItems) {
+                 *//*
+                     * if (productLineItem.getProductVariant().getWeight() != null &&
+                     * productLineItem.getProductVariant().getWeight() != 0.0) { totalWeightDeliveredByCourier +=
+                     * productLineItem.getProductVariant().getWeight() * productLineItem.getQty(); } else {
+                     * totalWeightDeliveredByCourier = 0.0D; break; }
+                     *//*
+                     * } for (LineItem productLineItem : productLineItems) { Double shippingChargedPerLineItem = 0.0D,
+                     * collectionChargedPerLineItem = 0.0D; retailLineItem =
+                     * retailLineItemDao.getRetailLineItem(productLineItem); if (retailLineItem == null) {
+                     * messagePostUpdation += " retail line item not found for product line item " +
+                     * productLineItem.getId() + " gateway shippingOrder id " + shippingOrder.getGatewayOrderId() + " at
+                     * Row " + rowCount + "<br/> "; continue; } if (totalWeightDeliveredByCourier == 0.0) {
+                     * shippingChargedPerLineItem = 1 / totalItemsInCourier.doubleValue() * shippingCharge; } else {
+                     * //shippingChargedPerLineItem = (productLineItem.getProductVariant().getWeight() /
+                     * totalWeightDeliveredByCourier) * shippingCharge; } collectionChargedPerLineItem =
+                     * (productLineItem.getHkPrice() / totalHkPriceDeliveredByCourier) * collectionCharge;
+                     * retailLineItem.setShippingChargedByCourier(shippingChargedPerLineItem);
+                     * retailLineItem.setCollectionChargedByCourier(collectionChargedPerLineItem);
+                     * retailLineItemDao.save(retailLineItem); }
+                     *//*
+                     * ProductVariant productVariant = productVariantDao.find(getCellValue(VARIANT_ID, rowMap,
+                     * headerMap)); if (productVariant != null) { Long qty = getLong(getCellValue(QTY, rowMap,
+                     * headerMap)); logger.debug("qty of variant - " + productVariant.getId() + " is - " + qty); if (qty !=
+                     * null && qty > 0) { Double cost = getDouble(getCellValue(COST, rowMap, headerMap)); Double mrp =
+                     * getDouble(getCellValue(MRP, rowMap, headerMap));
+                     *//**//*
+                         * RetailLineItem retailLineItem = new RetailLineItem();
+                         * retailLineItem.setPurchaseOrder(purchaseOrder); retailLineItem.setQty(qty);
+                         * retailLineItem.setProductVariant(productVariant); retailLineItem.setCostPrice(cost);
+                         * retailLineItem.setMrp(mrp); poLineItemDao.save(retailLineItem);
+                         * retailLineItemList.add(retailLineItem);
+                         *//**//*
+                         * } }
+                         *//*
+                     * logger.debug("read row " + rowCount);
+                     */
             }
 
         } catch (Exception e) {
@@ -681,6 +748,7 @@ public class XslParser {
                 IOUtils.closeQuietly(poiInputStream);
             }
         }
+		messagePostUpdation += "No. of Rows updated successfully: "+ rowsUpdated +".<br/>";
         logger.debug("parsing collection and shipping charges for orders  : " + objInFile.getAbsolutePath() + " completed ");
         logger.debug("message post updation " + messagePostUpdation);
         return messagePostUpdation;
