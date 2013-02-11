@@ -48,7 +48,7 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-            skuGroupList = skuGroupService.getSkuGroupsByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+            skuGroupList = skuGroupService.getSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             return new ForwardResolution("/pages/admin/searchHKBatch.jsp");
         } else {
             addRedirectAlertMessage(new SimpleMessage("Invalid HK Barcode."));

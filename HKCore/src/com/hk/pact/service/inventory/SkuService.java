@@ -34,6 +34,8 @@ public interface SkuService {
 
 	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant);
 
+	public List<Sku> getSKUsForMarkingProductOOS(ProductVariant productVariant);
+
 	/**
 	 * this will return a list of all sku's (instance of product variant at multiple warehouses) based on category.
 	 *
