@@ -11511,7 +11511,7 @@
     </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-3">
         <addColumn tableName="extra_inventory_line_item">
-            <column name="remarks" type="VARCHAR(100)"/>
+            <column name="remarks" type="TEXT"/>
         </addColumn>
     </changeSet>
     <changeSet author="Shrey (generated)" id="1359717387729-4">
