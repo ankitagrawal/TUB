@@ -78,6 +78,13 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
         Pincode pincodeObj = pincodeDao.getByPincode(pincode);
         applicableCourierList = pincodeCourierService.getApplicableCouriers(pincodeObj, cod, ground, true);
         Double totalCost = 0D;
+
+        if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
+           logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
+        }else{
+            return new TreeMap<Courier, Long>();
+        }
+
         List<PincodeRegionZone> sortedApplicableZoneList = pincodeRegionZoneService.getApplicableRegionList(applicableCourierList, pincodeObj, srcWarehouse);
 
         for (PincodeRegionZone pincodeRegionZone : sortedApplicableZoneList) {
