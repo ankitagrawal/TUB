@@ -48,8 +48,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW03' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW04' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW05' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR02' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR03' />
