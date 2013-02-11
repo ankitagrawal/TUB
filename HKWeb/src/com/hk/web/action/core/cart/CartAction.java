@@ -247,8 +247,13 @@ public class CartAction extends BaseAction {
       List<Offer> activeOffers = activeOffersPage.getList();
       for (Offer activeOffer : activeOffers) {
         OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
-        if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, order.getUser()) && activeOffer.isShowPromptly()) {
+        ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
+        if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, order.getUser()) && activeOffer.isShowPromptly() && freeVariant == null) {
           applicableOffers.add(activeOffer);
+        } else if (freeVariant != null) {
+          if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, order.getUser()) && activeOffer.isShowPromptly() && !freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+            applicableOffers.add(activeOffer);
+          }
         }
       }
     }
