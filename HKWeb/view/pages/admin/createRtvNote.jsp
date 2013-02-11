@@ -10,6 +10,7 @@
  <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="rtvNote"/>
 <c:set var="createdStatus" value="<%=EnumRtvNoteStatus.Created.getName()%>"/>
     <s:layout-component name="htmlHead">
+ <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
@@ -138,7 +139,7 @@
               <tr>
                   <td>
                       <input type="hidden" name="courierPickupDetail.id" value="${rtvNote.courierPickupDetail.id}" >
-                     <s:select name="courierPickupDetail.courier" id="courier">
+                     <s:select name="courierPickupDetail.courier" id="allActiveCourier">
                          <s:option value="">--Select--</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                                            serviceProperty="courierList" value="id" label="name"/>
@@ -163,7 +164,7 @@
                           $('#pickupStatus').val(${rtvNote.courierPickupDetail.pickupStatus.id});
                       </script>
                   </td>
-                  <td><s:text class="date_input" id="pickupDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
+                  <td><s:text class="date_input" id="pickupDate" formatPattern="yyyy-MM-dd" name="courierPickupDetail.pickupDate" value="${rtvNote.courierPickupDetail.pickupDate}"/></td>
                   <td>
                       <s:text name="destinationAddress" value="${rtvNote.rtvNote.destinationAddress}" id="destinationAddress" />
                   </td>
