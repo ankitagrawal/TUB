@@ -273,7 +273,7 @@ public class OrderServiceImpl implements OrderService {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 shippingOrders = splitOrder(order);
             } else {
-                logger.warn("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
@@ -459,9 +459,9 @@ public class OrderServiceImpl implements OrderService {
                     }
 
                     long endTime = (new Date()).getTime();
-                    logger.warn("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
+                    logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
                 } else {
-                    logger.warn("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                    logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
                 }
             }
         }
@@ -701,7 +701,7 @@ public class OrderServiceImpl implements OrderService {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
-        logger.warn("Trying to split order " + order.getId());
+        logger.debug("Trying to split order " + order.getId());
 
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
