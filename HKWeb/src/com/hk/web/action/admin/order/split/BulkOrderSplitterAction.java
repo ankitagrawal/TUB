@@ -13,6 +13,8 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
@@ -39,16 +41,20 @@ public class BulkOrderSplitterAction extends BaseAction {
 	OrderService orderService;
 
 	Order order;
+    private static Logger logger = LoggerFactory.getLogger(BulkOrderSplitterAction.class);
 
-	@DefaultHandler
+
+
+    @DefaultHandler
 	public Resolution bulkSplitOrders() {
 		OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
 		orderSearchCriteria.setOrderStatusList(orderStatusService.getOrderStatuses(Arrays.asList(EnumOrderStatus.Placed)));
 
 		List<Order> orderList = orderService.searchOrders(orderSearchCriteria);
-
 		if (orderList != null) {
+            logger.info("Size of order list fetched for unsplit orders is " + orderList.size());
 			for (Order order : orderList) {
+                logger.info("order to be split is " + order.getGatewayOrderId());
                 orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 			}
 		}
