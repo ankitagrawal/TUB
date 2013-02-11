@@ -27,7 +27,9 @@ ExtraInventory Id ${extraInventory.id} created.
         </tr>
     </table>
 </div>
-  <h3 style="color:blue;">Please go to Extra Inventory List on Admin Home and create PO or RTV of ExtraInventory List</h3>
+  <h3 style="color:blue;">Please click on link http://admin.healthkart.com/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventory.purchaseOrder.id}&wareHouseId=1 to go directly to this ExtraInventory</h3>
+     <br><br>
+<h3 style="color:blue;">Click on this Link to check all ExtraInventories http://admin.healthkart.com/admin/rtv/ExtraInventory.action?searchExtraInventory= </h3>
 <br>
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
 </body>
