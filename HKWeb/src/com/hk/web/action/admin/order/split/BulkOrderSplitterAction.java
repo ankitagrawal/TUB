@@ -54,7 +54,7 @@ public class BulkOrderSplitterAction extends BaseAction {
 		if (orderList != null) {
             logger.info("Size of order list fetched for unsplit orders is " + orderList.size());
 			for (Order order : orderList) {
-                logger.info("order to be split is " + order.getGatewayOrderId());
+                logger.warn("order to be split is " + order.getGatewayOrderId());
                 orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 			}
 		}
