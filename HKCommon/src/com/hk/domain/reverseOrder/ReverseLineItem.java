@@ -10,6 +10,9 @@ import java.util.Date;
  * Created by IntelliJ IDEA.  * User: Neha * Date: Feb 6, 2013 * Time: 12:55:13 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings ("serial")
+@Entity
+@Table(name = "reverse_line_item")
 public class ReverseLineItem {
 
 	@Id
@@ -22,11 +25,11 @@ public class ReverseLineItem {
 	private ReverseOrder reverseOrder;
 
 	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "referred_line_item")
+    @JoinColumn(name = "referred_line_item_id")
 	private LineItem referredLineItem;
 
 	@Column(name = "return_qty")
-	private int returnQty;
+	private Long returnQty;
 
 	@JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,11 +60,11 @@ public class ReverseLineItem {
 		this.referredLineItem = referredLineItem;
 	}
 
-	public int getReturnQty() {
+	public Long getReturnQty() {
 		return returnQty;
 	}
 
-	public void setReturnQty(int returnQty) {
+	public void setReturnQty(Long returnQty) {
 		this.returnQty = returnQty;
 	}
 

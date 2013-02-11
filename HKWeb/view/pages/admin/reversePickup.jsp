@@ -1,18 +1,10 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<c:set var="fedEx" value="<%=EnumCourier.FedEx.asCourier()%>"/>
-<c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.asCourier()%>"/>
-<c:set var="pickupNotValid" value="${pickupService.exceededPolicyLimit}"/>
-<%
-
-    String shippingOrderId = request.getParameter("shippingOrderId");
-    request.setAttribute("shippingOrderId", shippingOrderId);
-%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.CourierPickupAction" event="pre" var="pickupService"/>
-
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.ReversePickupCourierAction" event="pre" var="pickupAction"/>
+<c:set var="ApiCallCouriers" value="<%=EnumCourier.getFedexCouriers()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pickup Service">
 
     <s:layout-component name="htmlHead">
@@ -23,10 +15,17 @@
 
         <script type="text/javascript">
           $(document).ready(function() {
+           $('#selectedCourier').click(function(){
+               var courier =  $('#selectedCourier').val();
+               var courierDb = ${ApiCallCouriers};
+               if (courier in courierDb){
+                   alert("yes");
+               }
+               var courierDbArray = courierDb.split(",").first();
+               alert(courierDbArray.first());
+               alert(courierDb + " " + courier);
 
-	          if(${pickupNotValid}) {
-		          alert("Pickup can be done only within 14 days after delivery.This has been exceeded.");
-	          }
+           });
           });
     </script>
         
@@ -35,20 +34,27 @@
 
     <s:layout-component name="heading">Reverse Pickup Service</s:layout-component>
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.courier.CourierPickupAction">
+        <s:form beanclass="com.hk.web.action.admin.courier.ReversePickupCourierAction">
           <s:errors/>
         <fieldset>
             <ul>
                 <li>
                     <label>Courier</label>
-                    <s:select name="courierId" class="courier">
+                    <s:select name="selectedCourier" id="selectedCourier">
                         <s:option value="">-Select Courier-</s:option>
-                        <s:option value="${fedEx.id}">${fedEx.name}</s:option>
+                        <c:forEach items="${pickupAction.availableCouriers}" var="courier">
+                            <s:option value="${courier.id}">${courier.name}</s:option>
+                        </c:forEach>
                     </s:select>
                 </li>
                 <li>
                    <label>SO Gateway Id :</label><s:text name="shippingOrderId" value="${shippingOrderId}"/>
 
+                </li>
+                <li>
+                    <div class="manualNumber">
+                        <label>Tracking No : </label><s:text name="manualTrackingNo" id="trckNoBox" />
+                    </div>
                 </li>
                 <li>
                     <label>Pickup Time</label><s:text class="date_input startDate startDateCourier" style="width:150px"

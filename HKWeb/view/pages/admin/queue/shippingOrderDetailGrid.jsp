@@ -71,8 +71,7 @@
         <c:if test="${isActionQueue == false}">
             <th style="margin:2px;padding:3px;font-size:13px;font-weight:bold;text-align:center;">User & Adddress</th>
         </c:if>
-        <th style="margin:2px;padding:3px;font-size:13px;font-weight:bold;text-align:center;">Items and Qty[Checkedout
-            Qty]
+        <th style="margin:2px;padding:3px;font-size:13px;font-weight:bold;text-align:center;">Items and Qty[Checkedout Qty]
         </th>
         <c:if test="${showCourier == true}">
             <th style="margin:2px;padding:3px;font-size:13px;font-weight:bold;text-align:center;">Courier Details</th>
@@ -87,10 +86,10 @@
 <c:set var="payment" value="${shippingOrder.baseOrder.payment}"/>
 <tr id="shippingOrder-${shippingOrder.id}"
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
-    <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
+<%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
@@ -132,30 +131,27 @@
         <div class="clear"></div>
         <div class="floatleft">
             Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-            Score : ${shippingOrder.baseOrder.score}
+            Score : ${shippingOrder.baseOrder.score} 
         </div>
         <div class="clear"></div>
-        <div class="floatleft">
+         <div class="floatleft">
             Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
         </div>
         <div class="clear"></div>
     </c:if>
     <div class="floatleft">
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
-                 target="_blank">
+        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
         <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
     </s:link>)
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
                  target="_blank">
         <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre"
-                 target="_blank">
+        (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
         SO Lifecycle
         <s:param name="shippingOrder" value="${shippingOrder}"/>
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre"
-                 target="_blank">
+        (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre" target="_blank">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Invoice
     </s:link>)
@@ -189,15 +185,13 @@
 
         <c:if test="${isActionQueue == true}">
             <shiro:hasPermission name="<%=PermissionConstants.EDIT_LINEITEM%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction"
-                                     class="editSO">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.EditShippingOrderAction" class="editSO">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Edit SO
             </s:link>)
             </shiro:hasPermission>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                                     event="flipWarehouse"
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
                                      class="flipWarehouse">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
@@ -218,20 +212,11 @@
                 BO Split Analytics
             </s:link>)
             </shiro:hasAnyRoles>
-            &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                                 event="cancelShippingOrder"
+            &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
                                  class="cancelSO">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             Cancel SO
         </s:link>)
-<<<<<<< HEAD
-            &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                                 event="delieverDropShippingOrder"
-                                 class="delieverSO">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Mark SO Delivered
-        </s:link>)
-=======
             <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
                                      class="resolveShipment" target="_blank">
@@ -239,13 +224,11 @@
                 Resolve Shipment
             </s:link>)
             </shiro:hasPermission>
->>>>>>> master
         </c:if>
 
         <c:if test="${isSearchShippingOrder}">
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                                     event="flipWarehouse"
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
                                      class="flipWarehouse">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
@@ -295,23 +278,23 @@
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                        <s:label name="Reason for RTO:" style="margin-left:7px;"/>
-                        <s:select name="rtoReason" id="rto-reason">
-                            <s:option value="null">-Select Reason-</s:option>
-                            <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                       serviceProperty="replacementOrderReasonForRto" value="id"
-                                                       label="name"/>
-                        </s:select>
+	                    <s:label name="Reason for RTO:" style="margin-left:7px;"/>
+	                    <s:select name="rtoReason" id="rto-reason">
+		                    <s:option value="null">-Select Reason-</s:option>
+		                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
+		                                               serviceProperty="replacementOrderReasonForRto" value="id"
+		                                               label="name"/>
+	                    </s:select>
                         <div class="buttons">
                             <s:submit name="initiateRTO" value="Initiate RTO" class="initiateRTOButton"/>
                         </div>
                     </s:form>
                     <script type="text/javascript">
                         $('.initiateRTOButton').click(function() {
-                            if ($('#rto-reason').val() == "null") {
-                                alert("Please select a reason for RTO !");
-                                return false;
-                            }
+	                        if($('#rto-reason').val()=="null"){
+		                        alert("Please select a reason for RTO !");
+		                        return false;
+	                        }
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
@@ -357,17 +340,17 @@
 <c:if test="${isActionQueue == false}">
     <td>
         <c:choose>
-        <c:when test="${baseOrder.priorityOrder}">
-        <div id="userContactDetails" style="background:#F6CECE;">
+            <c:when test="${baseOrder.priorityOrder}">
+                <div id="userContactDetails" style="background:#F6CECE;">
             </c:when>
             <c:otherwise>
-            <div id="userContactDetails">
-                </c:otherwise>
-                </c:choose>
+                <div id="userContactDetails" >
+            </c:otherwise>
+        </c:choose>
 
-                <div class="floatleft">
-                    Name : <span class="or">${baseOrder.user.name}</span>
-                </div>
+        <div class="floatleft">
+            Name : <span class="or">${baseOrder.user.name}</span>
+        </div>
       <span style="margin-left:10px;">
         Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
           <s:param name="userFilterDto.login" value="${baseOrder.user.login}"/>
@@ -375,26 +358,16 @@
       </s:link>)
       </span>
 
-                <div class="clear"></div>
-                <div class="floatleft" style="margin-top:3px;">
-                    Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
-                </div>
+        <div class="clear"></div>
+        <div class="floatleft" style="margin-top:3px;">
+            Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
+        </div>
       <span style="margin-left:10px;">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
                  target="_blank"><s:param
               name="email" value="${baseOrder.user.login}"/>See previous orders</s:link>)
       </span>
 
-<<<<<<< HEAD
-                <div class="clear"></div>
-                <div class="floatleft" style="margin-top:3px;">
-                    <c:set var="baseOrderAddress" value="${baseOrder.address}"/>
-                        ${baseOrderAddress.name}<br/>
-                        ${baseOrderAddress.city}<br/>
-                        ${baseOrderAddress.state} - ( ${baseOrderAddress.pin} ) - ${baseOrderAddress.phone}<br/>
-                </div>
-            </div>
-=======
         <div class="clear"></div>
         <div class="floatleft" style="margin-top:3px;">
             <c:set var="baseOrderAddress" value="${baseOrder.address}"/>
@@ -403,7 +376,6 @@
             ${baseOrderAddress.state} - ( ${baseOrderAddress.pincode.pincode} ) - ${baseOrderAddress.phone}<br/>
         </div>
         </div>
->>>>>>> master
     </td>
 </c:if>
 <td id="shippingOrderLineItems-${shippingOrder.id}">
@@ -412,11 +384,11 @@
             <c:set var="cartLineItem" value="${lineItem.cartLineItem}"/>
             <c:set var="productVariant" value="${lineItem.sku.productVariant}"/>
             <c:set var="sku" value="${lineItem.sku}"/>
-            <c:if test="${isActionQueue == true}">
-                <c:set var="skuNetInventory" value="${hk:netInventory(sku)}"/>
-            </c:if>
+				<c:if test="${isActionQueue == true}">
+					<c:set var="skuNetInventory" value="${hk:netInventory(sku)}" />
+				</c:if>
 
-            <%--<tr>--%>
+			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
                 <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
@@ -442,12 +414,7 @@
                 </c:otherwise>
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
-<<<<<<< HEAD
-                    ${productVariant.product.name}
-
-=======
                 ${productVariant.product.name}
->>>>>>> master
                 <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
@@ -459,9 +426,9 @@
                 </span>
                 </c:if>
 
-                    <%--<div class="floatleft">--%>
-                    <%--<br/>Dispatch Within: ${productVariant.product.minDays} - ${productVariant.product.maxDays} Days--%>
-                    <%--</div>--%>
+                <%--<div class="floatleft">--%>
+                <%--<br/>Dispatch Within: ${productVariant.product.minDays} - ${productVariant.product.maxDays} Days--%>
+                <%--</div>--%>
 
                 <c:if test="${not empty productVariant.productOptions}">
                     <%--<br/>--%>
@@ -516,23 +483,21 @@
 
                     </c:forEach>
                 </c:if>
-
-                <c:if test="${isActionQueue == true}">
-
+                               <c:if test="${isActionQueue == true}">
                     <%--<c:if test="${productVariant.product.jit}">--%>
-                    ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
+                        ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
                     <%--</c:if>--%>
                 </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
-                    <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
-                    ${lineItem.qty}
+                <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
+                ${lineItem.qty}
                 <c:if test="${isActionQueue == true}">
-                    <c:if test="${!productVariant.product.service}">
-                        [${hk:bookedQty(sku)}]
-                        (${skuNetInventory})
-                    </c:if>
+							<c:if test="${!productVariant.product.service}">
+                    [${hk:bookedQty(sku)}]
+                    (${skuNetInventory})
                 </c:if>
+						</c:if>
             </td>
             </tr>
             <%--</c:if>--%>
@@ -547,25 +512,25 @@
         </div>
         <div class="clear"></div>
         <div class="floatleft">
-            Tracking Id: <strong>${shipment.awb.awbNumber}</strong>
+	        Tracking Id: <strong>${shipment.awb.awbNumber}</strong>
         </div>
         <div class="clear"></div>
         <div class="floatleft">
             Size: ${shipment.boxSize.name}, Weight: ${shipment.boxWeight}
         </div>
         <div class="clear"></div>
-        <div class="floatleft">
+	    <div class="floatleft">
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
         <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
             <div class="floatleft">
-                <s:link beanclass="com.hk.web.action.admin.courier.CourierPickupAction"
+                <s:link beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction"
                         target="_blank">
-                    <s:param name="shippingOrderId" value="${shippingOrder.gatewayOrderId}"/>Reverse Pickup</s:link>
+                    <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link>
             </div>
             <div class="clear"></div>
-        </c:if>
+        </c:if>   
     </td>
 </c:if>
 <td>
@@ -611,6 +576,6 @@
 </c:if>
 </c:forEach>
 </tr>
-    <%--</c:forEach>--%>
+<%--</c:forEach>--%>
 </table>
 </s:layout-definition>

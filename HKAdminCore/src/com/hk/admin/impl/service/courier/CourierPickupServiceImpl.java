@@ -2,13 +2,17 @@ package com.hk.admin.impl.service.courier;
 
 import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.admin.pact.service.courier.CourierPickupService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,8 +37,13 @@ public class CourierPickupServiceImpl implements CourierPickupService {
 		return courierPickupDetail;
 	}
 
-	public void save(CourierPickupDetail courierPickupDetail){
-		baseDao.save(courierPickupDetail);
+	public CourierPickupDetail save(CourierPickupDetail courierPickupDetail){
+		return (CourierPickupDetail) baseDao.save(courierPickupDetail);
+	}
+
+	public List<String> getPickupDetailsForThirdParty(Long courierId, ShippingOrder shippingOrder, Date pickupDate){
+		ThirdPartyPickupService thirdPartyPickupService = ThirdPartyCourierServiceFactory.getThirdPartyPickupService(courierId);
+		return thirdPartyPickupService.createPickupRequest(shippingOrder, pickupDate);
 	}
 
 

@@ -6,6 +6,9 @@ import com.hk.domain.user.User;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Created by IntelliJ IDEA. * User: Neha * Date: Feb 6, 2013 * Time: 1:07:11 PM
@@ -14,6 +17,7 @@ import javax.persistence.*;
 @SuppressWarnings ("serial")
 @Entity
 @Table(name = "reverse_order")
+@NamedQuery(name = "getReverseOrderById", query = "select rvo from ReverseOrder rvo where id = :reverseOrderId")
 public class ReverseOrder implements java.io.Serializable {
 
 	@Id
@@ -29,7 +33,7 @@ public class ReverseOrder implements java.io.Serializable {
 	@JoinColumn(name = "courier_pickup_detail_id")
 	private CourierPickupDetail courierPickupDetail;
 
-	@Column (name = "amount", nullable = false)
+	@Column (name = "amount", precision = 11)
 	private Double amount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -39,8 +43,16 @@ public class ReverseOrder implements java.io.Serializable {
 	@Column (name = "action_proposed")
 	private String actionProposed;
 
-	@Column (name = "reconciled")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn (name = "reconciliation_status_id")
 	private ReconciliationStatus reconciliationStatus;
+
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false, length = 19)
+    private Date createDate              = new Date();
+
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reverseOrder")
+//	private Set<ReverseLineItem> reverseLineItems               = new HashSet<ReverseLineItem>();
 
 	public Long getId() {
 		return id;
@@ -93,8 +105,24 @@ public class ReverseOrder implements java.io.Serializable {
 	public ReconciliationStatus getReconciliationStatus() {
 		return reconciliationStatus;
 	}
-
+	                                    
 	public void setReconciliationStatus(ReconciliationStatus reconciliationStatus) {
 		this.reconciliationStatus = reconciliationStatus;
 	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+//	public Set<ReverseLineItem> getReverseLineItems() {
+//		return reverseLineItems;
+//	}
+//
+//	public void setReverseLineItems(Set<ReverseLineItem> reverseLineItems) {
+//		this.reverseLineItems = reverseLineItems;
+//	}
 }
