@@ -152,7 +152,6 @@ public class OrderServiceImpl implements OrderService {
      * this will return the dispatch date for BO by adding min of dispatch days to refdate honouring the constraints of
      * warehouse like last time a order will be processed in WH each day (say till 4pm),
      *
-     * @param refDateForBO
      * @param order
      * @return
      */
@@ -274,7 +273,7 @@ public class OrderServiceImpl implements OrderService {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 shippingOrders = splitOrder(order);
             } else {
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                logger.warn("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
@@ -460,9 +459,9 @@ public class OrderServiceImpl implements OrderService {
                     }
 
                     long endTime = (new Date()).getTime();
-                    logger.debug("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
+                    logger.warn("Total time to split order[" + order.getId() + "] = " + (endTime - startTime));
                 } else {
-                    logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
+                    logger.warn("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
                 }
             }
         }
@@ -701,6 +700,8 @@ public class OrderServiceImpl implements OrderService {
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
+
+        logger.warn("Trying to split order " + order.getId());
 
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
