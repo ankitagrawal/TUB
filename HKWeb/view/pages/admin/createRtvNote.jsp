@@ -27,14 +27,9 @@
                    var courier = $('#courier').val();
                    var pickupStatus = $('#pickupStatus').val();
                    var destinationAddress = $('#destinationAddress').val();
-                   var pickupDate = $('#pickupDate').val();
                    if(rtvNoteStatus >= 20){
-                       if((courier == null || courier == "") || (pickupStatus == null || pickupStatus == "")){
+                       if((courier == "") || (pickupStatus == "")){
                            alert("Please Select a Courier and pickup status");
-                           return false;
-                       }
-                       if(pickupDate == null || pickupDate == ""){
-                           alert("Please Enter Pickup Date");
                            return false;
                        }
                        if(destinationAddress == null || destinationAddress == ""){
@@ -43,8 +38,8 @@
                        }
                    }
                    else{
-                       if((courier!=null && courier!="")|| (pickupStatus!=null && pickupStatus!="") || (destinationAddress!=null && destinationAddress!="")){
-                           if(courier==null || courier == "" || pickupStatus==null || pickupStatus == "" || destinationAddress==null || destinationAddress == ""){
+                       if((courier!="")|| (pickupStatus!="") || (destinationAddress!=null && destinationAddress!="")){
+                           if(courier == ""  || pickupStatus == "" || destinationAddress==null || destinationAddress == ""){
                                alert("Please Enter Courier, PickUp status and destination address!!");
                                return false;
                            }
