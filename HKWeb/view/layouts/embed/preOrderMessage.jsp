@@ -9,7 +9,7 @@
                 31st Jan, 2013
             </c:if>
                  <c:if test="${product.id == 'NUT1600'}">
-                     10th Feb, 2013
+                     15th Feb, 2013
                  </c:if>
 			 </span>
             <s:submit name="addToCart" value="Pre Order"
