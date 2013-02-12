@@ -25,6 +25,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -367,7 +368,14 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	private List<SkuGroup> findSkuGroup(String hkBarcode) {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		List<SkuGroup> skuGroupFromDb = skuGroupService.getSkuGroup(hkBarcode.trim(), warehouse.getId());
+        List<SkuGroup> skuGroupFromDb  = new ArrayList<SkuGroup>();
+         SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+        if (skuItemBarcode != null ){
+            skuGroupFromDb.add(skuItemBarcode.getSkuGroup());
+        } else{
+              skuGroupFromDb = skuGroupService.getSkuGroup(hkBarcode.trim(), warehouse.getId());
+        }
+
 		List<SkuGroup> skuGroupListResult = new ArrayList<SkuGroup>();
 		if (skuGroupFromDb != null && skuGroupFromDb.size() > 0) {
 			for (SkuGroup skuGroupCheckBrand : skuGroupFromDb) {
