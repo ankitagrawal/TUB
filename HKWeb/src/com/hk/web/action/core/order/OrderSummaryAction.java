@@ -76,7 +76,7 @@ public class OrderSummaryAction extends BaseAction {
     private boolean            codAllowedOnGroundShipping;
     private Double             cashbackOnGroundshipped;
     Map<String, String>        codFailureMap = new HashMap<String, String>();
-    private Set<CartLineItem>  trimCartLineItems = new HashSet<CartLineItem>();
+    private Set<CartLineItem>  trimCartLineItems;// = new HashSet<CartLineItem>();
     private Integer            sizeOfCLI;
 
     // COD related changes
@@ -101,9 +101,7 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
-        if(trimCartLineItems==null || trimCartLineItems.size()==0){
         trimCartLineItems = orderManager.trimEmptyLineItems(order);
-         }
         sizeOfCLI = order.getCartLineItems().size();
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;

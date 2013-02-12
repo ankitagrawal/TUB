@@ -50,8 +50,6 @@ public class PaymentAction extends BaseAction {
     private Gateway gateway;
     Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
-    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
-    private Integer               sizeOfCLI;
 
     @Validate(required = true)
     Issuer issuer;
@@ -79,11 +77,6 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-            trimCartLineItems = orderManager.trimEmptyLineItems(order);
-            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
-                return new RedirectResolution(OrderSummaryAction.class).addParameter("trimCartLineItems",trimCartLineItems);
-            }
-            sizeOfCLI = order.getCartLineItems().size();
 
             BillingAddress billingAddress = null;
             if(billingAddressId != null){
@@ -179,20 +172,4 @@ public class PaymentAction extends BaseAction {
     public void setBillingAddressId(Long billingAddressId) {
         this.billingAddressId = billingAddressId;
     }
-
-  public Set<CartLineItem> getTrimCartLineItems() {
-    return trimCartLineItems;
-  }
-
-  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
-    this.trimCartLineItems = trimCartLineItems;
-  }
-
-  public Integer getSizeOfCLI() {
-    return sizeOfCLI;
-  }
-
-  public void setSizeOfCLI(Integer sizeOfCLI) {
-    this.sizeOfCLI = sizeOfCLI;
-  }
 }

@@ -442,7 +442,7 @@
 </c:otherwise>
 </c:choose></div>
 </div>
-<c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
+<c:if test="${orderSummary.trimCartLineItems!=null && fn:length(orderSummary.trimCartLineItems) >0}">
         <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
