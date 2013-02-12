@@ -14,6 +14,8 @@ import java.net.MalformedURLException;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
 import com.hk.pact.service.order.OrderService;
+import com.hk.producer.ProducerFactory;
+import com.hk.hkjunction.observers.CODOrderObserver;
 
 
 /**
@@ -28,7 +30,8 @@ public class UserCodConfirmationCalling {
 
 	@Autowired
 	OrderService orderService;
-	
+	@Autowired
+	ProducerFactory producerFactory;
 
 	private static Logger logger = LoggerFactory.getLogger(UserCodConfirmationCalling.class);
 
@@ -47,25 +50,29 @@ public class UserCodConfirmationCalling {
 		String orderAmount = order.getAmount().toString();
 		String inputLine = "";
 		String response = "";
-		try {
-
-
-		url = new URL("http://www.smartivr.in/api/voice/quickCall/?username=health_kart&password=123456&ivr_id=800059891&format=xml&phone_book='8860680752,Gayatri,5678,123'");
-			//url = new URL("http://www.smartivr.in/api/voice/quickCall/?username=" + ivrUserName + "&password=" + ivrPassword + "&ivr_id=" + ivrId + "&format=xml&phone_book=`" + customerPhoneNumber + "," + orderId + "," + orderAmount + "'");
-		bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-			UserCodCall userCodCall = new UserCodCall();
-			userCodCall.setBasOrder(order);
-			userCodCall.setRemark("knowlarity call started , wiating for response");
-			userCodCall.setCallStatus(10L);
-			userCodCall = orderService.saveUserCodCallStatus(userCodCall);
-		} catch (MalformedURLException mfu) {
-			//call outbound call
-			logger.error("Invalid Url" + mfu.getMessage());
-		}
-		catch (IOException ioe) {
-			logger.error("IO Exception" + ioe.getMessage());
-		}
+		producerFactory.postCODMessage("test");
+//		try {
+////calkl jms
+//			UserCodCall userCodCall = new UserCodCall();
+//			userCodCall.setBasOrder(order);
+//			userCodCall.setRemark("knowlarity call started , wiating for response");
+//			userCodCall.setCallStatus(10L);
+//			userCodCall = orderService.saveUserCodCallStatus(userCodCall);
+//		} catch (MalformedURLException mfu) {
+//			//call outbound call
+//			logger.error("Invalid Url" + mfu.getMessage());
+//		}
+//		catch (IOException ioe) {
+//			logger.error("IO Exception" + ioe.getMessage());
+//		}
 	 return;
+	}
+
+
+
+
+	void onCODResponse(String s){
+
 	}
 
 }
