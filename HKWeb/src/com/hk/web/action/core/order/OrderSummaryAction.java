@@ -78,6 +78,7 @@ public class OrderSummaryAction extends BaseAction {
     Map<String, String>        codFailureMap = new HashMap<String, String>();
     private Set<CartLineItem>  trimCartLineItems;// = new HashSet<CartLineItem>();
     private Integer            sizeOfCLI;
+    private boolean            trim;
 
     // COD related changes
     @Autowired
@@ -101,7 +102,9 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
+        if(!trim){
         trimCartLineItems = orderManager.trimEmptyLineItems(order);
+         }
         sizeOfCLI = order.getCartLineItems().size();
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
@@ -264,4 +267,12 @@ public class OrderSummaryAction extends BaseAction {
   public void setSizeOfCLI(Integer sizeOfCLI) {
     this.sizeOfCLI = sizeOfCLI;
   }
+
+    public boolean isTrim() {
+        return trim;
+    }
+
+    public void setTrim(boolean trim) {
+        this.trim = trim;
+    }
 }
