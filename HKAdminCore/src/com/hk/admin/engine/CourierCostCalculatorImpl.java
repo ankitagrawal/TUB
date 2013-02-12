@@ -81,7 +81,6 @@ public class CourierCostCalculatorImpl implements CourierCostCalculator {
 
         if(pincodeObj == null || applicableCourierList == null || applicableCourierList.isEmpty()){
            logger.error("Could not fetch applicable couriers while making courier costing map for pincode " + pincode + "cod " + cod + " ground " + ground);
-        }else{
             return new TreeMap<Courier, Long>();
         }
 
