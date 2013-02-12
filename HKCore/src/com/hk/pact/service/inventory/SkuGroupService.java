@@ -7,6 +7,7 @@ import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
+
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public interface SkuGroupService {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
-	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId);
+	public List<SkuGroup> getSkuGroup(String barcode,  Long warehouseId);
 
 
 
@@ -45,8 +46,11 @@ public interface SkuGroupService {
 
 	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty);
 
-    public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus);
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup);
 
-      public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus);
+
+	public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+
 
 }
