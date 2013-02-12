@@ -157,13 +157,14 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Transactional
     private Awb attachAwbForShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
-        Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
-        if (suggestedAwb != null) {
-            suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-        } else {
-            return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
+      Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
+      if (suggestedAwb != null) {
+        suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
+        if (suggestedAwb == null) {
+          return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
         }
-        return suggestedAwb;
+      }
+      return suggestedAwb;
     }
 
     @Override
