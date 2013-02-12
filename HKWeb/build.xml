@@ -58,6 +58,11 @@
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
         <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
+		
+		<fileset file="${lib.root.dir}/thirdParty/HKJunctionClient-0.0.1-SNAPSHOT.abc.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar" />
   </path>
 
 

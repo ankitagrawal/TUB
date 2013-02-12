@@ -49,7 +49,7 @@ public class UserCodCallingIvrApi {
 				logger.error("Invalid Order ID returning from IVR USER COD AUTOMATIC CALL Api call for ");
 			} else {
 				userCodCall = order.getUserCodCall();
-				userCodCall.setCallStatus();
+				userCodCall.setCallStatus(0l);
 				userCodCall.setRemark(remark);
 				orderService.saveUserCodCallStatus(userCodCall);
 

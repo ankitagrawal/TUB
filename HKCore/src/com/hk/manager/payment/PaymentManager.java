@@ -291,7 +291,9 @@ public class PaymentManager {
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
 			   //seema
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-			
+
+			// call jms
+
 //			if (orderCount != null && orderCount >= 3) {
 //				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
 //			} else {
