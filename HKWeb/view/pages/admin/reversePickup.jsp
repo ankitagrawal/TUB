@@ -4,7 +4,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReversePickupCourierAction" event="pre" var="pickupAction"/>
-<c:set var="ApiCallCouriers" value="<%=EnumCourier.getFedexCouriers()%>"/>
+<c:set var="apiCallCouriers" value="<%=EnumCourier.getFedexCouriers()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Pickup Service">
 
     <s:layout-component name="htmlHead">
@@ -14,19 +14,29 @@
         <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 
         <script type="text/javascript">
-          $(document).ready(function() {
-           $('#selectedCourier').click(function(){
-               var courier =  $('#selectedCourier').val();
-               var courierDb = ${ApiCallCouriers};
-               if (courier in courierDb){
-                   alert("yes");
-               }
-               var courierDbArray = courierDb.split(",").first();
-               alert(courierDbArray.first());
-               alert(courierDb + " " + courier);
+            $(document).ready(function() {
+                $('#selectedCourier').change(function() {
+                    var courierVal = $('#selectedCourier').val();
+                    var courier = parseInt(courierVal);
+                    var courierList = ${apiCallCouriers};
 
-           });
-          });
+                    if (jQuery.inArray(courier, courierList) != '-1') {
+                        $('.manualNumberField').hide();
+                    } else {
+                        $('.manualNumberField').show();
+                    }
+                });
+
+                $('#checkSubmit').click(function() {
+                    if ($('.manualNumberField').is(':visible')) {
+                        var trackingNo = $('#trackingNo').val();
+                        if (trackingNo == null || trackingNo == "") {
+                            alert("Please enter a tracking number, as given by courier");
+                            return false;
+                        }
+                    }
+                });
+            });
     </script>
         
     </s:layout-component>
@@ -48,12 +58,12 @@
                     </s:select>
                 </li>
                 <li>
-                   <label>SO Gateway Id :</label><s:text name="shippingOrderId" value="${shippingOrderId}"/>
+                   <label>SO Gateway Id :</label><s:text name="shippingOrderId" value="${shippingOrderId}" style="width:120px" />
 
                 </li>
                 <li>
-                    <div class="manualNumber">
-                        <label>Tracking No : </label><s:text name="manualTrackingNo" id="trckNoBox" />
+                    <div class="manualNumberField">
+                        <label>Tracking No : </label><s:text id="trackingNo" name="manualTrackingNo" />
                     </div>
                 </li>
                 <li>
@@ -63,8 +73,9 @@
                 </li>
             </ul>
         </fieldset>
-        <s:submit name="submit" value="Submit"/>
-        </s:form>       
+            <s:param name="reverseOrderId" value="${pickupAction.reverseOrderId}" />
+        <s:submit name="submit" value="Submit" id="checkSubmit"/>
+        </s:form>
 
     </s:layout-component>
 </s:layout-render>

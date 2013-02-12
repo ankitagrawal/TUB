@@ -45,7 +45,7 @@ public class ReversePickupCourierAction extends BaseAction {
 	private Date pickupDate;
 	private Long courierId;
 	private String shippingOrderId;
-	private ReverseOrder reverseOrder;
+
 	private Long reverseOrderId;
 	private List<Courier> availableCouriers;
 	private Courier selectedCourier;
@@ -68,7 +68,7 @@ public class ReversePickupCourierAction extends BaseAction {
 	@DefaultHandler
 	public Resolution pre() {
 		if(reverseOrderId != null){
-			reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
 			shippingOrderId = reverseOrder.getShippingOrder().getGatewayOrderId();
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
 			availableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
@@ -80,28 +80,35 @@ public class ReversePickupCourierAction extends BaseAction {
 		if (shippingOrderId != null && pickupDate != null) {
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
 			CourierPickupDetail courierPickupDetail = null;
+
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
-				List<String> pickupReply = courierPickupService.getPickupDetailsForThirdParty(courierId, shippingOrder, pickupDate);
+				List<String> pickupReply = courierPickupService.getPickupDetailsForThirdParty(selectedCourier.getId(), shippingOrder, pickupDate);
 				if (pickupReply != null) {
 					if (pickupReply.get(0).equals(CourierConstants.SUCCESS)) {
 						String confirmationNo = pickupReply.get(1);
-						addRedirectAlertMessage(new SimpleMessage("Request sent. Pickup confirmation number: " + confirmationNo));
-						logger.debug("courier pickup service initiated successfully");
+						addRedirectAlertMessage(new SimpleMessage("Pickup Request saved. Pickup confirmation number: " + confirmationNo));
+						//logger.debug("courier pickup service initiated successfully");
 						courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, confirmationNo, null);
 					} else {
+						//message = "Could not generate a pickup request. " + pickupReply.get(1);
 						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
+						return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 					}
 				} else {
-					addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request."));
+					//message = "Could not generate a pickup request (#AF).Please choose some other courier";
+					addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request (#AF).Please choose some other courier"));
+					return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 				}
 			} else{
 				courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, manualTrackingNo);
+				addRedirectAlertMessage(new SimpleMessage("Pickup Request saved successfully"));
 			}
 
 			courierPickupDetail = courierPickupService.save(courierPickupDetail);
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
 			reverseOrderService.setCourierDetails(reverseOrder, courierPickupDetail);
 		}
-		return new ForwardResolution("/pages/admin/reversePickup.jsp");
+		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 	}
 
 	public Date getPickupDate() {
@@ -127,14 +134,6 @@ public class ReversePickupCourierAction extends BaseAction {
 
 	public void setShippingOrderId(String shippingOrderId) {
 		this.shippingOrderId = shippingOrderId;
-	}
-
-	public ReverseOrder getReverseOrder() {
-		return reverseOrder;
-	}
-
-	public void setReverseOrder(ReverseOrder reverseOrder) {
-		this.reverseOrder = reverseOrder;
 	}
 
 	public Long getReverseOrderId() {

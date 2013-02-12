@@ -2,14 +2,13 @@ package com.hk.pact.dao.courier;
 
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.ReversePickup;
+
 import com.hk.domain.courier.PickupStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.user.User;
 import com.akube.framework.dao.Page;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,11 +21,11 @@ public interface ReversePickupDao {
 	public void savePickupRequest(ShippingOrder shippingOrder, Courier courier, String confirmationNo,
 							   Date pickupDate, PickupStatus pickupStatus, ReconciliationStatus reconciliationStatus, User user);
 
-	public void save(ReversePickup reversePickup);
+	public void save(ReverseOrder reverseOrder);
 
 	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
 
-	//public List<ReversePickup> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
+	//public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 
 
 }

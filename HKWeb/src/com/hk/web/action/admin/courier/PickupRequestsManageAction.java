@@ -6,7 +6,7 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.domain.courier.ReversePickup;
+
 import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
@@ -27,8 +27,8 @@ import java.util.List;
 @Component
 public class PickupRequestsManageAction extends BasePaginatedAction{
 
-	private List<ReversePickup> pickupRequestsList;
-	private ReversePickup pickupRequest;
+	private List<ReverseOrder> orderRequestsList;
+	private ReverseOrder orderRequest;
 	Page pickupRequestsPage;
     private Integer defaultPerPage = 30;
 
@@ -42,22 +42,22 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 	@DefaultHandler
 	public Resolution pre() {
 		pickupRequestsPage = reversePickupDao.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, getPageNo(), getPerPage());
-		pickupRequestsList = pickupRequestsPage.getList();
-		return new ForwardResolution("/pages/admin/pickupRequestsList.jsp");
+		orderRequestsList = pickupRequestsPage.getList();
+		return new ForwardResolution("/pages/admin/orderRequestsList.jsp");
 	}
 
 	public Resolution markPicked(){
-		if(pickupRequest != null){
-			pickupRequest.setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
-			reversePickupDao.save(pickupRequest);
+		if(orderRequest != null){
+			orderRequest.setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
+			reversePickupDao.save(orderRequest);
 		}
 		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution markReconciled(){
-		if(pickupRequest != null){
-			pickupRequest.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
-			reversePickupDao.save(pickupRequest);
+		if(orderRequest != null){
+			orderRequest.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
+			reversePickupDao.save(orderRequest);
 		}
 		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
@@ -82,12 +82,12 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
         return params;
     }
 
-	public List<ReversePickup> getPickupRequestsList() {
-		return pickupRequestsList;
+	public List<ReverseOrder> getPickupRequestsList() {
+		return orderRequestsList;
 	}
 
-	public void setPickupRequestsList(List<ReversePickup> pickupRequestsList) {
-		this.pickupRequestsList = pickupRequestsList;
+	public void setPickupRequestsList(List<ReverseOrder> orderRequestsList) {
+		this.orderRequestsList = orderRequestsList;
 	}
 
 	public Long getPickupStatusId() {
@@ -106,12 +106,12 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 		this.reconciliationStatusId = reconciliationStatusId;
 	}
 
-	public ReversePickup getPickupRequest() {
-		return pickupRequest;
+	public ReverseOrder getPickupRequest() {
+		return orderRequest;
 	}
 
-	public void setPickupRequest(ReversePickup pickupRequest) {
-		this.pickupRequest = pickupRequest;
+	public void setPickupRequest(ReverseOrder orderRequest) {
+		this.orderRequest = orderRequest;
 	}
 
 	public String getShippingOrderId() {

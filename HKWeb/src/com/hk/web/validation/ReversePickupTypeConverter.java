@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.validation.TypeConverter;
 import net.sourceforge.stripes.validation.ValidationError;
 import com.hk.pact.dao.BaseDao;
-import com.hk.domain.courier.ReversePickup;
+
 
 import java.util.Collection;
 import java.util.Locale;
@@ -18,7 +18,7 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class ReversePickupTypeConverter implements TypeConverter<ReversePickup> {
+public class ReversePickupTypeConverter implements TypeConverter<ReverseOrder> {
   public void setLocale(Locale locale) {
     //do nothing
   }
@@ -26,7 +26,7 @@ public class ReversePickupTypeConverter implements TypeConverter<ReversePickup> 
   @Autowired
   BaseDao baseDao;
 
-  public ReversePickup convert(String s, Class<? extends ReversePickup> aClass, Collection<ValidationError> validationErrors) {
+  public ReverseOrder convert(String s, Class<? extends ReverseOrder> aClass, Collection<ValidationError> validationErrors) {
     Long idLong = null;
     try {
       idLong = Long.parseLong(s);
@@ -35,7 +35,7 @@ public class ReversePickupTypeConverter implements TypeConverter<ReversePickup> 
     if (idLong == null) {
       return null;
     } else {
-      return baseDao.get(ReversePickup.class, idLong);
+      return baseDao.get(ReverseOrder.class, idLong);
     }
   }
 

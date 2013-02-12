@@ -51,8 +51,8 @@ public class ReverseOrder implements java.io.Serializable {
     @Column(name = "create_dt", nullable = false, length = 19)
     private Date createDate              = new Date();
 
-//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reverseOrder")
-//	private Set<ReverseLineItem> reverseLineItems               = new HashSet<ReverseLineItem>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reverseOrder")
+	private Set<ReverseLineItem> reverseLineItems               = new HashSet<ReverseLineItem>();
 
 	public Long getId() {
 		return id;
@@ -118,11 +118,11 @@ public class ReverseOrder implements java.io.Serializable {
 		this.createDate = createDate;
 	}
 
-//	public Set<ReverseLineItem> getReverseLineItems() {
-//		return reverseLineItems;
-//	}
-//
-//	public void setReverseLineItems(Set<ReverseLineItem> reverseLineItems) {
-//		this.reverseLineItems = reverseLineItems;
-//	}
+	public Set<ReverseLineItem> getReverseLineItems() {
+		return reverseLineItems;
+	}
+
+	public void setReverseLineItems(Set<ReverseLineItem> reverseLineItems) {
+		this.reverseLineItems = reverseLineItems;
+	}
 }

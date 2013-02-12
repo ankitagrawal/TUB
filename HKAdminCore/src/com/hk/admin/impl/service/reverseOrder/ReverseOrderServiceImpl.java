@@ -33,11 +33,10 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 
 	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder){
 		User loggedOnUser = userService.getLoggedInUser();
-		Double amount = 140.0;
 		ReverseOrder reverseOrder = new ReverseOrder();
 		reverseOrder.setShippingOrder(shippingOrder);
 		reverseOrder.setCourierPickupDetail(null);
-		reverseOrder.setAmount(amount);
+		reverseOrder.setAmount(0.0);
 		reverseOrder.setUser(loggedOnUser);
 		reverseOrder.setReconciliationStatus(EnumReconciliationStatus.PENDING.asReconciliationStatus());
 		reverseOrder.setActionProposed(null);
@@ -46,14 +45,28 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 
 	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap){
 		Iterator itemIterator = itemMap.keySet().iterator();
+		Long returnQty;
+		Set<ReverseLineItem> reverseLineItemSet = new HashSet<ReverseLineItem>();
 		while(itemIterator.hasNext()){
 			LineItem item = (LineItem)itemIterator.next();
-			ReverseLineItem reverseLineItem = new ReverseLineItem();
-			reverseLineItem.setReferredLineItem(item);
-			reverseLineItem.setReturnQty(itemMap.get(item));
-			reverseLineItem.setReverseOrder(reverseOrder);
-			reverseLineItem.setCreateDate(new Date());
-			getBaseDao().save(reverseLineItem);
+			returnQty = itemMap.get(item);
+			if (returnQty > 0) {
+				ReverseLineItem reverseLineItem = new ReverseLineItem();
+				reverseLineItem.setReferredLineItem(item);
+				reverseLineItem.setReturnQty(returnQty);
+				reverseLineItem.setReverseOrder(reverseOrder);
+				reverseLineItem.setCreateDate(new Date());
+				reverseLineItem = (ReverseLineItem) getBaseDao().save(reverseLineItem);
+				reverseLineItemSet.add(reverseLineItem);
+			}
+		}
+
+		//TODO check this
+		if (reverseLineItemSet.size() != 0) {
+			reverseOrder.setReverseLineItems(reverseLineItemSet);
+			Double amount = getAmountForReverseOrder(reverseOrder);
+			reverseOrder.setAmount(amount);
+			getBaseDao().save(reverseOrder);
 		}
 	}
 
@@ -61,6 +74,18 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 		reverseOrder.setCourierPickupDetail(courierPickupDetail);
 		getBaseDao().save(reverseOrder);
 	}
+
+	public double getAmountForReverseOrder(ReverseOrder reverseOrder) {
+        double rvoBaseAmt = 0.0;
+        for (ReverseLineItem reverselineItem : reverseOrder.getReverseLineItems()) {
+			LineItem lineItem = reverselineItem.getReferredLineItem();
+            double lineItemAmount = lineItem.getHkPrice() * reverselineItem.getReturnQty();
+            double totalDiscountOnLineItem = lineItem.getDiscountOnHkPrice() + lineItem.getOrderLevelDiscount() + lineItem.getRewardPoints();
+            double forwardingCharges = lineItem.getShippingCharges() + lineItem.getCodCharges(); // check this calculation
+            rvoBaseAmt += (lineItemAmount - totalDiscountOnLineItem + forwardingCharges);
+        }
+        return rvoBaseAmt;
+    }
 
 	public ReverseOrder save(ReverseOrder reverseOrder){
 		 return (ReverseOrder) getBaseDao().save(reverseOrder);
