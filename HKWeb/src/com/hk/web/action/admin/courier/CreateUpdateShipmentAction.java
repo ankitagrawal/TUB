@@ -80,6 +80,7 @@ import java.util.List;
 
         //todo courier such condition should not occur
         if (shipment == null) {
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment was created at dispatch stage");
             shipment = shipmentService.createShipment(shippingOrder, true);
         }
         if (shipment == null) {

@@ -83,9 +83,11 @@
 	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>
 	</shiro:hasRole>
+<%--
 	<shiro:hasPermission name="<%=PermissionConstants.POPULATE_BUSY_DATA%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
 	</shiro:hasPermission>
+--%>
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
@@ -312,6 +314,9 @@
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+
+		 <h3>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
