@@ -331,7 +331,7 @@ public class InventoryCheckinAction extends BaseAction {
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
         if (sku == null){
-            addRedirectAlertMessage(new SimpleMessage("No Sku Found"));
+            addRedirectAlertMessage(new SimpleMessage("No Sku Found for ProductVariantId:- " + (productVariant == null ? "" : productVariant.getId())));
            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
