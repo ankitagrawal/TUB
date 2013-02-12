@@ -56,10 +56,10 @@ public class PaymentModeAction extends BaseAction {
       addRedirectAlertMessage(new SimpleMessage("You have not selected the shipping address"));
       return new RedirectResolution(SelectAddressAction.class);
      }
-    if(trimCartLineItems==null || trimCartLineItems.size()==0){
-      trimCartLineItems = orderManager.trimEmptyLineItems(order);
-    }
-      sizeOfCLI = order.getCartLineItems().size();
+//    if(trimCartLineItems==null || trimCartLineItems.size()==0){
+//      trimCartLineItems = orderManager.trimEmptyLineItems(order);
+//    }
+//      sizeOfCLI = order.getCartLineItems().size();
       bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
       cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
       return new ForwardResolution("/pages/paymentMode.jsp");

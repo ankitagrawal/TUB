@@ -587,18 +587,20 @@ public class OrderManager {
               }
           }
       }
-      Set<String> comboIds = new HashSet<String>();
       for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext(); ) {
           CartLineItem lineItem = iterator.next();
           ProductVariant productVariant = lineItem.getProductVariant();
           if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
               trimmedCartLineItems.add(lineItem);
+              Long qty = lineItem.getQty();
               iterator.remove();
               order.getCartLineItems().remove(lineItem);
               getBaseDao().delete(lineItem);
+              if(qty<=0){
               productVariant.setOutOfStock(true);
               getProductVariantService().save(productVariant);
               getComboService().markProductOutOfStock(productVariant);
+               }
           }
       }
       order = getOrderService().save(order);

@@ -526,7 +526,7 @@
                <td>&nbsp;</td>
                <td>&nbsp;</td>
            </tr>
-               <c:forEach items="${paymentModeBean.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+               <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
                    <tr>
                        <div class='product' style="border-bottom-style: solid;">
                          <td style="padding-left: 15px;">
@@ -581,7 +581,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
 
-                 <c:if test="${paymentModeBean.sizeOfCLI > 0}">
+                 <c:if test="${orderSummary.sizeOfCLI > 0}">
                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
                      </td><td>
                    </c:if>

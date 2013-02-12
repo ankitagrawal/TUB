@@ -101,16 +101,15 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
+        if(trimCartLineItems==null || trimCartLineItems.size()==0){
         trimCartLineItems = orderManager.trimEmptyLineItems(order);
+         }
         sizeOfCLI = order.getCartLineItems().size();
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
         if (useRewardPoints)
             rewardPointsUsed = redeemableRewardPoints;
-        if (order.getAddress() == null) {
-            return new RedirectResolution(SelectAddressAction.class);
-        }
 
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
 
@@ -118,9 +117,6 @@ public class OrderSummaryAction extends BaseAction {
         order = (Order) getBaseDao().save(order);
         if (order.getAddress() == null) {
             return new RedirectResolution(SelectAddressAction.class);
-        } else if (pricingDto.getProductLineCount() == 0 && (trimCartLineItems==null || trimCartLineItems.size()==0)) {
-            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-            return new RedirectResolution(CartAction.class);
         }
 
         Address address = order.getAddress();
