@@ -104,8 +104,9 @@ public class OrderSummaryAction extends BaseAction {
         order = orderManager.getOrCreateOrder(user);
         if(!trim){
         trimCartLineItems = orderManager.trimEmptyLineItems(order);
+         sizeOfCLI = order.getCartLineItems().size();
          }
-        sizeOfCLI = order.getCartLineItems().size();
+
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
