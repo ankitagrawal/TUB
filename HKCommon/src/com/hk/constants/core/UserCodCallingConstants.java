@@ -7,7 +7,7 @@ package com.hk.constants.core;
  * Time: 3:38:41 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CustomerCodCallingConstant {
+public class UserCodCallingConstants {
 
 	public static final String ORDER_ID = "order_id";
 

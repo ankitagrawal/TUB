@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
-import com.hk.constants.core.CustomerCodCallingConstant;
 import com.hk.domain.user.UserCodCall;
 import com.hk.domain.order.Order;
 import com.hk.pact.service.order.OrderService;
+import com.hk.constants.core.UserCodCallingConstants;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,16 +31,16 @@ public class UserCodCallingIvrApi {
 	public void getCallStatus(@QueryParam("orderId") String orderID, @QueryParam("keypress") String keypress) {
 		String remark = "";
 		String callStatus = "";
-		UserCodCall userCodCall = new UserCodCall();
+		UserCodCall userCodCall ;
 		try {
 			if (keypress == null || orderID == null) {
 				remark = "Null Values comes from IVR side";
-				callStatus = CustomerCodCallingConstant.NULL_ERROR;
+				callStatus = UserCodCallingConstants.NULL_ERROR;
 			}
-			if (keypress.equalsIgnoreCase(CustomerCodCallingConstant.OK)) {
-				callStatus = CustomerCodCallingConstant.OK;
+			if (keypress.equalsIgnoreCase(UserCodCallingConstants.OK)) {
+				callStatus = UserCodCallingConstants.OK;
 			} else {
-				callStatus = CustomerCodCallingConstant.USER_ERROR;
+				callStatus = UserCodCallingConstants.USER_ERROR;
 				remark = "Call Failed , get reason for it";
 			}
 
@@ -48,8 +48,8 @@ public class UserCodCallingIvrApi {
 			if (order == null) {
 				logger.error("Invalid Order ID returning from IVR USER COD AUTOMATIC CALL Api call for ");
 			} else {
-				userCodCall.setOrderId(order);
-				userCodCall.setCallStatus(callStatus);
+				userCodCall = order.getUserCodCall();
+				userCodCall.setCallStatus();
 				userCodCall.setRemark(remark);
 				orderService.saveUserCodCallStatus(userCodCall);
 
@@ -59,4 +59,7 @@ public class UserCodCallingIvrApi {
 
 		}
 	}
+
+
+
 }

@@ -289,11 +289,14 @@ public class PaymentManager {
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(null);
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-			if (orderCount != null && orderCount >= 3) {
-				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
-			} else {
-				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-			}
+			   //seema
+			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+			
+//			if (orderCount != null && orderCount >= 3) {
+//				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+//			} else {
+//				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
+//			}
 			payment = paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
 

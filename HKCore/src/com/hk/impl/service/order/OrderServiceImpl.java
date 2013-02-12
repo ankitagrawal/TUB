@@ -700,6 +700,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
+
+	     //call cod api
+
+
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
@@ -719,6 +723,8 @@ public class OrderServiceImpl implements OrderService {
                 shippingOrders = createShippingOrders(order);
             }
         }
+
+	    //todo
 
         if (shippingOrders != null && shippingOrders.size() > 0) {
             if (!shippingOrderAlreadyExists) {
@@ -741,7 +747,7 @@ public class OrderServiceImpl implements OrderService {
                             CourierConstants.DROP_SHIPPED_ORDER);
                 }
             }
-            // auto escalate shipping orders if possible
+            // auto escalate shipping orders if possible  //seema
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
@@ -759,8 +765,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
 	@Transactional
-	public void saveUserCodCallStatus(UserCodCall userCodCall){
-		baseDao.save(userCodCall);
+	public UserCodCall saveUserCodCallStatus(UserCodCall userCodCall){
+		return (UserCodCall)baseDao.save(userCodCall);
 	}
 
 

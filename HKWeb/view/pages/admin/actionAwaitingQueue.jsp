@@ -14,6 +14,7 @@
 <%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -28,6 +29,7 @@
 
 <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
 <c:set var="commentTypeOthers" value="<%=MasterDataDao.USER_COMMENT_TYPE_OTHERS_BASE_ORDER%>" />
+
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
 <s:layout-component name="htmlHead">
@@ -464,9 +466,14 @@
                     <div class="clear"></div>
                     <div id="paymentDetails-${order.id}" class="detailDiv">
                         <div class="headingLabel">Payment Details:</div>
+	                    
                         <div class="floatleft">
                             Total Amount: <strong>Rs.<fmt:formatNumber value="${order.payment.amount}"
                                                                        pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
+
+
+	                     <!-- seema !-->
+
               <span class="paymentStatusName or"
                     style="margin-left:30px;">Status: ${order.payment.paymentStatus.name}</span>
                         </div>
@@ -474,12 +481,20 @@
                             <c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">
                                 <c:choose>
                                     <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
-                                        (<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
-                                        <s:param name="order" value="${order.id}"/>
-                                        Confirm COD
-                                    </s:link>)
+                                        <%--(<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">--%>
+                                        <%--<s:param name="order" value="${order.id}"/>--%>
+                                        <%--Confirm COD--%>
+                                    <%--</s:link>)--%>
+		                                 <c:when test="${order.userCodCall != null}">
+			                               <c:forEach items="<%=EnumUserCodCalling.getAllList()%>" var="codstatus">		                                    
+		                                    <c:if test="${order.userCodCall.callStatus == codstatus.id}">
+			                                    ${codstatus.name}
+		                                    </c:if>
+	                                    </c:forEach>
+		                                 </c:when>
+
                                     </c:when>
-                                    <c:otherwise>
+	                                <c:otherwise>
                                         (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
                                         Update as successful
                                         <s:param name="order" value="${order.id}"/>

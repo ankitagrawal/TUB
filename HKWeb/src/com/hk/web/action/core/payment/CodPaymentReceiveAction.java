@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -17,6 +18,7 @@ import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.customerCalling.UserCodConfirmationCalling;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -44,6 +46,8 @@ public class CodPaymentReceiveAction extends BaseAction {
 	private PaymentService paymentService;
 	@Autowired
 	private PaymentManager paymentManager;
+	@Autowired
+	UserCodConfirmationCalling userCodConfirmationCalling;
 
 	@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
 	private Double codMinAmount;
@@ -115,6 +119,12 @@ public class CodPaymentReceiveAction extends BaseAction {
 			try {
 				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
 				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone);
+				// seema put call here
+
+				if (order.getUserCodCall() == null) {
+					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order);
+				}
+
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} catch (HealthkartPaymentGatewayException e) {
 				getPaymentManager().error(gatewayOrderId, e);

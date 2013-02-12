@@ -18,6 +18,7 @@ import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.UserCodCall;
 
 import javax.persistence.*;
 import java.util.*;
@@ -171,6 +172,10 @@ public class Order implements java.io.Serializable {
 
     @Column(name = "comment_type")
     private Long                      commentType;
+
+    @JsonSkip
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "basOrder")
+    private UserCodCall userCodCall ;
 
 
     public boolean isPriorityOrder() {
@@ -578,4 +583,11 @@ public class Order implements java.io.Serializable {
         this.targetDispatchDateOnVerification = targetDispatchDateOnVerification;
     }
 
+	public UserCodCall getUserCodCall() {
+		return userCodCall;
+	}
+
+	public void setUserCodCall(UserCodCall userCodCall) {
+		this.userCodCall = userCodCall;
+	}
 }
