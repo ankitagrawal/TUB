@@ -298,7 +298,6 @@ public class InventoryCheckinAction extends BaseAction {
 
     public Resolution saveStockTransfer() {
         SkuItem skuItem;
-
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
             return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -316,7 +315,7 @@ public class InventoryCheckinAction extends BaseAction {
 
         skuGroupList = skuGroupService.getSkuGroupsByBarcodeForStockTransfer(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
         if (skuGroupList == null || skuGroupList.size() <= 0) {
-            addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
+            addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode against this Stock Transfer"));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
         SkuGroup skuGroup = skuGroupList.get(0);
@@ -331,6 +330,10 @@ public class InventoryCheckinAction extends BaseAction {
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
+        if (sku == null){
+            addRedirectAlertMessage(new SimpleMessage("No Sku Found"));
+           return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
 
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
             checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);
