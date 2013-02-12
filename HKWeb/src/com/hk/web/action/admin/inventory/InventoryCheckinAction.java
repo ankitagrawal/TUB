@@ -315,7 +315,7 @@ public class InventoryCheckinAction extends BaseAction {
 
         skuGroupList = skuGroupService.getSkuGroupsByBarcodeForStockTransfer(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
         if (skuGroupList == null || skuGroupList.size() <= 0) {
-            addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode against this Stock Transfer"));
+            addRedirectAlertMessage(new SimpleMessage("No SKU Group found for Barcode"));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
         SkuGroup skuGroup = skuGroupList.get(0);
