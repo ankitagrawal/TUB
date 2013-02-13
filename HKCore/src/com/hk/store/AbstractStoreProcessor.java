@@ -24,6 +24,7 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.manager.OrderManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -42,6 +43,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	@Autowired protected PaymentManager paymentManager;
 	@Autowired protected AddressService addressService;
 	@Autowired protected CartLineItemService cartLineItemService;
+  @Autowired protected OrderManager orderManager;
 
 	@Override
 	public Long createOrder(Long userId) {
@@ -115,7 +117,9 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		@SuppressWarnings("unchecked")
 		List<Order> orders = baseDao.findByCriteria(criteria);
 		if (orders != null && orders.size() > 0) {
-			return orders.iterator().next();
+      Order order = orders.iterator().next();
+      order = orderManager.trimEmptyLineItems(order);
+      return order;
 		}
 		return null;
 	}

@@ -576,13 +576,17 @@ public class OrderManager {
                 CartLineItem lineItem = iterator.next();
                 if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())
                         || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
+                    ProductVariant productVariant = lineItem.getProductVariant();
+                    Product product = productVariant.getProduct();
+                    if (lineItem.getQty() > 0 && ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock())) {
+                      lineItem.setQty(0L);
+                    }
                     if (lineItem.getQty() <= 0) {
                         iterator.remove();
                         getCartLineItemDao().delete(lineItem);
                       logger.debug("Deleting cartLineItem for Product Variant" + lineItem.getProductVariant().getId()+ "because it's quantity is zero");                      
                     } else {
-                        ProductVariant productVariant = lineItem.getProductVariant();
-                        Product product = productVariant.getProduct();
+
                         boolean isService = false;
                         if (product.isService() != null && product.isService())
                             isService = true;

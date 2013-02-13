@@ -50,8 +50,8 @@
     <div class="container">
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
-          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram" style="text-decoration:none;">About Loyalty Program</s:link></li>
-          <li><a href="${pageContext.request.contextPath}">Visit Healthkart</a></li>
+          <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram" style="text-decoration:none;">About Program</s:link></li>
+          <li><a href="${pageContext.request.contextPath}">Visit HealthKart</a></li>
           <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>	      
         </ul>
 	      <a href="<hk:vhostJs/>/loyaltypg">

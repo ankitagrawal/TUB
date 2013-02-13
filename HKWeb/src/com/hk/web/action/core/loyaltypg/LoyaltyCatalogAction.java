@@ -19,6 +19,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
 
@@ -49,12 +50,11 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		int count = getProcessor().countProducts(getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = getProcessor().searchProducts(getPrincipal().getId(), criteria);
 		productList = new ArrayList<LoyaltyProduct>();
-		for (ProductAdapter productAdapter : list) {
-			productList.add(productAdapter.getLoyaltyProduct());
-		}
-		
-		
-		productPage = new Page(productList, getPerPage(), getPerPageDefault(), count);
+    for (ProductAdapter productAdapter : list) {
+        productList.add(productAdapter.getLoyaltyProduct());
+    }
+
+    productPage = new Page(productList, getPerPage(), getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 

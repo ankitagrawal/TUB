@@ -1,15 +1,5 @@
 package com.hk.web.action.core.loyaltypg;
 
-import java.util.*;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
@@ -18,6 +8,10 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductVariantInfo;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 public class CartAction extends AbstractLoyaltyAction {
 
@@ -26,7 +20,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	private Double totalShoppingPoints = 0d;
 	private CartLineItem cartLineItem;
 	
-	@Autowired LoyaltyProgramService loyaltyProgramService;
+	@Autowired LoyaltyProgramService loyaltyProgramService;   
 	
 	private List<LoyaltyProduct> loyaltyProductList;
 	
@@ -71,6 +65,8 @@ public class CartAction extends AbstractLoyaltyAction {
 				loyaltyProduct.setQty(cartLineItem.getQty());
 				loyaltyProductList.add(loyaltyProduct);
 			}
+      // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
+
 			totalShoppingPoints = loyaltyProgramService.aggregatePoints(order.getId());
 		}
 	}
