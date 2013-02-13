@@ -21,4 +21,6 @@ public interface BrandsToAuditDao extends BaseDao {
 
     public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus,Warehouse warehouse);
 
+    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus);
+
 }

@@ -23,77 +23,85 @@ import com.hk.impl.dao.BaseDaoImpl;
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
 
     public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage, Long auditStatus) {
-         DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-         if (StringUtils.isNotBlank(brand) ) {
-             auditCriteria.add(Restrictions.eq("brand", brand));
-         }
-         if (warehouse != null) {
-             auditCriteria.add(Restrictions.eq("warehouse", warehouse));
-         }
-         if (auditor != null) {
-             auditCriteria.add(Restrictions.eq("auditor", auditor));
-         }
-         if (startDate != null && endDate != null) {
-             auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
-         }
-         if(auditStatus != null){
-             auditCriteria.add(Restrictions.eq("auditStatus",auditStatus));
-         }
+        DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
+        if (StringUtils.isNotBlank(brand) ) {
+            auditCriteria.add(Restrictions.eq("brand", brand));
+        }
+        if (warehouse != null) {
+            auditCriteria.add(Restrictions.eq("warehouse", warehouse));
+        }
+        if (auditor != null) {
+            auditCriteria.add(Restrictions.eq("auditor", auditor));
+        }
+        if (startDate != null && endDate != null) {
+            auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
+        }
+        if(auditStatus != null){
+            auditCriteria.add(Restrictions.eq("auditStatus",auditStatus));
+        }
         /*auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));*/
-         auditCriteria.addOrder(org.hibernate.criterion.Order.desc("auditDate"));
-         return list(auditCriteria, pageNo, perPage);
-     }
+        auditCriteria.addOrder(org.hibernate.criterion.Order.desc("auditDate"));
+        return list(auditCriteria, pageNo, perPage);
+    }
 
     public List<String> brandsToBeAudited(Warehouse warehouse) {
-		String queryString = "select distinct lower(trim(ba.brand)) from BrandsToAudit ba where ba.warehouse = :warehouse and ba.auditStatus = :auditStatus";
-		return (List<String>) findByNamedParams(queryString, new String[]{"warehouse", "auditStatus"}, new Object[]{warehouse, EnumAuditStatus.Pending.getId()});
-	}
+        String queryString = "select distinct lower(trim(ba.brand)) from BrandsToAudit ba where ba.warehouse = :warehouse and ba.auditStatus = :auditStatus";
+        return (List<String>) findByNamedParams(queryString, new String[]{"warehouse", "auditStatus"}, new Object[]{warehouse, EnumAuditStatus.Pending.getId()});
+    }
 
-	public boolean isBrandAudited(String brand, Warehouse warehouse) {
-		String queryString = "from BrandsToAudit ba where ba.warehouse = :warehouse and ba.brand = :brand and ba.auditStatus = :auditStatus";
-		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
-				new String[]{"warehouse", "brand", "auditStatus"},
-				new Object[]{warehouse, brand, EnumAuditStatus.Done.getId()});
-		if (!brandsToAuditList.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
+    public boolean isBrandAudited(String brand, Warehouse warehouse) {
+        String queryString = "from BrandsToAudit ba where ba.warehouse = :warehouse and ba.brand = :brand and ba.auditStatus = :auditStatus";
+        List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
+                new String[]{"warehouse", "brand", "auditStatus"},
+                new Object[]{warehouse, brand, EnumAuditStatus.Done.getId()});
+        if (!brandsToAuditList.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
-    	public boolean isBrandAudited(String brand) {
-		String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
-		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
-				new String[]{"brand", "auditStatus"},
-				new Object[]{brand, EnumAuditStatus.Done.getId()});
-		if (!brandsToAuditList.isEmpty()) {
-			return true;
-		}
-		return false;
-	}
+    public boolean isBrandAudited(String brand) {
+        String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
+        List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
+                new String[]{"brand", "auditStatus"},
+                new Object[]{brand, EnumAuditStatus.Done.getId()});
+        if (!brandsToAuditList.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
-	public DetachedCriteria getBrandsToAuditCriteria(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, Long auditStatus) {
-	DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-		if (StringUtils.isNotBlank(brand) ) {
-			auditCriteria.add(Restrictions.eq("brand", brand));
-		}
-		if (warehouse != null) {
-			auditCriteria.add(Restrictions.eq("warehouse", warehouse));
-		}
-		if (auditor != null) {
-			auditCriteria.add(Restrictions.eq("auditor", auditor));
-		}
-		if (startDate != null && endDate != null) {
-			auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
-		}
-		if (auditStatus != null) {
-			auditCriteria.add(Restrictions.eq("auditStatus", auditStatus));
-		}
-		return  auditCriteria;
-	}
+    public DetachedCriteria getBrandsToAuditCriteria(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, Long auditStatus) {
+        DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
+        if (StringUtils.isNotBlank(brand) ) {
+            auditCriteria.add(Restrictions.eq("brand", brand));
+        }
+        if (warehouse != null) {
+            auditCriteria.add(Restrictions.eq("warehouse", warehouse));
+        }
+        if (auditor != null) {
+            auditCriteria.add(Restrictions.eq("auditor", auditor));
+        }
+        if (startDate != null && endDate != null) {
+            auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
+        }
+        if (auditStatus != null) {
+            auditCriteria.add(Restrictions.eq("auditStatus", auditStatus));
+        }
+        return  auditCriteria;
+    }
 
-	public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus ,Warehouse warehouse) {
-		DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
-		return findByCriteria(brandDetachedCriteria);
-	}
+    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus ,Warehouse warehouse) {
+        DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
+        return findByCriteria(brandDetachedCriteria);
+    }
+
+    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus){
+        String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
+        List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
+                       new String[]{"brand", "auditStatus"},
+                       new Object[]{brand, auditStatus});
+        return brandsToAuditList;
+    }
 
 }
