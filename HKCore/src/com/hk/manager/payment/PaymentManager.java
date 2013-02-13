@@ -11,6 +11,7 @@ import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.BillingAddress;
+import com.hk.domain.user.UserCodCall;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
@@ -22,6 +23,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.customerCalling.UserCodConfirmationCalling;
 import com.hk.util.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,7 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -60,6 +61,8 @@ public class PaymentManager {
 	private PaymentService paymentService;
 	@Autowired
 	SMSManager smsManager;
+	@Autowired
+	UserCodConfirmationCalling userCodConfirmationCalling;
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
@@ -279,7 +282,7 @@ public class PaymentManager {
 	@Transactional
 	public Order codSuccess(String gatewayOrderId, String codContactName, String codContactPhone) {
 		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		Order order = null;
+		Order order = orderService.findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
 			payment.setContactName(codContactName);
 			payment.setContactNumber(codContactPhone);
@@ -293,6 +296,18 @@ public class PaymentManager {
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 
 			// call jms
+
+			if (order.getUserCodCall() == null) {
+				try {
+					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order);
+					UserCodCall userCodCall = orderService.createUserCodCall(order);
+					if (userCodCall != null) {
+						orderService.saveUserCodCall(userCodCall);
+					}
+				} catch (Exception ex) {
+					logger.error("error occurred in calling JMS in Payment Manager  :::: " +ex.getMessage());
+				}
+			}
 
 //			if (orderCount != null && orderCount >= 3) {
 //				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));

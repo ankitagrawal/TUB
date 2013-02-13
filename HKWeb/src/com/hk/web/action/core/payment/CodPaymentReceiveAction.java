@@ -46,8 +46,7 @@ public class CodPaymentReceiveAction extends BaseAction {
 	private PaymentService paymentService;
 	@Autowired
 	private PaymentManager paymentManager;
-	@Autowired
-	UserCodConfirmationCalling userCodConfirmationCalling;
+
 
 	@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
 	private Double codMinAmount;
@@ -119,11 +118,6 @@ public class CodPaymentReceiveAction extends BaseAction {
 			try {
 				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
 				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone);
-				// seema put call here
-
-				if (order.getUserCodCall() == null) {
-					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order);
-				}
 
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} catch (HealthkartPaymentGatewayException e) {

@@ -174,7 +174,7 @@ public class Order implements java.io.Serializable {
     private Long                      commentType;
 
     @JsonSkip
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "basOrder")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "baseOrder")
     private UserCodCall userCodCall ;
 
 

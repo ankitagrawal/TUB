@@ -22,27 +22,27 @@ public class UserCodCall {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id", nullable = false)
-	private Order basOrder;
+	private Order baseOrder;
 
 	@Column(name = "call_status", nullable = false)
-	Long callStatus;
+	Integer callStatus;
 
 	@Column(name = "remark")
 	String remark;
 
-	public Order getBasOrder() {
-		return basOrder;
+	public Order getBaseOrder() {
+		return baseOrder;
 	}
 
-	public void setBasOrder(Order basOrder) {
-		this.basOrder = basOrder;
+	public void setBaseOrder(Order baseOrder) {
+		this.baseOrder = baseOrder;
 	}
 
-	public Long getCallStatus() {
+	public Integer getCallStatus() {
 		return callStatus;
 	}
 
-	public void setCallStatus(Long callStatus) {
+	public void setCallStatus(Integer callStatus) {
 		this.callStatus = callStatus;
 	}
 

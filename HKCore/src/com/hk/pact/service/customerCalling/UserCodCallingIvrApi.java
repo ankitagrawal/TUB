@@ -49,9 +49,9 @@ public class UserCodCallingIvrApi {
 				logger.error("Invalid Order ID returning from IVR USER COD AUTOMATIC CALL Api call for ");
 			} else {
 				userCodCall = order.getUserCodCall();
-				userCodCall.setCallStatus(0l);
+				userCodCall.setCallStatus(0);
 				userCodCall.setRemark(remark);
-				orderService.saveUserCodCallStatus(userCodCall);
+				orderService.saveUserCodCall(userCodCall);
 
 			}
 		} catch (Exception ex) {

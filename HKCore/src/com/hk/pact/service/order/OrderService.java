@@ -77,7 +77,9 @@ public interface OrderService {
 
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
-	public UserCodCall saveUserCodCallStatus(UserCodCall userCodCall);
+	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
+
+	public UserCodCall createUserCodCall(Order order);
 
 
 }

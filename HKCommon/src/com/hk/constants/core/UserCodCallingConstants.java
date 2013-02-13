@@ -11,15 +11,10 @@ public class UserCodCallingConstants {
 
 	public static final String ORDER_ID = "order_id";
 
-	public static final String CALL_IDS = "call_ids";
+	public static final String CONFIRMED = "CONFIRMED";
 
-	public static final String CALL_ID = "call_id";
+	public static final String CANCELLED = "CANCELLED";
 
-	public static final String OK = "OK";
-
-	public static final String NULL_ERROR = "NULL_ERROR";
-
-	public static final String USER_ERROR = "USER_ERROR";
 
 
 }

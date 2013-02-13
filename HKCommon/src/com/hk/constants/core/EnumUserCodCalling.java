@@ -14,9 +14,10 @@ import java.util.Arrays;
 public enum EnumUserCodCalling {
 
 	PENDING_WITH_THIRD_PARTY(10, "Waiting For Response"),
-	OK(20, "Sucessful"),
-	CANCEL(30,"Canceled"),
-	OTHERS(40,"Other");
+	CONFIRMED(20, "Sucessful"),
+	CANCELLED(30,"Canceled"),
+	OTHERS(40,"Other"),
+	EMPTY_MSG_RECIEVED(50,"respose comes with empty key press value");
 
 	private int id;
 	private String name;
@@ -44,6 +45,6 @@ public enum EnumUserCodCalling {
 	}
 
 	public static List<EnumUserCodCalling> getAllList(){
-		return Arrays.asList(PENDING_WITH_THIRD_PARTY, OK , CANCEL , OTHERS);
+		return Arrays.asList(PENDING_WITH_THIRD_PARTY, CONFIRMED , CANCELLED , OTHERS);
 	}
 }

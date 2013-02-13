@@ -766,9 +766,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
 	@Transactional
-	public UserCodCall saveUserCodCallStatus(UserCodCall userCodCall){
+	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
 		return (UserCodCall)baseDao.save(userCodCall);
 	}
 
+	public UserCodCall createUserCodCall(Order order){
+	        UserCodCall userCodCall = new UserCodCall();
+			userCodCall.setBasOrder(order);
+			userCodCall.setRemark("knowlarity call started,wiating for response");
+			userCodCall.setCallStatus(10);
+			return userCodCall;
+
+	}
 
 }

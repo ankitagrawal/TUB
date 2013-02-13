@@ -6,16 +6,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 import java.net.URL;
-import java.net.MalformedURLException;
-
 import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
 import com.hk.pact.service.order.OrderService;
-import com.hk.producer.ProducerFactory;
-import com.hk.hkjunction.observers.CODOrderObserver;
+
+import com.hk.hkjunction.producer.ProducerFactory;
+import com.hk.hkjunction.producer.ProducerTypeEnum;
+import com.hk.hkjunction.producer.Producer;
 
 
 /**
@@ -44,34 +42,15 @@ public class UserCodConfirmationCalling {
 	private static final String ivrId = "800059891";
 
 
-	public void triggerAutomaticCodCustomerCalling(Order order) {
+	public void triggerAutomaticCodCustomerCalling(Order order) throws Exception{
 		String customerPhoneNumber = order.getAddress().getPhone();
 		String orderId = order.getId().toString();
 		String orderAmount = order.getAmount().toString();
 		String inputLine = "";
 		String response = "";
-		producerFactory.postCODMessage("test");
-//		try {
-////calkl jms
-//			UserCodCall userCodCall = new UserCodCall();
-//			userCodCall.setBasOrder(order);
-//			userCodCall.setRemark("knowlarity call started , wiating for response");
-//			userCodCall.setCallStatus(10L);
-//			userCodCall = orderService.saveUserCodCallStatus(userCodCall);
-//		} catch (MalformedURLException mfu) {
-//			//call outbound call
-//			logger.error("Invalid Url" + mfu.getMessage());
-//		}
-//		catch (IOException ioe) {
-//			logger.error("IO Exception" + ioe.getMessage());
-//		}
-	 return;
-	}
-
-
-
-
-	void onCODResponse(String s){
+		String messageToPublish = orderId + "," ;
+		Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
+		producer.publishMessage(messageToPublish);
 
 	}
 
