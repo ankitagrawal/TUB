@@ -22,6 +22,7 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.factory.PaymentModeActionFactory;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -82,6 +83,9 @@ public class PaymentAction extends BaseAction {
             trimCartLineItems = orderManager.trimEmptyLineItems(order);
             sizeOfCLI = trimCartLineItems.size();
             if(trimCartLineItems!=null && trimCartLineItems.size()>0){
+                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
+                    return new RedirectResolution(CartAction.class);
+                }
                 return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
             }
             BillingAddress billingAddress = null;
