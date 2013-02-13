@@ -51,11 +51,11 @@
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
           <li><s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram" style="text-decoration:none;">About Loyalty Program</s:link></li>
-          <li><a href="http://www.healthkart.com">Visit Healthkart</a></li>
+          <li><a href="${pageContext.request.contextPath}">Visit Healthkart</a></li>
           <li><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View Cart</a></li>	      
         </ul>
 	      <a href="<hk:vhostJs/>/loyaltypg">
-        <h4 class="muted"><img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"> Loyalty Program</h4>
+        <img src="<hk:vhostJs/>/images/logo.png" alt="healthkart logo"><span style="vertical-align:bottom;font-size:1.1em;font-weight:bold;">Loyalty Program</span>
 	      </a>
       </div>
 	     <br>
