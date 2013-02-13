@@ -564,9 +564,13 @@ public class OrderManager {
       for (CartLineItem lineItem : cartLineItems) {
           ProductVariant productVariant = lineItem.getProductVariant();
           Product product = productVariant.getProduct();
+          ComboInstance comboInstance = lineItem.getComboInstance();
           List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
 
           if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock() || lineItem.getQty() <= 0) {
+              if (comboInstance != null) {
+                  toBeRemovedComboInstanceSet.add(comboInstance);
+              }
               lineItem.setQty(0L);
               continue;
           }
@@ -575,7 +579,6 @@ public class OrderManager {
               Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
-                  ComboInstance comboInstance = lineItem.getComboInstance();
                   if (comboInstance != null) {
                       toBeRemovedComboInstanceSet.add(comboInstance);
                       continue;
