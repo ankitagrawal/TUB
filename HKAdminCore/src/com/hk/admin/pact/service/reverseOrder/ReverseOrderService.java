@@ -4,6 +4,7 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.courier.CourierPickupDetail;
+import com.akube.framework.dao.Page;
 
 import java.util.Map;
 
@@ -18,7 +19,9 @@ public interface ReverseOrderService {
 
 	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder);
 
-	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap);
+	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap); 	
+
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
 
 	public ReverseOrder getReverseOrderById(Long id);
 

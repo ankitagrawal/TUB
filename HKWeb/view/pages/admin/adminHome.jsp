@@ -251,7 +251,7 @@
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing details</s:link></h3>
 
-	<h3><s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction">Reverse Pickup List</s:link></h3>
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
 

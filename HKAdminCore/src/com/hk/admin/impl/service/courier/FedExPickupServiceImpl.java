@@ -1,10 +1,9 @@
 package com.hk.admin.impl.service.courier;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hk.constants.core.Keys;
-import com.hk.admin.util.courier.thirdParty.FedExPickupServiceUtil;
+import com.hk.admin.util.courier.thirdParty.FedExPickupUtil;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.domain.order.ShippingOrder;
 
@@ -38,8 +37,8 @@ public class FedExPickupServiceImpl implements ThirdPartyPickupService {
 
 	@Override
 	public List<String> createPickupRequest(ShippingOrder shippingOrder, Date date){
-		FedExPickupServiceUtil fedExPickupServiceUtil = new FedExPickupServiceUtil(fedExAuthKey,fedExAccountNo,fedExMeterNo,fedExPassword,fedExServerUrl);
-		return fedExPickupServiceUtil.createPickupRequest(shippingOrder, date);
+		FedExPickupUtil fedExPickupUtil = new FedExPickupUtil(fedExAuthKey,fedExAccountNo,fedExMeterNo,fedExPassword,fedExServerUrl);
+		return fedExPickupUtil.createPickupRequest(shippingOrder, date);
 	}
 
 }

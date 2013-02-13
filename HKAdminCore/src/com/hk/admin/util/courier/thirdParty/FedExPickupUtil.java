@@ -16,7 +16,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.pact.service.shippingOrder.ShipmentService;
-import com.akube.framework.util.StringUtils;
 
 /**
  * Sample code to call the FedEx Pickup service with Axis
@@ -28,9 +27,9 @@ import com.akube.framework.util.StringUtils;
  *
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
-public class FedExPickupServiceUtil {
+public class FedExPickupUtil {
 	//
-	private static Logger logger = LoggerFactory.getLogger(FedExPickupServiceUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(FedExPickupUtil.class);
 
     private String fedExAuthKey;
 
@@ -44,7 +43,7 @@ public class FedExPickupServiceUtil {
 
 	private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
 
-	public FedExPickupServiceUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
+	public FedExPickupUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
         this.fedExAccountNo = fedExAccountNo;
         this.fedExMeterNo = fedExMeterNo;

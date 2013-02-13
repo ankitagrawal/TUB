@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.reverseOrder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.courier.ReverseOrderDao;
 import com.hk.pact.service.UserService;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.reverseOrder.ReverseLineItem;
@@ -12,6 +13,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.inventory.EnumReconciliationStatus;
+import com.akube.framework.dao.Page;
 
 import java.util.*;
 
@@ -30,6 +32,9 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 
 	@Autowired
 	BaseDao baseDao;
+
+	@Autowired
+	ReverseOrderDao reverseOrderDao;
 
 	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder){
 		User loggedOnUser = userService.getLoggedInUser();
@@ -66,13 +71,13 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 			reverseOrder.setReverseLineItems(reverseLineItemSet);
 			Double amount = getAmountForReverseOrder(reverseOrder);
 			reverseOrder.setAmount(amount);
-			getBaseDao().save(reverseOrder);
+			getReverseOrderDao().save(reverseOrder);
 		}
 	}
 
 	public void setCourierDetails(ReverseOrder reverseOrder, CourierPickupDetail courierPickupDetail){
 		reverseOrder.setCourierPickupDetail(courierPickupDetail);
-		getBaseDao().save(reverseOrder);
+		getReverseOrderDao().save(reverseOrder);
 	}
 
 	public double getAmountForReverseOrder(ReverseOrder reverseOrder) {
@@ -87,15 +92,23 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         return rvoBaseAmt;
     }
 
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
+        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, page, perPage);
+    }
+
 	public ReverseOrder save(ReverseOrder reverseOrder){
-		 return (ReverseOrder) getBaseDao().save(reverseOrder);
+		 return getReverseOrderDao().save(reverseOrder);
 	}
 
 	public ReverseOrder getReverseOrderById(Long id){
-		return (ReverseOrder) getBaseDao().findUniqueByNamedQueryAndNamedParam("getReverseOrderById", new String[]{"reverseOrderId"}, new Object[]{id});
+		return getReverseOrderDao().getReverseOrderById(id);
 	}
 
 	public BaseDao getBaseDao() {
 		return baseDao;
+	}
+
+	public ReverseOrderDao getReverseOrderDao() {
+		return reverseOrderDao;
 	}
 }

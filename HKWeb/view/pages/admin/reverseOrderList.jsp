@@ -2,7 +2,7 @@
 <%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" var="pickupManage"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
 <%
     pageContext.setAttribute("pickupStatusList", EnumPickupStatus.getPickupStatusList());
 %>
@@ -10,7 +10,7 @@
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
 <c:set var="pickupOpen" value="<%=EnumPickupStatus.OPEN.getId()%>"/>
 
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Pickup List">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Order List">
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
             
@@ -32,12 +32,12 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction">
+        <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
 
             <fieldset>
                 <legend>Search Reverse Pickup List</legend>
 
-                <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" value="${pickupManage.shippingOrderId} "style="width:150px"/>
+                <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" value="${pickupManage.shippingOrderId}" style="width:150px"/>
                 &nbsp; &nbsp;
                 <label>Pickup Status:</label>
                 <s:select name="pickupStatusId">
@@ -75,27 +75,27 @@
                 <th>Actions</th>
             </tr>
             </thead>
-            <c:forEach items="${pickupManage.pickupRequestsList}" var="pickupRequest">
+            <c:forEach items="${pickupManage.orderRequestsList}" var="reverseOrderRequest">
                 <tr>
-                    <td>${pickupRequest.shippingOrder.gatewayOrderId}</td>
-                    <td>${pickupRequest.courier.name}</td>
-                    <td>${pickupRequest.pickupConfirmationNo}</td>
-                    <td>${pickupRequest.pickupDate}</td>
-                    <td>${pickupRequest.pickupStatus.name}</td>
-                    <td>${pickupRequest.reconciliationStatus.name}</td>
-                    <td>${pickupRequest.user.name}</td>
+                    <td>${reverseOrderRequest.shippingOrder.gatewayOrderId}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.pickupDate}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.pickupStatus.name}</td>
+                    <td>${reverseOrderRequest.reconciliationStatus.name}</td>
+                    <td>${reverseOrderRequest.user.name}</td>
 
                     <td>
-                        <c:if test="${pickupRequest.pickupStatus.id == pickupOpen}">
-                            <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markPicked" class="markPicked">Mark Picked
-                                <s:param name="pickupRequest" value="${pickupRequest.id}"/>
+                        <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen}">
+                            <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markPicked" class="markPicked">Mark Picked
+                                <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                             </s:link>
 		                    <br/>
                         </c:if>
-                        <c:if test="${pickupRequest.reconciliationStatus.id == reconPending}">
-		                    <s:link beanclass="com.hk.web.action.admin.courier.PickupRequestsManageAction" event="markReconciled" class="markReconciled">Mark Reconciled
-			                    <s:param name="pickupRequest" value="${pickupRequest.id}"/>
+                        <c:if test="${reverseOrderRequest.reconciliationStatus.id == reconPending}">
+		                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markReconciled" class="markReconciled">Mark Reconciled
+			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                             </s:link>
 		                    <br/>

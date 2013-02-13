@@ -7,9 +7,10 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 
-import com.hk.pact.dao.courier.ReversePickupDao;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
+import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,11 +26,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class PickupRequestsManageAction extends BasePaginatedAction{
+public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	private List<ReverseOrder> orderRequestsList;
-	private ReverseOrder orderRequest;
-	Page pickupRequestsPage;
+	private Long orderRequestId;
+	Page orderRequestsPage;
     private Integer defaultPerPage = 30;
 
 	private Long pickupStatusId;
@@ -37,29 +38,31 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 	private String shippingOrderId;
 
 	@Autowired
-	ReversePickupDao reversePickupDao;
+	ReverseOrderService reverseOrderService;
 
 	@DefaultHandler
 	public Resolution pre() {
-		pickupRequestsPage = reversePickupDao.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, getPageNo(), getPerPage());
-		orderRequestsList = pickupRequestsPage.getList();
-		return new ForwardResolution("/pages/admin/orderRequestsList.jsp");
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, getPageNo(), getPerPage());
+		orderRequestsList = orderRequestsPage.getList();
+		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
 
 	public Resolution markPicked(){
-		if(orderRequest != null){
-			orderRequest.setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
-			reversePickupDao.save(orderRequest);
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.getCourierPickupDetail().setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
+			reverseOrderService.save(reverseOrder);
 		}
-		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution markReconciled(){
-		if(orderRequest != null){
-			orderRequest.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
-			reversePickupDao.save(orderRequest);
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
+			reverseOrderService.save(reverseOrder);
 		}
-		return new RedirectResolution(PickupRequestsManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public int getPerPageDefault() {
@@ -67,11 +70,11 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
     }
 
     public int getPageCount() {
-        return pickupRequestsPage == null ? 0 : pickupRequestsPage.getTotalPages();
+        return orderRequestsPage == null ? 0 : orderRequestsPage.getTotalPages();
     }
 
     public int getResultCount() {
-        return pickupRequestsPage == null ? 0 : pickupRequestsPage.getTotalResults();
+        return orderRequestsPage == null ? 0 : orderRequestsPage.getTotalResults();
     }
 
 	 public Set<String> getParamSet() {
@@ -82,11 +85,11 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
         return params;
     }
 
-	public List<ReverseOrder> getPickupRequestsList() {
+	public List<ReverseOrder> getOrderRequestsList() {
 		return orderRequestsList;
 	}
 
-	public void setPickupRequestsList(List<ReverseOrder> orderRequestsList) {
+	public void setOrderRequestsList(List<ReverseOrder> orderRequestsList) {
 		this.orderRequestsList = orderRequestsList;
 	}
 
@@ -106,12 +109,12 @@ public class PickupRequestsManageAction extends BasePaginatedAction{
 		this.reconciliationStatusId = reconciliationStatusId;
 	}
 
-	public ReverseOrder getPickupRequest() {
-		return orderRequest;
+	public Long getOrderRequestId() {
+		return orderRequestId;
 	}
 
-	public void setPickupRequest(ReverseOrder orderRequest) {
-		this.orderRequest = orderRequest;
+	public void setOrderRequestId(Long orderRequestId) {
+		this.orderRequestId = orderRequestId;
 	}
 
 	public String getShippingOrderId() {
