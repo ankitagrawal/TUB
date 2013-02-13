@@ -85,7 +85,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         }
 
         if (brandsToAudit.getId() == null) {
-            List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId());
+            List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId(),warehouse);
             if (!brandsToAuditInDb.isEmpty()) {
                 addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
                 return new RedirectResolution(BrandsToAuditAction.class);

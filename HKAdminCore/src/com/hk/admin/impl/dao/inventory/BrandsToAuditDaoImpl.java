@@ -1,13 +1,5 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-import org.hibernate.Query;
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.inventory.EnumAuditStatus;
@@ -15,6 +7,13 @@ import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 
 
@@ -95,13 +94,4 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
         DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
         return findByCriteria(brandDetachedCriteria);
     }
-
-    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus){
-        String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
-        List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString,
-                       new String[]{"brand", "auditStatus"},
-                       new Object[]{brand, auditStatus});
-        return brandsToAuditList;
-    }
-
 }
