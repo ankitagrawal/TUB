@@ -3,6 +3,7 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.constants.inventory.EnumInvTxnType;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
@@ -66,8 +67,8 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
   }
 
   public Long getCheckedInPVIAgainstRTO(LineItem lineItem) {
-    return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem and pvi.qty = :qty").setParameter("lineItem",
-        lineItem).setParameter("qty", 1L).uniqueResult();
+    return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem and pvi.qty = :qty and pvi.invTxnType.id=" + EnumInvTxnType.RTO_CHECKIN.getId()).setParameter("lineItem",
+            lineItem).setParameter("qty", 1L).uniqueResult();
   }
 
   public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem) {

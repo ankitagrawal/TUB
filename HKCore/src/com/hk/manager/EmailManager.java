@@ -33,6 +33,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -727,6 +728,29 @@ public class EmailManager {
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
+
+    }
+
+    public void sendCallbackRequestEmail(User user, DiscountCouponMailingList dcml) {
+      HashMap valuesMap = new HashMap();
+      valuesMap.put("dcml", dcml);
+      if (user != null)
+        valuesMap.put("userId", user.getId());
+      else
+        valuesMap.put("userId", "Guest User");
+
+      Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
+      List<String> emailIds = new ArrayList<String>();
+      if (dcml.getCategory() != null && dcml.getCategory().equals("nutrition")) {
+        emailIds.add("umang.mehta@healthkart.com");
+        emailIds.add("jatin.nayyar@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("eye")) {
+        emailIds.add("abhishek.mohta@healthkart.com");
+        emailIds.add("shefali.sankhyan@healthkart.com");
+      }
+      for (String emailId : emailIds) {
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, "Callback Request - " + dcml.getCategory());
+      }
 
     }
 

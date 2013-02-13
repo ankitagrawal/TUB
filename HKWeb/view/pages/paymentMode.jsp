@@ -181,12 +181,11 @@
             <c:set var="codFailureMap" value="${orderSummary.codFailureMap}"/>
 
             <c:choose>
-                <c:when test='${codFailureMap["CodAllowedOnPin"] == "N" }'>
+                 <c:when test='${codFailureMap["MutipleRTOs"] == "Y"}'>
                     ${message}
-                    <p>COD is not available for your delivery
-                        location (Pincode : <strong> ${codFailureMap["Pincode"]}</strong>).
-                        <br/>
-                        We provide cash on delivery option for select PIN codes only.</p>
+                     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+                       <p>Due to multiple RTOs.</p>  
+                     </shiro:hasRole>
                 </c:when>
                 <c:when test='${codFailureMap["CodOnAmount"] == "N" }'>
                     ${message}
@@ -202,11 +201,9 @@
                     ${message}
                     <p>You have subscriptions in your cart</p>
                 </c:when>
-                <c:when test='${codFailureMap["GroundShippingAllowed"] == "Y" && codFailureMap["CodAllowedOnGroundShipping"] == "N" }'>
+                <c:when test='${codFailureMap["OverallCodAllowedByPincodeProduct"] == "N" }'>
                     ${message}
-                    <p>The following products in your order are shipped via surface shipping, hence COD is not available
-                        :
-                        <strong> ${codFailureMap["GroundShipProduct"]} </strong> .</p>
+                    <p>We do not provide cod services at your Pincode, Please contact customer care for any issues and concerns</p>
                 </c:when>
 
                 <c:otherwise>

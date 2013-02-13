@@ -9,6 +9,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     private ReconciliationStatusDao    reconciliationStatusDao;
 	@Autowired
 	UserService                        userService;
+	@Autowired
+	ShipmentService shipmentService;
     
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
@@ -91,6 +94,9 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	    shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
 			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
+
+	    shipmentService.createShipment(replacementOrder, true);
+	    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
         return replacementOrder;
     }
 

@@ -79,7 +79,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             for (Product pr : productList) {
                 if (!pr.getDeleted()) {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
-                    updateExtraProperties(pr, solrProduct);
+                    productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
                 }
             }
@@ -91,18 +91,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
         } catch (Exception ex) {
             SearchException e = wrapException("Unable to build indexes. Problem with Solr", ex);
             throw e;
-        }
-    }
-
-    private void updateExtraProperties(Product pr, SolrProduct solrProduct) {
-        for (ProductVariant pv : pr.getProductVariants()) {
-            if (pv.getProductOptions() != null) {
-                for (ProductOption po : pv.getProductOptions()) {
-                    if (po.getValue() != null) {
-                        solrProduct.getVariantNames().add(pr.getName() + " " + po.getValue());
-                    }
-                }
-            }
         }
     }
 

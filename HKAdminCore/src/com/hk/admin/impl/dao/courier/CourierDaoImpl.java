@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.hk.admin.pact.dao.courier.CourierDao;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierGroup;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.constants.courier.EnumCourier;
 import com.akube.framework.dao.Page;
@@ -28,19 +27,18 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
 
     public Courier getPreferredCourierForState(String state) {
-        return (Courier) getSession().createQuery("select scs.courier from StateCourierService scs where lower(scs.state) = :state").setParameter("state", state.toLowerCase()).uniqueResult();
+        return (Courier) getSession().createQuery("select scs.courier from StateCourierService scs where lower(scs.state.name) = :state").setParameter("state", state.toLowerCase()).uniqueResult();
     }	
 
 
     @SuppressWarnings("unchecked")
-    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean disabled) {
-	    DetachedCriteria courierCriteria = getCourierCriteria(courierIds, courierNames, null, disabled);
+    public List<Courier> getCouriers(List<Long> courierIds, List<String> courierNames, Boolean active, Long operationBitset) {
+	    DetachedCriteria courierCriteria = getCourierCriteria(courierIds, courierNames, null, active, operationBitset);
 	    return (List<Courier>) findByCriteria(courierCriteria);
-
     }
 
 
-	public DetachedCriteria getCourierCriteria(List<Long> courierIds, List<String> courierNames, List<String> courierGroups, Boolean disabled) {
+	public DetachedCriteria getCourierCriteria(List<Long> courierIds, List<String> courierNames, List<String> courierGroups, Boolean active, Long operationBitset) {
 		DetachedCriteria courierCriteria = DetachedCriteria.forClass(Courier.class);
 		if (courierIds != null && courierIds.size() > 0) {
 			courierCriteria.add(Restrictions.in("id", courierIds));
@@ -49,9 +47,12 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 			courierCriteria.add(Restrictions.in("name", courierNames));
 		}
 
-		if (disabled != null) {
-			courierCriteria.add(Restrictions.eq("disabled", disabled));
+		if (active != null) {
+			courierCriteria.add(Restrictions.eq("active", active));
 		}
+        if(operationBitset != null){
+            courierCriteria.add(Restrictions.sqlRestriction("mod({alias}.operations_bitset," + operationBitset + ") = 0"));
+        }
 		if (courierGroups != null && courierGroups.size() > 0) {
 			courierCriteria.createCriteria("courierGroup", "group");
 			courierCriteria.add(Restrictions.in("group.name", courierGroups));
@@ -61,7 +62,7 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 
 	}
 
-	public Page getCouriers(String courierName, Boolean disabled, String courierGroup, int page, int perPage) {
+	public Page getCouriers(String courierName, Boolean active, String courierGroup, int page, int perPage, Long operationBitset) {
 		List<String> courierNameList = null;
 		if (courierName != null) {
 			courierNameList = new ArrayList<String>();
@@ -72,15 +73,6 @@ public class CourierDaoImpl extends BaseDaoImpl implements CourierDao{
 			courierGroupList = new ArrayList<String>();
 			courierGroupList.add(courierGroup.trim());
 		}
-		return list(getCourierCriteria(null, courierNameList, courierGroupList, disabled), page, perPage);
+		return list(getCourierCriteria(null, courierNameList, courierGroupList, active, operationBitset), page, perPage);
 	}
-
-	 public List<Courier> listOfVendorCouriers() {
-        List<EnumCourier> workingVendorCouriers = EnumCourier.getCurrentlyApplicableVendorCouriers();
-
-        List<Long> courierIds = EnumCourier.getCourierIDs(workingVendorCouriers);
-        Criteria criteria = getSession().createCriteria(Courier.class);
-        criteria.add(Restrictions.in("id", courierIds));
-        return criteria.list();
-    }
 }

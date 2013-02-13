@@ -2,6 +2,8 @@ package com.hk.impl.dao.sku;
 
 import java.util.List;
 
+import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
+import com.hk.pact.dao.warehouse.WarehouseDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -37,6 +39,13 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
 
     }
 
+	@SuppressWarnings("unchecked")
+	public List<Sku> getSkus(ProductVariant productVariant, List<Warehouse> warehouseList) {
+		String queryString = " from Sku sku where sku.productVariant = :productVariant and sku.warehouse in (:warehouseList) ";
+		return (List<Sku>) findByNamedParams(queryString, new String[]{"productVariant", "warehouseList"}, new Object[] {productVariant, warehouseList});
+
+	}
+
     @SuppressWarnings("unchecked")
     public List<Sku> filterProductVariantsByWarehouse(List<ProductVariant> productVariants, Warehouse warehouse) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Sku.class);
@@ -44,5 +53,11 @@ public class SkuDaoImpl extends BaseDaoImpl implements SkuDao {
         criteria.add(Restrictions.eq("warehouse", warehouse));
         return (List<Sku>) findByCriteria(criteria);
     }
+
+	@SuppressWarnings("unchecked")
+	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId) {
+		String query = "select sku from Sku sku where sku.productVariant.product.name like :productName and sku.warehouse.id = :warehouse ";
+		return (List<Sku>) findByNamedParams(query, new String[]{"productName", "warehouse"}, new Object[] {"%" + productName + "%", warehouseId});
+	}
 
 }

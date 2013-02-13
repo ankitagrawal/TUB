@@ -21,6 +21,8 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -151,8 +153,46 @@
             e.async = true;
             document.getElementById('sdt-js').appendChild(e);
         }());
-    </script> 
+    </script>
+    <!-- Start AdRoll (FB Retargetting Conversion Tracking Code -->
+	<script type="text/javascript">
+	  adroll_segments = "conversion"
+	</script>
+  <script type="text/javascript">
+  adroll_adv_id = "SKDGP6YYENHVJCJDIKHUF7";
+  adroll_pix_id = "JLZMDLGRYBFDFHEIKFE456";
+  (function () {
+  var oldonload = window.onload;
+  window.onload = function(){
+     __adroll_loaded=true;
+     var scr = document.createElement("script");
+     var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+     scr.setAttribute('async', 'true');
+     scr.type = "text/javascript";
+     scr.src = host + "/j/roundtrip.js";
+     ((document.getElementsByTagName('head') || [null])[0] ||
+      document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+     if(oldonload){oldonload()}};
+  }());
+  </script>
 
+	<!-- Start MicroAd Blade conversion Code  -->
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='convtrack14344';
+		
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+		
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+		
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>	
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
@@ -172,7 +212,6 @@
   <s:layout-render name="/layouts/embed/_adwordsConversionCode.jsp" conversion_value="${hk:decimal2(actionBean.pricingDto.grandTotal)}" order_id="${actionBean.payment.gatewayOrderId}"/>
 
 </c:if>
-
 
     <c:choose>
         <c:when test="${actionBean.payment != null}">
@@ -251,7 +290,7 @@
 
             <h2 class="paymentH2">Customer Support</h2>
 
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4502930</p>
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4616444</p>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
@@ -297,15 +336,12 @@
                     <c:if test="${not empty address.line2}">
                         ${address.line2},
                     </c:if>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}, <span class="upc">INDIA</span><br/>
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
               <div class="floatfix"></div>
-
-
-
         </c:when>
         <c:otherwise>
             Invalid request!

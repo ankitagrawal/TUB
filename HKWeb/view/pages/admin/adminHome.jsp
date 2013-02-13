@@ -5,6 +5,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
+<%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -35,17 +36,21 @@
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
 				</shiro:hasRole>
 			</td>
-			<%--<td>
-				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
-				<shiro:hasRole name="<%=RoleConstants.GOD%>">
-					<s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
-					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
-				</shiro:hasRole>
-				</c:if>
-			</td>--%>
 		</tr>
 	</table>
 </shiro:hasAnyRoles>
+
+<shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
+	<c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
+		<table>
+			<tr>
+				<td><s:link beanclass="com.hk.web.action.admin.pos.POSAction"
+				            style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
+				</td>
+			</tr>
+		</table>
+	</c:if>
+</shiro:hasPermission>
 
 <div class="left roundBox">
 
@@ -58,6 +63,11 @@
     <h3><s:link beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
+
+    <h3>
+    <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
+        Seek Payment
+    </s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
@@ -156,7 +166,7 @@
 
 	<h3>
 		<s:link
-				beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+				beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update Shipment</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
@@ -207,15 +217,21 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
 	<h3><s:link
-			beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
-
-	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">State Courier Service Info</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">Pincode Courier Mapping</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Update Shipment</s:link></h3>
+
+     <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">Shipment Resolution</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
@@ -296,6 +312,9 @@
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+
+		 <h3>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -393,9 +412,6 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
-	<h3>
-		<s:link
-				beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
 </div>
 
 <div class="cl"></div>

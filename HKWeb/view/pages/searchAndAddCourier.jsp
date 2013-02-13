@@ -49,9 +49,17 @@
 					&nbsp; &nbsp;
 					<label>Status:</label><s:select name="status">
 					<s:option value="">-ALL-</s:option>
-					<s:option value="false">Active</s:option>
-					<s:option value="true">Inactive</s:option>
+					<s:option value="true">Active</s:option>
+					<s:option value="false">Inactive</s:option>
 				</s:select>
+					&nbsp; &nbsp;
+					<label>Courier Operations:</label>
+					<s:select  name="operationBitset">
+						<s:option value="">-- All -- </s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>"
+						                           serviceProperty="allCourierOperations" value="id" label="name"/>
+					</s:select>
+					&nbsp; &nbsp;
 					<s:submit id="submit" name="pre" value="Search"/>
 				</fieldset>
 			</s:form>
@@ -82,11 +90,11 @@
 					</td>
 					<td>
 					<c:choose>
-					<c:when test="${courierv.disabled}">
-						InActive
+					<c:when test="${courierv.active}">
+                        Active
 					</c:when>
 					<c:otherwise>
-						Active
+                        InActive
 					</c:otherwise>
 					</c:choose>
 					</td>

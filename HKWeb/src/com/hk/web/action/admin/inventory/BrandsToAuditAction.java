@@ -9,6 +9,7 @@ import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.pact.service.catalog.ProductService;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,6 +34,8 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 
     @Autowired
     private BrandsToAuditDao brandsToAuditDao;
+	@Autowired
+	ProductService productService;
 
     private Integer defaultPerPage = 20;
 

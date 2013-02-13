@@ -1,23 +1,25 @@
 package com.hk.taglibs;
 
-import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.content.HeadingProduct;
-import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
+import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.util.ProductUtil;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -37,10 +39,8 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
@@ -246,6 +246,27 @@ public class Functions {
         return collectionContainsCollection;
     }
 
+    @SuppressWarnings("unchecked")
+    public static boolean urlContainsAnyCategory(String url, String categoryPipeSeparatedList) {
+        String[] categories = null;
+        if(categoryPipeSeparatedList.contains(",")){
+            categories = categoryPipeSeparatedList.split(",");
+        }else if (categoryPipeSeparatedList.contains("|")){
+            categories = categoryPipeSeparatedList.split(",");
+        }
+        /*
+         * for (Object o : c2) { if (collectionContains(c1, o) && collectionContains(c2, o)) { return
+         * collectionContains(c, o); } }
+         */
+
+        for (String category : categories){
+            if (url.contains(category.trim())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static Long netAvailableUnbookedInventory(Object o) {
         return netInventory(o) - bookedQty(o);
     }
@@ -262,6 +283,18 @@ public class Functions {
         }
     }
 
+	public static Long netInventoryAtServiceableWarehouses(Object o) {
+		AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
+
+		if (o instanceof Sku) {
+			Sku sku = (Sku) o;
+			return adminInventoryService.getNetInventory(sku);
+		} else {
+			ProductVariant productVariant = (ProductVariant) o;
+			return adminInventoryService.getNetInventoryAtServiceableWarehouses(productVariant);
+		}
+	}
+
     public static Long bookedQty(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
@@ -276,6 +309,16 @@ public class Functions {
     public static Category topLevelCategory(Object o) {
         CategoryService categoryService = ServiceLocatorFactory.getService(CategoryService.class);
         return categoryService.getTopLevelCategory((Product) o);
+    }
+
+    public static boolean hasProductAnyCategory(Object product, String pipeSeparatedCategory) {
+        Product pr = (Product)product;
+        for (Category category : pr.getCategories()){
+            if (pipeSeparatedCategory.contains(category.getName())){
+                 return true;
+            }
+        }
+        return false;
     }
 
     public static List<String> brandsInCategory(Object o) {
@@ -483,13 +526,13 @@ public class Functions {
         return menuHelper.getMenoNodeFromProduct(product);
     }
 
-	public static List<Courier> getAvailableCouriers(Object o) {
-
-		ShippingOrder shippingOrder = (ShippingOrder) o;
-		CourierService courierService = ServiceLocatorFactory.getService(CourierService.class);
-		return courierService.getAvailableCouriers(shippingOrder.getBaseOrder().getAddress().getPin(), shippingOrder.isCOD(), false, false, false);
-
-	}
+    public static List<Courier> getAvailableCouriers(Object o) {
+        ShippingOrder shippingOrder = (ShippingOrder) o;
+        PincodeCourierService pincodeCourierService = ServiceLocatorFactory.getService(PincodeCourierService.class);
+        PincodeService pincodeService = ServiceLocatorFactory.getService(PincodeService.class);
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
+        return pincodeCourierService.getApplicableCouriers(pincode, null, Arrays.asList(shippingOrder.getShipment().getShipmentServiceType()), true);
+    }
 
     public static boolean equalsIgnoreCase(String str1, String str2) {
         return !StringUtils.isBlank(str1) && str1.equalsIgnoreCase(str2);
@@ -657,7 +700,8 @@ public class Functions {
 
     public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
-        List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());
@@ -666,9 +710,9 @@ public class Functions {
     }
 
     public static boolean showOptionOnUI(String optionType) {
-        List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
-		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");
-        boolean showOptionOnUI = allowedOptions.contains(optionType.toUpperCase());
+    /*    List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");*/
+        boolean showOptionOnUI = ProductUtil.getVariantValidOptions().contains(optionType.toUpperCase());
         return showOptionOnUI;
     }
 

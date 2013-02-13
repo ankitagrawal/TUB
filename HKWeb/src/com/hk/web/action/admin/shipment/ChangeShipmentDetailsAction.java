@@ -81,74 +81,6 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 		}
 	}
 
-	public Resolution save() {
-		if (trackingId == null) {
-			addRedirectAlertMessage(new SimpleMessage("Enter Tracking ID"));
-			return new ForwardResolution("/pages/admin/changeShipmentDetails.jsp");
-		}
-
-		Awb attachedAwb = shipment.getAwb();
-		Awb finalAwb = attachedAwb;
-		if ((!(attachedAwb.getAwbNumber().equalsIgnoreCase(trackingId.trim()))) ||
-				((!(shipment.getAwb().getCourier().equals(attachedCourier))))) {
-
-			Awb awbFromDb = awbService.getAvailableAwbForCourierByWarehouseCodStatus(shipment.getAwb().getCourier(), trackingId.trim(), null, null, null);
-			if (awbFromDb != null && awbFromDb.getAwbNumber() != null) {
-				if (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Used.getId()) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Attach.getId())) || (awbFromDb.getAwbStatus().getId().equals(EnumAwbStatus.Authorization_Pending.getId()))) {
-					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Used with other  shipping Order"));
-					return new RedirectResolution(ChangeShipmentDetailsAction.class);
-				}
-				if ((!awbFromDb.getWarehouse().getId().equals(shippingOrder.getWarehouse().getId())) || (awbFromDb.getCod() != shippingOrder.isCOD())) {
-					addRedirectAlertMessage(new SimpleMessage(" OPERATION FAILED *********  Tracking Id : " + trackingId + "is already Present in another warehouse with same courier" +
-							"  : " + shipment.getAwb().getCourier().getName() + "  you are Trying to use COD tracking id with NON COD --->   TRY AGAIN "));
-					return new RedirectResolution(ChangeShipmentDetailsAction.class);
-				}
-
-				finalAwb = awbFromDb;
-				finalAwb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-			} else {
-				Awb awb = new Awb();
-				awb.setAwbNumber(trackingId.trim());
-				awb.setAwbBarCode(trackingId.trim());
-				awb.setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-				awb.setCourier(shipment.getAwb().getCourier());
-				awb.setCod(shippingOrder.isCOD());
-				awb.setWarehouse(shippingOrder.getWarehouse());
-				awb = (Awb)awbService.save(awb,null);
-				finalAwb = awb;
-			}
-			//Todo Seema -- Awb  detached from Shipment, their status should not change : Need to decide whether awb will be deleted or made available
-			//attachedAwb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
-			//awbService.save(attachedAwb);
-			shipment.setAwb(finalAwb);
-		}
-
-
-		shippingOrder.setShipment(shipment);
-		ShippingOrderStatus shippingOrderStatus = shippingOrder.getOrderStatus();
-		Long shippingOrderStatusId = shippingOrderStatus.getId();
-		String shippingOrderStatusName = shippingOrder.getOrderStatus().getName();
-
-		if (!shippingOrderStatusName.equals(originalShippingOrderStatus)) {
-			if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Delivered.getId())) {
-				adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-			} else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
-				adminShippingOrderService.markShippingOrderAsShipped(shippingOrder);
-			} else if (shippingOrderStatusId.equals(EnumShippingOrderStatus.SO_Lost.getId())) {
-				adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
-			}
-			if (!originalShippingOrderStatus.equals(shippingOrderStatusName)) {
-				comments = "Status changed from " + originalShippingOrderStatus + " to " + shippingOrderStatusName;
-				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
-			}
-		}
-		shippingOrderService.save(shippingOrder);
-		visible = false;
-		addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
-		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
-	}
-
-
 	public Resolution markDelivered() {
 		shippingOrder.setShipment(shipment);
 		Date deliverydate = shipment.getDeliveryDate();
@@ -182,7 +114,6 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 		visible = false;
 		addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
 		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
-
 	}
 
 

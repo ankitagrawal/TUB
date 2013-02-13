@@ -298,7 +298,6 @@ public class InventoryCheckinAction extends BaseAction {
 
     public Resolution saveStockTransfer() {
         SkuItem skuItem;
-
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
             return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -331,6 +330,10 @@ public class InventoryCheckinAction extends BaseAction {
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
+        if (sku == null){
+            addRedirectAlertMessage(new SimpleMessage("No Sku Found for ProductVariantId:- " + (productVariant == null ? "" : productVariant.getId())));
+           return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
 
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
             checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);

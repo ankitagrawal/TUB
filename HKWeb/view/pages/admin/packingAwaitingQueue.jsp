@@ -169,7 +169,7 @@ Order <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/
 <td>
   ${order.user.email}<br/>
   ${order.address.name}<br/>
-  ${order.address.city} - ${order.address.pin}<br/>
+  ${order.address.city} - ${order.address.pincode.pincode}<br/>
   ${order.address.state}<br/>
 Ph. ${order.address.phone}<br/>
 </td>

@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.inventory.EnumAuditStatus" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Brand Audit List">
@@ -53,10 +54,6 @@
                 <s:submit name="pre" value="Search"/>
             </s:form>
         </fieldset>
-
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
-
         <table class="zebra_vert">
             <thead>
             <tr>

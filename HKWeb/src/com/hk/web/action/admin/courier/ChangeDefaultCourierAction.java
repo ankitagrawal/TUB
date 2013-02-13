@@ -1,20 +1,20 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.dao.courier.CourierServiceInfoDao;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.util.XslParser;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.admin.util.helper.XslPincodeParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.CourierServiceInfo;
+import com.hk.domain.courier.PincodeCourierMapping;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
-import com.hk.pact.dao.courier.PincodeDao;
 import com.hk.pact.service.core.PincodeService;
-import com.hk.util.XslGenerator;
+import com.hk.web.HealthkartResponse;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,145 +26,110 @@ import org.stripesstuff.plugin.security.Secure;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-@Secure(hasAnyPermissions = {PermissionConstants.SEARCH_ORDERS})
 @Component
 public class ChangeDefaultCourierAction extends BaseAction {
-    @Autowired
-    PincodeDao pincodeDao;
+    private static Logger logger = LoggerFactory.getLogger(ChangeDefaultCourierAction.class);
+
     @Autowired
     private PincodeService pincodeService;
     @Autowired
-    CourierServiceInfoDao courierServiceInfoDao;
-    @Autowired
-    CourierService courierService;
-    @Autowired
-    WarehouseDaoImpl warehouseDao;
-    @Autowired
-    XslGenerator xslGenerator;
+    XslPincodeParser xslPincodeParser;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminDownloadsPath;
-
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
 
-    @Autowired
-    XslParser xslParser;
-
     FileBean fileBean;
 
-    private static Logger logger = LoggerFactory.getLogger(ChangeDefaultCourierAction.class);
-    private Long pincodesInSystem = 0L;
     private String pincodeString;
-    private PincodeDefaultCourier pincodeDefaultCourier;
     private Pincode pincode;
-    private List<CourierServiceInfo> courierServiceList = new ArrayList<CourierServiceInfo>();
     private List<PincodeDefaultCourier> pincodeDefaultCouriers = new ArrayList<PincodeDefaultCourier>();
-    private Warehouse warehouse;
-    private Long warehouseId;
+    private List<PincodeCourierMapping> pincodeCourierMappings;
+    private List<Courier> availableCouriers;
 
+    Warehouse warehouse;
+    Boolean cod;
+    Boolean ground;
+
+    @Autowired
+    PincodeCourierService pincodeCourierService;
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_VIEW}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
-        try {
-            pincode = pincodeDao.getByPincode(pincodeString);
-            pincodeDefaultCouriers = getPincodeService().searchPincodeDefaultCourierList(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-//             pincodeDefaultCourier = getPincodeService().searchPincodeDefaultCourier(pincode,null, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-            if (pincodeDefaultCourier != null) {
-                courierServiceList = courierService.getCourierServiceInfoList(null,pincodeString, false, false, false,null);
-                return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Pincode does not exist for selected combination"));
-                return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-            }
-
-            // return new RedirectResolution(MasterPincodeAction.class).addParameter("pincode", pincode.getId());
-        } catch (Exception e) {
-            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-        }
-        addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
-        return new RedirectResolution(ChangeDefaultCourierAction.class);
-    }
-
-    public Resolution save() {
-//        PincodeDefaultCourier pincodeDefaultCourierNew = getPincodeService().getByPincodeWarehouse(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-       PincodeDefaultCourier pincodeDefaultCourierNew = getPincodeService().searchPincodeDefaultCourier(pincodeDefaultCourier.getPincode(), pincodeDefaultCourier.getWarehouse(), pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-        if (pincodeDefaultCourierNew != null) {
-            pincodeDefaultCourierNew.setCourier(pincodeDefaultCourier.getCourier());
-            pincodeDefaultCourierNew.setEstimatedShippingCost(pincodeDefaultCourier.getEstimatedShippingCost());
-            pincodeDao.save(pincodeDefaultCourierNew);
-            addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        }
-
-        //Todo:
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-
-    }
-
-
-    public Resolution add_pincode() {
-        PincodeDefaultCourier pincodeDefaultCourierNew;
-        pincode = pincodeDao.getByPincode(pincodeString);
-        warehouse = pincodeDefaultCourier.getWarehouse();
-        Courier courier = pincodeDefaultCourier.getCourier();
-//        Courier nonCodCourier = pincodeDefaultCourier.getNonCodCourier();
-         pincodeDefaultCourierNew = getPincodeService().searchPincodeDefaultCourier(pincode, warehouse, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping());
-        if (pincodeDefaultCourierNew != null) {
-            addRedirectAlertMessage(new SimpleMessage("Default courier for destination pincode already exists for given warehouse"));
-            return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        pincode = pincodeService.getByPincode(pincodeString);
+        if (pincode == null) {
+            addRedirectAlertMessage(new SimpleMessage("No such pincode in system"));
+            return new RedirectResolution(ChangeDefaultCourierAction.class);
         } else {
-            if (pincode != null) {
-                pincodeDefaultCourierNew = new PincodeDefaultCourier();
-                pincodeDefaultCourierNew.setWarehouse(warehouse);
-                pincodeDefaultCourierNew.setPincode(pincode);
-                pincodeDefaultCourierNew.setCourier(courier);
-                pincodeDefaultCourierNew.setGroundShipping(pincodeDefaultCourier.isGroundShipping());
-                pincodeDefaultCourierNew.setCod(pincodeDefaultCourier.isCod());
-                pincodeDefaultCourierNew.setEstimatedShippingCost(pincodeDefaultCourier.getEstimatedShippingCost());
-                pincodeDao.save(pincodeDefaultCourierNew);
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Pincode does not exists in the system."));
-                return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-            }
+            availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null, null, true);
+            pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
+            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod!=null ? cod:false, ground!=null?ground:false, true);
         }
-        addRedirectAlertMessage(new SimpleMessage("Changes saved in system."));
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+        return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
-    public Resolution generatePincodeExcel() throws Exception {
-        List<PincodeDefaultCourier> pincodeDefaultCourierList = new ArrayList<PincodeDefaultCourier>();
-//        warehouse = pincodeDefaultCourier.getWarehouse();
-          warehouse = warehouseDao.getWarehouseById( warehouseId);
-//        pincodeDefaultCourierList = pincodeDao.getAll(PincodeDefaultCourier.class);
-        pincodeDefaultCourierList= pincodeDao.searchPincodeDefaultCourierList(null,warehouse,null,pincodeDefaultCourier.isGroundShipping()) ;
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPDATE}, authActionBean = AdminPermissionAction.class)
+    public Resolution save() {
+        String error = "";
+        boolean flag = false;
+        for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+                boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
+                if (!isDefaultCourierApplicable) {
+                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
+                    flag = true;
+                }
+                Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
+                if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId() == null) {
+                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
+                    flag = true;
+                }
+        }
 
+        if (!flag) {
+            for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
+                getBaseDao().save(pincodeDefaultCourier);
+            }
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect" + error));
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Resolution getPincodeJson() {
+
+        HealthkartResponse healthkartResponse = null;
+        Map dataMap = new HashMap();
+        Pincode pincode = pincodeService.getByPincode(pincodeString);
+        if (pincode != null) {
+            dataMap.put("pincode", pincode);
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Pincode", dataMap);
+            noCache();
+        } else {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid PinCode !!!");
+            noCache();
+        }
+        return new JsonResolution(healthkartResponse);
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
+    public Resolution generatePincodeExcel() throws Exception {
+        pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
         final File excelFile = new File(excelFilePath);
 
-	    //IMPORTANT::: DO NOT TOUCH THE CODE BELOW---- YE LOG HATANE SE GAME CHANGE HO JAAYEGA -- ADDED AS A LAST RESORT
-	    for (PincodeDefaultCourier pdcl : pincodeDefaultCourierList) {
-		    logger.error("pincode id --> " + pdcl.getPincode().getId().toString());
-		    //String x = pdcl.getPincode().getId().toString();
-		    logger.error("pincode    ---->" + pdcl.getPincode().getPincode());
-		    //String y = pdcl.getPincode().getPincode();
-		    logger.error("courier id ------->" + (pdcl.getCourier() != null ? pdcl.getCourier().getId().toString() : "-1"));
-		    //String z = pdcl.getCourier() != null ? pdcl.getCourier().getId().toString(): "-1";
-		    //logger.error("pincode id:" + pdcl.getPincode().getId().toString() +
-		    //                      "pincode:" + pdcl.getPincode().getPincode() +
-		    //                      "courier id:" + (pdcl.getCourier() != null ? pdcl.getCourier().getId().toString(): "-1"))  ;
-	    }
-	    //IMPORTANT::: DO NOT TOUCH THE CODE BELOW---- YE LOG HATANE SE GAME CHANGE HO JAAYEGA -- ADDED AS A LAST RESORT
-
-	    xslGenerator.generatePincodeDefaultCourierXsl(pincodeDefaultCourierList, excelFilePath);
-        addRedirectAlertMessage(new SimpleMessage("Downlaod complete"));
+        xslPincodeParser.generatePincodeDefaultCourierXsl(pincodeDefaultCouriers, excelFilePath);
+        addRedirectAlertMessage(new SimpleMessage("Download complete"));
         return new Resolution() {
 
             public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -184,49 +149,29 @@ public class ChangeDefaultCourierAction extends BaseAction {
         };
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPLOAD}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadPincodeExcel() throws Exception {
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));
-            return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+            return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }
         String excelFilePath = adminUploadsPath + "/pincodeExcelFiles/defaultpincodes" + System.currentTimeMillis() + ".xls";
         File excelFile = new File(excelFilePath);
         excelFile.getParentFile().mkdirs();
         fileBean.save(excelFile);
-
         try {
-            Set<PincodeDefaultCourier> defaultPincodes = xslParser.readDefaultPincodeList(excelFile);
-            for (PincodeDefaultCourier defaultPincode : defaultPincodes) {
-//                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().getByPincodeWarehouse(defaultPincode.getPincode(), defaultPincode.getWarehouse());
-                PincodeDefaultCourier existingDefaultCourierObject = getPincodeService().searchPincodeDefaultCourier(defaultPincode.getPincode(), defaultPincode.getWarehouse(), defaultPincode.isCod(), defaultPincode.isGroundShipping());
-                if (defaultPincode != null) {
-                    if (existingDefaultCourierObject == null) {
-                        pincodeDao.save(defaultPincode);
-                        logger.info("inserting:" + defaultPincode.getPincode().getPincode());
-                    } else {
-                        existingDefaultCourierObject.setCourier(defaultPincode.getCourier());
-                        existingDefaultCourierObject.setCod(defaultPincode.isCod());
-                        existingDefaultCourierObject.setGroundShipping(defaultPincode.isGroundShipping());
-                        existingDefaultCourierObject.setEstimatedShippingCost(defaultPincode.getEstimatedShippingCost());
-                        pincodeDao.save(existingDefaultCourierObject);
-//                        logger.info("updating:" + defaultPincode.getPincode().getPincode());
-                    }
-
-                }
+            Set<PincodeDefaultCourier> pincodeDefaultCourierSet = xslPincodeParser.readDefaultPincodeList(excelFile);
+            for (PincodeDefaultCourier defaultCourier : pincodeDefaultCourierSet) {
+                getBaseDao().save(defaultCourier);
             }
         } catch (Exception e) {
-            logger.error("Exception while reading excel sheet.", e);
+            logger.error("Exception while reading excel sheet.", e.getMessage());
             addRedirectAlertMessage(new SimpleMessage("Upload failed " + e.getMessage()));
-            return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
+            return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
         }
-
         excelFile.delete();
         addRedirectAlertMessage(new SimpleMessage("Database Updated"));
-        return new ForwardResolution("/pages/admin/changeDefaultCourier.jsp");
-    }
-
-    public Long getPincodesInSystem() {
-        return pincodesInSystem;
+        return new RedirectResolution(ChangeDefaultCourierAction.class);
     }
 
     public String getPincodeString() {
@@ -245,10 +190,6 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.pincode = pincode;
     }
 
-    public List<CourierServiceInfo> getCourierServiceList() {
-        return courierServiceList;
-    }
-
     public FileBean getFileBean() {
         return fileBean;
     }
@@ -257,45 +198,52 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.fileBean = fileBean;
     }
 
-    public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
-        return pincodeDefaultCouriers;
+  public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
+    return pincodeDefaultCouriers;
+  }
+
+  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+  }
+
+  public Warehouse getWarehouse() {
+        return warehouse;
     }
 
-    //TODO: please explain what is this
-    public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> addresses) {
-        this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
     }
 
-    public PincodeDefaultCourier getPincodeDefaultCourier() {
-        return pincodeDefaultCourier;
+
+    public List<PincodeCourierMapping> getPincodeCourierMappings() {
+        return pincodeCourierMappings;
     }
 
-    public void setPincodeDefaultCourier(PincodeDefaultCourier pincodeDefaultCourier) {
-        this.pincodeDefaultCourier = pincodeDefaultCourier;
+    public void setPincodeCourierMappings(List<PincodeCourierMapping> pincodeCourierMappings) {
+        this.pincodeCourierMappings = pincodeCourierMappings;
     }
 
-    public PincodeService getPincodeService() {
-        return pincodeService;
+    public List<Courier> getAvailableCouriers() {
+        return availableCouriers;
     }
 
-    public void setPincodeService(PincodeService pincodeService) {
-        this.pincodeService = pincodeService;
+    public void setAvailableCouriers(List<Courier> availableCouriers) {
+        this.availableCouriers = availableCouriers;
     }
 
-    public CourierService getCourierService() {
-        return courierService;
-    }
+  public Boolean isCod() {
+    return cod;
+  }
 
-    public void setCourierService(CourierService courierService) {
-        this.courierService = courierService;
-    }
+  public void setCod(Boolean cod) {
+    this.cod = cod;
+  }
 
-    public Long getWarehouseId() {
-        return warehouseId;
-    }
+  public Boolean isGround() {
+    return ground;
+  }
 
-    public void setWarehouseId(Long warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-    
+  public void setGround(Boolean ground) {
+    this.ground = ground;
+  }
 }
