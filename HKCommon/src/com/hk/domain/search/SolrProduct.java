@@ -66,6 +66,10 @@ public class SolrProduct {
 
     @Field
     private
+    List<String> variantCommaNames = new ArrayList<String>();
+
+    @Field
+    private
     String h1;
 
     @Field
@@ -470,6 +474,14 @@ public class SolrProduct {
 
     public void setProductUrl(String productUrl) {
         this.productUrl = productUrl;
+    }
+
+    public List<String> getVariantCommaNames() {
+        return variantCommaNames;
+    }
+
+    public void setVariantCommaNames(List<String> variantCommaNames) {
+        this.variantCommaNames = variantCommaNames;
     }
 
     public SolrProduct(){

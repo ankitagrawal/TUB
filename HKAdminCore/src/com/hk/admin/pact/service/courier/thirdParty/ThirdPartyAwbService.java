@@ -6,6 +6,7 @@ import java.util.List;
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
 
 /**
@@ -29,14 +30,15 @@ public interface ThirdPartyAwbService {
     
     /**
      * Would like to call it in async fashion
-     * @param courierId
+     *
+     * @param courier
      * @param thirdPartyAwbDetails
      * @return
      */
-    public boolean syncHKCourierServiceInfo(Long courierId, ThirdPartyAwbDetails thirdPartyAwbDetails);
+    public boolean syncHKCourierServiceInfo(Courier courier, ThirdPartyAwbDetails thirdPartyAwbDetails);
 
     public boolean deleteThirdPartyAwb(String awbNumber);
 
-	public String trackFedExShipment(String trackingId);
+	//public String trackFedExShipment(String trackingId);
 
 }

@@ -83,6 +83,10 @@ public class CourierConstants {
 	public static final String QUANTIUM_DELIVERY_DATE = "LastUpdatedDate";
 	public static final String QUANTIUM_INVALID_NO = "Invalid Tracking NO";
 
+
+	public static final String INDIAONTIME_DELIVERED = "DELIVERED";
+	public static final String FEDEX_DELIVERED = "Delivered";
+
     //Constants for Healthkart Delivery
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";
     public static final String HKDELIVERY_WORKSHEET = "HKDelivery_worksheet";

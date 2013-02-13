@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
-<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_Returned.getId()%>"/>
+<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <%
   int lineItemGlobalCtr = 0;
 %>
@@ -97,7 +97,7 @@
                 ${order.address.name}<br/>
                 ${order.address.line1}<br/>
               <c:if test="${hk:isNotBlank(order.address.line2)}">${order.address.line2}<br/></c:if>
-                ${order.address.city} - ${order.address.pin}<br/>
+                ${order.address.city} - ${order.address.pincode.pincode}<br/>
                 ${order.address.state}<br/>
               Ph. ${order.address.phone}<br/>
             </td>

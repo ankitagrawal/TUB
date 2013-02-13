@@ -96,7 +96,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
                         <br/>
                         <br/>
 
-                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4502930. <br/>
+                        In case you have any queries, feel free to chat with our Customer Care or call them at 0124-4616444. <br/>
                         <br/>
 
                         Healthy Shopping!<br/>
@@ -145,7 +145,7 @@ Your order ${order.baseOrder.gatewayOrderId} for subscription ${subscription.id}
             style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
 
             Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br/>
-            &copy; 2011 HealthKart.com. All Rights Reserved.
+            &copy; 2013 HealthKart.com. All Rights Reserved.
         </td>
     </tr>
 </table>

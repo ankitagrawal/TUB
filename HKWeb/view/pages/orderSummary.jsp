@@ -81,7 +81,7 @@
   <s:layout-component name="steps_content">
     <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
-
+<%----%>
     <jsp:include page="/includes/checkoutNotice.jsp"/>
       
     <c:if test="${orderSummary.availableCourierList == null}">
@@ -118,7 +118,7 @@
           <br/>
             ${orderSummary.order.address.state}
           <br/>
-            ${orderSummary.order.address.pin}
+            ${orderSummary.order.address.pincode.pincode}
           <br/>
             ${orderSummary.order.address.phone}
         </div>

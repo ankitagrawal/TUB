@@ -43,6 +43,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         return getWarehouseDao().findByIds(Arrays.asList(DEFAULT_WAREHOUSE_ID, MUMBAI_WAREHOUSE_ID));
     }
 
+		public List<Warehouse> getWarehousesToMarkOOS() {
+			return getWarehouseDao().findByIds(Arrays.asList(DEFAULT_WAREHOUSE_ID, MUMBAI_WAREHOUSE_ID, CORPORATE_OFFICE_ID));
+		}
+
     public Warehouse getCorporateOffice() {
         return getWarehouseDao().getWarehouseById(CORPORATE_OFFICE_ID);
     }

@@ -5,6 +5,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
+<%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
@@ -35,17 +36,21 @@
 					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
 				</shiro:hasRole>
 			</td>
-			<%--<td>
-				<c:if test="${whAction.setWarehouse != null && whAction.storeWarehouse}">
-				<shiro:hasRole name="<%=RoleConstants.GOD%>">
-					<s:link beanclass="com.hk.web.action.admin.order.UpdateOrderStatusAndSendEmailAction"
-					        style="color:red; font-size:1.3em; padding:3px;">Send shipping emails</s:link>
-				</shiro:hasRole>
-				</c:if>
-			</td>--%>
 		</tr>
 	</table>
 </shiro:hasAnyRoles>
+
+<shiro:hasPermission name="<%=PermissionConstants.STORE_MANAGER%>">
+	<c:if test="${whAction.userService.warehouseForLoggedInUser.store != null}">
+		<table>
+			<tr>
+				<td><s:link beanclass="com.hk.web.action.admin.pos.POSAction"
+				            style="color:red; font-size:1.3em; padding:3px;">Store</s:link>
+				</td>
+			</tr>
+		</table>
+	</c:if>
+</shiro:hasPermission>
 
 <div class="left roundBox">
 
@@ -58,6 +63,11 @@
     <h3><s:link beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
+
+    <h3>
+    <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
+        Seek Payment
+    </s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.core.menu.MenuRefreshAction">Refresh Menu</s:link></h3>
 
@@ -73,12 +83,17 @@
 	<shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>
 	</shiro:hasRole>
+<%--
 	<shiro:hasPermission name="<%=PermissionConstants.POPULATE_BUSY_DATA%>">
 		<h3><s:link beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction"> Populate Busy Data </s:link></h3>
 	</shiro:hasPermission>
+--%>
 	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUserDetailAction"> Populate User Detail Data </s:link></h3>
 	</shiro:hasRole>
+    <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <h3><s:link beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe Token </s:link></h3>
+    </shiro:hasRole>
 		<%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -153,7 +168,7 @@
 
 	<h3>
 		<s:link
-				beanclass="com.hk.web.action.admin.courier.SearchOrderAndEnterCourierInfoAction">Search Shipping Order & Enter Courier</s:link></h3>
+				beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Create Update Shipment</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
@@ -204,15 +219,21 @@
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
 
 	<h3><s:link
-			beanclass="com.hk.web.action.admin.courier.CourierServiceInfoAction">Update Courier Service Info</s:link></h3>
-
-	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">State Courier Service Info</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">Pincode Courier Mapping</s:link></h3>
+
+    <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Update Shipment</s:link></h3>
+
+     <h3><s:link
+			beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">Shipment Resolution</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
@@ -293,6 +314,9 @@
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+
+		 <h3>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -390,9 +414,6 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
 
-	<h3>
-		<s:link
-				beanclass="com.hk.web.action.admin.address.BulkUploadMerchantAddressAction">Bulk Upload Merchant Address</s:link></h3>
 </div>
 
 <div class="cl"></div>
@@ -512,5 +533,10 @@
 		});
 	});
 </script>
+
+<!-- Script to render JIRA issue collector Form -->
+<script type="text/javascript"
+        src="https://healthkart.atlassian.net/s/en_US-pg27qm-418945332/6020/74/1.3.2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=f0a8759b"></script>
+
 </s:layout-component>
 </s:layout-render>

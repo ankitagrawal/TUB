@@ -9,13 +9,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
-
  <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
  <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
  <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
  <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
 <%
+    response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+    response.setHeader("pragma", "no-cache");
+    response.setDateHeader("Expires", -1);
     CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
     Category eyeGlass = categoryDao.getCategoryByName("eyeglasses");
     ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
@@ -1098,6 +1100,9 @@
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 	</c:if>
+
+    <!--google remarketing-->
+    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"/>
 
 </s:layout-component>
 </s:layout-render>
