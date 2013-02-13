@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.core.Country;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.user.Address;
 import com.hk.pact.dao.core.AddressDao;
@@ -41,6 +42,8 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 		} else {
 			Pincode pin = pincodeDao.getByPincode(pincode);
 			address.setPincode(pin);
+			Country country = addressDao.get(Country.class, 80l);
+			address.setCountry(country);
 		}
 		Long orderId = getProcessor().getCart(getPrincipal().getId()).getId();
 		getProcessor().setShipmentAddress(orderId, address);
