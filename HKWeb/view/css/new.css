@@ -486,6 +486,11 @@ input[type="button"] .small, .button .small {
 
 /* line 277, ../sass/_base.scss */
 .button_grey {
+    width: 25%;
+    position: relative;
+    float: left;
+    padding: 4px;
+    left: 10px;
     -moz-border-radius: 0.3em;
     -webkit-border-radius: 0.3em;
     -o-border-radius: 0.3em;
@@ -494,7 +499,6 @@ input[type="button"] .small, .button .small {
     border-radius: 0.3em;
     font-weight: bold;
     font-size: 1em;
-    padding: 0.4em 0.8em;
     color: white;
     cursor: pointer;
     border: 2px solid transparent;
@@ -3182,11 +3186,9 @@ h2.prod_title {
 .step2 .right_container {
     display: inline;
     float: left;
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 190px;
+    width: 235px;
     position: relative;
-    left: 40px;
+    left: 30px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -o-border-radius: 5px;
@@ -3912,8 +3914,10 @@ h2.prod_title {
 
 /* line 1527, ../sass/main.scss */
 .coupon input {
+    position: relative;
+    float: left;
     margin: 10px 0 0 0;
-    width: 90%;
+    width: 60%;
 }
 
 /* line 1536, ../sass/main.scss */
@@ -5523,6 +5527,103 @@ a.close:hover {
 font-weight:bold;
 color: #e62580;
 }
+
+.appliedOffer{
+    border: 1px solid;
+    border-radius: 8px;
+    position: relative;
+    float: left;
+    clear: both;
+    width: 100%;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    height: auto;
+}
+
+.appliedOfferHead{
+    position: relative;
+    float: left;
+    left: 15px;
+    top: 5px;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.appliedOfferTitle{
+    position: relative;
+    float: left;
+    top: 10px;
+    left: 15px;
+    margin-bottom: 15px;
+    width: 90%;
+}
+
+.appliedOfferDetails{
+    position: relative;
+    margin-left: 5px;
+    float: right;
+    cursor: pointer;
+}
+
+.couponPopUp{
+    position: absolute;
+    float: right;
+    top: -15px;
+    border: 1px solid;
+    border-radius: 5px;
+    min-width: 150px;
+    min-height: 50px;
+    height: auto;
+    width: 75%;
+    z-index: 1000;
+    background: rgb(245, 250, 188);
+    box-shadow: 2px 5px 15px 0px;
+    word-wrap: break-word;
+    left: 250px;
+    display: none;
+}
+
+.couponPopUpMsg{
+    position: relative;
+    float: left;
+    left: 10px;
+    font-style: italic;
+    margin-bottom: 10px;
+    width: 90%;
+    word-wrap: break-word;
+}
+
+.popupArrow{
+    position: relative;
+    z-index: 1000;
+    float: left;
+    right: 12%;
+    top: 65px;
+    border-bottom: 11px solid #D5D57D;
+    border-top-color: #D5D57D;
+    border-left: 22px solid transparent;
+    box-shadow: 1px 1px 1px 0px;
+}
+
+.applicableOfferDesc{
+    position: relative;
+    float: left;
+    top: 10px;
+    left: 15px;
+    margin-bottom: 15px;
+    width: 65%;
+}
+
+.applicableOfferHead{
+    position: relative;
+    float: left;
+    left: 50px;
+    top: 5px;
+    text-decoration: underline;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
 /*
 slider pager end
 */

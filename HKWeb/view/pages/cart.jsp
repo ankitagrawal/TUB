@@ -22,6 +22,20 @@
     var timeout; //Set globally as it needs to be reset when removeLink is clicked.
     var timespan = 3000;
 
+    function showCouponDetails(){
+        $("#couponPopUp").toggle();
+        $(".appliedOfferDetails").toggle();
+    }
+
+    function applicableOffers(){
+        $.ajax({
+            url:"core/cart/Cart.action",
+            data:"eklgnm",
+            success:function(data){
+            }
+        });
+    }
+
     $(document).ready(function() {
       $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
@@ -580,16 +594,23 @@
 </div>
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div class='right_container coupon'>
+        <div class="appliedOffer">
+            <div class="appliedOfferHead">Currently Applied Offer</div>
+            <div class="appliedOfferTitle">Coupon Title goes here like 10% off on selected product in beauty and personal care section
+                <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
+                <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
+            </div>
+        </div>
+        <div id="couponPopUp" class="couponPopUp">
+            <div class="popupArrow"></div>
+            <div class="couponPopUpMsg">Hello! You have already used this coupon and it states that 10% off on selected product in beauty and personal care section</div>
+        </div>
   <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
-    <h6>Got a discount coupon?</h6>
-    <br/>
-    Enter Coupon Code
+      <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
-    <input placeholder='d-i-s-c-o-u-n-t' type='text' id="couponCode"/>
+    <input placeholder='discount code' type='text' id="couponCode"/>
     <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-            class="button_grey">Apply Coupon</s:link>
-    <s:link beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction"
-            id="availableOffersLink">(see previously applied offers)</s:link>
+            class="button_grey">Apply</s:link>
   </shiro:hasAnyRoles>
   <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
     Got a discount coupon?
@@ -608,6 +629,18 @@
     to redeem it.
     <br/>
   </shiro:hasAnyRoles>
+  <c:if test="${cartAction.applicableOffers !=null}">
+        <hr noshade size=1 width="100%">
+        <div class="applicableOfferHead">Other Applicable Offers!</div>
+        <div class="appliedOffer">
+            <div class="applicableOfferDesc">Coupon Title goes here like 10% off on selected product in beauty and personal care section</div>
+            <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
+                    class="button_grey" style="width: 33px;left: 30px;top: 5px;">Apply</s:link>
+            <div class="applicableOfferDesc">Coupon Title goes here like 10% off on selected product in beauty and personal care section</div>
+            <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
+                    class="button_grey" style="width: 33px;left: 30px;top: 5px;">Apply</s:link>
+        </div>
+  </c:if>
 </div>
 </shiro:lacksRole>
 <div class='right_container total'>
