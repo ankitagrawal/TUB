@@ -144,6 +144,7 @@
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/fitness-watches
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
 --/sports/fitness-accessories/sklz : SKLZ
@@ -236,6 +237,7 @@
 ---/sports/sports-equipment/boxing/accessories
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
+--/sports/sports-equipment/sports-watches
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 --/sports/sports-equipment/sklz : SKLZ
