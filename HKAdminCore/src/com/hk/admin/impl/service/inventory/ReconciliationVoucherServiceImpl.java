@@ -393,4 +393,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         return rvLineItem1;
     }
 
+
+     public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher){
+         return reconciliationVoucherDao.getRvLineItems(reconciliationVoucher);
+     }
+
+
 }

@@ -460,6 +460,52 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
+
+    public Resolution downloadAllBarcode() {
+           String barcodeFilePath = null;
+           Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+         List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);        
+
+
+           for (RvLineItem rvLineItem : rvLineItems) {
+//            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
+              List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,null,null, 1L);
+               if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
+                   SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+                   Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
+                   skuItemDataMap.putAll(skuItemDataMaptemp);
+                   Warehouse userWarehouse = null;
+                   if (getUserService().getWarehouseForLoggedInUser() != null) {
+                       userWarehouse = userService.getWarehouseForLoggedInUser();
+                   } else {
+                       addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+                       return new RedirectResolution(InventoryCheckinAction.class);
+                   }
+                   if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+                       barcodeFilePath = barcodeGurgaon;
+                   } else {
+                       barcodeFilePath = barcodeMumbai;
+                   }
+                   barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "grn_" + reconciliationVoucher.getId() + "_All_"
+                           + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+               }
+           }
+           try {
+               if (skuItemDataMap == null || skuItemDataMap.size() < 1) {
+                   addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+                    return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+               }
+           printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+           } catch (IOException e) {
+               logger.error("Exception while appending on barcode file", e);
+           }
+           addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+           return new HTTPResponseResolution();
+       }
+
+
+
+
     public ReconciliationVoucher getReconciliationVoucher() {
         return reconciliationVoucher;
     }

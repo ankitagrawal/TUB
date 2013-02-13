@@ -368,9 +368,8 @@ public class CycleCountAction extends BasePaginatedAction {
 
 	private List<SkuGroup> findSkuGroup(String hkBarcode) {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-        List<SkuGroup> skuGroupFromDb  = new ArrayList<SkuGroup>();         
+        List<SkuGroup> skuGroupFromDb  = new ArrayList<SkuGroup>();
         SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-
         if (skuItemBarcode != null ){
             skuGroupFromDb.add(skuItemBarcode.getSkuGroup());
         } else{
