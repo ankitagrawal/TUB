@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.inventory.BrandsToAudit;
@@ -60,8 +61,8 @@ public class CycleCountServiceImpl implements CycleCountService {
 		this.baseDao = baseDao;
 	}
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup) {
-		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup,SkuItem skuItem) {
+		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup,skuItem);
 	}
 
 	public Page searchCycleList(String auditBy, Long cycleCountStatus ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
@@ -84,4 +85,14 @@ public class CycleCountServiceImpl implements CycleCountService {
 	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
 		return cycleCountDao. cycleCountInProgress(brandsToAuditList ,product , productVariant,  warehouse);
 	}
+
+    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty) {
+        CycleCountItem cycleCountItem = new CycleCountItem();        
+        cycleCountItem.setSkuGroup(validSkuGroup);
+        cycleCountItem.setSkuItem(skuItem);
+        cycleCountItem.setCycleCount(cycleCount);
+        cycleCountItem.setScannedQty(qty);
+        return cycleCountItem;
+    }
+
 }

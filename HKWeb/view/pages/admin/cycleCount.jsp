@@ -99,6 +99,9 @@
 				<div style="display: inline-block;">
 					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
 				</div>
+
+              <div style ="float:right;width:900px;height:800px;overflow-y:scroll;">
+
 				<table style="float: right;margin-top:0px">
 					<thead>
 					<tr>
@@ -120,6 +123,24 @@
 						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
 							<tr class="ccItemRow">
+                                <c:if test="${cCItem.skuItem != null && cCItem.skuGroup == null }">
+
+                                 <td> ${cCItem.skuItem.skuGroup.sku.productVariant.id}
+									<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"
+									          value="${cCItem.skuItem.skuGroup.id}"/>
+								</td>
+                                <td> ${cCItem.skuItem.skuGroup.sku.productVariant.product.name} </td>
+								<td> ${cCItem.skuItem.barcode} </td>
+								<td> ${cCItem.skuItem.skuGroup.mrp}</td>
+								<td><fmt:formatDate value="${cCItem.skuItem.skuGroup.mfgDate}" type="date"/></td>
+								<td><fmt:formatDate value="${cCItem.skuItem.skuGroup.expiryDate}" type="date"/></td>
+                                <td> ${cCItem.scannedQty}</td>
+                                 <td> 1 </td>   
+                               </c:if>
+
+                                <c:if test="${cCItem.skuGroup != null && cCItem.skuItem == null}">
+
+
 								<td> ${cCItem.skuGroup.sku.productVariant.id}
 									<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"
 									          value="${cCItem.skuGroup.id}"/>
@@ -145,6 +166,7 @@
 
 										${item[cCItem.id]}
 								</td>
+                                </c:if>
 							</tr>
 
 						</c:forEach>
@@ -159,6 +181,7 @@
 
 					</tr>
 				</table>
+               </div>
 
 				<div style="margin-top: 60px;margin-bottom: 40px;">
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">

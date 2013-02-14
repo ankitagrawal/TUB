@@ -3,6 +3,7 @@ package com.hk.admin.pact.dao.inventory;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.inventory.BrandsToAudit;
@@ -24,7 +25,7 @@ import java.util.Date;
 public interface CycleCountDao {
 
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup, SkuItem skuItem);
 
 	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse);
 

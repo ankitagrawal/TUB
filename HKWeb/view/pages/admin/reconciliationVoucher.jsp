@@ -166,7 +166,8 @@
                                 <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
                                         event="downloadBarcode"> Barcode
                                     <s:param name="rvLineItem" value="${rvLineItem.id}"/>
-                                    <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}}"/>--%>
+                                    <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}"/>--%>
+                                     <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
                                 </s:link>
 
                         </c:if>

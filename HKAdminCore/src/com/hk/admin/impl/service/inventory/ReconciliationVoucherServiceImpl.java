@@ -349,7 +349,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         InvTxnType invTxnType = null;
 
         switch (subtractionType) {
-            case 30:
+            case 30:                
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED);
                 break;
             case 40:

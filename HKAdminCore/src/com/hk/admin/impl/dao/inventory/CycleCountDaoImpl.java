@@ -4,6 +4,7 @@ import com.hk.admin.pact.dao.inventory.CycleCountDao;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.inventory.BrandsToAudit;
@@ -36,28 +37,27 @@ import java.util.ArrayList;
 @Repository
 public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup) {
-		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount, skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup,SkuItem skuItem) {
+		DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount, skuGroup,skuItem);
 		List<CycleCountItem> cycleCountItems = findByCriteria(cycleCountItemCriteria);
 		return cycleCountItems != null && cycleCountItems.size() > 0 ? cycleCountItems.get(0) : null;
 
 	}
 
-	private DetachedCriteria getCycleCountItemCriteria(CycleCount cycleCount, SkuGroup skuGroup) {
+	private DetachedCriteria getCycleCountItemCriteria(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem) {
 		DetachedCriteria cycleCountItemCriteria = DetachedCriteria.forClass(CycleCountItem.class);
 
 		if (skuGroup != null) {
 			cycleCountItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
 		}
-		DetachedCriteria cycleCountDetachedCriteria = null;
+        if (skuItem != null){
+            cycleCountItemCriteria.add(Restrictions.eq("skuItem", skuItem));
+        }
+//		DetachedCriteria cycleCountDetachedCriteria = null;
 		if (cycleCount != null) {
-			cycleCountDetachedCriteria = cycleCountItemCriteria.add(Restrictions.eq("cycleCount", cycleCount));
+         cycleCountItemCriteria.add(Restrictions.eq("cycleCount", cycleCount));
 		}
-		if (cycleCountDetachedCriteria != null) {
-
-
-		}
-
+        
 		return cycleCountItemCriteria;
 	}
 

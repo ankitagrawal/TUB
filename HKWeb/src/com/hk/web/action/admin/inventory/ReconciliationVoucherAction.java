@@ -420,13 +420,13 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public Resolution downloadBarcode() {
 
         if (rvLineItem == null) {
-            return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+            return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
 //        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
-            return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+            return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
 //   getMap
         ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
@@ -486,14 +486,14 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                    } else {
                        barcodeFilePath = barcodeMumbai;
                    }
-                   barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "grn_" + reconciliationVoucher.getId() + "_All_"
+                   barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "rv_" + reconciliationVoucher.getId() + "_All_"
                            + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
                }
            }
            try {
                if (skuItemDataMap == null || skuItemDataMap.size() < 1) {
                    addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
-                    return new RedirectResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+                    return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
                }
            printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
            } catch (IOException e) {
