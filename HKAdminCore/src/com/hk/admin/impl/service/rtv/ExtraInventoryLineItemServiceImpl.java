@@ -18,22 +18,25 @@ import java.util.List;
 @Service
 public class ExtraInventoryLineItemServiceImpl implements ExtraInventoryLineItemService {
 
- @Autowired
- BaseDao baseDao;
+  @Autowired
+  BaseDao baseDao;
 
-  public ExtraInventoryLineItem getExtraInventoryLineItemById(Long extraInventoryLineItemId){
+  public ExtraInventoryLineItem getExtraInventoryLineItemById(Long extraInventoryLineItemId) {
     return (ExtraInventoryLineItem) getBaseDao().findUniqueByNamedQueryAndNamedParam("getExtraInventoryLineItemById", new String[]{"extraInventoryLineItemId"}, new Object[]{extraInventoryLineItemId});
   }
 
   @SuppressWarnings("unchecked")
-  public List<ExtraInventoryLineItem> getExtraInventoryLineItemsByExtraInventoryId(Long extraInventoryId){
-    return (List<ExtraInventoryLineItem>)  getBaseDao().findByNamedQueryAndNamedParam("getExtraInventoryLineItemsByExtraInventoryId", new String[]{"extraInventoryId"}, new Object[]{extraInventoryId});
+  public List<ExtraInventoryLineItem> getExtraInventoryLineItemsByExtraInventoryId(Long extraInventoryId) {
+    return (List<ExtraInventoryLineItem>) getBaseDao().findByNamedQueryAndNamedParam("getExtraInventoryLineItemsByExtraInventoryId", new String[]{"extraInventoryId"}, new Object[]{extraInventoryId});
   }
 
-public ExtraInventoryLineItem save(ExtraInventoryLineItem extraInventoryLineItem){
-   return (ExtraInventoryLineItem) getBaseDao().save(extraInventoryLineItem);
+  public ExtraInventoryLineItem save(ExtraInventoryLineItem extraInventoryLineItem) {
+    return (ExtraInventoryLineItem) getBaseDao().save(extraInventoryLineItem);
   }
 
+  public void delete(ExtraInventoryLineItem extraInventoryLineItem) {
+    getBaseDao().delete(extraInventoryLineItem);
+  }
 
   public BaseDao getBaseDao() {
     return baseDao;

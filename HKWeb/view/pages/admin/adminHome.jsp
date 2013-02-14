@@ -295,6 +295,9 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.inventory.POAction">PO List</s:link>
 	</h3>
+    <h3>
+          <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="searchExtraInventory" >ExtraInventory List</s:link>
+      </h3>
       <h3>
           <s:link beanclass="com.hk.web.action.admin.rtv.RTVAction">RTV(Return To Vendor) List</s:link>
       </h3>

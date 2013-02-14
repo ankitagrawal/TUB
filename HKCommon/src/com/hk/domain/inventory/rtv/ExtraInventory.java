@@ -42,6 +42,13 @@ public class ExtraInventory implements Serializable{
   @Column(name = "comments")
 	private String comments;
 
+  @ManyToOne
+  @JoinColumn (name = "extra_inventory_status_id", nullable = false)
+  private ExtraInventoryStatus extraInventoryStatus;
+
+  @Column (name = "is_email_sent")
+  private boolean  isEmailSent = false;
+
   @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
 	private Date createDate = new Date();
@@ -96,5 +103,21 @@ public class ExtraInventory implements Serializable{
 
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
+  }
+
+  public ExtraInventoryStatus getExtraInventoryStatus() {
+    return extraInventoryStatus;
+  }
+
+  public void setExtraInventoryStatus(ExtraInventoryStatus extraInventoryStatus) {
+    this.extraInventoryStatus = extraInventoryStatus;
+  }
+
+  public boolean isEmailSent() {
+    return isEmailSent;
+  }
+
+  public void setEmailSent(boolean emailSent) {
+    isEmailSent = emailSent;
   }
 }
