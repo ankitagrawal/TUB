@@ -220,7 +220,7 @@ public class InventoryCheckoutAction extends BaseAction {
 				                if(checkedOutItemCountForLineItem == null) {
 					                checkedOutItemCountForLineItem = 0L;
 				                }
-				                if(lineItemBySku.getQty() > checkedOutItemCountForLineItem) {
+				                if(lineItemBySku.getQty() > checkedOutItemCountForLineItem * -1) {
 					                lineItem = lineItemBySku;
 					                break;
 				                }
