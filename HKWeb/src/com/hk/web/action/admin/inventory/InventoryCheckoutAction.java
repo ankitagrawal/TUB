@@ -210,7 +210,23 @@ public class InventoryCheckoutAction extends BaseAction {
 
             if (skuGroup != null) {
                 if (lineItem == null) {
-                    lineItem = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+	                List<LineItem> lineItemsForSOBySku = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+	                if(lineItemsForSOBySku != null) {
+		                if(lineItemsForSOBySku.size() == 1) {
+			                lineItem = lineItemsForSOBySku.get(0);
+		                } else if(lineItemsForSOBySku.size() > 1) {
+			                for(LineItem lineItemBySku : lineItemsForSOBySku) {
+				                Long checkedOutItemCountForLineItem = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItemBySku);
+				                if(checkedOutItemCountForLineItem == null) {
+					                checkedOutItemCountForLineItem = 0L;
+				                }
+				                if(lineItemBySku.getQty() > checkedOutItemCountForLineItem) {
+					                lineItem = lineItemBySku;
+					                break;
+				                }
+			                }
+		                }
+	                }
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
