@@ -745,8 +745,9 @@ public class EmailManager {
         emailIds.add("umang.mehta@healthkart.com");
         emailIds.add("jatin.nayyar@healthkart.com");
       } else if (dcml.getCategory() != null && dcml.getCategory().equals("eye")) {
-        emailIds.add("abhishek.mohta@healthkart.com");
-        emailIds.add("shefali.sankhyan@healthkart.com");
+        emailIds.add("category.eye@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("sports")) {
+        emailIds.add("category.sports@healthkart.com");
       }
       for (String emailId : emailIds) {
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, "Callback Request - " + dcml.getCategory());
