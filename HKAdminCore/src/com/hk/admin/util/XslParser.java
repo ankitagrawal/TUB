@@ -240,7 +240,7 @@ public class XslParser {
                     product.setDeleted(isDeletedBoolean);
                     String isOutOfStock = getCellValue(XslConstants.OUT_OF_STOCK, rowMap, headerMap);
                     boolean isOutOfStockBoolean = StringUtils.isNotBlank(isOutOfStock) && isOutOfStock.trim().toLowerCase().equals("y") ? true : false;
-                    product.setOutOfStock(isOutOfStockBoolean);
+//                    product.setOutOfStock(isOutOfStockBoolean);
                     String isHidden = getCellValue(XslConstants.IS_HIDDEN, rowMap, headerMap);
                     boolean isHiddenBoolean = StringUtils.isNotBlank(isHidden) && isHidden.trim().toLowerCase().equals("y") ? true : false;
                     product.setHidden(isHiddenBoolean);
