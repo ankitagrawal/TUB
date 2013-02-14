@@ -343,6 +343,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierList;
     }
 
+    public List<Courier> getAllActiveCourier() {
+        return courierService.getAllActiveCourier();
+    }
+
     public List<ShippingOrderStatus> getSOStatusForReconcilation() {
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }

@@ -206,5 +206,8 @@
 	    <mapping class="com.hk.domain.courier.PincodeCourierMapping" />
 	    <mapping class="com.hk.domain.courier.ShipmentServiceType" />
 	    <mapping class="com.hk.domain.api.HkApiUser" />
+        <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryStatus" />
+        <mapping class="com.hk.domain.courier.CourierPickupDetail" />
+        <mapping class="com.hk.domain.courier.PickupStatus" />
     </session-factory>
 </hibernate-configuration>
