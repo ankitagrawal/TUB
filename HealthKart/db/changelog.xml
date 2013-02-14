@@ -11239,7 +11239,6 @@
             </column>
         </addColumn>
     </changeSet>
-<<<<<<< HEAD
     <changeSet author="Shilpa (generated)" id="1358928140364-1">
         <addColumn tableName="brands_to_audit">
             <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_date" type="TIMESTAMP">
@@ -11250,7 +11249,6 @@
     <changeSet author="Shilpa (generated)" id="1358928140364-2">
         <modifyDataType columnName="audit_date" newDataType="DATETIME" tableName="brands_to_audit"/>
     </changeSet>
-=======
     <changeSet author="Pratham" id="22-01-2013-01">
         <sql>
             update courier set active = 1 where active = 0;
@@ -11470,7 +11468,4 @@
            update hk_api_user set  terms='http://www.healthkartplus.com/tnc' where api_key='healthkartplus';
        </sql>
     </changeSet>
-
-
->>>>>>> master
 </databaseChangeLog>
