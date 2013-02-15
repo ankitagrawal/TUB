@@ -12,6 +12,7 @@
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="reverseOrder" value="${orderSummary.reverseOrder}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="warehouse" value="${shippingOrder.warehouse}"/>
@@ -22,7 +23,7 @@
   <h4>
     <c:choose>
       <c:when test="${isB2BOrder}">
-           TAX INVOICE            
+           TAX INVOICE
       </c:when>
       <c:otherwise>
         RETAIL INVOICE
@@ -35,7 +36,7 @@
 
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
-		<div class="column">			
+		<div class="column">
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<p>Bright Lifecare Pvt. Ltd.</p>
@@ -73,16 +74,16 @@
       </p>
 
       <p><strong>Invoice
-        Date: </strong><fmt:formatDate value="${shippingOrder.shipment.shipDate}" type="both"
+        Date: </strong><fmt:formatDate value="${reverseOrder.courierPickupDetail.pickupDate}" type="both"
 
                                        timeStyle="short"/></p>
 
       <p><strong>Payment Mode:</strong>${baseOrder.payment.paymentMode.name}</p>
 
-      <p><strong>Courier:</strong>${shippingOrder.shipment.awb.courier.name}</p>
+      <p><strong>Courier:</strong>${reverseOrder.courierPickupDetail.courier.name}</p>
 
-      <p><strong>Order#: </strong>${shippingOrder.gatewayOrderId} on <fmt:formatDate
-          value="${baseOrder.payment.createDate}" type="both" timeStyle="short"/></p>
+      <p><strong>Reverse Order#: </strong>${reverseOrder.id} on <fmt:formatDate
+          value="${reverseOrder.createDate}" type="both" timeStyle="short"/></p>
     </div>
   </div>
 
@@ -107,7 +108,7 @@
 	    <c:if test="${isB2BOrder}">
 		    <p><strong>Consignee:</strong><p>
 		    <p>${baseOrder.user.name}</p>
-		    <c:if test="${b2bUserDetails != null}">			    
+		    <c:if test="${b2bUserDetails != null}">
 			    <c:if test="${b2bUserDetails.tin != null}">
 				    <p>TIN- ${b2bUserDetails.tin}</p>
 			    </c:if>

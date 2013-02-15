@@ -86,12 +86,13 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 			LineItem lineItem = reverselineItem.getReferredLineItem();
             double lineItemAmount = lineItem.getHkPrice() * reverselineItem.getReturnQty();
             double totalDiscountOnLineItem = lineItem.getDiscountOnHkPrice() + lineItem.getOrderLevelDiscount() + lineItem.getRewardPoints();
-            double forwardingCharges = lineItem.getShippingCharges() + lineItem.getCodCharges(); // check this calculation
+            //double forwardingCharges = lineItem.getShippingCharges() + lineItem.getCodCharges(); // check this calculation
+			double forwardingCharges = 0.0;
             rvoBaseAmt += (lineItemAmount - totalDiscountOnLineItem + forwardingCharges);
         }
         return rvoBaseAmt;
     }
-
+	
 	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
         return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, page, perPage);
     }

@@ -1,5 +1,7 @@
 package com.hk.domain.order;
  
+import com.hk.domain.reverseOrder.ReverseOrder;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -28,6 +30,11 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ref_shipping_order_id")
+  private ReverseOrder refReverseOrder;
+
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "replacement_order_reason_id")

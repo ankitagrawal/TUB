@@ -10,13 +10,18 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.web.action.core.accounting.AccountingInvoiceAction;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +45,9 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	@Autowired
 	ReverseOrderService reverseOrderService;
 
+	@Autowired
+	ShippingOrderService shippingOrderService;
+
 	@DefaultHandler
 	public Resolution pre() {
 		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, getPageNo(), getPerPage());
@@ -56,6 +64,15 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	public Resolution markReceived(){
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.setReceivedDate(new Date());
+			reverseOrderService.save(reverseOrder);
+		}
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+	}
+
 	public Resolution markReconciled(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -63,7 +80,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrderService.save(reverseOrder);
 		}
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
-	}
+	}	
 
 	public int getPerPageDefault() {
         return defaultPerPage;

@@ -26,6 +26,12 @@
                    return false;
                 }
             });
+
+             $('.markReceived').click(function() {
+                if(!confirm("Are you sure you want to mark it received ?")){
+                   return false;
+                }
+            });
          });
 
         </script>
@@ -65,23 +71,29 @@
         <table class="zebra_vert">
             <thead>
             <tr>
-                <th>SO Gateway Order Id</th>
+                <th>Reverse Order Id</th>
+                <th>SO Gateway Id</th>
                 <th>Courier</th>
-                <th>Pickup Confirmation No.</th>
+                <th>Pickup Conf No.</th>
+                <th>Tracking No.</th>
                 <th>Pickup Date</th>
                 <th>Pickup Status</th>
-                <th>Reconciliation Status</th>
+                <th>Received Date</th>
+                <th>Reconciled</th>
                 <th>User</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <c:forEach items="${pickupManage.orderRequestsList}" var="reverseOrderRequest">
                 <tr>
+                    <td>${reverseOrderRequest.id}</td>
                     <td>${reverseOrderRequest.shippingOrder.gatewayOrderId}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.trackingNo}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupDate}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupStatus.name}</td>
+                    <td>${reverseOrderRequest.receivedDate}</td>
                     <td>${reverseOrderRequest.reconciliationStatus.name}</td>
                     <td>${reverseOrderRequest.user.name}</td>
 
@@ -91,8 +103,16 @@
                                 <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                             </s:link>
+                        </c:if>
+
+                        <c:if test="${reverseOrderRequest.receivedDate == null}">
+		                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markReceived" class="markReceived">Mark Received
+			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                                <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                            </s:link>
 		                    <br/>
                         </c:if>
+
                         <c:if test="${reverseOrderRequest.reconciliationStatus.id == reconPending}">
 		                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markReconciled" class="markReconciled">Mark Reconciled
 			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
@@ -100,6 +120,12 @@
                             </s:link>
 		                    <br/>
                         </c:if>
+
+                         (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
+                            <s:param name="reverseOrder" value="${reverseOrderRequest}"/>
+                            <s:param name="shippingOrder" value="${reverseOrderRequest.shippingOrder}"/>
+                            Accounting Invoice
+                          </s:link>)
 
                     </td>
                 </tr>

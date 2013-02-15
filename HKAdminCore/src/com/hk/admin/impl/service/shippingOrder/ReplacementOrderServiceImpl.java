@@ -62,13 +62,16 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
                 // lineItem = lineItemDao.getLineItem(lineItem.getSku(), shippingOrder);
                 // LineItem lineItemNew = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem);
                 lineItem.setShippingOrder(replacementOrder);
+				/*
+				This case is to replace for customer returns, a reverse order is created first and then the replacement order.
+				 */
                 if (!isRto) {
-                    lineItem.setHkPrice(0.00);
+                    //lineItem.setHkPrice(0.00);
                     lineItem.setCodCharges(0.00);
-                    lineItem.setDiscountOnHkPrice(0.00);
-                    lineItem.setOrderLevelDiscount(0.00);
+                    //lineItem.setDiscountOnHkPrice(0.00);
+                    //lineItem.setOrderLevelDiscount(0.00);
                     lineItem.setShippingCharges(0.00);
-                    lineItem.setRewardPoints(0.00);
+                    //lineItem.setRewardPoints(0.00);
                 }
                 lineItemSet.add(lineItem);
                 // lineItem.setShippingOrder(replacementOrder);
