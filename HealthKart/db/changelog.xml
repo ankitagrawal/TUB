@@ -11295,11 +11295,11 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-     <changeSet author="Shrey (generated)" id="29-01-2013-01">
-        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
-            <column name="shipping_order_id"/>
-        </createIndex>
-    </changeSet>
+     <!--<changeSet author="Shrey (generated)" id="29-01-2013-01">-->
+        <!--<createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">-->
+            <!--<column name="shipping_order_id"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
 <!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
@@ -11552,5 +11552,21 @@
         <addColumn tableName="extra_inventory">
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1359711888969-1">
+        <addColumn tableName="rv_line_item">
+            <column name="sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-1">
+        <addColumn tableName="cycle_count_item">
+            <column name="sku_item_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
