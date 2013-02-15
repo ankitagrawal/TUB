@@ -93,16 +93,40 @@ public class CycleCountHelper {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
 
 		for (CycleCountItem cycleCountItem : cycleCountItems) {
-			SkuGroup skuGroup = cycleCountItem.getSkuGroup();
-			xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
-			xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
-			xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
-			int scannedQty = cycleCountItem.getScannedQty().intValue();
-			xlsWriter.addCell(xlsRow, scannedQty);
-			int sysQty = cycleCountPVImap.get(cycleCountItem.getId());
-			xlsWriter.addCell(xlsRow, sysQty);
-			int diffQty = sysQty - scannedQty;
-			xlsWriter.addCell(xlsRow, diffQty);
+            SkuGroup skuGroup = null;
+            if (cycleCountItem.getSkuItem() != null && cycleCountItem.getSkuGroup() == null){
+                int  sysQty = 1;
+               skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
+                xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
+			    xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
+                xlsWriter.addCell(xlsRow,cycleCountItem.getSkuItem().getBarcode());
+			    xlsWriter.addCell(xlsRow, sysQty);
+                int scannedQty = cycleCountItem.getScannedQty().intValue();
+                xlsWriter.addCell(xlsRow, scannedQty);
+                int diffQty = sysQty - scannedQty;
+			    xlsWriter.addCell(xlsRow, diffQty);
+
+            } else if (cycleCountItem.getSkuItem() == null && cycleCountItem.getSkuGroup() != null) {
+                skuGroup = cycleCountItem.getSkuGroup();
+                xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
+			    xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
+                xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
+                int sysQty = cycleCountPVImap.get(cycleCountItem.getId());
+			    xlsWriter.addCell(xlsRow, sysQty);
+                int scannedQty = cycleCountItem.getScannedQty().intValue();
+                xlsWriter.addCell(xlsRow, scannedQty);
+                int diffQty = sysQty - scannedQty;
+			    xlsWriter.addCell(xlsRow, diffQty);
+            }
+
+
+//			xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
+//			int scannedQty = cycleCountItem.getScannedQty().intValue();
+//			xlsWriter.addCell(xlsRow, scannedQty);
+//			int sysQty = cycleCountPVImap.get(cycleCountItem.getId());
+//			xlsWriter.addCell(xlsRow, sysQty);
+//			int diffQty = sysQty - scannedQty;
+//			xlsWriter.addCell(xlsRow, diffQty);
 			String expiryDate = "";
 			if (skuGroup.getExpiryDate() != null) {
 				expiryDate = sdf.format(skuGroup.getExpiryDate());

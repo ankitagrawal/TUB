@@ -314,7 +314,7 @@ public class CycleCountAction extends BasePaginatedAction {
             if (skuItem != null) {
                 CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
                 if (existingCycleCountItem != null) {
-                     addRedirectAlertMessage(new SimpleMessage("Item has been already Scanned"));
+                     addRedirectAlertMessage(new SimpleMessage(hkBarcode + " --> already Scanned"));
                      return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId());
                 } else {
                     SkuItem  validSkuItem =  getValidSkuItem(skuItem);
@@ -358,10 +358,6 @@ public class CycleCountAction extends BasePaginatedAction {
                     }
 
                     if (validCycleCountItem == null) {
-//					validCycleCountItem = new CycleCountItem();
-//					validCycleCountItem.setSkuGroup(validSkuGroup);
-//					validCycleCountItem.setCycleCount(cycleCount);
-//					validCycleCountItem.setScannedQty(1);
                         validCycleCountItem = cycleCountService.createCycleCountItem(validSkuGroup, null, cycleCount, 1);
                         validCycleCountItem = cycleCountService.save(validCycleCountItem);
                         List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(validSkuGroup);
