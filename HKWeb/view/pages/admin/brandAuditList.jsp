@@ -86,6 +86,10 @@
                                 <c:set value="<%=EnumCycleCountStatus.InProgress.getId()%>" var="inProgress"/>
                                 <c:choose>
                                     <c:when test="${auditBrand.cycleCount.cycleStatus == inProgress}">
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
+                                            <s:param name="brandsToAudit" value="${auditBrand.id}"/>
+                                            Edit Audit Status
+                                        </s:link>
                                         <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
                                                 event="directToCycleCountPage">
                                             <s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>

@@ -75,11 +75,11 @@ public class BrandsToAuditAction extends BasePaginatedAction {
             brandsToAudit.setAuditDate(currentDate);
             auditDate = currentDate;
         }
-        if (updateDate == null && updateDate.compareTo(auditDate) < 0){
+        if (updateDate == null ){
             brandsToAudit.setUpdateDate(auditDate);
             updateDate = auditDate;
         }
-        if( auditDate.compareTo(currentDate) > 0  || updateDate.compareTo(currentDate) > 0 ) {
+        if( auditDate.compareTo(currentDate) > 0  || updateDate.compareTo(currentDate) > 0 || updateDate.compareTo(auditDate) < 0) {
             addRedirectAlertMessage(new SimpleMessage("Invalid date"));
             return new RedirectResolution(BrandsToAuditAction.class);
         }
