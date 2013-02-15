@@ -192,7 +192,23 @@
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(bs, s);
 		})();
-	</script>	
+	</script>
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='';
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<!--End: Tracking code for MicroAd Blade-->
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
