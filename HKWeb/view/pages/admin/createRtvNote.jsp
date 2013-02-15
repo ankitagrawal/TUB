@@ -19,12 +19,12 @@
             $(document).ready(function(){
                $('#save').click(function(){
                   var rtvNoteStatus = parseFloat($('#rtvNoteStatus').val());
-                   var rtvNoteStatusDB = parseFloat(${rtvNote.rtvNote.rtvNoteStatus.id});
+                   var rtvNoteStatusDB = ${rtvNote.rtvNote.rtvNoteStatus.id};
                    if(rtvNoteStatus < rtvNoteStatusDB){
                        alert("Rtv Note Status can't reverted back");
                        return false;
                    }
-                   var courier = $('#courier').val();
+                   var courier = $('#allActiveCourier').val();
                    var pickupStatus = $('#pickupStatus').val();
                    var destinationAddress = $('#destinationAddress').val();
                    if(rtvNoteStatus >= 20){
@@ -38,8 +38,8 @@
                        }
                    }
                    else{
-                       if((courier!="")|| (pickupStatus!="") || (destinationAddress!=null && destinationAddress!="")){
-                           if(courier == ""  || pickupStatus == "" || destinationAddress==null || destinationAddress == ""){
+                       if((courier!=null && courier!="")|| (pickupStatus!=null && pickupStatus!="") || (destinationAddress!=null && destinationAddress!="")){
+                           if(courier == ""  || courier == null || pickupStatus == null || pickupStatus == "" || destinationAddress==null || destinationAddress == ""){
                                alert("Please Enter Courier, PickUp status and destination address!!");
                                return false;
                            }
@@ -137,10 +137,10 @@
                      <s:select name="courierPickupDetail.courier" id="allActiveCourier">
                          <s:option value="">--Select--</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                           serviceProperty="courierList" value="id" label="name"/>
+                                                           serviceProperty="allActiveCourier" value="id" label="name"/>
                       </s:select>
                       <script type="text/javascript">
-                          $('#courier').val(${rtvNote.courierPickupDetail.courier.id});
+                          $('#allActiveCourier').val(${rtvNote.courierPickupDetail.courier.id});
                       </script>
                   </td>
                   <td>
@@ -181,6 +181,7 @@
                 <th>Cost Price</th>
                 <th>Received QTY</th>
                 <th>TAX</th>
+                <th>Remarks</th>
             </tr>
             </thead>
             <tbody id="poTable">
@@ -208,6 +209,9 @@
                         </td>
                         <td>
                             ${rtvLineItem.extraInventoryLineItem.tax.name}
+                        </td>
+                        <td>
+                            ${rtvLineItem.extraInventoryLineItem.remarks}
                         </td>
                     </tr>
                 </c:forEach>
