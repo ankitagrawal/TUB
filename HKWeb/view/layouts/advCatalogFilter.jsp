@@ -308,7 +308,7 @@
 								<a class="filterCatalogFormButton" style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Filter</a>
 
 							</h5>
-							<ul style="padding-left:10px;max-height:150px;overflow-y:auto;" id="body${headCtr.index}">
+							<ul style="padding-left:10px;max-height:200px;overflow-y:auto;" id="body${headCtr.index}">
 								<c:forEach items="${filter.value}" var="option">
 									<li style="vertical-align:middle;" class="filterOptionLi">
 										<c:choose>
