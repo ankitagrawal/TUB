@@ -527,6 +527,28 @@ public class CycleCountAction extends BasePaginatedAction {
 			Map<String, Integer> hkBarcodeQtyMap = cycleCountHelper.readCycleCountNotepad(excelFile);
 			cycleCountPviMap = new HashMap<Long, Integer>();
 			for (String hkbarcodeFromNotepad : hkBarcodeQtyMap.keySet()) {
+                SkuItem skuItem = findBySkuItem(hkbarcodeFromNotepad);
+                if (skuItem != null) {
+                    CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+                    if (existingCycleCountItem != null) {
+                         message = hkbarcodeFromNotepad + "-> Already Scanned Item";
+                        hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
+                    } else {
+                        SkuItem validSkuItem = getValidSkuItem(skuItem);
+                        if (validSkuItem != null) {
+                            CycleCountItem cycleCountItemNew = new CycleCountItem();
+                            cycleCountItemNew.setSkuGroup(null);
+                            cycleCountItemNew.setCycleCount(cycleCount);
+                            cycleCountItemNew.setScannedQty(1);
+                            cycleCountItemNew.setSkuItem(skuItem);
+                            cycleCountService.save(cycleCountItemNew);
+
+                        } else {
+                            message = hkbarcodeFromNotepad + "-> Invalid Item barcode for this Audit";
+                            hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
+                        }
+                    }
+                }else {
 				List<SkuGroup> validSkuGroupList = findSkuGroup(hkbarcodeFromNotepad);
 				if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
 					int notepadScannedQty = hkBarcodeQtyMap.get(hkbarcodeFromNotepad);
@@ -585,11 +607,13 @@ public class CycleCountAction extends BasePaginatedAction {
 
 					}
 
+
 				} else {
 					hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
 				}
 
 			}
+            }
 			if (hkBarcodeErrorsMap.size() > 0) {
 				error = true;
 				message = "";

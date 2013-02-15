@@ -126,8 +126,8 @@
                                 <c:if test="${cCItem.skuItem != null && cCItem.skuGroup == null }">
 
                                  <td> ${cCItem.skuItem.skuGroup.sku.productVariant.id}
-									<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"
-									          value="${cCItem.skuItem.skuGroup.id}"/>
+									<%--<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"--%>
+									          <%--value="${cCItem.skuItem.skuGroup.id}"/>--%>
 								</td>
                                 <td> ${cCItem.skuItem.skuGroup.sku.productVariant.product.name} </td>
 								<td> ${cCItem.skuItem.barcode} </td>
