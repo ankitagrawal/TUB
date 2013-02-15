@@ -257,8 +257,8 @@
 </s:layout-component>
 
 <s:layout-component name="cart_items">
-<c:choose>
-<c:when test="${cartAction.pricingDto.productLineCount >= 1}">
+
+<c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
 <div class='products_container' style="min-height: 500px;">
 
@@ -699,9 +699,10 @@
   document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
-</c:when>
- <c:otherwise>
-     <c:set var="comboInstanceIds"  value=""/>
+
+</c:if>
+     <c:set var="comboInstanceIds"  value="" />
+     <c:set var="comboInstanceIdsName" value="" />
      <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
          <script type="text/javascript">
              $(document).ready(function () {
@@ -732,8 +733,7 @@
              });
          </script>
      </c:if>
- </c:otherwise>
- </c:choose>
+
 </s:layout-component>
 </s:layout-render>
 
@@ -753,7 +753,7 @@
            </tr>
            <tr>
                <td colspan="3" style="padding-left: 15px;">
-                   <b>The following items have been removed due to no available inventory</b>
+                   <b>The following items have been removed due to insufficient inventory</b>
                </td>
            </tr>
            <tr>
@@ -765,17 +765,35 @@
                        <div class='product' style="border-bottom-style: solid;">
                          <td style="padding-left: 15px;">
                            <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
-                               <c:choose>
-                                   <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
-                                       <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
-                                                        size="<%=EnumImageSize.TinySize%>"/>
-                                   </c:when>
-                                   <c:otherwise>
-                                       <img class="prod48"
-                                            src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-                                            alt="${cartLineItem.productVariant.product.name}"/>
-                                   </c:otherwise>
-                               </c:choose>
+                                 <c:choose>
+                                     <c:when test="${cartLineItem.comboInstance!=null}">
+                                         <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                          <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIds}"/>
+                                             <c:choose>
+                                                 <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
+                                                     <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                                 </c:when>
+                                                 <c:otherwise>
+                                                     <img class="prod48"
+                                                          src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.comboInstance.combo.id}.jpg"
+                                                          alt="${cartLineItem.comboInstance.combo.name}"/>
+                                                 </c:otherwise>
+                                             </c:choose>
+                                         </c:if>
+                                     </c:when>
+                                     <c:otherwise>
+                                         <c:choose>
+                                             <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                                 <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                             </c:when>
+                                             <c:otherwise>
+                                                 <img class="prod48"
+                                                      src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                                      alt="${cartLineItem.productVariant.product.name}"/>
+                                             </c:otherwise>
+                                         </c:choose>
+                                     </c:otherwise>
+                                 </c:choose>
                            </div>
                          </td>
                          <td>
@@ -785,9 +803,9 @@
                                        <td>
                                                <c:choose>
                                                   <c:when test="${cartLineItem.comboInstance!=null}">
-                                                    <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
-                                                        <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','"/>
-                                                        ${cartLineItem.productVariant.product.name} <br/>
+                                                    <c:if test="${!fn:contains(comboInstanceIdsName, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIdsName"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIdsName}"/>
+                                                        ${cartLineItem.comboInstance.combo.name} <br/>
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>

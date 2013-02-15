@@ -443,7 +443,9 @@
 </c:choose></div>
 </div>
 <c:if test="${orderSummary.trimCartLineItems!=null && fn:length(orderSummary.trimCartLineItems) >0}">
-        <script type="text/javascript">
+    <c:set var="comboInstanceIds"  value=""/>
+    <c:set var="comboInstanceIdsName" value="" />
+    <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
 //              e.preventDefault();
@@ -500,7 +502,6 @@
 <s:layout-component name="zopim">
     <jsp:include page="/includes/_zopim.jsp"/>
 </s:layout-component>
- <c:set var="comboInstanceIds"  value=""/>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>
@@ -519,7 +520,7 @@
            </tr>
            <tr>
                <td colspan="3" style="padding-left: 15px;">
-                   <b>The following items have been removed due to no available inventory</b>
+                   <b>The following items have been removed due to insufficient inventory</b>
                </td>
            </tr>
            <tr>
@@ -532,14 +533,32 @@
                          <td style="padding-left: 15px;">
                            <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
                                <c:choose>
-                                   <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
-                                       <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}"
-                                                        size="<%=EnumImageSize.TinySize%>"/>
+                                   <c:when test="${cartLineItem.comboInstance!=null}">
+                                       <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                           <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIds}"/>
+                                           <c:choose>
+                                               <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
+                                                   <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <img class="prod48"
+                                                        src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.comboInstance.combo.id}.jpg"
+                                                        alt="${cartLineItem.comboInstance.combo.name}"/>
+                                               </c:otherwise>
+                                           </c:choose>
+                                       </c:if>
                                    </c:when>
                                    <c:otherwise>
-                                       <img class="prod48"
-                                            src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
-                                            alt="${cartLineItem.productVariant.product.name}"/>
+                                       <c:choose>
+                                           <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                               <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                           </c:when>
+                                           <c:otherwise>
+                                               <img class="prod48"
+                                                    src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                                    alt="${cartLineItem.productVariant.product.name}"/>
+                                           </c:otherwise>
+                                       </c:choose>
                                    </c:otherwise>
                                </c:choose>
                            </div>
@@ -551,9 +570,9 @@
                                        <td>
                                              <c:choose>
                                                   <c:when test="${cartLineItem.comboInstance!=null}">
-                                                    <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
-                                                        <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','"/>
-                                                        ${cartLineItem.productVariant.product.name} <br/>
+                                                    <c:if test="${!fn:contains(comboInstanceIdsName, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIdsName"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIdsName}"/>
+                                                        ${cartLineItem.comboInstance.combo.name} <br/>
                                                      </c:if>
                                                   </c:when>
                                                   <c:otherwise>
