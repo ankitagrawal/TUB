@@ -3,6 +3,7 @@ package com.hk.domain.inventory.rtv;
 import com.hk.domain.user.User;
 
 import javax.persistence.*;
+import com.hk.domain.courier.CourierPickupDetail;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -50,18 +51,12 @@ public class RtvNote implements Serializable{
   @Column (name = "remarks")
   private String remarks;
 
-  @Column (name = "docket_number")
-  private String docketNumber;
-
-  @Column (name = "courier_name")
-  private String courierName;
-
   @Column (name = "destination_address")
   private String destinationAddress;
 
-  @Temporal (TemporalType.TIMESTAMP)
-  @Column (name = "dispatch_date")
-  private Date dispatchDate = new Date();
+  @ManyToOne
+  @JoinColumn(name = "courier_pickup_detail_id")
+  private CourierPickupDetail courierPickupDetail;
 
   @Temporal (TemporalType.TIMESTAMP)
   @Column (name = "create_dt", nullable = false, length = 19)
@@ -151,22 +146,6 @@ public class RtvNote implements Serializable{
     this.createdBy = createdBy;
   }
 
-  public String getDocketNumber() {
-    return docketNumber;
-  }
-
-  public void setDocketNumber(String docketNumber) {
-    this.docketNumber = docketNumber;
-  }
-
-  public String getCourierName() {
-    return courierName;
-  }
-
-  public void setCourierName(String courierName) {
-    this.courierName = courierName;
-  }
-
   public String getDestinationAddress() {
     return destinationAddress;
   }
@@ -175,11 +154,11 @@ public class RtvNote implements Serializable{
     this.destinationAddress = destinationAddress;
   }
 
-  public Date getDispatchDate() {
-    return dispatchDate;
+  public CourierPickupDetail getCourierPickupDetail() {
+    return courierPickupDetail;
   }
 
-  public void setDispatchDate(Date dispatchDate) {
-    this.dispatchDate = dispatchDate;
+  public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+    this.courierPickupDetail = courierPickupDetail;
   }
 }

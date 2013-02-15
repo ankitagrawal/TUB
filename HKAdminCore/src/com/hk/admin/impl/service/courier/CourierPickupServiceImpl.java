@@ -33,8 +33,8 @@ public class CourierPickupServiceImpl implements CourierPickupService {
 		return courierPickupDetail;
 	}
 
-	public void save(CourierPickupDetail courierPickupDetail){
-		baseDao.save(courierPickupDetail);
+	public CourierPickupDetail save(CourierPickupDetail courierPickupDetail){
+		return (CourierPickupDetail)baseDao.save(courierPickupDetail);
 	}
 
 

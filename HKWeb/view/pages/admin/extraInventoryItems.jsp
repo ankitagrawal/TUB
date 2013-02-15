@@ -8,7 +8,11 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Extra Inventory">
 <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="extraInventory"/>
 
-
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+    response.setHeader("pragma", "no-cache");
+    response.setDateHeader("Expires", -1);
+%>
 <s:layout-component name="htmlHead">
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -183,7 +187,13 @@ $(document).ready(function () {
                 alert("Extra Inventory Status can't be closed until all ExtraInventoryLineItems is RTV or PO.");
                 bool  = false;
                 saveObj.show();
+                return false;
           });
+        }
+        if(extraInventoryStatusDB==10 && extraInventoryStatus == 40){
+            alert("Status can't directly change from created to closed.");
+            saveObj.show();
+            return false;
         }
         if (!bool) return false;
     });
@@ -230,6 +240,9 @@ $(document).ready(function () {
                 '<option value="' + ${tax.id} + '">' + "${tax.name}" + '</option>' +
                         </c:forEach>
                 '</select>' +
+                '</td>' +
+                '<td>' +
+                '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
                 '</td>' +
                 '</tr>';
 
@@ -292,6 +305,7 @@ $(document).ready(function () {
                     <c:choose>
                         <c:when test="${extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus}">
                             <span style="color:blue;">(Closed)</span>
+                            <s:hidden name="extraInventoryStatusId" value="<%=EnumExtraInventoryStatus.Closed.getId()%>" />
                         </c:when>
                         <c:otherwise>
                             <s:select name="extraInventoryStatusId" id="extraInventoryStatus">
@@ -499,8 +513,7 @@ $(document).ready(function () {
                             ${eInLineItems.remarks}
                         </c:when>
                         <c:otherwise>
-                            <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10"
-                                        style="height:60px; width:210px;"/>
+                            <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10" style="height:60px; width:210px;"/>
                         </c:otherwise>
                     </c:choose>
                 </td>
@@ -510,7 +523,7 @@ $(document).ready(function () {
     </tbody>
 </table>
 <c:choose>
-    <c:when test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled') && !(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus)}">
+    <c:when test="${!(extraInventory.extraInventory.extraInventoryStatus.name eq exInStatus) &&  !(extraInventory.reconciledStatus!=null and extraInventory.reconciledStatus eq 'reconciled')}">
         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
             <a href="extraInventoryItems.jsp?purchaseOrderId=${extraInventory.purchaseOrderId}&wareHouseId=${extraInventory.wareHouseId}#"
                id="addRowButton" style="font-size:1.2em">Add new row</a>

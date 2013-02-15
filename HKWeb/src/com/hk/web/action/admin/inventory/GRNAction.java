@@ -78,8 +78,6 @@ public class GRNAction extends BasePaginatedAction {
 	private PoLineItemService poLineItemService;
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
-  @Autowired
-  private ExtraInventoryService extraInventoryService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -289,13 +287,7 @@ public class GRNAction extends BasePaginatedAction {
 		if (grnListForPurchaseInvoice != null && grnListForPurchaseInvoice.isEmpty()) {
 			return new ForwardResolution("/pages/admin/purchaseInvoiceForGrnAlreadyExist.jsp");
 		}
-    if(grnListForPurchaseInvoice != null && !grnListForPurchaseInvoice.isEmpty() && grnListForPurchaseInvoice.get(0)!=null && grnListForPurchaseInvoice.get(0).getPurchaseOrder().isExtraInventoryCreated()){
-      ExtraInventory extraInventory = getExtraInventoryService().getExtraInventoryByPoId(grnListForPurchaseInvoice.get(0).getPurchaseOrder().getId());
-      if(!extraInventory.getExtraInventoryStatus().getName().equals(EnumExtraInventoryStatus.Closed.getName())){
-      addRedirectAlertMessage(new SimpleMessage("Extra Inventory created from Purchase Order " + grnListForPurchaseInvoice.get(0).getPurchaseOrder().getId() + "is not closed."));
-      return new ForwardResolution("/pages/admin/purchaseInvoiceForGrnAlreadyExist.jsp");
-      }
-    }
+   
 		if (grnListForPurchaseInvoice != null && !grnListForPurchaseInvoice.isEmpty() && grnListForPurchaseInvoice.get(0) != null
 				&& grnListForPurchaseInvoice.get(0).getPurchaseOrder() != null && grnListForPurchaseInvoice.get(0).getPurchaseOrder().getSupplier() != null) {
 			supplier = grnListForPurchaseInvoice.get(0).getPurchaseOrder().getSupplier();
@@ -674,10 +666,6 @@ public class GRNAction extends BasePaginatedAction {
 	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
 		this.purchaseOrderService = purchaseOrderService;
 	}
-
-  public ExtraInventoryService getExtraInventoryService() {
-    return extraInventoryService;
-  }
 
   public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();

@@ -16,5 +16,5 @@ public interface CourierPickupService {
 
 	public CourierPickupDetail requestCourierPickup (Courier courier, Date pickupDate, String confirmationNo, String trackingNo);
 
-	public void save(CourierPickupDetail courierPickupDetail);
+	public CourierPickupDetail save(CourierPickupDetail courierPickupDetail);
 }

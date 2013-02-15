@@ -1,3 +1,4 @@
+<%@ page import="com.hk.constants.rtv.EnumExtraInventoryStatus" %>
 <%--
   Created by IntelliJ IDEA.
   User: Shrey
@@ -26,6 +27,12 @@
               <s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
                 <label>ExtraInventory ID:</label><input type="text" name="extraInventoryId"/>
                 <label>Purchase Order ID:</label><input type="text" name="purchaseOrderId"/>
+                <label>Status:</label><select name="extraInventoryStatusId">
+                  <option value="">--Select--</option>
+                  <option value="<%=EnumExtraInventoryStatus.Created.getId()%>"><%=EnumExtraInventoryStatus.Created.getName()%></option>
+                  <option value="<%=EnumExtraInventoryStatus.SentToCategory.getId()%>"><%=EnumExtraInventoryStatus.SentToCategory.getName()%></option>
+                  <option value="<%=EnumExtraInventoryStatus.Closed.getId()%>"><%=EnumExtraInventoryStatus.Closed.getName()%></option>
+                </select>
                 <s:submit name="searchExtraInventory" value="Search ExtraInventory"/>
               </s:form>
             </fieldset>
@@ -42,15 +49,13 @@
                 <th>Created By</th>
                 <th>Created Date</th>
                 <th>Comments</th>
+                <th>Action</th>
               </tr>
               </thead>
             <c:forEach items="${extraInventoryAction.extraInventories}" var="extraInventory">
             <tr>
                <td>
-                  <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="pre" >${extraInventory.id}
-                     <s:param name="purchaseOrderId" value="${extraInventory.purchaseOrder.id}"/>
-                     <s:param name="wareHouseId" value="${extraInventory.purchaseOrder.warehouse.id}"/>
-                  </s:link>
+                   ${extraInventory.id}
                </td>
                 <td>
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${extraInventory.purchaseOrder.id}
@@ -68,6 +73,12 @@
                 </td>
                 <td>
                     ${extraInventory.comments}
+                </td>
+                <td>
+                    <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="pre" >Edit ExtraInventory
+                     <s:param name="purchaseOrderId" value="${extraInventory.purchaseOrder.id}"/>
+                     <s:param name="wareHouseId" value="${extraInventory.purchaseOrder.warehouse.id}"/>
+                  </s:link>
                 </td>
             </tr>
             </c:forEach>

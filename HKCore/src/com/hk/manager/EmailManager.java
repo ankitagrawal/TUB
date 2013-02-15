@@ -745,8 +745,9 @@ public class EmailManager {
         emailIds.add("umang.mehta@healthkart.com");
         emailIds.add("jatin.nayyar@healthkart.com");
       } else if (dcml.getCategory() != null && dcml.getCategory().equals("eye")) {
-        emailIds.add("abhishek.mohta@healthkart.com");
-        emailIds.add("shefali.sankhyan@healthkart.com");
+        emailIds.add("category.eye@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("sports")) {
+        emailIds.add("category.sports@healthkart.com");
       }
       for (String emailId : emailIds) {
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, "Callback Request - " + dcml.getCategory());
@@ -826,7 +827,7 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("extraInventory", extraInventory);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
-        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getProductVariant().getProduct().getPrimaryCategory();
+        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
         for(String categoryAdminEmail : this.categoryAdmins(category)){
             emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryAdminEmail,category.getDisplayName());
         }

@@ -2,14 +2,17 @@ package com.hk.web.action.admin.rtv;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.CourierPickupService;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
+import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
 import com.hk.manager.EmailManager;
 import com.hk.pact.service.core.WarehouseService;
@@ -71,6 +74,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   MasterDataDao masterDataDao;
   @Autowired
   EmailManager emailManager;
+  @Autowired
+  CourierPickupService courierPickupService;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -95,10 +100,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private Boolean isReconciled;
   private String reconciledStatus;
   private Long newPurchaseOrderId;
-  private String courierName;
   private String destinationAddress;
-  private String docketNumber;
-
+  private CourierPickupDetail courierPickupDetail;
+  private Long pickupStatusId;
 
   @DefaultHandler
   public Resolution pre(){
@@ -179,8 +183,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       if(!(extraInventory.getExtraInventoryStatus().getName().equals(extraInventoryStatus.getName()))){
         extraInventory.setExtraInventoryStatus(extraInventoryStatus);
         if(extraInventoryStatus.getName().equals(EnumExtraInventoryStatus.SentToCategory.getName()) && !extraInventory.isEmailSent()){
-          getEmailManager().sendExtraInventoryMail(extraInventory);
-          extraInventory.setEmailSent(true);
+          boolean isEmailSent = getEmailManager().sendExtraInventoryMail(extraInventory);
+          if(isEmailSent)extraInventory.setEmailSent(true);
         }
       }
       extraInventory = getExtraInventoryService().save(extraInventory);
@@ -298,12 +302,15 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         }
       }
       rtvNote.setDebitToSupplier(isDebitToSupplier);
-      if(courierName!=null || docketNumber!=null || destinationAddress!=null){
-      rtvNote.setCourierName(courierName);
-      rtvNote.setDocketNumber(docketNumber);
-      rtvNote.setDestinationAddress(destinationAddress);
-      rtvNote.setDispatchDate(new Date());
+      if(courierPickupDetail!=null && pickupStatusId!=null && courierPickupDetail.getCourier()!=null){
+        if(courierPickupDetail.getPickupDate()==null){
+          courierPickupDetail.setPickupDate(new Date());
+        }
+        courierPickupDetail.setPickupStatus(EnumPickupStatus.asPickupStatusById(pickupStatusId));
+        courierPickupDetail = getCourierPickupService().save(courierPickupDetail);
+        rtvNote.setCourierPickupDetail(courierPickupDetail);
       }
+      rtvNote.setDestinationAddress(destinationAddress);
       rtvNote = getRtvNoteService().save(rtvNote);
     }
     noCache();
@@ -336,6 +343,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     }
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
     extraInventory = rtvNote.getExtraInventory();
+    courierPickupDetail = rtvNote.getCourierPickupDetail();
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
 
@@ -468,15 +476,17 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
     extraInventory = rtvNote.getExtraInventory();
     rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
+    courierPickupDetail = rtvNote.getCourierPickupDetail();
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId);
   }
-
+                                                            
   @SuppressWarnings("unchecked")
   public Resolution searchExtraInventory(){
     if(purchaseOrderId!=null){
       purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     }
-    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,getPageNo(),getPerPage());
+    ExtraInventoryStatus extraInventoryStatus = EnumExtraInventoryStatus.asEnumExtraInventoryStatusByID(extraInventoryStatusId);
+    purchaseOrderPage = getExtraInventoryService().searchExtraInventory(extraInventoryId,purchaseOrder,extraInventoryStatus, getPageNo(),getPerPage());
     extraInventories  = purchaseOrderPage.getList();
     return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
   }
@@ -725,14 +735,6 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     this.extraInventoryStatusId = extraInventoryStatusId;
   }
 
-  public String getDocketNumber() {
-    return docketNumber;
-  }
-
-  public void setDocketNumber(String docketNumber) {
-    this.docketNumber = docketNumber;
-  }
-
   public String getDestinationAddress() {
     return destinationAddress;
   }
@@ -741,15 +743,27 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     this.destinationAddress = destinationAddress;
   }
 
-  public String getCourierName() {
-    return courierName;
-  }
-
-  public void setCourierName(String courierName) {
-    this.courierName = courierName;
-  }
-
   public EmailManager getEmailManager() {
     return emailManager;
+  }
+
+  public CourierPickupDetail getCourierPickupDetail() {
+    return courierPickupDetail;
+  }
+
+  public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
+    this.courierPickupDetail = courierPickupDetail;
+  }
+
+  public Long getPickupStatusId() {
+    return pickupStatusId;
+  }
+
+  public void setPickupStatusId(Long pickupStatusId) {
+    this.pickupStatusId = pickupStatusId;
+  }
+
+  public CourierPickupService getCourierPickupService() {
+    return courierPickupService;
   }
 }
