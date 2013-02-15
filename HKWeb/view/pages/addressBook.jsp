@@ -39,10 +39,6 @@
                 $(this).parents('tr').removeClass('item_selected');
             }
         }
-
-
-
-
     </script>
     <%-- use attribute selectors to apply a specify styles  --%>
     <style type="text/css">
