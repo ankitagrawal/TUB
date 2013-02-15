@@ -56,6 +56,11 @@ public class CourierServiceImpl implements CourierService {
         return getCourierDao().getAll(Courier.class);
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Courier> getAllActiveCourier(){
+        return (List<Courier>)courierDao.findByNamedQuery("allActiveCouriers");
+    }
+
     public CourierDao getCourierDao() {
         return courierDao;
     }
