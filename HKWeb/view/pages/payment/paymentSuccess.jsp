@@ -46,7 +46,15 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
-    <div style="margin-top: 50px;">
+   <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+        <div>
+            <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
+            </a>
+        </div>
+    </c:if>
+    <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
         </h1>
@@ -230,7 +238,7 @@
 </c:if>
 
     <c:choose>
-        <c:when test="${actionBean.payment != null}">
+        <c:when test="${actionBean.payment != null}">         
             <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">

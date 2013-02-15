@@ -13,7 +13,7 @@ public interface LineItemDao extends BaseDao {
 
     public LineItem save(LineItem lineItem);
 
-    public LineItem getLineItem(Sku sku, ShippingOrder shippingOrder);
+    public List<LineItem> getLineItem(Sku sku, ShippingOrder shippingOrder);
 
     public LineItem getLineItem(CartLineItem cartLineItem);
 

@@ -11,6 +11,8 @@ public interface CourierService {
 
     public List<Courier> getAllCouriers();
 
+    public List<Courier> getAllActiveCourier();
+
     public Courier getCourierById(Long courierId);
 
     public Courier getCourierByName(String name);
