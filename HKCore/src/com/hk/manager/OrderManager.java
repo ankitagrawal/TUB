@@ -561,13 +561,21 @@ public class OrderManager {
       Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
       Set<CartLineItem> trimmedCartLineItems = new HashSet<CartLineItem>();
       Set<ComboInstance> toBeRemovedComboInstanceSet = new HashSet<ComboInstance>();
-      for (CartLineItem lineItem : cartLineItems) {
+      for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext();) {
+          CartLineItem lineItem = iterator.next();
           ProductVariant productVariant = lineItem.getProductVariant();
           Product product = productVariant.getProduct();
           ComboInstance comboInstance = lineItem.getComboInstance();
           List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
 
-          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock() || lineItem.getQty() <= 0) {
+          if(lineItem.getQty() <= 0){
+           iterator.remove();
+           order.getCartLineItems().remove(lineItem);
+           getBaseDao().delete(lineItem);
+          }
+          else{
+
+          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
               }
@@ -589,6 +597,7 @@ public class OrderManager {
                   lineItem.setQty(unbookedInventory);
               }
           }
+        }
       }
       for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext(); ) {
           CartLineItem lineItem = iterator.next();

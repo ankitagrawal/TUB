@@ -256,9 +256,10 @@
   </c:if>
 </s:layout-component>
 
-<c:if test="${cartAction.pricingDto.productLineCount >= 1}">
-
 <s:layout-component name="cart_items">
+<c:choose>
+<c:when test="${cartAction.pricingDto.productLineCount >= 1}">
+
 <div class='products_container' style="min-height: 500px;">
 
 <div style="display: none;">
@@ -698,40 +699,42 @@
   document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
-
-<c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
-        <script type="text/javascript">
-          $(document).ready(function () {
-              ShowDialog(true);
+</c:when>
+ <c:otherwise>
+     <c:set var="comboInstanceIds"  value=""/>
+     <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
+         <script type="text/javascript">
+             $(document).ready(function () {
+                 ShowDialog(true);
 //              e.preventDefault();
-              $('.button_green').live('click',function(){
-                  $(this).hide();
-                  HideDialog();
-              });
+                 $('.button_green').live('click',function(){
+                     $(this).hide();
+                     HideDialog();
+                 });
 
-          function ShowDialog(modal)
-          {
-              $("#overlay2").show();
-              $("#dialog2").fadeIn(300);
+                 function ShowDialog(modal)
+                 {
+                     $("#overlay2").show();
+                     $("#dialog2").fadeIn(300);
 
-              if (modal)
-              {
-                  $("#overlay2").unbind("click");
-              }
-          }
+                     if (modal)
+                     {
+                         $("#overlay2").unbind("click");
+                     }
+                 }
 
-          function HideDialog()
-          {
+                 function HideDialog()
+                 {
 
-              $("#overlay2").hide();                       
-              $("#dialog2").fadeOut(300);
-          }
-          });
-    </script>
+                     $("#overlay2").hide();
+                     $("#dialog2").fadeOut(300);
+                 }
+             });
+         </script>
      </c:if>
+ </c:otherwise>
+ </c:choose>
 </s:layout-component>
-<c:set var="comboInstanceIds"  value=""/>
-</c:if>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>

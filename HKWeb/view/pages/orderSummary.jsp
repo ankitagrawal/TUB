@@ -87,17 +87,6 @@
     <c:if test="${orderSummary.availableCourierList == null}">
       <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
     </c:if>
-     <c:if test="${orderSummary.trim}">
-         <c:choose>
-             <c:when test="${orderSummary.sizeOfCLI == 1}">
-                 <h3 style="color:#0000ff;">${orderSummary.sizeOfCLI}&nbsp;Product Has been trim due to no available inventory</h3>
-             </c:when>
-          <c:otherwise>
-              <h3 style="color:#0000ff;">${orderSummary.sizeOfCLI}&nbsp; Products Have been trim due to no available inventory</h3>
-          </c:otherwise>
-         </c:choose>
-         <br><br>
-     </c:if>
     <h3>
       You selected
     </h3>
