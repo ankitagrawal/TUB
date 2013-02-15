@@ -81,7 +81,7 @@ public class UserCODConfirmationCallObserver implements OrderResponseObserver {
 				}
 
 			} else {
-				logger.error("Invalid Order ID Returned From JMS");
+				logger.error("Invalid Order ID Returned From JMS" +orderId);
 			}
 		} catch (Exception ex) {
 			logger.error("Exception in Recieving Response " + ex.getMessage());

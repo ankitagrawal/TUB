@@ -466,14 +466,9 @@
                     <div class="clear"></div>
                     <div id="paymentDetails-${order.id}" class="detailDiv">
                         <div class="headingLabel">Payment Details:</div>
-	                    
                         <div class="floatleft">
                             Total Amount: <strong>Rs.<fmt:formatNumber value="${order.payment.amount}"
                                                                        pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
-
-
-	                     <!-- seema !-->
-
               <span class="paymentStatusName or"
                     style="margin-left:30px;">Status: ${order.payment.paymentStatus.name}</span>
                         </div>

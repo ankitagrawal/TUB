@@ -4,7 +4,6 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.Keys;
-import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -45,7 +44,6 @@ public class CodPaymentReceiveAction extends BaseAction {
 	private PaymentService paymentService;
 	@Autowired
 	private PaymentManager paymentManager;
-
 
 	@Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
 	private Double codMinAmount;
@@ -117,7 +115,6 @@ public class CodPaymentReceiveAction extends BaseAction {
 			try {
 				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
 				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone);
-
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} catch (HealthkartPaymentGatewayException e) {
 				getPaymentManager().error(gatewayOrderId, e);

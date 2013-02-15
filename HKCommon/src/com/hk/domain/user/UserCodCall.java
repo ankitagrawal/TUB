@@ -20,66 +20,66 @@ import java.util.Date;
 @Table(name = "user_cod_call")
 public class UserCodCall {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id", nullable = false)
-	private Order baseOrder;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order baseOrder;
 
-	@Column(name = "call_status", nullable = false)
-	Integer callStatus;
+    @Column(name = "call_status", nullable = false)
+    Integer callStatus;
 
-	@Column(name = "remark")
-	String remark;
+    @Column(name = "remark")
+    String remark;
 
-     @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", length = 19)
-    private Date           createDate;
+    private Date createDate;
 
-	public Order getBaseOrder() {
-		return baseOrder;
-	}
+    public Order getBaseOrder() {
+        return baseOrder;
+    }
 
-	public void setBaseOrder(Order baseOrder) {
-		this.baseOrder = baseOrder;
-	}
+    public void setBaseOrder(Order baseOrder) {
+        this.baseOrder = baseOrder;
+    }
 
-	public Integer getCallStatus() {
-		return callStatus;
-	}
+    public Integer getCallStatus() {
+        return callStatus;
+    }
 
-	public void setCallStatus(Integer callStatus) {
-		this.callStatus = callStatus;
-	}
+    public void setCallStatus(Integer callStatus) {
+        this.callStatus = callStatus;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	 @Override
+    @Override
     public String toString() {
         return this.id != null ? this.id.toString() : "";
     }

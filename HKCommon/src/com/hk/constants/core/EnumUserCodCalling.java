@@ -44,7 +44,4 @@ public enum EnumUserCodCalling {
 		this.id = id;
 	}
 
-	public static List<EnumUserCodCalling> getAllList(){
-		return Arrays.asList(PENDING_WITH_THIRD_PARTY, CONFIRMED , CANCELLED , OTHERS);
-	}
 }

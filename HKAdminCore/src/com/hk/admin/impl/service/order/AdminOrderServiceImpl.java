@@ -428,16 +428,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return codFailureMap;
     }
 
+    @Transactional
+    public void confirmCodOrder(Order order) {
+        if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
+            paymentManager.verifyCodPayment(order.getPayment());
+            orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+            orderService.setTargetDispatchDelDatesOnBO(order);
+            getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
 
-	public void confirmCodOrder(Order order){
-		if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-			paymentManager.verifyCodPayment(order.getPayment());
-			orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
-			orderService.setTargetDispatchDelDatesOnBO(order);
-			getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
-
-		}
-	}
+        }
+    }
 
     public UserService getUserService() {
         return userService;

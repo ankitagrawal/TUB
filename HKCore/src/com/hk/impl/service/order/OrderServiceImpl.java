@@ -27,7 +27,6 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
-
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
@@ -35,7 +34,6 @@ import com.hk.helper.OrderDateUtil;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
-
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -60,7 +58,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.*;
 
@@ -108,7 +105,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     ShipmentService shipmentService;
-
 
 
     /*
@@ -703,7 +699,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
-
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
@@ -726,8 +721,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-	    //todo
-
         if (shippingOrders != null && shippingOrders.size() > 0) {
             if (!shippingOrderAlreadyExists) {
                 // save order with InProcess status since shipping orders have been created
@@ -749,7 +742,7 @@ public class OrderServiceImpl implements OrderService {
                             CourierConstants.DROP_SHIPPED_ORDER);
                 }
             }
-            // auto escalate shipping orders if possible  //seema
+            // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
@@ -783,7 +776,7 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
-	public List<UserCodCall> getAllUserCodCallOfToday(){
+	public List<UserCodCall> getAllUserCodCallForToday(){
 	return 	orderDao.getAllUserCodCallOfToday();
 	}
 

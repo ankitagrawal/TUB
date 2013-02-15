@@ -33,13 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.joda.time.DateTime;
 
 import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
-import com.hk.pact.service.codbridge.PaymentSucessListenerApiCall;
+import com.hk.pact.service.codbridge.PaymentSuccessListenerApiCall;
 
 /**
  * Author: Kani Date: Jan 3, 2009
@@ -70,7 +67,7 @@ public class PaymentManager {
 	@Autowired
 	CodConfirmationOrPaymentFailureCalling userCodConfirmationCalling;
 	@Autowired
-	PaymentSucessListenerApiCall paymentSucessListenerApiCall;
+    PaymentSuccessListenerApiCall paymentSuccessListenerApiCall;
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
@@ -81,8 +78,6 @@ public class PaymentManager {
 	private PaymentDao paymentDao;
 	@Autowired
 	private PaymentStatusDao paymentStatusDao;
-
-	Map<Order, DateTime>  orderPaymentFailureCallMap = new HashMap<Order, DateTime>();
 
 	// TODO: rewrite
 
@@ -319,10 +314,8 @@ public class PaymentManager {
 			payment = paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
 
-
-			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallOfToday();
+			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
 			if(userCodCallList != null && userCodCallList.size() < 30) {
-				/* Skip COD calls for users , whose 3 COD orders  have been already placed sucessfuly in history*/
 			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
 				/* Make JMS Call For COD Confirmation Only Once*/
 				if (order.getUserCodCall() == null) {
@@ -465,8 +458,8 @@ public class PaymentManager {
 	}
 
 	private void intiatePaymentFailureCall(Order order) {
-		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallOfToday();
-		/* Make 30 Calls only for testing , Later on we will remove it*/
+		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
+		/* Make 30 Calls  for testing , Later on we will remove it*/
 		if (userCodCallList != null && userCodCallList.size() < 30) {
 			/* Make JMS Call For COD Confirmation Only Once*/
 			if (order.getUserCodCall() == null) {
@@ -477,7 +470,7 @@ public class PaymentManager {
 						orderService.saveUserCodCall(userCodCall);
 					}
 				} catch (Exception ex) {
-					logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+					logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
 				}
 			}
 
@@ -487,9 +480,9 @@ public class PaymentManager {
 
 	public void notifyPaymentSuccess(Order order) {
 		try {
-			paymentSucessListenerApiCall.notifyToPaymentSuccessListener(order);
+			paymentSuccessListenerApiCall.notifyToPaymentSuccessListener(order);
 		} catch (Exception ex) {
-			logger.error("Eroor in Notifying JMS for payment success" + ex.getMessage());
+			logger.error("Error in Notifying JMS for payment success" + ex.getMessage());
 		}
 	}
 
@@ -547,13 +540,5 @@ public class PaymentManager {
 
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
-	}
-
-	public Map<Order, DateTime> getOrderPaymentFailureCallMap() {
-		return orderPaymentFailureCallMap;
-	}
-
-	public void setOrderPaymentFailureCallMap(Map<Order, DateTime> orderPaymentFailureCallMap) {
-		this.orderPaymentFailureCallMap = orderPaymentFailureCallMap;
 	}
 }
