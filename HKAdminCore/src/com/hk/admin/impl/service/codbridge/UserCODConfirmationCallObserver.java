@@ -17,6 +17,7 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hk.pact.service.codbridge.CodConfirmationOrPaymentFailureCalling;
@@ -42,6 +43,7 @@ public class UserCODConfirmationCallObserver implements OrderResponseObserver {
 	@Autowired
 	UserService userService;
 
+	@Transactional
 	public void onResponse(OrderResponse orderResponse) {
 
 		Order order;
