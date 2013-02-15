@@ -15,6 +15,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "courier")
+@NamedQueries({
+        @NamedQuery(name = "allActiveCouriers" , query = "select c from Courier c where active = true")
+})
 public class Courier implements java.io.Serializable {
 
     @Id

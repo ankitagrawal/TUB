@@ -4,6 +4,9 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.GRNDto;
 import com.hk.admin.manager.GRNManager;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+import com.hk.constants.rtv.EnumExtraInventoryStatus;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
@@ -102,7 +105,6 @@ public class GRNAction extends BasePaginatedAction {
 	public GrnStatus grnStatus;
 	public Double surcharge;
 	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
-
 	private Integer defaultPerPage = 20;
 
 	@DefaultHandler
@@ -285,6 +287,7 @@ public class GRNAction extends BasePaginatedAction {
 		if (grnListForPurchaseInvoice != null && grnListForPurchaseInvoice.isEmpty()) {
 			return new ForwardResolution("/pages/admin/purchaseInvoiceForGrnAlreadyExist.jsp");
 		}
+   
 		if (grnListForPurchaseInvoice != null && !grnListForPurchaseInvoice.isEmpty() && grnListForPurchaseInvoice.get(0) != null
 				&& grnListForPurchaseInvoice.get(0).getPurchaseOrder() != null && grnListForPurchaseInvoice.get(0).getPurchaseOrder().getSupplier() != null) {
 			supplier = grnListForPurchaseInvoice.get(0).getPurchaseOrder().getSupplier();
@@ -664,7 +667,7 @@ public class GRNAction extends BasePaginatedAction {
 		this.purchaseOrderService = purchaseOrderService;
 	}
 
-    public Set<String> getParamSet() {
+  public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("productVariant");
 		params.add("invoiceNumber");
