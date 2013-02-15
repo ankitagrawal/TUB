@@ -20,6 +20,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.OrderSearchCriteria;
@@ -37,6 +38,7 @@ import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
 import com.hk.manager.StoreOrderService;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
@@ -94,12 +96,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private PincodeCourierService pincodeCourierService;
 	@Autowired
     private SMSManager                smsManager;
+	@Autowired
+	PaymentManager paymentManager;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double                    codMinAmount;
 
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double                    codMaxAmount;
+
+
 
     @Transactional
     public Order putOrderOnHold(Order order) {
@@ -421,6 +427,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
         return codFailureMap;
     }
+
+
+	public void confirmCodOrder(Order order){
+		if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
+			paymentManager.verifyCodPayment(order.getPayment());
+			orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+			orderService.setTargetDispatchDelDatesOnBO(order);
+			getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
+
+		}
+	}
 
     public UserService getUserService() {
         return userService;

@@ -478,20 +478,16 @@
                     style="margin-left:30px;">Status: ${order.payment.paymentStatus.name}</span>
                         </div>
                         <div class="floatright">
-                            <c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">
+                            <%--<c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">--%>
                                 <c:choose>
                                     <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
                                         <%--(<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">--%>
                                         <%--<s:param name="order" value="${order.id}"/>--%>
                                         <%--Confirm COD--%>
-                                    <%--</s:link>)--%>
-		                                 <c:when test="${order.userCodCall != null}">
-			                               <c:forEach items="<%=EnumUserCodCalling.getAllList()%>" var="codstatus">		                                    
-		                                    <c:if test="${order.userCodCall.callStatus == codstatus.id}">
-			                                    ${codstatus.name}
-		                                    </c:if>
-	                                    </c:forEach>
-		                                 </c:when>
+                                    <%--</s:link>)--%>	
+		                                 <c:if test="${order.userCodCall != null}">
+			                               ${order.userCodCall.remark}
+		                                 </c:if>
 
                                     </c:when>
 	                                <c:otherwise>
@@ -501,7 +497,7 @@
                                     </s:link>)
                                     </c:otherwise>
                                 </c:choose>
-                            </c:if>
+                            <%--</c:if>--%>
                         </div>
                         <div class="clear"></div>
                         <div class="floatleft">

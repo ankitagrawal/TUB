@@ -32,6 +32,7 @@ public interface AdminOrderService {
 
     public Order putOrderOnHold(Order order);
 
+
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser);
 
 
@@ -41,5 +42,7 @@ public interface AdminOrderService {
 	 * @return
 	 */
     public Map<String, String> isCODAllowed(Order order, Double totalPayable);
+
+	public void confirmCodOrder(Order order);
 
 }

@@ -17,7 +17,7 @@ public enum EnumUserCodCalling {
 	CONFIRMED(20, "Sucessful"),
 	CANCELLED(30,"Canceled"),
 	OTHERS(40,"Other"),
-	EMPTY_MSG_RECIEVED(50,"respose comes with empty key press value");
+	EMPTY_MSG_RECIEVED(50,"response comes with empty key press value");
 
 	private int id;
 	private String name;

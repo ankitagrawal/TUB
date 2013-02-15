@@ -16,6 +16,7 @@ import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
+import com.hk.domain.payment.Payment;
 import com.hk.exception.OrderSplitException;
 
 public interface OrderService {
@@ -75,12 +76,12 @@ public interface OrderService {
     
     public void setTargetDispatchDelDatesOnBO(Order order);
 
-    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);	
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 
 	public UserCodCall createUserCodCall(Order order);
 
-
+	public List<UserCodCall> getAllUserCodCallOfToday();
 }
 

@@ -1,8 +1,13 @@
 package com.hk.domain.user;
 
 import com.hk.domain.order.Order;
+import com.akube.framework.gson.JsonSkip;
 
 import javax.persistence.*;
+
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +34,10 @@ public class UserCodCall {
 
 	@Column(name = "remark")
 	String remark;
+
+     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", length = 19)
+    private Date           createDate;
 
 	public Order getBaseOrder() {
 		return baseOrder;
@@ -61,4 +70,17 @@ public class UserCodCall {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	 @Override
+    public String toString() {
+        return this.id != null ? this.id.toString() : "";
+    }
 }

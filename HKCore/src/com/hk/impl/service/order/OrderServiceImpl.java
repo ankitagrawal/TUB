@@ -27,6 +27,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
+
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
@@ -34,6 +35,7 @@ import com.hk.helper.OrderDateUtil;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
+
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
@@ -58,6 +60,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.*;
 
@@ -105,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     ShipmentService shipmentService;
+
 
 
     /*
@@ -700,9 +704,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
 
-	     //call cod api
-
-
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
@@ -765,18 +766,25 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
+
+
 	@Transactional
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
 		return (UserCodCall)baseDao.save(userCodCall);
 	}
 
-	public UserCodCall createUserCodCall(Order order){
-	        UserCodCall userCodCall = new UserCodCall();
-			userCodCall.setBasOrder(order);
-			userCodCall.setRemark("knowlarity call started,wiating for response");
-			userCodCall.setCallStatus(10);
-			return userCodCall;
+	public UserCodCall createUserCodCall(Order order) {
+		UserCodCall userCodCall = new UserCodCall();
+		userCodCall.setBaseOrder(order);
+		userCodCall.setRemark(" PENDING_WITH_THIRD_PARTY");
+		userCodCall.setCallStatus(10);
+		userCodCall.setCreateDate(new Date());
+		return userCodCall;
 
+	}
+
+	public List<UserCodCall> getAllUserCodCallOfToday(){
+	return 	orderDao.getAllUserCodCallOfToday();
 	}
 
 }

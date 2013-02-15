@@ -23,8 +23,9 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.customerCalling.UserCodConfirmationCalling;
+import com.hk.pact.service.codbridge.CodConfirmationOrPaymentFailureCalling;
 import com.hk.util.TokenUtils;
+import com.hk.hkjunction.producer.ProducerTypeEnum;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.joda.time.DateTime;
 
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import com.hk.pact.service.codbridge.PaymentSucessListenerApiCall;
 
 /**
  * Author: Kani Date: Jan 3, 2009
@@ -62,7 +68,9 @@ public class PaymentManager {
 	@Autowired
 	SMSManager smsManager;
 	@Autowired
-	UserCodConfirmationCalling userCodConfirmationCalling;
+	CodConfirmationOrPaymentFailureCalling userCodConfirmationCalling;
+	@Autowired
+	PaymentSucessListenerApiCall paymentSucessListenerApiCall;
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
@@ -73,6 +81,8 @@ public class PaymentManager {
 	private PaymentDao paymentDao;
 	@Autowired
 	private PaymentStatusDao paymentStatusDao;
+
+	Map<Order, DateTime>  orderPaymentFailureCallMap = new HashMap<Order, DateTime>();
 
 	// TODO: rewrite
 
@@ -254,6 +264,8 @@ public class PaymentManager {
             payment.setRrn(rrn);
             payment = paymentDao.save(payment);
             order = getOrderManager().orderPaymentReceieved(payment);
+	        /*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+	        notifyPaymentSuccess(order);
         }
         return order;
     }
@@ -275,6 +287,8 @@ public class PaymentManager {
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
 			payment = paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
+			/*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+	        notifyPaymentSuccess(order);
 		}
 		return order;
 	}
@@ -282,7 +296,7 @@ public class PaymentManager {
 	@Transactional
 	public Order codSuccess(String gatewayOrderId, String codContactName, String codContactPhone) {
 		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		Order order = orderService.findByGatewayOrderId(gatewayOrderId);
+		Order order = null;
 		if (payment != null) {
 			payment.setContactName(codContactName);
 			payment.setContactNumber(codContactPhone);
@@ -292,31 +306,38 @@ public class PaymentManager {
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(null);
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-			   //seema
+
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 
-			// call jms
 
-			if (order.getUserCodCall() == null) {
-				try {
-					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order);
-					UserCodCall userCodCall = orderService.createUserCodCall(order);
-					if (userCodCall != null) {
-						orderService.saveUserCodCall(userCodCall);
-					}
-				} catch (Exception ex) {
-					logger.error("error occurred in calling JMS in Payment Manager  :::: " +ex.getMessage());
-				}
+
+			if (orderCount != null && orderCount >= 3) {
+				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
+			} else {
+				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			}
-
-//			if (orderCount != null && orderCount >= 3) {
-//				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
-//			} else {
-//				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-//			}
 			payment = paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
 
+
+			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallOfToday();
+			if(userCodCallList != null && userCodCallList.size() < 30) {
+				/* Skip COD calls for users , whose 3 COD orders  have been already placed sucessfuly in history*/
+			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+				/* Make JMS Call For COD Confirmation Only Once*/
+				if (order.getUserCodCall() == null) {
+					try {
+						userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order, ProducerTypeEnum.COD_PRODUCER);
+						UserCodCall userCodCall = orderService.createUserCodCall(order);
+						if (userCodCall != null) {
+							orderService.saveUserCodCall(userCodCall);
+						}
+					} catch (Exception ex) {
+						logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+					}
+				}
+			}
+			}
 		}
 		return order;
 	}
@@ -339,6 +360,8 @@ public class PaymentManager {
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
+			/*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+	        notifyPaymentSuccess(order);
 
 		}
 		return order;
@@ -357,7 +380,8 @@ public class PaymentManager {
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
 			paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
-
+			/*Notify To JMS for payment success , to discard user who was eligible for Effort Bpo PaymentFailureCall */
+	        notifyPaymentSuccess(order);
 		}
 		return order;
 	}
@@ -395,6 +419,7 @@ public class PaymentManager {
 	public Payment fail(String gatewayOrderId, String gatewayReferenceId) {
 		Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
+			intiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
@@ -411,6 +436,7 @@ public class PaymentManager {
 	public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e) {
 		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
+			intiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
@@ -423,6 +449,7 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
+	        intiatePaymentFailureCall(payment.getOrder());
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setResponseMessage(responseMessage);
@@ -435,6 +462,35 @@ public class PaymentManager {
 	public Payment verifyCodPayment(Payment payment) {
 		payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
 		return paymentDao.save(payment);
+	}
+
+	private void intiatePaymentFailureCall(Order order) {
+		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallOfToday();
+		/* Make 30 Calls only for testing , Later on we will remove it*/
+		if (userCodCallList != null && userCodCallList.size() < 30) {
+			/* Make JMS Call For COD Confirmation Only Once*/
+			if (order.getUserCodCall() == null) {
+				try {
+					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order, ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
+					UserCodCall userCodCall = orderService.createUserCodCall(order);
+					if (userCodCall != null) {
+						orderService.saveUserCodCall(userCodCall);
+					}
+				} catch (Exception ex) {
+					logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+				}
+			}
+
+		}
+	}
+
+
+	public void notifyPaymentSuccess(Order order) {
+		try {
+			paymentSucessListenerApiCall.notifyToPaymentSuccessListener(order);
+		} catch (Exception ex) {
+			logger.error("Eroor in Notifying JMS for payment success" + ex.getMessage());
+		}
 	}
 
 	public OrderManager getOrderManager() {
@@ -491,5 +547,13 @@ public class PaymentManager {
 
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
+	}
+
+	public Map<Order, DateTime> getOrderPaymentFailureCallMap() {
+		return orderPaymentFailureCallMap;
+	}
+
+	public void setOrderPaymentFailureCallMap(Map<Order, DateTime> orderPaymentFailureCallMap) {
+		this.orderPaymentFailureCallMap = orderPaymentFailureCallMap;
 	}
 }

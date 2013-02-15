@@ -27,6 +27,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;
@@ -170,5 +171,12 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     public void setOrderLifecycleDao(OrderLifecycleDao orderLifecycleDao) {
         this.orderLifecycleDao = orderLifecycleDao;
     }
+
+	public List<UserCodCall> getAllUserCodCallOfToday(){
+		Date createDate = new Date();
+		String query = "from UserCodCall  where createDate >= :createDate ";
+		return getSession().createQuery(query).setDate("createDate",createDate).list();
+
+	}
 
 }
