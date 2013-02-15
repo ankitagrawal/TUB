@@ -59,6 +59,9 @@ public class ExtraInventoryLineItem implements Serializable{
   @Column (name = "mrp" , nullable = false)
   private Double mrp;
 
+  @Column (name = "remarks")
+  private String remarks;
+
   @Column (name = "is_rtv_created")
   private Boolean isRtvCreated;
 
@@ -183,5 +186,13 @@ public class ExtraInventoryLineItem implements Serializable{
 
    public Boolean getGrnCreated() {
     return isGrnCreated;
+  }
+
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
   }
 }

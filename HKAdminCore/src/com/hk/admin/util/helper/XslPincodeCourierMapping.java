@@ -117,6 +117,7 @@ public class XslPincodeCourierMapping {
                 }
               else{
                  if(pincodeCourierService.changePincodeCourierMapping(pincodeCourierMappingDB, pincodeCourierMapping)){
+                   pincodeCourierMapping.setId(pincodeCourierMappingDB.getId());
                    pincodeCourierMappings.add(pincodeCourierMapping);
                   }    
                 }
@@ -165,6 +166,7 @@ public class XslPincodeCourierMapping {
         int initialRowNo = 1;
 
         for (PincodeCourierMapping pincodeCourierMapping : pincodeCourierMappings) {
+            if(pincodeCourierMapping.isPrepaidAir() || pincodeCourierMapping.isPrepaidGround() || pincodeCourierMapping.isCodAir() || pincodeCourierMapping.isCodGround()){
             row = sheet1.createRow(initialRowNo);
             for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
                 row.createCell(columnNo);
@@ -179,7 +181,7 @@ public class XslPincodeCourierMapping {
             setCellValue(row, 5, pincodeCourierMapping.isCodGround() ? "Y" : "N");
             setCellValue(row, 6, pincodeCourierMapping.getRoutingCode());
             initialRowNo++;
-
+            }
         }
 
         Sheet sheet2 = wb.createSheet("Courier IDs");

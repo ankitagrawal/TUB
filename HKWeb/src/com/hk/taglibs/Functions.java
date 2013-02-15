@@ -283,6 +283,18 @@ public class Functions {
         }
     }
 
+	public static Long netInventoryAtServiceableWarehouses(Object o) {
+		AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
+
+		if (o instanceof Sku) {
+			Sku sku = (Sku) o;
+			return adminInventoryService.getNetInventory(sku);
+		} else {
+			ProductVariant productVariant = (ProductVariant) o;
+			return adminInventoryService.getNetInventoryAtServiceableWarehouses(productVariant);
+		}
+	}
+
     public static Long bookedQty(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
         if (o instanceof Sku) {
@@ -688,7 +700,8 @@ public class Functions {
 
     public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
-        List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());

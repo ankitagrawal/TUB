@@ -70,20 +70,27 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
         }else{
             //all variants without sku marked out of stock
             //todo check for product oos as well
-            productVariant.setOutOfStock(true);
-            productVariantService.save(productVariant);
+	          List<Sku> skuListToMarkProductOOS = getSkuService().getSKUsForMarkingProductOOS(productVariant);
+	          if(skuListToMarkProductOOS == null || skuListToMarkProductOOS.isEmpty()) {
+		          if (!productVariant.isOutOfStock()) {
+			          productVariant.setOutOfStock(true);
+			          productVariantService.save(productVariant);
+		          }
+	          }
         }
     }
 
     @Override
     public Long getAggregateCutoffInventory(ProductVariant productVariant) {
-        List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         return this.getAggregateCutoffInventory(skuList);
     }
 
@@ -258,7 +265,8 @@ public class InventoryServiceImpl implements InventoryService {
 		if (productVariant != null) {
 			Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
 			logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
-			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			//Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
 			logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}

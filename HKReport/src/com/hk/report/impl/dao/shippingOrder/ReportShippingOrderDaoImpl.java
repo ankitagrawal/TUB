@@ -54,8 +54,10 @@ public class ReportShippingOrderDaoImpl extends BaseDaoImpl implements ReportShi
           paymentWhereClause = " and pm.id != " + EnumPaymentMode.COD.getId();
       }
       if (shippingOrderStatusId == null) {
-          allSOstatusForReconReport= EnumShippingOrderStatus.SO_Delivered.getId()+","+EnumShippingOrderStatus.SO_Returned.getId()+","
-                  + EnumShippingOrderStatus.SO_Lost.getId()+","+ EnumShippingOrderStatus.SO_Shipped.getId()+","+EnumShippingOrderStatus.RTO_Initiated.getId();
+          allSOstatusForReconReport= EnumShippingOrderStatus.SO_Delivered.getId()+","+EnumShippingOrderStatus.SO_RTO.getId()+","
+                  + EnumShippingOrderStatus.SO_Lost.getId()+","+ EnumShippingOrderStatus.SO_Shipped.getId()+","+EnumShippingOrderStatus.RTO_Initiated.getId()
+                  + "," + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId() + "," + EnumShippingOrderStatus.SO_Installed.getId()
+                  + "," + EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId();
           shippingOrderClause = " and os.id in (" + allSOstatusForReconReport+")";
       } else {
           shippingOrderClause = " and os.id = " + shippingOrderStatusId;

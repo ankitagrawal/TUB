@@ -94,12 +94,12 @@ public class FedExAwbServiceImpl implements ThirdPartyAwbService {
        FedExShipmentDeleteUtil fedExShipmentDeleteUtil = new FedExShipmentDeleteUtil(fedExAuthKey, fedExAccountNo, fedExMeterNo, fedExPassword, fedExServerUrl);
        return fedExShipmentDeleteUtil.deleteShipment(awbNumber);
     }
-
+	/*
 	@Override
 	public String trackFedExShipment(String trackingId){
 		// Tracking can only be done for real fedex shipments 
 		FedExTrackShipmentUtil fedExTrack = new FedExTrackShipmentUtil();
 		return fedExTrack.trackFedExShipment(trackingId);
 	}
-
+    */
 }

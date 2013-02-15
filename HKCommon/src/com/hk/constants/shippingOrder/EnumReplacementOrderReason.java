@@ -6,21 +6,21 @@ import java.util.List;
 
 public enum EnumReplacementOrderReason {
 
-	Damaged(10L, "courier-Shipment was damaged"),                                                     //RTO, replacement
-	WrongDispatched(20L, "Wrong variant was sent"),                                           //replacement
-    CustomerUnavailable(30L, "Customer-Customer was not present hence shipment was RTO"),              //RTO
-	WrongAddress(40L, "Customer-RTO due to wrong address mentioned"),                                  //RTO
-	ServiceUnavailable(50L, "courier-RTO due to service unavailability of the courier."),             //RTO
-	Expired(60L, "The product is past the expiry date."),                                     //replacement
-	Missing(70L, "The product went missing during transit."),                                 //replacement
-	DelayInDelivery(80L, "courier-Delay in Delivery"),                                                //RTO
-	ShipmentOffload(90L, "courier-Shipment Offload"),                                                 //RTO
-	CustomerNotInterested(100L, "Customer-Customer not interested"),                                   //RTO
-	CodAmountNotReady(110L, "Customer-COD Amount not ready"),                                          //RTO
-	CustomerNotContactable(120L, "Customer-Customer not contactable"),
-	OutsideDeliveryArea(130L, "courier-Outside Delivery Area"),                             //RTO
-	FakeRTO(140L, "courier-Fake RTO"),                                                    //RTO
-	ShipmentMisrouted(150L, "courier-Shipment Misrouted");                                //RTO
+	Damaged(10L, "Courier - Shipment was damaged"),                                                     //RTO, replacement
+	WrongDispatched(20L, "HealthKart - Wrong variant was sent"),                                           //replacement
+  CustomerUnavailable(30L, "Customer - Customer was not present hence shipment was RTO"),              //RTO
+	WrongAddress(40L, "Customer - RTO due to wrong address mentioned"),                                  //RTO
+	ServiceUnavailable(50L, "Courier - RTO due to service unavailability of the courier."),             //RTO
+	Expired(60L, "HealthKart - The product is expired."),                                     //replacement
+	Missing(70L, "HealthKart - The product went missing during transit."),                                 //replacement
+	DelayInDelivery(80L, "Courier - Delay in Delivery"),                                                //RTO
+	ShipmentOffload(90L, "Courier - Shipment Offload"),                                                 //RTO
+	CustomerNotInterested(100L, "Customer - Customer not interested"),                                   //RTO
+	CodAmountNotReady(110L, "Customer - COD Amount not ready"),                                          //RTO
+	CustomerNotContactable(120L, "Customer - Customer not contactable"),
+	OutsideDeliveryArea(130L, "Courier - Outside Delivery Area"),                             //RTO
+	FakeRTO(140L, "Courier - Fake RTO"),                                                    //RTO
+	ShipmentMisrouted(150L, "Courier - Shipment Misrouted");                                //RTO
 
 
 

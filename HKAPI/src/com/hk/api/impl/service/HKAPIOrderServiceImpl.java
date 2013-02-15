@@ -163,7 +163,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
                 ProductVariant productVariant = getProductVariantService().getVariantById(apiCartLineItem.getProductId().trim());
                 if (productVariant != null) {
                     CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
-                    cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
+                    cartLineItemBuilder.ofType(getCartLineItemType(apiCartLineItem.getCartLineItemType()));
                     cartLineItemBuilder.forVariantQty(productVariant,apiCartLineItem.getQty()).hkPrice(apiCartLineItem.getStorePrice()).markedPrice(apiCartLineItem.getStoreMrp()).discountOnHkPrice(apiCartLineItem.getDiscountOnStorePrice());
                     CartLineItem cartLineItem=cartLineItemBuilder.build();
                     cartLineItem.setOrder(order);
@@ -171,12 +171,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
                 }
             }else {
                 CartLineItemBuilder cartLineItemBuilder=new CartLineItemBuilder();
-                for(EnumCartLineItemType enumType:EnumCartLineItemType.values()){
-                    if(enumType.getId().equals(apiCartLineItem.getCartLineItemType())){
-                        cartLineItemBuilder.ofType(enumType);
-                        break;
-                    }
-                }
+                cartLineItemBuilder.ofType(getCartLineItemType(apiCartLineItem.getCartLineItemType()));
                 cartLineItemBuilder.hkPrice(apiCartLineItem.getStorePrice()).markedPrice(apiCartLineItem.getStoreMrp()).discountOnHkPrice(apiCartLineItem.getDiscountOnStorePrice());
                 CartLineItem cartLineItem=cartLineItemBuilder.build();
                 cartLineItem.setQty(apiCartLineItem.getQty());
@@ -185,6 +180,15 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
             }
         }
         return cartLineItems;
+    }
+
+    private  EnumCartLineItemType getCartLineItemType(Long itemType){
+        for(EnumCartLineItemType enumType:EnumCartLineItemType.values()){
+            if(enumType.getId().equals(itemType)){
+                return enumType;
+            }
+        }
+        return null;
     }
 
     @Deprecated
@@ -217,7 +221,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
 
                 if (shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Shipped.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Delivered.getId()
-                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Returned.getId()
+                        && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_RTO.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Lost.getId()
                         && shippingOrder.getOrderStatus().getId() != EnumShippingOrderStatus.SO_Cancelled.getId()) {
 
