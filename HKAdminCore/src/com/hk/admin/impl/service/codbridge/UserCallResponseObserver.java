@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hk.pact.service.codbridge.CodConfirmationOrPaymentFailureCalling;
+import com.hk.pact.service.codbridge.OrderEventPublisher;
 
 
 /**
@@ -31,15 +31,15 @@ import com.hk.pact.service.codbridge.CodConfirmationOrPaymentFailureCalling;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class UserCODConfirmationCallObserver implements OrderResponseObserver {
-	private static Logger logger = LoggerFactory.getLogger(UserCODConfirmationCallObserver.class);
+public class UserCallResponseObserver implements OrderResponseObserver {
+	private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
 
 	@Autowired
 	OrderService orderService;
 	@Autowired
 	AdminOrderService adminOrderService;
 	@Autowired
-	CodConfirmationOrPaymentFailureCalling userCodConfirmationCalling;
+    OrderEventPublisher userCodConfirmationCalling;
 	@Autowired
 	UserService userService;
 
@@ -68,7 +68,7 @@ public class UserCODConfirmationCallObserver implements OrderResponseObserver {
 
 				if (keyPressResponse == confirmed) {
 					userCodCall.setCallStatus(EnumUserCodCalling.CONFIRMED.getId());
-					userCodCall.setRemark("Payment Sucessful"); 					
+					userCodCall.setRemark("Payment Successful");
 					orderService.saveUserCodCall(userCodCall);
 					adminOrderService.confirmCodOrder(order);
 
@@ -86,10 +86,6 @@ public class UserCODConfirmationCallObserver implements OrderResponseObserver {
 		} catch (Exception ex) {
 			logger.error("Exception in Recieving Response " + ex.getMessage());
 		}
-
-
 	}
-
-
 }
 

@@ -23,9 +23,8 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.codbridge.CodConfirmationOrPaymentFailureCalling;
+import com.hk.pact.service.codbridge.OrderEventPublisher;
 import com.hk.util.TokenUtils;
-import com.hk.hkjunction.producer.ProducerTypeEnum;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.List;
-import com.hk.pact.service.codbridge.PaymentSuccessListenerApiCall;
 
 /**
  * Author: Kani Date: Jan 3, 2009
@@ -65,9 +63,7 @@ public class PaymentManager {
 	@Autowired
 	SMSManager smsManager;
 	@Autowired
-	CodConfirmationOrPaymentFailureCalling userCodConfirmationCalling;
-	@Autowired
-    PaymentSuccessListenerApiCall paymentSuccessListenerApiCall;
+    OrderEventPublisher orderEventPublisher;
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
@@ -320,7 +316,7 @@ public class PaymentManager {
 				/* Make JMS Call For COD Confirmation Only Once*/
 				if (order.getUserCodCall() == null) {
 					try {
-						userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order, ProducerTypeEnum.COD_PRODUCER);
+						orderEventPublisher.publishCODEvent(order);
 						UserCodCall userCodCall = orderService.createUserCodCall(order);
 						if (userCodCall != null) {
 							orderService.saveUserCodCall(userCodCall);
@@ -464,7 +460,7 @@ public class PaymentManager {
 			/* Make JMS Call For COD Confirmation Only Once*/
 			if (order.getUserCodCall() == null) {
 				try {
-					userCodConfirmationCalling.triggerAutomaticCodCustomerCalling(order, ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
+					orderEventPublisher.publishPaymentFailureEvent(order);
 					UserCodCall userCodCall = orderService.createUserCodCall(order);
 					if (userCodCall != null) {
 						orderService.saveUserCodCall(userCodCall);
@@ -480,7 +476,7 @@ public class PaymentManager {
 
 	public void notifyPaymentSuccess(Order order) {
 		try {
-			paymentSuccessListenerApiCall.notifyToPaymentSuccessListener(order);
+            orderEventPublisher.publishPaymentSuccessEvent(order);
 		} catch (Exception ex) {
 			logger.error("Error in Notifying JMS for payment success" + ex.getMessage());
 		}

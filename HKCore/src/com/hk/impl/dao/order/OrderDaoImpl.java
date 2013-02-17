@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.akube.framework.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.DetachedCriteria;
@@ -173,10 +174,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     }
 
 	public List<UserCodCall> getAllUserCodCallOfToday(){
-		Date createDate = new Date();
-		String query = "from UserCodCall  where createDate >= :createDate ";
-		return getSession().createQuery(query).setDate("createDate",createDate).list();
-
+        Date today = new Date();
+		Date createDate = DateUtils.getStartOfDay(today);
+        Date nextDate = DateUtils.getEndOfDay(today);
+		String query = "from UserCodCall  where createDate >= :createDate and createDate <= :nextDate";
+		return getSession().createQuery(query).setDate("createDate",today).setDate("nextDate",nextDate).list();
 	}
-
 }
