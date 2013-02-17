@@ -67,7 +67,9 @@ public class PaymentManager {
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
-	@Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
+    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
+    private Long maxCODCallCount;
+    @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
 	private Long defaultGateway;
 
 	@Autowired
@@ -311,7 +313,7 @@ public class PaymentManager {
 			order = getOrderManager().orderPaymentReceieved(payment);
 
 			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
-			if(userCodCallList != null && userCodCallList.size() < 30) {
+			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
 			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
 				/* Make JMS Call For COD Confirmation Only Once*/
 				if (order.getUserCodCall() == null) {
