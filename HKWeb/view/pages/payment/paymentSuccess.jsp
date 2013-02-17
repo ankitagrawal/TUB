@@ -46,7 +46,15 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
-    <div style="margin-top: 50px;">
+   <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+        <div>
+            <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
+            </a>
+        </div>
+    </c:if>
+    <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
         </h1>
@@ -192,7 +200,23 @@
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(bs, s);
 		})();
-	</script>	
+	</script>
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='';
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<!--End: Tracking code for MicroAd Blade-->
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
@@ -214,7 +238,7 @@
 </c:if>
 
     <c:choose>
-        <c:when test="${actionBean.payment != null}">
+        <c:when test="${actionBean.payment != null}">         
             <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">

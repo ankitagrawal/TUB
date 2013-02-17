@@ -96,6 +96,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
 
 	    shipmentService.createShipment(replacementOrder, true);
+	    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
         return replacementOrder;
     }
 

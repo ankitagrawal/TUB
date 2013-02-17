@@ -30,6 +30,15 @@ public enum EnumRtvNoteStatus {
     return id;
   }
 
+  public static RtvNoteStatus asRtvNoteStatusById(Long rtvNoteStatusId){
+    for(EnumRtvNoteStatus rtvNoteStatus : values()){
+      if(rtvNoteStatus.getId().equals(rtvNoteStatusId)){
+        return rtvNoteStatus.asRtvNoteStatus();
+      }
+    }
+    return null;
+  }
+
    public RtvNoteStatus asRtvNoteStatus() {
     RtvNoteStatus rtvNoteStatus = new RtvNoteStatus();
     rtvNoteStatus.setId(this.getId());
