@@ -2,10 +2,7 @@ package com.hk.web.action.core.catalog;
 
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -27,6 +24,7 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
 import com.hk.dto.search.SearchResult;
@@ -35,6 +33,7 @@ import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
@@ -72,7 +71,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
   ProductSearchService productSearchService;
 
   @Autowired
-   CategoryDaoImpl categoryDao;
+  CategoryDao categoryDao;
   @Autowired
    MenuHelper menuHelper;
   @Autowired
@@ -106,7 +105,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
                   String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
                   onlyCOD = Boolean.parseBoolean( params[0].toString());
               }
-			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), topLevelCategory, getPageNo(), getPerPage(), preferredZone);
+			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), categoryDao.getCategoryByName(topLevelCategory), getPageNo(), getPerPage(), preferredZone);
 			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
 		  } catch (Exception e) {
 			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");
@@ -123,7 +122,10 @@ public class BrandCatalogAction extends BasePaginatedAction {
 				  }
 			  }
 		  }
-		  seoData = seoManager.generateSeo(brand+"||"+topLevelCategory); 		  		  
+      if (topLevelCategory != null && categoryDao.getCategoryByName(topLevelCategory) != null)
+        seoData = seoManager.generateSeo(brand + "||" + topLevelCategory);
+      else
+        seoData = seoManager.generateSeo(brand);
 	  }
 	  return new ForwardResolution("/pages/brand-catalog.jsp");
   }
@@ -210,4 +212,5 @@ public class BrandCatalogAction extends BasePaginatedAction {
   public void setSeoData(SeoData seoData) {
     this.seoData = seoData;
   }
+  
 }

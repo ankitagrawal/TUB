@@ -451,8 +451,20 @@ public class ProductServiceImpl implements ProductService {
         if (product.getName() != null){
             solrProduct.setName(product.getName());
         }
-        if (product.getBrand() != null){
-            solrProduct.setBrand(product.getBrand());
+        if (product.getBrand() != null) {
+          List<String> brands = new ArrayList<String>();
+          if (product instanceof Combo) {
+            Combo combo = (Combo) product;
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+              String cpBrand = comboProduct.getProduct().getBrand();
+              if (cpBrand != null) {
+                brands.add(cpBrand);
+              }
+            }
+          } else {
+            brands.add(product.getBrand());
+          }
+          solrProduct.setBrand(brands);
         }
         if (product.getOverview() != null){
             solrProduct.setOverview(StringEscapeUtils.escapeHtml(product.getOverview().trim()));
@@ -491,9 +503,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<String> categories = new ArrayList<String>();
+        List<String> categoryDisplayNames = new ArrayList<String>();
         if (product.getCategories() != null){
             for (Category category : product.getCategories()){
                 categories.add(category.getName());
+                categoryDisplayNames.add(category.getDisplayName());
             }
         }
 
@@ -563,6 +577,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         solrProduct.setCategory(categories);
+        solrProduct.setCategoryDisplayName(categoryDisplayNames);
         return solrProduct;
     }
 
