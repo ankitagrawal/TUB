@@ -20,6 +20,7 @@ bin-groovy/
 *.classpath
 *.project
 *.war
+*.rar
 Thumbs.db
 .idea
 .project
