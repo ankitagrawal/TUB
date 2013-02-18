@@ -28,15 +28,12 @@ HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
 
 
 .b2bDiv {
-	border-radius: 10px;
-	box-shadow: 1px 1px 1px 0px;
 	position: relative;
 	clear: both;
 	margin-left: 15px;
 	margin-right: 15px;
 	top: 5px;
-	overflow-y: scroll;
-	height: 260px;
+	height: auto;
 	margin-bottom: 17px;
 	padding: 25px;
 }
@@ -87,7 +84,7 @@ font-weight :  bold !important;
 		$(document).ready(function () {
 			var totalPayableAmount=0.0;
 			$('.totalPrice').each(function(){
-				totalPayableAmount=totalPayableAmount+parseFloat($(this).val());
+				totalPayableAmount=totalPayableAmount+parseFloat($(this).html());
 			});
 			$("#totalPayableAmount").html(totalPayableAmount);
 			var counter=$("#indexCounter").val();
@@ -106,7 +103,7 @@ font-weight :  bold !important;
 		            '<td><div class="img48" style="vertical-align:top;"></div></td>'+
 		            '<td align="center"><span id="mrp" class="mrp"/></td>' +
 		            '<td><input name="b2bProductList[' + index + '].quantity" class="qty b2bTableInput" value="0"/></td>' +		            
-		            '<td align="center"><input id="totalPrice" readonly="readonly" class="totalPrice b2bTableInput" type="text" value="0"></td>' +
+		            '<td align="center"><label id="totalPrice" class="totalPrice b2bTableInput">0</label></td>' +
 		            '</tr><tr height="10"></tr>';
 		        $('#poTable').append(newRowHtml);
 		        return true;
@@ -118,9 +115,9 @@ font-weight :  bold !important;
 								var price = parseFloat(row.find(".mrp").html());
 								if (quantity != null && quantity >= 0 && !isNaN(price)) {
 									var totalPrice = parseFloat(quantity * price);
-									row.find(".totalPrice").val(totalPrice);
+									row.find(".totalPrice").html(totalPrice);
 								} else {
-									row.find(".totalPrice").val(0);
+									row.find(".totalPrice").html(0);
 								}
 								
 								var productVariantId = row.find('.variant').val();
@@ -151,6 +148,7 @@ font-weight :  bold !important;
 										var options = res.data.options.toCapitalCase();
 										self1.html(variantName + "</br>" + "<em>" + options + "</em>");
 										self2.html(res.data.variant.b2bPrice);
+										self4.val(0);
 										var path = "${pageContext.request.contextPath}";
 										var url = path + res.data.imageUrl;
 										imgDiv.html('<img class="prod48" src="' + url + '" />');
@@ -159,11 +157,13 @@ font-weight :  bold !important;
 										if (res.data.variant.outOfStock) {
 										row.find('.variant').css("background-color", "#FF0000");
 										row.find('.variant').attr("title", "Product Out of Stock");
+										$("#variantDetailsInavlid").html('<h4>'+"Out Of Stock"+'</h4>');
 										error=true;
 										} 
 										if (res.data.inventory == 0) {
 										row.find('.variant').css("background-color", "#FF0000");
 										row.find('.variant').attr("title", "Inventory Not Found");
+										$("#variantDetailsInavlid").html('<h4>'+"Inventory Not Found"+'</h4>');
 										error=true;
 										}
 										if((res.data.variant.outOfStock)&& (res.data.inventory == 0)){
@@ -174,6 +174,7 @@ font-weight :  bold !important;
 										if(!error){
 											row.css('background-color', '#F2F7FB');
 											 $('input[type="submit"]').removeAttr('disabled');
+											 $("#variantDetailsInavlid").html('');
 										}
 
 									updateTotal('.totalPrice', "#totalPayableAmount", productVariantId, 0);
@@ -189,7 +190,7 @@ font-weight :  bold !important;
 									}
 									self1.html('');
 									self2.html('');
-									self3.val(0);
+									self3.html(0);
 									self4.val(0);
 									imgDiv.html("");
 									$("#variantDetailsInavlid").html('<h4>' + res.message + '</h4>');
@@ -224,7 +225,7 @@ font-weight :  bold !important;
 				var total = 0;
 				$.each($(fromTotalClass), function(index, value) {
 					var eachRow = $(value);
-					var eachRowValue = eachRow.val().trim();
+					var eachRowValue = eachRow.html().trim();
 					total += parseFloat(eachRowValue);
 				});
 
@@ -292,9 +293,9 @@ font-weight :  bold !important;
 									<td align="center"><span id="mrp" class="mrp">${lineItem.productVariant.b2bPrice}</span></td>
 									<td><input name="b2bProductList[${item.count-1}].quantity"
 										class="qty b2bTableInput" value="${lineItem.qty}"/></td>
-									<td align="center"><input id="totalPrice"
-										readonly="readonly" class="totalPrice b2bTableInput"
-										type="text" value="${lineItem.productVariant.b2bPrice*lineItem.qty}"></td>
+									<td align="center"><label id="totalPrice"
+										 class="totalPrice b2bTableInput"
+										>${lineItem.productVariant.b2bPrice*lineItem.qty}</label></td>
 								</tr>
 								<tr height="10"></tr>
 								<c:set var="newIndex" value="${item.count}" scope="page"/>

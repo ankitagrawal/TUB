@@ -19,6 +19,7 @@ import com.hk.manager.EmailManager;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.HomeAction;
+import com.hk.web.action.core.b2b.B2BBulkOrderAction;
 import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.SUPER_LOGIN }, authActionBean = AdminPermissionAction.class, disallowRememberMe = true)
@@ -60,6 +61,11 @@ public class AssumedLoginAction extends BaseAction {
             }
         }
         getPrincipal().setAssumedIdentity(user);
+        if(user.getRoles().contains(getRoleService().getRoleByName(EnumRole.B2B_USER.getRoleName())))
+        {
+        	 return new RedirectResolution(B2BBulkOrderAction.class);
+        	
+        }
         return new RedirectResolution(HomeAction.class);
     }
 

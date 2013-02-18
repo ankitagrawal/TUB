@@ -95,17 +95,14 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         }
         if (StringUtils.isNotBlank(userFilterDto.getPhone())) {
         	ud_criteria.add(Restrictions.eq("phone", Long.parseLong(userFilterDto.getPhone())));
-        	//criteria.add(Restrictions.or(con_criteria, Subqueries.propertyIn("u.id", ud_criteria)));
+        	dis_criteria.add(Subqueries.propertyIn("u.id", ud_criteria));
         }
         
         if(!is_empty_conjuction)
         {
-        	 dis_criteria.add(con_criteria).add(Subqueries.propertyIn("u.id", ud_criteria));
+        	 dis_criteria.add(con_criteria);
         }
-        else
-        {
-        	dis_criteria.add(Subqueries.propertyIn("u.id", ud_criteria));
-        }
+       
         criteria.add(Restrictions.and(dis_criteria, Subqueries.propertyIn("u.id", b2b_criteria)));
         return list(criteria, pageNo, perPage);
 	}
