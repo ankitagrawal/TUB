@@ -17,7 +17,7 @@
 					<li>
 						<a href="${pageContext.request.contextPath}${menuNode.url}?brand=${hk:urlEncode(ca.brand)}"
 						   style="font-size:1.2em;color:#444444;">
-								${menuNode.name}-${menuNode.level}
+								${menuNode.name}
 						</a>
 					</li>
 				</c:forEach>

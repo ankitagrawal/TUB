@@ -11553,4 +11553,9 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1361217619752-1">
+        <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
+    </changeSet>
+    
 </databaseChangeLog>

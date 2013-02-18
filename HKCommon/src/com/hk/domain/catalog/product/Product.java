@@ -54,7 +54,7 @@ public class Product  implements java.io.Serializable {
     @Column(name = "thumb_url", nullable = false, length = 150)
     private String               thumbUrl;
 
-    @Column(name = "order_ranking", precision = 22, scale = 0)
+    @Column(name = "order_ranking", precision = 22, scale = 0, nullable = false)
     private Double               orderRanking;
 
     @Column(name = "brand", length = 100)
