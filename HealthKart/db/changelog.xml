@@ -11557,5 +11557,15 @@
     <changeSet author="Ajeet (generated)" id="1361217619752-1">
         <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
     </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-2">
+        <sql>
+            update product set order_ranking=1.0 where order_ranking=0.0 and deleted=0;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-3">
+        <sql>
+            update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
+        </sql>
+    </changeSet>
     
 </databaseChangeLog>
