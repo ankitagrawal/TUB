@@ -84,7 +84,7 @@ public class UserCallResponseObserver implements OrderResponseObserver {
 				logger.error("Invalid Order ID Returned From JMS" +orderId);
 			}
 		} catch (Exception ex) {
-			logger.error("Exception in Recieving Response " + ex.getMessage());
+			logger.error("Exception in Receiving Response " + ex.getMessage());
 		}
 	}
 }

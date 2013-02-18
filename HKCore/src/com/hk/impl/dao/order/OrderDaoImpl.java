@@ -178,6 +178,6 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 		Date createDate = DateUtils.getStartOfDay(today);
         Date nextDate = DateUtils.getEndOfDay(today);
 		String query = "from UserCodCall  where createDate >= :createDate and createDate <= :nextDate";
-		return getSession().createQuery(query).setDate("createDate",today).setDate("nextDate",nextDate).list();
+		return getSession().createQuery(query).setDate("createDate",createDate).setDate("nextDate",nextDate).list();
 	}
 }
