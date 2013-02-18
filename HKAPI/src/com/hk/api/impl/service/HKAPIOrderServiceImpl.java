@@ -150,7 +150,7 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     public Payment createPayment(Order order, Set<CartLineItem> cartLineItems, HKAPIPaymentDTO hkapiPaymentDTO) {
         double orderAmount=0.0;
         for(CartLineItem cartLineItem:cartLineItems){
-            orderAmount=orderAmount+cartLineItem.getHkPrice()-cartLineItem.getDiscountOnHkPrice();
+            orderAmount=orderAmount+cartLineItem.getHkPrice()*cartLineItem.getQty()-cartLineItem.getDiscountOnHkPrice();
         }
         PaymentMode paymentMode = getPaymentModeDao().getPaymentModeById(new Long(hkapiPaymentDTO.getPaymentmodeId()));
         return automatedOrderService.createNewPayment(order,orderAmount, paymentMode);
