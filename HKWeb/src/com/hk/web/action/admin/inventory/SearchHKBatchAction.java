@@ -42,6 +42,9 @@ public class SearchHKBatchAction extends BaseAction {
 
      private List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
 
+   private  SkuItem skuItemBarcode;
+    private boolean itemBarcodePresent;
+
     @DefaultHandler
     @DontValidate
     public Resolution pre() {
@@ -51,9 +54,13 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+//            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
+//                if ( skuItemBarcode.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())){
+//                      itemBarcodePresent = true;
+//                }
             } else {
                 skuGroupList = skuGroupService.getSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             }
@@ -79,4 +86,20 @@ public class SearchHKBatchAction extends BaseAction {
 	public void setSkuGroupList(List<SkuGroup> skuGroupList) {
 		this.skuGroupList = skuGroupList;
 	}
+
+    public boolean isItemBarcodePresent() {
+        return itemBarcodePresent;
+    }
+
+    public void setItemBarcodePresent(boolean itemBarcodePresent) {
+        this.itemBarcodePresent = itemBarcodePresent;
+    }
+
+    public SkuItem getSkuItemBarcode() {
+        return skuItemBarcode;
+    }
+
+    public void setSkuItemBarcode(SkuItem skuItemBarcode) {
+        this.skuItemBarcode = skuItemBarcode;
+    }
 }

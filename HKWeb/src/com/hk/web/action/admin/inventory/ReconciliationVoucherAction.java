@@ -431,7 +431,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 //   getMap
         ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
         SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems);
 
         String barcodeFilePath = null;
         Warehouse userWarehouse = null;
@@ -464,15 +464,17 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public Resolution downloadAllBarcode() {
            String barcodeFilePath = null;
            Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
-         List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);        
-
-
+         List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);
+        if (rvLineItems == null || rvLineItems.size ()< 0){
+           addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+            return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+        }
            for (RvLineItem rvLineItem : rvLineItems) {
 //            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
               List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,null,null, 1L);
                if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                    SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-                   Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems, skuGroup.getExpiryDate());
+                   Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems);
                    skuItemDataMap.putAll(skuItemDataMaptemp);
                    Warehouse userWarehouse = null;
                    if (getUserService().getWarehouseForLoggedInUser() != null) {

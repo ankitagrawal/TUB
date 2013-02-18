@@ -78,5 +78,5 @@ public interface AdminInventoryService {
 
    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,Long transferQty) ;
 
-    public Map<Long, String> skuItemDataMap (  List<SkuItem> checkedInSkuItems, Date expiryDate);
+    public Map<Long, String> skuItemDataMap (  List<SkuItem> checkedInSkuItems);
 }

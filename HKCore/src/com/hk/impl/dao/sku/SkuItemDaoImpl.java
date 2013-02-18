@@ -100,6 +100,13 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId) {
+           List<SkuItem> skuItems = getSession().createQuery("select si from SkuItem si where si.barcode = :barcode and si.skuGroup.sku.warehouse.id = :warehouseId").
+                   setParameter("barcode", barcode).setParameter("warehouseId", warehouseId).list();
+           return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
+       }
+
 }
 
 

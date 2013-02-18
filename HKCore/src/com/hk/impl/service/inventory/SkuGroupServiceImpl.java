@@ -93,4 +93,8 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     }
 
 
+     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId){
+           return skuItemDao.getSkuItemByBarcode(barcode, warehouseId);
+     }
+
 }
