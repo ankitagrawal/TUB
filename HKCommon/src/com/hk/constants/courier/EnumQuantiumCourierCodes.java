@@ -32,6 +32,7 @@ public enum EnumQuantiumCourierCodes {
 	RTO("RTO","Return To Origin"),
 	FRK("FRK","Franked"),
 	URO("URO","Undelivered Received at Origin"),
+	CBD("CBD","What is CBD"),
 	URBS("URBS", "Undelivered returned back to Shipper");
 
 	private java.lang.String code;

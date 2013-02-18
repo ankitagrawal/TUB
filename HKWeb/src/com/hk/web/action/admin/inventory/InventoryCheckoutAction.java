@@ -210,7 +210,34 @@ public class InventoryCheckoutAction extends BaseAction {
 
             if (skuGroup != null) {
                 if (lineItem == null) {
-                    lineItem = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+	                //There can be more than one line item corresponding to a Sku, and a Shipping Order only in case of lenses
+	                //So, to handle these cases, list of line items are being fetched, instead of only unique line item.
+	                List<LineItem> lineItemsForSOBySku = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+	                if(lineItemsForSOBySku != null) {
+		                if(lineItemsForSOBySku.size() == 1) {         //for normal case
+			                lineItem = lineItemsForSOBySku.get(0);
+		                } else if(lineItemsForSOBySku.size() > 1) { //for lens case
+			                for(LineItem lineItemBySku : lineItemsForSOBySku) {
+				                Long checkedOutItemCountForLineItem = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItemBySku);
+				                if(checkedOutItemCountForLineItem == null) {
+					                checkedOutItemCountForLineItem = 0L;
+				                }
+
+				                //checkedOutItemCountForLineItem should never be positive, because sum(qty) in PVI against any line item should be <=0
+				                //If the case arrives, there would be some problem in the PVI data, tech would handle it manually.
+				                if(checkedOutItemCountForLineItem > 0) {
+					                addRedirectAlertMessage(new SimpleMessage("Oops!! Item could not be checked Out. Please contact tech support"));
+					                return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc",
+							                skuGroup.getSku().getProductVariant().getUpc());
+				                }
+
+				                if(lineItemBySku.getQty() > Math.abs(checkedOutItemCountForLineItem)) {
+					                lineItem = lineItemBySku;
+					                break;
+				                }
+			                }
+		                }
+	                }
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
