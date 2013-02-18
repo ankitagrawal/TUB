@@ -57,7 +57,7 @@ public class UserCallResponseObserver implements OrderResponseObserver {
 			order = orderService.find(Long.valueOf(orderId.trim()));
 			if (order != null) {
 				if (order.getUserCodCall() == null) {
-					userCodCall = orderService.createUserCodCall(order);
+					userCodCall = orderService.createUserCodCall(order,EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
 					userCodCall.setRemark(sourceOfMessage);
 
 				} else {
@@ -68,15 +68,16 @@ public class UserCallResponseObserver implements OrderResponseObserver {
 
 				if (keyPressResponse == confirmed) {
 					userCodCall.setCallStatus(EnumUserCodCalling.CONFIRMED.getId());
-					userCodCall.setRemark("Payment Successful");
+					userCodCall.setRemark(EnumUserCodCalling.CONFIRMED.getName());
 					orderService.saveUserCodCall(userCodCall);
-					adminOrderService.confirmCodOrder(order);
+                    String comment = "Order Confirmed By " +orderResponse.getSource();
+					adminOrderService.confirmCodOrder(order ,comment);
 
 				} else if (keyPressResponse == cancelled) {
 					String cancellationRemark = sourceOfMessage + "called User for COD confirmation , User Request for cancel";
 					adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), cancellationRemark, userService.getAdminUser());
 					userCodCall.setCallStatus(EnumUserCodCalling.CANCELLED.getId());
-					userCodCall.setRemark("Cancelled");
+					userCodCall.setRemark(EnumUserCodCalling.CANCELLED.getName());
 					orderService.saveUserCodCall(userCodCall);
 				}
 

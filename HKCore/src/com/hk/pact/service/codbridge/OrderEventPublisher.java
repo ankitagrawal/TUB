@@ -1,6 +1,7 @@
 package com.hk.pact.service.codbridge;
 
 import com.akube.framework.util.StringUtils;
+import com.hk.hkjunction.observers.OrderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,29 +52,36 @@ public class OrderEventPublisher {
         return orderStatusMessage;
     }
 
-    public void publishCODEvent(Order order) throws Exception{
+    public boolean publishCODEvent(Order order){
+        boolean messagePublished = false;
         try{
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
+            orderStatusMessage.setOrderType(OrderType.COD);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
-            producer.publishMessage(orderStatusMessage);
+            messagePublished = producer.publishMessage(orderStatusMessage);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
+        return messagePublished;
     }
 
-    public void publishPaymentFailureEvent(Order order) throws Exception{
+    public boolean publishPaymentFailureEvent(Order order) {
+        boolean messagePublished = false;
         try{
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
+            orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
-            producer.publishMessage(orderStatusMessage);
+            messagePublished =  producer.publishMessage(orderStatusMessage);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
+        return messagePublished;
     }
 
-    public void publishPaymentSuccessEvent(Order order) throws Exception{
+    public void publishPaymentSuccessEvent(Order order){
         try{
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
+            orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             producer.publishMessage(orderStatusMessage);
         }catch (Exception ex){

@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -766,11 +767,11 @@ public class OrderServiceImpl implements OrderService {
 		return (UserCodCall)baseDao.save(userCodCall);
 	}
 
-	public UserCodCall createUserCodCall(Order order) {
+	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling) {
 		UserCodCall userCodCall = new UserCodCall();
 		userCodCall.setBaseOrder(order);
-		userCodCall.setRemark(" PENDING_WITH_THIRD_PARTY");
-		userCodCall.setCallStatus(10);
+		userCodCall.setRemark(enumUserCodCalling.getName());
+		userCodCall.setCallStatus(enumUserCodCalling.getId());
 		userCodCall.setCreateDate(new Date());
 		return userCodCall;
 

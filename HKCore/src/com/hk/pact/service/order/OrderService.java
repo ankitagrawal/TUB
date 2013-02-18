@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
@@ -79,7 +80,7 @@ public interface OrderService {
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 
-	public UserCodCall createUserCodCall(Order order);
+	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
 	public List<UserCodCall> getAllUserCodCallForToday();
 }

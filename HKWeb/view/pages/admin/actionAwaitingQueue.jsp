@@ -29,6 +29,7 @@
 
 <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
 <c:set var="commentTypeOthers" value="<%=MasterDataDao.USER_COMMENT_TYPE_OTHERS_BASE_ORDER%>" />
+<c:set var="thirdPartyCodCallFailed" value="<%=EnumUserCodCalling.THIRD_PARTY_FAILED.getId()%>"/>
 
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
@@ -476,13 +477,26 @@
                             <%--<c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">--%>
                                 <c:choose>
                                     <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
-                                        <%--(<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">--%>
-                                        <%--<s:param name="order" value="${order.id}"/>--%>
-                                        <%--Confirm COD--%>
-                                    <%--</s:link>)--%>	
-		                                 <c:if test="${order.userCodCall != null}">
-			                               ${order.userCodCall.remark}
-		                                 </c:if>
+
+                                        <c:choose>
+                                            <c:when test="${order.userCodCall != null}">
+                                                ${order.userCodCall.remark}
+                                                <c:if test="${order.userCodCall.callStatus == thirdPartyCodCallFailed}">
+                                                    (<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
+                                                    <s:param name="order" value="${order.id}"/>
+                                                    Confirm COD
+                                                </s:link>)
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                (<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
+                                                <s:param name="order" value="${order.id}"/>
+                                                Confirm COD
+                                            </s:link>)
+                                            </c:otherwise>
+
+                                        </c:choose>
+
 
                                     </c:when>
 	                                <c:otherwise>

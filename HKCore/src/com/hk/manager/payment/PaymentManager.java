@@ -1,6 +1,7 @@
 package com.hk.manager.payment;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
@@ -68,7 +69,7 @@ public class PaymentManager {
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
     @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
-    private Long maxCODCallCount;
+    private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
 	private Long defaultGateway;
 
@@ -317,15 +318,20 @@ public class PaymentManager {
 			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
 				/* Make JMS Call For COD Confirmation Only Once*/
 				if (order.getUserCodCall() == null) {
-					try {
-						orderEventPublisher.publishCODEvent(order);
-						UserCodCall userCodCall = orderService.createUserCodCall(order);
-						if (userCodCall != null) {
-							orderService.saveUserCodCall(userCodCall);
-						}
-					} catch (Exception ex) {
-						logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
-					}
+                    try {
+                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
+                        UserCodCall userCodCall = null;
+                        if (messagePublished) {
+                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                        } else {
+                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                        }
+                        if (userCodCall != null) {
+                            orderService.saveUserCodCall(userCodCall);
+                        }
+                    } catch (Exception ex) {
+                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+                    }
 				}
 			}
 			}
@@ -410,7 +416,7 @@ public class PaymentManager {
 	public Payment fail(String gatewayOrderId, String gatewayReferenceId) {
 		Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
-			intiatePaymentFailureCall(payment.getOrder());
+			initiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
@@ -427,7 +433,7 @@ public class PaymentManager {
 	public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e) {
 		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
-			intiatePaymentFailureCall(payment.getOrder());
+			initiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
@@ -440,7 +446,7 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-	        intiatePaymentFailureCall(payment.getOrder());
+	        initiatePaymentFailureCall(payment.getOrder());
             payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
             payment.setGatewayReferenceId(gatewayReferenceId);
             payment.setResponseMessage(responseMessage);
@@ -455,18 +461,20 @@ public class PaymentManager {
 		return paymentDao.save(payment);
 	}
 
-	private void intiatePaymentFailureCall(Order order) {
+	private void initiatePaymentFailureCall(Order order) {
 		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
 		/* Make 30 Calls  for testing , Later on we will remove it*/
 		if (userCodCallList != null && userCodCallList.size() < 30) {
 			/* Make JMS Call For COD Confirmation Only Once*/
 			if (order.getUserCodCall() == null) {
 				try {
-					orderEventPublisher.publishPaymentFailureEvent(order);
-					UserCodCall userCodCall = orderService.createUserCodCall(order);
-					if (userCodCall != null) {
-						orderService.saveUserCodCall(userCodCall);
-					}
+                    boolean messagePublished = orderEventPublisher.publishPaymentFailureEvent(order);
+                    if (messagePublished) {
+                        UserCodCall userCodCall = orderService.createUserCodCall(order,EnumUserCodCalling.PAYMENT_FAILED);
+                        if (userCodCall != null) {
+                            orderService.saveUserCodCall(userCodCall);
+                        }
+                    }
 				} catch (Exception ex) {
 					logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
 				}

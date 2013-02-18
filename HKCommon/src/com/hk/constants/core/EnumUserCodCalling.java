@@ -13,11 +13,11 @@ import java.util.Arrays;
  */
 public enum EnumUserCodCalling {
 
-	PENDING_WITH_THIRD_PARTY(10, "Waiting For Response"),
-	CONFIRMED(20, "Sucessful"),
-	CANCELLED(30,"Canceled"),
-	OTHERS(40,"Other"),
-	EMPTY_MSG_RECIEVED(50,"response comes with empty key press value");
+	PENDING_WITH_THIRD_PARTY(10, "Pending With Third Party"),
+    THIRD_PARTY_FAILED(20,"Third Party Failed"),
+	CONFIRMED(30, "Payment Sucessful"),
+	CANCELLED(40,"Cancelled"),
+    PAYMENT_FAILED(50,"Payment Failed");
 
 	private int id;
 	private String name;
