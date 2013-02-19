@@ -1,6 +1,9 @@
 package com.hk.pact.service.codbridge;
 
+import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
+import com.google.gson.Gson;
+import com.hk.domain.order.CartLineItem;
 import com.hk.hkjunction.observers.OrderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,10 @@ import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.hkjunction.producer.ProducerTypeEnum;
 import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.observers.OrderStatusMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -32,6 +39,33 @@ public class OrderEventPublisher {
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
 
 
+    private String getCartDetailsJson(Order order) {
+
+        UserCartDetail userCartDetail = new UserCartDetail();
+        String jsonString = null;
+
+        List<UserCartDetail.ProductVariant> productPurchasedList = new ArrayList<UserCartDetail.ProductVariant>();
+
+        Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
+        if (cartLineItemSet != null) {
+            for (CartLineItem cartLineItem : cartLineItemSet) {
+                UserCartDetail.ProductVariant product = userCartDetail.new ProductVariant();
+                product.setId(cartLineItem.getProductVariant().getId());
+                product.setName(cartLineItem.getProductVariant().getProduct().getBrand());
+                product.setQty(cartLineItem.getQty());
+                product.setPrice(cartLineItem.getHkPrice());
+                productPurchasedList.add(product);
+            }
+            userCartDetail.setOrderId(order.getId());
+            userCartDetail.setProductList(productPurchasedList);
+            Gson gson = JsonUtils.getGsonDefault();
+            jsonString = gson.toJson(userCartDetail);
+
+        }
+
+        return jsonString;
+    }
+
     private OrderStatusMessage getOrderMessage(Order order){
         Long customerPhoneNumber =  0L;
         try{
@@ -49,6 +83,8 @@ public class OrderEventPublisher {
         orderStatusMessage.setOrderId(orderId);
         orderStatusMessage.setPhone(customerPhoneNumber);
         orderStatusMessage.setName(customerName);
+        String cartDetailJson = getCartDetailsJson(order);
+        orderStatusMessage.setCustomParam(cartDetailJson);
         return orderStatusMessage;
     }
 

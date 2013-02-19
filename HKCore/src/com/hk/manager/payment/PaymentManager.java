@@ -68,8 +68,8 @@ public class PaymentManager {
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
-    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
-    private int maxCODCallCount;
+//    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
+//    private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
 	private Long defaultGateway;
 
@@ -403,7 +403,7 @@ public class PaymentManager {
 			payment = getPaymentService().save(payment);
 			order = getOrderManager().orderPaymentAuthPending(payment);
 		}
-        notifyPaymentSuccess(order);
+       initiatePaymentFailureCall(order);
 		return order;
 	}
 
@@ -462,8 +462,6 @@ public class PaymentManager {
 
 	private void initiatePaymentFailureCall(Order order) {
 		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
-		/* Make 30 Calls  for testing , Later on we will remove it*/
-		if (userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
 			/* Make JMS Call For COD Confirmation Only Once*/
 			if (order.getUserCodCall() == null) {
 				try {
@@ -479,7 +477,7 @@ public class PaymentManager {
 				}
 			}
 
-		}
+
 	}
 
 

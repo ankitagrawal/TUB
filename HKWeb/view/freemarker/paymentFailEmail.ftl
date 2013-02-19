@@ -1,7 +1,7 @@
-Unsuccessful Order!
+Unsuccessful Order..Request sent to Effort Bpo!
 <html>
 <head>
-  <title>Unsuccessful Order!</title>
+  <title>Unsuccessful Order..Request sent to Effort Bpo!</title>
 </head>
 <body>
 

@@ -722,14 +722,14 @@ public class EmailManager {
     /* Commenting code , Since we have started Payment Failure's Automatic Call through  Effort BPO  */
 
     public void sendPaymentFailMail(User user, String gatewayOrderId) {
-//        HashMap valuesMap = new HashMap();
-//        valuesMap.put("user", user);
-//        valuesMap.put("gatewayOrderId", gatewayOrderId);
-//
-//        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
-//        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
-//
-//        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("user", user);
+        valuesMap.put("gatewayOrderId", gatewayOrderId);
+
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
+
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
 
     }
 
