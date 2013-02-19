@@ -719,9 +719,9 @@ public class EmailManager {
       return boolFinal;
     }
 
-    /* Commenting code , Since we have started Automatic Payment Failure  through  Effort Bpo  */
+    /* Commenting code , Since we have started Payment Failure's Automatic Call through  Effort BPO  */
 
-//    public void sendPaymentFailMail(User user, String gatewayOrderId) {
+    public void sendPaymentFailMail(User user, String gatewayOrderId) {
 //        HashMap valuesMap = new HashMap();
 //        valuesMap.put("user", user);
 //        valuesMap.put("gatewayOrderId", gatewayOrderId);
@@ -730,8 +730,8 @@ public class EmailManager {
 //        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 //
 //        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
-//
-//    }
+
+    }
 
     public void sendCallbackRequestEmail(User user, DiscountCouponMailingList dcml) {
       HashMap valuesMap = new HashMap();
