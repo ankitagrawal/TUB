@@ -430,14 +430,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Transactional
-    public Payment confirmCodOrder(Order order , String source) {
+    public Payment confirmCodOrder(Order order, String source) {
+        Payment payment = null;
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            Payment  payment = paymentManager.verifyCodPayment(order.getPayment());
+            payment = paymentManager.verifyCodPayment(order.getPayment());
             orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
             orderService.setTargetDispatchDelDatesOnBO(order);
             getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
-             return payment;
+
         }
+        return payment;
     }
 
     public UserService getUserService() {
