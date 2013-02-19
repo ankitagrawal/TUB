@@ -9,6 +9,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
+import com.hk.constants.courier.EnumAdviceProposed;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
@@ -41,6 +42,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	private Long pickupStatusId;
 	private Long reconciliationStatusId;
 	private String shippingOrderId;
+	private String adviceId;
 
 	@Autowired
 	ReverseOrderService reverseOrderService;
@@ -80,7 +82,24 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrderService.save(reverseOrder);
 		}
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
-	}	
+	}
+
+	public Resolution reschedulePickup(){
+		if(orderRequestId != null){
+			return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", orderRequestId);
+		} else{
+			return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		}
+	}
+
+	public Resolution adviceProposed(){
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.setActionProposed(EnumAdviceProposed.valueOf(adviceId).getName());
+			reverseOrderService.save(reverseOrder);
+		}
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+	}
 
 	public int getPerPageDefault() {
         return defaultPerPage;
@@ -140,5 +159,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	public void setShippingOrderId(String shippingOrderId) {
 		this.shippingOrderId = shippingOrderId;
+	}
+
+	public String getAdviceId() {
+		return adviceId;
+	}
+
+	public void setAdviceId(String adviceId) {
+		this.adviceId = adviceId;
 	}
 }

@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
+import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.ReconciliationStatusDao;
@@ -46,6 +48,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	UserService                        userService;
 	@Autowired
 	ShipmentService shipmentService;
+	@Autowired
+	ReverseOrderService reverseOrderService;
     
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
@@ -87,7 +91,10 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-
+		
+//		if (!isRto){
+//			replacementOrder.setReverseOrder(reverseOrderService.getReverseOrderByShippingOrderId(replacementOrder.getRefShippingOrder().getId()));
+//		}
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),

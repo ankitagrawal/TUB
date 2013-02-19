@@ -52,4 +52,9 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 	public ReverseOrder getReverseOrderById(Long id){
 		return (ReverseOrder) super.findUniqueByNamedQueryAndNamedParam("getReverseOrderById", new String[]{"reverseOrderId"}, new Object[]{id});
 	}
+
+	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){
+		return (ReverseOrder) super.findUniqueByNamedParams("from ReverseOrder rvo where rvo.shippingOrder.id = :shippingOrderId", new String []{"shippingOrderId"},
+				new Object[]{shippingOrderId});
+	}
 }

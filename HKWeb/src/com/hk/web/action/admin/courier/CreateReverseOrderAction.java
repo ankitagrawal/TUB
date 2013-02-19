@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.courier;
 
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.shippingOrder.LineItem;
@@ -11,6 +8,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,32 +40,41 @@ public class CreateReverseOrderAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre(){
+		if (shippingOrder.getShipment().getDeliveryDate() != null) {
+			if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
+				exceededPolicyLimit = false;
+				Calendar todayCal = Calendar.getInstance(); //current date and time
+				int presentDay = todayCal.get(Calendar.DATE);
+				int diff;
 
-		exceededPolicyLimit = false;
-		Calendar todayCal = Calendar.getInstance(); //current date and time
-		int presentDay = todayCal.get(Calendar.DATE);
-		int diff;
+				Date deliveryDate = shippingOrder.getShipment().getDeliveryDate();
+				Calendar deliveryCal = Calendar.getInstance();
+				deliveryCal.setTime(deliveryDate);
+				int deliveryDay = deliveryCal.get(Calendar.DATE);
 
-		Date deliveryDate = shippingOrder.getShipment().getDeliveryDate();
-		Calendar deliveryCal = Calendar.getInstance();
-		deliveryCal.setTime(deliveryDate);
-		int deliveryDay = deliveryCal.get(Calendar.DATE);
+				if (todayCal.get(Calendar.MONTH) == deliveryCal.get(Calendar.MONTH)) {
+					diff = presentDay - deliveryDay;
+				} else {
+					int interimDays = presentDay - 1;
+					int interimSum = interimDays + (31 - deliveryDay);
+					diff = interimSum;
+				}
 
-		if (todayCal.get(Calendar.MONTH) == deliveryCal.get(Calendar.MONTH)) {
-			diff = presentDay - deliveryDay;
+				if (diff <= maxPossibleDays) {
+					exceededPolicyLimit = false;
+				} else {
+					exceededPolicyLimit = true;
+
+				}
+				return new ForwardResolution("/pages/admin/createReverseOrder.jsp");
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Reverse Order has been already created for this SO"));
+				return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
+			}
 		} else {
-			int interimDays = presentDay - 1;
-			int interimSum = interimDays + (31 - deliveryDay);
-			diff = interimSum;
+			addRedirectAlertMessage(new SimpleMessage("Delivery date is not found"));
+			return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId", shippingOrder.getGatewayOrderId());
 		}
-
-		if (diff <= maxPossibleDays) {
-			exceededPolicyLimit = false;
-		} else {
-			exceededPolicyLimit = true;
-
-		}
-	  return new ForwardResolution("/pages/admin/createReverseOrder.jsp");
 	}
 
 	public Resolution submit(){		

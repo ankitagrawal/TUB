@@ -4,13 +4,7 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,10 +25,9 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ref_shipping_order_id")
-  private ReverseOrder refReverseOrder;
-
+//	@OneToOne(fetch = FetchType.LAZY)
+//  	@JoinColumn(name = "reverse_order_id")
+//  	private ReverseOrder reverseOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "replacement_order_reason_id")
@@ -63,4 +56,12 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
 	public void setReplacementOrderReason(ReplacementOrderReason replacementOrderReason) {
 		this.replacementOrderReason = replacementOrderReason;
 	}
+
+//	public ReverseOrder getReverseOrder() {
+//		return reverseOrder;
+//	}
+//
+//	public void setReverseOrder(ReverseOrder reverseOrder) {
+//		this.reverseOrder = reverseOrder;
+//	}
 }

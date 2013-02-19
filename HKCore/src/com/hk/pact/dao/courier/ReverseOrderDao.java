@@ -26,6 +26,8 @@ public interface ReverseOrderDao {
 
 	public ReverseOrder getReverseOrderById(Long id);
 
+	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
+
 	//public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 
 

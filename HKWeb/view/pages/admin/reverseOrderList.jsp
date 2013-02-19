@@ -1,5 +1,6 @@
 <%@ page import="com.hk.constants.inventory.EnumReconciliationStatus" %>
 <%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
+<%@ page import="com.hk.constants.courier.EnumAdviceProposed" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
@@ -9,6 +10,7 @@
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
 <c:set var="pickupOpen" value="<%=EnumPickupStatus.OPEN.getId()%>"/>
+<c:set var="adviceList" value="<%=EnumAdviceProposed.getAdviceList()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Order List">
     <s:layout-component name="htmlHead">
@@ -82,14 +84,27 @@
                 <th>Reconciled</th>
                 <th>User</th>
                 <th>Actions</th>
+                <th>Advice</th>
             </tr>
             </thead>
-            <c:forEach items="${pickupManage.orderRequestsList}" var="reverseOrderRequest">
+            <c:forEach items="${pickupManage.orderRequestsList}" var="reverseOrderRequest" varStatus="ctr">
                 <tr>
-                    <td>${reverseOrderRequest.id}</td>
-                    <td>${reverseOrderRequest.shippingOrder.gatewayOrderId}</td>
+                    <td>
+                        ${reverseOrderRequest.id} </br>
+                         (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
+                            <s:param name="reverseOrder" value="${reverseOrderRequest}"/>
+                            <s:param name="shippingOrder" value="${reverseOrderRequest.shippingOrder}"/>
+                            Accounting Invoice
+                          </s:link>)
+                    </td>
+                    <td>
+                        <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder" target="_blank">
+                            <s:param name="shippingOrderGatewayId" value="${reverseOrderRequest.shippingOrder.gatewayOrderId}"/>
+                            ${reverseOrderRequest.shippingOrder.gatewayOrderId}
+                        </s:link>
+                    </td>
                     <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
-                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>                     
                     <td>${reverseOrderRequest.courierPickupDetail.trackingNo}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupDate}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupStatus.name}</td>
@@ -120,13 +135,30 @@
                             </s:link>
 		                    <br/>
                         </c:if>
+                        <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen || reverseOrderRequest.courierPickupDetail == null}">
+                         <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="reschedulePickup">Reschedule Pickup
+			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                                <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                         </s:link>
+                        </c:if>
 
-                         (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
-                            <s:param name="reverseOrder" value="${reverseOrderRequest}"/>
-                            <s:param name="shippingOrder" value="${reverseOrderRequest.shippingOrder}"/>
-                            Accounting Invoice
-                          </s:link>)
-
+                    </td>
+                    <td>
+                        <c:set var="activeName" value="${reverseOrderRequest.actionProposed}" />
+                        <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
+                            <s:select name="adviceId"><%-- value="<%=EnumAdviceProposed.getAdviceProposedByName('')%>">--%>
+                                <s:option value="">-ALL-</s:option>
+                                <c:forEach items="${adviceList}" var="advice">
+                                    <s:option value="${advice.id}">${advice.name}</s:option>
+                                </c:forEach>
+                            </s:select>
+                            <%--<script type="text/javascript">--%>
+                                <%--$('#advice${ctr.index}').val(${});--%>
+                            <%--</script>--%>
+                                <s:hidden name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                                <s:hidden name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                            <s:submit name="adviceProposed" value="save" style="" />
+                        </s:form>
                     </td>
                 </tr>
             </c:forEach>

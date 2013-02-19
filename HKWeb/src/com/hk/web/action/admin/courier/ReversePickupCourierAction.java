@@ -50,6 +50,7 @@ public class ReversePickupCourierAction extends BaseAction {
 	private List<Courier> availableCouriers;
 	private Courier selectedCourier;
 	private String manualTrackingNo;
+	private String manualConfNo;
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
@@ -86,8 +87,7 @@ public class ReversePickupCourierAction extends BaseAction {
 				if (pickupReply != null) {
 					if (pickupReply.get(0).equals(CourierConstants.SUCCESS)) {
 						String confirmationNo = pickupReply.get(1);
-						addRedirectAlertMessage(new SimpleMessage("Pickup Request saved. Pickup confirmation number: " + confirmationNo));
-						//logger.debug("courier pickup service initiated successfully");
+						addRedirectAlertMessage(new SimpleMessage("Pickup Request saved. Pickup confirmation number: " + confirmationNo));						
 						courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, confirmationNo, null);
 					} else {
 						//message = "Could not generate a pickup request. " + pickupReply.get(1);
@@ -100,8 +100,7 @@ public class ReversePickupCourierAction extends BaseAction {
 					return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 				}
 			} else{
-				courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, manualTrackingNo);
-				addRedirectAlertMessage(new SimpleMessage("Pickup Request saved successfully"));
+				courierPickupDetail = setDetailsForManualRequests(courierPickupDetail, selectedCourier, pickupDate, manualTrackingNo, manualConfNo);
 			}
 
 			courierPickupDetail = courierPickupService.save(courierPickupDetail);
@@ -109,6 +108,16 @@ public class ReversePickupCourierAction extends BaseAction {
 			reverseOrderService.setCourierDetails(reverseOrder, courierPickupDetail);
 		}
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
+	}
+
+	public CourierPickupDetail setDetailsForManualRequests(CourierPickupDetail courierPickupDetail, Courier selectedCourier, Date pickupDate, String manualTrackingNo, String manualConfNo){
+		if (manualTrackingNo != null) {
+			courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, manualTrackingNo);
+		} else {
+			courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, manualConfNo, null);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Pickup Request saved successfully"));
+		return courierPickupDetail;
 	}
 
 	public Date getPickupDate() {
@@ -166,5 +175,13 @@ public class ReversePickupCourierAction extends BaseAction {
 
 	public void setManualTrackingNo(String manualTrackingNo) {
 		this.manualTrackingNo = manualTrackingNo;
+	}
+
+	public String getManualConfNo() {
+		return manualConfNo;
+	}
+
+	public void setManualConfNo(String manualConfNo) {
+		this.manualConfNo = manualConfNo;
 	}
 }

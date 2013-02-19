@@ -27,5 +27,7 @@ public interface ReverseOrderService {
 
 	public void setCourierDetails(ReverseOrder reverseOrder, CourierPickupDetail courierPickupDetail);
 
+	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
+
 	public ReverseOrder save(ReverseOrder reverseOrder);
 }

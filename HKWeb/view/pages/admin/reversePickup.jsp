@@ -21,20 +21,24 @@
                     var courierList = ${apiCallCouriers};
 
                     if (jQuery.inArray(courier, courierList) != '-1') {
-                        $('.manualNumberField').hide();
+                        $('.manualConfNoField').hide();
+                        $('.manualTrckNoField').hide();
                     } else {
-                        $('.manualNumberField').show();
+                        $('.manualConfNoField').show();
+                        $('.manualTrckNoField').show();
                     }
                 });
 
                 $('#checkSubmit').click(function() {
-                    if ($('.manualNumberField').is(':visible')) {
+                    if ($('.manualTrckNoField').is(':visible') && $('.manualConfNoField').is(':visible')) {
                         var trackingNo = $('#trackingNo').val();
-                        if (trackingNo == null || trackingNo == "") {
-                            alert("Please enter a tracking number, as given by courier");
+                        var confNo = $('#pickupConfNo').val();                        
+                        if ((trackingNo == null || trackingNo == "") && (confNo == null || confNo==  "")) {
+                            alert("Please enter a tracking/confirmation number, as given by courier");
                             return false;
                         }
                     }
+
                 });
             });
     </script>
@@ -62,7 +66,12 @@
 
                 </li>
                 <li>
-                    <div class="manualNumberField">
+                    <div class="manualConfNoField">
+                        <label>Pickup Confirmation No : </label><s:text id="pickupConfNo" name="manualConfNo" />
+                    </div>
+                </li>
+                <li>
+                    <div class="manualTrckNoField">
                         <label>Tracking No : </label><s:text id="trackingNo" name="manualTrackingNo" />
                     </div>
                 </li>

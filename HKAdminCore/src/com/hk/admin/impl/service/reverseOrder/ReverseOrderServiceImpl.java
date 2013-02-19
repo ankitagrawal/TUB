@@ -105,6 +105,10 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 		return getReverseOrderDao().getReverseOrderById(id);
 	}
 
+	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){
+		return getReverseOrderDao().getReverseOrderByShippingOrderId(shippingOrderId);
+	}
+
 	public BaseDao getBaseDao() {
 		return baseDao;
 	}
