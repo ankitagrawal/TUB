@@ -79,7 +79,7 @@ public class Product  implements java.io.Serializable {
     private Long                 maxDays;
 
     @Column(name = "deleted", scale = 0)
-    private Boolean              deleted;
+    private Boolean              deleted = false;
 
     @Column(name = "main_image_id")
     private Long                 mainImageId;
@@ -103,7 +103,7 @@ public class Product  implements java.io.Serializable {
     private Boolean              isAmazonProduct;
 
     @Column(name = "out_of_stock")
-    private Boolean              outOfStock;
+    private Boolean              outOfStock =  false;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
@@ -159,7 +159,7 @@ public class Product  implements java.io.Serializable {
     private boolean              groundShipping;
 
 	@Column(name = "cod_allowed", nullable = false, scale = 1)
-    private Boolean              codAllowed;
+    private Boolean              codAllowed = false;
 
     @Column(name = "is_subscribable", nullable = true)
     private Boolean              isSubscribable;
@@ -397,15 +397,15 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isDeleted() {
-        return deleted;
+        return deleted!=null ? deleted : false;
     }
 
     public Boolean getDeleted() {
-        return deleted;
+        return deleted!=null ? deleted : false;
     }
 
     public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
+        this.deleted = deleted!=null ? deleted : false;
     }
 
     public Long getMainImageId() {
@@ -429,23 +429,23 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getProductHaveColorOptions() {
-        return this.isProductHaveColorOptions();
+        return isProductHaveColorOptions!=null ? isProductHaveColorOptions : false;
     }
 
     public void setProductHaveColorOptions(Boolean productHaveColorOptions) {
-        isProductHaveColorOptions = productHaveColorOptions;
+        isProductHaveColorOptions = productHaveColorOptions!=null ? productHaveColorOptions : false;
     }
 
     public Boolean isOutOfStock() {
-        return outOfStock;
+        return outOfStock!=null ? outOfStock : false;
     }
 
     public Boolean getOutOfStock() {
-        return outOfStock;
+        return outOfStock!=null ? outOfStock : false;
     }
 
     public void setOutOfStock(Boolean outOfStock) {
-        this.outOfStock = outOfStock;
+        this.outOfStock = outOfStock!=null ? outOfStock : false;
     }
 
     public Supplier getSupplier() {
@@ -473,27 +473,27 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isService() {
-        return isService;
+        return isService!=null ? isService : false;
     }
 
     public Boolean getService() {
-        return isService;
+        return isService!=null ? isService : false;
     }
 
     public void setService(Boolean service) {
-        isService = service;
+        isService = service!=null ? service: false;
     }
 
     public Boolean isGoogleAdDisallowed() {
-        return isGoogleAdDisallowed;
+        return isGoogleAdDisallowed!=null ? isGoogleAdDisallowed : false;
     }
 
     public Boolean getGoogleAdDisallowed() {
-        return isGoogleAdDisallowed;
+        return isGoogleAdDisallowed!=null ? isGoogleAdDisallowed : false;
     }
 
     public void setGoogleAdDisallowed(Boolean googleAdDisallowed) {
-        isGoogleAdDisallowed = googleAdDisallowed;
+        isGoogleAdDisallowed = googleAdDisallowed!=null ? googleAdDisallowed : false;
     }
 
     public String getVideoEmbedCode() {
@@ -505,35 +505,35 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean getHidden() {
-        return hidden;
+        return hidden!=null ? hidden : false;
     }
 
     public Boolean isHidden() {
-        return hidden;
+        return hidden!=null ? hidden : false;
     }
 
     public void setHidden(Boolean hidden) {
-        this.hidden = hidden;
+        this.hidden = hidden!=null ? hidden : false;
     }
 
     public Boolean getJit() {
-        return isJit;
+        return isJit!=null ? isJit : false;
     }
 
     public Boolean isJit() {
-        return isJit;
+       return isJit!=null ? isJit : false;
     }
 
     public void setJit(Boolean jit) {
-        isJit = jit;
+        isJit = jit!=null ? jit : false;
     }
 
     public Boolean getAmazonProduct() {
-        return isAmazonProduct;
+        return isAmazonProduct!=null ? isAmazonProduct : false;
     }
 
     public void setAmazonProduct(Boolean amazonProduct) {
-        isAmazonProduct = amazonProduct;
+        isAmazonProduct = amazonProduct!=null ? amazonProduct : false;
     }
 
     public void setCategoriesPipeSeparated(String categoriesPipeSeparated) {
@@ -603,7 +603,7 @@ public class Product  implements java.io.Serializable {
      public boolean isGroundShipping() {
         return groundShipping;
     }
-    public Boolean getGroundShipping(){
+    public boolean getGroundShipping(){
          return groundShipping;
     }
 
@@ -612,15 +612,15 @@ public class Product  implements java.io.Serializable {
     }
 
 	public Boolean isCodAllowed() {
-		return codAllowed;
+		return codAllowed!=null ? codAllowed : false;
 	}
 	
 	public Boolean getCodAllowed() {
-		return codAllowed;
+		return codAllowed!=null ? codAllowed : false;
 	}  	
 
 	public void setCodAllowed(Boolean codAllowed) {
-		this.codAllowed = codAllowed;
+		this.codAllowed = codAllowed!=null ? codAllowed : false;
 	}
 
 	@Override
@@ -709,7 +709,7 @@ public class Product  implements java.io.Serializable {
     }
 
     public Boolean isInstallable() {
-        return installable;
+        return installable!=null ? installable : false;
     }
 
     public void setInstallable(Boolean installable) {
@@ -717,7 +717,7 @@ public class Product  implements java.io.Serializable {
     }
 
      public Boolean getInstallable() {
-		return installable;
+		return installable!=null ? installable : false;
 	}
 
 }
