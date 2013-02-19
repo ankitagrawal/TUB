@@ -300,11 +300,6 @@ public class PaymentManager {
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(null);
 			Long orderCount = getUserManager().getProcessedOrdersCount(payment.getOrder().getUser());
-
-			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.AUTHORIZATION_PENDING));
-
-
-
 			if (orderCount != null && orderCount >= 3) {
 				payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ON_DELIVERY));
 			} else {
@@ -408,6 +403,7 @@ public class PaymentManager {
 			payment = getPaymentService().save(payment);
 			order = getOrderManager().orderPaymentAuthPending(payment);
 		}
+        notifyPaymentSuccess(order);
 		return order;
 	}
 

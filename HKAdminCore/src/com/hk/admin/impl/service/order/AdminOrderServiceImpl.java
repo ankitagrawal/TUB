@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.order;
 import java.util.*;
 
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.domain.payment.Payment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -429,13 +430,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     @Transactional
-    public void confirmCodOrder(Order order , String source) {
+    public Payment confirmCodOrder(Order order , String source) {
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            paymentManager.verifyCodPayment(order.getPayment());
+            Payment  payment = paymentManager.verifyCodPayment(order.getPayment());
             orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
             orderService.setTargetDispatchDelDatesOnBO(order);
             getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
-
+             return payment;
         }
     }
 
