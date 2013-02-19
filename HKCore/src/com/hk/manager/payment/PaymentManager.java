@@ -467,7 +467,7 @@ public class PaymentManager {
 	private void initiatePaymentFailureCall(Order order) {
 		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
 		/* Make 30 Calls  for testing , Later on we will remove it*/
-		if (userCodCallList != null && userCodCallList.size() < 30) {
+		if (userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
 			/* Make JMS Call For COD Confirmation Only Once*/
 			if (order.getUserCodCall() == null) {
 				try {
