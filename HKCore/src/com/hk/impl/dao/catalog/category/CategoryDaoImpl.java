@@ -59,7 +59,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     }
 
     public List<Category> getPrimaryCategories() {
-        return findByQuery("select distinct p.primaryCategory from Product p where p.deleted<>1 and p.hidden<>1");
+        return findByQuery("select distinct p.primaryCategory from Product p where p.deleted<>1 and p.hidden<>1 order by p.primaryCategory.displayName asc");
     }
 
     public List<ProductOptionDto> getProductOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice) {
