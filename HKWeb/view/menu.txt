@@ -170,6 +170,7 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
+--/sports/fitness-equipment/massage-equipments
 --/sports/fitness-equipment/trampolines
 --/sports/fitness-equipment/weighing-scales
 ---/sports/fitness-equipment/weighing-scales/Analog
