@@ -240,7 +240,7 @@ public class XslParser {
                     product.setDeleted(isDeletedBoolean);
                     String isOutOfStock = getCellValue(XslConstants.OUT_OF_STOCK, rowMap, headerMap);
                     boolean isOutOfStockBoolean = StringUtils.isNotBlank(isOutOfStock) && isOutOfStock.trim().toLowerCase().equals("y") ? true : false;
-                    product.setOutOfStock(isOutOfStockBoolean);
+//                    product.setOutOfStock(isOutOfStockBoolean);
                     String isHidden = getCellValue(XslConstants.IS_HIDDEN, rowMap, headerMap);
                     boolean isHiddenBoolean = StringUtils.isNotBlank(isHidden) && isHidden.trim().toLowerCase().equals("y") ? true : false;
                     product.setHidden(isHiddenBoolean);
@@ -364,12 +364,12 @@ public class XslParser {
                 productVariant.setProductOptions(productOptions);
                 productVariant.setProductExtraOptions(productExtraOptions);
                 String availability = getCellValue(XslConstants.AVAILABILITY, rowMap, headerMap);
-                if (isJitBoolean) {
-                    outOfStock = false;
-                } else {
-                    outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
-                }
-                productVariant.setOutOfStock(outOfStock);
+//                if (isJitBoolean) {
+//                    outOfStock = false;
+//                } else {
+//                    outOfStock = StringUtils.isNotBlank(availability) && availability.trim().toLowerCase().equals("y") ? false : true;
+//                }
+//                productVariant.setOutOfStock(outOfStock);
                 String deleted = getCellValue(XslConstants.DELETED, rowMap, headerMap);
                 boolean deletedBoolean = StringUtils.isNotBlank(deleted) && deleted.trim().toLowerCase().equals("y") ? true : false;
                 productVariant.setDeleted(deletedBoolean);

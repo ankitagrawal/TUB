@@ -108,7 +108,7 @@ public class XslPincodeCourierMapping {
                     pincodeCourierMapping.setCodGround(isCodGround);
                     pincodeCourierMapping.setPrepaidAir(isPrepaidAir);
                     pincodeCourierMapping.setPrepaidGround(isPrepaidGround);
-
+                    pincodeCourierMapping.setRoutingCode(routingCode);
                 if (pincodeCourierMappingDB == null) {
                     boolean isValidMapping = isCodGround || isPrepaidGround || isPrepaidAir || isCodAir;
                     if (isValidMapping) {
