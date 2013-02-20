@@ -200,7 +200,23 @@
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(bs, s);
 		})();
-	</script>	
+	</script>
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='';
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<!--End: Tracking code for MicroAd Blade-->
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
@@ -212,6 +228,7 @@
 		f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
 	</script>
 	<!-- End Visual Website Optimizer Asynchronous Code -->
+	
 
   <%
     }

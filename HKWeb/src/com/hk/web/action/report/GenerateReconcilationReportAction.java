@@ -141,6 +141,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		xlsWriter.addHeader("BOX WEIGHT", "BOX WEIGHT");
 		xlsWriter.addHeader("BOX SIZE", "BOX SIZE");
 		xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
+		xlsWriter.addHeader("DROP SHIPMENT", "DROP SHIPMENT");
+		xlsWriter.addHeader("CATEGORY", "CATEGORY");
 
 		int row = 1;
 		for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
@@ -181,6 +183,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
 			xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
 			xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
+			xlsWriter.addCell(row, shippingOrder.isDropShipping() ? 'Y' : 'N');
+			xlsWriter.addCell(row, shippingOrder.getBasketCategory());
 			row++;
 		}
 		xlsWriter.writeData(excelFile, "Reconciliation_report");
