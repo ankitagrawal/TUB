@@ -461,7 +461,7 @@ public class PaymentManager {
 	}
 
 	private void initiatePaymentFailureCall(Order order) {
-
+           if(order != null){
 			if (order.getUserCodCall() == null) {
 				try {
                     boolean messagePublished = orderEventPublisher.publishPaymentFailureEvent(order);
@@ -475,7 +475,10 @@ public class PaymentManager {
 					logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
 				}
 			}
-
+           }
+        else {
+               logger.error("Null Order Id Recieved");
+           }
 
 	}
 
