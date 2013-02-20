@@ -113,8 +113,11 @@ public class CycleCountHelper {
 				mfgDate = sdf.format(skuGroup.getMfgDate());
 			}
 			xlsWriter.addCell(xlsRow, mfgDate);
-
-			xlsWriter.addCell(xlsRow, skuGroup.getMrp());
+            Double mrp = 0d;
+            if(skuGroup.getMrp() != null){
+                mrp = skuGroup.getMrp();
+            }
+            xlsWriter.addCell(xlsRow, mrp);
 			xlsWriter.addCell(xlsRow, skuGroup.getCostPrice());
 
 			xlsRow++;
@@ -125,7 +128,56 @@ public class CycleCountHelper {
 
 
 
-	public Resolution download() {
+    public File generateSkuGroupNotScannedExcel(List<SkuGroup> skuGroupList, File xlsFile, Map<Long, Integer> skuGroupSystemInventoryMap) {
+        this.xlsFile = xlsFile;
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader(XslConstants.HK_BARCODE, XslConstants.HK_BARCODE);
+        xlsWriter.addHeader(XslConstants.VARIANT_ID, XslConstants.VARIANT_ID);
+        xlsWriter.addHeader(XslConstants.MRP, XslConstants.MRP);
+        xlsWriter.addHeader(XslConstants.MFG_DATE, XslConstants.MFG_DATE);
+        xlsWriter.addHeader(XslConstants.EXP_DATE, XslConstants.EXP_DATE);
+
+        xlsWriter.addHeader(XslConstants.SCANNED_QTY, XslConstants.SCANNED_QTY);
+        xlsWriter.addHeader(XslConstants.BATCH_NUMBER, XslConstants.BATCH_NUMBER);
+        xlsWriter.addHeader(XslConstants.SYSTEM_QTY, XslConstants.SYSTEM_QTY);
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+
+        for (SkuGroup skuGroup : skuGroupList) {
+            xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
+            xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
+            Double mrp = 0d;
+            if(skuGroup.getMrp() != null){
+                mrp = skuGroup.getMrp();
+            }
+            xlsWriter.addCell(xlsRow, mrp);
+            String mfgDate = "";
+            if (skuGroup.getMfgDate() != null) {
+                mfgDate = sdf.format(skuGroup.getMfgDate());
+            }
+            xlsWriter.addCell(xlsRow, mfgDate);
+            String expiryDate = "";
+            if (skuGroup.getExpiryDate() != null) {
+                expiryDate = sdf.format(skuGroup.getExpiryDate());
+            }
+            xlsWriter.addCell(xlsRow, expiryDate);
+            int systemQty = skuGroupSystemInventoryMap.get(skuGroup.getId());
+            xlsWriter.addCell(xlsRow, "0");
+            xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
+            xlsWriter.addCell(xlsRow, systemQty);
+            xlsRow++;
+        }
+        xlsWriter.writeData(xlsFile, "MissedBatches");
+        return xlsFile;
+    }
+
+
+
+
+
+    public Resolution download() {
 		return new Resolution() {
 			public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 				OutputStream out = null;

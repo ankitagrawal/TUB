@@ -18,9 +18,14 @@
 		<thead>
 		<tr>
 			<th>VariantID</th>
+            <th>Variant Option</th>
+            <th>Batch</th>
+            <th>MRP</th>
+            <th>MFG Date</th>
+            <th>Expiry</th>
 			<th>Hk Barcode</th>
 			<th>Scanned Qty</th>
-			<th>Total System Qty</th>
+			<th>System Quantity</th>
 			<th>Variance</th>
 
 		</tr>
@@ -34,6 +39,11 @@
 						<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
 						<tr>
 							<td>${cCItem.skuGroup.sku.productVariant.id}</td>
+                            <td>${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated}</td>
+                            <td>${cCItem.skuGroup.batchNumber}</td>
+                            <td>${cCItem.skuGroup.mrp}</td>
+                            <td>${cCItem.skuGroup.mfgDate}</td>
+                            <td>${cCItem.skuGroup.expiryDate}</td>
 							<td>${cCItem.skuGroup.barcode}</td>
 							<td>
 
@@ -67,7 +77,29 @@
 						</tr>
 
 					</c:forEach>
-					</table>
+                <tr>
+                    <td>
+                        <label>Missed Scanned</label>
+                    </td>
+                </tr>
+                <tr>
+                    <c:forEach items="${cycle.missedSkuGroupList}" var="missedskugroup">
+                        <td>${missedskugroup.sku.productVariant.id}</td>
+                        <td>${missedskugroup.sku.productVariant.optionsPipeSeparated}</td>
+                        <td>${missedskugroup.batchNumber}</td>
+                        <td>${missedskugroup.mrp}</td>
+                        <td>${missedskugroup.mfgDate}</td>
+                        <td>${missedskugroup.expiryDate}</td>
+                        <td>${missedskugroup.barcode}</td>
+                        <td> 0</td>
+                        <c:set value="${cycle.skuGroupSystemInventoryMap}" var="item"/>
+                        <td>${item[missedskugroup.id]}</td>
+                        <td>${item[missedskugroup.id]}</td>
+                    </c:forEach>
+
+
+                </tr>
+                </table>
 
 					<div style="text-align: center;">
 						<c:set value="<%= EnumCycleCountStatus.RequestForApproval.getId()%>" var="pendingForApproval"/>

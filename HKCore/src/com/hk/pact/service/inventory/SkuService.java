@@ -44,6 +44,8 @@ public interface SkuService {
 	 */
 	public List<Sku> getSKUs(String category, String brand, String productId);
 
+    public List<Sku> getSKUs(String brand,String productId, Warehouse warehouse);
+
 	/**
 	 * this will return a list of all sku's of warehouse
 	 *
