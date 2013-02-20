@@ -3,6 +3,7 @@ package com.hk.pact.service.codbridge;
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.hkjunction.observers.OrderType;
 import org.slf4j.Logger;
@@ -49,12 +50,14 @@ public class OrderEventPublisher {
         Set<CartLineItem> cartLineItemSet = order.getCartLineItems();
         if (cartLineItemSet != null) {
             for (CartLineItem cartLineItem : cartLineItemSet) {
-                UserCartDetail.ProductVariant product = userCartDetail.new ProductVariant();
-                product.setId(cartLineItem.getProductVariant().getId());
-                product.setName(cartLineItem.getProductVariant().getProduct().getBrand());
-                product.setQty(cartLineItem.getQty());
-                product.setPrice(cartLineItem.getHkPrice());
-                productPurchasedList.add(product);
+                if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                    UserCartDetail.ProductVariant product = userCartDetail.new ProductVariant();
+                    product.setId(cartLineItem.getProductVariant().getId());
+                    product.setName(cartLineItem.getProductVariant().getProduct().getName());
+                    product.setQty(cartLineItem.getQty());
+                    product.setPrice(cartLineItem.getHkPrice());
+                    productPurchasedList.add(product);
+                }
             }
             userCartDetail.setOrderId(order.getId());
             userCartDetail.setProductList(productPurchasedList);
