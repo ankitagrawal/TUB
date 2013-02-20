@@ -305,7 +305,9 @@ public class PricingDto {
         totalHkPostpaidServiceDiscount = postpaidServiceMrpSubTotal - postpaidServiceHkSubTotal;
 
         totalPromoDiscount = productsDiscount + prepaidServiceDiscount + postpaidServiceDiscount + orderLevelDiscount;
-
+            if(totalPromoDiscount > payableHkSubTotal){
+              totalPromoDiscount = payableMrpSubTotal;
+            }
         totalDiscount = productsDiscount + prepaidServiceDiscount + postpaidServiceDiscount + shippingDiscount + orderLevelDiscount + codDiscount +subscriptionDiscount;
     }
 
