@@ -260,13 +260,6 @@ ORDER INVOICE <c:choose>
     </c:if>
 </div>
 
-<div class="grid_12">
-    <c:if test="${baseOrder.userComments != null}">
-        <hr/>
-        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
-        <hr/>
-    </c:if>
-</div>
 
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
@@ -300,6 +293,15 @@ ORDER INVOICE <c:choose>
     </c:choose>
 
 </div>
+<div class="clear"></div>
+<div class="grid_12">
+    <c:if test="${baseOrder.userComments != null}">
+        <hr/>
+        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
+        <hr/>
+    </c:if>
+</div>
+
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 <div class="grid_12">
