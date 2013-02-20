@@ -338,7 +338,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
 
         if (canRunSpellQuery) {
-            SolrQuery solrQuery = getResultsQuery(suggestions, searchFilters, page, perPage);
+            SolrQuery solrQuery = getResultsQuery(suggestions, searchFilters, page, perPage);              
             response = solr.query(solrQuery);
             List<SolrProduct> solrProductList = getQueryResults(response);
             int totalResultCount = (int) response.getResults().getNumFound();
@@ -406,6 +406,10 @@ class ProductSearchServiceImpl implements ProductSearchService {
         solrQuery.setHighlight(true);
         solrQuery.setStart((page - 1) * perPage);
         solrQuery.setRows(perPage);
+
+        solrQuery.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
+        solrQuery.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
+
         // We want to push out of stock products to the last page
         solrQuery.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         solrQuery.addSortField("score", SolrQuery.ORDER.desc);

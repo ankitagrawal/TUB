@@ -3,6 +3,8 @@ package com.hk.web.action.core.search;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -39,13 +41,13 @@ public class AutoCompleteAction extends BaseAction {
 
     @DontValidate
     public Resolution pre() throws Exception {
-        List<String> terms = query(q, Integer.parseInt(limit));
+        Set<String> terms = query(q, Integer.parseInt(limit));
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", terms));
     }
 
-    private List<String> query(String q, int limit) throws MalformedURLException {
+    private Set<String> query(String q, int limit) throws MalformedURLException {
 
-        List<String> suggestedStrings = new ArrayList<String>();
+        Set<String> suggestedStrings = new HashSet<String>();
         List<TermsResponse.Term> items = null;
         q = q.trim();
         q = q.replaceAll(",","");
@@ -54,7 +56,8 @@ public class AutoCompleteAction extends BaseAction {
         query.setQuery("*:*");
         query.addTermsField("title_autocomplete");
         query.setTerms(true);
-        query.setTermsLimit(limit);
+        //query.setTermsLimit(limit);
+        query.setTermsLimit(100);
         // query.setTermsLower(q);
         query.setHighlight(true);
         // query.setTermsPrefix(q);
@@ -71,7 +74,12 @@ public class AutoCompleteAction extends BaseAction {
 
         if (items != null) {
             for (TermsResponse.Term item : items) {
-                suggestedStrings.add(item.getTerm());
+              String completeTerm = item.getTerm();
+              String termFromQuery =  completeTerm.substring(completeTerm.indexOf(q));
+              if(termFromQuery.split(" ").length >= q.split(" ").length)   //Ajeet
+                suggestedStrings.add(termFromQuery);
+              if(suggestedStrings.size() == 10)
+                break;
             }
         }
         return suggestedStrings;
