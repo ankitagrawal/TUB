@@ -119,15 +119,16 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                                 userReviewMail.setBaseOrder(order);
                                 userReviewMail.setCreateDt(BaseUtils.getCurrentTimestamp());
                                 userReviewMailService.save(userReviewMail);
-                            }else{
-                                if(priorUserReviewMail.getIsMailSent()){
+                            }else if(priorUserReviewMail.getIsMailSent()){
                                     if(priorUserReviewMail.getSentDate().getTime() + 24*3600*1000*productReviewMail.getDaysToSendReviewMailAgain() <= BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()).getTime() ){
                                         priorUserReviewMail.setDueDate(BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()));
-                                        priorUserReviewMail.setIsMailSent(false);
-                                        priorUserReviewMail.setBaseOrder(order);
-                                        userReviewMailService.save(priorUserReviewMail);
                                     }
-                                }
+                                    else{
+                                        priorUserReviewMail.setDueDate(BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getDaysToSendReviewMailAgain()));
+                                    }
+                                    priorUserReviewMail.setIsMailSent(false);
+                                    priorUserReviewMail.setBaseOrder(order);
+                                    userReviewMailService.save(priorUserReviewMail);
                             }
                         }
                     }

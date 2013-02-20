@@ -1,7 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:useActionBean beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" var="rmsa" />
+<s:useActionBean beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" var="rmsa"  />
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Review Collection List">
 
    <s:layout-component name="heading">
@@ -10,7 +10,7 @@
 
     <s:layout-component name="content">
         <s:messages/>
-        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction"> Create Mail Template </s:link>
+        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction"> Create Mail Template </s:link><>
         <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" event="create"> Create Product Settings </s:link>
         <fieldset class="right_label">
             <legend>Search Product</legend>

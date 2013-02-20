@@ -54,6 +54,7 @@
                 </ul>
             </fieldset>
         </s:form>
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">BACK </s:link>
 
         <%--<s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
             <label>Order ID</label>
