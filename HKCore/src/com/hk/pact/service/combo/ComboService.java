@@ -12,5 +12,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 public interface ComboService {
 
   public void markRelatedCombosOutOfStock(ProductVariant productVariant);
+
+  public void markProductOutOfStock(ProductVariant productVariant);
   
 }

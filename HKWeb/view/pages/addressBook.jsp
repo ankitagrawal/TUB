@@ -3,7 +3,7 @@
 
 
 <s:useActionBean beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre" var="addressBean"/>
-<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>
+<%--<s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="pre"/>--%>
 
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
 <%@ include file="/layouts/_userData.jsp" %>
@@ -39,10 +39,6 @@
                 $(this).parents('tr').removeClass('item_selected');
             }
         }
-
-
-
-
     </script>
     <%-- use attribute selectors to apply a specify styles  --%>
     <style type="text/css">

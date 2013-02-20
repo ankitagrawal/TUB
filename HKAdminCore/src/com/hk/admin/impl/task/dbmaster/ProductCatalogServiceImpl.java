@@ -108,8 +108,15 @@ public class ProductCatalogServiceImpl {
 					logger.debug("mainImageId[" + product.getName() + "]:" + mainImageId);
 					product.setMainImageId(mainImageId);
                     product.setCreateDate(productInDB.getCreateDate());
+                    product.setOutOfStock(productInDB.getOutOfStock());
 				} else {      //Newly created product
 					product.setCreateDate(new Date());
+                    if(product.isJit()!=null && !product.isJit()){
+                        product.setOutOfStock(true);
+                    }
+                    else{
+                        product.setOutOfStock(false);
+                    }
 				}
 			} catch (Exception e) {
 
@@ -159,9 +166,16 @@ public class ProductCatalogServiceImpl {
 				if (productVariantInDB != null) {
 					productVariant.setCreatedDate(productVariantInDB.getCreatedDate());
 					productVariant.setFreeProductVariant(productVariantInDB.getFreeProductVariant());
+                    productVariant.setOutOfStock(productVariantInDB.getOutOfStock());
 				} else {
+          if(productVariant.getProduct().isJit()!=null && !productVariant.getProduct().isJit()){
+             productVariant.setOutOfStock(true);
+          }
+          else{
+            productVariant.setOutOfStock(false);
+          }
 					productVariant.setCreatedDate(new Date());
-				}
+				} 
 				logger.debug("saving product variant : " + productVariant.getId() + "," + productVariant.getHkPrice(null));
 				logger.debug("inserting product variant " + productVariant.getId() + " - " + productVariant.getProduct().getName());
 
