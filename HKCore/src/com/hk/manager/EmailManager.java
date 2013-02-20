@@ -719,8 +719,6 @@ public class EmailManager {
       return boolFinal;
     }
 
-    /* Commenting code , Since we have started Payment Failure's Automatic Call through  Effort BPO  */
-
     public void sendPaymentFailMail(User user, String gatewayOrderId) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
