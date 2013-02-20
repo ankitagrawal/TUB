@@ -38,6 +38,8 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 */
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
+
+    public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse);
     
     public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;
     

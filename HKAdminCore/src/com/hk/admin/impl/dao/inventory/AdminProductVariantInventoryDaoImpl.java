@@ -119,7 +119,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
   public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
     String sql = "select pvi as productVariantInventory, sg as skuGroup, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
         + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
-        + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand ";
+        + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NOT Null and si.barcode not like '%HK-INV-%' ";
     if (warehouse != null) {
       sql = sql + " and s.warehouse = :warehouse ";
     }
@@ -133,6 +133,26 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     return query.list();
   }
+
+
+
+    public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse){
+       String sql = "select pvi as productVariantInventory, sg as skuGroup, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
+        + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
+        + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NULL and si.barcode like '%HK-INV-%'";
+    if (warehouse != null) {
+      sql = sql + " and s.warehouse = :warehouse ";
+    }
+    sql = sql + " group by si.id having sum(pvi.qty) > 0";
+
+    Query query = getSession().createQuery(sql).setParameter("brand", brand);
+    if (warehouse != null) {
+      query.setParameter("warehouse", warehouse);
+    }
+    query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+
+    return query.list();
+    }
 
     /*
      * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {

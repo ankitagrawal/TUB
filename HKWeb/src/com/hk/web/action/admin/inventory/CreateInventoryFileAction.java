@@ -89,6 +89,8 @@ public class CreateInventoryFileAction extends BaseAction {
       // List<CreateInventoryFileDto> inventoryFileList =
       // productVariantInventoryDao.getDetailsForUncheckedItems(brand);
       List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getDetailsForUncheckedItems(brand, userWarehouse);
+      List<CreateInventoryFileDto> inventoryFileListForItemBarcode = adminproductVariantInventoryDao.getDetailsForUncheckedItemsWithItemBarcode(brand, userWarehouse); 
+      inventoryFileList.addAll(inventoryFileListForItemBarcode);
       Iterator<CreateInventoryFileDto> iterator = inventoryFileList.iterator();
 
       String barcodeFilePath = null;
@@ -169,6 +171,8 @@ public class CreateInventoryFileAction extends BaseAction {
     }
     try {
       List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getDetailsForUncheckedItems(brand, userWarehouse);
+      List<CreateInventoryFileDto> inventoryFileListForItemBarcode = adminproductVariantInventoryDao.getDetailsForUncheckedItemsWithItemBarcode(brand, userWarehouse);
+      inventoryFileList.addAll(inventoryFileListForItemBarcode);
       Iterator<CreateInventoryFileDto> iterator = inventoryFileList.iterator();
 
       String barcodeFilePath = null;
