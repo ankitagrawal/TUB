@@ -31,7 +31,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     }
 
 	public List<String> getBrandsByPrimaryCategory(Category primaryCategory) {
-		String queryString = "select distinct p.brand from Product p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted order by p.brand asc";
+		String queryString = "select distinct p.brand from Product p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted and p.hidden <> 1 order by p.brand asc";
 		return findByNamedParams(queryString, new String[] { "primaryCategory", "deleted"}, new Object[] { primaryCategory.getName(), false});
 	}
 
@@ -59,7 +59,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     }
 
     public List<Category> getPrimaryCategories() {
-        return findByQuery("select distinct p.primaryCategory from Product p");
+        return findByQuery("select distinct p.primaryCategory from Product p where p.deleted<>1 and p.hidden<>1 order by p.primaryCategory.displayName asc");
     }
 
     public List<ProductOptionDto> getProductOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice) {
