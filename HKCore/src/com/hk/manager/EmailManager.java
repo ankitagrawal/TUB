@@ -413,14 +413,16 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }
 
-    public boolean sendProductReviewEmail(User user, Product product, Mail mail, String testEmailId){
+    public boolean sendProductReviewEmail(User user, Product product, Mail mail, String testEmailId, EmailRecepient emailRecepient){
         HashMap valuesMap = new HashMap();
 
         valuesMap.put("user", user);
         valuesMap.put("product", product);
 
-        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReviewByMail=&product="+product.getId() + "&userHash="+user.getUserHash();
+        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReviewByMail=&product="+product.getId() + "&uid="+user.getUserHash();
         valuesMap.put("review_link", review_link);
+        String unsubscribeLink = getLinkManager().getEmailUnsubscribeLink(emailRecepient);
+        valuesMap.put("unsubscribeLink", unsubscribeLink);
 
         //template contents from db
         String mailTemplateContents = mail.getContent();

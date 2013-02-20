@@ -4,6 +4,7 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.review.Mail;
@@ -54,7 +55,8 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
     public boolean sendTestEmail(User user, Product product){
         productReviewMail = productReviewMailService.getProductReviewMailByProduct(product);
         if(productReviewMail.getIsEnabled()){
-            return getEmailManager().sendProductReviewEmail(user, product, productReviewMail.getMail(),productReviewMail.getTestEmailId());
+            EmailRecepient emailRecepient = emailRecepientDao.getOrCreateEmailRecepient(user.getEmail());
+            return getEmailManager().sendProductReviewEmail(user, product, productReviewMail.getMail(),productReviewMail.getTestEmailId(),emailRecepient);
         }else{
             logger.info("Emails not enabled for" + productReviewMail.getProduct());
         }
@@ -72,10 +74,11 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                 if(!isUserUnsubscribed){
                     productReviewMail = productReviewMailService.getProductReviewMailByProduct(userReviewMail.getProductVariant().getProduct());
                     userReview = reviewService.getReviewByUserAndProduct(userReviewMail.getUser(), userReviewMail.getProductVariant().getProduct());
-                    if(userReview == null){
+                    if(productReviewMail != null && userReview == null){
                         if(productReviewMail.getIsEnabled()){
                             Mail mail = productReviewMail.getMail();
-                            mailSent = getEmailManager().sendProductReviewEmail(userReviewMail.getUser(), userReviewMail.getProductVariant().getProduct(), mail, null);
+                            EmailRecepient emailRecepient = emailRecepientDao.getOrCreateEmailRecepient(userReviewMail.getUser().getEmail());
+                            mailSent = getEmailManager().sendProductReviewEmail(userReviewMail.getUser(), userReviewMail.getProductVariant().getProduct(), mail, null,emailRecepient);
                             if(mailSent){
                                 userReviewMail.setSentDate(BaseUtils.getCurrentTimestamp());
                                 userReviewMail.setIsMailSent(true);
