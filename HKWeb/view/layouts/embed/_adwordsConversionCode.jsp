@@ -346,6 +346,42 @@
   </div>
 </noscript>
 
+
+<%--Dynamic Remarketing code start--%>
+<script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_language = "en";
+  var google_conversion_format = "3";
+  var google_conversion_color = "ffffff";
+  var google_conversion_id = 992091386;
+  var google_conversion_label = "u1moCKavkgQQ-rmI2QM";
+  var google_conversion_value = 0;
+  if (${conversion_value}) {
+    google_conversion_value = ${conversion_value};
+  }
+  /* ]]> */
+</script>
+<script type="text/javascript" >
+  var conversionJsHost = (("https:" == document.location.protocol) ? "https://www." : "http://www.");
+  document.write(unescape("%3Cscript src='" + conversionJsHost + "googleadservices.com/pagead/conversion.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<noscript>
+  <div style="display:inline;">
+
+	  <c:choose>
+		  <c:when test="${isSecure}">
+			  <img height="1" width="1" style="border-style:none;" alt=""
+			       src="https://www.googleadservices.com/pagead/conversion/992091386/?value=${conversion_value}&amp;label=u1moCKavkgQQ-rmI2QM&amp;guid=ON&amp;script=0"/>
+		  </c:when>
+		  <c:otherwise>
+			  <img height="1" width="1" style="border-style:none;" alt=""
+			       src="http://www.googleadservices.com/pagead/conversion/992091386/?value=${conversion_value}&amp;label=u1moCKavkgQQ-rmI2QM&amp;guid=ON&amp;script=0"/>
+		  </c:otherwise>
+	  </c:choose>
+  </div>
+</noscript>
+<%--Dynamic Remarketing end--%>
+
 <%--Facebook Conversion Tracking Codes--%>
 
 <script type="text/javascript">

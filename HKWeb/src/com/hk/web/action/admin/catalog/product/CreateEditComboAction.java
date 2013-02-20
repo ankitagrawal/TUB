@@ -1,24 +1,5 @@
 package com.hk.web.action.admin.catalog.product;
 
-import java.util.*;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.PermissionConstants;
@@ -34,6 +15,17 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.report.dto.catalog.ComboProductAndAllowedVariantsDto;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -171,6 +163,9 @@ public class CreateEditComboAction extends BaseAction {
         if (combo.getDeleted() == null) {
             combo.setDeleted(Boolean.FALSE);
         }
+	    if (combo.getHidden() == null) {
+		    combo.setHidden(Boolean.FALSE);
+	    }
 //        if (combo.getCodAllowed() == null) {
 //            combo.setCodAllowed(Boolean.FALSE);
 //        }
