@@ -21,12 +21,12 @@
                 <ul class="mail">
                     <li>
                         <label>Mail Template Name</label>
-                        <s:text name="mail.name" id="name"/>
-                        <s:submit name="searchMail" value="Edit" />
+                        <s:text name="mail.name" id="name" maxlength="45"/>
+                        <s:submit name="searchMail" value="Search/Edit" id="btn" />
                     </li>
                     <li>
                         <label>Subject</label>
-                        <s:text name="mail.subject" id="subject" />
+                        <s:text name="mail.subject" id="subject" maxlength="200"/>
                     </li>
                     <li>
                         <label>Modify Content</label> <s:file name="contentBean"/><br/>

@@ -10,11 +10,12 @@
 
     <s:layout-component name="content">
         <s:messages/>
-        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction"> Create Mail Template </s:link><>
-        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" event="create"> Create Product Settings </s:link>
+        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" class="button_orange">Create/Search Mail Templates</s:link>
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" class="button_orange" event="create">Create/Search Product Settings</s:link>
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" class="button_orange" event="sendDueEmail">Send Emails</s:link><br><br>
+        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
         <fieldset class="right_label">
             <legend>Search Product</legend>
-            <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">
                 <label>Product ID:</label><s:text name="product"/>
                 <label>Mail Type</label>
                 <s:select name="mail">
@@ -72,8 +73,5 @@
 
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${rmsa}"/>
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${rmsa}"/>
-        <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
-            <s:submit name= "sendDueEmail" value="Send Emails" />
-        </s:form>
     </s:layout-component>
 </s:layout-render>

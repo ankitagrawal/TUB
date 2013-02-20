@@ -18,8 +18,10 @@ import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
+import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
+import net.sourceforge.stripes.validation.ValidationMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,16 +57,16 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     private Order order;
 
    @ValidateNestedProperties( {
-            @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings"}),
+            @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings"}),
+            @Validate(field = "mail", required = true, on = {"createProductSettings"}),
+            @Validate(field = "testEmailId", required = true, on = {"createProductSettings"}),
     })
    private ProductReviewMail productReviewMail;
    private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
     Page reviewCollectionPage;
 
-   @Validate(required = true, on={"createProductSettings","saveProductSettings", "sendTestEmail"})
+   @Validate(required = true, on={"createProductSettings", "sendTestEmail"})
    private Product product;
 
     private Mail mail;
@@ -126,6 +128,30 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
         productReviewMailService.save(productReviewMail);
         addRedirectAlertMessage(new SimpleMessage("Review Mailing product saved successfully."));
         return new RedirectResolution(ReviewMailSettingsAction.class);
+    }
+
+    @ValidationMethod(on = "saveProductSettings")
+    public void validateProductSettings(){
+        if (product == null) {
+            editSettings = true;
+            getContext().getValidationErrors().add("1", new SimpleError("Please Enter Product"));
+        }
+        if (productReviewMail == null || productReviewMail.getTimeWindowDays() == null) {
+            editSettings = true;
+            getContext().getValidationErrors().add("2", new SimpleError("Please Enter Days to Mail after"));
+        }
+        if (productReviewMail.getDaysToSendReviewMailAgain() == null) {
+            editSettings = true;
+            getContext().getValidationErrors().add("3", new SimpleError("Please Enter Days to Send Review Mail again"));
+        }
+        if (productReviewMail.getMail() == null) {
+            editSettings = true;
+            getContext().getValidationErrors().add("4", new SimpleError("Please Select a Mail Type"));
+        }
+        if (productReviewMail.getTestEmailId() == null) {
+            editSettings = true;
+            getContext().getValidationErrors().add("5", new SimpleError("Please Enter Test EMail Id"));
+        }
     }
 
     /*public Resolution test(){

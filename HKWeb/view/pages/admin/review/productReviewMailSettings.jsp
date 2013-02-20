@@ -18,7 +18,13 @@
                 <ul class="productList">
                     <li>
                         <label>Product ID</label>
-                        <s:text name="product" />  <%--(eg: NUT130)  <s:submit name="editProductSettings" value="edit" />--%>
+                        <c:if test="${rmsa.editSettings}">
+                        <span style= "color:#ff0000;">${rmsa.product}</span>
+                        <s:hidden name="product" value="${product}"/><%--(eg: NUT130)  <s:submit name="editProductSettings" value="edit" />--%>
+                        </c:if>
+                        <c:if test="${!rmsa.editSettings}">
+                            <s:text name="product"/>
+                        </c:if>
                     </li>
                     <li>
                         <label>Days To Mail After</label>
@@ -38,7 +44,7 @@
                     </li>
                     <li>
                         <label>Test Email Id</label>
-                        <s:text name="productReviewMail.testEmailId"  />
+                        <s:text name="productReviewMail.testEmailId"  maxlength="50"/>
                     </li>
                     <li>
                         <label>is Review Mail Enabled</label>
