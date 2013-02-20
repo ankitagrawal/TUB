@@ -122,8 +122,6 @@
                                     </s:link>
                                 </c:if>
                             </c:otherwise>
-
-
                         </c:choose>
                     </td>
                 </tr>
