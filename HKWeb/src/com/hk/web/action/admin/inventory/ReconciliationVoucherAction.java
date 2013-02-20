@@ -465,9 +465,9 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
            String barcodeFilePath = null;
            Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
          List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);
-        if (rvLineItems == null || rvLineItems.size ()< 0){
+        if (rvLineItems == null || rvLineItems.size ()< 1){
            addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
-            return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+           return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
         }
            for (RvLineItem rvLineItem : rvLineItems) {
 //            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
