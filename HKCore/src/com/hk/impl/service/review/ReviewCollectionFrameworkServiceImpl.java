@@ -109,7 +109,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                     if(productVariant != null){
                         productReviewMail = productReviewMailService.getProductReviewMailByProduct(productVariant.getProduct());
                         userReview = reviewService.getReviewByUserAndProduct(user, productVariant.getProduct());
-                        if(userReview == null){
+                        if(productReviewMail != null && userReview == null ){
                             UserReviewMail priorUserReviewMail = userReviewMailService.getByUserAndProductVariant(user, productVariant);
                             if(priorUserReviewMail == null){
                                 userReviewMail.setDueDate(BaseUtils.getFutureTimestamp( 24*3600*1000*productReviewMail.getTimeWindowDays()));
