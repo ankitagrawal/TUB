@@ -462,7 +462,7 @@ public class PaymentManager {
 
 	private void initiatePaymentFailureCall(Order order) {
 		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
-			/* Make JMS Call For COD Confirmation Only Once*/
+
 			if (order.getUserCodCall() == null) {
 				try {
                     boolean messagePublished = orderEventPublisher.publishPaymentFailureEvent(order);
