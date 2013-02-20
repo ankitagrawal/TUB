@@ -245,9 +245,7 @@ public class UserManager {
 
     public String getUserActivationLink(User user) {
         TempToken tempToken = getTempTokenDao().createNew(user, ACTIVATION_LINK_EXPIRY_DAYS);
-        String userActivationLink = getLinkManager().getUserActivationLink(tempToken);
-        // System.out.println("Account activation link: " + userActivationLink);
-        return userActivationLink;
+        return getLinkManager().getUserActivationLink(tempToken);
     }
 
     public User createAndLoginAsGuestUser(String email, String name) {
