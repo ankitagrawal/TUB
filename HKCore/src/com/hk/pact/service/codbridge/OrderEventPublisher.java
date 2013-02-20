@@ -119,7 +119,7 @@ public class OrderEventPublisher {
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
-            producer.publishMessage(orderStatusMessage);
+            boolean messagePublished = producer.publishMessage(orderStatusMessage);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }

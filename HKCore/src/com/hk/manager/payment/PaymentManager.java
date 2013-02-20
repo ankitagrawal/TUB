@@ -461,7 +461,6 @@ public class PaymentManager {
 	}
 
 	private void initiatePaymentFailureCall(Order order) {
-		List<UserCodCall> userCodCallList = orderService.getAllUserCodCallForToday();
 
 			if (order.getUserCodCall() == null) {
 				try {
