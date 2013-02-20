@@ -160,6 +160,17 @@
                 <s:hidden name="rvLineItems[${ctr.index}]" value="${rvLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                     <td>
+                         <c:if test="${rvLineItem.reconciledQty > 0}">
+                           <c:set var="itemCheckedin" value="true"/>
+
+                                <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                                        event="downloadBarcode"> Barcode
+                                    <s:param name="rvLineItem" value="${rvLineItem.id}"/>
+                                    <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}"/>--%>
+                                     <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                                </s:link>
+
+                        </c:if>
                             ${productVariant.id}
                     </td>
                     <td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
@@ -211,6 +222,10 @@
             </div>
         </fieldset>
         </shiro:hasRole>
+
+         <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+    </s:link>
 
     </s:form>
 

@@ -27,6 +27,12 @@
 					$('#errordiv').hide();
 				});
 
+                $('.valueChange').live("change", function () {
+                    alert("Hello");
+                    var valueChangeRow = $(this).parents('.lineItemRow');
+                      var qty = valueChangeRow.find('.quantity').val();
+                      updateTotal('.quantity', '.totalQuantity', 1);
+                });
 
 				$('#uploadnotepad').live("click", function() {
 					var filebean = $('#filebean').val();
@@ -35,6 +41,20 @@
 						return false;
 					}
 				});
+
+                function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+                              var total = 0;
+                              $.each($(fromTotalClass), function (index, value) {
+                                  var eachRow = $(value);
+                                  var eachRowValue = eachRow.val().trim();
+                                  total += parseFloat(eachRowValue);
+                              });
+                              if (toHtml == 1) {
+                                  $(toTotalClass).html(total);
+                              } else {
+                                  $(toTotalClass).val(total.toFixed(2));
+                              }
+                          }
 
 
 				$('.scannedBarcode').live("change", function() {
@@ -131,15 +151,20 @@
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
 								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
+                                 <div class="quantity valueChange">
 								<c:choose>
+
 									<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
+
 										<td><span style="color:red"> ${cCItem.scannedQty} </span></td>
+
 									</c:when>
 									<c:otherwise>
 										<td>${cCItem.scannedQty}</td>
 									</c:otherwise>
-								</c:choose>
 
+								</c:choose>
+                                     </div>
 
 								<td>
 
@@ -150,7 +175,14 @@
 						</c:forEach>
 					</c:if>
 
-					<tr>
+                    <tr>
+                        &nbsp; &nbsp;
+                        <td colspan="12">Total</td>
+                        <td colspan="6" class="totalQuantity"></td>
+                    </tr>                  
+
+
+                    <tr>
 						<td>
 							<div style="display:none;">
 								<input type="submit" class="saveform" name="saveScanned"/>
