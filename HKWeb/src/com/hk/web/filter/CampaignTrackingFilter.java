@@ -80,14 +80,15 @@ public class CampaignTrackingFilter implements Filter {
         //Get temp user from cookie
 	    if (httpRequest.getCookies() != null) {
 		    for (Cookie cookie : httpRequest.getCookies()) {
-			    if (user == null && cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
+			/*    if (user == null && cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.tempHealthKartUser)) {
 				    String userHash = cookie.getValue();
 				    user = userService.findByUserHash(userHash);
 				    if (user != null) {
 					    logger.debug("Getting Temp User from Cookie and Setting as Principal User=" + userHash);
 					    new PrincipalImpl(user);
 				    }
-			    } else if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.trackingId)) {
+			    } else */
+                if (cookie.getName() != null && cookie.getName().equals(HealthkartConstants.Cookie.trackingId)) {
 				    trackingId = cookie.getValue();
 			    }
 		    }

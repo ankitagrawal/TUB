@@ -71,4 +71,6 @@ public class RoleConstants {
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
 	public static final String REWARD_POINT_MANAGER_L1       = "REWARD_POINT_MANAGER_L1";
 	public static final String REWARD_POINT_MANAGER_L2       = "REWARD_POINT_MANAGER_L2";
+
+	public static final String STORE_MANAGER                 = "STORE_MANAGER";
 }

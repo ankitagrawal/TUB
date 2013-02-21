@@ -4,10 +4,13 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
@@ -19,7 +22,10 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -31,8 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Author: Pratham
@@ -46,6 +51,8 @@ public class PaymentAction extends BaseAction {
     private Gateway gateway;
     Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
+//    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
+//    private Integer               sizeOfCLI;
 
     @Validate(required = true)
     Issuer issuer;
@@ -73,7 +80,14 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
-
+//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
+//            sizeOfCLI = trimCartLineItems.size();
+//            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
+//                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
+//                    return new RedirectResolution(CartAction.class);
+//                }
+//                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
+//            }
             BillingAddress billingAddress = null;
             if(billingAddressId != null){
                 billingAddress = addressDao.getBillingAddressById(billingAddressId);

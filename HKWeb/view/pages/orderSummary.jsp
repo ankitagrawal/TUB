@@ -8,7 +8,6 @@
 <%@ page import="com.hk.web.action.core.cart.AddToCartAction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
 <%
   Double codMaxAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMaxAmount));
   Double codMinAmount = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
@@ -81,13 +80,12 @@
   <s:layout-component name="steps_content">
     <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
-
+<%----%>
     <jsp:include page="/includes/checkoutNotice.jsp"/>
       
     <c:if test="${orderSummary.availableCourierList == null}">
       <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
     </c:if>
-
     <h3>
       You selected
     </h3>
@@ -190,7 +188,8 @@
       </s:form>
 
     </div>
-    <c:if test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
+    <c:choose>
+    <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
@@ -223,11 +222,43 @@
               $("#overlay").hide();
               $("#dialog").fadeOut(300);
           }
-
-
-
       </script>
+     </c:when>
+      <c:otherwise>
+      <c:if test="${orderSummary.trimCartLineItems!=null and fn:length(orderSummary.trimCartLineItems) > 0}">
+          <c:set var="comboInstanceIds"  value=""/>
+          <c:set var="comboInstanceIdsName" value="" />
+          <script type="text/javascript">
+          $(document).ready(function () {
+              ShowDialog(true);
+//              e.preventDefault();
+              $('.button_green').live('click',function(){
+                  $(this).hide();
+                  HideDialog();
+              });
+
+          function ShowDialog(modal)
+          {
+              $("#overlay2").show();
+              $("#dialog2").fadeIn(300);
+
+              if (modal)
+              {
+                  $("#overlay2").unbind("click");
+              }
+          }
+
+          function HideDialog()
+          {
+
+              $("#overlay2").hide();
+              $("#dialog2").fadeOut(300);
+          }
+          });
+    </script>
      </c:if>
+     </c:otherwise>
+      </c:choose>
   </s:layout-component>
 </s:layout-render>
 
@@ -317,6 +348,114 @@
    </s:form>
    </div>
 
+
+  <div id="overlay2" class="web_dialog_overlay"></div>
+   <div id="dialog2" class="web_dialog">
+
+       <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
+           <tr>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+               <td class="web_dialog_title align_right">
+                   <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+               <td colspan="3" style="padding-left: 15px;">
+                   <b>The following items have been removed due to insufficient inventory</b>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+               <c:forEach items="${orderSummary.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+                   <tr>
+                       <div class='product' style="border-bottom-style: solid;">
+                         <td style="padding-left: 15px;">
+                           <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+                               <c:choose>
+                                   <c:when test="${cartLineItem.comboInstance!=null}">
+                                       <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                           <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIds}"/>
+                                           <c:choose>
+                                               <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
+                                                   <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <img class="prod48"
+                                                        src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.comboInstance.combo.id}.jpg"
+                                                        alt="${cartLineItem.comboInstance.combo.name}"/>
+                                               </c:otherwise>
+                                           </c:choose>
+                                       </c:if>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <c:choose>
+                                           <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                               <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                           </c:when>
+                                           <c:otherwise>
+                                               <img class="prod48"
+                                                    src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                                    alt="${cartLineItem.productVariant.product.name}"/>
+                                           </c:otherwise>
+                                       </c:choose>
+                                   </c:otherwise>
+                               </c:choose>
+                           </div>
+                         </td>
+                         <td>
+                           <div class='name'>
+                               <table width="100%">
+                                   <tr>
+                                       <td>
+                                            <c:choose>
+                                                  <c:when test="${cartLineItem.comboInstance!=null}">
+                                                    <c:if test="${!fn:contains(comboInstanceIdsName, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIdsName"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIdsName}"/>
+                                                        ${cartLineItem.comboInstance.combo.name} <br/>
+                                                     </c:if>
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                       ${cartLineItem.productVariant.product.name}
+                                                  </c:otherwise>
+                                               </c:choose>
+                                       </td>
+                                   </tr>
+                               </table>
+                           </div>
+                         </td>
+
+                       </div>
+                   </tr>
+                 </c:forEach>
+
+
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+
+           </tr>
+           <tr>
+               <td colspan="2" style="text-align: center;">
+
+                 <c:if test="${orderSummary.sizeOfCLI > 0}">
+                   <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                     </td><td>
+                   </c:if>
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                           style="width: 160px; height: 18px;">Back to Shopping
+                   </s:link>
+               </td>
+           </tr>
+       </table>
+   </div>
 
 <style type="text/css">
 

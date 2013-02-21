@@ -48,12 +48,12 @@ import com.hk.db.seed.ticket.TicketTypeSeedData;
 @Component
 public class MasterDataService {
     private static Logger                  logger = LoggerFactory.getLogger(MasterDataService.class);
-    @Autowired
-    RoleSeedData                           roleSeedData;
-    @Autowired
-    PermissionSeedData                     permissionSeedData;
-    @Autowired
-    RoleHasPermissionSeedData              roleHasPermissionSeedData;
+//    @Autowired
+//    RoleSeedData                           roleSeedData;
+//    @Autowired
+//    PermissionSeedData                     permissionSeedData;
+//    @Autowired
+//    RoleHasPermissionSeedData              roleHasPermissionSeedData;
 //    @Autowired
 //    CourierSeedData                        courierSeedData;
     /* CartLineItemTypeSeedData lineItemStatusSeedData; */
@@ -151,17 +151,20 @@ public class MasterDataService {
 	DispatchLotStatusSeedData dispatchLotStatusSeedData;
 	@Autowired
 	SkuItemStatusSeedData skuItemStatusSeedData;
+	@Autowired
+	CourierPickupStatusSeedData courierPickupStatusSeedData;
 
 	public void insert() {
 
-        logger.debug("inserting roles");
-        roleSeedData.invokeInsert();
+        //todo do all new roles insertions through db, insert scripts till a new framework is not in place
+//        logger.debug("inserting roles");
+//        roleSeedData.invokeInsert();
+//
+//        logger.debug("inserting permissions");
+//        permissionSeedData.invokeInsert();
 
-        logger.debug("inserting permissions");
-        permissionSeedData.invokeInsert();
-
-        logger.debug("inserting role has permissions");
-        roleHasPermissionSeedData.invokeInsert();
+//        logger.debug("inserting role has permissions");
+//        roleHasPermissionSeedData.invokeInsert();
 
 //        logger.debug("inserting couriers");
 //        courierSeedData.invokeInsert();
@@ -310,5 +313,8 @@ public class MasterDataService {
 
 		logger.debug("inserting Sku Item Status");
 		skuItemStatusSeedData.invokeInsert();
+
+		logger.debug("inserting courier pickup status");
+		courierPickupStatusSeedData.invokeInsert();
 	}
 }

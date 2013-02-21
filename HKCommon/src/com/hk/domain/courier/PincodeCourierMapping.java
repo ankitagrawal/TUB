@@ -49,8 +49,8 @@ public class PincodeCourierMapping implements java.io.Serializable {
       return false;
 
     PincodeCourierMapping pincodeCourierMapping = (PincodeCourierMapping) o;
-    if (this.id != null && pincodeCourierMapping.getId() != null) {
-      return id.equals(pincodeCourierMapping.getId());
+    if (pincodeCourierMapping.getPincode()!=null && pincodeCourierMapping.getCourier()!=null && this.pincode!=null && this.courier!=null) {
+      return (pincodeCourierMapping.getPincode().equals(this.pincode) && pincodeCourierMapping.getCourier().equals(this.courier));
     }
     return false;
   }

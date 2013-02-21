@@ -70,20 +70,27 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void checkInventoryHealth(ProductVariant productVariant) {
-        List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             checkInventoryHealth(skuList, productVariant);
         }else{
             //all variants without sku marked out of stock
             //todo check for product oos as well
-            productVariant.setOutOfStock(true);
-            productVariantService.save(productVariant);
+	          List<Sku> skuListToMarkProductOOS = getSkuService().getSKUsForMarkingProductOOS(productVariant);
+	          if(skuListToMarkProductOOS == null || skuListToMarkProductOOS.isEmpty()) {
+		          if (!productVariant.isOutOfStock()) {
+			          productVariant.setOutOfStock(true);
+			          productVariantService.save(productVariant);
+		          }
+	          }
         }
     }
 
     @Override
     public Long getAggregateCutoffInventory(ProductVariant productVariant) {
-        List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+        //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
+	    List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         return this.getAggregateCutoffInventory(skuList);
     }
 
@@ -159,7 +166,7 @@ public class InventoryServiceImpl implements InventoryService {
             //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
             //calling Async method to set all out of stock combos to in stock
-            getComboService().markRelatedCombosOutOfStock(productVariant);
+            getComboService().markProductOutOfStock(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -179,7 +186,7 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant.setOutOfStock(false);
           //calling Async method to set all out of stock combos to in stock
             productVariant = getProductVariantService().save(productVariant);
-            getComboService().markRelatedCombosOutOfStock(productVariant);
+            getComboService().markProductOutOfStock(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {
@@ -258,7 +265,8 @@ public class InventoryServiceImpl implements InventoryService {
 		if (productVariant != null) {
 			Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
 			logger.debug("bookedInventoryForProductVariant " + bookedInventoryForProductVariant);
-			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			//Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariant(productVariant));
+			Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
 			logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
 			bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
 		}

@@ -122,6 +122,9 @@ public class PurchaseOrder implements java.io.Serializable {
   @JoinColumn (name = "extra_inventory_id")
   private ExtraInventory extraInventory;
 
+  @Column (name = "is_extra_inventory_created")
+  private boolean isExtraInventoryCreated;
+
 	@Transient
 	private int noOfSku;
 
@@ -339,6 +342,18 @@ public class PurchaseOrder implements java.io.Serializable {
 
   public void setExtraInventory(ExtraInventory extraInventory) {
     this.extraInventory = extraInventory;
+  }
+
+  public boolean isExtraInventoryCreated() {
+    return isExtraInventoryCreated;
+  }
+
+  public boolean getExtraInventoryCreated(){
+    return isExtraInventoryCreated;
+  }
+
+  public void setExtraInventoryCreated(boolean extraInventoryCreated) {
+    isExtraInventoryCreated = extraInventoryCreated;
   }
 }
 

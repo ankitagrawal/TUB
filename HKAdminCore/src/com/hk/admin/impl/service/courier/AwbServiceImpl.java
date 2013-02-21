@@ -70,6 +70,7 @@ public class AwbServiceImpl implements AwbService {
         Courier courier = awb.getCourier();
         if (ThirdPartyAwbService.integratedCouriers.contains(courier.getId())) {
             deleteAwbForThirdPartyCourier(awb);
+            save(awb, EnumAwbStatus.Used.getId().intValue());
         } else {
             save(awb, EnumAwbStatus.Unused.getId().intValue());
         }

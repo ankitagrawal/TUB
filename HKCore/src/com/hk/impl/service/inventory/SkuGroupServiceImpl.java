@@ -10,6 +10,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +56,12 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuGroupDao.getInStockSkuGroupByQty(sku);
 	}
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku){
-		return  skuGroupDao.getSkuGroupsByBatch(batch,sku);
+	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
+		return skuGroupDao.getSkuGroupsByBatch(batch, sku);
 	}
 
-	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId){
-		return skuGroupDao.getSkuGroupsByBarcode(barcode, warehouseId);
+	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
+		return skuGroupDao.getSkuGroup(barcode, warehouseId);
 	}
 
 
@@ -73,12 +74,18 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
 	}
 
-      public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus){
-        return skuItemDao.getSkuItem(skuGroup,skuItemStatus);
-    }
 
-     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId){
-       return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);  
-     }
+	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+		return skuItemDao.getInStockSkuItems(skuGroup);
+	}
+
+	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+		return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
+	}
+
+	public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
+		return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);
+	}
+
 
 }

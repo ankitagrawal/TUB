@@ -62,10 +62,14 @@
 			${stockTransferBean.stockTransfer.fromWarehouse.city} &nbsp;
 			-${stockTransferBean.stockTransfer.fromWarehouse.pincode} <br/>
 			${stockTransferBean.stockTransfer.fromWarehouse.state}<br/>
-			TIN: ${stockTransferBean.stockTransfer.fromWarehouse.tin}
-		</td>
-		<td align="right">
-			<img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>
+            <c:choose>
+                <c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'HARYANA'}">
+                    <p> TIN# 06101832036</p>
+                </c:when>
+                <c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'MAHARASHTRA'}">
+                    <p> TIN# 27210893736</p>
+                </c:when>
+            </c:choose>
 		</td>
 	</tr>
 </table>
