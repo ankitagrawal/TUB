@@ -119,7 +119,7 @@
 		location="/WEB-INF/environment.properties" />
 
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
-        <constructor-arg name="ipAddress" value="localhost">
+        <constructor-arg name="address" value="localhost">
         </constructor-arg>
     </bean>
 
