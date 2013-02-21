@@ -1,16 +1,12 @@
 package com.hk.web.action.core.search;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.Keys;
+import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
@@ -21,9 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.core.Keys;
-import com.hk.web.HealthkartResponse;
+import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @UrlBinding("/autocomplete-search")
 public class AutoCompleteAction extends BaseAction {
@@ -39,15 +36,21 @@ public class AutoCompleteAction extends BaseAction {
     String                q      = "";
     String                limit  = "10";
 
+    private static enum RegexType {
+      NONE,
+      LEFT,
+      RIGHT,
+      BOTH
+    }
+
     @DontValidate
     public Resolution pre() throws Exception {
-        Set<String> terms = query(q, Integer.parseInt(limit));
+        Set<String> suggestedStrings = new HashSet<String>();
+        Set<String> terms = query(q, Integer.parseInt(limit), RegexType.NONE, new HashSet<String>());
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", terms));
     }
 
-    private Set<String> query(String q, int limit) throws MalformedURLException {
-
-        Set<String> suggestedStrings = new HashSet<String>();
+    private Set<String> query(String q, int limit, RegexType regexType, Set<String> suggestedStrings) throws MalformedURLException {
         List<TermsResponse.Term> items = null;
         q = q.trim();
         q = q.replaceAll(",","");
@@ -56,12 +59,16 @@ public class AutoCompleteAction extends BaseAction {
         query.setQuery("*:*");
         query.addTermsField("title_autocomplete");
         query.setTerms(true);
-        //query.setTermsLimit(limit);
-        query.setTermsLimit(100);
+        query.setTermsLimit(limit);
         // query.setTermsLower(q);
         query.setHighlight(true);
-        // query.setTermsPrefix(q);
-        query.setTermsRegex(".*" + q.toLowerCase() + ".*");
+        if (regexType.equals(RegexType.NONE))
+          query.setTermsPrefix(q.toLowerCase());
+        else if (regexType.equals(RegexType.RIGHT))
+          query.setTermsRegex(q.toLowerCase() + ".*");
+        else if (regexType.equals(RegexType.BOTH))
+          query.setTermsRegex(".*" + q.toLowerCase() + ".*");
+
         // query.setTermsRegexFlag("dotall");
         query.setQueryType("/terms");
         try {
@@ -75,11 +82,19 @@ public class AutoCompleteAction extends BaseAction {
         if (items != null) {
             for (TermsResponse.Term item : items) {
               String completeTerm = item.getTerm();
-              String termFromQuery =  completeTerm.substring(completeTerm.indexOf(q));
+              suggestedStrings.add(completeTerm);
+
+              /*String termFromQuery =  completeTerm.substring(completeTerm.indexOf(q));
               if(termFromQuery.split(" ").length >= q.split(" ").length)   //Ajeet
                 suggestedStrings.add(termFromQuery);
               if(suggestedStrings.size() == 10)
-                break;
+                break;*/
+            }
+            if (suggestedStrings.size() < limit && regexType.equals(RegexType.NONE)) {
+              suggestedStrings = query(q, limit-suggestedStrings.size(), RegexType.RIGHT, suggestedStrings);
+            }
+            if (suggestedStrings.size() < limit && regexType.equals(RegexType.RIGHT)) {
+              suggestedStrings = query(q, limit-suggestedStrings.size(), RegexType.BOTH, suggestedStrings);
             }
         }
         return suggestedStrings;

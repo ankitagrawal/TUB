@@ -1991,7 +1991,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
     var numResults = results.length;
     for (i = 0; i < numResults; i++) {
       result = results[i];
-      $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
+      $li = $('<li>' + this.showResult((result.value).replace(filter, '<b>'+filter+'</b>'), result.data) + '</li>');
       $li.data('value', result.value);
       $li.data('data', result.data);
       $li.click(function() {

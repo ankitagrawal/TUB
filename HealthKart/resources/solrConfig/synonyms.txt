@@ -24,6 +24,11 @@ Television, Televisions, TV, TVs
 #notice we use "gib" instead of "GiB" so any WordDelimiterFilter coming
 #after us won't split it into two words.
 
+ON, Optimum Nutrition
+MuscleBlaze, Muscle Blaze, MB
+MusclePharm, Muscle Pharm
+MuscleTech, Muscle Tech
+
 # Synonym mappings can be used for spelling correction too
 pixima => pixma
 
@@ -34,3 +39,5 @@ superpump => super pump
 running => jogging
 moisturiser => moisturizer
 loreal =>l'oreal
+on => optimum nutriion
+optimum nutriion => on
