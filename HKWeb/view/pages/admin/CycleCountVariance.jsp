@@ -207,7 +207,10 @@
             <tr>
                 <th>VariantID</th>
                 <th>Hk Barcode</th>
+                <th>Product Name</th>
+                <th>Variant Option</th>
                 <th>Scanned Qty</th>
+
             </tr>
             </thead>
             <div style="margin: 0px auto;text-align: center;">
@@ -215,12 +218,25 @@
                     <tr>
                         <td>${cCItem.skuGroup.sku.productVariant.id}</td>
                         <td>${cCItem.skuGroup.barcode}</td>
+                        <td>${cCItem.skuGroup.sku.productVariant.product.name}</td>
+                        <td>${cCItem.skuGroup.sku.productVariant.optionsCommaSeparated}</td>
                         <td><label class="scannedQty">${cCItem.scannedQty} </label></td>
                     </tr>
                 </c:forEach>
+
+                <c:forEach items="${cycle.missedSkuGroupList}" var="missedGroup">
+                <tr>
+                    <td>${missedGroup.sku.productVariant.id}</td>
+                    <td>${missedGroup.barcode}</td>
+                    <td>${missedGroup.sku.productVariant.product.name}</td>
+                    <td>${missedGroup.sku.productVariant.optionsPipeSeparated}</td>
+                    <td><c:set var="scannedqty" value="0" />
+                        <label class="scannedQty" style="color: #ff0000;">${scannedqty}</label></td>
+                 </tr>
+                </c:forEach>
                 <tr>
                     &nbsp; &nbsp;
-                    <td style="font-weight:BOLD;" colspan="2">Total</td>
+                    <td style="font-weight:BOLD;" colspan="4">Total</td>
                     <td class="totalQuantity"><label id="scannedValueClosed" style="font-weight:BOLD;"></label></td>
 
                     </td>
