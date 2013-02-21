@@ -85,7 +85,11 @@ public class InvoiceLineItemDto {
 
     }
 
-    public LineItem getProductLineItem() {
+    public InvoiceLineItemDto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public LineItem getProductLineItem() {
         return productLineItem;
     }
 

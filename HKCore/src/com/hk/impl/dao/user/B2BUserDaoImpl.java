@@ -38,7 +38,8 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         userFilterDto.setLastLoginDateFrom(DateUtils.getStartOfDay(userFilterDto.getLastLoginDateFrom()));
         userFilterDto.setLastLoginDateTo(DateUtils.getEndOfDay(userFilterDto.getLastLoginDateTo()));
 
-        DetachedCriteria criteria = DetachedCriteria.forClass(User.class,"u");
+        DetachedCriteria criteria = DetachedCriteria.forClass(User.class,"u")
+        		.createAlias("roles", "r").add(Restrictions.eq("r.name","B2B_USER"));
         DetachedCriteria b2b_criteria = DetachedCriteria.forClass(B2bUserDetails.class)
         		.setProjection(Projections.property("user"));
         DetachedCriteria ud_criteria = DetachedCriteria.forClass(UserDetail.class)
@@ -47,6 +48,7 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         Conjunction con_criteria=Restrictions.conjunction();
         Disjunction dis_criteria=Restrictions.disjunction();
         boolean is_empty_conjuction=true;
+        boolean is_b2b_details=false;
         
         if (userFilterDto.getId() != null) {
             con_criteria.add(Restrictions.eq("id", userFilterDto.getId()));
@@ -86,12 +88,15 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         }
         if (StringUtils.isNotBlank(userFilterDto.getTin())) {
         	b2b_criteria.add(Restrictions.eq("tin", userFilterDto.getTin()));
+        	is_b2b_details=true;
         }
         if (StringUtils.isNotBlank(userFilterDto.getDlNumber())) {
         	b2b_criteria.add(Restrictions.eq("dlNumber", userFilterDto.getDlNumber()));
+        	is_b2b_details=true;
         }
         if (StringUtils.isNotBlank(userFilterDto.getCategory())) {
         	b2b_criteria.add(Restrictions.eq("category", userFilterDto.getCategory()));
+        	is_b2b_details=true;
         }
         if (StringUtils.isNotBlank(userFilterDto.getPhone())) {
         	ud_criteria.add(Restrictions.eq("phone", Long.parseLong(userFilterDto.getPhone())));
@@ -102,8 +107,14 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         {
         	 dis_criteria.add(con_criteria);
         }
-       
-        criteria.add(Restrictions.and(dis_criteria, Subqueries.propertyIn("u.id", b2b_criteria)));
+       if(is_b2b_details)
+       {
+        criteria.add(Restrictions.or(dis_criteria, Subqueries.propertyIn("u.id", b2b_criteria)));
+       }
+       else
+       {
+    	   criteria.add(dis_criteria);
+       }
         return list(criteria, pageNo, perPage);
 	}
 
