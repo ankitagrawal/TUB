@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 @UrlBinding("/autocomplete-search")
 public class AutoCompleteAction extends BaseAction {
@@ -45,12 +46,12 @@ public class AutoCompleteAction extends BaseAction {
 
     @DontValidate
     public Resolution pre() throws Exception {
+        List<String> terms = query(q, Integer.parseInt(limit), RegexType.NONE, new ArrayList<String>());
         Set<String> suggestedStrings = new HashSet<String>();
-        Set<String> terms = query(q, Integer.parseInt(limit), RegexType.NONE, new HashSet<String>());
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", terms));
     }
 
-    private Set<String> query(String q, int limit, RegexType regexType, Set<String> suggestedStrings) throws MalformedURLException {
+    private List<String> query(String q, int limit, RegexType regexType, List<String> suggestedStrings) throws MalformedURLException {
         List<TermsResponse.Term> items = null;
         q = q.trim();
         q = q.replaceAll(",","");
@@ -83,12 +84,6 @@ public class AutoCompleteAction extends BaseAction {
             for (TermsResponse.Term item : items) {
               String completeTerm = item.getTerm();
               suggestedStrings.add(completeTerm);
-
-              /*String termFromQuery =  completeTerm.substring(completeTerm.indexOf(q));
-              if(termFromQuery.split(" ").length >= q.split(" ").length)   //Ajeet
-                suggestedStrings.add(termFromQuery);
-              if(suggestedStrings.size() == 10)
-                break;*/
             }
             if (suggestedStrings.size() < limit && regexType.equals(RegexType.NONE)) {
               suggestedStrings = query(q, limit-suggestedStrings.size(), RegexType.RIGHT, suggestedStrings);
