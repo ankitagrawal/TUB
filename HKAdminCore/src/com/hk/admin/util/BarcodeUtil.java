@@ -37,7 +37,7 @@ public class BarcodeUtil {
              if (printBarcode.exists()) {
                  printBarcode.delete();
              }
-               printBarcode.createNewFile();
+             printBarcode.createNewFile();
              FileWriter fileWriter = new FileWriter(barcodeFilePath, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 

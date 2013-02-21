@@ -382,15 +382,14 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
            if (rvLineItem == null) {
                return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
            }
-//        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
            if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
                addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
                return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
            }
-//   getMap
+
            ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
-           SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+//           SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
            Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems);
 
            String barcodeFilePath = null;
@@ -416,21 +415,19 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
            }
            addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
            return new HTTPResponseResolution();
-//        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-       }
+     }
 
 
 
     public Resolution downloadAllBarcode() {                                 
             String barcodeFilePath = null;
             Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
-//          List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);
+          List <RvLineItem> rvLineItems =   reconciliationVoucherService.getRvLineItems(reconciliationVoucher);
          if (rvLineItems == null || rvLineItems.size ()< 1){
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
          }
             for (RvLineItem rvLineItem : rvLineItems) {
-//            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
                List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,null,null, 1L);
                 if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                     SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
@@ -453,7 +450,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 }
             }
             try {
-                if (skuItemDataMap == null || skuItemDataMap.size() < 1) {
+                if ( skuItemDataMap.size() < 1) {
                     addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
                      return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
                 }

@@ -162,13 +162,14 @@
                     <td>
                          <c:if test="${rvLineItem.reconciledQty > 0}">
                            <c:set var="itemCheckedin" value="true"/>
-
+                              <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
                                 <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
                                         event="downloadBarcode"> Barcode
                                     <s:param name="rvLineItem" value="${rvLineItem.id}"/>
                                     <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}"/>--%>
                                      <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
                                 </s:link>
+                             </shiro:hasRole>
 
                         </c:if>
                             ${productVariant.id}
@@ -221,11 +222,13 @@
                 <s:submit name="parse" value="Create RV LineItems"/>
             </div>
         </fieldset>
+
+          <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+         </s:link>
         </shiro:hasRole>
 
-         <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
-             <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
-    </s:link>
+
 
     </s:form>
 

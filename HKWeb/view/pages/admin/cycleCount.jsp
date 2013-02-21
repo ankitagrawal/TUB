@@ -27,14 +27,19 @@
 					$('#errordiv').hide();
 				});
 
-                $('.valueChange').live("change", function () {
-                    alert("Hello");
-                    var valueChangeRow = $(this).parents('.lineItemRow');
-                      var qty = valueChangeRow.find('.quantity').val();
-                      updateTotal('.quantity', '.totalQuantity', 1);
+                var scannedSum = 0;
+                var systemSum = 0;
+                $('.scannedQty').each(function() {
+                    scannedSum = scannedSum + parseFloat($(this).html());
                 });
+                $("#scannedValue").html(scannedSum);
 
-				$('#uploadnotepad').live("click", function() {
+                $('.systemQty').each(function() {
+                    systemSum = systemSum + parseFloat($(this).html());
+                });
+                $("#systemValue").html(systemSum);
+
+                $('#uploadnotepad').live("click", function() {
 					var filebean = $('#filebean').val();
 					if (filebean == null || filebean == '') {
 						alert('choose file');
@@ -42,22 +47,7 @@
 					}
 				});
 
-                function updateTotal(fromTotalClass, toTotalClass, toHtml) {
-                              var total = 0;
-                              $.each($(fromTotalClass), function (index, value) {
-                                  var eachRow = $(value);
-                                  var eachRowValue = eachRow.val().trim();
-                                  total += parseFloat(eachRowValue);
-                              });
-                              if (toHtml == 1) {
-                                  $(toTotalClass).html(total);
-                              } else {
-                                  $(toTotalClass).val(total.toFixed(2));
-                              }
-                          }
-
-
-				$('.scannedBarcode').live("change", function() {
+  				$('.scannedBarcode').live("change", function() {
 					var value = $(this).val();
 					if (value == null || value.trim() == '') {
 						return false;
@@ -131,11 +121,10 @@
 						<th>Scanned Qty</th>
 						<th>Total Inventory</th>
 
-
 					</tr>
 					</thead>
 
-
+                    <c:set var="scannedsum" value="0"/>
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
@@ -151,25 +140,24 @@
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
 								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
-                                 <div class="quantity valueChange">
-								<c:choose>
 
-									<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
+                                <c:choose>
 
-										<td><span style="color:red"> ${cCItem.scannedQty} </span></td>
+                                    <c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
 
-									</c:when>
-									<c:otherwise>
-										<td>${cCItem.scannedQty}</td>
-									</c:otherwise>
+                                        <td><span style="color:red"><label
+                                                class="scannedQty"> ${cCItem.scannedQty}</label> </span></td>
 
-								</c:choose>
-                                     </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td><label class="scannedQty"> ${cCItem.scannedQty} </label></td>
+                                    </c:otherwise>
 
-								<td>
-
-										${item[cCItem.id]}
+                                </c:choose>
+                                <td>
+									<label class="systemQty">	${item[cCItem.id]}   </label>
 								</td>
+                                
 							</tr>
 
 						</c:forEach>
@@ -177,8 +165,10 @@
 
                     <tr>
                         &nbsp; &nbsp;
-                        <td colspan="12">Total</td>
-                        <td colspan="6" class="totalQuantity"></td>
+                        <td style="font-weight:BOLD;" colspan="6">Total</td>
+                        <td class="totalQuantity"><label id="scannedValue" style="font-weight:BOLD;"></label></td>
+                        <td> <label style="font-weight:BOLD;" id="systemValue"></label></td>
+                        </td>
                     </tr>                  
 
 

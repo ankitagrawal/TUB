@@ -53,4 +53,12 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
             return null;
 
     }
+
+     public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher){
+      DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
+        rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher", reconciliationVoucher));
+         List<RvLineItem> rvLineItemList = (List<RvLineItem> )findByCriteria(rvLineItemCriteria);
+        return   rvLineItemList;
+
+    }
 }

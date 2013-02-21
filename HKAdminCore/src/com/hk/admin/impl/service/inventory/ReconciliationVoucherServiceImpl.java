@@ -325,4 +325,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 		getBaseDao().delete(reconciliationVoucher);
 	}
 
+
+     public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher){
+         return reconciliationVoucherDao.getRvLineItems(reconciliationVoucher);
+     }
+
 }
