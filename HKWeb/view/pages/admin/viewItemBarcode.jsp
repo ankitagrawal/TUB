@@ -1,7 +1,13 @@
 <%@ page import="com.hk.constants.sku.EnumSkuItemStatus" %>
+<%@ page import="com.hk.pact.service.UserService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="stockTransferOutId" value="<%=EnumSkuItemStatus.Stock_Transfer_Out.getId()%>"/>
+<%
+    UserService userService = ServiceLocatorFactory.getService(UserService.class);
+    pageContext.setAttribute("warehouse", userService.getWarehouseForLoggedInUser());
+%>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" var="viewItem"/>
 
@@ -34,7 +40,7 @@
                         <td>${skuItem.skuGroup.id} </td>
                         <td> ${skuItem.skuGroup.barcode}</td>
                         <td> ${skuItem.skuItemStatus.name} </td>
-                        <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId}">
+                        <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id}">
                             <td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
                                         event="revertStockTransferOut">Revert it
                                 <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
