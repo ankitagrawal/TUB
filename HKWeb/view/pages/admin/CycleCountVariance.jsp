@@ -34,7 +34,7 @@
                 varianceSum = varianceSum + Number($(this).text());
             });
             if (varianceSum < 0) {
-                $("#varianceValue").html(varianceSum).css("background-color", "red");
+                $("#varianceValue").html(varianceSum).css("color", "red");
             } else {
                 $("#varianceValue").html(varianceSum);
             }

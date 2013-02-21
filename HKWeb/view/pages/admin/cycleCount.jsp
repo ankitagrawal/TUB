@@ -42,6 +42,7 @@
 
                 var scannedSum = 0;
                 var systemSum = 0;
+                var varianceSum = 0;
                 $('.scannedQty').each(function() {
                     scannedSum = scannedSum + Number($(this).text());
                 });
@@ -51,6 +52,15 @@
                     systemSum = systemSum + Number($(this).text());
                 });
                 $("#systemValue").html(systemSum);
+
+                $('.varianceQty').each(function () {
+                    varianceSum = varianceSum + Number($(this).text());
+                });
+                if (varianceSum < 0) {
+                    $("#varianceValue").html(varianceSum).css("color", "red");
+                } else {
+                    $("#varianceValue").html(varianceSum);
+                }
 
                 $('#uploadnotepad').live("click", function() {
 					var filebean = $('#filebean').val();
@@ -112,7 +122,7 @@
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
 					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
-				</div>
+				</div>  <br><br>
 				<table style="float: right;margin-top:0px">
 					<thead>
 					<tr>
@@ -124,7 +134,7 @@
 						<th>Mfg Date</th>
 						<th>Expiry Date</th>
 						<th>Scanned Qty</th>
-						<th>Total Inventory</th>
+						<th>System Quantity</th>
                         <th>Variance</th>
 
 					</tr>
@@ -166,7 +176,7 @@
 								</td>
 
                                 <td>
-                                    <label class="systemQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label>
+                                    <label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label>
                                 </td>
                                 
 							</tr>
@@ -180,7 +190,7 @@
                         <td class="totalQuantity">
                             <label id="scannedValue" style="font-weight:bold;"></label></td>
                         <td> <label style="font-weight:bold;" id="systemValue"></label></td>
-
+                         <td><label style="font-weight:bold;" id="varianceValue"></label></td>
                     </tr>                  
 
 
@@ -199,8 +209,7 @@
 			</div>
 		</s:form>
 
-        <br/><br/>
-
+        
         <div style="margin:0px auto;width:1200px;margin-top: 42px;">
             <fieldset class="right_label">
                 <legend>Upload Cycle Count Notepad</legend>
@@ -219,10 +228,10 @@
             </fieldset>
         </div>
 
-        <div>
+        <div align="right">
             <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
                 <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-                <s:submit name="downloadSkuGroupMissedInScanning" value="missed batch"/>
+                <s:submit name="downloadSkuGroupMissedInScanning" value="Download missed batch"/>
             </s:form>
         </div>
 

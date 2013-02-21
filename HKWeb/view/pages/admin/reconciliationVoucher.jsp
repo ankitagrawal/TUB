@@ -224,7 +224,7 @@
                 <s:submit name="parse" value="Create RV LineItems"/>
             </div>
         </fieldset>
-        </shiro:hasRole
+        </shiro:hasRole>
 
         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
          <c:if test="${itemCheckedin}">
