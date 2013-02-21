@@ -464,6 +464,7 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public Resolution downloadSkuGroupMissedInScanning() {
         List<SkuGroup> skuGroupList = missedSkuGroupInScanning(cycleCount);
+        Collections.sort(skuGroupList);
         Date todayDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + "MissedBatches_" + cycleCount.getId() + "" + sdf.format(todayDate) + ".xls";
@@ -787,7 +788,6 @@ public class CycleCountAction extends BasePaginatedAction {
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
         params.add("brand");
-        params.add("warehouse");
         params.add("auditorLogin");
         params.add("startDate");
         params.add("endDate");

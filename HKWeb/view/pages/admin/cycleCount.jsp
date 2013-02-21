@@ -8,7 +8,6 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <style>
 	.scannedBarcode {
-
 		width: 125px
 	}
 
@@ -133,6 +132,7 @@
 						<th>Mrp</th>
 						<th>Mfg Date</th>
 						<th>Expiry Date</th>
+                        <th>Batch</th>
 						<th>Scanned Qty</th>
 						<th>System Quantity</th>
                         <th>Variance</th>
@@ -156,6 +156,7 @@
 								<td> ${cCItem.skuGroup.mrp}</td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
+                                <td>${cCItem.skuGroup.batchNumber}</td>
 								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
 
                                 <c:choose>
@@ -186,7 +187,7 @@
 
                     <tr>
                         &nbsp; &nbsp;
-                        <td style="font-weight:bold;" colspan="7">Total</td>
+                        <td style="font-weight:bold;" colspan="8">Total</td>
                         <td class="totalQuantity">
                             <label id="scannedValue" style="font-weight:bold;"></label></td>
                         <td> <label style="font-weight:bold;" id="systemValue"></label></td>

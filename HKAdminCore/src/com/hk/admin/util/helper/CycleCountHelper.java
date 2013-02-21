@@ -168,6 +168,7 @@ public class CycleCountHelper {
         int xlsRow = 1;
         xlsWriter.addHeader(XslConstants.HK_BARCODE, XslConstants.HK_BARCODE);
         xlsWriter.addHeader(XslConstants.VARIANT_ID, XslConstants.VARIANT_ID);
+        xlsWriter.addHeader(XslConstants.PRODUCT_NAME, XslConstants.PRODUCT_NAME);
         xlsWriter.addHeader(XslConstants.VARIANT_NAME, XslConstants.VARIANT_NAME);
         xlsWriter.addHeader(XslConstants.MRP, XslConstants.MRP);
         xlsWriter.addHeader(XslConstants.MFG_DATE, XslConstants.MFG_DATE);
@@ -184,6 +185,7 @@ public class CycleCountHelper {
             xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
             xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
             xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getProduct().getName());
+            xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getOptionsPipeSeparated());
             Double mrp = 0d;
             if(skuGroup.getMrp() != null){
                 mrp = skuGroup.getMrp();
