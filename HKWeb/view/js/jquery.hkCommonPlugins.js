@@ -2234,7 +2234,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
     useCache: false,
     maxCacheLength: 10,
     autoFill: false,
-    sortResults: true,
+    sortResults: false,
     sortFunction: false,
     onItemSelect: false,
     onNoMatch: false
