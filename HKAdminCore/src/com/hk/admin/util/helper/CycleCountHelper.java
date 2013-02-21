@@ -198,23 +198,27 @@ public class CycleCountHelper {
 	}
 
 
-	public Map<String, Integer> readCycleCountNotepad(File file) throws IOException {
-		logger.debug("parsing Cycle Count Notepad : " + file.getAbsolutePath());
-		Map<String, Integer> barcodeQtyMap = new HashMap<String, Integer>();
-			BufferedReader buffer = new BufferedReader(new FileReader(file));
-			String barcode = null;
-			while ((barcode = buffer.readLine()) != null) {
-				if (barcodeQtyMap.containsKey(barcode)) {
-					int qty = barcodeQtyMap.get(barcode);
-					barcodeQtyMap.put(barcode, (qty + 1));
-				} else {
-					barcodeQtyMap.put(barcode, 1);
-				}
-			}
+    public Map<String, Integer> readCycleCountNotepad(File file) throws IOException {
+        logger.debug("parsing Cycle Count Notepad : " + file.getAbsolutePath());
+        Map<String, Integer> barcodeQtyMap = new HashMap<String, Integer>();
+        BufferedReader buffer = new BufferedReader(new FileReader(file));
+        String barcode = null;
+        while ((barcode = buffer.readLine()) != null) {
+            if (barcode.isEmpty()) {
+                continue;
+            }
+            if (barcodeQtyMap.containsKey(barcode)) {
+                int qty = barcodeQtyMap.get(barcode);
+                barcodeQtyMap.put(barcode, (qty + 1));
+            } else {
+                barcodeQtyMap.put(barcode, 1);
+            }
+        }
 
 
-		return barcodeQtyMap;
-	}
+        return barcodeQtyMap;
+    }
+
 
 
 }

@@ -77,13 +77,14 @@
 						</tr>
 
 					</c:forEach>
-                <tr>
-                    <td>
+                <tr style="text-align:center;">
+                    <td colspan="10" style="font:bold;font-family:cursive;color:#ff0000;">
                         <label>Missed Scanned</label>
                     </td>
                 </tr>
-                <tr>
+
                     <c:forEach items="${cycle.missedSkuGroupList}" var="missedskugroup">
+                        <tr>
                         <td>${missedskugroup.sku.productVariant.id}</td>
                         <td>${missedskugroup.sku.productVariant.optionsPipeSeparated}</td>
                         <td>${missedskugroup.batchNumber}</td>
@@ -95,10 +96,8 @@
                         <c:set value="${cycle.skuGroupSystemInventoryMap}" var="item"/>
                         <td>${item[missedskugroup.id]}</td>
                         <td>${item[missedskugroup.id]}</td>
+                        </tr>
                     </c:forEach>
-
-
-                </tr>
                 </table>
 
 					<div style="text-align: center;">

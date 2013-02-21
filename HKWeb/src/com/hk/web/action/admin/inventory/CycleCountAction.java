@@ -80,7 +80,7 @@ public class CycleCountAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloadsPath;
 
-    private List<CycleCountItem> cycleCountItems;
+    private List<CycleCountItem> cycleCountItems = new ArrayList<CycleCountItem>();
     private List<CycleCount> cycleCountList;
     private CycleCount cycleCount;
     private String hkBarcode;
@@ -90,7 +90,7 @@ public class CycleCountAction extends BasePaginatedAction {
     private Map<Long, Integer> skuGroupSystemInventoryMap = new HashMap<Long, Integer>();
     private String cycleCountPVImapString;
     private boolean error = false;
-    private Page cyceCountPage;
+    private Page cycleCountPage;
     private String brand;
     private String auditorLogin;
     private Date startDate;
@@ -269,9 +269,9 @@ public class CycleCountAction extends BasePaginatedAction {
         if (StringUtils.isNotBlank(auditorLogin)) {
             auditor = getUserService().findByLogin(auditorLogin);
         }
-        cyceCountPage = cycleCountService.searchCycleList(auditBy, cycleCountStatus, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
-        if (cyceCountPage != null) {
-            cycleCountList = cyceCountPage.getList();
+        cycleCountPage = cycleCountService.searchCycleList(auditBy, cycleCountStatus, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
+        if (cycleCountPage != null) {
+            cycleCountList = cycleCountPage.getList();
         }
         return new ForwardResolution("/pages/admin/cycleCountList.jsp");
 
@@ -542,11 +542,12 @@ public class CycleCountAction extends BasePaginatedAction {
     public Resolution generateCompleteCycleExcel() {
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
         populateScannedPviVarianceMap(cycleCountItems);
+       List<SkuGroup> skuGroupList =  missedSkuGroupInScanning(cycleCount);
         Date todayDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + "CompleteCycleCount_" + cycleCount.getId() + "_Variance" + sdf.format(todayDate) + ".xls";
         final File excelFile = new File(excelFilePath);
-        cycleCountHelper.generateCompleteCycleCountExcel(cycleCountItems, excelFile, cycleCountPviMap);
+        cycleCountHelper.generateCompleteCycleCountExcel(cycleCountItems, excelFile, cycleCountPviMap ,skuGroupList, skuGroupSystemInventoryMap);
         return cycleCountHelper.download();
     }
 
@@ -583,19 +584,22 @@ public class CycleCountAction extends BasePaginatedAction {
                             cycleCountItemNew.setSkuGroup(skuGroup);
                             cycleCountItemNew.setCycleCount(cycleCount);
                             if (pviQty > 0) {
-                                if (notepadScannedQty >= pviQty) {
-                                    cycleCountItemNew.setScannedQty(pviQty);
-                                    notepadScannedQty = notepadScannedQty - pviQty;
+                                if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                    cycleCountItemNew.setScannedQty(notepadScannedQty);
                                 } else {
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                    if (notepadScannedQty >= pviQty) {
+                                        cycleCountItemNew.setScannedQty(pviQty);
+                                        notepadScannedQty = notepadScannedQty - pviQty;
+                                    } else {
                                         cycleCountItemNew.setScannedQty(notepadScannedQty);
                                     }
+
                                 }
-
-
                             } else {
                                 if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
                                     cycleCountItemNew.setScannedQty(notepadScannedQty);
+                                } else {
+                                    continue;
                                 }
                             }
                             cycleCountItemNew = cycleCountService.save(cycleCountItemNew);
@@ -603,16 +607,20 @@ public class CycleCountAction extends BasePaginatedAction {
                         } else {
                             int alreadySavedScannedQty = cycleCountItemFromDb.getScannedQty();
                             int fillPviQty = pviQty - alreadySavedScannedQty;
+                            /* Handles case of multiple Skugroup for same barcode */
                             if (fillPviQty > 0) {
-                                if (notepadScannedQty >= fillPviQty) {
-                                    cycleCountItemFromDb.setScannedQty(pviQty);
-                                    notepadScannedQty = notepadScannedQty - fillPviQty;
+                                /* check if this the last skuGroup */
+                                if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                    cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
                                 } else {
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                    if (notepadScannedQty >= fillPviQty) {
+                                        cycleCountItemFromDb.setScannedQty(pviQty);
+                                        notepadScannedQty = notepadScannedQty - fillPviQty;
+                                    } else {
                                         cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
                                     }
-                                }
 
+                                }
 
                             } else {
                                 if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
@@ -769,11 +777,11 @@ public class CycleCountAction extends BasePaginatedAction {
 
 
     public int getPageCount() {
-        return cyceCountPage == null ? 0 : cyceCountPage.getTotalPages();
+        return cycleCountPage == null ? 0 : cycleCountPage.getTotalPages();
     }
 
     public int getResultCount() {
-        return cyceCountPage == null ? 0 : cyceCountPage.getTotalResults();
+        return cycleCountPage == null ? 0 : cycleCountPage.getTotalResults();
     }
 
     public Set<String> getParamSet() {
