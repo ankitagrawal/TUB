@@ -9,6 +9,34 @@
 		CYCLE COUNT # ${cycle.cycleCount.id}
 		BRAND : ${cycle.cycleCount.brandsToAudit.brand}
 	   </div>
+
+        <script type="text/javascript">
+			$(document).ready(function() {
+                var scannedSum = 0;
+                var systemSum = 0;
+                var varianceSum =0;
+                $('.scannedQty').each(function() {
+                    scannedSum = scannedSum + parseFloat($(this).html());
+                });
+                $("#scannedValue").html(scannedSum);
+                $("#scannedValueClosed").html(scannedSum);                
+
+                $('.systemQty').each(function() {
+                    systemSum = systemSum + parseFloat($(this).html());
+                });
+                $("#systemValue").html(systemSum);
+
+                 $('.varianceQty').each(function() {
+                    varianceSum = varianceSum + parseFloat($(this).html());
+                });
+                if(varianceSum < 0) {
+                $("#varianceValue").html(varianceSum).css("background-color","red");
+                }else{
+                   $("#varianceValue").html(varianceSum);
+                }
+
+        } );
+        </script>
 	</s:layout-component>
 	<s:layout-component name="content">
 
@@ -39,34 +67,42 @@
 
 								<c:choose>
 									<c:when test="${cycle.cycleCount.cycleStatus >= approved}">
-										${cCItem.scannedQty}
+									<label class="scannedQty">	${cCItem.scannedQty} </label>
 									</c:when>
 									<c:otherwise>
 										<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
-											<input type="text" name="cycleCountItems[${ctr.index}].scannedQty"
+											<input type="text" name="cycleCountItems[${ctr.index}].scannedQty" class="scannedQty"
 											       value="${cCItem.scannedQty}">
 										</shiro:hasPermission>
 										<shiro:lacksPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
-											${cCItem.scannedQty}
+										 <label class="scannedQty">	${cCItem.scannedQty} </label>
 										</shiro:lacksPermission>
 									</c:otherwise>
 								</c:choose>
 							</td>
 							<c:set value="${cycle.cycleCountPviMap}" var="item"/>
-							<td>${item[cCItem.id]}</td>
+							<td ><label class="systemQty">${item[cCItem.id]}</label></td>
 
 							<c:choose>
 								<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
-									<td><span style="color:red">${(item[cCItem.id]) - (cCItem.scannedQty)} </span></td>
+									<td><span style="color:red"><label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label> </span></td>
 								</c:when>
 								<c:otherwise>
-									<td>${(item[cCItem.id]) - (cCItem.scannedQty)}</td>
+									<td><label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label></td>
 								</c:otherwise>
 							</c:choose>
 
 						</tr>
 
 					</c:forEach>
+                <tr>
+                    &nbsp; &nbsp;
+                    <td style="font-weight:BOLD;" colspan="2">Total</td>
+                    <td class="totalQuantity"><label id="scannedValue" style="font-weight:BOLD;"></label></td>
+                    <td><label style="font-weight:BOLD;" id="systemValue"></label></td>
+                    <td><label style="font-weight:BOLD;" id="varianceValue"></label></td>
+                    </td>
+                </tr>
 					</table>
 
 					<div style="text-align: center;">
@@ -142,9 +178,16 @@
 						<tr>
 							<td>${cCItem.skuGroup.sku.productVariant.id}</td>
 							<td>${cCItem.skuGroup.barcode}</td>
-							<td>${cCItem.scannedQty}</td>
+							<td><label class="scannedQty">${cCItem.scannedQty} </label></td>
 						</tr>
 					</c:forEach>
+                     <tr>
+                    &nbsp; &nbsp;
+                    <td style="font-weight:BOLD;" colspan="2">Total</td>
+                    <td class="totalQuantity"><label id="scannedValueClosed" style="font-weight:BOLD;"></label></td>
+
+                    </td>
+                </tr>
 				</div>
 			</table>
 
