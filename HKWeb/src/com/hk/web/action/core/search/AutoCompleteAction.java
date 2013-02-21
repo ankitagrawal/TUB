@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.net.MalformedURLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 @UrlBinding("/autocomplete-search")
 public class AutoCompleteAction extends BaseAction {
@@ -46,12 +43,22 @@ public class AutoCompleteAction extends BaseAction {
 
     @DontValidate
     public Resolution pre() throws Exception {
-        List<String> terms = query(q, Integer.parseInt(limit), RegexType.NONE, new ArrayList<String>());
-        Set<String> suggestedStrings = new HashSet<String>();
-        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", terms));
+        Set<String> terms = query(q, Integer.parseInt(limit), RegexType.NONE, new HashSet<String>());
+        List<String> suggestedItems = new ArrayList<String>();
+        suggestedItems.addAll(terms);
+        Collections.sort(suggestedItems, new SearchResultComparator());
+        return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Done", suggestedItems));
     }
 
-    private List<String> query(String q, int limit, RegexType regexType, List<String> suggestedStrings) throws MalformedURLException {
+    public class SearchResultComparator implements Comparator<String> {
+      public int compare(String o1, String o2) {
+        Integer index1 = Integer.valueOf(o1.indexOf(q));
+        Integer index2 = Integer.valueOf(o2.indexOf(q));
+        return index1.compareTo(index2);
+      }
+    }
+
+    private Set<String> query(String q, int limit, RegexType regexType, Set<String> suggestedStrings) throws MalformedURLException {
         List<TermsResponse.Term> items = null;
         q = q.trim();
         q = q.replaceAll(",","");
