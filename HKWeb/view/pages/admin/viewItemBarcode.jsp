@@ -27,6 +27,7 @@
                     <th>SKU Group</th>
                     <th> Group Barcode</th>
                     <th>Status</th>
+                    <th>Warehouse</th>
                     <c:if test="${viewItem.stockTransferLineItem != null}">
                         <th> Revert</th>
                     </c:if>
@@ -40,13 +41,15 @@
                         <td>${skuItem.skuGroup.id} </td>
                         <td> ${skuItem.skuGroup.barcode}</td>
                         <td> ${skuItem.skuItemStatus.name} </td>
+                        <td> ${skuItem.skuGroup.sku.warehouse.name}</td>
+                        <td>
                         <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id}">
-                            <td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
+                            <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
                                         event="revertStockTransferOut">Revert it
                                 <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
                                 <s:param name="stockTransfer" value="${viewItem.stockTransferLineItem.stockTransfer}"/>
-                                <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link></td>
-                        </c:if>
+                                <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link>
+                        </c:if></td>
                     </tr>
 
                 </c:forEach>

@@ -369,6 +369,11 @@ public class InventoryCheckinAction extends BaseAction {
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
+         if (stockTransferLineItem.getCheckedoutQty() <= 0){
+                addRedirectAlertMessage(new SimpleMessage("Please  transfer some Item to do check in "));
+                return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+         }
+        
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();

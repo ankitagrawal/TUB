@@ -144,7 +144,7 @@
 				<th>Batch Number</th>
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
-                <th>Reduce Qty By 1</th>
+                <%--<th>Reduce Qty By 1</th>--%>
                 <th> Item Details</th>
 
 
@@ -172,13 +172,13 @@
 						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
 					<td>
 						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
-                <td>    
-					<c:if test="${stockTransferLineItem.checkedoutQty > 0}">
-				<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
-						Reduce Qty By 1
-					<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
-					<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link>
-					</c:if>    </td>
+                <%--<td>    --%>
+					<%--<c:if test="${stockTransferLineItem.checkedoutQty > 0}">--%>
+				<%--<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">--%>
+						<%--Reduce Qty By 1--%>
+					<%--<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>--%>
+					<%--<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link>--%>
+					<%--</c:if>    </td>--%>
                      <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
 						View Item Details
 					 <s:param name="stockTransferLineItem" value="${stockTransferLineItem}"/>
