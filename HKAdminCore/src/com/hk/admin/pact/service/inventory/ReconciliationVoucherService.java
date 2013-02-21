@@ -27,4 +27,6 @@ public interface ReconciliationVoucherService {
 	public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList);
 
 	public void delete(ReconciliationVoucher reconciliationVoucher);
+
+     public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher);
 }

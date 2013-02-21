@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
@@ -238,4 +239,21 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
          return getAll(VariantConfig.class);
      }
 
+
+     public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) {
+        DetachedCriteria criteria =  DetachedCriteria.forClass(ProductVariantInventory.class);
+        if(rvLineItem!= null){
+            criteria.add(Restrictions.eq("rvLineItem", rvLineItem)) ;
+        }
+         if(stockTransferLineItem!= null){
+            criteria.add(Restrictions.eq("stockTransferLineItem", stockTransferLineItem)) ;
+        }
+         if(grnLineItem!= null){
+            criteria.add(Restrictions.eq("grnLineItem", grnLineItem)) ;
+        }
+        criteria.add(Restrictions.eq("qty", transferQty));
+        criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
+        return (List<SkuItem>) findByCriteria(criteria);
+
+    }
 }

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: user Date: Mar 9, 2012 Time: 5:13:41 PM To change this template use File | Settings |
@@ -28,4 +29,29 @@ public class BarcodeUtil {
         bufferedWriter.append("\r\n");
         bufferedWriter.close();
     }
+
+
+    public static File createBarcodeFileForSkuItem(String barcodeFilePath, Map skuItemDataMap) throws IOException {
+             File printBarcode = new File(barcodeFilePath);
+
+             if (printBarcode.exists()) {
+                 printBarcode.delete();
+             }
+             printBarcode.createNewFile();
+             FileWriter fileWriter = new FileWriter(barcodeFilePath, true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+             if (!skuItemDataMap.isEmpty()) {
+                Set<Long> keys = skuItemDataMap.keySet();
+                List<Long> list = new ArrayList<Long>(keys);
+                Collections.sort(list);
+                for (Long key : list) {
+                  bufferedWriter.append( skuItemDataMap.get(key).toString());
+                   bufferedWriter.append("\r\n");
+                }
+            }
+             bufferedWriter.close();
+            return  printBarcode;
+         }
+
 }

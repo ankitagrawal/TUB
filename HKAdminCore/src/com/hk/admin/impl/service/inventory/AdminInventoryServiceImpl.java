@@ -1,8 +1,7 @@
 package com.hk.admin.impl.service.inventory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.text.SimpleDateFormat;
 
 import com.hk.constants.sku.EnumSkuItemStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +42,8 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
+import org.apache.commons.lang.StringUtils;
+
 
 @Service
 public class AdminInventoryServiceImpl implements AdminInventoryService {
@@ -330,6 +331,39 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
      }
 
 
+    public Map<Long, String> skuItemDataMap( List<SkuItem> checkedInSkuItems ) {
+         int strLength = 20;
+         SkuItem skuItem = checkedInSkuItems.get(0);
+         Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+         ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+         String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+         SkuGroup skuGroup = skuItem.getSkuGroup();
+         Date expiryDate = skuGroup.getExpiryDate();
+         String date = "";
+         if (expiryDate == null) {
+             date = "NA";
+         } else {
+             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+             date = sdf.format(expiryDate);
+         }
+         for (SkuItem skuItem1 : checkedInSkuItems) {
+             String data = "";
+              if (skuItem1.getSkuGroup().getBarcode() == null && skuItem1.getBarcode().contains("HK-INV-")) {
+               data = skuItem1.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                 + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+              } else {
+                   data = skuItem1.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                 + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+              }
+             if (!skuItemDataMap.containsKey(skuItem1.getId())) {
+                 skuItemDataMap.put(skuItem1.getId(), data);
+             }
+
+         }
+         return skuItemDataMap;
+     }
+
+    
     public BaseDao getBaseDao() {
         return baseDao;
     }
@@ -439,4 +473,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 	}
 
 
+     public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) {
+            return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,grnLineItem,1L );
+     }
 }
