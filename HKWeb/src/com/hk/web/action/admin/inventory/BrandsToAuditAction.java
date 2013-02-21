@@ -23,6 +23,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 
     private static Logger logger = Logger.getLogger(BrandsToAuditAction.class);
     private String brand;
+    private Long auditStatus;
     private Warehouse warehouse;
     private String auditorLogin;
     private Date startDate;
@@ -44,10 +45,11 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         User loggedOnUser = getPrincipalUser();
         if (warehouse == null) warehouse = loggedOnUser.getSelectedWarehouse();
         User auditor = null;
+        if(auditStatus == null) auditStatus = EnumAuditStatus.Pending.getId();
         if (StringUtils.isNotBlank(auditorLogin)) {
             auditor = getUserService().findByLogin(auditorLogin);
         }
-        brandsAuditPage = getBrandsToAuditDao().searchAuditList(brand, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage());
+        brandsAuditPage = getBrandsToAuditDao().searchAuditList(brand, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage(),auditStatus);
         if (brandsAuditPage != null) {
             brandsToAuditList = brandsAuditPage.getList();
         }
@@ -64,45 +66,43 @@ public class BrandsToAuditAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-        if (brandsToAudit != null) {
-	        String brandName = brandsToAudit.getBrand();
-	        logger.debug("brand: " + brandName);
-	        if (brandsToAudit.getAuditDate() != null) {
-		        /* check if brand name id valid */
-		        boolean doesBrandExist = productService.doesBrandExist(brandName);
-		        if (!doesBrandExist) {
-			        addRedirectAlertMessage(new SimpleMessage("Invalid Brand Name"));
-			        return new RedirectResolution(BrandsToAuditAction.class, "view");
-		        }
+        Date auditDate = brandsToAudit.getAuditDate();
+        Date updateDate = brandsToAudit.getUpdateDate();
+        Date currentDate = new Date();
+        logger.debug("brand: " + brandsToAudit.getBrand());
 
-		          if (getPrincipalUser() != null) {
-			        User auditor = getPrincipalUser();
-			        warehouse = auditor.getSelectedWarehouse();
-			        brandsToAudit.setAuditor(auditor);
-			        brandsToAudit.setWarehouse(warehouse);
-		        }
-
-		        if (brandsToAudit.getId() == null) {
-			        List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId(),warehouse);
-			        /* Audit entry for this brand already exists in database with status pending */
-			        if (!brandsToAuditInDb.isEmpty()) {
-				        addRedirectAlertMessage(new SimpleMessage("Brand Audit is Already in progress"));
-				        return new RedirectResolution(BrandsToAuditAction.class);
-			        }
-			        brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
-		        }
-
-
-
-		        getBrandsToAuditDao().save(brandsToAudit);
-		        addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
-	        } else {
-		        addRedirectAlertMessage(new SimpleMessage("Kindly enter the audit date!"));
-		        return new RedirectResolution(BrandsToAuditAction.class, "view")
-				        .addParameter("brandsToAudit", brandsToAudit.getId());
-	        }
+        if (auditDate == null){
+            brandsToAudit.setAuditDate(currentDate);
+            auditDate = currentDate;
         }
-	    return new RedirectResolution(BrandsToAuditAction.class);
+        if (updateDate == null ){
+            brandsToAudit.setUpdateDate(auditDate);
+            updateDate = auditDate;
+        }
+        if( auditDate.compareTo(currentDate) > 0  || updateDate.compareTo(currentDate) > 0 || updateDate.compareTo(auditDate) < 0) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid date"));
+            return new RedirectResolution(BrandsToAuditAction.class);
+        }
+
+        if (brandsToAudit.getId() == null) {
+            List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId(),warehouse);
+            if (!brandsToAuditInDb.isEmpty()) {
+                addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
+                return new RedirectResolution(BrandsToAuditAction.class);
+            }
+            brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
+        }
+
+        if (getPrincipalUser() != null) {
+            User auditor = getPrincipalUser();
+            warehouse = auditor.getSelectedWarehouse();
+            brandsToAudit.setAuditor(auditor);
+            brandsToAudit.setWarehouse(warehouse);
+        }
+
+        getBrandsToAuditDao().save(brandsToAudit);
+        addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
+        return new RedirectResolution(BrandsToAuditAction.class);
     }
 
     public String getBrand() {
@@ -113,6 +113,12 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         this.brand = brand;
     }
 
+    public Long getAuditStatus(){
+        return auditStatus;
+    }
+    public void setAuditStatus(Long auditStatus){
+        this.auditStatus = auditStatus;
+    }
     public Warehouse getWarehouse() {
         return warehouse;
     }
@@ -161,7 +167,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         this.brandsToAudit = brandsToAudit;
     }
 
-    public BrandsToAuditDao getBrandsToAuditDao() {
+    public BrandsToAuditDao getBrandsToAuditDao(){
         return brandsToAuditDao;
     }
 
