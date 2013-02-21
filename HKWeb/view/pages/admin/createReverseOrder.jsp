@@ -18,6 +18,7 @@
             $(document).ready(function() {
                 if (${pickupNotValid}) {
                     alert("Pickup can be done only within 14 days after delivery.This limit has been exceeded.");
+                    return false;
                 }
 
                 $('#validateOnSubmit').click(function() {

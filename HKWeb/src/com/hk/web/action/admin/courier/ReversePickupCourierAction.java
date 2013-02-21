@@ -70,8 +70,8 @@ public class ReversePickupCourierAction extends BaseAction {
 	public Resolution pre() {
 		if(reverseOrderId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
-			shippingOrderId = reverseOrder.getShippingOrder().getGatewayOrderId();
-			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
+			ShippingOrder shippingOrder = reverseOrder.getShippingOrder();
+			shippingOrderId = shippingOrder.getGatewayOrderId();
 			availableCouriers = pincodeCourierService.getApplicableCouriers(shippingOrder);
 		}
 		return new ForwardResolution("/pages/admin/reversePickup.jsp");

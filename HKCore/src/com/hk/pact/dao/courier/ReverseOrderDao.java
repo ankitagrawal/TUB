@@ -10,6 +10,7 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.akube.framework.dao.Page;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,11 +23,13 @@ public interface ReverseOrderDao {
 
 	public ReverseOrder save(ReverseOrder reverseOrder);
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage);
 
 	public ReverseOrder getReverseOrderById(Long id);
 
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
+
+	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage);
 
 	//public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus);
 

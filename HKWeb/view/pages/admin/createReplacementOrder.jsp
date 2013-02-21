@@ -117,6 +117,11 @@
                                 <a href="#" id="is-replacement-radio">
                                     <h5>Create RO<br />for Customer Return</h5>
                                 </a>
+                                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
+                                    <s:param name="reverseOrder" value="${replacementOrderBean.reverseOrder}"/>
+                                     <s:param name="shippingOrder" value="${replacementOrderBean.shippingOrder}"/>
+                                    View Reverse Order
+                                </s:link>)
                             </c:if>
                         </td>
                         <td>

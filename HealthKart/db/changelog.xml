@@ -11546,4 +11546,12 @@
     <changeSet author="Neha (generated)" id="1360566211728-6">
         <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1361432007800-1">
+        <addColumn tableName="replacement_order">
+            <column name="reverse_order_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1361432007800-2">
+        <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="replacement_order" constraintName="fk_replacement_order_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

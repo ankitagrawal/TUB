@@ -4,9 +4,11 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.courier.CourierPickupDetail;
+import com.hk.domain.courier.Courier;
 import com.akube.framework.dao.Page;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +23,7 @@ public interface ReverseOrderService {
 
 	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap); 	
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage);
 
 	public ReverseOrder getReverseOrderById(Long id);
 
@@ -30,4 +32,6 @@ public interface ReverseOrderService {
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
 
 	public ReverseOrder save(ReverseOrder reverseOrder);
+
+	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage);
 }

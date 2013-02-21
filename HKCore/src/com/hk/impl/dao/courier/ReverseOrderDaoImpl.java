@@ -2,12 +2,15 @@ package com.hk.impl.dao.courier;
 
 
 import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.courier.ReverseOrderDao;
 import com.akube.framework.dao.Page;
 import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.  * User: Neha * Date: Dec 4, 2012 * Time: 5:20:41 PM
@@ -21,16 +24,17 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 		return (ReverseOrder) super.save(reverseOrder);
 	}
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
-        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId), page, perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage){
+        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courier), page, perPage);
     }
 
 //	 public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus) {
 //        return findByCriteria(getPickupSearchCriteria(pickupStatus, reconciliationStatusId));
 //    }
 
-	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId) {
+	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier) {
         DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
+		DetachedCriteria courierCriteria = null;
 
 		if(shippingOrderId != null){
 			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
@@ -38,7 +42,8 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 		}
 
         if (pickupStatusId != null){
-			DetachedCriteria pickupStatusCriteria = orderCriteria.createCriteria("courierPickupDetail").createCriteria("pickupStatus");
+			courierCriteria = orderCriteria.createCriteria("courierPickupDetail");
+			DetachedCriteria pickupStatusCriteria = courierCriteria.createCriteria("pickupStatus");
             pickupStatusCriteria.add(Restrictions.eq("id", pickupStatusId));
 		}
 		
@@ -46,6 +51,14 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 			DetachedCriteria reconciliationCriteria = orderCriteria.createCriteria("reconciliationStatus");
 			reconciliationCriteria.add(Restrictions.eq("id", reconciliationStatusId));
 		}
+
+		if(courier != null){
+			if(courierCriteria == null){
+				courierCriteria = orderCriteria.createCriteria("courierPickupDetail");
+			}
+			courierCriteria.add((Restrictions.eq("courier", courier)));
+		}
+
         return orderCriteria;
     }
 
@@ -56,5 +69,11 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){
 		return (ReverseOrder) super.findUniqueByNamedParams("from ReverseOrder rvo where rvo.shippingOrder.id = :shippingOrderId", new String []{"shippingOrderId"},
 				new Object[]{shippingOrderId});
+	}
+
+	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage){
+		DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
+		orderCriteria.add(Restrictions.isNull("courierPickupDetail"));
+		return list(orderCriteria, page, perPage);
 	}
 }

@@ -25,9 +25,9 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
   @JoinColumn(name = "ref_shipping_order_id")
   private ShippingOrder refShippingOrder;
 
-//	@OneToOne(fetch = FetchType.LAZY)
-//  	@JoinColumn(name = "reverse_order_id")
-//  	private ReverseOrder reverseOrder;
+	@OneToOne(fetch = FetchType.LAZY)
+  	@JoinColumn(name = "reverse_order_id")
+  	private ReverseOrder reverseOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "replacement_order_reason_id")
@@ -57,11 +57,11 @@ public class ReplacementOrder extends ShippingOrder implements Serializable{
 		this.replacementOrderReason = replacementOrderReason;
 	}
 
-//	public ReverseOrder getReverseOrder() {
-//		return reverseOrder;
-//	}
-//
-//	public void setReverseOrder(ReverseOrder reverseOrder) {
-//		this.reverseOrder = reverseOrder;
-//	}
+	public ReverseOrder getReverseOrder() {
+		return reverseOrder;
+	}
+
+	public void setReverseOrder(ReverseOrder reverseOrder) {
+		this.reverseOrder = reverseOrder;
+	}
 }

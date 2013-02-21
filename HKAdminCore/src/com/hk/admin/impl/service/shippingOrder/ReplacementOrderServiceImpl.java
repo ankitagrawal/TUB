@@ -92,9 +92,9 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 		
-//		if (!isRto){
-//			replacementOrder.setReverseOrder(reverseOrderService.getReverseOrderByShippingOrderId(replacementOrder.getRefShippingOrder().getId()));
-//		}
+		if (!isRto){
+			replacementOrder.setReverseOrder(reverseOrderService.getReverseOrderByShippingOrderId(replacementOrder.getRefShippingOrder().getId()));
+		}
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),

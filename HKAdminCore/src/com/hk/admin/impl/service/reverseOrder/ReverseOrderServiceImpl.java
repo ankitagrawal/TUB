@@ -11,6 +11,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.courier.CourierPickupDetail;
+import com.hk.domain.courier.Courier;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.akube.framework.dao.Page;
@@ -93,8 +94,8 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         return rvoBaseAmt;
     }
 	
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, int page, int perPage){
-        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, page, perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage){
+        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, page, perPage);
     }
 
 	public ReverseOrder save(ReverseOrder reverseOrder){
@@ -103,6 +104,10 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 
 	public ReverseOrder getReverseOrderById(Long id){
 		return getReverseOrderDao().getReverseOrderById(id);
+	}
+
+	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage){
+		return getReverseOrderDao().getReverseOrderWithNoPickupSchedule(page, perPage);
 	}
 
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){

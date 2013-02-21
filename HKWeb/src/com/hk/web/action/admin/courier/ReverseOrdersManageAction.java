@@ -9,12 +9,10 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
-import com.hk.constants.courier.EnumAdviceProposed;
+
 import com.hk.domain.reverseOrder.ReverseOrder;
-import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.courier.Courier;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
-import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.web.action.core.accounting.AccountingInvoiceAction;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,9 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	private Long pickupStatusId;
 	private Long reconciliationStatusId;
 	private String shippingOrderId;
-	private String adviceId;
+	private String advice;
+	private Courier courier;
+	private String trackingNo;
 
 	@Autowired
 	ReverseOrderService reverseOrderService;
@@ -52,7 +52,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@DefaultHandler
 	public Resolution pre() {
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, getPageNo(), getPerPage());
+		orderRequestsList = orderRequestsPage.getList();
+		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
+	}
+
+	public Resolution searchUnscheduled(){
+	    orderRequestsPage = reverseOrderService.getReverseOrderWithNoPickupSchedule( getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
@@ -95,11 +101,22 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	public Resolution adviceProposed(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
-			reverseOrder.setActionProposed(EnumAdviceProposed.valueOf(adviceId).getName());
+			reverseOrder.setActionProposed(advice);
 			reverseOrderService.save(reverseOrder);
 		}
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
+
+	public Resolution editTrack(){
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.getCourierPickupDetail().setTrackingNo(trackingNo);
+			reverseOrderService.save(reverseOrder);
+		}
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+	}
+
+	
 
 	public int getPerPageDefault() {
         return defaultPerPage;
@@ -118,6 +135,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
         params.add("pickupStatusId");
         params.add("reconciliationStatusId");
 		params.add("shippingOrderId");
+		params.add("courier"); 
         return params;
     }
 
@@ -161,11 +179,27 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		this.shippingOrderId = shippingOrderId;
 	}
 
-	public String getAdviceId() {
-		return adviceId;
+	public String getAdvice() {
+		return advice;
 	}
 
-	public void setAdviceId(String adviceId) {
-		this.adviceId = adviceId;
+	public void setAdvice(String advice) {
+		this.advice = advice;
+	}
+
+	public Courier getCourier() {
+		return courier;
+	}
+
+	public void setCourier(Courier courier) {
+		this.courier = courier;
+	}
+
+	public String getTrackingNo() {
+		return trackingNo;
+	}
+
+	public void setTrackingNo(String trackingNo) {
+		this.trackingNo = trackingNo;
 	}
 }

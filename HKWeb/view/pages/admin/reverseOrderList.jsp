@@ -1,6 +1,7 @@
 <%@ page import="com.hk.constants.inventory.EnumReconciliationStatus" %>
 <%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
-<%@ page import="com.hk.constants.courier.EnumAdviceProposed" %>
+<%@ page import="com.hk.constants.courier.AdviceProposedConstants" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
@@ -10,7 +11,7 @@
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
 <c:set var="pickupOpen" value="<%=EnumPickupStatus.OPEN.getId()%>"/>
-<c:set var="adviceList" value="<%=EnumAdviceProposed.getAdviceList()%>"/>
+<c:set var="adviceList" value="<%=AdviceProposedConstants.getAdviceList()%>"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Order List">
     <s:layout-component name="htmlHead">
@@ -34,6 +35,13 @@
                    return false;
                 }
             });
+
+             $('.track').click(function(){
+               var x = prompt("Enter tracking no");
+               if(!x) return false;
+
+               $('#trackingNo').attr('value',x);
+             });
          });
 
         </script>
@@ -44,9 +52,9 @@
 
             <fieldset>
                 <legend>Search Reverse Pickup List</legend>
-
+                </br>
                 <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" value="${pickupManage.shippingOrderId}" style="width:150px"/>
-                &nbsp; &nbsp;
+                &nbsp;
                 <label>Pickup Status:</label>
                 <s:select name="pickupStatusId">
                     <s:option value="" selected="true">-ALL-</s:option>
@@ -62,8 +70,18 @@
 			        <s:option value="${reconPending}">No</s:option>
 	            </s:select>
 
+                <label>Courier:</label>
+                <s:select name="courier" class="courierService">
+                  <s:option value="">All Couriers</s:option>
+                  <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
+                                                        label="name"/>
+                </s:select>
+
+
                 <s:submit name="pre" value="Search"/>
-                <%--<s:submit name="generateExcelReport" value="Download to Excel" />--%>
+                <br/>
+                <s:submit name="searchUnscheduled" value="Search Unscheduled cases" />
+                <s:submit name="generateExcelReport" value="Download to Excel" />
             </fieldset>
         </s:form>
 
@@ -89,6 +107,7 @@
             </thead>
             <c:forEach items="${pickupManage.orderRequestsList}" var="reverseOrderRequest" varStatus="ctr">
                 <tr>
+
                     <td>
                         ${reverseOrderRequest.id} </br>
                          (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
@@ -104,8 +123,21 @@
                         </s:link>
                     </td>
                     <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
-                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>                     
-                    <td>${reverseOrderRequest.courierPickupDetail.trackingNo}</td>
+                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>
+                    <td>
+                         <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
+                           <s:hidden name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                           <s:hidden name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                           <c:choose>
+                            <c:when test="${reverseOrderRequest.courierPickupDetail != null && reverseOrderRequest.courierPickupDetail.trackingNo == null}">
+                                <s:hidden name="trackingNo" id="trackingNo" />
+                                <s:submit value="Add" name="editTrack" class="track" />                                  
+                            </c:when>
+                            <c:otherwise>
+                                ${reverseOrderRequest.courierPickupDetail.trackingNo}
+                            </c:otherwise>
+                           </c:choose>
+                    </td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupDate}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.pickupStatus.name}</td>
                     <td>${reverseOrderRequest.receivedDate}</td>
@@ -115,7 +147,7 @@
                     <td>
                         <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen}">
                             <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markPicked" class="markPicked">Mark Picked
-                                <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                                <s:param name="orderRequestId" value="${reverseOrderRequest.id}" />
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                             </s:link>
                         </c:if>
@@ -136,27 +168,27 @@
 		                    <br/>
                         </c:if>
                         <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen || reverseOrderRequest.courierPickupDetail == null}">
-                         <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="reschedulePickup">Reschedule Pickup
+                         <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="reschedulePickup" target="_blank">Reschedule Pickup
 			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                          </s:link>
                         </c:if>
 
+                         <%--<c:if test="${reverseOrderRequest.courierPickupDetail.trackingNo == null}">--%>
+                         <%--<s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="editTrackingNo">Reschedule Pickup--%>
+			                    <%--<s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>--%>
+                                <%--<s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>--%>
+                         <%--</s:link>--%>
+                        <%--</c:if>--%>
+
                     </td>
                     <td>
-                        <c:set var="activeName" value="${reverseOrderRequest.actionProposed}" />
-                        <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
-                            <s:select name="adviceId"><%-- value="<%=EnumAdviceProposed.getAdviceProposedByName('')%>">--%>
-                                <s:option value="">-ALL-</s:option>
+                            <s:select name="advice" value="${reverseOrderRequest.actionProposed}">
+                                <s:option value="">-Select-</s:option>
                                 <c:forEach items="${adviceList}" var="advice">
-                                    <s:option value="${advice.id}">${advice.name}</s:option>
+                                    <s:option value="${advice}">${advice}</s:option>
                                 </c:forEach>
-                            </s:select>
-                            <%--<script type="text/javascript">--%>
-                                <%--$('#advice${ctr.index}').val(${});--%>
-                            <%--</script>--%>
-                                <s:hidden name="orderRequestId" value="${reverseOrderRequest.id}"/>
-                                <s:hidden name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                            </s:select>                                
                             <s:submit name="adviceProposed" value="save" style="" />
                         </s:form>
                     </td>
@@ -167,6 +199,23 @@
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${pickupManage}"/>
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${pickupManage}"/>
 
-
+                <style type="text/css">
+                    .zebra_vert input[type=submit] {
+                        padding: 2px;
+                        font-weight: normal;
+                        font-size: 1.1em;
+                    }
+                    .zebra_vert input[type=submit].track {
+                        color: #889;
+                        border: 0;
+                        background: none;
+                        border-radius: 0;                        
+                    }
+                    .zebra_vert tr input[type=submit].track:hover {
+                        color: #fff;
+                        border: 0;
+                        background: #3379bb;
+                    }
+                </style>
     </s:layout-component>
 </s:layout-render>

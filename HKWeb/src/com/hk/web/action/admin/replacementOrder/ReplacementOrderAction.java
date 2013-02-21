@@ -22,10 +22,12 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
+import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
@@ -50,7 +52,8 @@ public class ReplacementOrderAction extends BaseAction {
 	private String roComment;
 	private List<LineItem> lineItems = new ArrayList<LineItem>();
 	private List<ReplacementOrder> replacementOrderList;
-	private ReplacementOrderReason replacementOrderReason;
+	private ReplacementOrderReason replacementOrderReason; 	
+	private ReverseOrder reverseOrder;
 
 	@Autowired
 	private ShippingOrderService shippingOrderService;
@@ -63,6 +66,10 @@ public class ReplacementOrderAction extends BaseAction {
 
 	@Autowired
 	private InventoryService inventoryService;
+
+	@Autowired
+	private ReverseOrderService reverseOrderService;
+
 
 	private ReplacementOrder replacementOrder;
 
@@ -93,6 +100,7 @@ public class ReplacementOrderAction extends BaseAction {
 			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
 		}
 		shippingOrderId = shippingOrder.getId();
+		reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
 		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
 	}
 
@@ -256,5 +264,13 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setRoComment(String roComment) {
 		this.roComment = roComment;
+	}
+
+	public ReverseOrder getReverseOrder() {
+		return reverseOrder;
+	}
+
+	public void setReverseOrder(ReverseOrder reverseOrder) {
+		this.reverseOrder = reverseOrder;
 	}
 }
