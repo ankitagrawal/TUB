@@ -31,7 +31,7 @@ import com.hk.pact.service.codbridge.OrderEventPublisher;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class UserCallResponseObserver  {
+public class UserCallResponseObserver implements OrderResponseObserver {
 	private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
 
 	@Autowired
