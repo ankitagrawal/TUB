@@ -450,6 +450,11 @@ public class ProductServiceImpl implements ProductService {
               String cpBrand = comboProduct.getProduct().getBrand();
               if (cpBrand != null) {
                 brands.add(cpBrand);
+               if(cpBrand.equals("ON")){
+                 brands.add("Optimum Nutrition");
+               }else if(cpBrand.equals("MuscleBlaze")){
+                 brands.add("MB");
+               }
               }
             }
           } else {
