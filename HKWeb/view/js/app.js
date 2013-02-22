@@ -56,7 +56,7 @@ function program1(depth0,data) {
   }
 function program2(depth0,data) {
   
-  var buffer = '', hashTypes;
+  var buffer = '', stack1, hashTypes;
   data.buffer.push("\n    <div class=\"applicableOffer\">    \n      <div class=\"applicableOfferDesc\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
@@ -65,13 +65,23 @@ function program2(depth0,data) {
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" type=\"hidden\">        \n        <input name=\"applyOffer\" value=\"Apply\" class=\"button_raj\" type=\"submit\">\n        <div style=\"display: none;\">\n          <input type=\"hidden\" name=\"_sourcePage\" value=\"nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ\">\n          <input type=\"hidden\" name=\"__fp\" value=\"CATsOzMhS2E=\">\n        </div>\n      </form>\n      <div class=\"applicableOfferTerms\"><strong>Terms:</strong>");
+  data.buffer.push(" type=\"hidden\">        \n        <input name=\"applyOffer\" value=\"Apply\" class=\"button_raj\" type=\"submit\">\n        <div style=\"display: none;\">\n          <input type=\"hidden\" name=\"_sourcePage\" value=\"nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ\">\n          <input type=\"hidden\" name=\"__fp\" value=\"CATsOzMhS2E=\">\n        </div>\n      </form>\n      ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.terms", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n      <div class=\"endDate\">Valid till: ");
+  stack1 = helpers['if'].call(depth0, "value.terms", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n      <div class=\"endDate\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>        \n    </div>\n  ");
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n        <div class=\"applicableOfferTerms\"><strong>Terms:</strong>");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.terms", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n      ");
   return buffer;
   }
 
@@ -273,13 +283,23 @@ HK.CartOfferController = Ember.Controller.create({
     },
     getOffer:function(){
         self = this;
+        self.get("applicableOffers").clear();
         tempArray = [],
         $.ajax({
             url: "/healthkart/rest/api/cartResource/otherApplicableOffers",
             success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
+                    if(data.applicableOffers.length === 0){
+                        self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                    }
                     data.applicableOffers.forEach(function(offer){
-                        if(offer.id === parseInt(data.appliedOffer.offer)){
+                        self.get("currentlyAppliedOffer").clear();
+                        if(offer.id !== parseInt(data.appliedOffer.id)){
+                            self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                        }
+                    });
+                    data.applicableOffers.forEach(function(offer){
+                        if(offer.id === parseInt(data.appliedOffer.id)){
                             if(self.get("currentlyAppliedOffer").length === 0){
                                 self.get("currentlyAppliedOffer").pushObject(offer);
                             }                            

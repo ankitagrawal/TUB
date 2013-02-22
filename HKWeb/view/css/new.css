@@ -5670,6 +5670,10 @@ color: #e62580;
     float: left;
     left: 16px;
     color: #888;
+    word-wrap: break-word;
+    height: auto;
+    width: 90%;
+    margin-bottom: 2px
 }
 
 .endDate{

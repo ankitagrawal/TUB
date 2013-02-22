@@ -13,7 +13,9 @@
           <input type="hidden" name="__fp" value="CATsOzMhS2E=">
         </div>
       </form>
-      <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
+      {{#if value.terms}}
+        <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
+      {{/if}}
       <div class="endDate">Valid till: {{value.endDate}}</div>        
     </div>
   {{/each}}

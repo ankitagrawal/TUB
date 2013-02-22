@@ -87,13 +87,23 @@ HK.CartOfferController = Ember.Controller.create({
     },
     getOffer:function(){
         self = this;
+        self.get("applicableOffers").clear();
         tempArray = [],
         $.ajax({
             url: "/healthkart/rest/api/cartResource/otherApplicableOffers",
             success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
+                    if(data.applicableOffers.length === 0){
+                        self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                    }
                     data.applicableOffers.forEach(function(offer){
-                        if(offer.id === parseInt(data.appliedOffer.offer)){
+                        self.get("currentlyAppliedOffer").clear();
+                        if(offer.id !== parseInt(data.appliedOffer.id)){
+                            self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                        }
+                    });
+                    data.applicableOffers.forEach(function(offer){
+                        if(offer.id === parseInt(data.appliedOffer.id)){
                             if(self.get("currentlyAppliedOffer").length === 0){
                                 self.get("currentlyAppliedOffer").pushObject(offer);
                             }                            
