@@ -68,8 +68,8 @@ public class PaymentManager {
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
-//    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
-//    private int maxCODCallCount;
+    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
+    private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
 	private Long defaultGateway;
 
@@ -309,28 +309,28 @@ public class PaymentManager {
 			order = getOrderManager().orderPaymentReceieved(payment);
             /* Commenting User COD Knowlarity Call */
 
-//			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
-//			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
-//			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-//				/* Make JMS Call For COD Confirmation Only Once*/
-//				if (order.getUserCodCall() == null) {
-//                    try {
-//                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
-//                        UserCodCall userCodCall = null;
-//                        if (messagePublished) {
-//                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
-//                        } else {
-//                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
-//                        }
-//                        if (userCodCall != null) {
-//                            orderService.saveUserCodCall(userCodCall);
-//                        }
-//                    } catch (Exception ex) {
-//                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
-//                    }
-//				}
-//			}
-//			}
+			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
+			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
+			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+				/* Make JMS Call For COD Confirmation Only Once*/
+				if (order.getUserCodCall() == null) {
+                    try {
+                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
+                        UserCodCall userCodCall = null;
+                        if (messagePublished) {
+                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                        } else {
+                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                        }
+                        if (userCodCall != null) {
+                            orderService.saveUserCodCall(userCodCall);
+                        }
+                    } catch (Exception ex) {
+                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+                    }
+				}
+			}
+			}
 		}
         /* Call CodPayment Success */
         notifyPaymentSuccess(order);
