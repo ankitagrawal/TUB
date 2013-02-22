@@ -96,6 +96,14 @@ public class OrderEventPublisher {
         try{
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
             orderStatusMessage.setOrderType(OrderType.COD);
+            Long customerPhoneNumber =  0L;
+            try{
+                customerPhoneNumber = StringUtils.getUserPhone(order.getPayment().getContactNumber());
+            }catch (NumberFormatException ex){
+                logger.error(String.format("Wrong phone number for order %d",order.getId()));
+            }
+            orderStatusMessage.setName(order.getPayment().getContactName());
+            orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
         }catch (Exception ex){
