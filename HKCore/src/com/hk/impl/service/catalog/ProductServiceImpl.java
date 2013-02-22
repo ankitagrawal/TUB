@@ -450,15 +450,13 @@ public class ProductServiceImpl implements ProductService {
               String cpBrand = comboProduct.getProduct().getBrand();
               if (cpBrand != null) {
                 brands.add(cpBrand);
-               if(cpBrand.equals("ON")){
-                 brands.add("Optimum Nutrition");
-               }else if(cpBrand.equals("MuscleBlaze")){
-                 brands.add("MB");
-               }
+                this.addBrandSynonyms(brands, cpBrand);
               }
             }
           } else {
-            brands.add(product.getBrand());
+            String pBrand = product.getBrand();
+            brands.add(pBrand);
+            this.addBrandSynonyms(brands, pBrand);
           }
           solrProduct.setBrand(brands);
         }
@@ -577,14 +575,15 @@ public class ProductServiceImpl implements ProductService {
         return solrProduct;
     }
 
-//    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
-//        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
-//        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
-//        for (Product product : products){
-//            solrProducts.add(createSolrProduct(product));
-//        }
-//        return solrProducts;
-//    }
+    // Thing logic should be centralized. SOLR syns cann't work for brand terms like on etc.
+    private List<String> addBrandSynonyms(List<String> brandList, String brand) {
+      if (brand.equals("ON")) {
+        brandList.add("Optimum Nutrition");
+      } else if (brand.equals("MuscleBlaze")) {
+        brandList.add("MB");
+      }
+      return brandList;
+    }
 
     public List<Product> getSimilarProducts(Product product) {
         List<Product> inStockSimilarProducts = new ArrayList<Product>();
