@@ -160,6 +160,13 @@ font-weight :  bold !important;
 										$("#variantDetailsInavlid").html('<h4>'+"Out Of Stock"+'</h4>');
 										error=true;
 										} 
+										
+										if(res.data.variant.b2bPrice==null){
+											row.find('.variant').css("background-color", "#FF0000");
+											row.find('.variant').attr("title", "B2BPrice Not Found");
+											$("#variantDetailsInavlid").html('<h4>'+"B2BPrice not found"+'</h4>');
+											error=true;
+										}
 										if (res.data.inventory == 0) {
 										row.find('.variant').css("background-color", "#FF0000");
 										row.find('.variant').attr("title", "Inventory Not Found");
