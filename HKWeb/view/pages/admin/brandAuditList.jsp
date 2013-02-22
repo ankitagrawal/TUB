@@ -46,7 +46,8 @@
                 </c:forEach>
             </s:select>
                 <label>Audit Status</label><s:select name="auditStatus">
-                <s:option value="<%=EnumAuditStatus.Pending.getId()%>" >--Select--</s:option>
+               <%-- <s:option value="<%=EnumAuditStatus.Pending.getId()%>" >--Select--</s:option>--%>
+                <s:option value="">---Select----</s:option>
                 <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
                     <s:option value="${status.id}">${status.name}</s:option>
                 </c:forEach>

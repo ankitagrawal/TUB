@@ -48,7 +48,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         User loggedOnUser = getPrincipalUser();
         if (warehouse == null) warehouse = loggedOnUser.getSelectedWarehouse();
         User auditor = null;
-        if (auditStatus == null) auditStatus = EnumAuditStatus.Pending.getId();
+
         if (StringUtils.isNotBlank(auditorLogin)) {
             auditor = getUserService().findByLogin(auditorLogin);
         }
@@ -73,9 +73,14 @@ public class BrandsToAuditAction extends BasePaginatedAction {
             Date auditDate = brandsToAudit.getAuditDate();
             Date updateDate = brandsToAudit.getUpdateDate();
             Date currentDate = new Date();
-            logger.debug("brand: " + brandsToAudit.getBrand());
             String brandName = brandsToAudit.getBrand();
             Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+            logger.debug("brand: " + brandName);
+
+            if (auditStatus == null){
+                auditStatus = EnumAuditStatus.Pending.getId();
+            }
+
             /* check if brand name id valid */
             boolean doesBrandExist = productService.doesBrandExist(brandName);
             if (!doesBrandExist) {

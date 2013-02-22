@@ -43,14 +43,13 @@ public enum EnumAuditStatus {
                     EnumAuditStatus.Deleted);
         } else if (statusId.equals(EnumAuditStatus.Invalid.getId())) {
             return Arrays.asList(
-                    EnumAuditStatus.Done,
                     EnumAuditStatus.Deleted);
         } else if (statusId.equals(EnumAuditStatus.Deleted.getId())) {
-            return Arrays.asList(
-                    EnumAuditStatus.Done,
-                    EnumAuditStatus.Invalid);
-        } else if (statusId.equals(EnumAuditStatus.Done.getId())) {
             return Collections.EMPTY_LIST;
+        } else if (statusId.equals(EnumAuditStatus.Done.getId())) {
+            return Arrays.asList(
+                    EnumAuditStatus.Invalid,
+                    EnumAuditStatus.Deleted);
         }
         return Collections.EMPTY_LIST;
     }
