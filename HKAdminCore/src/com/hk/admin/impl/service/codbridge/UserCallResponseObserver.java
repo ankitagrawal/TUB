@@ -48,12 +48,12 @@ public class UserCallResponseObserver implements OrderResponseObserver {
 
 		Order order;
 		UserCodCall userCodCall;
-		int keyPressResponse = orderResponse.getOrderStatus().ordinal();
-		String orderId = orderResponse.getOrderId();
-		String sourceOfMessage = orderResponse.getSource();
 
-
+        logger.info("response received for  " +orderResponse.getOrderId()) ;
 		try {
+            int keyPressResponse = orderResponse.getOrderStatus().ordinal();
+            String orderId = orderResponse.getOrderId();
+            String sourceOfMessage = orderResponse.getSource();
 			order = orderService.find(Long.valueOf(orderId.trim()));
 			if (order != null) {
 				if (order.getUserCodCall() == null) {
