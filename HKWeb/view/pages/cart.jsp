@@ -99,7 +99,7 @@
           simpleProductCount = Math.round($('#simpleProductsInCart').html())
           if (count == 1 || simpleProductCount==1) {
 	        $('#productsInCart').html(0);
-			//$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");	        
+			//$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");
             location.reload();
           }
           else if (count > 1) {
@@ -176,6 +176,7 @@
     }
 
     function _updateTotals(responseData) {
+      HK.CartOfferController.getOffer();
       $('#summaryProductsMrpSubTotal').html('Rs. ' + responseData.data.totalMrpSubTotal);
       $('#summaryProductsHkpSubTotal').html('Rs. ' + responseData.data.totalHkSubTotal);
       $('#summaryHkDiscount').html('Rs. ' + responseData.data.totalHkDiscount);
@@ -223,7 +224,7 @@
 </s:layout-component>
 
 <s:layout-component name="modal">
-  <div class="jqmWindow" id="couponWindow" style="display:none">
+  <div class="jqmWindow" id="couponWindow">
     <s:layout-render name="/layouts/modal.jsp">
       <s:layout-component name="heading">Loading..</s:layout-component>
       <s:layout-component name="content">Please wait</s:layout-component>
@@ -541,48 +542,6 @@
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
-<c:if test="${fn:length(cartAction.applicableOffers) > 0}">
-  <br/>
-  <div class="applicableOffersDiv">
-    <h3>Applicable Offers for your Cart</h3>
-    <table class="offerTable">
-      <thead>
-      <tr>
-        <th>Description</th>
-        <th>Valid till</th>
-        <th></th>
-      </tr>
-      </thead>
-        <c:forEach items="${cartAction.applicableOffers}" var="offer" varStatus="offerCount">
-          <tr>
-            <td width="200">
-              <strong>${offer.description}</strong>
-              <c:if test="${hk:isNotBlank(offer.terms)}">
-                <br/>
-                <strong>Terms:</strong>
-                ${hk:convertNewLineToBr(offer.terms)}
-              </c:if>
-            </td>
-            <td width="150"><fmt:formatDate value="${offer.endDate}"/></td>
-            <td>
-              <s:form beanclass="com.hk.web.action.core.discount.ApplyCouponAction">
-              <s:hidden name="offer" value="${offer}"/>
-              <c:choose>
-              <c:when test="${cartAction.order.offerInstance.offer.id == offer.id}">
-                <s:submit name="removeOffer" value="Remove" style="padding:1px;background:orange"/>
-              </c:when>
-              <c:otherwise>
-                <s:submit name="applyOffer" value="Apply" style="padding:1px;"/>
-              </c:otherwise>
-              </c:choose>
-              </s:form>
-          </tr>
-        </c:forEach>
-    </table>
-    <br/>
-  </div>
-</c:if>
-
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
 </c:if>
@@ -592,57 +551,46 @@
 </c:if>
 </c:if>
 </div>
+<!--
+    Ember js code for MVC javascript!
+-->
+<script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
+<script src="${pageContext.request.contextPath}/js/ember.js"></script>
+<script src="${pageContext.request.contextPath}/js/loader.js"></script>
+<script src="${pageContext.request.contextPath}/js/app.js"></script>
+
+<div id="appliedOfferDiv"></div>
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div class='right_container coupon'>
-        <div class="appliedOffer">
-            <div class="appliedOfferHead">Currently Applied Offer</div>
-            <div class="appliedOfferTitle">Coupon Title goes here like 10% off on selected product in beauty and personal care section
-                <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
-                <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
-            </div>
-        </div>
-        <div id="couponPopUp" class="couponPopUp">
-            <div class="popupArrow"></div>
-            <div class="couponPopUpMsg">Hello! You have already used this coupon and it states that 10% off on selected product in beauty and personal care section</div>
-        </div>
-  <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
-      <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
+        <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
+            <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
-    <input placeholder='discount code' type='text' id="couponCode"/>
-    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-            class="button_grey">Apply</s:link>
-  </shiro:hasAnyRoles>
-  <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
-    Got a discount coupon?
-    <br/>
-    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
-      <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
-    </s:link>
-    to redeem it.
-    <br/>
-  </shiro:hasAnyRoles>
-  <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
-    Got a discount coupon?
-    <br/>
-    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
-    </s:link>
-    to redeem it.
-    <br/>
-  </shiro:hasAnyRoles>
-  <c:if test="${cartAction.applicableOffers !=null}">
-        <hr noshade size=1 width="100%">
-        <div class="applicableOfferHead">Other Applicable Offers!</div>
-        <div class="appliedOffer">
-            <div class="applicableOfferDesc">Coupon Title goes here like 10% off on selected product in beauty and personal care section</div>
+            <input placeholder='discount code' type='text' id="couponCode"/>
             <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-                    class="button_grey" style="width: 33px;left: 30px;top: 5px;">Apply</s:link>
-            <div class="applicableOfferDesc">Coupon Title goes here like 10% off on selected product in beauty and personal care section</div>
-            <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-                    class="button_grey" style="width: 33px;left: 30px;top: 5px;">Apply</s:link>
-        </div>
-  </c:if>
-</div>
+                    class="button_grey">Apply</s:link>
+        </shiro:hasAnyRoles>
+        <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
+            Got a discount coupon?
+            <br/>
+            <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
+                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
+            </s:link>
+            to redeem it.
+            <br/>
+        </shiro:hasAnyRoles>
+        <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
+            Got a discount coupon?
+            <br/>
+            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
+            </s:link>
+            to redeem it.
+            <br/>
+        </shiro:hasAnyRoles>
+
+    </div>
 </shiro:lacksRole>
+<div id="applicableOfferDiv"></div>
+
 <div class='right_container total'>
 <h5>Checkout</h5>
 <br/>

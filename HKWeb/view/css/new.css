@@ -3198,7 +3198,7 @@ h2.prod_title {
     border: 1px solid #ddd;
     color: #888;
     padding: 10px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 }
 
 /* line 1220, ../sass/main.scss */
@@ -5529,15 +5529,16 @@ color: #e62580;
 }
 
 .appliedOffer{
-    border: 1px solid;
+    border: 1px solid rgb(190, 190, 190);
     border-radius: 8px;
     position: relative;
     float: left;
-    clear: both;
-    width: 100%;
     margin-bottom: 5px;
     word-wrap: break-word;
     height: auto;
+    width: 253px;
+    left: 30px;
+    box-shadow: 1px 1px 1px 0px;
 }
 
 .appliedOfferHead{
@@ -5547,6 +5548,7 @@ color: #e62580;
     top: 5px;
     text-decoration: underline;
     font-weight: bold;
+    color: #888;
 }
 
 .appliedOfferTitle{
@@ -5556,6 +5558,7 @@ color: #e62580;
     left: 15px;
     margin-bottom: 15px;
     width: 90%;
+    color: #888;
 }
 
 .appliedOfferDetails{
@@ -5567,20 +5570,19 @@ color: #e62580;
 
 .couponPopUp{
     position: absolute;
-    float: right;
-    top: -15px;
-    border: 1px solid;
-    border-radius: 5px;
-    min-width: 150px;
+    float: left;
+    border: 1px solid #888;
+    border-radius: 9px;
+    width: 200px;
     min-height: 50px;
     height: auto;
-    width: 75%;
-    z-index: 1000;
     background: rgb(245, 250, 188);
-    box-shadow: 2px 5px 15px 0px;
+    box-shadow: 2px 2px 2px 0px;
     word-wrap: break-word;
-    left: 250px;
     display: none;
+    left: 105%;
+    bottom: -8%;
+    z-index: 1000;
 }
 
 .couponPopUpMsg{
@@ -5588,18 +5590,41 @@ color: #e62580;
     float: left;
     left: 10px;
     font-style: italic;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     width: 90%;
     word-wrap: break-word;
+    font-size: 12px;
+}
+
+.couponPopUpTerms{
+    position: relative;
+    float: left;
+    left: 10px;
+    font-style: italic;
+    margin-bottom: 5px;
+    width: 90%;
+    word-wrap: break-word;
+    font-size: 12px;
+}
+
+.couponPopUpDate{
+    position: relative;
+    float: left;
+    left: 10px;
+    font-style: italic;
+    margin-bottom: 8px;
+    width: 90%;
+    word-wrap: break-word;
+    font-size: 11px;
+    font-style: italic;
 }
 
 .popupArrow{
     position: relative;
-    z-index: 1000;
     float: left;
     right: 12%;
-    top: 65px;
-    border-bottom: 11px solid #D5D57D;
+    top: 45px;
+    border-bottom: 8px solid #D5D57D;
     border-top-color: #D5D57D;
     border-left: 22px solid transparent;
     box-shadow: 1px 1px 1px 0px;
@@ -5612,16 +5637,132 @@ color: #e62580;
     left: 15px;
     margin-bottom: 15px;
     width: 65%;
+    font-weight: bold;
+    color: #888;
 }
 
 .applicableOfferHead{
     position: relative;
     float: left;
-    left: 50px;
+    left: 6px;
     top: 5px;
-    text-decoration: underline;
     font-weight: bold;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    color: #888;
+}
+
+.applicableOffer{
+    left: 3px;
+    width: 97%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    position: relative;
+    float: left;
+    clear: both;
+    margin-bottom: 5px;
+    word-wrap: break-word;
+    box-shadow: 1px 1px 1px 0px;
+}
+
+.applicableOfferTerms{
+    position: relative;
+    float: left;
+    left: 16px;
+    color: #888;
+}
+
+.endDate{
+    position: relative;
+    float: left;
+    left: 16px;
+    font-size: 10px;
+    font-style: italic;
+    margin-bottom: 2px;
+}
+
+.offerCount{
+    position: relative;
+    float: left;
+    left: 10px;
+    border: 1px solid;
+    border-radius: 10px;
+    width: 20px;
+    text-align: center;
+    height: 15px;
+    top: 2px;
+    background: rgb(248, 248, 152);
+    font-size: 15px;
+    font-weight: bold;
+    color: #888;
+}
+
+.couponModal{
+    z-index: 4000;
+    display: none;
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    margin-left: -350px;
+    width: 700px;
+    font-family: Arial, sans-serif;
+    border-radius: 10px;
+    background-color: white;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+.fadeBackground{
+    transition: background-color 0.2s linear; 
+   -moz-transition: background-color 0.2s linear;  
+   -webkit-transition: background-color 0.2s linear; 
+   -ms-transition: background-color 0.2s linear; 
+}
+
+.modalWindow{
+    display: none;
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    margin-left: -350px;
+    width: 700px;
+    font-family: Arial, sans-serif;
+    border-radius: 10px;
+    background-color: white;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+.applicableOfferContainer{
+    position: relative;
+    float: left;
+    border: 1px solid #ddd;
+    width: 258px;
+    height: 145px;
+    border-radius: 5px;
+    left: 30px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.applicableOfferContainer:hover {
+    border-color: #f87500;
+}
+
+.appliedOfferContainer{
+    position: relative;
+    float: left;
+    border: 1px solid;
+}
+
+.button_raj{
+    width: 60px;
+    height: 25px;
+    position: relative;
+    float: left;
+    font-size: 10px !important;
+    left: 15px;
+    background: #bab3b3 !important;
 }
 
 /*

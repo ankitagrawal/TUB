@@ -1,0 +1,20 @@
+{{#view class="applicableOfferContainer" controllerBinding="controller" isVisibleBinding="HK.CartOfferController.showOfferFlag"}}
+  <div class="applicableOfferHead">Other Applicable Offers!</div>
+  <div class="offerCount">{{controller.applicableOffers.length}}</div>
+  <hr noshade="" size="1" width="95%" style="border-color: #ddd;">
+  {{#each value in controller.applicableOffers}}
+    <div class="applicableOffer">    
+      <div class="applicableOfferDesc">{{value.description}}</div>
+      <form action="/healthkart/core/discount/ApplyCoupon.action" method="post">
+        <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
+        <input name="applyOffer" value="Apply" class="button_raj" type="submit">
+        <div style="display: none;">
+          <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
+          <input type="hidden" name="__fp" value="CATsOzMhS2E=">
+        </div>
+      </form>
+      <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
+      <div class="endDate">Valid till: {{value.endDate}}</div>        
+    </div>
+  {{/each}}
+{{/view}}
