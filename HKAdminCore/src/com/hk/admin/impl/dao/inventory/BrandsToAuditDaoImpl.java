@@ -22,23 +22,7 @@ import java.util.List;
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
 
     public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage, Long auditStatus) {
-        DetachedCriteria auditCriteria = DetachedCriteria.forClass(BrandsToAudit.class);
-        if (StringUtils.isNotBlank(brand) ) {
-            auditCriteria.add(Restrictions.eq("brand", brand));
-        }
-        if (warehouse != null) {
-            auditCriteria.add(Restrictions.eq("warehouse", warehouse));
-        }
-        if (auditor != null) {
-            auditCriteria.add(Restrictions.eq("auditor", auditor));
-        }
-        if (startDate != null && endDate != null) {
-            auditCriteria.add(Restrictions.between("auditDate", startDate, endDate));
-        }
-        if(auditStatus != null){
-            auditCriteria.add(Restrictions.eq("auditStatus",auditStatus));
-        }
-        /*auditCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));*/
+        DetachedCriteria auditCriteria = getBrandsToAuditCriteria(brand, warehouse, auditor, startDate, endDate, auditStatus);
         auditCriteria.addOrder(org.hibernate.criterion.Order.desc("auditDate"));
         return list(auditCriteria, pageNo, perPage);
     }
@@ -94,4 +78,5 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
         DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
         return findByCriteria(brandDetachedCriteria);
     }
+
 }
