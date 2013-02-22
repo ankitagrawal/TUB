@@ -110,6 +110,7 @@
 
 <s:layout-component name="content">
     <div style="display: none;">
+        <c:set var="itemCheckedin" value="false"/>
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails"></s:link>
     </div>
@@ -223,10 +224,11 @@
         </fieldset>
         </shiro:hasRole>
 
-
+    <c:if test="${itemCheckedin}">
      <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
              <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>                
     </s:link>
+    </c:if>    
 
 
     </s:form>

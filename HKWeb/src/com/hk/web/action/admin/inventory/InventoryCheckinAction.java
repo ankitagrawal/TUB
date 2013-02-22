@@ -370,7 +370,7 @@ public class InventoryCheckinAction extends BaseAction {
         }
 
          if (stockTransferLineItem.getCheckedoutQty() <= 0){
-                addRedirectAlertMessage(new SimpleMessage("Please  transfer some Item to do check in "));
+                addRedirectAlertMessage(new SimpleMessage("Please do transfer some Item to check in "));
                 return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
          }
         
