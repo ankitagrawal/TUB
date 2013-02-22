@@ -147,12 +147,25 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SolrQuery query = new SolrQuery("*:*");
         //query.addFilterQuery("{!field f= brand}" + term);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term+"\"");
+    
         try {
             QueryResponse response = solr.query(query);
             long resultCount = response.getResults().getNumFound();
             logger.debug("resultCount@isBrandTerm="+resultCount+" for term="+term);
             if(resultCount > 0)
               return true;
+            else{
+              SpellCheckResponse spellCheckResponse = this.getSpellCheckResponse(term);
+              for (SpellCheckResponse.Suggestion suggestion : spellCheckResponse.getSuggestions()) {
+                term = suggestion.getToken();
+                query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term +"\"");
+                response = solr.query(query);
+                resultCount = response.getResults().getNumFound();
+                logger.debug("resultCount@isBrandTerm=" + resultCount + " for term=" + term);
+                if (resultCount > 0)
+                  return true;
+              }
+            }
         } catch (SolrServerException ex) {
             SearchException e = wrapException("Unable to get brand term results", ex);
             throw e;
@@ -304,6 +317,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
         return new SearchResult(sortedProducts, totalResultCount);
     }
+
+  private SpellCheckResponse getSpellCheckResponse(String userQuery) throws SolrServerException {
+        ModifiableSolrParams params = new ModifiableSolrParams();
+        params.set("q", userQuery);
+        params.set("spellcheck", "on"); // get spelling suggestions
+
+        QueryResponse response = solr.query(params);
+        return response.getSpellCheckResponse();
+  }
 
     private SearchResult getProductSuggestions(QueryResponse response, List<SearchFilter> searchFilters, String userQuery, int page, int perPage) throws SolrServerException {
         ModifiableSolrParams params = new ModifiableSolrParams();

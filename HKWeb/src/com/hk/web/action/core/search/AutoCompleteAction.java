@@ -54,6 +54,9 @@ public class AutoCompleteAction extends BaseAction {
       public int compare(String o1, String o2) {
         Integer index1 = Integer.valueOf(o1.indexOf(q));
         Integer index2 = Integer.valueOf(o2.indexOf(q));
+        if(index1.equals(index2)){
+            return o1.compareTo(o2);
+        }
         return index1.compareTo(index2);
       }
     }

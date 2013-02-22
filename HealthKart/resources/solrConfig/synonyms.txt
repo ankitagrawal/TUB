@@ -39,5 +39,6 @@ superpump => super pump
 running => jogging
 moisturiser => moisturizer
 loreal =>l'oreal
-on => optimum nutriion
-optimum nutriion => on
+on => optimum nutrition
+optimum nutrition => on
+

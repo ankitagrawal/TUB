@@ -2222,7 +2222,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
    */
   $.fn.autocomplete.defaults = {
     paramName: 'q',
-    minChars: 3,
+    minChars: 2,
     loadingClass: 'acLoading',
     resultsClass: 'acResults',
     inputClass: 'acInput',

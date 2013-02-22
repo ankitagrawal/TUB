@@ -216,10 +216,12 @@
             <analyzer type="index">
                 <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
             </analyzer>
             <analyzer type="query">
                 <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
             </analyzer>
         </fieldType>
 
@@ -295,6 +297,7 @@
                 <!--We do not want any HTML to be stored in our data-->
                 <charFilter class="solr.HTMLStripCharFilterFactory"/>
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
                 <!-- in this example, we will only use synonyms at query time
                 <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
                 -->
@@ -672,7 +675,7 @@ via copyField further on in this schema  -->
     <copyField source="name" dest="nameSort"/>
     <copyField source="name" dest="alphaNameSort"/>
     <copyField source="brand" dest="brand_liberal"/>
-    
+
     <copyField source="name" dest="title_autocomplete"/>
     <copyField source="brand" dest="title_autocomplete"/>
     <copyField source="categoryDisplayName" dest="title_autocomplete"/>
