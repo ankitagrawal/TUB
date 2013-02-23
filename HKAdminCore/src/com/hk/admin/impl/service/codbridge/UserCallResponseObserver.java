@@ -1,6 +1,7 @@
 package com.hk.admin.impl.service.codbridge;
 
 
+import com.hk.domain.order.ShippingOrder;
 import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderResponseObserver;
 import com.hk.hkjunction.observers.OrderResponse;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.hk.pact.service.codbridge.OrderEventPublisher;
 
 import javax.annotation.PostConstruct;
+import java.util.Set;
 
 
 /**
@@ -70,12 +72,15 @@ public class UserCallResponseObserver extends OrderObserver {
             String sourceOfMessage = orderResponse.getSource();
 			order = orderService.find(Long.valueOf(orderId.trim()));
 			if (order != null) {
+                userCodCall = order.getUserCodCall();
+                if (userCodCall != null){
+                   logger.info("User Call Record for " + userCodCall.getId().toString());
+                    Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+                }
 				if (order.getUserCodCall() == null) {
-					userCodCall = orderService.createUserCodCall(order,EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+					userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
 					userCodCall.setRemark(sourceOfMessage);
 
-				} else {
-					userCodCall = order.getUserCodCall();
 				}
 				int cancelled = OrderResponse.OrderStatus.CANCELLED.ordinal();
 				int confirmed = OrderResponse.OrderStatus.CONFIRMED.ordinal();
