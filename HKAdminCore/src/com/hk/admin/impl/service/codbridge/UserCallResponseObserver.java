@@ -1,9 +1,11 @@
 package com.hk.admin.impl.service.codbridge;
 
 
+import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderResponseObserver;
 import com.hk.hkjunction.observers.OrderResponse;
 
+import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.UserService;
 
@@ -22,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hk.pact.service.codbridge.OrderEventPublisher;
 
+import javax.annotation.PostConstruct;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +35,7 @@ import com.hk.pact.service.codbridge.OrderEventPublisher;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class UserCallResponseObserver implements OrderResponseObserver {
+public class UserCallResponseObserver extends OrderObserver {
 	private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
 
 	@Autowired
@@ -42,8 +46,17 @@ public class UserCallResponseObserver implements OrderResponseObserver {
     OrderEventPublisher userCodConfirmationCalling;
 	@Autowired
 	UserService userService;
+    @Autowired
+    ProducerFactory producerFactory;
 
-	@Transactional
+    @PostConstruct
+    void init(){
+        //Start listening to events
+        producerFactory.register(this);
+    }
+
+    @Transactional
+    @Override
 	public void onResponse(OrderResponse orderResponse) {
 
 		Order order;
