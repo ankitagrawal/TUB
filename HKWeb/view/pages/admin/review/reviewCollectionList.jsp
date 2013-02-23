@@ -10,9 +10,9 @@
 
     <s:layout-component name="content">
         <s:messages/>
-        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" class="button_orange">Create/Search Mail Templates</s:link>
-        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" class="button_orange" event="create">Create/Search Product Settings</s:link>
-        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" class="button_orange" event="sendDueEmail">Send Emails</s:link><br><br>
+        <s:link beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" >Create/Search Mail Templates</s:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" event="create">Create Product Settings</s:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" event="sendDueEmail">Send Due Emails</s:link><br><br>
         <s:form beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction" >
         <fieldset class="right_label">
             <legend>Search Product</legend>

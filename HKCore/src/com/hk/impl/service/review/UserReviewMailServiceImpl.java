@@ -2,6 +2,7 @@ package com.hk.impl.service.review;
 
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -38,12 +39,21 @@ public class UserReviewMailServiceImpl implements UserReviewMailService {
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date){
         return userReviewMailDao.getAllUserReviewMailByDueDate(date);
     }
+
+    public UserReviewMail getUserReviewMailById(Long id){
+           return userReviewMailDao.getUserReviewMailById(id);
+    }
+
+    public UserReviewMail getLatestUserReviewMailBySentDate(User user,ProductVariant productVariant){
+        return userReviewMailDao.getLatestUserReviewMailBySentDate(user, productVariant);
+    }
+
     public UserReviewMail save(UserReviewMail userReviewMail){
         userReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         return userReviewMailDao.save(userReviewMail);
     }
 
-    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant){
-        return userReviewMailDao.getByUserAndProductVariant(user, productVariant);
+    public UserReviewMail getByUserAndProduct(User user, Product product){
+        return userReviewMailDao.getByUserAndProduct(user, product);
     }
 }

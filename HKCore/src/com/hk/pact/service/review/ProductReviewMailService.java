@@ -12,7 +12,7 @@ public interface ProductReviewMailService {
 
     public ProductReviewMail save(ProductReviewMail productReviewMail);
 
-    public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage);
+    public Page searchAllProductReviewMail(Product product,Mail mail,int pageNo, int perPage);
 
     public void delete(ProductReviewMail productReviewMail);
 

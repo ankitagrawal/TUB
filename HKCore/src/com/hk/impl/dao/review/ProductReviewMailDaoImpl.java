@@ -18,29 +18,35 @@ import java.util.List;
 public class ProductReviewMailDaoImpl extends BaseDaoImpl implements ProductReviewMailDao {
 
     public ProductReviewMail getProductReviewMailByProduct(Product product){
-         return (ProductReviewMail) findUniqueByNamedParams("from ProductReviewMail prm where prm.product = :product", new String[]{"product"}, new Object[]{product});
+         return (ProductReviewMail) findUniqueByNamedParams("from ProductReviewMail prm where prm.product = :product AND prm.deleted = :deleted", new String[]{"product","deleted"}, new Object[]{product,false});
     }
 
-    public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage){
-        return list(getProductReviewMailCriteria(mail),pageNo,perPage);
+    public Page searchAllProductReviewMail(Product product,Mail mail,int pageNo, int perPage){
+        return list(getProductReviewMailCriteria(product,mail),pageNo,perPage);
     }
 
-    private DetachedCriteria getProductReviewMailCriteria(Mail mail) {
+    private DetachedCriteria getProductReviewMailCriteria(Product product,Mail mail) {
         DetachedCriteria productReviewMailCriteria = DetachedCriteria.forClass(ProductReviewMail.class);
 
+        if (product != null) {
+            productReviewMailCriteria.add(Restrictions.eq("product", product));
+        }
         if (mail != null) {
             productReviewMailCriteria.add(Restrictions.eq("mail", mail));
         }
+        productReviewMailCriteria.add(Restrictions.eq("deleted", false));
         productReviewMailCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 
         return productReviewMailCriteria;
     }
 
     public void delete(ProductReviewMail productReviewMail){
-        super.delete(productReviewMail);
+        productReviewMail.setDeleted(true);
+        super.saveOrUpdate(productReviewMail);
     }
 
     public ProductReviewMail save(ProductReviewMail productReviewMail){
+        productReviewMail.setDeleted(false);
         return (ProductReviewMail) super.save(productReviewMail);
     }
 }

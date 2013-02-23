@@ -11576,6 +11576,9 @@
             <column name="is_enabled" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="product_id" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>

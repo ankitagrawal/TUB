@@ -13,7 +13,7 @@ public interface ProductReviewMailDao extends BaseDao{
 
     public ProductReviewMail getProductReviewMailByProduct(Product product);
 
-    public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage);
+    public Page searchAllProductReviewMail(Product product,Mail mail,int pageNo, int perPage);
 
     public ProductReviewMail save(ProductReviewMail productReviewMail);
 

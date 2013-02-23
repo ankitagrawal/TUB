@@ -7,11 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.review.UserReviewMail;
+import com.hk.pact.service.review.UserReviewMailService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.LocalizableError;
+import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
@@ -39,13 +42,16 @@ import com.hk.util.SeoManager;
 public class ProductReviewAction extends BasePaginatedAction {
 
     private Product          product;
-    private String userHash;
+    private String           uid;
+    private Double           starRating;
     private Page             productReviewPage;
     private List<UserReview> productReviews = new ArrayList<UserReview>();
     private Integer          defaultPerPage = 10;
     private SeoData          seoData;
     private UserReview       review;
     private boolean          captchaMatch;
+    @Validate(encrypted=true)
+    private long              urm = -1;
 
     @Autowired
     private SeoManager       seoManager;
@@ -55,6 +61,8 @@ public class ProductReviewAction extends BasePaginatedAction {
     private ReviewDao        userReviewDao;
     @Autowired
     private ReviewService    reviewService;
+    @Autowired
+    private UserReviewMailService  userReviewMailService;
 
 
     @SuppressWarnings("unchecked")
@@ -74,6 +82,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     @Secure
     public Resolution writeNewReview() {
         review = new UserReview();
+        review.setStarRating(3.0);
         review.setPostedBy(userService.getLoggedInUser());
         // User loggedInUser = UserCache.getInstance().getLoggedInUser();
         // review.setPostedBy(loggedInUser);
@@ -82,14 +91,21 @@ public class ProductReviewAction extends BasePaginatedAction {
 
     public Resolution writeNewReviewByMail(){
         review = new UserReview();
-        review.setPostedBy(userService.findByUserHash(userHash));
+        review.setPostedBy(userService.findByLogin(uid));
+        review.setStarRating(starRating);
         return new ForwardResolution("/pages/postReview.jsp");
     }
 
     public Resolution postReview() {
         review.setReviewDate(new Date());
+        review.setPostedBy(userService.findByLogin(uid));
         review.setReviewStatus(reviewService.getReviewStatus(EnumReviewStatus.Pending.getId()));
-        userReviewDao.save(review);
+        review =(UserReview)userReviewDao.save(review);
+        if(urm != -1){
+            UserReviewMail userReviewMail = userReviewMailService.getUserReviewMailById(urm);
+            userReviewMail.setUserReview(review);
+            userReviewMailService.save(userReviewMail);
+        }
         captchaMatch = true;
         return new ForwardResolution("/pages/postReview.jsp");
 
@@ -118,12 +134,12 @@ public class ProductReviewAction extends BasePaginatedAction {
         this.product = product;
     }
 
-    public String getUserHash() {
-        return userHash;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserHash(String userHash) {
-        this.userHash = userHash;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public List<UserReview> getProductReviews() {
@@ -182,5 +198,21 @@ public class ProductReviewAction extends BasePaginatedAction {
 
     public void setCaptchaMatch(boolean captchaMatch) {
         this.captchaMatch = captchaMatch;
+    }
+
+    public Double getStarRating() {
+        return starRating;
+    }
+
+    public void setStarRating(Double starRating) {
+        this.starRating = starRating;
+    }
+
+    public Long getUrm() {
+        return urm;
+    }
+
+    public void setUrm(Long urm) {
+        this.urm = urm;
     }
 }

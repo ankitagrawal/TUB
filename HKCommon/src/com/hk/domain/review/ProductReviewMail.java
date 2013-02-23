@@ -63,6 +63,9 @@ public class ProductReviewMail  implements java.io.Serializable {
     @Column(name="test_email_id", length=50)
     private String testEmailId;
 
+    @Column(name="deleted", nullable=false)
+    private boolean deleted;
+
     public Long getId() {
         return this.id;
     }
@@ -132,16 +135,24 @@ public class ProductReviewMail  implements java.io.Serializable {
     }
 
     public boolean getIsEnabled() {
-        return isEnabled;
+        return this.isEnabled;
     }
 
     public void setIsEnabled(boolean enabled){
-        isEnabled = enabled;
+        this.isEnabled = enabled;
     }
 
+    public boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
     public String getTestEmailId() {
         return this.testEmailId;
     }
+
 
     public void setTestEmailId(String testEmailId) {
         this.testEmailId = testEmailId;

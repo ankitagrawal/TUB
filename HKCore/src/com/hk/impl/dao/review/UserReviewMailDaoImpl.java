@@ -28,17 +28,34 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
         }else
             return null;
     }
+
+    public UserReviewMail getUserReviewMailById(Long id){
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.id = :id", new String[]{"id"}, new Object[]{id});
+        if(result !=  null && result.size()>0){
+            return result.get(0);
+        }else
+            return null;
+    }
     public UserReviewMail save(UserReviewMail userReviewMail){
         return (UserReviewMail) super.save(userReviewMail);
     }
 
-    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant){
-        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant = :productVariant ORDER BY urm.updateDt DESC", new String[]{"user", "productVariant"}, new Object[]{user, productVariant});
+    public UserReviewMail getByUserAndProduct(User user, Product product){
+
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant.product = :product ORDER BY urm.updateDt DESC", new String[]{"user", "product"}, new Object[]{user, product});
         if(result !=null && result.size()>0){
             return result.get(0);
         }else
             return null;
 
+    }
+
+    public UserReviewMail getLatestUserReviewMailBySentDate(User user, ProductVariant productVariant){
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant.product = :product AND urm.sentDate is not null ORDER BY urm.sentDate DESC", new String[]{"user", "product"}, new Object[]{user, productVariant.getProduct()});
+        if(result != null && result.size()>0){
+                return result.get(0);
+        }else
+            return null;
     }
 
 }

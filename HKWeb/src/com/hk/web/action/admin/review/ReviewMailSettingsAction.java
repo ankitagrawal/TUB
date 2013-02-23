@@ -57,16 +57,16 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     private Order order;
 
    @ValidateNestedProperties( {
-            @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings"}),
-            @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings"}),
-            @Validate(field = "mail", required = true, on = {"createProductSettings"}),
-            @Validate(field = "testEmailId", required = true, on = {"createProductSettings"}),
+            @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
     })
    private ProductReviewMail productReviewMail;
    private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
     Page reviewCollectionPage;
 
-   @Validate(required = true, on={"createProductSettings", "sendTestEmail"})
+   @Validate(required = true, on={"createProductSettings", "sendTestEmail","saveProductSettings"})
    private Product product;
 
     private Mail mail;
@@ -77,19 +77,18 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
 
     @DefaultHandler
     public Resolution pre(){
-        if(product != null){
-            productReviewMail = productReviewMailService.getProductReviewMailByProduct(product);
-            productReviewMailList.add(productReviewMail);
-        }else{
-            reviewCollectionPage = productReviewMailService.searchAllProductReviewMail(mail, getPageNo(), getPerPage());
+//        if(product != null){
+//            productReviewMail = productReviewMailService.getProductReviewMailByProduct(product);
+//            productReviewMailList.add(productReviewMail);
+//        }else{
+            reviewCollectionPage = productReviewMailService.searchAllProductReviewMail(product,mail, getPageNo(), getPerPage());
             productReviewMailList = reviewCollectionPage.getList();
-        }
+//        }
         return new ForwardResolution("/pages/admin/review/reviewCollectionList.jsp");
     }
 
     public Resolution editProductSettings(){
         editSettings=true;
-        //productReviewMail = productReviewMailService.getProductReviewMailByProduct(product);
         product = productReviewMail.getProduct();
         if(productReviewMail==null){
             editSettings=false;
@@ -124,13 +123,12 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     public Resolution saveProductSettings(){
         editSettings = false;
         productReviewMail.setLastUpdatedBy(getPrincipalUser());
-        productReviewMail.setProduct(product);
+        //productReviewMail.setProduct(product);
         productReviewMailService.save(productReviewMail);
         addRedirectAlertMessage(new SimpleMessage("Review Mailing product saved successfully."));
         return new RedirectResolution(ReviewMailSettingsAction.class);
     }
 
-    @ValidationMethod(on = "saveProductSettings")
     public void validateProductSettings(){
         if (product == null) {
             editSettings = true;

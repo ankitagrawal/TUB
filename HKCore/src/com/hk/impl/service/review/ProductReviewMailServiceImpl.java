@@ -28,11 +28,12 @@ public class ProductReviewMailServiceImpl implements ProductReviewMailService {
         return productReviewMailDao.save(productReviewMail);
     }
 
-    public Page searchAllProductReviewMail(Mail mail,int pageNo, int perPage){
-        return productReviewMailDao.searchAllProductReviewMail(mail, pageNo, perPage);
+    public Page searchAllProductReviewMail(Product product,Mail mail,int pageNo, int perPage){
+        return productReviewMailDao.searchAllProductReviewMail(product,mail, pageNo, perPage);
     }
 
     public void delete(ProductReviewMail productReviewMail){
+        productReviewMail.setUpdateDt(BaseUtils.getCurrentTimestamp());
         productReviewMailDao.delete(productReviewMail);
     }
 }

@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.review.Mail;
+import com.hk.web.AppConstants;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -413,16 +414,31 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
     }
 
-    public boolean sendProductReviewEmail(User user, Product product, Mail mail, String testEmailId, EmailRecepient emailRecepient){
+    public boolean sendProductReviewEmail(User user, ProductVariant productVariant, Mail mail, String testEmailId, long userReviewMailId){
         HashMap valuesMap = new HashMap();
 
         valuesMap.put("user", user);
-        valuesMap.put("product", product);
+        String productVariantName = "";
+        if(productVariant.getVariantName() != null){
+            productVariantName = productVariant.getVariantName();
+            valuesMap.put("product", productVariant.getProduct().getName() +" "+ productVariantName);
+        }else
+            valuesMap.put("product", productVariant.getProduct().getName());
 
-        String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReviewByMail=&product="+product.getId() + "&uid="+user.getUserHash();
+        HashMap params = new HashMap();
+        params.put("writeNewReviewByMail","");
+        params.put("product",productVariant.getProduct().getId());
+        params.put("uid",user.getLogin());
+        params.put("urm",userReviewMailId);
+        String review_link = getLinkManager().getReviewPageLink(params);
         valuesMap.put("review_link", review_link);
-        String unsubscribeLink = getLinkManager().getEmailUnsubscribeLink(emailRecepient);
+        //String review_link = "http://www.healthkart.com/core/catalog/product/ProductReview.action?writeNewReviewByMail=&product="+product.getId() + "&uid="+user.getUserHash();
+        String unsubscribeLink = getLinkManager().getUnsubscribeLink(user);
+        //String unsubscribeLink = "http://www.healthkart.com/core/email/HKUnsubscribeEmail.action?unsubscribeToken="+user.getUnsubscribeToken();
         valuesMap.put("unsubscribeLink", unsubscribeLink);
+
+        String contextPath = AppConstants.contextPath;
+        valuesMap.put("contextPath", contextPath);
 
         //template contents from db
         String mailTemplateContents = mail.getContent();

@@ -1,5 +1,6 @@
 package com.hk.pact.service.review;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.Order;
 import com.hk.domain.review.UserReviewMail;
@@ -13,9 +14,13 @@ public interface UserReviewMailService {
 
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date);
 
+    public UserReviewMail getUserReviewMailById(Long id);
+
+    public UserReviewMail getLatestUserReviewMailBySentDate(User user,ProductVariant productVariant);
+
     public UserReviewMail save(UserReviewMail userReviewMail);
 
-    public UserReviewMail getByUserAndProductVariant(User user, ProductVariant productVariant);
+    public UserReviewMail getByUserAndProduct(User user, Product product);
 
 
 }

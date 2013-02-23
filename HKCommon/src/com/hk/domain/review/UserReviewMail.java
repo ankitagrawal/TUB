@@ -130,6 +130,10 @@ public class UserReviewMail  implements java.io.Serializable {
     public void setSentDate(Date sentDate) {
         this.sentDate = sentDate;
     }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
 
 
