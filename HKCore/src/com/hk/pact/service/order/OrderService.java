@@ -83,5 +83,7 @@ public interface OrderService {
 	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
 	public List<UserCodCall> getAllUserCodCallForToday();
+
+    Order findByOrderId(long orderId);
 }
 

@@ -37,4 +37,6 @@ public interface OrderDao extends BaseDao {
     public Order findByGatewayOrderId(String gatewayOrderId);
 
 	public List<UserCodCall> getAllUserCodCallOfToday();
+
+    Order findByOrderId(long orderId);
 }

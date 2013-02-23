@@ -49,6 +49,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         return (Order) getSession().createQuery("from Order o where o.gatewayOrderId = :gatewayOrderId").setString("gatewayOrderId", gatewayOrderId).uniqueResult();
     }
 
+    public Order findByOrderId(long orderId) {
+        return (Order) getSession().createQuery("from Order o where o.id = :orderId").setLong("orderId", orderId).uniqueResult();
+    }
+
     public Order getLatestOrderForUser(User user) {
         @SuppressWarnings( { "unchecked" })
         List<Order> orders = getSession().createQuery("from Order o where o.user = :user and " + "o.orderStatus.id <> :incartOrderStatusId " +
@@ -56,8 +60,6 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
                 "incartOrderStatusId", EnumOrderStatus.InCart.getId()).setParameter("user", user).setMaxResults(1).list();
         return orders == null || orders.isEmpty() ? null : orders.get(0);
     }
-    
-    
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
