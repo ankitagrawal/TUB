@@ -11640,4 +11640,10 @@
     <changeSet author="Ankur (generated)" id="1358841573903-12">
         <addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-02-22-01">
+        <sql>
+            alter table awb add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+            update awb set `update_dt` = `create_dt` where 1;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
