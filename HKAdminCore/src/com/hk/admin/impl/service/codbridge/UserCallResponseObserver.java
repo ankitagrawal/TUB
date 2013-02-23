@@ -51,6 +51,7 @@ public class UserCallResponseObserver extends OrderObserver {
 
     @PostConstruct
     void init(){
+        logger.info("Initializing User Call Observer..");
         //Start listening to events
         producerFactory.register(this);
     }
