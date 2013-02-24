@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-@SuppressWarnings("unchecked")
 @Secure( hasAnyRoles = {RoleConstants.ADMIN},  authActionBean = AdminPermissionAction.class)
 @Component
 public class AddRolePermissionAction extends BaseAction{
@@ -38,6 +37,7 @@ public class AddRolePermissionAction extends BaseAction{
         return new ForwardResolution("/pages/admin/roles/linkRoles.jsp").addParameter("role",role).addParameter("permission",permission);
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution saveRoleAndPermission(){
         if(role!=null){
             if(getRoleService().listAllRoles().contains(role)){

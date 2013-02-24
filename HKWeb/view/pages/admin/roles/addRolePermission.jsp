@@ -24,14 +24,12 @@
                     <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
                 </div>
             </fieldset>
-            <div class="buttons">
-                <s:link beanclass="com.hk.web.action.roles.AddRolePermisisonAction" event="linkRolePermission">
-                    <s:submit name="saveRoleAndPermission" value="save"/>
-                    <div align="right" style="font-weight:bold; font-size:150%">Link Roles to Permissions and Users</div>
+                <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">
+                    <s:submit name="saveRoleAndPermission" value="save"/>  <br/><br/>
+                    <div>Link Roles to Permissions and Users</div>
                     <s:param name="role" value="${roleBean.role}"/>
                     <s:param name="permission" value="${roleBean.permission}"/>
                 </s:link>
-            </div>
         </s:form>
     </s:layout-component>
 
