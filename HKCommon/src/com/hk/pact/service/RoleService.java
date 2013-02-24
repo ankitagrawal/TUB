@@ -16,8 +16,6 @@ public interface RoleService {
 
     public List<Role> listAllBasicRoles();*/
 
-    /*public Permission save(Permission permission);*/
-
     public List<Role> listAllRoles();
 
     public List<Permission> listAllPermissions();

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+@SuppressWarnings("unchecked")
 @Secure( hasAnyRoles = {RoleConstants.ADMIN},  authActionBean = AdminPermissionAction.class)
 @Component
 public class AddRolePermissionAction extends BaseAction{
@@ -21,7 +22,6 @@ public class AddRolePermissionAction extends BaseAction{
     private Permission permission;
     private String roleName;
     private String permissionName;
-    private static final String FORM = "/pages/admin/roles/addRolePermission.jsp";
     private static Logger logger = Logger.getLogger(AddRolePermissionAction.class);
 
     @Autowired
@@ -31,7 +31,11 @@ public class AddRolePermissionAction extends BaseAction{
 
     @DefaultHandler
     public Resolution pre(){
-        return new ForwardResolution(FORM);
+        return new ForwardResolution("/pages/admin/roles/addRolePermission.jsp");
+    }
+
+    public Resolution linkRolePermission(){
+        return new ForwardResolution("/pages/admin/roles/linkRoles.jsp").addParameter("role",role).addParameter("permission",permission);
     }
 
     public Resolution saveRoleAndPermission(){

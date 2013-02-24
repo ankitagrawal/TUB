@@ -8,27 +8,31 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-        <a href="#" id="buttonRole"> Add New Role </a> <br/><br/>
-        <fieldset id = "addRole">
-            <div class = "new role">
-                <legend>Add New Role</legend>  <br/>
-                <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
+        <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
+            <a href="#" id="buttonRole"> Add New Role </a> <br/><br/>
+            <fieldset id = "addRole">
+                <div class = "new role">
+                    <legend>Add New Role</legend>  <br/>
                     <label>Role: </label> <s:text id = "role-name" name="role.name"/>
-                    <s:submit name="saveRoleAndPermission" value="save"/>
-                </s:form>
-            </div>
-        </fieldset>
-        <br/>
-        <a href="#" id="buttonPermission"> Add New Permission </a> <br/>
-        <fieldset id = "addPermission">
-            <div class = "new permission">
-                <legend>Add New Permission</legend>  <br/>
-                <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
+                </div>
+            </fieldset>
+            <br/>
+            <a href="#" id="buttonPermission"> Add New Permission </a> <br/>
+            <fieldset id = "addPermission">
+                <div class = "new permission">
+                    <legend>Add New Permission</legend>  <br/>
                     <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
+                </div>
+            </fieldset>
+            <div class="buttons">
+                <s:link beanclass="com.hk.web.action.roles.AddRolePermisisonAction" event="linkRolePermission">
                     <s:submit name="saveRoleAndPermission" value="save"/>
-                </s:form>
+                    <div align="right" style="font-weight:bold; font-size:150%">Link Roles to Permissions and Users</div>
+                    <s:param name="role" value="${roleBean.role}"/>
+                    <s:param name="permission" value="${roleBean.permission}"/>
+                </s:link>
             </div>
-        </fieldset>
+        </s:form>
     </s:layout-component>
 
 </s:layout-render>
