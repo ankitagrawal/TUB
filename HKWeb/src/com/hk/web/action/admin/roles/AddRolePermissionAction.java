@@ -37,6 +37,10 @@ public class AddRolePermissionAction extends BaseAction{
         return new ForwardResolution("/pages/admin/roles/linkRoles.jsp").addParameter("role",role).addParameter("permission",permission);
     }
 
+    public Resolution linkRoles(){
+        return new ForwardResolution("/pages/admin/roles/linkRoles.jsp");
+    }
+
     @SuppressWarnings("unchecked")
     public Resolution saveRoleAndPermission(){
         if(role!=null){

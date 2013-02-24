@@ -1,5 +1,6 @@
-<%@page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+
 <s:useActionBean beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="roleBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Roles and Permissions">
 
@@ -9,18 +10,18 @@
 
     <s:layout-component name="content">
         <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
-            <a href="#" id="buttonRole"> Add New Role </a> <br/><br/>
+            <a href="#" id="buttonRole"> Add New Role or Permission</a> <br/><br/>
             <fieldset id = "addRole">
                 <div class = "new role">
-                    <legend>Add New Role</legend>  <br/>
-                    <label>Role: </label> <s:text id = "role-name" name="role.name"/>
-                </div>
+                    <legend>Add New Role/Permission</legend>  <br/>
+                    <label>Role: </label> <s:text id = "role-name" name="role.name"/> <br/>
+                <%--</div>
             </fieldset>
             <br/>
             <a href="#" id="buttonPermission"> Add New Permission </a> <br/>
             <fieldset id = "addPermission">
                 <div class = "new permission">
-                    <legend>Add New Permission</legend>  <br/>
+                    <legend>Add New Permission</legend>  <br/>--%>
                     <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
                 </div>
             </fieldset>
@@ -43,10 +44,10 @@
             $('#buttonRole').hide();
             $('#addRole').show(500);
         });
-        $("#buttonPermission").click(function(){
+        /*$("#buttonPermission").click(function(){
             $('#buttonPermission').hide();
             $('#addPermission').show(500);
-        });
+        });*/
     });
     $('#role-name').focus();
     $('#permission-name').focus();
