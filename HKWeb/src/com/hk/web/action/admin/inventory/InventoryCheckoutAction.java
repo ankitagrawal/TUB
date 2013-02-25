@@ -114,6 +114,7 @@ public class InventoryCheckoutAction extends BaseAction {
     // private boolean wronglyPickedBox = false;
     // private SkuGroup earlierSkuGroup;
     List<SkuGroup>                          skuGroups;
+    private SkuItem                          skuItemBarcode;
 
     @DefaultHandler
     public Resolution pre() {
@@ -154,7 +155,7 @@ public class InventoryCheckoutAction extends BaseAction {
 	        //TODO: Fetch available sku groups
 
 //   first check for skuitem Barcode
-            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),EnumSkuItemStatus.Checked_IN.getId());
+             skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),EnumSkuItemStatus.Checked_IN.getId());
 //       SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),);
             if (skuItemBarcode != null) {
                skuGroupBarcode = skuItemBarcode.getSkuGroup();
@@ -262,7 +263,12 @@ public class InventoryCheckoutAction extends BaseAction {
 
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
 //      get Instock skuitem againts these sku group
-                         SkuItem  skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                            SkuItem skuItem = null;
+                            if (skuItemBarcode != null) {
+                                skuItem = skuItemBarcode;
+                            } else {
+                                skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                            }
 //                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
 //                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
                            if (skuItem != null)  {
@@ -509,9 +515,17 @@ public class InventoryCheckoutAction extends BaseAction {
         this.productVariantService = productVariantService;
     }
 
+    public SkuItem getSkuItemBarcode() {
+        return skuItemBarcode;
+    }
+
+    public void setSkuItemBarcode(SkuItem skuItemBarcode) {
+        this.skuItemBarcode = skuItemBarcode;
+    }
+
     /*
-     * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
-     */
+    * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
+    */
 
     /*
      * public void setWronglyPickedBox(boolean wronglyPickedBox) { this.wronglyPickedBox = wronglyPickedBox; }
@@ -520,5 +534,7 @@ public class InventoryCheckoutAction extends BaseAction {
     /*
      * public SkuGroup getEarlierSkuGroup() { return earlierSkuGroup; } public void setEarlierSkuGroup(SkuGroup
      * earlierSkuGroup) { this.earlierSkuGroup = earlierSkuGroup; }
+     *
+     *
      */
 }
