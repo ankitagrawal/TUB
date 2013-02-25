@@ -581,6 +581,7 @@ public class ProductServiceImpl implements ProductService {
         brandList.add("Optimum Nutrition");
       } else if (brand.equals("MuscleBlaze")) {
         brandList.add("MB");
+        brandList.add("Muscle Blaze");
       }
       return brandList;
     }
