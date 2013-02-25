@@ -1,6 +1,7 @@
 package com.hk.constants.core;
 
 import com.hk.domain.courier.Courier;
+import com.hk.domain.core.CancellationType;
 
 
 /**
@@ -34,11 +35,18 @@ public enum EnumCancellationType {
     return id;
   }
 
+    public CancellationType asCancellationType() {
+        CancellationType cancellationType = new CancellationType();
+        cancellationType.setId(this.id);
+        cancellationType.setName(this.name);
+        return cancellationType;
+    }
 
-  public Courier asCourier() {
-    Courier courier = new Courier();
-    courier.setId(this.id);
-    courier.setName(this.name);
-    return courier;
-  }
+
+    public Courier asCourier() {
+        Courier courier = new Courier();
+        courier.setId(this.id);
+        courier.setName(this.name);
+        return courier;
+    }
 }
