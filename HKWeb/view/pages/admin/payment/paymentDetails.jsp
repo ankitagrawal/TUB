@@ -10,6 +10,12 @@
             <fieldset>
                 <label>Enter Gateway Order Id</label>
                 <s:text name="gatewayOrderId" id = "gatewayOrderId" style="width:180px;height:25px;"/>
+                <label>Enter Start Date (yyyymmdd)</label>
+                <s:text name="txnStartDate" id = "txnStartDate" style="width:180px;height:25px;"/>
+                <label>Enter End Date (yyyymmdd)</label>
+                <s:text name="txnEndDate" id = "txnEndDate" style="width:180px;height:25px;"/>
+                <label>Enter Merchant Id</label>
+                <s:text name="merchantId" id = "merchantId" style="width:180px;height:25px;"/>
                 <s:submit name="seekPayment" value="Seek" id="save"/>
                 <s:submit name="refundPayment" value="Refund  (beta)" id="refund"/>
             </fieldset>
