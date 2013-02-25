@@ -43,7 +43,7 @@ public class ProductReviewAction extends BasePaginatedAction {
 
     private Product          product;
     private String           uid;
-    private Double           starRating;
+    private Double           starRating = 3.0;
     private Page             productReviewPage;
     private List<UserReview> productReviews = new ArrayList<UserReview>();
     private Integer          defaultPerPage = 10;
@@ -82,7 +82,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     @Secure
     public Resolution writeNewReview() {
         review = new UserReview();
-        review.setStarRating(3.0);
+        review.setStarRating(starRating);
         review.setPostedBy(userService.getLoggedInUser());
         // User loggedInUser = UserCache.getInstance().getLoggedInUser();
         // review.setPostedBy(loggedInUser);

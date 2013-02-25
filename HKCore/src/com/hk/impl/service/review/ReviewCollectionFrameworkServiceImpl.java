@@ -119,7 +119,6 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
     }
     public void doUserEntryForReviewMail(Order order){
         User user = order.getUser();
-        userReviewMail = new UserReviewMail();
         boolean isUserUnsubscribed = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.UNSUBSCRIBED , user.getSubscribedMask());
         if(!isUserUnsubscribed){
             Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -127,6 +126,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                 //productCartLineItems = keepOneVariantOfProduct(productCartLineItems);
                 ProductVariant productVariant;
                 for(CartLineItem cartLineItem : productCartLineItems){
+                    userReviewMail = new UserReviewMail();
                     productVariant = cartLineItem.getProductVariant();
                     if(productVariant != null){
                         productReviewMail = productReviewMailService.getProductReviewMailByProduct(productVariant.getProduct());

@@ -112,16 +112,19 @@ public class CreateMailTemplateAction extends BaseAction {
 
                     contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
                     //contentUploaded = true;
-                    logger.info("uploaded email content to s3.");
+
                     FileUtils.deleteDirectory(contentFolder);
                     FileUtils.deleteQuietly(contentZipFolder);
                     FileUtils.deleteQuietly(ftlFile);
                     if(contentUploaded){
+                        logger.info("uploaded email content to s3.");
                         mail.setContent(ftlContents);
                         mail.setAmazonFilePath(FtlUtils.getBasicAmazonS3Path() + HKFileUtils.getPathAfterSubstring(htmlPath, "emailContentFiles"));
                         mailService.save(mail);
+                        addRedirectAlertMessage(new SimpleMessage("ftl generated and upload to s3"));
+                        return new RedirectResolution(ReviewMailSettingsAction.class, "pre");
                     }
-                    addRedirectAlertMessage(new SimpleMessage("ftl generated and upload to s3"));
+                    addRedirectAlertMessage(new SimpleMessage("error in  uploading to s3"));
                     return new ForwardResolution(CreateMailTemplateAction.class, "pre");
                 }
                 addRedirectAlertMessage(new SimpleMessage("Error while unzipping folder: " + contentBean.getFileName()));
@@ -154,7 +157,7 @@ public class CreateMailTemplateAction extends BaseAction {
 
             mail = mailService.save(mail);
             addRedirectAlertMessage(new SimpleMessage("changes to the mail template: " + mail.getName() + " have been saved."));
-            return new RedirectResolution(CreateMailTemplateAction.class);
+            return new RedirectResolution(ReviewMailSettingsAction.class);
         } catch (IOException ioe) {
             logger.info("Error writing contents to html file: " + ioe);
         } finally {
