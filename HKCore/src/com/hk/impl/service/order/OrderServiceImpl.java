@@ -124,10 +124,6 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().get(Order.class, orderId);
     }
 
-    public Order findByOrderId(long orderId) {
-        return getOrderDao().findByOrderId(orderId);
-    }
-
     public Order findByGatewayOrderId(String gatewayOrderId) {
         return orderDao.findByGatewayOrderId(gatewayOrderId);
     }

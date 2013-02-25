@@ -180,9 +180,9 @@ public class UserOrderResource {
         }
         try {
             Order order = orderService.find(orderId);
-            if (action.equalsIgnoreCase(EnumUserCodCalling.CANCELLED.getName())) {
+            if (action.equalsIgnoreCase("CANCELLED")) {
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
-            } else if (action.equalsIgnoreCase(EnumUserCodCalling.CONFIRMED.getName())) {
+            } else if (action.equalsIgnoreCase("CONFIRMED")) {
                 adminOrderService.confirmCodOrder(order, source);
             }
             return Response.status(Response.Status.OK).build();

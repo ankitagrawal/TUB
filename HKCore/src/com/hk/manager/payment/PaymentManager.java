@@ -477,7 +477,7 @@ public class PaymentManager {
 			}
            }
         else {
-               logger.error("Null Order Id Recieved");
+               logger.error("Null Order Id Received");
            }
 
 	}
