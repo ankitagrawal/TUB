@@ -11553,4 +11553,10 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-02-22-01">
+        <sql>
+            alter table awb add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+            update awb set `update_dt` = `create_dt` where 1;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
