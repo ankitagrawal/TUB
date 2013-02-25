@@ -13,9 +13,18 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.models.user.APIUserDetail;
+import com.hk.constants.core.EnumCancellationType;
+import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.dto.user.UserLoginDto;
+import com.hk.exception.HealthkartLoginException;
+import com.hk.manager.UserManager;
+import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
+import org.jboss.resteasy.spi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +66,12 @@ public class UserOrderResource {
 
     @Autowired
     private UserDetailService userDetailService;
+
+    @Autowired
+    AdminOrderService adminOrderService;
+
+    @Autowired
+    OrderService orderService;
 
     @POST
     @Path("/email/{email}/phone/{phone}")
@@ -141,6 +156,39 @@ public class UserOrderResource {
         } catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
+        }
+        return response;
+    }
+
+    @POST
+    @Path("/order/source/{source}/order/{orderId}/action/{action}")
+    @Produces("application/json")
+    @Encoded
+    public Response changeOrderStatus(@PathParam("orderId") Long orderId,
+                                      @PathParam("source") String source,
+                                      @PathParam("action") String action,
+                                      @QueryParam("authToken") String authToken
+    ) {
+        String key = authToken;
+        Response response = null;
+        User loggedInUser = null;
+        loggedInUser = userService.getAdminUser();
+
+        String decryptKey = CryptoUtil.decrypt(key);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        try {
+            Order order = orderService.find(orderId);
+            if (action.equalsIgnoreCase(EnumUserCodCalling.CANCELLED.getName())) {
+                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
+            } else if (action.equalsIgnoreCase(EnumUserCodCalling.CONFIRMED.getName())) {
+                adminOrderService.confirmCodOrder(order, source);
+            }
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception ex) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to change order status ", ex);
         }
         return response;
     }

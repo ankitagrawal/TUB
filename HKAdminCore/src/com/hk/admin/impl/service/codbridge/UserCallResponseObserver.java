@@ -1,9 +1,12 @@
 package com.hk.admin.impl.service.codbridge;
 
 
+import com.hk.constants.core.Keys;
+import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderResponseObserver;
 import com.hk.hkjunction.observers.OrderResponse;
 
+import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.UserService;
 
@@ -15,12 +18,17 @@ import com.hk.constants.core.EnumUserCodCalling;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
 
+import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hk.pact.service.codbridge.OrderEventPublisher;
+
+import javax.annotation.PostConstruct;
 
 
 /**
@@ -31,62 +39,63 @@ import com.hk.pact.service.codbridge.OrderEventPublisher;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class UserCallResponseObserver implements OrderResponseObserver {
-	private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
+public class UserCallResponseObserver extends OrderObserver {
+    private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
 
-	@Autowired
-	OrderService orderService;
-	@Autowired
-	AdminOrderService adminOrderService;
-	@Autowired
+    @Autowired
+    OrderService orderService;
+    @Autowired
+    AdminOrderService adminOrderService;
+    @Autowired
     OrderEventPublisher userCodConfirmationCalling;
-	@Autowired
-	UserService userService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ProducerFactory producerFactory;
+    @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
+    private String healthkartRestUrl;
 
-	@Transactional
-	public void onResponse(OrderResponse orderResponse) {
+    @PostConstruct
+    void init() {
+        producerFactory.register(this);
+    }
 
-		Order order;
-		UserCodCall userCodCall;
+    @Transactional
+    public void onResponse(OrderResponse orderResponse) {
 
-        logger.info("response received for  " +orderResponse.getOrderId()) ;
-		try {
-            int keyPressResponse = orderResponse.getOrderStatus().ordinal();
-            String orderId = orderResponse.getOrderId();
-            String sourceOfMessage = orderResponse.getSource();
-			order = orderService.find(Long.valueOf(orderId.trim()));
-			if (order != null) {
-				if (order.getUserCodCall() == null) {
-					userCodCall = orderService.createUserCodCall(order,EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
-					userCodCall.setRemark(sourceOfMessage);
+        Order order;
+        UserCodCall userCodCall;
 
-				} else {
-					userCodCall = order.getUserCodCall();
-				}
-				int cancelled = OrderResponse.OrderStatus.CANCELLED.ordinal();
-				int confirmed = OrderResponse.OrderStatus.CONFIRMED.ordinal();
+        logger.info("response received for  " + orderResponse.getOrderId());
+        try {
 
-				if (keyPressResponse == confirmed) {
-					userCodCall.setCallStatus(EnumUserCodCalling.CONFIRMED.getId());
-					userCodCall.setRemark(EnumUserCodCalling.CONFIRMED.getName());
-					orderService.saveUserCodCall(userCodCall);
-                    String comment = "Order Confirmed By " +orderResponse.getSource();
-					adminOrderService.confirmCodOrder(order ,comment);
+            Long orderId = Long.parseLong(orderResponse.getOrderId());
+            String sourceOfMessage = orderResponse.getSource() + " COD ,Requested By User";
+            order = orderService.find(orderId);
+            if (order.getUserCodCall() == null) {
+                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                userCodCall.setRemark(sourceOfMessage);
 
-				} else if (keyPressResponse == cancelled) {
-					String cancellationRemark = sourceOfMessage + "called User for COD confirmation , User Request for cancel";
-					adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), cancellationRemark, userService.getAdminUser());
-					userCodCall.setCallStatus(EnumUserCodCalling.CANCELLED.getId());
-					userCodCall.setRemark(EnumUserCodCalling.CANCELLED.getName());
-					orderService.saveUserCodCall(userCodCall);
-				}
-
-			} else {
-				logger.error("Invalid Order ID Returned From JMS" +orderId);
-			}
-		} catch (Exception ex) {
-			logger.error("Exception in Receiving Response " + ex.getMessage());
-		}
-	}
+            } else {
+                userCodCall = order.getUserCodCall();
+            }
+            String urlStr = String.format(healthkartRestUrl + "user/order/source/%s/order/%d/action/%s", sourceOfMessage, orderId, orderResponse.getOrderStatus().name());
+            ClientRequest request = new ClientRequest(urlStr);
+            request.getQueryParameters().add("authToken", "US3jbSEN5EKVVzlabDl95loyWf_hloCZ");
+            request.setHttpMethod("POST");
+            ClientResponse<String> response = request.post();
+            int status = response.getStatus();
+            if (status == 200) {
+                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(orderResponse.getOrderStatus().name()).getId());
+                userCodCall.setRemark(orderResponse.getOrderStatus().name() + " Request Successful");
+                orderService.saveUserCodCall(userCodCall);
+            } else {
+                userCodCall.setRemark(orderResponse.getOrderStatus().name() + "Request From Admin Failed");
+                orderService.saveUserCodCall(userCodCall);
+            }
+        } catch (Exception ex) {
+            logger.error("Exception in Receiving Response " + ex.getMessage());
+        }
+    }
 }
 
