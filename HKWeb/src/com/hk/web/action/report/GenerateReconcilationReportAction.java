@@ -13,12 +13,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.akube.framework.util.BaseUtils;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.user.Address;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -143,11 +145,24 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		xlsWriter.addHeader("WAREHOUSE", "WAREHOUSE");
 		xlsWriter.addHeader("DROP SHIPMENT", "DROP SHIPMENT");
 		xlsWriter.addHeader("CATEGORY", "CATEGORY");
+		xlsWriter.addHeader("ADDRESS", "ADDRESS");
+		xlsWriter.addHeader("CUSTOMER PHONE", "CUSTOMER PHONE");
 
 		int row = 1;
 		for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
 			String rtoInitiatedComments = "";
 			ShippingOrder shippingOrder = reconcilationReportDto.getShippingOrder();
+			Address address = reconcilationReportDto.getAddress();
+			String custAddress = "";
+			String custPhone = "";
+			if(address != null) {
+				custAddress = address.getLine1();
+				if(address.getLine2() != null) {
+					custAddress = custAddress + BaseUtils.newline + address.getLine2();
+				}
+				custAddress = custAddress + BaseUtils.newline + address.getCity() + BaseUtils.newline + address.getState();
+				custPhone = address.getPhone();
+			}
 
 			List<ShippingOrderLifecycle> shippingOrderLifecycleList =
 					getShippingOrderLifecycleService().getShippingOrderLifecycleBySOAndActivity(shippingOrder.getId(), EnumShippingOrderLifecycleActivity.RTO_Initiated.getId());
@@ -185,6 +200,8 @@ public class GenerateReconcilationReportAction extends BaseAction {
 			xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
 			xlsWriter.addCell(row, shippingOrder.isDropShipping() ? 'Y' : 'N');
 			xlsWriter.addCell(row, shippingOrder.getBasketCategory());
+			xlsWriter.addCell(row, custAddress);
+			xlsWriter.addCell(row, custPhone);
 			row++;
 		}
 		xlsWriter.writeData(excelFile, "Reconciliation_report");

@@ -10,6 +10,7 @@ import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.pact.dao.BaseDao;
 
 public interface OrderDao extends BaseDao {
@@ -34,4 +35,6 @@ public interface OrderDao extends BaseDao {
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments);
 
     public Order findByGatewayOrderId(String gatewayOrderId);
+
+	public List<UserCodCall> getAllUserCodCallOfToday();
 }

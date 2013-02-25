@@ -11553,4 +11553,24 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1360944809663-1">
+        <createTable tableName="user_cod_call">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="call_status" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remark" type="VARCHAR(70)"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1360944809663-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_cod_call"  constraintName="fk_user_cod_call_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
