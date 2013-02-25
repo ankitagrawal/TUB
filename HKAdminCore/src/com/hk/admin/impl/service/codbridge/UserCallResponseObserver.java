@@ -85,7 +85,9 @@ public class UserCallResponseObserver extends OrderObserver {
             request.setHttpMethod("POST");
             ClientResponse<String> response = request.post();
             int status = response.getStatus();
+            logger.info("Calling Post API " + urlStr);
             if (status == 200) {
+                logger.info("Post API returned correct status");
                 userCodCall.setCallStatus(EnumUserCodCalling.valueOf(orderResponse.getOrderStatus().name()).getId());
                 userCodCall.setRemark(orderResponse.getOrderStatus().name() + " Request Successful");
                 orderService.saveUserCodCall(userCodCall);
