@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.payment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,8 @@ public class CheckPaymentAction extends BaseAction {
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
 
+    List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
+
     @DefaultHandler
     public Resolution show() {
         paymentList = getPaymentService().listByOrderId(order.getId());
@@ -90,7 +93,14 @@ public class CheckPaymentAction extends BaseAction {
             if (paymentResultMap.isEmpty()) {
                 paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
             }
+            transactionList.add(paymentResultMap);
         }
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    @DontValidate
+    public Resolution searchTransactionByDate() {
+        transactionList = PaymentFinder.findTransactionListIcici("20130101", "20130102", "00007518");
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
@@ -269,5 +279,13 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setPaymentResultMap(Map<String, Object> paymentResultMap) {
         this.paymentResultMap = paymentResultMap;
+    }
+
+    public List<Map<String, Object>> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Map<String, Object>> transactionList) {
+        this.transactionList = transactionList;
     }
 }

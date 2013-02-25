@@ -15,8 +15,10 @@
             </fieldset>
         </s:form>
 
-        <c:forEach items="${cpa.paymentResultMap}" var="paymentMapEntry">
-              ${paymentMapEntry.key}  -->   ${paymentMapEntry.value}  <br/>
+        <c:forEach  items="${cpa.transactionList}" var="paymentResultMap">
+            <c:forEach items="${paymentResultMap}" var="paymentMapEntry">
+                ${paymentMapEntry.key}  -->   ${paymentMapEntry.value}  <br/>
+            </c:forEach>
         </c:forEach>
 
     </s:layout-component>
