@@ -70,7 +70,7 @@ public class UserCallResponseObserver extends OrderObserver {
         try {
 
             Long orderId = Long.parseLong(orderResponse.getOrderId());
-            String sourceOfMessage = orderResponse.getSource() + " COD ,Requested By User";
+            String sourceOfMessage = orderResponse.getSource() + "CodCall";
             order = orderService.find(orderId);
             if (order.getUserCodCall() == null) {
                 userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
