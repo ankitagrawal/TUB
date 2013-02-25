@@ -11573,4 +11573,19 @@
     <changeSet author="Seema (generated)" id="1360944809663-2">
         <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_cod_call"  constraintName="fk_user_cod_call_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
     </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1361217619752-1">
+           <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-2">
+       <sql>
+           update product set order_ranking=1.0 where order_ranking=0.0 and deleted=0;
+       </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-3">
+       <sql>
+           update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
+       </sql>
+    </changeSet>
 </databaseChangeLog>
+        
