@@ -71,8 +71,7 @@ public class BusyTableTransactionGenerator {
                            FROM purchase_invoice pv  INNER JOIN  supplier s ON  pv.supplier_id = s.id
 
                            INNER JOIN  warehouse w ON  w.id=pv.warehouse_id  WHERE
-                           pv.reconcilation_date > ${lastUpdateDate}
-                           and pv.reconciled = 1  
+                           pv.reconciled = 1  and pv.id in (3027, 6789)
                            and pv.create_dt > '2011-11-08 16:10:50'   """) {
 
         purchaseRow ->
