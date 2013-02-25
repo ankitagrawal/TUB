@@ -1,13 +1,11 @@
 package com.hk.admin.pact.service.inventory;
 
-import com.hk.domain.user.User;
-import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
-import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.user.User;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,5 +26,5 @@ public interface ReconciliationVoucherService {
 
 	public void delete(ReconciliationVoucher reconciliationVoucher);
 
-     public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher);
+
 }

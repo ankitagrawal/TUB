@@ -79,5 +79,5 @@ public interface AdminInventoryService {
 
     public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
     
-   public Map<Long, String> skuItemDataMap( List<SkuItem> checkedInSkuItems );
+   public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
 }
