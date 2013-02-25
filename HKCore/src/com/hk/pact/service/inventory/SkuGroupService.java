@@ -1,11 +1,13 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.SkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.warehouse.Warehouse;
 
 
 import java.util.List;
@@ -35,6 +37,8 @@ public interface SkuGroupService {
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
 	public List<SkuGroup> getSkuGroup(String barcode,  Long warehouseId);
+
+    public List<SkuGroup> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product);
 
 
 

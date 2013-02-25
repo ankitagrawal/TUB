@@ -1,13 +1,16 @@
 package com.hk.impl.dao.sku;
 
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -178,6 +181,41 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return skuGroups;
     }
 
+
+    public List<SkuGroup> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product) {
+        DetachedCriteria skuGroupCriteria = DetachedCriteria.forClass(SkuGroup.class);
+
+        DetachedCriteria skuCriteria = null;
+        if (warehouse != null) {
+            skuCriteria = skuGroupCriteria.createCriteria("sku");
+            skuCriteria.add(Restrictions.eq("warehouse", warehouse));
+        }
+        DetachedCriteria productVariantCriteria = null;
+        if (product != null) {
+            if (skuCriteria == null) {
+                skuCriteria = skuGroupCriteria.createCriteria("sku");
+            }
+            productVariantCriteria = skuCriteria.createCriteria("productVariant");
+            productVariantCriteria.add(Restrictions.eq("product", product));
+        }
+        if (brand != null) {
+            if (skuCriteria == null) {
+                skuCriteria = skuGroupCriteria.createCriteria("sku");
+            }
+            if (productVariantCriteria == null) {
+                productVariantCriteria = skuCriteria.createCriteria("productVariant");
+            }
+
+            DetachedCriteria productCriteria =  productVariantCriteria.createCriteria("product");
+            productCriteria.add(Restrictions.eq("brand", brand));
+        }
+       DetachedCriteria skuItemCriteria =  skuGroupCriteria.createCriteria("skuItems","skuItem");
+        skuItemCriteria.add(Restrictions.eq("skuItem.skuItemStatus.id", EnumSkuItemStatus.Checked_IN.getId()));
+        skuGroupCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
+
+        return (List<SkuGroup>) findByCriteria(skuGroupCriteria);
+
+    }
 
 
 }

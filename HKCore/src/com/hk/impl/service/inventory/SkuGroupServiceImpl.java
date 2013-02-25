@@ -1,5 +1,7 @@
 package com.hk.impl.service.inventory;
 
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -63,6 +65,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
 		return skuGroupDao.getSkuGroup(barcode, warehouseId);
 	}
+
+    public List<SkuGroup> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product){
+        return skuGroupDao.getCheckedInSkuGroup(brand , warehouse, product);
+    }
 
 
 	//SkuItemDao Methods

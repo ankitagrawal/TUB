@@ -2,6 +2,7 @@ package com.hk.pact.dao.sku;
 
 import java.util.List;
 
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.sku.Sku;
@@ -32,5 +33,7 @@ public interface SkuGroupDao extends BaseDao {
 	public List<SkuGroup> getSkuGroup(String barcode,  Long warehouseId);
 
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+
+    public List<SkuGroup> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product);
 
 }

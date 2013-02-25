@@ -6,7 +6,7 @@
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<style>
+<style type="text/css">
 	.scannedBarcode {
 		width: 125px
 	}
@@ -15,7 +15,6 @@
 		margin-left: 0px
 	}
 </style>
-</sttyle>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count">
 	<s:layout-component name="htmlHead">

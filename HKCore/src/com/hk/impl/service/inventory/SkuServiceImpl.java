@@ -1,6 +1,9 @@
 package com.hk.impl.service.inventory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,16 +132,7 @@ public class SkuServiceImpl implements SkuService {
      * @param category
      * @return
      */
-
-    public List<Sku> getSKUs(String category, String brand, String productId ){
-      return getSKUsCriteria(category, brand, productId ,null);
-    }
-
-    public List<Sku>  getSKUs(String brand, String productId, Warehouse warehouse){
-        return  getSKUsCriteria(null, brand, productId ,warehouse);
-    }
-
-    public List<Sku> getSKUsCriteria(String category, String brand, String productId , Warehouse warehouse) {
+    public List<Sku> getSKUs(String category, String brand, String productId) {
         List<Sku> skuList = new ArrayList<Sku>();
         List<ProductVariant> superProductVariantList = new ArrayList<ProductVariant>();
         List<ProductVariant> subProductVariantList = new ArrayList<ProductVariant>();
@@ -164,14 +158,7 @@ public class SkuServiceImpl implements SkuService {
                 superProductVariantList.addAll(subProductVariantList);
             }
             for (ProductVariant productVariant : superProductVariantList) {
-                List<Sku> skulist = null;
-                if(warehouse != null){
-                    skulist = Arrays.asList(getSkuDao().getSku(productVariant,warehouse));
-                }
-                else{
-                    skulist = getSkuDao().getSkus(productVariant);
-                }
-                skuList.addAll(skulist);
+                skuList.addAll(getSkuDao().getSkus(productVariant));
             }
             return skuList;
         } else {

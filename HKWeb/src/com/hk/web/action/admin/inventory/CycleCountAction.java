@@ -417,29 +417,27 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
     private List<SkuGroup> missedSkuGroupInScanning(CycleCount cycleCount) {
-        List<Sku> skuList = new ArrayList<Sku>();
         List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
         Warehouse warehouse = cycleCount.getWarehouse();
         if (cycleCount.getBrandsToAudit() != null) {
-            List<Sku> skuListForBrand = skuService.getSKUs(cycleCount.getBrandsToAudit().getBrand(), null, cycleCount.getWarehouse());
-            if (skuListForBrand != null) {
-                skuList.addAll(skuListForBrand);
+            List<SkuGroup> skuGroupListForBrand = skuGroupService.getCheckedInSkuGroup(cycleCount.getBrandsToAudit().getBrand(), cycleCount.getWarehouse(), null);
+            if (skuGroupListForBrand != null) {
+                skuGroupList.addAll(skuGroupListForBrand);
             }
         } else if (cycleCount.getProduct() != null) {
-            List<Sku> skuListForProduct = skuService.getSKUs(null, cycleCount.getProduct().getId(), cycleCount.getWarehouse());
-            if (skuListForProduct != null) {
-                skuList.addAll(skuListForProduct);
+            List<SkuGroup> skuGroupListForProduct = skuGroupService.getCheckedInSkuGroup(null, cycleCount.getWarehouse(), cycleCount.getProduct());
+            if (skuGroupListForProduct != null) {
+                skuGroupList.addAll(skuGroupListForProduct);
             }
         } else {
-            skuList.addAll(Arrays.asList(skuService.getSKU(cycleCount.getProductVariant(), warehouse)));
+            List<SkuGroup> skuGroupForPv = skuGroupService.getInStockSkuGroups(skuService.getSKU(cycleCount.getProductVariant(), warehouse));
+            if (skuGroupForPv != null) {
+                skuGroupList.addAll(skuGroupForPv);
+            }
+            skuGroupList.addAll(skuGroupForPv);
         }
 
-        for (Sku sku : skuList) {
-            List<SkuGroup> skuGroupListBySku = skuGroupService.getInStockSkuGroups(sku);
-            if (skuGroupListBySku.size() > 0) {
-                skuGroupList.addAll(skuGroupListBySku);
-            }
-        }
+
         if (cycleCount.getCycleCountItems() != null) {
             for (CycleCountItem cycleCountItem : cycleCount.getCycleCountItems()) {
                 if (skuGroupList.contains(cycleCountItem.getSkuGroup())) {
