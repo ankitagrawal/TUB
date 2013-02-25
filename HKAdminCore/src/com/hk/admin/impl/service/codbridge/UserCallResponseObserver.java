@@ -90,7 +90,8 @@ public class UserCallResponseObserver extends OrderObserver {
                 userCodCall.setRemark(orderResponse.getOrderStatus().name() + " Request Successful");
                 orderService.saveUserCodCall(userCodCall);
             } else {
-                userCodCall.setRemark(orderResponse.getOrderStatus().name() + "Request From Admin Failed");
+                logger.error("Unable to update order status.." + Integer.toString(status));
+                userCodCall.setRemark(orderResponse.getOrderStatus().name() + "Request From Admin Failed..");
                 orderService.saveUserCodCall(userCodCall);
             }
         } catch (Exception ex) {
