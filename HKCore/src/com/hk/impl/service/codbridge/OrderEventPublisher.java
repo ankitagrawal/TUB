@@ -46,7 +46,7 @@ public class OrderEventPublisher {
 
     @PostConstruct
     void init(){
-        userCallResponseObserver.subscribe(userCallResponseObserver);
+        userCallResponseObserver.subscribe();
     }
 
     private String getCartDetailsJson(Order order) {
@@ -115,7 +115,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
-            producerFactory.register(userCallResponseObserver);
+            producerFactory.register();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -142,7 +142,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribe(userCallResponseObserver);
+            userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
