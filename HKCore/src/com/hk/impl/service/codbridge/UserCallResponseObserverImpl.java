@@ -5,24 +5,18 @@ import com.hk.constants.core.Keys;
 import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderResponse;
 
-import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
-
-import com.hk.constants.core.EnumUserCodCalling;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.jms.MessageListener;
 
 
 /**
@@ -34,8 +28,8 @@ import javax.jms.MessageListener;
  */
 
 @Service
-public class UserCallResponseObserver{
-    private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
+public class UserCallResponseObserverImpl extends OrderObserver implements com.hk.pact.service.codbridge.UserCallResponseObserver{
+    private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserverImpl.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
     private String healthkartRestUrl;
