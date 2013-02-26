@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.hkjunction.observers.OrderType;
+import com.hk.impl.service.codbridge.UserCallResponseObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ public class OrderEventPublisher {
 
     @Autowired
     ProducerFactory producerFactory;
+    @Autowired
+    UserCallResponseObserver userCallResponseObserver;
 
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
 
@@ -106,6 +109,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -119,6 +123,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -131,6 +136,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }

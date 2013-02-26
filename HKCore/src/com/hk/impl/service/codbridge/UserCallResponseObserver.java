@@ -1,9 +1,8 @@
-package com.hk.admin.impl.service.codbridge;
+package com.hk.impl.service.codbridge;
 
 
 import com.hk.constants.core.Keys;
 import com.hk.hkjunction.observers.OrderObserver;
-import com.hk.hkjunction.observers.OrderResponseObserver;
 import com.hk.hkjunction.observers.OrderResponse;
 
 import com.hk.hkjunction.producer.ProducerFactory;
@@ -13,10 +12,7 @@ import com.hk.pact.service.UserService;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
 
-import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
-
-import com.hk.admin.pact.service.order.AdminOrderService;
 
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -45,8 +41,6 @@ public class UserCallResponseObserver extends OrderObserver {
     @Autowired
     OrderService orderService;
     @Autowired
-    AdminOrderService adminOrderService;
-    @Autowired
     OrderEventPublisher userCodConfirmationCalling;
     @Autowired
     UserService userService;
@@ -54,10 +48,23 @@ public class UserCallResponseObserver extends OrderObserver {
     ProducerFactory producerFactory;
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
     private String healthkartRestUrl;
+    //Assumption is that this class is singleton which is default behavior of Spring Beans
+    static boolean isSubscribed = false;
 
     @PostConstruct
     void init() {
-        producerFactory.register(this);
+        subscribeOrderCallResponse();
+    }
+
+    public synchronized void subscribeOrderCallResponse(){
+        if (!isSubscribed){
+            try{
+                producerFactory.register(this);
+                isSubscribed = true;
+            }catch (Exception ex){
+                logger.error("Unable to register Order Call Observer..Jms is down..",ex);
+            }
+        }
     }
 
     @Transactional
