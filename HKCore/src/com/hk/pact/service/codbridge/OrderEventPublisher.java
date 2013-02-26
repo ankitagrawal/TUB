@@ -20,6 +20,7 @@ import com.hk.hkjunction.producer.ProducerTypeEnum;
 import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.observers.OrderStatusMessage;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,10 @@ public class OrderEventPublisher {
 
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
 
+    @PostConstruct
+    void init(){
+        producerFactory.register(userCallResponseObserver);
+    }
 
     private String getCartDetailsJson(Order order) {
 
@@ -109,7 +114,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribeOrderCallResponse();
+            //userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -123,7 +128,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribeOrderCallResponse();
+           // userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -136,7 +141,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
-            userCallResponseObserver.subscribeOrderCallResponse();
+            //userCallResponseObserver.subscribeOrderCallResponse();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
