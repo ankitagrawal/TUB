@@ -1,8 +1,7 @@
 package com.hk.pact.service;
 
-import java.util.List;
-
 import com.hk.constants.core.EnumRole;
+import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 
 public interface RoleService {
@@ -14,5 +13,7 @@ public interface RoleService {
    /* public List<Role> listAllExceptAdmins();
 
     public List<Role> listAllBasicRoles();*/
+
+    public Permission save(Permission permission);
 
 }

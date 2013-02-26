@@ -1,12 +1,12 @@
 package com.hk.impl.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hk.constants.core.EnumRole;
+import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -38,6 +38,10 @@ public class RoleServiceImpl implements RoleService {
 
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
+    }
+
+    public Permission save(Permission permission){
+       return (Permission)roleDao.save(permission);
     }
 
 }

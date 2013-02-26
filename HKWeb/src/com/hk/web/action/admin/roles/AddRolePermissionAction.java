@@ -5,6 +5,7 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.service.RoleService;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -21,10 +22,10 @@ public class AddRolePermissionAction extends BaseAction{
     @Autowired
     private RoleService roleService;
 
-
-
-
-
+    @DefaultHandler
+    public Resolution pre(){
+        return new ForwardResolution("/pages/admin/roles/addRolePermission.jsp");
+    }
 
 
 }
