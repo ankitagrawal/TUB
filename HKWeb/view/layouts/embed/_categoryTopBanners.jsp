@@ -55,9 +55,9 @@
     <jsp:include page="/categoryBanners/eyeCallback.jsp"/>
   </c:if>
 
-  <c:if test="${hk:collectionContains(categoryNameList, 'fitness-equipment')}">
-    <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
-  </c:if>
+  <%--<c:if test="${hk:collectionContains(categoryNameList, 'fitness-equipment')}">--%>
+    <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+  <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'treadmills')}">--%>
    <%--<jsp:include page="/categoryBanners/treadmillsCallback.jsp"/>--%>
   <%--</c:if>--%>

@@ -47,6 +47,7 @@
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
+			<p>Phone - ${warehouse.whPhone}</p>
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<c:choose>
