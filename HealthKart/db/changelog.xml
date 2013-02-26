@@ -11606,7 +11606,7 @@
             <column name="time_window_days" type="INT"/>
             <column name="days_to_send_review_mail_again" type="INT"/>
             <column name="create_dt" type="DATETIME"/>
-            <column name="update_dt" type="TIMESTAMP"/>
+            <column name="update_dt" type="DATETIME"/>
             <column name="is_enabled" type="TINYINT">
                 <constraints nullable="false"/>
             </column>
@@ -11635,7 +11635,7 @@
             </column>
             <column name="due_date" type="DATETIME"/>
             <column name="create_dt" type="DATETIME"/>
-            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP"/>
+            <column name="update_dt" type="DATETIME"/>
             <column name="is_mail_sent" type="TINYINT"/>
             <column name="user_id" type="INT">
                 <constraints nullable="false"/>
@@ -11675,4 +11675,3 @@
         <addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
-        
