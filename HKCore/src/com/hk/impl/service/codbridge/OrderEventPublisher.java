@@ -1,4 +1,4 @@
-package com.hk.pact.service.codbridge;
+package com.hk.impl.service.codbridge;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.hkjunction.observers.OrderType;
-import com.hk.impl.service.codbridge.UserCallResponseObserver;
+import com.hk.pact.service.codbridge.UserCartDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
