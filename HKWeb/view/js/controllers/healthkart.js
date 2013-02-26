@@ -94,7 +94,9 @@ HK.CartOfferController = Ember.Controller.create({
             success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
                     if(data.applicableOffers.length === 0){
-                        self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                        if(self.get("currentlyAppliedOffer").length === 0){
+                            self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
+                        }
                     }
                     data.applicableOffers.forEach(function(offer){
                         self.get("currentlyAppliedOffer").clear();
