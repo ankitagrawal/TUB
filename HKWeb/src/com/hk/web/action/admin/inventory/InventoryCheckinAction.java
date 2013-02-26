@@ -218,7 +218,7 @@ public class InventoryCheckinAction extends BaseAction {
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
 //                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroup(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
-                      SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
+                    SkuGroup skuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, grn, null, null, sku);
                     getAdminInventoryService().createSkuItemsAndCheckinInventory(skuGroup, qty, null, grnLineItem, null, null,
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
@@ -369,18 +369,18 @@ public class InventoryCheckinAction extends BaseAction {
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
-         if (stockTransferLineItem.getCheckedoutQty() <= 0){
-                addRedirectAlertMessage(new SimpleMessage("Please do transfer some Item to check in "));
-                return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
-         }
-        
+        if (stockTransferLineItem.getCheckedoutQty() <= 0) {
+            addRedirectAlertMessage(new SimpleMessage("Please do transfer some Item to check in "));
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
+
         StockTransferLineItem stockTransferLineItemAgainstCheckInSkuGrp = stockTransferDao.checkinSkuGroupExists(stockTransferLineItem);
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
-        if (sku == null){
-           addRedirectAlertMessage(new SimpleMessage("No SKU Found "));
-           return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        if (sku == null) {
+            addRedirectAlertMessage(new SimpleMessage("No SKU Found "));
+            return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
@@ -544,7 +544,7 @@ public class InventoryCheckinAction extends BaseAction {
     public Resolution downloadBarcode() {
         grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
 //        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
-         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null,null,grnLineItem, 1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -571,12 +571,12 @@ public class InventoryCheckinAction extends BaseAction {
                 + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
 
         try {
-          printBarcode =  BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+            printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);
         }
         addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
-         return new HTTPResponseResolution();
+        return new HTTPResponseResolution();
 //        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
     }
 
@@ -589,7 +589,7 @@ public class InventoryCheckinAction extends BaseAction {
 
         for (GrnLineItem grnLineItem : grnLineItems) {
 //            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
-           List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null,null,grnLineItem, 1L);
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                 SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
                 Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems);
@@ -615,7 +615,7 @@ public class InventoryCheckinAction extends BaseAction {
                 addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
                 return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
             }
-        printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+            printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
         } catch (IOException e) {
             logger.error("Exception while appending on barcode file", e);
         }
