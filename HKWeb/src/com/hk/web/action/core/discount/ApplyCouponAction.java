@@ -219,6 +219,7 @@ public class ApplyCouponAction extends BaseAction {
       offerInstance = offerInstanceDao.createOfferInstance(offer, null, user, offer.getEndDate());
     }
     order.setOfferInstance(offerInstance);
+    orderDao.save(order);
     success = true;
 
     ProductVariant freeVariant = offer.getOfferAction().getFreeVariant();
