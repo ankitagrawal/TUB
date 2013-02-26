@@ -770,8 +770,10 @@ public class EmailManager {
         valuesMap.put("user", user);
         valuesMap.put("gatewayOrderId", gatewayOrderId);
 
+        Template adminFreemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentFailEmail);
+        emailService.sendHtmlEmail(adminFreemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
+
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
 
