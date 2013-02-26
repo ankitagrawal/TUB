@@ -128,10 +128,10 @@
                         <th>Product Name</th>
                         <th>Variant Option</th>
 						<th>Hk Barcode</th>
+                        <th>Batch</th>
 						<th>Mrp</th>
 						<th>Mfg Date</th>
 						<th>Expiry Date</th>
-                        <th>Batch</th>
 						<th>Scanned Qty</th>
 						<th>System Quantity</th>
                         <th>Variance</th>
@@ -152,10 +152,11 @@
 								<td> ${cCItem.skuGroup.sku.productVariant.product.name} </td>
                                 <td> ${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated} </td>
 								<td> ${cCItem.skuGroup.barcode} </td>
+                                <td>${cCItem.skuGroup.batchNumber}</td>
 								<td> ${cCItem.skuGroup.mrp}</td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
-                                <td>${cCItem.skuGroup.batchNumber}</td>
+
 								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
 
                                 <c:choose>

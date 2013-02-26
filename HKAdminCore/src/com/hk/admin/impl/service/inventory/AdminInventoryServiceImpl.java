@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.inventory;
 
+import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
@@ -7,6 +8,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
@@ -469,4 +471,8 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
      public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) {
             return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,grnLineItem,1L );
      }
+
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant){
+        return adminPVIDao. getCheckedInSkuGroup(brand, warehouse, product,productVariant);
+    }
 }

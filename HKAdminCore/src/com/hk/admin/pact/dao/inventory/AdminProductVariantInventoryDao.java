@@ -3,6 +3,8 @@ package com.hk.admin.pact.dao.inventory;
 import java.util.List;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
@@ -48,5 +50,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
      public List<VariantConfig> getAllVariantConfig();
 
     public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 
 }

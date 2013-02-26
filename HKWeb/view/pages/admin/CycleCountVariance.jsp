@@ -125,7 +125,7 @@
                          <c:set var="scannedqty" value="0" />
                         <label class="scannedQty" style="color: #ff0000;">${scannedqty}</label>
                     </td>
-                    <c:set value="${cycle.skuGroupSystemInventoryMap}" var="item"/>
+                    <c:set value="${cycle.missedSkuGroupSystemInventoryMap}" var="item"/>
                     <td><label class="systemQty">${item[missedGroup.id]}</label></td>
                     <td><label class="varianceQty">${item[missedGroup.id]}</label></td>
                 </tr>

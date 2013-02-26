@@ -75,7 +75,7 @@ public class CycleCountHelper {
 	}
 
 
-	public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap , List<SkuGroup> skuGroupList, Map<Long, Integer> skuGroupSystemInventoryMap) {
+	public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap , List<SkuGroup> skuGroupList, Map<Long, Integer> missedSkuGroupSystemInventoryMap) {
 		this.xlsFile = xlsFile;
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 		int xlsRow = 1;
@@ -132,7 +132,7 @@ public class CycleCountHelper {
             xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
             xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
             xlsWriter.addCell(xlsRow, "0");
-            int sysQty = skuGroupSystemInventoryMap.get(skuGroup.getId());
+            int sysQty = missedSkuGroupSystemInventoryMap.get(skuGroup.getId());
             xlsWriter.addCell(xlsRow, sysQty);
             xlsWriter.addCell(xlsRow, sysQty);
             String expiryDate = "";
@@ -162,7 +162,7 @@ public class CycleCountHelper {
 
 
 
-    public File generateSkuGroupNotScannedExcel(List<SkuGroup> skuGroupList, File xlsFile, Map<Long, Integer> skuGroupSystemInventoryMap) {
+    public File generateSkuGroupNotScannedExcel(List<SkuGroup> skuGroupList, File xlsFile, Map<Long, Integer> missedSkuGroupSystemInventoryMap) {
         this.xlsFile = xlsFile;
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
@@ -201,7 +201,7 @@ public class CycleCountHelper {
                 expiryDate = sdf.format(skuGroup.getExpiryDate());
             }
             xlsWriter.addCell(xlsRow, expiryDate);
-            int systemQty = skuGroupSystemInventoryMap.get(skuGroup.getId());
+            int systemQty = missedSkuGroupSystemInventoryMap.get(skuGroup.getId());
             xlsWriter.addCell(xlsRow, "0");
             xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
             xlsWriter.addCell(xlsRow, systemQty);
