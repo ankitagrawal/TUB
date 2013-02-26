@@ -5,6 +5,7 @@ import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
+import com.hk.hkjunction.observers.OrderObserver;
 import com.hk.hkjunction.observers.OrderType;
 import com.hk.pact.service.codbridge.UserCartDetail;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class OrderEventPublisher {
 
     @Autowired
     ProducerFactory producerFactory;
-    //@Autowired
+    @Autowired
     UserCallResponseObserver userCallResponseObserver;
 
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);

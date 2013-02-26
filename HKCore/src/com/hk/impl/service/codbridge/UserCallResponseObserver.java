@@ -43,7 +43,7 @@ public class UserCallResponseObserver extends OrderObserver {
 
     @PostConstruct
     void init() {
-        //subscribeOrderCallResponse();
+
     }
 
     @Transactional
