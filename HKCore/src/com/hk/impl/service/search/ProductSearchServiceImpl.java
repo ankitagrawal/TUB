@@ -12,6 +12,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.search.PaginationFilter;
 import com.hk.domain.search.RangeFilter;
 import com.hk.domain.search.SearchFilter;
@@ -108,11 +110,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
         // resultsMap.getResultSize().longValue());
     }
 
-    public SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
+    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
-        query.addFilterQuery("{!field f= brand}" + brand);
-        // query.addFilterQuery(SolrSchemaConstants.brand + ":" + brand);
-        query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory);
+        //query.addFilterQuery("{!field f= brand}" + brand);
+        //query.addFilterQuery(SolrSchemaConstants.brand + ":" + brand);
+        query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + brand+"\"");
+        if(topLevelCategory != null)
+          query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory.getName());
         query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
@@ -122,6 +126,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         query.setRows(perPage);
         query.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         query.addSortField(SolrSchemaConstants.sortBy, SolrQuery.ORDER.asc);
+
         List<SolrProduct> solrProductList = new ArrayList<SolrProduct>();
         long resultCount = 0;
         SearchResult searchResult = null;
@@ -137,6 +142,38 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
         return searchResult;
     }
+
+  public boolean isBrandTerm(String term) throws SearchException {
+        SolrQuery query = new SolrQuery("*:*");
+        //query.addFilterQuery("{!field f= brand}" + term);
+        query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term+"\"");
+    
+        try {
+            QueryResponse response = solr.query(query);
+            long resultCount = response.getResults().getNumFound();
+            logger.debug("resultCount@isBrandTerm="+resultCount+" for term="+term);
+            if(resultCount > 0)
+              return true;
+            else{
+              SpellCheckResponse spellCheckResponse = this.getSpellCheckResponse(term);
+              for (SpellCheckResponse.Suggestion suggestion : spellCheckResponse.getSuggestions()) {
+                term = suggestion.getToken();
+                query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + term +"\"");
+                response = solr.query(query);
+                resultCount = response.getResults().getNumFound();
+                logger.debug("resultCount@isBrandTerm=" + resultCount + " for term=" + term);
+                if (resultCount > 0)
+                  return true;
+              }
+            }
+        } catch (SolrServerException ex) {
+            SearchException e = wrapException("Unable to get brand term results", ex);
+            throw e;
+        }
+        return false;
+    }
+
+
 
     private void buildDictionary() throws SolrServerException {
         ModifiableSolrParams params = new ModifiableSolrParams();
@@ -208,6 +245,52 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return searchResult;
     }
 
+   private SearchResult getCategoryResults(String category, int page, int perPage) throws SearchException {
+
+     SolrQuery query = new SolrQuery("*:*");
+       query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + category+"\"");
+        query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
+        query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
+        query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
+
+        query.set("fl", "*");
+        query.setStart((page - 1) * perPage);
+        query.setRows(perPage);
+        query.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
+        query.addSortField(SolrSchemaConstants.sortBy, SolrQuery.ORDER.asc);
+
+        List<SolrProduct> solrProductList = new ArrayList<SolrProduct>();
+        long resultCount = 0;
+        SearchResult searchResult = null;
+        try {
+            QueryResponse response = solr.query(query);
+            // SolrDocumentList documents = response.getResults();
+            resultCount = response.getResults().getNumFound();
+            solrProductList.addAll(response.getBeans(SolrProduct.class));
+            searchResult = getSearchResult(solrProductList, (int) resultCount);
+        } catch (SolrServerException ex) {
+            SearchException e = wrapException("Unable to get brand catalog results", ex);
+            throw e;
+        }
+        return searchResult;
+    }
+
+   public boolean isCategoryTerm(String term) throws SearchException {
+        SolrQuery query = new SolrQuery("*:*");
+        query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + term+"\"");
+        try {
+            QueryResponse response = solr.query(query);
+            long resultCount = response.getResults().getNumFound();
+            logger.debug("resultCount@isCategoryTerm="+resultCount+" for term="+term);
+            if(resultCount > 0)
+              return true;
+        } catch (SolrServerException ex) {
+            SearchException e = wrapException("Unable to get category term results", ex);
+            throw e;
+        }
+        return false;
+    }
+
     private SearchResult getSearchResult(List<SolrProduct> solrProducts, int totalResultCount) {
         List<String> productIds = new ArrayList<String>();
         // This sorting can also be done in database query but decided to do it in Java
@@ -234,6 +317,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
         return new SearchResult(sortedProducts, totalResultCount);
     }
+
+  private SpellCheckResponse getSpellCheckResponse(String userQuery) throws SolrServerException {
+        ModifiableSolrParams params = new ModifiableSolrParams();
+        params.set("q", userQuery);
+        params.set("spellcheck", "on"); // get spelling suggestions
+
+        QueryResponse response = solr.query(params);
+        return response.getSpellCheckResponse();
+  }
 
     private SearchResult getProductSuggestions(QueryResponse response, List<SearchFilter> searchFilters, String userQuery, int page, int perPage) throws SolrServerException {
         ModifiableSolrParams params = new ModifiableSolrParams();
@@ -268,7 +360,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         }
 
         if (canRunSpellQuery) {
-            SolrQuery solrQuery = getResultsQuery(suggestions, searchFilters, page, perPage);
+            SolrQuery solrQuery = getResultsQuery(suggestions, searchFilters, page, perPage);              
             response = solr.query(solrQuery);
             List<SolrProduct> solrProductList = getQueryResults(response);
             int totalResultCount = (int) response.getResults().getNumFound();
@@ -284,6 +376,13 @@ class ProductSearchServiceImpl implements ProductSearchService {
         SearchResult searchResult = new SearchResult();
         try {
             query = sanitizeQuery(query);
+            //Level 1 check Starts - Ajeet
+            if (this.isBrandTerm(query)) {
+              return this.getBrandCatalogResults(query, null, page, perPage, null);
+            } else if (this.isCategoryTerm(query)) {
+              return this.getCategoryResults(query, page, perPage);
+            }
+            //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));
             List<SolrProduct> productList = getQueryResults(response);
             searchResult = getSearchResult(productList, (int) response.getResults().getNumFound());
@@ -329,6 +428,10 @@ class ProductSearchServiceImpl implements ProductSearchService {
         solrQuery.setHighlight(true);
         solrQuery.setStart((page - 1) * perPage);
         solrQuery.setRows(perPage);
+
+        solrQuery.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
+        solrQuery.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
+
         // We want to push out of stock products to the last page
         solrQuery.addSortField(SolrSchemaConstants.sortByOutOfStock, SolrQuery.ORDER.asc);
         solrQuery.addSortField("score", SolrQuery.ORDER.desc);
