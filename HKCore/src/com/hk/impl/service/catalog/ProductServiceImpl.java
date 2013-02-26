@@ -1,33 +1,14 @@
 package com.hk.impl.service.catalog;
 
-import java.util.*;
-
+import com.akube.framework.dao.Page;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.image.EnumImageType;
-import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.image.ProductImageService;
-import com.hk.util.HKImageUtils;
-import net.sourceforge.stripes.controller.StripesFilter;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import com.akube.framework.dao.Page;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductGroup;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.SimilarProduct;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
-import com.hk.domain.content.PrimaryCategoryHeading;
 import com.hk.domain.content.SeoData;
 import com.hk.domain.search.SolrProduct;
 import com.hk.manager.LinkManager;
@@ -36,10 +17,18 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.content.PrimaryCategoryHeadingDao;
 import com.hk.pact.dao.seo.SeoDao;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.search.ProductIndexService;
+import com.hk.util.HKImageUtils;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.controller.StripesFilter;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -453,8 +442,23 @@ public class ProductServiceImpl implements ProductService {
         if (product.getName() != null){
             solrProduct.setName(product.getName());
         }
-        if (product.getBrand() != null){
-            solrProduct.setBrand(product.getBrand());
+        if (product.getBrand() != null) {
+          List<String> brands = new ArrayList<String>();
+          if (product instanceof Combo) {
+            Combo combo = (Combo) product;
+            for (ComboProduct comboProduct : combo.getComboProducts()) {
+              String cpBrand = comboProduct.getProduct().getBrand();
+              if (cpBrand != null) {
+                brands.add(cpBrand);
+                this.addBrandSynonyms(brands, cpBrand);
+              }
+            }
+          } else {
+            String pBrand = product.getBrand();
+            brands.add(pBrand);
+            this.addBrandSynonyms(brands, pBrand);
+          }
+          solrProduct.setBrand(brands);
         }
         if (product.getOverview() != null){
             solrProduct.setOverview(StringEscapeUtils.escapeHtml(product.getOverview().trim()));
@@ -493,9 +497,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<String> categories = new ArrayList<String>();
+        List<String> categoryDisplayNames = new ArrayList<String>();
         if (product.getCategories() != null){
             for (Category category : product.getCategories()){
                 categories.add(category.getName());
+                categoryDisplayNames.add(category.getDisplayName());
             }
         }
 
@@ -565,17 +571,20 @@ public class ProductServiceImpl implements ProductService {
         }
 
         solrProduct.setCategory(categories);
+        solrProduct.setCategoryDisplayName(categoryDisplayNames);
         return solrProduct;
     }
 
-//    public List<SolrProduct> getProductsSortedByOrderRanking(PrimaryCategoryHeading primaryCategoryHeading) {
-//        List<Product> products = primaryCategoryHeading.getProductSortedByOrderRanking();
-//        List<SolrProduct> solrProducts = new ArrayList<SolrProduct>();
-//        for (Product product : products){
-//            solrProducts.add(createSolrProduct(product));
-//        }
-//        return solrProducts;
-//    }
+    // Thing logic should be centralized. SOLR syns cann't work for brand terms like on etc.
+    private List<String> addBrandSynonyms(List<String> brandList, String brand) {
+      if (brand.equals("ON")) {
+        brandList.add("Optimum Nutrition");
+      } else if (brand.equals("MuscleBlaze")) {
+        brandList.add("MB");
+        brandList.add("Muscle Blaze");
+      }
+      return brandList;
+    }
 
     public List<Product> getSimilarProducts(Product product) {
         List<Product> inStockSimilarProducts = new ArrayList<Product>();

@@ -228,11 +228,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
 					criteria.add(Restrictions.eq("hidden", false));
-                    if (onlyCOD){
-                        criteria.add(Restrictions.eq("codAllowed", true));
-                    }
-
-                    criteria.addOrder(Order.asc("outOfStock"));
+          if (onlyCOD){
+              criteria.add(Restrictions.eq("codAllowed", true));
+          }
+          criteria.addOrder(Order.asc("outOfStock"));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}
