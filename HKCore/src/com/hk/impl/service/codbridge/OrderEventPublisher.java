@@ -46,7 +46,7 @@ public class OrderEventPublisher {
 
     @PostConstruct
     void init(){
-        //producerFactory.register(userCallResponseObserver);
+        producerFactory.register(userCallResponseObserver);
     }
 
     private String getCartDetailsJson(Order order) {
@@ -115,7 +115,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
-            //userCallResponseObserver.subscribeOrderCallResponse();
+            producerFactory.register(userCallResponseObserver);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -129,7 +129,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
-           // userCallResponseObserver.subscribeOrderCallResponse();
+            producerFactory.register(userCallResponseObserver);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -142,7 +142,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
-            //userCallResponseObserver.subscribeOrderCallResponse();
+            producerFactory.register(userCallResponseObserver);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
