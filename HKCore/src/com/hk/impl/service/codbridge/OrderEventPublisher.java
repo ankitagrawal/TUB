@@ -38,7 +38,7 @@ public class OrderEventPublisher {
 
     @Autowired
     ProducerFactory producerFactory;
-    @Autowired
+    //@Autowired
     UserCallResponseObserver userCallResponseObserver;
 
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
