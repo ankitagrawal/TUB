@@ -45,7 +45,7 @@ public class OrderEventPublisher {
 
     @PostConstruct
     void init(){
-        producerFactory.register(userCallResponseObserver);
+        //producerFactory.register(userCallResponseObserver);
     }
 
     private String getCartDetailsJson(Order order) {
