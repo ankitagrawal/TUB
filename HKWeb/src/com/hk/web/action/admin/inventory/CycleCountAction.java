@@ -453,7 +453,9 @@ public class CycleCountAction extends BasePaginatedAction {
             missedSkuGroupSystemInventoryMap.put(skuGroup.getId(), pvi);
 
         }
-
+        if (skuGroupList.size() > 0) {
+            Collections.sort(skuGroupList);
+        }
 
         return skuGroupList;
     }
