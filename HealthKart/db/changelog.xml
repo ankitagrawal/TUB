@@ -11553,14 +11553,4 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Shilpa (generated)" id="1361512668014-1">
-        <addColumn tableName="brands_to_audit">
-            <column name="update_date" type="TIMESTAMP"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Shilpa (generated)" id="1361512668014-2">
-      <sql>
-          update brands_to_audit set update_date = audit_date;
-      </sql>
-    </changeSet>
 </databaseChangeLog>
