@@ -43,14 +43,14 @@ public class CreateMailTemplateAction extends BaseAction {
     })
     Mail mail;
 
-    @Validate(required = true, on = {"generateFtl"})
+    @Validate(required = true, on = {"createMailTemplate"})
     private FileBean contentBean;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
     String adminUploadsPath;
 
 
-    private boolean editTemplate = false, ftlGenerated =false, contentUploaded = false;
+    private boolean editTemplate = false, contentUploaded = false;
     String htmlPath,ftlContents;
 
 
@@ -72,8 +72,16 @@ public class CreateMailTemplateAction extends BaseAction {
 
 
     public Resolution createMailTemplate(){
-        File contentZipFolder;
-        File contentFolder;
+        Mail priorMail = mailService.getMailByName(mail.getName());
+        if(priorMail != null){
+            if(!editTemplate){
+                addRedirectAlertMessage(new SimpleMessage(mail.getName() +" Template already  exist."));
+                return new RedirectResolution(CreateMailTemplateAction.class, "pre");
+            }else
+                mail = priorMail;
+        }
+        File contentZipFolder=null;
+        File contentFolder=null;
         try {
             if (contentBean != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -107,14 +115,11 @@ public class CreateMailTemplateAction extends BaseAction {
                     //making changes in the .html file also
                     FileUtils.copyFile(ftlFile, htmlFiles[0]);
                     ftlContents = HKFileUtils.fileToString(ftlFile);
-                    ftlGenerated = Boolean.TRUE;
                     logger.info("ftl generated");
 
                     contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
                     //contentUploaded = true;
 
-                    FileUtils.deleteDirectory(contentFolder);
-                    FileUtils.deleteQuietly(contentZipFolder);
                     FileUtils.deleteQuietly(ftlFile);
                     if(contentUploaded){
                         logger.info("uploaded email content to s3.");
@@ -134,13 +139,21 @@ public class CreateMailTemplateAction extends BaseAction {
             return new ForwardResolution(CreateMailTemplateAction.class, "pre");
         } catch (IOException ioe) {
             logger.info("ftl generation failed: " + ioe);
+        }finally{
+            if(contentFolder != null || contentZipFolder != null){
+                try{
+                    FileUtils.deleteDirectory(contentFolder);
+                }catch (IOException ioe){
+                    logger.info("Error in deleting file" + ioe);
+                }
+                FileUtils.deleteQuietly(contentZipFolder);
+            }
         }
         addRedirectAlertMessage(new SimpleMessage("Error generating ftl"));
         return new ForwardResolution(CreateMailTemplateAction.class, "pre");
     }
 
     public Resolution saveMailTemplate(){
-        editTemplate = false;
         Mail priorMail = mailService.getMailById(mail.getId());
         mail.setAmazonFilePath(priorMail.getAmazonFilePath());
 
@@ -150,6 +163,7 @@ public class CreateMailTemplateAction extends BaseAction {
         String amazonHtmlPath = mail.getAmazonFilePath();
         String htmlKey = amazonHtmlPath.replaceAll("(.*\\.s3\\.amazonaws\\.com/)", "");
         File htmlFile = new File(adminUploadsPath + "/emailContentFiles/emailer.html");
+        editTemplate = false;
         try {
             FileUtils.writeStringToFile(htmlFile, mail.getContent());
             adminEmailCampaignService.uploadHtml(htmlFile, htmlKey);

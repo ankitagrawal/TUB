@@ -15,17 +15,18 @@
         <s:form beanclass="com.hk.web.action.admin.review.CreateMailTemplateAction" var="cmta" >
             <fieldset class="right_label">
                 <legend>Create Mail Template</legend>
+                <s:hidden name="editTemplate" value="${cmta.editTemplate}"/>
                 <c:if test="${cmta.editTemplate}">
                     <s:hidden name="mail.id"/>
                 </c:if>
                 <ul class="mail">
                     <li>
-                        <label>Mail Template Name</label>
+                        <label>Mail Template Name*</label>
                         <s:text name="mail.name" id="name" maxlength="45"/>
                         <s:submit name="searchMail" value="Search/Edit" id="btn" />
                     </li>
                     <li>
-                        <label>Subject</label>
+                        <label>Subject*</label>
                         <s:text name="mail.subject" id="subject" maxlength="200"/>
                     </li>
                     <li>
