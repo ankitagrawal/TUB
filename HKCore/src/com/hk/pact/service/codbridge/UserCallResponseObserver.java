@@ -8,4 +8,5 @@ package com.hk.pact.service.codbridge;
  * To change this template use File | Settings | File Templates.
  */
 public interface UserCallResponseObserver {
+    void subscribe();
 }

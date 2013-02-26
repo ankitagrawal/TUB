@@ -8,8 +8,10 @@ import com.hk.hkjunction.observers.OrderResponse;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
 
+import com.hk.hkjunction.producer.ProducerFactory;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +35,18 @@ public class UserCallResponseObserverImpl extends OrderObserver implements com.h
 
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
     private String healthkartRestUrl;
+    @Autowired
+    ProducerFactory producerFactory;
     //Assumption is that this class is singleton which is default behavior of Spring Beans
     static boolean isSubscribed = false;
 
     @PostConstruct
     void init() {
 
+    }
+
+    public void subscribe(){
+       producerFactory.register(this);
     }
 
     @Transactional
