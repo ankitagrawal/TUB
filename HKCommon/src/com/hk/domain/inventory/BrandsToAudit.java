@@ -38,7 +38,7 @@ public class BrandsToAudit implements java.io.Serializable {
     private Date auditDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 10)
+    @Column(name = "update_dt", nullable = false, length = 10)
     private Date updateDate;
 
     @Column(name = "audit_status", nullable = false)
