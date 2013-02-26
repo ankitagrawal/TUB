@@ -46,7 +46,7 @@ public class OrderEventPublisher {
 
     @PostConstruct
     void init(){
-        userCallResponseObserver.subscribe();
+        //userCallResponseObserver.subscribe();
     }
 
     private String getCartDetailsJson(Order order) {
