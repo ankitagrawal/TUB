@@ -35,7 +35,7 @@ public class SearchB2BUserAction extends BasePaginatedAction {
     @Autowired
     private KarmaProfileService karmaProfileService;
 
-  @Session(key = HealthkartConstants.Session.userSearchFilterKey)
+  @Session(key = HealthkartConstants.Session.b2bUserSearchFilterKey)
   private B2BUserFilterDto userFilterDto;
   private Page userPage;
   private List<User> userList;
