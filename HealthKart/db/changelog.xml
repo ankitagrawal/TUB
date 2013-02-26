@@ -11587,5 +11587,11 @@
            update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
        </sql>
     </changeSet>
+    <changeSet author="user (generated)" id="1361862105941-1">
+        <addColumn tableName="brands_to_audit">
+            <column defaultValue="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
-        
