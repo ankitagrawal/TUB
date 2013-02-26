@@ -33,7 +33,7 @@ import javax.annotation.PostConstruct;
  */
 
 @Service
-public class UserCallResponseObserver extends OrderObserver {
+public class UserCallResponseObserver {
     private static Logger logger = LoggerFactory.getLogger(UserCallResponseObserver.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.healthkartRestUrl + "']}")
