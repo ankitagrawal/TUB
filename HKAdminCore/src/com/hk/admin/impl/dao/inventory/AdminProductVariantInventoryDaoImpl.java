@@ -1,22 +1,12 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.sku.SkuGroup;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Repository;
-
-import com.hk.admin.dto.inventory.CreateInventoryFileDto;
-import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
@@ -26,9 +16,17 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -272,26 +270,26 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         if (productVariant != null) {
             productVariantId = productVariant.getId();
         }
-        String sql = "select sg as skuGroup, pv as productVariant,p as product ,sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
-                + "from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
-                + "join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
+        String sql = "select sg as skuGroup, pv as productVariant, p as product, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
+                + " from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
+                + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
 
         if (productId != null) {
-            sql = sql + "and p.id = :productId";
+            sql = sql + " and p.id = :productId ";
         }
 
         if (productVariantId != null) {
-            sql = sql + "and pv.id = :productVariantId";
+            sql = sql + " and pv.id = :productVariantId ";
         }
 
         if (brand != null) {
-            sql = sql + "and  p.brand = :brand";
+            sql = sql + " and  p.brand = :brand ";
         }
         if (warehouse != null) {
             sql = sql + " and s.warehouse = :warehouse ";
         }
 
-        sql = sql + " group by sg.id";
+        sql = sql + " group by sg.id ";
 
         Query query = getSession().createQuery(sql);
         if (product != null) {
