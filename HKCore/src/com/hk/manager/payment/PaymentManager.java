@@ -319,10 +319,28 @@ public class PaymentManager {
                     try {
                         boolean messagePublished = orderEventPublisher.publishCODEvent(order);
                         UserCodCall userCodCall = null;
+
+                        if (order.getUserCodCall() != null) {
+                            userCodCall = order.getUserCodCall();
+                        }
+
                         if (messagePublished) {
-                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_THIRD_PARTY;
+                                userCodCall.setRemark(thirdPartyPending.getName());
+                                userCodCall.setCallStatus(thirdPartyPending.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                            }
+
                         } else {
-                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
+                                userCodCall.setRemark(thirdPartyFailed.getName());
+                                userCodCall.setCallStatus(thirdPartyFailed.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                            }
                         }
                         if (userCodCall != null) {
                             orderService.saveUserCodCall(userCodCall);
