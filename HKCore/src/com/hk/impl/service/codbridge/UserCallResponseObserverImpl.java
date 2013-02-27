@@ -9,6 +9,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.UserCodCall;
 
 import com.hk.hkjunction.producer.ProducerFactory;
+import com.hk.pact.service.order.OrderService;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class UserCallResponseObserverImpl extends OrderObserver implements com.h
     private String healthkartRestUrl;
     @Autowired
     ProducerFactory producerFactory;
+    @Autowired
+    OrderService orderService;
     //Assumption is that this class is singleton which is default behavior of Spring Beans
     static boolean isSubscribed = false;
 
@@ -60,23 +63,27 @@ public class UserCallResponseObserverImpl extends OrderObserver implements com.h
 
             Long orderId = Long.parseLong(orderResponse.getOrderId());
             String sourceOfMessage = orderResponse.getSource() + "CodCall";
-            //order = orderService.find(orderId);
-
-            String urlStr = String.format(healthkartRestUrl + "user/order/source/%s/order/%d/action/%s", sourceOfMessage, orderId, orderResponse.getOrderStatus().name());
-            ClientRequest request = new ClientRequest(urlStr);
-            request.getQueryParameters().add("authToken", "US3jbSEN5EKVVzlabDl95loyWf_hloCZ");
-            request.setHttpMethod("POST");
-            ClientResponse<String> response = request.post();
-            int status = response.getStatus();
-            logger.info("Calling Post API " + urlStr);
-            if (status == 200) {
-                logger.info("Post API returned correct status");
+            order = orderService.find(orderId);
+            if (order != null) {
+                String urlStr = String.format(healthkartRestUrl + "user/order/source/%s/order/%d/action/%s", sourceOfMessage, orderId, orderResponse.getOrderStatus().name());
+                ClientRequest request = new ClientRequest(urlStr);
+                request.getQueryParameters().add("authToken", "US3jbSEN5EKVVzlabDl95loyWf_hloCZ");
+                request.setHttpMethod("POST");
+                ClientResponse<String> response = request.post();
+                int status = response.getStatus();
+                logger.info("Calling Post API " + urlStr);
+                if (status == 200) {
+                    logger.info("Post API returned correct status");
+                } else {
+                    logger.error("Unable to update order status.." + Integer.toString(status));
+                }
             } else {
-                logger.error("Unable to update order status.." + Integer.toString(status));
+                logger.error("Invalid Order Id Recieved From Third Party for COD confirmation.." + orderId);
             }
         } catch (Exception ex) {
             logger.error("Exception in Receiving Response " + ex.getMessage());
         }
+
     }
 }
 

@@ -18,6 +18,8 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.models.user.APIUserDetail;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.user.UserCodCall;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
@@ -191,8 +193,20 @@ public class UserOrderResource {
             }
 
             if (action.equalsIgnoreCase("CANCELLED")) {
+                if (order.getOrderStatus().getId().equals(EnumOrderStatus.Cancelled.getId())) {
+                    logger.debug("Order Already Cancelled" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                if (!(order.isCOD())) {
+                    logger.debug("Order is not COD" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
             } else if (action.equalsIgnoreCase("CONFIRMED")) {
+                if (order.getPayment() != null && ((EnumPaymentStatus.getEscalablePaymentStatusIds()).contains(order.getPayment().getPaymentStatus().getId()))) {
+                    logger.debug("Order Payment Already Confirmed" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
                 adminOrderService.confirmCodOrder(order, source);
             }
             userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
