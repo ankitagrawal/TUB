@@ -195,7 +195,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
-        Product oldProduct = getProductDAO().getProductById(product.getId());
+        Product oldProduct = getProductDAO().getOriginalProductById(product.getId());
         Product savedProduct = getProductDAO().save(product);
         productIndexService.indexProduct(savedProduct);
 
@@ -209,14 +209,16 @@ public class ProductServiceImpl implements ProductService {
           Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
           String oldJson = gson.toJson(oldProduct);
           eat.setOldJson(oldJson);
+          savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
           String newJson = gson.toJson(savedProduct);
           eat.setNewJson(newJson);
-          //if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+          if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
             eat.setUserEmail(userService.getLoggedInUser().getLogin());
-            eat.setCallingClass(Reflection.getCallerClass(2).getName());
+            eat.setCallingClass(Reflection.getCallerClass(2).getName());         
+            eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
             eat.setCreateDt(new Date());
             getProductDAO().save(eat);
-          //}
+          }
         } catch (Exception e) {
           logger.error("Error while entering audit trail for product->" + product.getId());
         }
