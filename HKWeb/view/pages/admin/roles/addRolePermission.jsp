@@ -9,18 +9,28 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="roleBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Roles and Permissions">
-    <s:layout-component name="heading">
-        Add Roles and Permissions
-    </s:layout-component>
+
     <s:layout-component name="contents">
+        <a href="#" id="buttonRole"> Add New Role</a> <br/>
         <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
-            <fieldset>
+            <fieldset id = "addRole">
                 <legend>Add New Role</legend>
-                <s:label>Role : </s:label>${roleBean.role}
+                <s:label>Role : </s:label> <s:text id = "role-name" name="role.name"/>
+                <s:submit name="saveRole" value="save"/>
             </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#addRole').hide();
+        $("#buttonRole").click(function(){
+            $('#buttonRole').hide();
+            $('#addRole').show(500);
+        });
+    });
+</script>
 
 
 

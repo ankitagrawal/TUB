@@ -13,18 +13,26 @@ import org.stripesstuff.plugin.security.Secure;
 @Secure( hasAnyRoles = {RoleConstants.ADMIN})
 @Component
 public class AddRolePermissionAction extends BaseAction{
-    @Autowired
+
     private Role role;
+    private static final String FORM = "/pages/admin/roles/addRolePermission.jsp";
 
     @Autowired
     private RoleDao roleDao;
-
     @Autowired
     private RoleService roleService;
 
     @DefaultHandler
     public Resolution pre(){
-        return new ForwardResolution("/pages/admin/roles/addRolePermission.jsp");
+        return new ForwardResolution(FORM);
+    }
+
+    public Resolution save(){
+        if(role.getName() != ""){
+            roleDao.save(role);
+            addRedirectAlertMessage(new SimpleMessage("Role Added Successfully"));
+        }
+        return new RedirectResolution(AddRolePermissionAction.class);
     }
 
 
