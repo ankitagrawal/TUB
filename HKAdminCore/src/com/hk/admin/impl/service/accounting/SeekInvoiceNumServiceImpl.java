@@ -23,8 +23,8 @@ public class SeekInvoiceNumServiceImpl implements SeekInvoiceNumService {
      * @return InvoiceNum that can be used - This method will increment the InvoiceNum which can be used for other
      *         invoices.
      */
-    public Long getInvoiceNum(String invoiceType, Warehouse warehouse) {
-        return getSeekInvoiceNumDao().getInvoiceNum(invoiceType, warehouse);
+    public String getInvoiceNum(String invoiceType, Warehouse warehouse) {
+        return invoiceType + getSeekInvoiceNumDao().getInvoiceNum(invoiceType, warehouse);
     }
 
     public SeekInvoiceNumDao getSeekInvoiceNumDao() {

@@ -11610,4 +11610,9 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1361952544855-1">
+        <addColumn tableName="shipping_order">
+            <column name="accounting_invoice_number" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>    
 </databaseChangeLog>
