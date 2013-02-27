@@ -46,6 +46,7 @@ public class ServiceQueueAction extends BasePaginatedAction {
     private String                     gatewayOrderId;
     private Date                       startDate;
     private Date                       endDate;
+    private Integer defaultPerPage = 30;
     Page                shippingOrderPage;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
@@ -97,7 +98,7 @@ public class ServiceQueueAction extends BasePaginatedAction {
     }
 
     public int getPerPageDefault() {
-        return 30;
+        return defaultPerPage;
     }
 
     public int getPageCount() {
@@ -189,5 +190,6 @@ public class ServiceQueueAction extends BasePaginatedAction {
     public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
         this.adminShippingOrderService = adminShippingOrderService;
     }
+
 
 }

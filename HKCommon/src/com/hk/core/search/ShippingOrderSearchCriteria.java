@@ -24,7 +24,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<Awb> awbList;
     private List<Courier> courierList;
     private Long warehouseId;
-    private boolean isServiceOrder = false;
+    private Boolean isServiceOrder = null;
     private Date activityStartDate;
     private Date activityEndDate;
     private String basketCategory;
@@ -59,7 +59,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setServiceOrder(boolean serviceOrder) {
+    public ShippingOrderSearchCriteria setServiceOrder(Boolean serviceOrder) {
         isServiceOrder = serviceOrder;
         return this;
     }
@@ -198,8 +198,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             warehouseCriteria = criteria.createCriteria("warehouse");
             warehouseCriteria.add(Restrictions.eq("id", warehouseId));
         }
-
-        criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        if (isServiceOrder != null) {
+            criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        }
 
         DetachedCriteria shippingOrderLifecycleCriteria = null;
         if (shippingOrderLifeCycleActivities != null && shippingOrderLifeCycleActivities.size() > 0) {

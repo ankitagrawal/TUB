@@ -233,7 +233,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 User adminUser = getUserService().getAdminUser();
+
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if(shippingOrder.isServiceOrder()){
+                        break;
+                    }
                     Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
                     // is after including placed order qty
 
