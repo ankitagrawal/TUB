@@ -18,6 +18,7 @@ import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.models.user.APIUserDetail;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.domain.user.UserCodCall;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
 import com.hk.manager.UserManager;
@@ -173,22 +174,36 @@ public class UserOrderResource {
         Response response = null;
         User loggedInUser = null;
         loggedInUser = userService.getAdminUser();
+        Order order = orderService.find(orderId);
+        UserCodCall userCodCall = null;
 
         String decryptKey = CryptoUtil.decrypt(key);
         if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         try {
-            Order order = orderService.find(orderId);
+            if (order.getUserCodCall() == null) {
+                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                userCodCall.setRemark(source);
+
+            } else {
+                userCodCall = order.getUserCodCall();
+            }
+
             if (action.equalsIgnoreCase("CANCELLED")) {
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
             } else if (action.equalsIgnoreCase("CONFIRMED")) {
                 adminOrderService.confirmCodOrder(order, source);
             }
+            userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            userCodCall.setRemark(action + " Request Successful");
+            orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
         } catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to change order status ", ex);
+            userCodCall.setRemark(action + " Request From Admin Failed..");
+            orderService.saveUserCodCall(userCodCall);
         }
         return response;
     }
