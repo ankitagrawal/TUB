@@ -130,6 +130,9 @@ public class CreateEditComboAction extends BaseAction {
         if (StringUtils.isBlank(combo.getBrand())) {
             combo.setBrand("Combo");
         }
+      if (combo.getOrderRanking() == null || combo.getOrderRanking().equals(0.0D)) {
+            combo.setOrderRanking(100000.0D);
+        }
         Double comboMrp = 0.0;
         Set<Product> comboProducts = new HashSet<Product>();
         for (ComboProductAndAllowedVariantsDto comboProductAndAllowedVariantsDto : comboProductAndAllowedVariantsDtoList) {

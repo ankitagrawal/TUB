@@ -155,17 +155,104 @@ public class PaymentFinder {
 
     }
 
+    public static List<Map<String, Object>> findTransactionListIcici(String startDate, String endDate, String merchantId) {
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+        List<Map<String, Object>> paymentResultMapList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
+
+        com.opus.epg.sfa.java.Merchant oMerchant 	= new com.opus.epg.sfa.java.Merchant();
+
+        try {
+            com.opus.epg.sfa.java.PostLib oPostLib	= new PostLib();
+            oMerchant.setMerchantTxnSearch(merchantId,startDate,endDate);
+            PGSearchResponse    oPgSearchResp=oPostLib.postTxnSearch(oMerchant);
+            ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
+            System.out.println("PGSearchResponse received from payment gateway:"+ oPgSearchResp.toString());
+            logger.error("PGSearchResponse received from payment gateway:"+ oPgSearchResp.toString());
+            int index = 0;
+            if (oPgRespArr != null) {
+                for (index = 0; index < oPgRespArr.size(); index++) {
+                    PGResponse oPgResp = (PGResponse) oPgRespArr.get(index);
+                    paymentResultMap.put("Response Code", oPgResp.getRespCode());
+                    paymentResultMap.put("Response Message", oPgResp.getRespMessage());
+                    paymentResultMap.put("Txn Id", oPgResp.getTxnId());
+                    paymentResultMap.put("Epg Txn Id", oPgResp.getEpgTxnId());
+                    paymentResultMap.put("AuthIdCode", oPgResp.getAuthIdCode());
+                    paymentResultMap.put("RRN", oPgResp.getRRN());
+                    paymentResultMap.put("TxnType", oPgResp.getTxnType());
+                    paymentResultMap.put("TxnDateTime", oPgResp.getTxnDateTime());
+                    paymentResultMap.put("Cv resp Code", oPgResp.getCVRespCode());
+                    logger.error("PGResponse object:" + oPgResp.toString());
+                    paymentResultMapList.add(paymentResultMap);
+                }
+            }
+            return paymentResultMapList;
+        } catch (Exception e) {
+                logger.debug("There was an exception while trying to search for payment details ", e);
+        }
+        return null;
+    }
+
+
+    public static List<Map<String, Object>> findTransactionListCitrus(String startDate, String endDate) {
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+        List<Map<String, Object>> paymentResultMapList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
+        com.citruspay.pg.util.CitruspayConstant.merchantKey = "26635c9f27d46c139c7feb3e2960ee1b1780ac28";
+        paymentSearchMap.put("merchantAccessKey", "6Z1PA7WZEVIRHMGKG1VG");
+        paymentSearchMap.put("txnStartDate", startDate);
+        paymentSearchMap.put("txnEndDate", endDate);
+        paymentSearchMap.put("bankName", "ABC BANK");
+
+        try {
+            com.citruspay.pg.model.TransactionSearchCollection transactionSearchCollection = com.citruspay.pg.model.TransactionSearch.all(paymentSearchMap);
+            System.out.println("Response Code: " + transactionSearchCollection.getRespCode());
+            System.out.println("Response Message : " + transactionSearchCollection.getRespMessage());
+            System.out.println("No of Transactions : " + transactionSearchCollection.getTransaction().size());
+            if (transactionSearchCollection.getTransaction() != null && !transactionSearchCollection.getTransaction().isEmpty()) {
+                for (int index = 0; index < transactionSearchCollection.getTransaction().size(); index++) {
+                    com.citruspay.pg.model.TransactionSearch transaction = (com.citruspay.pg.model.TransactionSearch) transactionSearchCollection.getTransaction().get(index);
+                    paymentResultMap.put("Response Code", transaction.getRespCode());
+                    paymentResultMap.put("Response Message", transaction.getRespMessage()== null ? "" : transaction.getRespMessage());
+                    paymentResultMap.put("Merchant Txn Id", transaction.getMerchantTxnId() == null ? "" : transaction.getMerchantTxnId());
+                    paymentResultMap.put("Txn Id", transaction.getTxnId() == null ? "" : transaction.getTxnId());
+                    paymentResultMap.put("Epg Txn Id", transaction.getPgTxnId() == null ? "" : transaction.getPgTxnId());
+                    paymentResultMap.put("AuthIdCode", transaction.getAuthIdCode() == null ? "" : transaction.getAuthIdCode());
+                    paymentResultMap.put("Issuer Ref. No.", transaction.getRRN() == null ? "" : transaction.getRRN());
+                    paymentResultMap.put("TxnType", transaction.getTxnType() == null ? "" : transaction.getTxnType());
+                    paymentResultMap.put("Amount", transaction.getAmount() == null ? "" : transaction.getAmount());
+                    paymentResultMap.put("Date", transaction.getTxnDateTime() == null ? "" : transaction.getTxnDateTime().substring(0, 10));
+                    paymentResultMapList.add(paymentResultMap);
+                }
+            } else{
+                System.out.println("Seems, an Empty collection was returned");
+            }
+            return paymentResultMapList;
+        } catch (CitruspayException e) {
+            logger.debug("There was an exception while trying to search for payment details for payment ", e);
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 
     public static void main(String[] args) {
 
 
-        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
+//        Map<String, Object> paymentResultMap = findCitrusPayment("1934755-56691");
 //        Map<String, Object> paymentResultMap = findIciciPayment("1936895-17020", "00007518");
 
-        for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
-            System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
-            logger.debug(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
+        List<Map<String, Object>> transactionList = findTransactionListIcici("20130101", "20130102", "00007518");
+//        List<Map<String, Object>> transactionList = findTransactionListCitrus("20130101", "20130102");
+
+        for (Map<String, Object> paymentResultMap : transactionList) {
+            for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
+                System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
+                logger.error(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
+            }
+
         }
+
 
     }
 }

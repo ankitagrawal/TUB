@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.payment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,12 @@ public class CheckPaymentAction extends BaseAction {
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
+    private String txnStartDate;
+    private String txnEndDate;
+    private String merchantId;
+
+
+    List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
 
     @DefaultHandler
     public Resolution show() {
@@ -90,6 +97,17 @@ public class CheckPaymentAction extends BaseAction {
             if (paymentResultMap.isEmpty()) {
                 paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
             }
+            transactionList.add(paymentResultMap);
+        }
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
+    @DontValidate
+    public Resolution searchTransactionByDate() {
+        if(merchantId != null){
+            transactionList = PaymentFinder.findTransactionListIcici(txnStartDate,txnEndDate,merchantId);
+        } else{
+            transactionList = PaymentFinder.findTransactionListCitrus(txnStartDate,txnEndDate);
         }
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
@@ -269,5 +287,37 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setPaymentResultMap(Map<String, Object> paymentResultMap) {
         this.paymentResultMap = paymentResultMap;
+    }
+
+    public List<Map<String, Object>> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Map<String, Object>> transactionList) {
+        this.transactionList = transactionList;
+    }
+
+    public String getTxnStartDate() {
+        return txnStartDate;
+    }
+
+    public void setTxnStartDate(String txnStartDate) {
+        this.txnStartDate = txnStartDate;
+    }
+
+    public String getTxnEndDate() {
+        return txnEndDate;
+    }
+
+    public void setTxnEndDate(String txnEndDate) {
+        this.txnEndDate = txnEndDate;
+    }
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
     }
 }

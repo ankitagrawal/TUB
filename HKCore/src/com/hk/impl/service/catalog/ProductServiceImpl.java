@@ -1,6 +1,10 @@
 package com.hk.impl.service.catalog;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.gson.JsonUtils;
+import com.akube.framework.util.BaseUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.image.EnumImageType;
@@ -20,6 +24,7 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.search.ProductIndexService;
+import com.hk.pact.service.UserService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
@@ -27,8 +32,12 @@ import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.*;
+
+import sun.reflect.Reflection;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -57,7 +66,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private SeoDao seoDao;
 
-    /*private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);*/
+    @Autowired
+    private UserService userService;
+
+    private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     public Product getProductById(String productId) {
         return getProductDAO().getProductById(productId);
@@ -183,9 +195,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
+        Product oldProduct = getProductDAO().getProductById(product.getId());
         Product savedProduct = getProductDAO().save(product);
         productIndexService.indexProduct(savedProduct);
-        return savedProduct;
+
+        // Audit Trail of Product
+        // TODO: Old and New JSON are same as of now. Need to do some fixes to avoid hibernate reattachment
+        // That's why commneting md5 check as they are same
+        try {
+          EntityAuditTrail eat = new EntityAuditTrail();
+          eat.setEntityId(product.getId());
+          //Gson gson = JsonUtils.getGsonDefault();
+          Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+          String oldJson = gson.toJson(oldProduct);
+          eat.setOldJson(oldJson);
+          String newJson = gson.toJson(savedProduct);
+          eat.setNewJson(newJson);
+          //if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+            eat.setUserEmail(userService.getLoggedInUser().getLogin());
+            eat.setCallingClass(Reflection.getCallerClass(2).getName());
+            eat.setCreateDt(new Date());
+            getProductDAO().save(eat);
+          //}
+        } catch (Exception e) {
+          logger.error("Error while entering audit trail for product->" + product.getId());
+        }
+
+      return savedProduct;
     }
 
     public Page getProductReviewsForCustomer(Product product, List<Long> reviewStatusList, int page, int perPage) {
