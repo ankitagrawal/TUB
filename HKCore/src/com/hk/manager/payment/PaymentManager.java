@@ -314,7 +314,8 @@ public class PaymentManager {
 			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
 			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
 				/* Make JMS Call For COD Confirmation Only Once*/
-				if (order.getUserCodCall() == null) {
+                   Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
+				if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
                     try {
                         boolean messagePublished = orderEventPublisher.publishCODEvent(order);
                         UserCodCall userCodCall = null;
