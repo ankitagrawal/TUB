@@ -488,10 +488,12 @@
                                                 </c:if>
                                             </c:when>
                                             <c:otherwise>
+                                                <c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">
                                                 (<s:link beanclass="com.hk.web.action.admin.payment.VerifyCodAction" class="confirmCodLink">
                                                 <s:param name="order" value="${order.id}"/>
                                                 Confirm COD
                                             </s:link>)
+                                                </c:if>
                                             </c:otherwise>
 
                                         </c:choose>
