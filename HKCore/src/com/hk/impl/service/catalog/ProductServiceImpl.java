@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private SeoDao seoDao;
 
-    @Autowired
+    //@Autowired
     private UserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
