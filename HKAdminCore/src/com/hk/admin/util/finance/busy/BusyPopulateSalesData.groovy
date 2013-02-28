@@ -213,7 +213,7 @@ public class BusyPopulateSalesData {
                    """) {
         invoiceItems ->
         
-      Long lineItemId = Pincode.getPincode;
+      Long lineItemId = invoiceItems.id;
       Long item_code = invoiceItems.sku_id;
       int qty = invoiceItems.qty;
       if(qty <= 0){

@@ -53,6 +53,9 @@ public class HkApiUser {
     @Column(name = "order_placement_enabled", nullable = false)
     private boolean orderPlacementEnabled;
 
+    @Column(name = "terms", length = 500)
+    private String  terms;
+
     public Long getId() {
         return id;
     }
@@ -131,5 +134,13 @@ public class HkApiUser {
 
     public void setOrderPlacementEnabled(boolean orderPlacementEnabled) {
         this.orderPlacementEnabled = orderPlacementEnabled;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms = terms;
     }
 }

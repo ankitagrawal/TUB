@@ -32,6 +32,7 @@ import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -342,6 +343,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierList;
     }
 
+    public List<Courier> getAllActiveCourier() {
+        return courierService.getAllActiveCourier();
+    }
+
     public List<ShippingOrderStatus> getSOStatusForReconcilation() {
         return EnumShippingOrderStatus.getStatusForReconcilationReport();
     }
@@ -488,4 +493,12 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
 	}
 
-}
+	public List<EnumCourierOperations> getAllCourierOperations() {
+		return EnumCourierOperations.getAllCourierOperations();
+	}
+
+	public List<EnumCycleCountStatus> getAllCycleCountStatus() {
+		return EnumCycleCountStatus.getAllList();
+	}
+	
+	}

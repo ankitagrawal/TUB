@@ -155,7 +155,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
 				Product hkProduct = gson.fromJson(br, Product.class);
 				product.setDescription(hkProduct.getDescription());
 				product.setOverview(hkProduct.getOverview());
-				productDao.save(product);
+				getProductService().save(product);
 
 			} catch (IOException e) {
 				logger.error(" exception syncing products" + product.getId(), e);

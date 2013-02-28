@@ -4,6 +4,7 @@ import com.hk.db.seed.courier.*;
 import com.hk.db.seed.inventory.*;
 import com.hk.db.seed.order.*;
 import com.hk.db.seed.sku.SkuItemStatusSeedData;
+import com.hk.domain.inventory.StockTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +145,8 @@ public class MasterDataService {
 	DispatchLotStatusSeedData dispatchLotStatusSeedData;
 	@Autowired
 	SkuItemStatusSeedData skuItemStatusSeedData;
+	@Autowired
+	CourierPickupStatusSeedData courierPickupStatusSeedData;
 	@Autowired
 	StockTransferStatusSeed stockTransferStatusSeed;
 
@@ -306,6 +309,9 @@ public class MasterDataService {
 
 		logger.debug("inserting Sku Item Status");
 		skuItemStatusSeedData.invokeInsert();
+
+		logger.debug("inserting courier pickup status");
+		courierPickupStatusSeedData.invokeInsert();
 
 		logger.debug("inserting Stock Transfer Status");
 		stockTransferStatusSeed.invokeInsert();

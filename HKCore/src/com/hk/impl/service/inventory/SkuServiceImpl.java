@@ -116,6 +116,16 @@ public class SkuServiceImpl implements SkuService {
 		return getSkuDao().getSkus(productVariant, warehouseService.getServiceableWarehouses());
 	}
 
+		/**
+	 * this will return a list of all sku's (instance of product variant at serviceable warehouses only)
+	 *
+	 * @param productVariant
+	 * @return
+	 */
+	public List<Sku> getSKUsForMarkingProductOOS(ProductVariant productVariant) {
+		return getSkuDao().getSkus(productVariant, warehouseService.getWarehousesToMarkOOS());
+	}
+
     /**
      * this will return a list of all sku's (instance of product variant at multiple warehouses) based on category.
      * 
