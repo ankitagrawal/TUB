@@ -48,9 +48,9 @@
     </div>
     <s:layout-render name="/includes/_footer.jsp"/>
 
-    <s:layout-component name="zopim">
+    <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
-    </s:layout-component>
+    </s:layout-component>--%>
 
   </div>
   </body>
