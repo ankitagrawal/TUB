@@ -506,9 +506,6 @@
     <jsp:include page="/includes/_analytics.jsp"/>
 </s:layout-component>
 
-<s:layout-component name="zopim">
-    <jsp:include page="/includes/_zopim.jsp"/>
-</s:layout-component>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>
