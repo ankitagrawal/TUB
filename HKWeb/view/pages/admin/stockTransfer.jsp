@@ -62,6 +62,21 @@
 				return confirm("Do You want to finish the Transfer Out Process?");
 			});
 
+			updateTotal('.checkedOutQty', '.totalCheckedOutQty', 1);
+			function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+				var total = 0;
+				$.each($(fromTotalClass), function (index, value) {
+					var eachRow = $(value);
+					var eachRowValue = eachRow.html();
+					total += parseFloat(eachRowValue);
+				});
+				if (toHtml == 1) {
+					$(toTotalClass).html(total);
+				} else {
+					$(toTotalClass).val(total.toFixed(2));
+				}
+			}
+
 		});
 	</script>
 
@@ -171,7 +186,7 @@
 					</td>
 					<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
 					</td>
-					<td> ${stockTransferLineItem.checkedoutQty}
+					<td class="checkedOutQty"> ${stockTransferLineItem.checkedoutQty}
 					</td>
 					<td>${checkedOutSkuGroup.costPrice}
 					</td>
@@ -192,6 +207,12 @@
 
 			</c:forEach>
 			</tbody>
+			<tfoot>
+			<tr>
+				<td colspan="3">Total</td>
+				<td class="totalCheckedOutQty"></td>
+			</tr>
+			</tfoot>
 		</table>
 	</c:if>
 

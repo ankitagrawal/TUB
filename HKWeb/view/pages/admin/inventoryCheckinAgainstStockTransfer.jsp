@@ -46,16 +46,13 @@
                     formName.submit();
                 });
 
-	           /* $('.lineItemRow').each(function() {
-		            var checkedOutQty = $('.lineItemRow').find('.checkedOutQty').html();
-		            alert(checkedOutQty);
-	            });*/
-	            updateTotal('.checkedOutQty', '.totalcheckedOutQty', 1);
+	            updateTotal('.checkedOutQty', '.totalCheckedOutQty', 1);
+	            updateTotal('.checkedInQty', '.totalCheckedInQty', 1);
 	            function updateTotal(fromTotalClass, toTotalClass, toHtml) {
 		            var total = 0;
 		            $.each($(fromTotalClass), function (index, value) {
 			            var eachRow = $(value);
-			            var eachRowValue = eachRow.val().trim();
+			            var eachRowValue = eachRow.html();
 			            total += parseFloat(eachRowValue);
 		            });
 		            if (toHtml == 1) {
@@ -64,7 +61,6 @@
 			            $(toTotalClass).val(total.toFixed(2));
 		            }
 	            }
-
 
             });
         </script>
@@ -76,8 +72,7 @@
             <h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
 	        <s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
 	        <div>
-		        <s:submit name="closeStockTransfer" value="Close Stock Transfer"
-		                  id="markAsStockTransferOutCompleted"/>
+		        <s:submit name="closeStockTransfer" value="Close Stock Transfer"/>
 		        <s:hidden name="stockTransfer" value="${ica.stockTransfer.id}" />
 	        </div>
 	        </s:form>
@@ -126,7 +121,7 @@
                             </td>
                             <td class="checkedOutQty"> ${stockTransferLineItem.checkedoutQty}
                             </td>
-                            <td> ${stockTransferLineItem.checkedinQty}
+                            <td class="checkedInQty"> ${stockTransferLineItem.checkedinQty == null ? 0 : stockTransferLineItem.checkedinQty}
                             </td>
                             <td>${checkedOutSkuGroup.costPrice}
                             </td>
@@ -144,8 +139,8 @@
 	                <tfoot>
 	                <tr>
 		                <td colspan="2">Total</td>
-		                <td id="totalCheckedOutQty"></td>
-		                <td id="totalCheckedInQty"></td>
+		                <td class="totalCheckedOutQty"></td>
+		                <td class="totalCheckedInQty"></td>
 	                </tr>
 	                </tfoot>
                 </table>
