@@ -49,10 +49,6 @@ public class ComboDaoImpl extends BaseDaoImpl implements ComboDao {
 		return getSession().createQuery("select c from Combo c where c.deleted != :deleted").setBoolean("deleted", true).list();
 	}
 
-	public List<LineItem> getComboLineItems(Order order, Combo combo) {
-		return getSession().createQuery("from LineItem li where li.order = :order and li.comboInstance.combo =:combo").setParameter("order", order).setParameter("combo", combo).list();
-	}
-
 	public List<Combo> getCombos(Product product) {
 		return (List<Combo>) findByNamedParams("select cp.combo from ComboProduct cp where cp.product = :product", new String[]{"product"}, new Object[]{product});
 	}
