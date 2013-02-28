@@ -1,25 +1,25 @@
-/**
-* Created with IntelliJ IDEA.
-* User: Shilpa
-* Date: 2/25/13
-* Time: 7:16 PM
-* To change this template use File | Settings | File Templates.
-*/
-
+<%@page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="roleBean"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Roles and Permissions">
 
-    <s:layout-component name="contents">
-        <a href="#" id="buttonRole"> Add New Role</a> <br/>
-        <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
-            <fieldset id = "addRole">
-                <legend>Add New Role</legend>
-                <s:label>Role : </s:label> <s:text id = "role-name" name="role.name"/>
-                <s:submit name="saveRole" value="save"/>
-            </fieldset>
-        </s:form>
+    <s:layout-component name="heading">
+        Add Roles And Permissions
     </s:layout-component>
+
+    <s:layout-component name="content">
+        <a href="#" id="buttonRole"> Add New Role </a> <br/>
+        <fieldset id = "addRole">
+            <div class = "new role">
+                <legend>Add New Role</legend>  <br/>
+                <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
+                    <label>Role: </label> <s:text id = "role-name" name="role.name"/>
+                    <s:submit name="saveRole" value="save"/>
+                </s:form>
+           </div>
+        </fieldset>
+    </s:layout-component>
+
 </s:layout-render>
 
 <script type="text/javascript">
@@ -30,6 +30,7 @@
             $('#addRole').show(500);
         });
     });
+    $('#role-name').focus();
 </script>
 
 
