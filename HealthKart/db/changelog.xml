@@ -11610,9 +11610,14 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361941166899-1">
+        <addColumn tableName="entity_audit_trail">
+            <column name="stack_trace" type="LONGTEXT"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Tarun (generated)" id="1361952544855-1">
         <addColumn tableName="shipping_order">
             <column name="accounting_invoice_number" type="VARCHAR(20)"/>
         </addColumn>
-    </changeSet>    
+    </changeSet>    	
 </databaseChangeLog>
