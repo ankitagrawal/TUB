@@ -11615,4 +11615,22 @@
             <column name="stack_trace" type="LONGTEXT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1362045657991-1">
+        <createTable tableName="stock_transfer_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1362045657991-2">
+        <addColumn tableName="stock_transfer">
+            <column name="stock_transfer_status_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1362045657991-3">
+        <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
