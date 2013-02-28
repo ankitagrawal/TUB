@@ -34,7 +34,7 @@
 							<s:option value="">--Select Type --</s:option>
 							<s:option value="1">Brand</s:option>
 							<s:option value="2">Product</s:option>
-							<s:option value="3">Product Varinat</s:option>
+							<s:option value="3">Product Variant</s:option>
 						</s:select>
 					</li>
 				</ul>
@@ -54,7 +54,7 @@
 					alert("Select Cycle Count Type!");
 					return false;
 				}
-
+            $('#subBtn').hide();
 			return true;
 		});
 	});

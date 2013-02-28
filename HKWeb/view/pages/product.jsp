@@ -159,6 +159,10 @@
 
 	</script>
 
+  <c:if test="${product.primaryCategory.name == 'eye'}">
+    <script src="http://resources.flixstock.com/flixstock.js"></script>
+  </c:if>
+
 </s:layout-component>
 
 <s:layout-component name="modal">
