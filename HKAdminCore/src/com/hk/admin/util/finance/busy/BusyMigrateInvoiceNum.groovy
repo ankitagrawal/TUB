@@ -37,9 +37,9 @@ public class BusyMigrateInvoiceNum {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyMigrateInvoiceNum.class);
 
 	public void updateSalesInvoiceNumber() {
-		sql.execute("""
+	/*	sql.execute("""
 								ALTER TABLE  `shipping_order` ADD  `accounting_invoice_number` VARCHAR( 20 ) NULL;
-		""")
+		""")*/
 		
 		busySql.eachRow("""
                     SELECT hk_ref_no AS so_id, vch_no AS invoice_num 
