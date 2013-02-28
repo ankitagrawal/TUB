@@ -203,7 +203,9 @@ public class ProductServiceImpl implements ProductService {
           eat.setEntityId(product.getId());
           //Gson gson = JsonUtils.getGsonDefault();
           Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-          String oldJson = gson.toJson(oldProduct);
+          String oldJson = "";
+          if(oldProduct != null)
+            oldJson = gson.toJson(oldProduct);
           eat.setOldJson(oldJson);
           savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
           String newJson = gson.toJson(savedProduct);
