@@ -37,10 +37,17 @@
             });
 
              $('.track').click(function(){
-               var x = prompt("Enter tracking no");
+               var x = prompt("Enter Tracking no");
                if(!x) return false;
 
                $('#trackingNo').attr('value',x);
+             });
+
+              $('.confNo').click(function(){
+               var x = prompt("Enter Pickup Confirmation no");
+               if(!x) return false;
+
+               $('#confirmationNo').attr('value',x);
              });
          });
 
@@ -62,14 +69,14 @@
                         <s:option value="${pickupStatus.id}">${pickupStatus.name}</s:option>
                     </c:forEach>
                 </s:select>
-
+                &nbsp;
                 <label>Reconciliation Status:</label>
                 <s:select name="reconciliationStatusId">
 			        <s:option value="" selected="true">-ALL-</s:option>
 			        <s:option value="${reconDone}">Yes</s:option>
 			        <s:option value="${reconPending}">No</s:option>
 	            </s:select>
-
+                &nbsp;
                 <label>Courier:</label>
                 <s:select name="courier" class="courierService">
                   <s:option value="">All Couriers</s:option>
@@ -80,8 +87,8 @@
 
                 <s:submit name="pre" value="Search"/>
                 <br/>
-                <s:submit name="searchUnscheduled" value="Search Unscheduled cases" />
-                <s:submit name="generateExcelReport" value="Download to Excel" />
+                <s:submit name="searchUnscheduled" value="Search Unscheduled cases" class="format-button"  />
+                <s:submit name="generateExcelForReversePickup" value="Download to Excel" class="format-button"/>
             </fieldset>
         </s:form>
 
@@ -93,6 +100,7 @@
             <tr>
                 <th>Reverse Order Id</th>
                 <th>SO Gateway Id</th>
+                <th>Reason for return</th>
                 <th>Courier</th>
                 <th>Pickup Conf No.</th>
                 <th>Tracking No.</th>
@@ -122,16 +130,27 @@
                             ${reverseOrderRequest.shippingOrder.gatewayOrderId}
                         </s:link>
                     </td>
+                    <td>${reverseOrderRequest.returnReason}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
-                    <td>${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}</td>
-                    <td>
-                         <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
+                    <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
                            <s:hidden name="orderRequestId" value="${reverseOrderRequest.id}"/>
                            <s:hidden name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                    <td>
+                           <c:choose>
+                            <c:when test="${reverseOrderRequest.courierPickupDetail != null && reverseOrderRequest.courierPickupDetail.pickupConfirmationNo == null}">
+                                <s:hidden name="confirmationNo" id="confirmationNo" />
+                                <s:submit value="Add" name="editConfirmationNo" class="confNo design" />
+                            </c:when>
+                            <c:otherwise>
+                                ${reverseOrderRequest.courierPickupDetail.pickupConfirmationNo}
+                            </c:otherwise>
+                           </c:choose>
+                    </td>
+                    <td>
                            <c:choose>
                             <c:when test="${reverseOrderRequest.courierPickupDetail != null && reverseOrderRequest.courierPickupDetail.trackingNo == null}">
                                 <s:hidden name="trackingNo" id="trackingNo" />
-                                <s:submit value="Add" name="editTrack" class="track" />                                  
+                                <s:submit value="Add" name="editTrack" class="track design" />
                             </c:when>
                             <c:otherwise>
                                 ${reverseOrderRequest.courierPickupDetail.trackingNo}
@@ -172,14 +191,7 @@
 			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                          </s:link>
-                        </c:if>
-
-                         <%--<c:if test="${reverseOrderRequest.courierPickupDetail.trackingNo == null}">--%>
-                         <%--<s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="editTrackingNo">Reschedule Pickup--%>
-			                    <%--<s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>--%>
-                                <%--<s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>--%>
-                         <%--</s:link>--%>
-                        <%--</c:if>--%>
+                        </c:if>                      
 
                     </td>
                     <td>
@@ -189,7 +201,7 @@
                                     <s:option value="${advice}">${advice}</s:option>
                                 </c:forEach>
                             </s:select>                                
-                            <s:submit name="adviceProposed" value="save" style="" />
+                            <s:submit name="adviceProposed" value="save" class="format-button"/>
                         </s:form>
                     </td>
                 </tr>
@@ -200,22 +212,26 @@
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${pickupManage}"/>
 
                 <style type="text/css">
-                    .zebra_vert input[type=submit] {
-                        padding: 2px;
-                        font-weight: normal;
-                        font-size: 1.1em;
+                    .format-button{
+                        padding: 2px !important;
+                        font-weight: normal !important;
+                        font-size: 1.1em !important;
                     }
-                    .zebra_vert input[type=submit].track {
-                        color: #889;
-                        border: 0;
-                        background: none;
-                        border-radius: 0;                        
+                    .design {
+                        color: #889 !important;
+                        border: 0 !important;
+                        background: none !important;
+                        border-radius: 0 !important;
+                        font-size: 11px !important;
+                        font-weight: normal !important;
+                        width: 30px !important;
                     }
-                    .zebra_vert tr input[type=submit].track:hover {
-                        color: #fff;
-                        border: 0;
-                        background: #3379bb;
+                    .design:hover {
+                        color: #fff !important;
+                        border: 0 !important;
+                        background: #3379bb !important;
                     }
+
                 </style>
     </s:layout-component>
 </s:layout-render>

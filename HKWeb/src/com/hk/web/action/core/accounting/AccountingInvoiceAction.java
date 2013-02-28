@@ -99,10 +99,11 @@ public class AccountingInvoiceAction extends BaseAction {
 
 	public Resolution reverseOrderInvoice(){
 		if (reverseOrder != null) {
-			String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
-			if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
-				b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
-			}
+			String invoiceType = InvoiceNumHelper.PREFIX_FOR_REVERSE_ORDER;
+			//String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
+//			if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
+//				b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+//			}
 
 			reverseOrderInvoiceDto = new ReverseOrderInvoiceDto(reverseOrder, b2bUserDetails);
 

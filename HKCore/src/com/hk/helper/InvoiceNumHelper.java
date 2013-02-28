@@ -5,6 +5,7 @@ public class InvoiceNumHelper {
     public static final String PREFIX_FOR_SERVICE_ORDER = "S";
     public static final String PREFIX_FOR_RETAIL_ORDER = "R";
     public static final String PREFIX_FOR_B2B_ORDER = "T";
+	public static final String PREFIX_FOR_REVERSE_ORDER = "RT";
 
     /**
      * @param isServiceOrder

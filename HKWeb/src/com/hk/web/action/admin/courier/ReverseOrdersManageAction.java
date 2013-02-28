@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.courier;
 
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.*;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 
@@ -14,13 +11,17 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.util.XslGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Date;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,12 +44,17 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	private String advice;
 	private Courier courier;
 	private String trackingNo;
+	private String confirmationNo;
+	private File xlsFile;
 
 	@Autowired
 	ReverseOrderService reverseOrderService;
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
+
+	@Autowired
+	XslGenerator xslGenerator;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -115,8 +121,41 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		}
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
-
 	
+	public Resolution editConfirmationNo(){
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			reverseOrder.getCourierPickupDetail().setPickupConfirmationNo(confirmationNo);
+			reverseOrderService.save(reverseOrder);
+		}
+		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+	}
+
+	public Resolution generateExcelForReversePickup(){
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, getPageNo(), getPerPage());
+		orderRequestsList = orderRequestsPage.getList();
+		xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
+		addRedirectAlertMessage(new SimpleMessage("Download complete"));
+        return new HTTPResponseResolution();
+	}
+
+	public class HTTPResponseResolution implements Resolution {
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			OutputStream out = null;
+			InputStream in = new BufferedInputStream(new FileInputStream(xlsFile));
+			res.setContentLength((int) xlsFile.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + xlsFile.getName() + "\";");
+			out = res.getOutputStream();
+
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+		}
+
+	}
 
 	public int getPerPageDefault() {
         return defaultPerPage;
@@ -201,5 +240,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	public void setTrackingNo(String trackingNo) {
 		this.trackingNo = trackingNo;
+	}
+
+	public String getConfirmationNo() {
+		return confirmationNo;
+	}
+
+	public void setConfirmationNo(String confirmationNo) {
+		this.confirmationNo = confirmationNo;
 	}
 }

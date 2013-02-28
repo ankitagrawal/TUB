@@ -37,12 +37,13 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 	@Autowired
 	ReverseOrderDao reverseOrderDao;
 
-	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder){
+	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder, String returnOrderReason){
 		User loggedOnUser = userService.getLoggedInUser();
 		ReverseOrder reverseOrder = new ReverseOrder();
 		reverseOrder.setShippingOrder(shippingOrder);
 		reverseOrder.setCourierPickupDetail(null);
 		reverseOrder.setAmount(0.0);
+		reverseOrder.setReturnReason(returnOrderReason);
 		reverseOrder.setUser(loggedOnUser);
 		reverseOrder.setReconciliationStatus(EnumReconciliationStatus.PENDING.asReconciliationStatus());
 		reverseOrder.setActionProposed(null);

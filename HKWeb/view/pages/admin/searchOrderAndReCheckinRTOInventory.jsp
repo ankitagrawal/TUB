@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" var="orderAdmin"/>
-<c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
+<c:set var="shippingOrderStatusReturn" value="<%=EnumShippingOrderStatus.getStatusForReCheckinReturnItems()%>"/>
 <%
   int lineItemGlobalCtr = 0;
 %>
@@ -30,7 +30,7 @@
   </s:layout-component>
 
 
-  <s:layout-component name="heading">Search Order and Checkin RTO Units</s:layout-component>
+  <s:layout-component name="heading">Search Order and Checkin Returned Units</s:layout-component>
 
   <s:layout-component name="content">
     <s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" method="get" autocomplete="false">
@@ -55,11 +55,11 @@
             <th>Order and payment</th>
             <th>User</th>
             <th>Address</th>
-            <th>Items and Qty | Re-checkin (RTO) | (Delivery Date)</th>
+            <th>Items and Qty | Re-checkin (Returned) | (Delivery Date)</th>
               <%--<th></th>--%>
           </tr>
           </thead>
-        <c:if test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO }">
+        <c:if test="${orderAdmin.shippingOrder.orderStatus ==  shippingOrderStatusReturn }">
 
           <tr>
             <td>
@@ -165,7 +165,7 @@
           </c:if>
         </table>
 
-        <div class="buttons"><s:submit name="checkinRTOUnits" value="Checkin RTO Units"/></div>
+        <div class="buttons"><s:submit name="checkinRTOUnits" value="Checkin Returned Units"/></div>
       </s:form>
 
     </c:if>

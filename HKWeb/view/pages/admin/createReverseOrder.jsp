@@ -1,6 +1,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,8 +18,8 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 if (${pickupNotValid}) {
-                    alert("Pickup can be done only within 14 days after delivery.This limit has been exceeded.");
-                    return false;
+                    alert("Customer Returns only allowed within 14 days after delivery. This limit has been exceeded.");
+                    window.location.href="<%=request.getContextPath()%>/admin";
                 }
 
                 $('#validateOnSubmit').click(function() {
@@ -84,7 +85,17 @@
                       </tr>
                   </c:forEach>
                   </tbody>
-              </table>           
+              </table>
+            <p>
+            <label>Reason to Return :</label>
+            <s:select name="returnOrderReason">
+                <s:option value="null">-Select Reason-</s:option>
+                <s:option value="Damaged Product">Damaged Product</s:option>
+                <s:option value="Expired Product">Expired Product</s:option>
+                <s:option value="Wrong Product">Wrong Product</s:option>
+                <s:option value="Not Interested">Not Interested</s:option>
+            </s:select>
+            <p></p>
         <s:param name="shippingOrder" value="${reverseOrderAction.shippingOrder.id}"/>
         <s:submit name="submit" value="Submit" id="validateOnSubmit"/>
         </s:form>

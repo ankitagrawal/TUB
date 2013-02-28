@@ -21,11 +21,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
@@ -37,15 +39,21 @@ import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.PincodeDefaultCourier;
 import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.OrderPaymentReconciliation;
+import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.reverseOrder.ReverseLineItem;
+import com.hk.domain.user.Address;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
+import net.sourceforge.stripes.action.SimpleMessage;
 
 @Component
 public class XslGenerator {
@@ -56,6 +64,11 @@ public class XslGenerator {
 	private AdminInventoryService adminInventoryService;
 
 	private Map<String, Integer>  headerMap          = new HashMap<String, Integer>();
+
+	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String                                         adminDownloads;
+    File                                           xlsFile;
+
 
 	public File generateCatalogExcel(List<Product> products, String xslFilePath) throws Exception {
 
@@ -704,70 +717,62 @@ public class XslGenerator {
 		return file;
 	}
 
-	/*
-	File generateExcelForReversePickup(){
-		StockReportDto stockReportDto = null;
-		xlsFile = new File(adminDownloads + "/reports/StockReport.xls");
+
+	public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		xlsFile = new File(adminDownloads + "/reports/ReversePickup -" + sdf.format(new Date()) + ".xls");
 		HkXlsWriter xlsWriter = new HkXlsWriter();
 
-		if (productIdListCommaSeparated != null) {
-            int xlsRow = 1;
-            xlsWriter.addHeader("PRODUCT VARIANT ID", "PRODUCT VARIANT ID");
-            xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
-            xlsWriter.addHeader("PRODUCT OPTIONS", "PRODUCT OPTIONS");
-            xlsWriter.addHeader("OPENING STOCK", "OPENING STOCK");
-            xlsWriter.addHeader("STOCK LEFT", "STOCK LEFT");
-            xlsWriter.addHeader("LINE ITEM CHECKOUT", "LINE ITEM CHECKOUT");
-            xlsWriter.addHeader("RECONCILE CHECKOUT", "RECONCILE CHECKOUT");
-            xlsWriter.addHeader("GRN CHECKIN", "GRN CHECKIN");
-            xlsWriter.addHeader("RECONCILE CHECKIN", "RECONCILE CHECKIN");
-            xlsWriter.addHeader("RTO CHECKIN", "RTO CHECKIN");
-            xlsWriter.addHeader("MOVE BACK CHECKIN", "MOVE BACK CHECKIN");
-            xlsWriter.addHeader("DAMAGED STOCK", "DAMAGED STOCK");
-            xlsWriter.addHeader("INVENTORY CHECKOUT RESHIPPING", "INVENTORY CHECKOUT RESHIPPING");
-            xlsWriter.addHeader("RV EXPIRED", "RV EXPIRED");
-            xlsWriter.addHeader("RV LOST/PILFERAGE", "RV LOST/PILFERAGE");
-            xlsWriter.addHeader("STOCK TRANSFER CHECKOUT", "STOCK TRANSFER CHECKOUT");
-            xlsWriter.addHeader("STOCK TRANSFER CHECKIN", "STOCK TRANSFER CHECKIN");
-            xlsWriter.addHeader("LOST DURING TRANSIT", "LOST DURING TRANSIT");
-            // EnumInvTxnType.TRANSIT_LOST
-            productIdArray = productIdListCommaSeparated.split(",");
-            for (String productId : productIdArray) {
-                stockReportDto = reportProductVariantService.getStockDetailsByProductVariant(productId, warehouse, startDate, endDate);
-                if (stockReportDto != null) {
-                    xlsWriter.addCell(xlsRow, stockReportDto.getProductVariant());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getProductName());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getProductOption());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getOpeningStock());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getStockLeft());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getLineItemCheckout());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getReconcileCheckout());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getGrnCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getReconcileCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getRtoCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getCancelCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getDamageCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getInventoryRepeatCheckout());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getRvExpired());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getRvLostPilferage());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckout());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getStockTransferCheckin());
-                    xlsWriter.addCell(xlsRow, stockReportDto.getTransitLost());
+		int xlsRow = 1;
+		xlsWriter.addHeader("Customer Name", "Customer Name");
+		xlsWriter.addHeader("Customer Contact", "Customer Contact");
+		xlsWriter.addHeader("Customer Address", "Customer Address");
+		xlsWriter.addHeader("Customer City", "Customer City");
+		xlsWriter.addHeader("Customer State", "Customer State");
+		xlsWriter.addHeader("Pincode", "Pincode");
+		xlsWriter.addHeader("Declared Value", "Declared Value");
+		xlsWriter.addHeader("Piece", "Piece");
+		xlsWriter.addHeader("Courier", "Courier");
+		xlsWriter.addHeader("Pickup Confirmation No", "Pickup Confirmation No");
+		xlsWriter.addHeader("AWB No", "AWB No");
+		xlsWriter.addHeader("Pickup DateTime", "Pickup DateTime");
+		xlsWriter.addHeader("Box Size", "Box Size");
+		xlsWriter.addHeader("Box Weight", "Box Weight");
 
-                }
-                xlsRow++;
-            }
-            xlsWriter.writeData(xlsFile, "Stock_Report");
-            addRedirectAlertMessage(new SimpleMessage("Download complete"));
+		if (reverseOrderList != null) {
+			for (ReverseOrder order : reverseOrderList) {
+				if (order != null) {
+					Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
+					xlsWriter.addCell(xlsRow, customerDetails.getName());
+					xlsWriter.addCell(xlsRow, customerDetails.getPhone());
+					xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + customerDetails.getLine2());
+					xlsWriter.addCell(xlsRow, customerDetails.getCity());
+					xlsWriter.addCell(xlsRow, customerDetails.getState());
+					xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());
+					xlsWriter.addCell(xlsRow, order.getAmount());
 
-            return new HTTPResponseResolution();
-        }
-        addRedirectAlertMessage(new SimpleMessage("Product Variant not entered"));
-        return new ForwardResolution("/pages/admin/inventorySoldReport.jsp");
-    }
+					Long qty = 0L;
+					for (ReverseLineItem lineItem : order.getReverseLineItems()) {
+                    	qty += lineItem.getReturnQty();
+                	}
+					xlsWriter.addCell(xlsRow, qty);
 
+					if (order.getCourierPickupDetail() != null) {
+						CourierPickupDetail courierPickupDetail = order.getCourierPickupDetail();
+						xlsWriter.addCell(xlsRow, courierPickupDetail.getCourier().getName());
+						xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupConfirmationNo());
+						xlsWriter.addCell(xlsRow, courierPickupDetail.getTrackingNo());
+						xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupDate().toString());
+					}
+					xlsRow++;
+				}
+			}
+		}
+		xlsWriter.writeData(xlsFile, "Reverse_Pickup");
+		return xlsFile;
 	}
-    */
+
 	private void setCellValue(Row row, int column, Double cellValue) {
 		if (cellValue != null) {
 			Cell cell = row.getCell(column);

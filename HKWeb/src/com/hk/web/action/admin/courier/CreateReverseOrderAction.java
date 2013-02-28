@@ -31,7 +31,8 @@ public class CreateReverseOrderAction extends BaseAction {
 	private Map<LineItem, Long> itemMap = new HashMap<LineItem, Long>();
 
 	private boolean exceededPolicyLimit;
-	private static final int maxPossibleDays = 14;
+	private static final int maxPossibleDays = 20;
+	private String returnOrderReason;
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
@@ -55,8 +56,7 @@ public class CreateReverseOrderAction extends BaseAction {
 				if (todayCal.get(Calendar.MONTH) == deliveryCal.get(Calendar.MONTH)) {
 					diff = presentDay - deliveryDay;
 				} else {
-					int interimDays = presentDay - 1;
-					int interimSum = interimDays + (31 - deliveryDay);
+					int interimSum = presentDay + (31 - deliveryDay);
 					diff = interimSum;
 				}
 
@@ -64,7 +64,6 @@ public class CreateReverseOrderAction extends BaseAction {
 					exceededPolicyLimit = false;
 				} else {
 					exceededPolicyLimit = true;
-
 				}
 				return new ForwardResolution("/pages/admin/createReverseOrder.jsp");
 			} else {
@@ -78,7 +77,7 @@ public class CreateReverseOrderAction extends BaseAction {
 	}
 
 	public Resolution submit(){		
-		ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder);
+		ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason);
 		reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
 	}
@@ -105,6 +104,14 @@ public class CreateReverseOrderAction extends BaseAction {
 
 	public void setItemMap(Map<LineItem, Long> itemMap) {
 		this.itemMap = itemMap;
+	}
+
+	public String getReturnOrderReason() {
+		return returnOrderReason;
+	}
+
+	public void setReturnOrderReason(String returnOrderReason) {
+		this.returnOrderReason = returnOrderReason;
 	}
 }
 

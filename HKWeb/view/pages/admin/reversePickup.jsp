@@ -14,33 +14,33 @@
         <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
 
         <script type="text/javascript">
-            $(document).ready(function() {
-                $('#selectedCourier').change(function() {
-                    var courierVal = $('#selectedCourier').val();
-                    var courier = parseInt(courierVal);
-                    var courierList = ${apiCallCouriers};
+            <%--$(document).ready(function() {--%>
+                <%--$('#selectedCourier').change(function() {--%>
+                    <%--var courierVal = $('#selectedCourier').val();--%>
+                    <%--var courier = parseInt(courierVal);--%>
+                    <%--var courierList = ${apiCallCouriers};--%>
 
-                    if (jQuery.inArray(courier, courierList) != '-1') {
-                        $('.manualConfNoField').hide();
-                        $('.manualTrckNoField').hide();
-                    } else {
-                        $('.manualConfNoField').show();
-                        $('.manualTrckNoField').show();
-                    }
-                });
+                    <%--if (jQuery.inArray(courier, courierList) != '-1') {--%>
+                        <%--$('.manualConfNoField').hide();--%>
+                        <%--$('.manualTrckNoField').hide();--%>
+                    <%--} else {--%>
+                        <%--$('.manualConfNoField').show();--%>
+                        <%--$('.manualTrckNoField').show();--%>
+                    <%--}--%>
+                <%--});--%>
 
-                $('#checkSubmit').click(function() {
-                    if ($('.manualTrckNoField').is(':visible') && $('.manualConfNoField').is(':visible')) {
-                        var trackingNo = $('#trackingNo').val();
-                        var confNo = $('#pickupConfNo').val();                        
-                        if ((trackingNo == null || trackingNo == "") && (confNo == null || confNo==  "")) {
-                            alert("Please enter a tracking/confirmation number, as given by courier");
-                            return false;
-                        }
-                    }
+                <%--$('#checkSubmit').click(function() {--%>
+                    <%--if ($('.manualTrckNoField').is(':visible') && $('.manualConfNoField').is(':visible')) {--%>
+                        <%--var trackingNo = $('#trackingNo').val();--%>
+                        <%--var confNo = $('#pickupConfNo').val();                        --%>
+                        <%--if ((trackingNo == null || trackingNo == "") && (confNo == null || confNo==  "")) {--%>
+                            <%--alert("Please enter a tracking/confirmation number, as given by courier");--%>
+                            <%--return false;--%>
+                        <%--}--%>
+                    <%--}--%>
 
-                });
-            });
+                <%--});--%>
+            <%--});--%>
     </script>
         
     </s:layout-component>
@@ -65,16 +65,7 @@
                    <label>SO Gateway Id :</label><s:text name="shippingOrderId" value="${shippingOrderId}" style="width:120px" />
 
                 </li>
-                <li>
-                    <div class="manualConfNoField">
-                        <label>Pickup Confirmation No : </label><s:text id="pickupConfNo" name="manualConfNo" />
-                    </div>
-                </li>
-                <li>
-                    <div class="manualTrckNoField">
-                        <label>Tracking No : </label><s:text id="trackingNo" name="manualTrackingNo" />
-                    </div>
-                </li>
+
                 <li>
                     <label>Pickup Time</label><s:text class="date_input startDate startDateCourier" style="width:150px"
                                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"

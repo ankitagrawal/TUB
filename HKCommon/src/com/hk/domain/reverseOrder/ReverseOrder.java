@@ -36,6 +36,9 @@ public class ReverseOrder implements java.io.Serializable {
 	@Column (name = "amount", precision = 11)
 	private Double amount;
 
+	@Column (name = "return_reason")
+	private String returnReason;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -88,6 +91,14 @@ public class ReverseOrder implements java.io.Serializable {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public String getReturnReason() {
+		return returnReason;
+	}
+
+	public void setReturnReason(String returnReason) {
+		this.returnReason = returnReason;
 	}
 
 	public User getUser() {

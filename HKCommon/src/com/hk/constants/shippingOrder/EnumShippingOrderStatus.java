@@ -24,8 +24,8 @@ public enum EnumShippingOrderStatus {
     RTO_Initiated(230L, "RTO Initiated"),
     SO_RTO(200L, "SO RTO"),
     SO_Lost(210L, "SO Lost"),
-    SO_Customer_Return_Replaced(250L, "SO Customer Return and Replaced"),
-    SO_Customer_Return_Refunded(260L, "SO Customer Return and Refunded"),
+    SO_Customer_Return_Replaced(250L, "SO Customer Return and Replace"),
+    SO_Customer_Return_Refunded(260L, "SO Customer Return and Refund"),
     SO_Cancelled(999L, "SO Cancelled");
 
 
@@ -177,5 +177,11 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_RTO,
                 EnumShippingOrderStatus.SO_Delivered);
     }
+
+	public static List<EnumShippingOrderStatus> getStatusForReCheckinReturnItems(){
+		return Arrays.asList(EnumShippingOrderStatus.SO_RTO,
+				EnumShippingOrderStatus.SO_Customer_Return_Replaced,
+				EnumShippingOrderStatus.SO_Customer_Return_Refunded);
+	}
 
 }
