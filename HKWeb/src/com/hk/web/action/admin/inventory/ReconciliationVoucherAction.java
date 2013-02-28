@@ -385,7 +385,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
            }
 
-           ProductVariant productVariant = rvLineItem.getProductVariant();
+           ProductVariant productVariant = rvLineItem.getSku().getProductVariant();
 //           SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
            Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
 
