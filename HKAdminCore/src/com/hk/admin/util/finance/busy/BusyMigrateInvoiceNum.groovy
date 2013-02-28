@@ -52,7 +52,7 @@ public class BusyMigrateInvoiceNum {
 
 			try {
 				sql.executeUpdate("""
-                    UPDATE shipping_order so SET accounting_invoice_num = ${invoiceNumber} WHERE id = ${shippingOrderId};
+                    UPDATE shipping_order so SET accounting_invoice_number = ${invoiceNumber} WHERE id = ${shippingOrderId};
      """);
 			}
 			catch (Exception e) {
