@@ -76,7 +76,7 @@
 					<td>${stockTransfer.stockTransferStatus.name}</td>
 					<td>
 						<c:if test="${stockTransfer.fromWarehouse.id == whAction.setWarehouse.id}">
-						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">Edit
+						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">View/Edit
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>&nbsp;
 						<c:if test="${stockTransfer.toWarehouse.id == whAction.setWarehouse.id && (stockTransfer.stockTransferStatus.id == stStatusCheckoutCompleted

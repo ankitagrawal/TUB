@@ -163,7 +163,9 @@
 		<table border="1">
 			<thead>
 			<tr>
-				<th>Barcode</th>
+				<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+					<th>Barcode</th>
+				</c:if>
 				<th>VariantID</th>
 				<th>Details</th>
 				<th>Checkedout Qty</th>
@@ -180,7 +182,9 @@
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-					<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+					<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+						<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+					</c:if>
 					<td>
 							${productVariant.id}
 					</td>
