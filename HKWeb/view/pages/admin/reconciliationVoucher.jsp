@@ -4,6 +4,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
@@ -109,6 +110,7 @@
 </s:layout-component>
 
 <s:layout-component name="content">
+    <c:set var="itemCheckedin" value="false"/>
     <div style="display: none;">
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails"></s:link>
@@ -160,6 +162,18 @@
                 <s:hidden name="rvLineItems[${ctr.index}]" value="${rvLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                     <td>
+                         <c:if test="${rvLineItem.reconciledQty > 0}">
+                           <c:set var="itemCheckedin" value="true"/>
+                             <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+                                <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                                        event="downloadBarcode"> Barcode
+                                    <s:param name="rvLineItem" value="${rvLineItem.id}"/>
+                                    <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}"/>--%>
+                                     <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                                </s:link>
+                             </shiro:hasPermission>
+
+                        </c:if>
                             ${productVariant.id}
                     </td>
                     <td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
@@ -211,6 +225,14 @@
             </div>
         </fieldset>
         </shiro:hasRole>
+
+        <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+         <c:if test="${itemCheckedin}">
+          <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+         </s:link>
+            </c:if>
+        </shiro:hasPermission>
 
     </s:form>
 
