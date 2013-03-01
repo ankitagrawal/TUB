@@ -2,6 +2,7 @@ package com.hk.web.action.admin.roles;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.service.RoleService;
@@ -17,7 +18,9 @@ import org.stripesstuff.plugin.security.Secure;
 public class AddRolePermissionAction extends BaseAction{
 
     private Role role;
+    private Permission permission;
     private String roleName;
+    private String permissionName;
     private static final String FORM = "/pages/admin/roles/addRolePermission.jsp";
     private static Logger logger = Logger.getLogger(AddRolePermissionAction.class);
 
@@ -28,15 +31,29 @@ public class AddRolePermissionAction extends BaseAction{
 
     @DefaultHandler
     public Resolution pre(){
-        return new RedirectResolution(FORM);
+        return new ForwardResolution(FORM);
     }
 
-    public Resolution save(){
+    public Resolution saveRoleAndPermission(){
         if(role!=null){
-            roleName = role.getName();
-            logger.debug("role Name : " + roleName);
-            getRoleDao().save(role);
-            addRedirectAlertMessage(new SimpleMessage("Role Added Successfully"));
+            if(getRoleService().listAllRoles().contains(role)){
+                addRedirectAlertMessage(new SimpleMessage("This role already exists"));
+            }else{
+                roleName = role.getName();
+                logger.debug("role Name : " + roleName);
+                getRoleDao().save(role);
+                addRedirectAlertMessage(new SimpleMessage("Role Added Successfully"));
+            }
+        }
+        if(permission != null){
+            if(!getRoleService().listAllPermissions().contains(permission)){
+                permissionName = permission.getName();
+                logger.debug("Permission Name : " + roleName);
+                getRoleDao().save(permission);
+                addRedirectAlertMessage(new SimpleMessage("Permission Added Successfully"));
+            }else{
+                addRedirectAlertMessage(new SimpleMessage("This permission already exists"));
+            }
         }
         return new RedirectResolution(AddRolePermissionAction.class);
     }
@@ -57,12 +74,12 @@ public class AddRolePermissionAction extends BaseAction{
         this.role = role1;
     }
 
-    public String getName(){
-        return roleName;
+    public Permission getPermission(){
+        return permission;
     }
 
-    public void setName(String name){
-        this.roleName = name;
+    public void setPermission(Permission permission1){
+        this.permission = permission1;
     }
 
     public RoleService getRoleService(){

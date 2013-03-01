@@ -8,15 +8,26 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-        <a href="#" id="buttonRole"> Add New Role </a> <br/>
+        <a href="#" id="buttonRole"> Add New Role </a> <br/><br/>
         <fieldset id = "addRole">
             <div class = "new role">
                 <legend>Add New Role</legend>  <br/>
                 <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
                     <label>Role: </label> <s:text id = "role-name" name="role.name"/>
-                    <s:submit name="saveRole" value="save"/>
+                    <s:submit name="saveRoleAndPermission" value="save"/>
                 </s:form>
-           </div>
+            </div>
+        </fieldset>
+        <br/>
+        <a href="#" id="buttonPermission"> Add New Permission </a> <br/>
+        <fieldset id = "addPermission">
+            <div class = "new permission">
+                <legend>Add New Permission</legend>  <br/>
+                <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
+                    <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
+                    <s:submit name="saveRoleAndPermission" value="save"/>
+                </s:form>
+            </div>
         </fieldset>
     </s:layout-component>
 
@@ -25,12 +36,18 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('#addRole').hide();
+        $('#addPermission').hide();
         $("#buttonRole").click(function(){
             $('#buttonRole').hide();
             $('#addRole').show(500);
         });
+        $("#buttonPermission").click(function(){
+            $('#buttonPermission').hide();
+            $('#addPermission').show(500);
+        });
     });
     $('#role-name').focus();
+    $('#permission-name').focus();
 </script>
 
 

@@ -4,6 +4,8 @@ import com.hk.constants.core.EnumRole;
 import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
 
+import java.util.List;
+
 public interface RoleService {
 
     public Role getRoleByName(EnumRole enumRole);
@@ -14,6 +16,10 @@ public interface RoleService {
 
     public List<Role> listAllBasicRoles();*/
 
-    public Permission save(Permission permission);
+    /*public Permission save(Permission permission);*/
+
+    public List<Role> listAllRoles();
+
+    public List<Permission> listAllPermissions();
 
 }

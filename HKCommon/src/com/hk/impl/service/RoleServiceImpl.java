@@ -8,6 +8,8 @@ import com.hk.pact.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -40,8 +42,15 @@ public class RoleServiceImpl implements RoleService {
         this.roleDao = roleDao;
     }
 
-    public Permission save(Permission permission){
-       return (Permission)roleDao.save(permission);
+    /*public Permission save(Permission permission){
+       return (Permission)(getRoleDao().save(permission));
+    }
+*/
+    public List<Role> listAllRoles(){
+        return getRoleDao().getAll(Role.class);
     }
 
+    public List<Permission> listAllPermissions(){
+        return getRoleDao().getAll(Permission.class);
+    }
 }
