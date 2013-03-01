@@ -33,7 +33,7 @@ public class BrandsToAudit implements java.io.Serializable {
     @Column(name = "brand", nullable = false, length = 45)
     private String brand;
 
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal (TemporalType.DATE)
     @Column(name = "audit_date", nullable = false, length = 10)
     private Date auditDate;
 

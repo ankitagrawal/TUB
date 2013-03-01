@@ -20,4 +20,6 @@ public interface BrandsToAuditDao extends BaseDao {
     public boolean isBrandAudited(String brand);
 
     public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus,Warehouse warehouse);
+
+    public BrandsToAudit save(BrandsToAudit brandsToAudit);
 }
