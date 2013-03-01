@@ -11295,11 +11295,11 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-     <!--<changeSet author="Shrey (generated)" id="29-01-2013-01">-->
-        <!--<createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">-->
-            <!--<column name="shipping_order_id"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
+     <changeSet author="Shrey (generated)" id="29-01-2013-01">
+        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
+            <column name="shipping_order_id"/>
+        </createIndex>
+    </changeSet>
 <!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
@@ -11553,20 +11553,66 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1359711888969-1">
-        <addColumn tableName="rv_line_item">
-            <column name="sku_group_id" type="INT"/>
+    <changeSet author="Seema (generated)" id="1360944809663-1">
+        <createTable tableName="user_cod_call">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="call_status" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remark" type="VARCHAR(70)"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1360944809663-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_cod_call"  constraintName="fk_user_cod_call_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1361217619752-1">
+           <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-2">
+       <sql>
+           update product set order_ranking=1.0 where order_ranking=0.0 and deleted=0;
+       </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-3">
+       <sql>
+           update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
+       </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361868792355-1">
+        <createTable tableName="entity_audit_trail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="entity_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_json" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_json" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="admin@healthkart.com" name="user_email" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calling_class" type="VARCHAR(200)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361941166899-1">
+        <addColumn tableName="entity_audit_trail">
+            <column name="stack_trace" type="LONGTEXT"/>
         </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-1">
-        <addColumn tableName="cycle_count_item">
-            <column name="sku_item_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-3">
-        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

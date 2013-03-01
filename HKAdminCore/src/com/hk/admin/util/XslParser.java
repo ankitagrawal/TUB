@@ -229,7 +229,7 @@ public class XslParser {
                     product.setId(getCellValue(XslConstants.PRODUCT_ID, rowMap, headerMap));
                     product.setName(getCellValue(XslConstants.PRODUCT_NAME, rowMap, headerMap));
                     Double sortingOrder = getDouble(getCellValue(XslConstants.SORTING, rowMap, headerMap));
-                    if (sortingOrder == null) {
+                    if (sortingOrder == null || sortingOrder.equals(0D)) {
                         sortingOrder = 100000.0;
                     }
                     product.setOrderRanking(sortingOrder);

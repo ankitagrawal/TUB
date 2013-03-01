@@ -56,9 +56,9 @@
    
     <s:layout-render name="/layouts/embed/remarketing.jsp" labels="${topCategory}"/>
 
-    <s:layout-component name="zopim">
+    <%--<s:layout-component name="zopim">
       <jsp:include page="/includes/_zopim.jsp"/>
-    </s:layout-component>
+    </s:layout-component>--%>
   </div>
 
   </body>

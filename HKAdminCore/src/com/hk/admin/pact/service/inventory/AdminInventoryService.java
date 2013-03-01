@@ -4,10 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
-import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.StockTransfer;
+import com.hk.domain.inventory.StockTransferLineItem;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.order.ShippingOrder;
@@ -74,9 +79,9 @@ public interface AdminInventoryService {
 
 	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
 
-    public  List<SkuItem> getCheckedinskuItemAgainstGrn(GrnLineItem grnLineItem) ;
+    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+    
+   public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
 
-   public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,Long transferQty) ;
-
-    public Map<Long, String> skuItemDataMap (  List<SkuItem> checkedInSkuItems);
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 }

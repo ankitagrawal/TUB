@@ -1,14 +1,5 @@
 package com.hk.admin.impl.dao.inventory;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
@@ -19,7 +10,14 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
-import com.hk.constants.inventory.EnumInvTxnType;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements ReconciliationVoucherDao {
@@ -58,26 +56,18 @@ public class ReconciliationVoucherDaoImpl extends BaseDaoImpl implements Reconci
     }
 
 
-
-    public RvLineItem getRvLineItems (ReconciliationVoucher reconciliationVoucher , Sku sku, SkuGroup skuGroup, ReconciliationType reconciliationType){
-         DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
+    public RvLineItem getRvLineItems(ReconciliationVoucher reconciliationVoucher, Sku sku, SkuGroup skuGroup, ReconciliationType reconciliationType) {
+        DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
         rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher", reconciliationVoucher));
         rvLineItemCriteria.add(Restrictions.eq("sku", sku));
-        rvLineItemCriteria.add(Restrictions.eq("skuGroup" , skuGroup));
+        rvLineItemCriteria.add(Restrictions.eq("skuGroup", skuGroup));
         rvLineItemCriteria.add(Restrictions.eq("reconciliationType", reconciliationType));
-        List<RvLineItem> rvLineItemList = (List<RvLineItem> )findByCriteria(rvLineItemCriteria);
+        List<RvLineItem> rvLineItemList = (List<RvLineItem>) findByCriteria(rvLineItemCriteria);
         if (rvLineItemList != null && rvLineItemList.size() > 0)
             return rvLineItemList.get(0);
         else
             return null;
     }
 
-    public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher){
-      DetachedCriteria rvLineItemCriteria = DetachedCriteria.forClass(RvLineItem.class);
-        rvLineItemCriteria.add(Restrictions.eq("reconciliationVoucher", reconciliationVoucher));
-         List<RvLineItem> rvLineItemList = (List<RvLineItem> )findByCriteria(rvLineItemCriteria);
-        return   rvLineItemList;
 
-    }
-    
 }
