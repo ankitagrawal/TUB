@@ -19,6 +19,8 @@ public interface ProductDao extends BaseDao {
 
     public Product getProductById(String productId);
 
+    public Product getOriginalProductById(String productId);
+
     @Transactional
     public Product save(Product product);
 
