@@ -552,7 +552,7 @@ public class InventoryCheckinAction extends BaseAction {
 //   getMap
         ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
         SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemDataMap(checkedInSkuItems);
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
 
         String barcodeFilePath = null;
         Warehouse userWarehouse = null;
@@ -592,7 +592,7 @@ public class InventoryCheckinAction extends BaseAction {
             List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                 SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-                Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemDataMap(checkedInSkuItems);
+                Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
                 skuItemDataMap.putAll(skuItemDataMaptemp);
                 Warehouse userWarehouse = null;
                 if (getUserService().getWarehouseForLoggedInUser() != null) {

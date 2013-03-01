@@ -27,7 +27,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void removeInventory(SkuItem skuItem);
 
-    public Long getCheckedInPVIAgainstRTO(LineItem lineItem);                                                    
+    public Long getCheckedInPVIAgainstRTO(LineItem lineItem);
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem);
 
@@ -40,16 +40,18 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 */
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
-    
-    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;
-    
+
+    public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse);
+
+    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
+
     public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem);
 
-    public void updateProductVariantsConfig (String id, Long variantconfigId);
+    public void updateProductVariantsConfig(String id, Long variantconfigId);
 
-     public List<VariantConfig> getAllVariantConfig();
+    public List<VariantConfig> getAllVariantConfig();
 
-    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, Long transferQty);
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 
