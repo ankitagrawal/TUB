@@ -68,9 +68,26 @@
         <s:form id="ccform" beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
             <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
             <c:set value="<%= EnumCycleCountStatus.Approved.getId()%>" var="approved"/>
+             <c:set var="skuItemInventory"  value="1" />
             <c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
                 <s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
                 <tr>
+
+                    <c:if test="${cCItem.skuItem != null && cCItem.skuGroup == null }">
+                        <td>${cCItem.skuItem.skuGroup.sku.productVariant.id}</td>
+                        <td>${cCItem.skuGroup.sku.productVariant.product.name}</td>
+                        <td>${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated}</td>
+                        <td>${cCItem.skuGroup.batchNumber}</td>
+                        <td>${cCItem.skuItem.barcode}</td>
+                         <td> ${cCItem.skuGroup.mrp}</td>
+                        <td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
+                        <td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
+                        <td>${cCItem.scannedQty} </td>
+                        <td>${skuItemInventory}</td>
+                        <td>${cCItem.scannedQty - skuItemInventory }</td>
+                    </c:if>
+
+                     <c:if test="${cCItem.skuItem == null && cCItem.skuGroup != null }">
                     <td>${cCItem.skuGroup.sku.productVariant.id}</td>
                     <td>${cCItem.skuGroup.sku.productVariant.product.name}</td>
                     <td>${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated}</td>
@@ -106,7 +123,7 @@
                             <td><label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label></td>
                         </c:otherwise>
                     </c:choose>
-
+               </c:if>
                 </tr>
 
             </c:forEach>

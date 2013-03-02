@@ -120,7 +120,8 @@
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
 					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
-				</div>  <br><br>
+				</div>  <br>
+              <div style ="float:right;width:900px;height:800px;overflow-y:scroll;">
 				<table style="float: right;margin-top:0px">
 					<thead>
 					<tr>
@@ -140,10 +141,28 @@
 					</thead>
 
                     <c:set var="scannedsum" value="0"/>
+                    <c:set var="skuItemInventory"  value="1" />
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
 							<tr class="ccItemRow">
+                                <c:if test="${cCItem.skuItem != null && cCItem.skuGroup == null }">
+
+                                 <td> ${cCItem.skuItem.skuGroup.sku.productVariant.id}</td>          
+
+                                <td> ${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated} </td>
+                                <td> ${cCItem.skuItem.skuGroup.sku.productVariant.product.name} </td>
+								<td> ${cCItem.skuItem.barcode} </td>
+                                <td>${cCItem.skuGroup.batchNumber}</td>    
+								<td> ${cCItem.skuItem.skuGroup.mrp}</td>
+								<td><fmt:formatDate value="${cCItem.skuItem.skuGroup.mfgDate}" type="date"/></td>
+								<td><fmt:formatDate value="${cCItem.skuItem.skuGroup.expiryDate}" type="date"/></td>
+                                <td> <label class="scannedQty"> ${cCItem.scannedQty} </label></td>
+                                <td><label class="systemQty"> ${skuItemInventory} </label></td>
+                                <td> <label class="varianceQty">${cCItem.scannedQty - skuItemInventory } </label></td>
+
+                               </c:if>
+                                <c:if test="${cCItem.skuGroup != null && cCItem.skuItem == null}">
 								<td> ${cCItem.skuGroup.sku.productVariant.id}
 									<s:hidden name="cycleCountItems[${ctr.index}].skuGroup"
 									          value="${cCItem.skuGroup.id}"/>
@@ -179,7 +198,7 @@
                                 <td>
                                     <label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label>
                                 </td>
-                                
+                              </c:if>  
 							</tr>
 
 						</c:forEach>
@@ -200,6 +219,7 @@
 							</div>
 
 				</table>
+            </div>  
 
 				<div style="margin-top: 60px;margin-bottom: 40px;">
                     <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">

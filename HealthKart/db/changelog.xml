@@ -11615,4 +11615,20 @@
             <column name="stack_trace" type="LONGTEXT"/>
         </addColumn>
     </changeSet>
+     <changeSet author="Ankit (generated)" id="1359711888969-1">
+        <addColumn tableName="rv_line_item">
+            <column name="sku_group_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-1">
+        <addColumn tableName="cycle_count_item">
+            <column name="sku_item_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
+    </changeSet>
+    <changeSet author="Ankit (generated)" id="1360921695034-3">
+        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

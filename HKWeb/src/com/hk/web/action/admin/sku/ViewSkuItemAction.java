@@ -23,29 +23,26 @@ import java.util.Set;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class ViewSkuItemAction  extends BaseAction {
+public class ViewSkuItemAction extends BaseAction {
 
     @Autowired
     private AdminInventoryService adminInventoryService;
     private Long entityId;
     private RvLineItem rvLineItem;
     private StockTransferLineItem stockTransferLineItem;
-                                                            
+    List<SkuItem> skuItemList = new ArrayList<SkuItem>(0);
 
+    public Resolution pre() {
 
-     List<SkuItem> skuItemList = new ArrayList<SkuItem>(0);
+        if (entityId.equals(EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, -1L);
+        } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())) {
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, 1L);
+        } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())) {
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, -1L);
+        }
 
-    public Resolution  pre(){
-
-        if (entityId.equals (EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
-           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem,null,null, -1L);
-        } else if(entityId.equals( EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())){
-            skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(null,stockTransferLineItem,null,1L);
-        } else if (entityId.equals (EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())){
-           skuItemList =  adminInventoryService.getCheckedInOrOutSkuItems(null,stockTransferLineItem,null,-1L);
-        }     
-
-       return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
+        return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
     }
 
     public List<SkuItem> getSkuItemList() {

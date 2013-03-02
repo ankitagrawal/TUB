@@ -542,16 +542,14 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
-        grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
-//        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
         }
-//   getMap
-        ProductVariant productVariant = checkedInSkuItems.get(0).getSkuGroup().getSku().getProductVariant();
-        SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+
+        ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+//        SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
         Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
 
         String barcodeFilePath = null;
@@ -577,23 +575,21 @@ public class InventoryCheckinAction extends BaseAction {
         }
         addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
         return new HTTPResponseResolution();
-//        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+
     }
 
 
     public Resolution downloadAllBarcode() {
         String barcodeFilePath = null;
         Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
-        List<GrnLineItem> grnLineItems = getGrnLineItemDao().getGrnLineItemList(grn);
-//        Set <Map<Long, String>> downloadMapSet = new HashSet<Map<Long, String>>();
+        List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {
-//            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedinskuItemAgainstGrn(grnLineItem);
             List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
-                SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
-                Map<Long, String> skuItemDataMaptemp = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
-                skuItemDataMap.putAll(skuItemDataMaptemp);
+//                SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+                Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
+                skuItemDataMap.putAll(skuItemBarcodeMap);
                 Warehouse userWarehouse = null;
                 if (getUserService().getWarehouseForLoggedInUser() != null) {
                     userWarehouse = userService.getWarehouseForLoggedInUser();
