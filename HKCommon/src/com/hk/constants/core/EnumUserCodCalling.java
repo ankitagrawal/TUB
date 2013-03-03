@@ -15,7 +15,7 @@ public enum EnumUserCodCalling {
 
 	PENDING_WITH_THIRD_PARTY(10, "Pending With Third Party"),
     THIRD_PARTY_FAILED(20,"Third Party Failed"),
-	CONFIRMED(30, "Payment Sucessful"),
+	CONFIRMED(30, "Payment Successful"),
 	CANCELLED(40,"Cancelled"),
     PAYMENT_FAILED(50,"Payment Failed");
 

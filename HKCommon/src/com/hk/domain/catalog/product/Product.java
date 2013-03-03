@@ -133,7 +133,6 @@ public class Product  implements java.io.Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductVariant> productVariants  = new ArrayList<ProductVariant>(0);
 
-    @Expose
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "category_has_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "category_name", nullable = false, updatable = false) })
@@ -150,7 +149,6 @@ public class Product  implements java.io.Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductImage>   productImages    = new ArrayList<ProductImage>();
 
-    @Expose    
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_category", nullable = false)
@@ -167,7 +165,7 @@ public class Product  implements java.io.Serializable {
     @Column(name = "ground_shipping")
     private boolean              groundShipping;
 
-	@Column(name = "cod_allowed", nullable = false, scale = 1)
+	  @Column(name = "cod_allowed", nullable = false, scale = 1)
     private Boolean              codAllowed = false;
 
     @Column(name = "is_subscribable", nullable = true)
@@ -176,6 +174,7 @@ public class Product  implements java.io.Serializable {
     @Column(name = "is_installable")
     private Boolean   installable ;
 
+    @Expose
     @Transient
     private String               categoriesPipeSeparated;
 

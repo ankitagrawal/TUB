@@ -36,6 +36,9 @@ public class EntityAuditTrail implements java.io.Serializable {
   @Column(name = "calling_class")
   private String callingClass;
 
+  @Column(name = "stack_trace")
+  private String stackTrace;
+
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_dt", nullable = false, length = 19)
@@ -87,6 +90,14 @@ public class EntityAuditTrail implements java.io.Serializable {
 
   public void setCallingClass(String callingClass) {
     this.callingClass = callingClass;
+  }
+
+  public String getStackTrace() {
+    return stackTrace;
+  }
+
+  public void setStackTrace(String stackTrace) {
+    this.stackTrace = stackTrace;
   }
 
   public Date getCreateDt() {

@@ -11610,4 +11610,9 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361941166899-1">
+        <addColumn tableName="entity_audit_trail">
+            <column name="stack_trace" type="LONGTEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
