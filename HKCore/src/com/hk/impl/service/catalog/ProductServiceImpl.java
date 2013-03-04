@@ -191,7 +191,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
-        Product oldProduct = getProductDAO().getOriginalProductById(product.getId());
+        //Product oldProduct = getProductDAO().getOriginalProductById(product.getId());
         Product savedProduct = getProductDAO().save(product);
         productIndexService.indexProduct(savedProduct);
 

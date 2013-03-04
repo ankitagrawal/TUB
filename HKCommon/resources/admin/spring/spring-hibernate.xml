@@ -27,7 +27,30 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-
+		<property name="eventListeners">
+			<map>
+				<entry key="post-insert">
+					<bean
+						class="com.hk.listener.EntityAuditEventListener">
+					</bean>
+				</entry>
+				<entry key="merge">
+					<bean
+						class="com.hk.listener.HKMergeEventListener">
+					</bean>
+				</entry>
+				<entry key="post-update">
+					<bean
+						class="com.hk.listener.EntityAuditEventListener">
+					</bean>
+				</entry>
+				<entry key="post-delete">
+					<bean
+						class="com.hk.listener.EntityAuditEventListener">
+					</bean>
+				</entry>
+			</map>
+		</property>
 
 
 		<!--<property name="typeDefinitions">
