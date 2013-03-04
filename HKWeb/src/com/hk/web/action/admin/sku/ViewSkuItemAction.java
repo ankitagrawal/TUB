@@ -41,7 +41,7 @@ public class ViewSkuItemAction extends BaseAction {
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())) {
             skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, -1L);
         }
-
+                                                        
         return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
     }
 

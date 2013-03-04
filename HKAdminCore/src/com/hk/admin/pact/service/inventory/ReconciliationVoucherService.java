@@ -2,6 +2,7 @@ package com.hk.admin.pact.service.inventory;
 
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -31,6 +32,8 @@ public interface ReconciliationVoucherService {
      public RvLineItem createRVLineItemWithBasicDetails (SkuGroup skuGroup , Sku sku);
 
     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, RvLineItem rvLineItem, SkuItem skuItem);
+
+     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks);
 
 
 }

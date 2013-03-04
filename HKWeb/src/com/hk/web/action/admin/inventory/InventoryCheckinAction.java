@@ -542,6 +542,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
+        grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
@@ -581,7 +582,7 @@ public class InventoryCheckinAction extends BaseAction {
 
     public Resolution downloadAllBarcode() {
         String barcodeFilePath = null;
-        Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+        Map<Long, String> skuItemDataMap = new HashMap<Long, String>();       
         List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {

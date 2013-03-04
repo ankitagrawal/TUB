@@ -473,7 +473,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
 
      public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) {
-            return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,grnLineItem,1L );
+            return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,grnLineItem,transferQty );
      }
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant){

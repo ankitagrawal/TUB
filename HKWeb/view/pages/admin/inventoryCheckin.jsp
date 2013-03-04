@@ -108,8 +108,8 @@
             <td class="chkInInfoQty">${grnLineItem.qty}</td>
             <td class="chkInQty" style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
             <td> <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Download
-                <%--<s:param name="grnLineItemId" value="${grnLineItem.id}"/>--%>
-                <s:param name="grnLineItem" value="${grnLineItem.id}"/>
+                <s:param name="grnLineItemId" value="${grnLineItem.id}"/>
+                <%--<s:param name="grnLineItem" value="${grnLineItem.id}"/>--%>
                 <s:param name="grn" value="${ica.grn.id}"/>
             </s:link></td>
 

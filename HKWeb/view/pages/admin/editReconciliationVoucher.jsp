@@ -298,18 +298,30 @@
             <td> UPC (Barcode)</td>
             <td><s:text name="upc" id="upc" size="50" style="padding:5px; width:125px;"/></td>
              <td>Reconciliation Type</td>
-            <td><s:select name="rvLineItem.reconciliationType"
+            <%--<td><s:select name="rvLineItem.reconciliationType"--%>
+                          <%--value="${rvLineItem.reconciliationType.id}" class="valueChange">--%>
+                <%--<hk:master-data-collection service="<%=MasterDataDao.class%>"--%>
+                                           <%--serviceProperty="reconciliationTypeList" value="id"--%>
+                                           <%--label="name"/>--%>
+            <%--</s:select></td>--%>
+
+             <td><s:select name="reconciliationType"
                           value="${rvLineItem.reconciliationType.id}" class="valueChange">
                 <hk:master-data-collection service="<%=MasterDataDao.class%>"
                                            serviceProperty="reconciliationTypeList" value="id"
                                            label="name"/>
             </s:select></td>
 
+
+
+
+
         </tr>
         
         <tr>
             <td> Remarks </td>
-            <td> <s:textarea style="height:60px;" name="rvLineItem.remarks" value="${rvLineItem.remarks}"> </s:textarea></td>
+            <%--<td> <s:textarea style="height:60px;" name="rvLineItem.remarks" value="${rvLineItem.remarks}"> </s:textarea></td>--%>
+            <td> <s:textarea style="height:60px;" name="remarks"> </s:textarea></td>
         </tr>
 
         <tr>
