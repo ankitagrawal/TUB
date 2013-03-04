@@ -161,7 +161,7 @@
 		<div style="height:75px"></div>
 
 		<c:if test="${not isSecure }">
-			 <iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=&catid=&subcat1id=&subcat2id=&pname=&image=&lp=&old=&new=&misc=&section=1&level=2&uid=${user_hash}"
+			 <iframe src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e300&pid=${ca.productList[0].id}&catid=&subcat1id=&subcat2id=&pname=&image=&lp=&old=&new=&misc=&section=1&level=2&uid=${user_hash}"
 			         scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0">
 
 			 </iframe>

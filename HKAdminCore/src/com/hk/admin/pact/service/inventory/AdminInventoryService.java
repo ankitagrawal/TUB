@@ -2,7 +2,10 @@ package com.hk.admin.pact.service.inventory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
@@ -76,4 +79,9 @@ public interface AdminInventoryService {
 
 	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
 
+    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+    
+   public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
+
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 }

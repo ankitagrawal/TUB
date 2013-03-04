@@ -24,9 +24,9 @@ public class LineItemDaoImpl extends BaseDaoImpl implements LineItemDao {
         return (LineItem) super.save(lineItem);
     }
 
-    public LineItem getLineItem(Sku sku, ShippingOrder shippingOrder) {
+    public List<LineItem> getLineItem(Sku sku, ShippingOrder shippingOrder) {
         String query = "select li from LineItem li where li.sku = :sku  and li.shippingOrder = :shippingOrder";
-        return (LineItem) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).uniqueResult();
+        return (List<LineItem>) getSession().createQuery(query).setEntity("sku", sku).setEntity("shippingOrder", shippingOrder).list();
     }
 
     public LineItem getLineItem(CartLineItem cartLineItem) {

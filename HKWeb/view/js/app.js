@@ -20,7 +20,7 @@ function program1(depth0,data) {
   data.buffer.push("</div>\n          <div class=\"couponPopUpDate\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>\n    <form action=\"/healthkart/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
+  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>\n    <form action=\"/hk/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
   hashTypes = {'value': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
@@ -60,7 +60,7 @@ function program2(depth0,data) {
   data.buffer.push("\n    <div class=\"applicableOffer\">    \n      <div class=\"applicableOfferDesc\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n      <form action=\"/healthkart/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
+  data.buffer.push("</div>\n      <form action=\"/hk/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
   hashTypes = {'value': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
@@ -175,7 +175,7 @@ function program6(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"modal_header\">\n    <div class=\"jqDrag\" style=\"padding: 5px 3px;\">Apply Coupon</div>\n    <a href=\"#\" id=\"couponModalClose\" class=\"modal_close jqmClose\" style=\" margin-top: 0px;\"><img src=\"/healthkart/images/spacer.gif\" width=\"21\" height=\"21\"/></a>\n</div>\n<div class=\"modal_content\">\n  <p class=\"lrg em\">");
+  data.buffer.push("<div class=\"modal_header\">\n    <div class=\"jqDrag\" style=\"padding: 5px 3px;\">Apply Coupon</div>\n    <a href=\"#\" id=\"couponModalClose\" class=\"modal_close jqmClose\" style=\" margin-top: 0px;\"><img src=\"/hk/images/spacer.gif\" width=\"21\" height=\"21\"/></a>\n</div>\n<div class=\"modal_content\">\n  <p class=\"lrg em\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "controller.modalData.message", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</p>\n  ");
@@ -222,7 +222,7 @@ HK.CartOfferController = Ember.Controller.create({
     getRoles:function(){
         self = this;
         $.ajax({
-            url: "/healthkart/rest/api/cartResource/roles",
+            url: "/hk/rest/api/cartResource/roles",
             success: function ( data ) {
                 data.roles.forEach(function(role){
                     self.get("roles").pushObject(role.name);
@@ -262,7 +262,7 @@ HK.CartOfferController = Ember.Controller.create({
         self.get("applicableOffers").clear();
         tempArray = [],
         $.ajax({
-            url: "/healthkart/rest/api/cartResource/otherApplicableOffers",
+            url: "/hk/rest/api/cartResource/otherApplicableOffers",
             success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
                     if(data.applicableOffers.length === 0){

@@ -1,19 +1,5 @@
 package com.hk.web.action.admin.inventory;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.hk.pact.service.UserService;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.stripes.controller.JsonHandler;
@@ -22,25 +8,42 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
+import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
-import com.hk.domain.user.User;
-import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.Sku;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.user.User;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
-import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.HealthkartResponse;
-import com.hk.exception.NoSkuException;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.RECON_VOUCHER_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -89,12 +92,20 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 	private Integer askedQty;
 	private String batchNumber;
 	private String errorMessage;
+    File printBarcode;
+
 
 	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
+
+      @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
+    String barcodeGurgaon;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
+    String barcodeMumbai;
 
 	@SuppressWarnings("unchecked")
 	@DefaultHandler
@@ -360,6 +371,116 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 		}
 		return skuItemList;
 	}
+
+
+
+    public Resolution downloadBarcode() {
+
+           if (rvLineItem == null) {
+               return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+           }
+           List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
+           if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
+               addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+               return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+           }
+
+           ProductVariant productVariant = rvLineItem.getSku().getProductVariant();
+//           SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+           Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
+
+           String barcodeFilePath = null;
+           Warehouse userWarehouse = null;
+           if (getUserService().getWarehouseForLoggedInUser() != null) {
+               userWarehouse = userService.getWarehouseForLoggedInUser();
+           } else {
+               addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+               return new RedirectResolution(ReconciliationVoucherAction.class);
+           }
+           if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+               barcodeFilePath = barcodeGurgaon;
+           } else {
+               barcodeFilePath = barcodeMumbai;
+           }
+           barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "rv_" + rvLineItem.getReconciliationVoucher().getId() + "_" + productVariant.getId() + "_"
+                   + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+           try {
+               printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+           } catch (IOException e) {
+               logger.error("Exception while appending on barcode file", e);
+           }
+           addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+           return new HTTPResponseResolution();
+     }
+
+
+
+    public Resolution downloadAllBarcode() {
+	    String barcodeFilePath = null;
+	    Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
+	    List<RvLineItem> rvLineItems = reconciliationVoucher.getRvLineItems();
+	    if (rvLineItems == null || rvLineItems.size() < 1) {
+		    addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+		    return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
+	    }
+	    for (RvLineItem rvLineItem : rvLineItems) {
+		    List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
+		    if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
+			    SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+			    Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
+			    skuItemDataMap.putAll(skuItemBarcodeMap);
+			    Warehouse userWarehouse = null;
+			    if (getUserService().getWarehouseForLoggedInUser() != null) {
+				    userWarehouse = userService.getWarehouseForLoggedInUser();
+			    } else {
+				    addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+				    return new RedirectResolution(InventoryCheckinAction.class);
+			    }
+			    if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+				    barcodeFilePath = barcodeGurgaon;
+			    } else {
+				    barcodeFilePath = barcodeMumbai;
+			    }
+			    barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "rv_" + reconciliationVoucher.getId() + "_All_"
+					    + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+		    }
+	    }
+	    try {
+		    if (skuItemDataMap.size() < 1) {
+			    addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+			    return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+		    }
+		    printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+	    } catch (IOException e) {
+		    logger.error("Exception while appending on barcode file", e);
+	    }
+	    addRedirectAlertMessage(new SimpleMessage("Print Barcode downloaded Successfully."));
+	    return new HTTPResponseResolution();
+    }
+
+
+    public class HTTPResponseResolution implements Resolution {
+           public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+               InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));
+               res.setContentType("text/plain");
+               res.setCharacterEncoding("UTF-8");
+               res.setContentLength((int) printBarcode.length());
+               res.setHeader("Content-Disposition", "attachment; filename=\"" + printBarcode.getName() + "\";");
+               OutputStream out = res.getOutputStream();
+
+               // Copy the contents of the file to the output stream
+               byte[] buf = new byte[4096];
+               int count = 0;
+               while ((count = in.read(buf)) >= 0) {
+                   out.write(buf, 0, count);
+               }
+               in.close();
+               out.flush();
+               out.close();
+           }
+
+       }
 
 
 	public ReconciliationVoucher getReconciliationVoucher() {

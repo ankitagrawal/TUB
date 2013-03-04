@@ -8,12 +8,6 @@
     </li>
 
     <li>
-      <a href="${pageContext.request.contextPath}/pages/careers.jsp" title="Contact Us">
-        <span id="careersLink">Careers</span>
-      </a>
-    </li>
-
-    <li>
       <a href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp" title="Terms & Conditions">
         <span id="tncLink">Terms & Conditions</span>
       </a>

@@ -87,7 +87,7 @@ $(document).ready(function () {
 		return false;
 	});
 
-	$('.valueChange').live("change", function () {
+	$('.valueChange').live("change", function () {        
 		var valueChangeRow = $(this).parents('.lineItemRow');
 		var costPrice = valueChangeRow.find('.costPrice').val();
 		var mrp = valueChangeRow.find('.mrp').val();
