@@ -194,7 +194,7 @@ public class ApplyCouponAction extends BaseAction {
                 //&& offerTriggerMatcher.hasEasyMatch(false)
                 if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
                   orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
-                  message = "Free variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
+                  message = "Offer variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
                 } else {
                   message = "Oops! Offer is over.";
                   error = error_freeVariantStockOver;
