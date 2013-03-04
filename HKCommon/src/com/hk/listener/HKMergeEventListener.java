@@ -81,7 +81,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     session = sessionFactory.openSession();
                     session.save(eat);
                 } catch (Exception e) {
-
+                    logger.error("Error while entering audit trail for product->" + productId);
                 } finally {
                     if (session != null) {
                         session.close();
