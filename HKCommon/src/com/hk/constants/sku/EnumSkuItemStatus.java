@@ -12,7 +12,9 @@ import com.hk.domain.sku.SkuItemStatus;
 public enum EnumSkuItemStatus {
 	Checked_IN(10L, "CHECKED IN"),
 	Checked_OUT(20L, "CHECKED OUT"),
-	Stock_Transfer_Out(30L, "Stock Transfer Out");
+	Stock_Transfer_Out(30L, "Stock Transfer Out"),
+	Damaged (40L, "Damaged"),
+	Expired (50L, "Expired");
 
 	private Long id;
 	private String name;

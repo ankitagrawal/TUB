@@ -746,7 +746,8 @@ public class XslGenerator {
 					Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
 					xlsWriter.addCell(xlsRow, customerDetails.getName());
 					xlsWriter.addCell(xlsRow, customerDetails.getPhone());
-					xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + customerDetails.getLine2());
+					String line2 = customerDetails.getLine2();
+					xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + ((line2 != null) ? line2 : ""));
 					xlsWriter.addCell(xlsRow, customerDetails.getCity());
 					xlsWriter.addCell(xlsRow, customerDetails.getState());
 					xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());

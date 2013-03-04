@@ -178,10 +178,10 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Delivered);
     }
 
-	public static List<EnumShippingOrderStatus> getStatusForReCheckinReturnItems(){
-		return Arrays.asList(EnumShippingOrderStatus.SO_RTO,
-				EnumShippingOrderStatus.SO_Customer_Return_Replaced,
-				EnumShippingOrderStatus.SO_Customer_Return_Refunded);
+	public static List<ShippingOrderStatus> getStatusForReCheckinReturnItems(){
+		return Arrays.asList(EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus());
 	}
 
 }
