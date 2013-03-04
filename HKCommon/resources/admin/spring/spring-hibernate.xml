@@ -27,7 +27,7 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-		<<property name="eventListeners">
+		<property name="eventListeners">
 			<map>
 				<entry key="merge">
 					<bean
