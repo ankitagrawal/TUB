@@ -219,30 +219,6 @@ HK.CartOfferController = Ember.Controller.create({
         this.getOffer();
     },
 
-    /*applyOffer:function(event){
-        self = this;
-        console.log(event.context);
-        $.ajax({
-            url: "/healthkart/core/discount/ApplyCoupon.action?applyOffer&offer=" + event.context.id,
-            success: function ( data ) {
-                $(".ember-application").html(data);
-                $("#applyOfferButton").toggle();              
-            }
-        });        
-    },
-
-    removeOffer:function(event){
-        self = this;
-        console.log(event.context);
-        $.ajax({
-            url: "/healthkart/core/discount/ApplyCoupon.action?applyOffer&offer=" + event.context.id,
-            success: function ( data ) {
-                $(".ember-application").html(data);
-                $("#applyOfferButton").toggle();              
-            }
-        });        
-    },*/
-
     getRoles:function(){
         self = this;
         $.ajax({
