@@ -6,6 +6,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.domain.audit.ChangeGroup;
 import com.hk.exception.HealthkartDefaultWebException;
@@ -20,6 +22,7 @@ import com.hk.pact.service.audit.AuditAPI;
  * @author vaibhav.adlakha
  *
  */
+@Service
 public class AuditAPIImpl implements AuditAPI {
 
     private static Logger logger = LoggerFactory.getLogger(AuditAPIImpl.class);
@@ -41,6 +44,7 @@ public class AuditAPIImpl implements AuditAPI {
 
 
     @Override
+    @Transactional
     public void saveChangeGroup(ChangeGroup changeGroup) {
       try {
         getBaseDao().save(changeGroup);

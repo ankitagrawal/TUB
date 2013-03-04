@@ -198,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
         // Audit Trail of Product
         // TODO: Old and New JSON are same as of now. Need to do some fixes to avoid hibernate reattachment
         // That's why commneting md5 check as they are same
-        try {
+        /*try {
           EntityAuditTrail eat = new EntityAuditTrail();
           eat.setEntityId(product.getId());
           //Gson gson = JsonUtils.getGsonDefault();
@@ -220,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             logger.error("Error while entering audit trail for product->" + product.getId());
         }
-
+*/
         return savedProduct;
     }
 

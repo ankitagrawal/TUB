@@ -17,5 +17,5 @@ public interface AuditService {
      * @param propertyNames
      * @param propertyTypes
      */
-    public void audit(AuditAction action, Object entity, Long entityId, Object[] state, Object[] oldState, String[] propertyNames, Object[] propertyTypes);
+    public void audit(AuditAction action, Object entity, String entityId, Object[] state, Object[] oldState, String[] propertyNames, Object[] propertyTypes);
 }
