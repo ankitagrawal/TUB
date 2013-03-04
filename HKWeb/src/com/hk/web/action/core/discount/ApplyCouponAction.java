@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Arrays;
 
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.coupon.CouponType;
 import net.sourceforge.stripes.action.*;
@@ -43,6 +44,8 @@ import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.HealthkartResponse;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.util.OfferTriggerMatcher;
+
+import javax.ws.rs.PathParam;
 
 /**
  * User: rahul Time: 8 Jan, 2010 6:19:28 PM
@@ -204,6 +207,8 @@ public class ApplyCouponAction extends BaseAction {
         return new ForwardResolution("/pages/modal/applyCoupon.jsp");
     }
 
+
+
   public Resolution applyOffer() {
     User user = getUserService().getUserById(getPrincipal().getId());
     Order order = orderManager.getOrCreateOrder(user);
@@ -214,6 +219,7 @@ public class ApplyCouponAction extends BaseAction {
       offerInstance = offerInstanceDao.createOfferInstance(offer, null, user, offer.getEndDate());
     }
     order.setOfferInstance(offerInstance);
+    orderDao.save(order);
     success = true;
 
     ProductVariant freeVariant = offer.getOfferAction().getFreeVariant();

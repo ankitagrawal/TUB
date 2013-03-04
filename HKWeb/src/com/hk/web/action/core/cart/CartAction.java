@@ -49,6 +49,10 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.action.core.user.SelectAddressAction;
 import com.hk.util.OfferTriggerMatcher;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
 @Component
 @HttpCache(allow = false)
 public class CartAction extends BaseAction {
