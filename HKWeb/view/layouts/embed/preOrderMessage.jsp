@@ -2,7 +2,7 @@
 <s:layout-definition>
 
   <c:choose>
-    <c:when test="${product.isJit && (product.id == 'NUT1600' || product.id == 'NUT1599')}">
+    <c:when test="${product.isJit != null && product.isJit && (product.id == 'NUT1600' || product.id == 'NUT1599')}">
 			<span style="font-size: 11px;"> Product is Out of Stock<br>
                 Expected back in stock date is
              <c:if test="${product.id == 'NUT1600'}">
