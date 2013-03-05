@@ -11615,27 +11615,49 @@
             <column name="stack_trace" type="LONGTEXT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362045657991-1">
-        <createTable tableName="stock_transfer_status">
-            <column name="id" type="INT">
+    <changeSet author="Vaibhav (generated)" id="1362395307901-1">
+        <createTable tableName="change_group">
+            <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(45)">
+            <column name="entity_id" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifying_user" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="modified_date" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362045657991-2">
-        <addColumn tableName="stock_transfer">
-            <column name="stock_transfer_status_id" type="INT"/>
-        </addColumn>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-2">
+        <createTable tableName="change_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="field_name" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field_type" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362045657991-3">
-        <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
-    </changeSet>
-	<changeSet author="Rohit (generated)" id="1362052302302-1">
-        <createIndex indexName="name" tableName="manufacturer" unique="true">
-            <column name="name"/>
-        </createIndex>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-11">
+        <addForeignKeyConstraint baseColumnNames="change_group_id" baseTableName="change_item" constraintName="fk_change_item_change_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="change_group" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>
