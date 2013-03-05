@@ -5742,10 +5742,10 @@ color: #e62580;
     float: left;
     border: 1px solid #ddd;
     width: 258px;
-    height: 145px;
+    max-height: 145px;
     border-radius: 5px;
     left: 30px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -5760,13 +5760,14 @@ color: #e62580;
 }
 
 .button_raj{
-    width: 60px;
+    width: 67px;
     height: 25px;
     position: relative;
     float: left;
     font-size: 10px !important;
     left: 15px;
-    background: #bab3b3 !important;
+    background: #aaaaaa !important;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.1)), color-stop(100%, rgba(255, 255, 255, 0))) !important;
 }
 
 /*

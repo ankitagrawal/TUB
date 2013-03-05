@@ -18,9 +18,14 @@
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
 <s:layout-component name="htmlHead">
+<script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
+<script src="${pageContext.request.contextPath}/js/ember.js"></script>
+<script src="${pageContext.request.contextPath}/js/loader.js"></script>
   <script type="text/javascript">
     var timeout; //Set globally as it needs to be reset when removeLink is clicked.
     var timespan = 3000;
+    HK = Ember.Application.create({});
+    HK.contextPath = "${pageContext.request.contextPath}";
 
     function showCouponDetails(){
         $("#couponPopUp").toggle();
@@ -554,9 +559,7 @@
 <!--
     Ember js code for MVC javascript!
 -->
-<script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
-<script src="${pageContext.request.contextPath}/js/ember.js"></script>
-<script src="${pageContext.request.contextPath}/js/loader.js"></script>
+
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
 
 <div id="appliedOfferDiv"></div>
