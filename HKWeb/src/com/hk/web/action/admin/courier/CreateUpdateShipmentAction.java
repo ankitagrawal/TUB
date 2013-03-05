@@ -80,6 +80,7 @@ import java.util.List;
 
         //todo courier such condition should not occur
         if (shipment == null) {
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment was created at dispatch stage");
             shipment = shipmentService.createShipment(shippingOrder, true);
         }
         if (shipment == null) {
@@ -109,14 +110,17 @@ import java.util.List;
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
-        shipmentService.save(shipment);
-        if(!shippingOrder.isDropShipping()){
-            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
+            shipmentService.save(shipment);
+            if (!shippingOrder.isDropShipping()) {
+                shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+            }
+            shippingOrderService.save(shippingOrder);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, shipment.getAwb().toString());
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
         }
-        shippingOrderService.save(shippingOrder);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
-
-        addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
 

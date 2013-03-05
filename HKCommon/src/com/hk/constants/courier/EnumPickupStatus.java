@@ -8,8 +8,7 @@ import java.util.Arrays;
 
 public enum EnumPickupStatus {
   OPEN(10L, "Open"),
-  CLOSE(20L, "Close")
-  ;
+  CLOSE(20L, "Close");
 
 
   private java.lang.String name;
@@ -38,6 +37,15 @@ public enum EnumPickupStatus {
     pickupStatus.setId(this.getId());
     pickupStatus.setName(this.getName());
     return pickupStatus;
+  }
+
+  public static PickupStatus asPickupStatusById(Long pickUpStatusId){
+    for(EnumPickupStatus enumPickupStatus : values()){
+      if(enumPickupStatus.getId().equals(pickUpStatusId)){
+        return enumPickupStatus.asPickupStatus();
+      }
+    }
+    return null;
   }
 
   public static List<EnumPickupStatus> getPickupStatusList(){

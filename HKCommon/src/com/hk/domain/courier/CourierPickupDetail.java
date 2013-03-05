@@ -25,65 +25,65 @@ public class CourierPickupDetail implements java.io.Serializable{
     @JoinColumn(name = "courier_id", nullable = false)
     private Courier courier;
 
-	@Column(name = "pickup_confirmation_no", length = 70)
-	private String pickupConfirmationNo;
+	  @Column(name = "pickup_confirmation_no", length = 70)
+	  private String pickupConfirmationNo;
 
-	@Column(name = "tracking_no", length = 70)
-	private String trackingNo;
+	  @Column(name = "tracking_no", length = 70)
+	  private String trackingNo;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "pickup_date", nullable = false, length = 19)
     private Date pickupDate;
 
-	@ManyToOne
+	  @ManyToOne
     @JoinColumn(name = "pickup_status_id", nullable = false)
-	private PickupStatus pickupStatus;
+	  private PickupStatus pickupStatus;
 
-	public Long getId() {
+	  public Long getId() {
 		return id;
-	}
+	   }
 
-	public void setId(Long id) {
+	  public void setId(Long id) {
 		this.id = id;
-	}
+	   }
 
-	public Courier getCourier() {
+	  public Courier getCourier() {
 		return courier;
-	}
+	   }
 
-	public void setCourier(Courier courier) {
+	  public void setCourier(Courier courier) {
 		this.courier = courier;
-	}
+	   }
 
-	public String getPickupConfirmationNo() {
+	  public String getPickupConfirmationNo() {
 		return pickupConfirmationNo;
-	}
+	   }
 
-	public void setPickupConfirmationNo(String pickupConfirmationNo) {
+   	public void setPickupConfirmationNo(String pickupConfirmationNo) {
 		this.pickupConfirmationNo = pickupConfirmationNo;
-	}
+	   }
 
-	public Date getPickupDate() {
+	  public Date getPickupDate() {
 		return pickupDate;
-	}
+	   }
 
-	public void setPickupDate(Date pickupDate) {
+	  public void setPickupDate(Date pickupDate) {
 		this.pickupDate = pickupDate;
-	}
+	   }
 
-	public PickupStatus getPickupStatus() {
+	  public PickupStatus getPickupStatus() {
 		return pickupStatus;
-	}
+	   }
 
-	public void setPickupStatus(PickupStatus pickupStatus) {
+	  public void setPickupStatus(PickupStatus pickupStatus) {
 		this.pickupStatus = pickupStatus;
-	}
+	    }
 
-	public String getTrackingNo() {
+	  public String getTrackingNo() {
 		return trackingNo;
-	}
+	   }
 
-	public void setTrackingNo(String trackingNo) {
+	  public void setTrackingNo(String trackingNo) {
 		this.trackingNo = trackingNo;
-	}
+	   }
 }

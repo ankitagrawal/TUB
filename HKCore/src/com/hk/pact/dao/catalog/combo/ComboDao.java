@@ -21,8 +21,6 @@ public interface ComboDao extends BaseDao {
 
     public List<Combo> getCombos();
 
-    public List<LineItem> getComboLineItems(Order order, Combo combo);
-
 	public List<Combo> getCombos(Product product);
 
 }

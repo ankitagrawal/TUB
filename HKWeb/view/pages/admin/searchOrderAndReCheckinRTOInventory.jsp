@@ -30,6 +30,8 @@
                     $(this).val(0);
                 }
             });
+
+            $('.good')
         });
     </script>
 </s:layout-component>
@@ -191,19 +193,27 @@
                                                 </td>
                                                 <td class="qty">${reverseLineItem.returnQty}</td>
                                                 <td title="Re-checkin">
-                                                    Okay
+                                                    <span class="good">
+                                                    Good
                                                     <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]" size="1"
-                                                            style="width:25px;" class="rto ok-qty" value="0"/>
-                                                    Damaged
+                                                            style="width:25px;" class="rto ok-barcode" value="0"/>
+                                                        <input type="hidden" name="conditionOfItem"  value="good">
+                                                    </span>
+                                                    <span class="damaged">
+                                                        Damaged
                                                     <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]" size="1"
                                                             style="width:25px;" class="rto damaged-qty" value="0"/>
-                                                    Expired
+                                                       <input type="hidden" name="conditionOfItem"  value="damaged">
+                                                        </span>
+                                                    <span class="expired">
+                                                        Expired
                                                     <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]" size="1"
                                                             style="width:25px;" class="rto expired-qty" value="0"/>
+                                                        <input type="hidden" name="conditionOfItem"  value="expired">
+                                                        </span>
                                                 </td>
                                                 <td>
-                                                    OK-${hk:getReCheckedinUnitsCount(reverseLineItem.referredLineItem)}<br/>
-                                                    DAMAGE-${hk:getDamageUnitsCount(reverseLineItem.referredLineItem)}
+                                                    Checked-in Qty:${hk:getReCheckedinUnitsCount(reverseLineItem.referredLineItem)}<br/>                                                      
                                                 </td>
 
                                             </tr>

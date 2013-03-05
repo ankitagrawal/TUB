@@ -47,13 +47,14 @@
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
+			<p>Phone - ${warehouse.whPhone}</p>
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<c:choose>
-						<c:when test="${orderSummary.reverseOrderInvoiceDto.warehouseState == 'HARYANA'}">
+						<c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
 							<p> TIN# 06101832036</p>
 						</c:when>
-						<c:when test="${orderSummary.reverseOrderInvoiceDto.warehouseState == 'MAHARASHTRA'}">
+						<c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
 							<p> TIN# 27210893736</p>
 						</c:when>
 					</c:choose>
@@ -69,7 +70,7 @@
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.reverseOrderInvoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice
@@ -132,7 +133,7 @@
       <th>Surcharge</th>
 
     </tr>
-    <c:forEach items="${orderSummary.reverseOrderInvoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
+    <c:forEach items="${orderSummary.invoiceDto.invoiceLineItemDtos}" var="invoiceLineItem">
       <tr>
         <td>${hk:escapeHtml(invoiceLineItem.productName)}
           <br/>
@@ -174,9 +175,9 @@
     </c:forEach>
     <tr>
       <td colspan="4"><b>Total</b></td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalTaxable}" maxFractionDigits="0"/></td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalTax}" maxFractionDigits="0"/></td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalSurcharge}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="0"/></td>
 
     </tr>
   </table>
@@ -187,18 +188,18 @@
   <table>
     <tr>
       <td width="70%"><strong>Shipping Cost</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.shipping}" maxFractionDigits="2"/></td>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.shipping}" maxFractionDigits="2"/></td>
 
     </tr>
 
     <tr>
       <td width="70%"><strong>Cod Cost</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.cod}" maxFractionDigits="2"/></td>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.cod}" maxFractionDigits="2"/></td>
 
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.grandTotal}" maxFractionDigits="0"/></td>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="0"/></td>
     </tr>
   </table>
 
@@ -224,18 +225,18 @@
     </tr>
 
     <c:forEach items="${orderSummary.enumTaxes}" var="taxValue">
-      <c:if test="${orderSummary.reverseOrderInvoiceDto.summaryQtyMap[taxValue.name] != 0}">
+      <c:if test="${orderSummary.invoiceDto.summaryQtyMap[taxValue.name] != 0}">
 
         <tr>
           <td>${taxValue.name}</td>
-          <td>${orderSummary.reverseOrderInvoiceDto.summaryQtyMap[taxValue.name]}</td>
-          <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.summaryAmountMap[taxValue.name]}"
+          <td>${orderSummary.invoiceDto.summaryQtyMap[taxValue.name]}</td>
+          <td><fmt:formatNumber value="${orderSummary.invoiceDto.summaryAmountMap[taxValue.name]}"
                                 maxFractionDigits="2"/></td>
-          <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.summaryTaxMap[taxValue.name]}"
+          <td><fmt:formatNumber value="${orderSummary.invoiceDto.summaryTaxMap[taxValue.name]}"
                                 maxFractionDigits="2"/></td>
-          <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.summarySurchargeMap[taxValue.name]}"
+          <td><fmt:formatNumber value="${orderSummary.invoiceDto.summarySurchargeMap[taxValue.name]}"
                                 maxFractionDigits="2"/></td>
-          <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.summaryPayableMap[taxValue.name]}"
+          <td><fmt:formatNumber value="${orderSummary.invoiceDto.summaryPayableMap[taxValue.name]}"
                                 maxFractionDigits="2"/></td>
         </tr>
 
@@ -247,11 +248,11 @@
     </tr>
     <tr>
       <td><strong>Total</strong></td>
-      <td>${orderSummary.reverseOrderInvoiceDto.totalSummaryQty}</td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalSummaryAmount}" maxFractionDigits="0"/></td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalSummaryTax}" maxFractionDigits="0"/></td>
-      <td><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalSummarySurcharge}" maxFractionDigits="0"/></td>
-      <td><Strong><fmt:formatNumber value="${orderSummary.reverseOrderInvoiceDto.totalSummaryPayable}"
+      <td>${orderSummary.invoiceDto.totalSummaryQty}</td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryTax}" maxFractionDigits="0"/></td>
+      <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="0"/></td>
+      <td><Strong><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryPayable}"
                                     maxFractionDigits="0"/></Strong></td>
     </tr>
   </table>
@@ -261,12 +262,12 @@
 <div style="margin-top: 15px;"></div>
 
 <div class="grid_12">
+	<p><strong>Thankyou for shopping with us !</strong></p>
   <p><strong>Terms &amp; Conditions:</strong></p>
 
-  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction.</p>
-  <c:if test="${orderSummary.reverseOrderInvoiceDto.b2bUserDetails != null}">
-    <p>2. This is computer generated invoice</p>
-  </c:if>
+  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction only.</p>
+  <p>2. No Exchange and refund.</p>
+  <p>3. E.&.O.E</p>
   <p style="display:inline;float:right;"><strong>(Authorised Signatory)</strong></p>
 </div>
 

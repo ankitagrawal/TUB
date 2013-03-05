@@ -25,6 +25,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
@@ -59,7 +60,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 	@Autowired
 	private ReverseOrderService 				reverseOrderService;
 
-    Map<LineItem, List<Long>>                     lineItemRecheckinQtyMap = new HashMap<LineItem, List<Long>>();
+    Map<LineItem, String>                     lineItemRecheckinQtyMap = new HashMap<LineItem, String>();
 
     private Long                            orderId;
     private String                          gatewayOrderId;
@@ -67,6 +68,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
     private ShippingOrder                   shippingOrder;
 	private ReverseOrder					reverseOrder;
     private List<LineItem>                  lineItems               = new ArrayList<LineItem>();
+	private String 							conditionOfItem;
 
     @DefaultHandler
     public Resolution pre() {
@@ -98,50 +100,60 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
     public Resolution checkinReturnedUnits() {
         User loggedOnUser = userService.getLoggedInUser();
 
-        for (Map.Entry<LineItem, List<Long>> lineItemRecheckinQtyMapEntry : lineItemRecheckinQtyMap.entrySet()) {
+        for (Map.Entry<LineItem, String> lineItemRecheckinQtyMapEntry : lineItemRecheckinQtyMap.entrySet()) {
             LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             ShippingOrder shippingOrder = lineItem.getShippingOrder();
-            List<Long> recheckinQty = lineItemRecheckinQtyMapEntry.getValue();
-			Long okayQty = recheckinQty.get(0);
-			Long damagedQty = recheckinQty.get(1);
-			Long expiredQty = recheckinQty.get(2);
+            String recheckinBarcode = lineItemRecheckinQtyMapEntry.getValue();
             Long checkedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstRTO(lineItem) + getProductVariantDamageInventoryDao().getCheckedInPVDIAgainstRTO(lineItem);
             List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
-            if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
-                int recheckinCounter = 0;
-                for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-                    if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
-                        recheckinCounter++;
-                        getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
-                                null,getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
-                        // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
-                        // productVariantInventoryDao.remove(checkedOutInventory.getId());
-                        inventoryService.checkInventoryHealth(productVariant);
-                    } else {
-                        getAdminInventoryService().damageInventoryCheckin(checkedOutInventory.getSkuItem(), lineItem);
-                    }
-                }
-                String comments = "Re Checked-in Returned Items: " + recheckinQty + " x " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
-                String damageComments = "Checked-in Damage Returned Items: " + (lineItem.getQty() - recheckinQty) + " x " + productVariant.getProduct().getName() + "<br/>"
-                        + productVariant.getOptionsCommaSeparated();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, damageComments);
-                addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
-            }
-//			if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
-//				for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-//					getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
-//							null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
-//					inventoryService.checkInventoryHealth(productVariant);
-//				}
-//				String comments = "Re Checked-in Returned Items: " + recheckinQty + " x " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
-//				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
+//            if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
+//                int recheckinCounter = 0;
+//                for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+//                    if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
+//                        recheckinCounter++;
+//                        getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
+//                                null,getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
+//                        // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
+//                        // productVariantInventoryDao.remove(checkedOutInventory.getId());
+//                        inventoryService.checkInventoryHealth(productVariant);
+//                    } else {
+//                        getAdminInventoryService().damageInventoryCheckin(checkedOutInventory.getSkuItem(), lineItem);
+//                    }
+//                }
+			if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
+				int recheckinCounter = 0;
+				while (recheckinCounter <= checkedOutInventories.size()) {
+					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+						String skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
+						if (skuGroupBarcode.equalsIgnoreCase(recheckinBarcode)) {
+							recheckinCounter++;
+							if (conditionOfItem.equals("good")){
+								checkedOutInventory.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
+										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
+							}
+							if (conditionOfItem.equals("damaged")){
+								checkedOutInventory.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
+								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
+										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 1L, loggedOnUser);
+							}
+							if (conditionOfItem.equals("expired")){
+								checkedOutInventory.getSkuItem().setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
+										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 1L, loggedOnUser);
+							}
+							inventoryService.checkInventoryHealth(productVariant);
+						}
+					}
+				}
+				String comments = "Re Checked-in Returned Items: " + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
+				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
 //				String damageComments = "Checked-in Damage Returned Items: " + (lineItem.getQty() - recheckinQty) + " x " + productVariant.getProduct().getName() + "<br/>"
 //						+ productVariant.getOptionsCommaSeparated();
 //				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, damageComments);
-//				addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
-//			}
+				addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
+			}
 			else {
 				addRedirectAlertMessage(new SimpleMessage("Oops!!! Either Returned Units are already checked in OR No batch information was there while checking out items."));
 			}
@@ -182,11 +194,11 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
         this.lineItems = lineItems;
     }
 
-	public Map<LineItem, List<Long>> getLineItemRecheckinQtyMap() {
+	public Map<LineItem, String> getLineItemRecheckinQtyMap() {
 		return lineItemRecheckinQtyMap;
 	}
 
-	public void setLineItemRecheckinQtyMap(Map<LineItem, List<Long>> lineItemRecheckinQtyMap) {
+	public void setLineItemRecheckinQtyMap(Map<LineItem, String> lineItemRecheckinQtyMap) {
 		this.lineItemRecheckinQtyMap = lineItemRecheckinQtyMap;
 	}
 
@@ -256,5 +268,13 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 
 	public void setReverseOrder(ReverseOrder reverseOrder) {
 		this.reverseOrder = reverseOrder;
+	}
+
+	public String getConditionOfItem() {
+		return conditionOfItem;
+	}
+
+	public void setConditionOfItem(String conditionOfItem) {
+		this.conditionOfItem = conditionOfItem;
 	}
 }

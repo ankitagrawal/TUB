@@ -18,10 +18,10 @@ public interface PurchaseOrderDao extends BaseDao {
     public List<PurchaseOrder> listPurchaseOrdersWithProductVariant(ProductVariant productVariant);
 
     public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber, String tinNumber,
-                                        String supplierName, Warehouse warehouse);
+                                        String supplierName, Warehouse warehouse, Boolean extraInventoryCreated);
 
     public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                         String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage);
+                         String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, int pageNo, int perPage);
 
     public List<PurchaseOrder> listPurchaseOrdersIncludingStatus(List<Long> purchaseOrderStatusList);
 

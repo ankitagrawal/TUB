@@ -8,6 +8,7 @@ import com.hk.domain.search.PaginationFilter;
 import com.hk.domain.search.RangeFilter;
 import com.hk.domain.search.SearchFilter;
 import com.hk.domain.search.SortFilter;
+import com.hk.domain.catalog.category.Category;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 
@@ -30,5 +31,5 @@ public interface ProductSearchService {
 
     SearchResult getSearchResults(String query,List<SearchFilter> searchFilters, int page, int perPage,boolean isRetry) throws SearchException;
 
-    SearchResult getBrandCatalogResults(String brand, String topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
+    SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
 }

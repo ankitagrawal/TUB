@@ -7,6 +7,9 @@ import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 
+import java.util.Collection;
+import java.util.Set;
+
 public interface CartLineItemService {
 
     public CartLineItem save(CartLineItem cartLineItem);
@@ -25,5 +28,4 @@ public interface CartLineItemService {
     public CartLineItem createCartLineItemWithBasicDetails(ProductVariant productVariant, Order order);
 
     public CartLineItem getMatchingCartLineItemFromOrder(Order order, CartLineItemMatcher cartLineItemMatcher);
-
 }

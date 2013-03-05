@@ -254,7 +254,7 @@ public class XslPincodeParser {
 
                 PincodeDefaultCourier pincodeDefaultCourier = pincodeCourierService.createPincodeDefaultCourier(pincode, courier, warehouse, isGroundShippingAvailable, isCODAvailable, estimatedShippingCostDouble);
                 boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, courier, isGroundShippingAvailable, isCODAvailable);
-                PincodeDefaultCourier pincodeDefaultCourierDb = pincodeCourierService.getPincodeDefaultCourier(pincode, warehouse, isGroundShippingAvailable, isCODAvailable);
+                PincodeDefaultCourier pincodeDefaultCourierDb = pincodeCourierService.getPincodeDefaultCourier(pincode, warehouse, isCODAvailable, isGroundShippingAvailable);
                 if (pincodeDefaultCourierDb == null && isDefaultCourierApplicable) {
                     pincodeDefaultCouriers.add(pincodeDefaultCourier);
                 }

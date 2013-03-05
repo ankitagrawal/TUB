@@ -54,6 +54,8 @@ public enum EnumShippingOrderLifecycleActivity {
   SO_Customer_Return(755L,"SO Customer Return"),
   RTO_Initiated(760L,"RTO Initiated for SO"),
   RO_Created(770L, "Replacement Order Created for shipping order"),
+  COD_Converter(790L, "COD_Converter"),
+  SO_Shipment_Re_Created(795L, "SO Shipment Re Created"),
   SHIPMENT_RESOLUTION_ACTIVITY(800L, "SHIPMENT RESOLUTION ACTIVITY"),
   SO_Cancelled(999L, "SO  Cancelled");
 
