@@ -11660,4 +11660,20 @@
     <changeSet author="Vaibhav (generated)" id="1362395307901-11">
         <addForeignKeyConstraint baseColumnNames="change_group_id" baseTableName="change_item" constraintName="fk_change_item_change_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="change_group" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Ankit" id="05-03-2013-01">
+        <sql>
+            update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID004' where issuer_id = 39  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID007' where issuer_id = 36  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID015' where issuer_id = 34  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID014' where issuer_id = 33  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID005' where issuer_id = 32  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID012' where issuer_id = 31  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID001' where issuer_id = 22  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID010' where issuer_id = 21  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID002' where issuer_id = 8  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID006' where issuer_id = 17  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID009' where issuer_id = 20  and gateway_id = 80;            
+        </sql>
+    </changeSet>
 </databaseChangeLog>
