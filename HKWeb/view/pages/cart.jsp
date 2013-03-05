@@ -405,9 +405,11 @@
     </div>
     <div class="quantity">
       <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+      <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
       <a class='remove removeLink' href='#'>
         (remove)
       </a>
+      </c:if>
     </div>
     <div class="price">
       <c:choose>
