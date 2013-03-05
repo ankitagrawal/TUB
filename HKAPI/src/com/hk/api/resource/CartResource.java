@@ -1,64 +1,52 @@
 package com.hk.api.resource;
 
-import javax.ws.rs.*;
-
 import com.akube.framework.dao.Page;
-import com.hk.constants.coupon.EnumCouponType;
-import com.hk.constants.subscription.EnumSubscriptionStatus;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.core.fliter.SubscriptionFilter;
-import com.hk.domain.catalog.product.combo.ComboInstance;
-import com.hk.domain.coupon.CouponType;
-import com.hk.domain.offer.OfferEmailDomain;
-import com.hk.domain.subscription.Subscription;
-import com.hk.domain.user.Address;
-import com.hk.manager.UserManager;
-import com.hk.pact.dao.affiliate.AffiliateDao;
-import com.hk.pact.dao.offer.OfferDao;
-import com.hk.pact.dao.shippingOrder.LineItemDao;
-import com.hk.pact.service.order.CartFreebieService;
-import com.hk.pricing.PricingEngine;
-import com.hk.util.json.JSONResponseBuilder;
-import com.shiro.PrincipalImpl;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-
-import java.util.*;
-
-import org.joda.time.DateTime;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
+import com.hk.constants.coupon.EnumCouponType;
 import com.hk.constants.discount.OfferConstants;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.domain.coupon.Coupon;
-import com.hk.domain.offer.OfferInstance;
-import com.hk.domain.offer.Offer;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.ComboInstance;
+import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.CouponType;
+import com.hk.domain.offer.Offer;
+import com.hk.domain.offer.OfferEmailDomain;
+import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.Order;
+import com.hk.domain.subscription.Subscription;
+import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
+import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.coupon.CouponDao;
+import com.hk.pact.dao.offer.OfferDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
-import com.hk.pact.service.order.CartLineItemService;
-import com.hk.dto.pricing.PricingDto;
+import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pricing.PricingEngine;
 import com.hk.util.OfferTriggerMatcher;
-import org.testng.Assert;
-import org.slf4j.LoggerFactory;
+import com.hk.util.json.JSONResponseBuilder;
+import com.shiro.PrincipalImpl;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.testng.Assert;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.util.*;
 
 
 @Path ("/cartResource")
@@ -83,10 +71,6 @@ public class CartResource extends BaseAction {
     private IHOManager         ihoManager;
     @Autowired
     private EmployeeManager    employeeManager;
-    @Autowired
-    private CartLineItemService cartLineItemService;
-
-    private String             couponCode;
 
     private Coupon             coupon;
     private String             message;
@@ -120,8 +104,6 @@ public class CartResource extends BaseAction {
     PricingEngine pricingEngine;
     @Autowired
     LineItemDao lineItemDao;
-    @Autowired
-    private CartFreebieService cartFreebieService;
     @Autowired
     OfferDao offerDao;
 
@@ -274,10 +256,6 @@ public class CartResource extends BaseAction {
     @Override
     public PrincipalImpl getPrincipal() {
         return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
-    public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode;
     }
 
     public Coupon getCoupon() {
