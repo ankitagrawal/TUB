@@ -57,6 +57,8 @@ import com.hk.pact.service.order.CartLineItemService;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.util.OfferTriggerMatcher;
 import org.testng.Assert;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 @Path ("/cartResource")
@@ -126,6 +128,8 @@ public class CartResource extends BaseAction {
     boolean verifyMessage = false;
 
     List<Offer> applicableOffers = new ArrayList<Offer>();
+
+  private static Logger logger = LoggerFactory.getLogger(CartResource.class);
 
     @GET
     @Path("/applyCoupon")
@@ -450,10 +454,13 @@ public class CartResource extends BaseAction {
         if (activeOffersPage != null) {
             List<Offer> activeOffers = activeOffersPage.getList();
             for (Offer activeOffer : activeOffers) {
+              if (activeOffer.getOfferTrigger() != null) {
+                logger.debug("Active Offer ID -> "+activeOffer.getId());
                 OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
                 if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, order.getUser()) && activeOffer.isShowPromptly()) {
-                    applicableOffers.add(activeOffer);
+                  applicableOffers.add(activeOffer);
                 }
+              }
             }
         }
         return applicableOffers;
