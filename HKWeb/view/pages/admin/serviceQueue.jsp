@@ -42,7 +42,7 @@
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                     shippingOrders="${serviceQueueBean.shippingOrderList}"/>
+                     shippingOrders="${serviceQueueBean.shippingOrderList}" isServiceQueue="true"/>
 
     <div>
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${serviceQueueBean}"/>
@@ -79,6 +79,17 @@
       });
       return true;
     });
+
+
+    $('.movetoactionqueue').click(function (e) {
+        e.preventDefault();
+        var ele = $(this);
+        var link = ele.attr('href') + '&';
+        link += "shippingOrderList[]=" + ele.attr("dataId");
+        location.href = link;
+    });
+
+
 
   </script>
 

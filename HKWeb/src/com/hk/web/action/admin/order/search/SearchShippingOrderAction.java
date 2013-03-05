@@ -68,7 +68,6 @@ public class SearchShippingOrderAction extends BasePaginatedAction {
             }
         }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-
         shippingOrderSearchCriteria.setOrderId(shippingOrderId).setGatewayOrderId(shippingOrderGatewayId);
         shippingOrderSearchCriteria.setAwbList(awbList);
 

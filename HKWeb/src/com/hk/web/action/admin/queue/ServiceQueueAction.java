@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -40,13 +37,13 @@ public class ServiceQueueAction extends BasePaginatedAction {
     @Autowired
     private AdminShippingOrderService  adminShippingOrderService;
 
-    Page                        orderPage;
+
     List<Order>                        orderList         = new ArrayList<Order>();
     private Long                       orderId;
     private String                     gatewayOrderId;
     private Date                       startDate;
     private Date                       endDate;
-    private Integer defaultPerPage = 30;
+    private Integer defaultPerPage = 20;
     Page                shippingOrderPage;
 
     List<ShippingOrder>                shippingOrderList = new ArrayList<ShippingOrder>();
@@ -64,9 +61,10 @@ public class ServiceQueueAction extends BasePaginatedAction {
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
-        shippingOrderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId);
+        shippingOrderSearchCriteria.setBaseOrderId(orderId).setGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setServiceOrder(true);
-
+        shippingOrderSearchCriteria.setPaymentStartDate(startDate);
+        shippingOrderSearchCriteria.setPaymentEndDate(endDate);
         shippingOrderPage = getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria, false, getPageNo(), getPerPage());
         if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
@@ -102,15 +100,20 @@ public class ServiceQueueAction extends BasePaginatedAction {
     }
 
     public int getPageCount() {
-        return orderPage == null ? 0 : orderPage.getTotalPages();
+        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalPages();
     }
 
     public int getResultCount() {
-        return orderPage == null ? 0 : orderPage.getTotalResults();
+        return shippingOrderPage == null ? 0 : shippingOrderPage.getTotalResults();
     }
 
     public Set<String> getParamSet() {
-        return null;
+        HashSet<String> params = new HashSet<String>();
+        params.add("gatewayOrderId");
+        params.add("orderId");
+        params.add("startDate");
+        params.add("endDate");
+        return params;
     }
 
     public List<Order> getOrderList() {
@@ -191,5 +194,11 @@ public class ServiceQueueAction extends BasePaginatedAction {
         this.adminShippingOrderService = adminShippingOrderService;
     }
 
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
+    public Long getOrderId() {
+        return orderId;
+    }
 }

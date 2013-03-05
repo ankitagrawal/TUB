@@ -17,6 +17,7 @@
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
     Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
+    Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
 
 
     if (isActionQueue != null) {
@@ -28,6 +29,11 @@
         pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
     } else {
         pageContext.setAttribute("isDropShipQueue", false);
+    }
+    if (isServiceQueue != null) {
+        pageContext.setAttribute("isServiceQueue", isServiceQueue);
+    } else {
+        pageContext.setAttribute("isServiceQueue", false);
     }
     Boolean showCourier = (Boolean) pageContext.getAttribute("showCourier");
     if (showCourier != null) {
@@ -89,7 +95,7 @@
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}">
     <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score} 
+        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
     </div>
     <div class="clear" style=""></div>
     <div class="floatleft">
@@ -131,7 +137,7 @@
         <div class="clear"></div>
         <div class="floatleft">
             Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-            Score : ${shippingOrder.baseOrder.score} 
+            Score : ${shippingOrder.baseOrder.score}
         </div>
         <div class="clear"></div>
          <div class="floatleft">
@@ -233,7 +239,7 @@
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)
-                
+
             </shiro:hasAnyRoles>
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
                 <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
@@ -248,7 +254,7 @@
                                     value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
                             </s:option>
                         </s:select>
-                        <br/><b>Customer Return Reason:</b> 
+                        <br/><b>Customer Return Reason:</b>
                         <s:select name="customerReturnReason" id="return-reason">
 		                    <s:option value="null">-Select Reason-</s:option>
 		                    <s:option value="Damaged Product">Damaged Product</s:option>
@@ -267,7 +273,7 @@
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
-                       
+
                     </script>
                 </shiro:hasAnyRoles>
             </c:if>
@@ -565,6 +571,15 @@
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
     </td>
+</c:if>
+<c:if test="${isServiceQueue== true}">
+    <td>
+        <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id == paymentStatusAuthPending}">
+         (<s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
+            move to action queue
+         </s:link>)
+        </c:if>
+</td>
 </c:if>
 </c:forEach>
 </tr>

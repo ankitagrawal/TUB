@@ -32,6 +32,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private String baseGatewayOrderId;
     private Date shipmentStartDate;
     private Date shipmentEndDate;
+    private Date paymentStartDate;
+    private Date paymentEndDate ;
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
@@ -223,6 +225,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
 
+        if (paymentStartDate != null || paymentEndDate != null) {
+            paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
+        }
+
         if (!searchForPrinting) {
             if (sortByPaymentDate) {
                 paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
@@ -300,5 +306,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setInstallable(boolean installable) {
         this.installable = installable;
+    }
+
+    public void setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+    }
+
+    public void setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
     }
 }
