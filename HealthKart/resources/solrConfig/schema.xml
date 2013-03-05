@@ -216,10 +216,12 @@
             <analyzer type="index">
                 <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
             </analyzer>
             <analyzer type="query">
                 <tokenizer class="solr.KeywordTokenizerFactory"/>
                 <filter class="solr.LowerCaseFilterFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
             </analyzer>
         </fieldType>
 
@@ -295,6 +297,7 @@
                 <!--We do not want any HTML to be stored in our data-->
                 <charFilter class="solr.HTMLStripCharFilterFactory"/>
                 <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+                <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
                 <!-- in this example, we will only use synonyms at query time
                 <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
                 -->
@@ -526,9 +529,9 @@ any data added to them will be ignored outright.  -->
         <field name="variantNames" type="text_en_splitting" indexed="true" stored="true" multiValued="true" />
         <field name="nameSort" type="string" indexed="true" stored="false"/>
         <field name="alphaNameSort" type="alphaOnlySort" indexed="true" stored="false"/>
-        <field name="brand" type="text_brand" indexed="true" stored="true" />
+        <field name="brand" type="text_brand" indexed="true" stored="true" multiValued="true"/>
         <!--This does not match exact brand. Useful in search-->
-        <field name="brand_liberal" type="text_general" indexed="true" stored="true" />
+        <field name="brand_liberal" type="text_general" indexed="true" stored="true"  multiValued="true"/>
         <field name="overview" type="text_en_splitting" indexed="true" stored="true" />
         <field name="description" type="text_en_splitting" indexed="true" stored="true" />
         <field name="isGoogleAdDisallowed" type="boolean" indexed="true" stored="true" />
@@ -537,6 +540,7 @@ any data added to them will be ignored outright.  -->
         <field name="mainImageId" type="long" indexed="true" stored="true" />
         <field name="hkPrice" type="float" indexed="true" stored="true" />
         <field name="category" type="text_brand" indexed="true" stored="true" multiValued="true" />
+		<field name="categoryDisplayName" type="text_brand" indexed="true" stored="true" multiValued="true" />
         <field name="h1" type="string" indexed="true" stored="true"/>
         <field name="title" type="text" indexed="true" stored="true"/>
         <field name="slug" type="text" indexed="true" stored="true" />
@@ -556,6 +560,7 @@ any data added to them will be ignored outright.  -->
         <field name="outOfStock" type="boolean" indexed="true" stored="true" />
         <field name="isService" type="boolean" indexed="true" stored="true" />
         <field name="title_autocomplete" type="lowercase" indexed="true" stored="true" multiValued="true"/>
+
         <!-- SpellFind field used to store all the fields from where we want to return spelling suggestions -->
         <field name="spellfind" type="text_en_splitting" indexed="true" stored="true" multiValued="true"/>
 
@@ -669,9 +674,12 @@ via copyField further on in this schema  -->
     <copyField source="name" dest="text"/>
     <copyField source="name" dest="nameSort"/>
     <copyField source="name" dest="alphaNameSort"/>
-    <copyField source="name" dest="title_autocomplete"/>
     <copyField source="brand" dest="brand_liberal"/>
-    <copyField source="variantNames" dest="title_autocomplete"/>
+
+    <copyField source="name" dest="title_autocomplete"/>
+    <copyField source="brand" dest="title_autocomplete"/>
+    <copyField source="categoryDisplayName" dest="title_autocomplete"/>
+    <!--<copyField source="variantNames" dest="title_autocomplete"/>-->
 
     <copyField source="name" dest="spellfind"/>
     <copyField source="variantNames" dest="spellfind"/>

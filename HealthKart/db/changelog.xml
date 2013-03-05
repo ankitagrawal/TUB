@@ -11553,4 +11553,111 @@
             <column defaultValue="0" name="is_email_sent" type="TINYINT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1360944809663-1">
+        <createTable tableName="user_cod_call">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="call_status" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remark" type="VARCHAR(70)"/>
+            <column name="create_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1360944809663-2">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_cod_call"  constraintName="fk_user_cod_call_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    </changeSet>
+    
+    <changeSet author="Ajeet (generated)" id="1361217619752-1">
+           <addNotNullConstraint columnDataType="DOUBLE" columnName="order_ranking" tableName="product" defaultNullValue="100000.0"/>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-2">
+       <sql>
+           update product set order_ranking=1.0 where order_ranking=0.0 and deleted=0;
+       </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="1361217619752-3">
+       <sql>
+           update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
+       </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361868792355-1">
+        <createTable tableName="entity_audit_trail">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="entity_id" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_json" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="new_json" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="admin@healthkart.com" name="user_email" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calling_class" type="VARCHAR(200)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1361941166899-1">
+        <addColumn tableName="entity_audit_trail">
+            <column name="stack_trace" type="LONGTEXT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-1">
+        <createTable tableName="change_group">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="entity_id" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifying_user" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="modified_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-2">
+        <createTable tableName="change_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="field_name" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field_type" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-11">
+        <addForeignKeyConstraint baseColumnNames="change_group_id" baseTableName="change_item" constraintName="fk_change_item_change_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="change_group" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

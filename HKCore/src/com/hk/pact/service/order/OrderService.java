@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
@@ -15,6 +16,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
 
 public interface OrderService {
@@ -74,8 +76,12 @@ public interface OrderService {
     
     public void setTargetDispatchDelDatesOnBO(Order order);
 
-    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);	
 
+	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 
+	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
+
+	public List<UserCodCall> getAllUserCodCallForToday();
 }
 

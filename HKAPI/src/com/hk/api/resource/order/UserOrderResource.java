@@ -13,9 +13,21 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.models.user.APIUserDetail;
+import com.hk.constants.core.EnumCancellationType;
+import com.hk.constants.core.EnumUserCodCalling;
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.domain.user.UserCodCall;
+import com.hk.dto.user.UserLoginDto;
+import com.hk.exception.HealthkartLoginException;
+import com.hk.manager.UserManager;
+import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
+import org.jboss.resteasy.spi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +69,12 @@ public class UserOrderResource {
 
     @Autowired
     private UserDetailService userDetailService;
+
+    @Autowired
+    AdminOrderService adminOrderService;
+
+    @Autowired
+    OrderService orderService;
 
     @POST
     @Path("/email/{email}/phone/{phone}")
@@ -141,6 +159,66 @@ public class UserOrderResource {
         } catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
+        }
+        return response;
+    }
+
+    @POST
+    @Path("/order/source/{source}/order/{orderId}/action/{action}")
+    @Produces("application/json")
+    @Encoded
+    public Response changeOrderStatus(@PathParam("orderId") Long orderId,
+                                      @PathParam("source") String source,
+                                      @PathParam("action") String action,
+                                      @QueryParam("authToken") String authToken
+    ) {
+        String key = authToken;
+        Response response = null;
+        User loggedInUser = null;
+        loggedInUser = userService.getAdminUser();
+        Order order = orderService.find(orderId);
+        UserCodCall userCodCall = null;
+
+        String decryptKey = CryptoUtil.decrypt(key);
+        if ((decryptKey == null) || !decryptKey.trim().equals(API_KEY)) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        try {
+            if (order.getUserCodCall() == null) {
+                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                userCodCall.setRemark(source);
+
+            } else {
+                userCodCall = order.getUserCodCall();
+            }
+            if (!(order.isCOD())) {
+                logger.debug("Order is not COD" + order.getId());
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            if (action.equalsIgnoreCase("CANCELLED")) {
+                if (order.getOrderStatus().getId().equals(EnumOrderStatus.Cancelled.getId())) {
+                    logger.debug("Order Already Cancelled" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
+            } else if (action.equalsIgnoreCase("CONFIRMED")) {
+                List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
+                if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
+                    logger.debug("Order Payment Already Confirmed" + order.getId());
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+                adminOrderService.confirmCodOrder(order, source);
+            }
+            userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            userCodCall.setRemark(action + " Request Successful");
+            orderService.saveUserCodCall(userCodCall);
+            return Response.status(Response.Status.OK).build();
+        } catch (Exception ex) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Unable to change order status ", ex);
+            userCodCall.setRemark(action + " Request From Admin Failed..");
+            orderService.saveUserCodCall(userCodCall);
         }
         return response;
     }

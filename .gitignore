@@ -27,4 +27,6 @@ environmentLocator.properties
 rebel.xml
 .swp
 clean.bat
+HKJunctionClient/
+HKJunction/
 
