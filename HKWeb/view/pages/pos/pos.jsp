@@ -201,6 +201,11 @@
 				$('#newAddress').val(true);
 			});
 
+			$('#discount').change(function() {
+				var discount = $('#discount').find('option:selected').val();
+				var grandTotal = $('.grandTotal').val();
+				$('#finalPayable').val(parseFloat(grandTotal) - discount).toFixed(0);
+			});
 		});
 	</script>
 </s:layout-component>
@@ -331,8 +336,8 @@
 					</s:select></td>
 				</tr>
 				<tr>
-					<td colspan="5" align="right"><b>Grand Total</b></td>
-					<td><input type="text" value="${pos.grandTotal}" id="total" readonly="readonly"/></td>
+					<td colspan="5" align="right"><b>Final Payable</b></td>
+					<td><input type="text" id="finalPayable" readonly="readonly"/></td>
 				</tr>
 				<tr><td><b>Order ID</b></td><td colspan="3">${pos.order.id}</td>
 					<td align="right"><b>Payment Mode</b></td>
