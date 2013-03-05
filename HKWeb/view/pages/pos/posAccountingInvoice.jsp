@@ -47,6 +47,7 @@
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
+			<p>Phone - ${warehouse.whPhone}</p>
 			<c:choose>
 				<c:when test="${isB2BOrder}">
 					<c:choose>
@@ -261,12 +262,12 @@
 <div style="margin-top: 15px;"></div>
 
 <div class="grid_12">
+	<p><strong>Thankyou for shopping with us !</strong></p>
   <p><strong>Terms &amp; Conditions:</strong></p>
 
-  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction.</p>
-  <c:if test="${orderSummary.invoiceDto.b2bUserDetails != null}">
-    <p>2. This is computer generated invoice</p>
-  </c:if>
+  <p>1. All disputes are subject to ${warehouse.city} Jurisdiction only.</p>
+  <p>2. No Exchange and refund.</p>
+  <p>3. E.&.O.E</p>
   <p style="display:inline;float:right;"><strong>(Authorised Signatory)</strong></p>
 </div>
 

@@ -32,19 +32,19 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
     }
 
     public List<PurchaseOrder> searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                        String tinNumber, String supplierName, Warehouse warehouse) {
+                                        String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
         return findByCriteria(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse));
+                tinNumber, supplierName, warehouse, extraInventoryCreated));
     }
 
     public Page searchPO(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                         String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
+                         String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated, int pageNo, int perPage) {
         return list(getPurchaseOrderCriteria(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber,
-                tinNumber, supplierName, warehouse), pageNo, perPage);
+                tinNumber, supplierName, warehouse, extraInventoryCreated), pageNo, perPage);
     }
 
     private DetachedCriteria getPurchaseOrderCriteria(PurchaseOrder purchaseOrder, PurchaseOrderStatus purchaseOrderStatus, User approvedBy, User createdBy, String invoiceNumber,
-                                                      String tinNumber, String supplierName, Warehouse warehouse) {
+                                                      String tinNumber, String supplierName, Warehouse warehouse, Boolean extraInventoryCreated) {
         DetachedCriteria purchaseOrderCriteria = DetachedCriteria.forClass(PurchaseOrder.class);
         DetachedCriteria supplierCriteria = null;
         if (purchaseOrder != null) {
@@ -77,6 +77,9 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
             }
             supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
         }
+      if(extraInventoryCreated!=null){
+        purchaseOrderCriteria.add(Restrictions.eq("isExtraInventoryCreated",extraInventoryCreated));
+      }
 
         purchaseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 

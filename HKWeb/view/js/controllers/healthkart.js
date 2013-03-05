@@ -25,7 +25,11 @@ HK.CartOfferController = Ember.Controller.create({
     getRoles:function(){
         self = this;
         $.ajax({
+<<<<<<< HEAD
             url: HK.contextPath + "/rest/api/cartResource/roles",
+=======
+            url: "/hk/rest/api/cartResource/roles",
+>>>>>>> c4e641c1d819579c87570bcd59ddb34be608582d
             success: function ( data ) {
                 data.roles.forEach(function(role){
                     self.get("roles").pushObject(role.name);
@@ -65,7 +69,11 @@ HK.CartOfferController = Ember.Controller.create({
         self.get("applicableOffers").clear();
         tempArray = [],
         $.ajax({
+<<<<<<< HEAD
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
+=======
+            url: "/hk/rest/api/cartResource/otherApplicableOffers",
+>>>>>>> c4e641c1d819579c87570bcd59ddb34be608582d
             success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
                     if(data.applicableOffers.length === 0){

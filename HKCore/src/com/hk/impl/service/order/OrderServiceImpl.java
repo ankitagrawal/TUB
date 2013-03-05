@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -25,6 +26,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
@@ -152,7 +154,6 @@ public class OrderServiceImpl implements OrderService {
      * this will return the dispatch date for BO by adding min of dispatch days to refdate honouring the constraints of
      * warehouse like last time a order will be processed in WH each day (say till 4pm),
      *
-     * @param refDateForBO
      * @param order
      * @return
      */
@@ -702,6 +703,8 @@ public class OrderServiceImpl implements OrderService {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
 
+        logger.debug("Trying to split order " + order.getId());
+
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
 
@@ -757,5 +760,25 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
+
+
+	@Transactional
+	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
+		return (UserCodCall)baseDao.save(userCodCall);
+	}
+
+	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling) {
+		UserCodCall userCodCall = new UserCodCall();
+		userCodCall.setBaseOrder(order);
+		userCodCall.setRemark(enumUserCodCalling.getName());
+		userCodCall.setCallStatus(enumUserCodCalling.getId());
+		userCodCall.setCreateDate(new Date());
+		return userCodCall;
+
+	}
+
+	public List<UserCodCall> getAllUserCodCallForToday(){
+	return 	orderDao.getAllUserCodCallOfToday();
+	}
 
 }
