@@ -575,9 +575,9 @@
 <c:if test="${isServiceQueue== true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id == paymentStatusAuthPending}">
-         (<s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
-            move to action queue
-         </s:link>)
+         <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
+            (move back to action queue)
+         </s:link>
         </c:if>
 </td>
 </c:if>
