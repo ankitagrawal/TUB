@@ -455,10 +455,17 @@ public class CartResource extends BaseAction {
             List<Offer> activeOffers = activeOffersPage.getList();
             for (Offer activeOffer : activeOffers) {
               if (activeOffer.getOfferTrigger() != null) {
-                logger.debug("Active Offer ID -> "+activeOffer.getId());
+                logger.debug("Active Offer ID -> " + activeOffer.getId());
                 OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
                 if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, order.getUser()) && activeOffer.isShowPromptly()) {
-                  applicableOffers.add(activeOffer);
+                  if (activeOffer.getOfferAction().getFreeVariant() != null) {
+                    ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
+                    if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                      applicableOffers.add(activeOffer);
+                    }
+                  } else {
+                    applicableOffers.add(activeOffer);
+                  }
                 }
               }
             }
