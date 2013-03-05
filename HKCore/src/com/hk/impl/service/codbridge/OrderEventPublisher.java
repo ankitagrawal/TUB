@@ -1,4 +1,4 @@
-package com.hk.pact.service.codbridge;
+package com.hk.impl.service.codbridge;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
 import com.hk.hkjunction.observers.OrderType;
+import com.hk.pact.service.codbridge.UserCallResponseObserver;
+import com.hk.pact.service.codbridge.UserCartDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,7 @@ import com.hk.hkjunction.producer.ProducerTypeEnum;
 import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.observers.OrderStatusMessage;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,9 +39,15 @@ public class OrderEventPublisher {
 
     @Autowired
     ProducerFactory producerFactory;
+    @Autowired
+    UserCallResponseObserver userCallResponseObserver;
 
     private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
 
+    @PostConstruct
+    void init(){
+        //userCallResponseObserver.subscribe();
+    }
 
     private String getCartDetailsJson(Order order) {
 
@@ -96,8 +105,17 @@ public class OrderEventPublisher {
         try{
             OrderStatusMessage orderStatusMessage = getOrderMessage(order);
             orderStatusMessage.setOrderType(OrderType.COD);
+            Long customerPhoneNumber =  0L;
+            try{
+                customerPhoneNumber = StringUtils.getUserPhone(order.getPayment().getContactNumber());
+            }catch (NumberFormatException ex){
+                logger.error(String.format("Wrong phone number for order %d",order.getId()));
+            }
+            orderStatusMessage.setName(order.getPayment().getContactName());
+            orderStatusMessage.setPhone(customerPhoneNumber);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -111,6 +129,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_FAILURE);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_FAILURE_PRODUCER);
             messagePublished =  producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
@@ -123,6 +142,7 @@ public class OrderEventPublisher {
             orderStatusMessage.setOrderType(OrderType.PAYMENT_SUCCESS);
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.PAYMENT_SUCCESS_PRODUCER);
             boolean messagePublished = producer.publishMessage(orderStatusMessage);
+            userCallResponseObserver.subscribe();
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
