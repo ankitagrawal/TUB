@@ -10,23 +10,23 @@ package com.hk.constants.sku;
 public enum EnumSkuItemTransferMode {
 
     STOCK_TRANSFER_OUT(10L, "Stock Transfer Out"),
-	STOCK_TRANSFER_IN(20L, "Stock Transfer In"),
-	RV_LINEITEM_OUT(30L, "RVLineItem");
+    STOCK_TRANSFER_IN(20L, "Stock Transfer In"),
+    RV_LINEITEM_OUT(30L, "RVLineItem");
 
-	private String name;
-	private Long id;
+    private String name;
+    private Long id;
 
-	EnumSkuItemTransferMode(Long id, String name) {
-		this.name = name;
-		this.id = id;
-	}
+    EnumSkuItemTransferMode(Long id, String name) {
+        this.name = name;
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
 }

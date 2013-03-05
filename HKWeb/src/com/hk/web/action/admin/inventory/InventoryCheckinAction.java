@@ -582,7 +582,7 @@ public class InventoryCheckinAction extends BaseAction {
 
     public Resolution downloadAllBarcode() {
         String barcodeFilePath = null;
-        Map<Long, String> skuItemDataMap = new HashMap<Long, String>();       
+        Map<Long, String> skuItemDataMap = new HashMap<Long, String>();
         List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {
