@@ -227,6 +227,7 @@ public class CartResource extends BaseAction {
                     //OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(coupon.getOffer().getOfferTrigger(), order.getCartLineItems());
                     //&& offerTriggerMatcher.hasEasyMatch(false)
                     if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                        freeVariant.setQty(1L);
                         orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
                         message = "Free variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
                     } else {
