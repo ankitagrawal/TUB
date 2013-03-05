@@ -111,7 +111,12 @@
         <shiro:lacksRole name="<%=RoleConstants.COD_BLOCKED%>">
             <c:if test="${orderSummary.order.offerInstance.offer.paymentType != prePaidPaymentType}">
                 <li id="tab4" class="cod-mode">Cash on Delivery</li>
-                <li id="tab5">Cheque / Bank Deposit</li>
+	            <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
+	              <li id="tab5">Cheque / Bank Deposit</li>
+	            </shiro:hasRole>
+	            <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
+                <li id="tab5">NEFT Deposit</li>
+	            </shiro:lacksRole>
             </c:if>
         </shiro:lacksRole>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">
@@ -277,6 +282,7 @@
                                 value='<%=EnumPaymentMode.NEFT.getId()%>' checked="checked"/>&nbsp;Online
                     Transfer(NEFT)</label>
                 <br/>
+	            <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
                 <label><s:radio name='paymentMode'
                                 value='<%=EnumPaymentMode.CashDeposit.getId()%>'/>&nbsp;Cash
                     Deposit</label>
@@ -284,6 +290,7 @@
                 <label><s:radio name='paymentMode'
                                 value='<%=EnumPaymentMode.ChequeDeposit.getId()%>'/>&nbsp;Cheque</label>
                 <br/>
+	            </shiro:hasRole>
 
                 <div id="chequeno" style="display: none;">
                     <div class="label" id="#cheque">Cheque No.</div>
@@ -499,9 +506,6 @@
     <jsp:include page="/includes/_analytics.jsp"/>
 </s:layout-component>
 
-<s:layout-component name="zopim">
-    <jsp:include page="/includes/_zopim.jsp"/>
-</s:layout-component>
 </s:layout-render>
 
 <div id="overlay2" class="web_dialog_overlay"></div>

@@ -117,6 +117,9 @@ public class Keys {
         public static final String fedExMeterNo                    = "fedExMeterNo";
         public static final String fedExAccountNo                  = "fedExAccountNo";
 
+        /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
+        public static final String maxCODCallCount                  = "maxCODCallCount";
+
         public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
     }
