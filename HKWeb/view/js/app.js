@@ -20,7 +20,12 @@ function program1(depth0,data) {
   data.buffer.push("</div>\n          <div class=\"couponPopUpDate\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>\n    <form action=\"/healthkart/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
+  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>\n    <form ");
+  hashTypes = {'action': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'action': ("controller.applyURL")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" method=\"post\">\n        <input name=\"offer\" ");
   hashTypes = {'value': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
@@ -60,7 +65,12 @@ function program2(depth0,data) {
   data.buffer.push("\n    <div class=\"applicableOffer\">    \n      <div class=\"applicableOfferDesc\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n      <form action=\"/healthkart/core/discount/ApplyCoupon.action\" method=\"post\">\n        <input name=\"offer\" ");
+  data.buffer.push("</div>\n      <form ");
+  hashTypes = {'action': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'action': ("controller.applyURL")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" method=\"post\">\n        <input name=\"offer\" ");
   hashTypes = {'value': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
@@ -212,6 +222,7 @@ HK.CartOfferController = Ember.Controller.create({
     errorMessage:"",
     showApply:true,
     showRemove:false,
+    applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",
     init:function(){
         this.getRoles();
         this.getOffer();

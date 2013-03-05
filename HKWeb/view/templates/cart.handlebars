@@ -5,7 +5,7 @@
   {{#each value in controller.applicableOffers}}
     <div class="applicableOffer">    
       <div class="applicableOfferDesc">{{value.description}}</div>
-      <form action="/healthkart/core/discount/ApplyCoupon.action" method="post">
+      <form {{bindAttr action="controller.applyURL"}} method="post">
         <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
         <input name="applyOffer" value="Apply" class="button_raj" type="submit">
         <div style="display: none;">

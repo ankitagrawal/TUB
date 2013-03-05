@@ -11,7 +11,7 @@
         <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
         <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
     </div>
-    <form action="/healthkart/core/discount/ApplyCoupon.action" method="post">
+    <form {{bindAttr action="controller.applyURL"}} method="post">
         <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
         <input name="removeOffer" value="Remove" class="button_raj" style="float: right;left: 0px;margin-bottom: 0px;bottom: 8px;" type="submit">
         <div style="display: none;">
