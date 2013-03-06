@@ -61,11 +61,13 @@
                                        title="${product.name}"  style="max-height:75px;max-width:75px;">
                               </c:otherwise>
                           </c:choose>
+                          <%-- for service product only--%>
 
-	                      <%--<c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
+	                      <c:if test="${hk:isNotBlank(variant.variantName) && (hk:isProductService(product))}}">
 		                      <br/>
 		                      ${variant.variantName}
-	                      </c:if>--%>
+	                      </c:if>
+
                       </c:when>
                       <c:otherwise>
                           <c:choose>

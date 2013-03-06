@@ -22,11 +22,11 @@
           <li><label>Order ID</label> <s:text name="orderId"/></li>
           <li><label>Gateway Order ID</label> <s:text name="gatewayOrderId" id="gatewayOrderId"/></li>
           <li>
-            <label> Order Start
+            <label> Payment Start
               date</label><s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
           </li>
           <li>
-            <label>Order End
+            <label>Payment End
               date</label><s:text class="date_input endDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
           </li>
           <div class="buttons"><s:submit name="searchOrders" value="Search"/></div>

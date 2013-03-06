@@ -803,4 +803,12 @@ public class Functions {
 		}
 	}
 
+    public static Boolean isProductService(Product product) {
+        if (product != null) {
+            return product.isService();
+        } else {
+            return null;
+        }
+    }
+
 }
