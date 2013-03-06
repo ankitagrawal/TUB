@@ -3188,6 +3188,7 @@ h2.prod_title {
     float: left;
     width: 235px;
     position: relative;
+    border: 1px solid #ddd;
     left: 30px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -3195,7 +3196,6 @@ h2.prod_title {
     -ms-border-radius: 5px;
     -khtml-border-radius: 5px;
     border-radius: 5px;
-    border: 1px solid #ddd;
     color: #888;
     padding: 10px 10px;
     margin-bottom: 2px;
@@ -5529,7 +5529,6 @@ color: #e62580;
 }
 
 .appliedOffer{
-    border: 1px solid rgb(190, 190, 190);
     border-radius: 8px;
     position: relative;
     float: left;
@@ -5537,8 +5536,6 @@ color: #e62580;
     word-wrap: break-word;
     height: auto;
     width: 253px;
-    left: 30px;
-    box-shadow: 1px 1px 1px 0px;
 }
 
 .appliedOfferHead{
@@ -5571,17 +5568,17 @@ color: #e62580;
 .couponPopUp{
     position: absolute;
     float: left;
-    border: 1px solid #888;
+    border: 1px solid #DCA;
     border-radius: 9px;
     width: 200px;
     min-height: 50px;
     height: auto;
-    background: rgb(245, 250, 188);
+    background: #fffAF0;
     box-shadow: 2px 2px 2px 0px;
     word-wrap: break-word;
     display: none;
-    left: 105%;
-    bottom: -8%;
+    left: 17%;
+    top: 20px;
     z-index: 1000;
 }
 
@@ -5620,14 +5617,11 @@ color: #e62580;
 }
 
 .popupArrow{
+    z-index: -4;
     position: relative;
     float: left;
-    right: 12%;
-    top: 45px;
-    border-bottom: 8px solid #D5D57D;
-    border-top-color: #D5D57D;
-    border-left: 22px solid transparent;
-    box-shadow: 1px 1px 1px 0px;
+    right: -72%;
+    top: -12px;
 }
 
 .applicableOfferDesc{
@@ -5655,14 +5649,12 @@ color: #e62580;
     left: 3px;
     width: 97%;
     height: auto;
-    border: 1px solid #ddd;
     border-radius: 8px;
     position: relative;
     float: left;
     clear: both;
     margin-bottom: 5px;
     word-wrap: break-word;
-    box-shadow: 1px 1px 1px 0px;
 }
 
 .applicableOfferTerms{
@@ -5740,17 +5732,26 @@ color: #e62580;
 .applicableOfferContainer{
     position: relative;
     float: left;
-    border: 1px solid #ddd;
     width: 258px;
     max-height: 145px;
     border-radius: 5px;
-    left: 30px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.applicableOfferContainer:hover {
+.offerContainer:hover {
     border-color: #f87500;
+}
+
+.offerContainer{
+    position: relative;
+    height: auto;
+    width:auto;
+    float: left;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    left: 30px;
+    margin-bottom: 10px;
 }
 
 .appliedOfferContainer{

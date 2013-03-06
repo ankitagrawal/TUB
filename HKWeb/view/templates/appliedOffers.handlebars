@@ -3,7 +3,7 @@
     <div class="appliedOfferHead">Currently Applied Offer</div>
     <div class="appliedOfferTitle">{{value.description}}
         <div id="couponPopUp" class="couponPopUp">
-          <div class="popupArrow"></div>
+          <img {{bindAttr src="controller.imageURL"}} class="popupArrow"></img>
           <div class="couponPopUpMsg">{{value.description}}</div>
           <div class="couponPopUpTerms"><strong>Terms:</strong> {{value.terms}}</div>
           <div class="couponPopUpDate">Valid till: {{value.endDate}}</div>

@@ -17,7 +17,8 @@ HK.CartOfferController = Ember.Controller.create({
     errorMessage:"",
     showApply:true,
     showRemove:false,
-    applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",    
+    applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",
+    imageURL:HK.contextPath + "/images/messageArrow.png",
     init:function(){
         this.getRoles();
         this.getOffer();

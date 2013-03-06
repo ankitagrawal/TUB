@@ -42,6 +42,7 @@
     }
 
     $(document).ready(function() {
+
       $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
@@ -565,9 +566,10 @@
 
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
 
+<div class="offerContainer">
 <div id="appliedOfferDiv"></div>
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div class='right_container coupon'>
+    <div style="left:0px; border:none" class='right_container coupon'>
         <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
             <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
@@ -596,6 +598,7 @@
     </div>
 </shiro:lacksRole>
 <div id="applicableOfferDiv"></div>
+</div>
 
 <div class='right_container total'>
 <h5>Checkout</h5>
