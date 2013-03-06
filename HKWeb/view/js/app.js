@@ -6,7 +6,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   var stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
-
+  
   var buffer = '', hashTypes;
   data.buffer.push("\n  <div class=\"appliedOffer\">\n    <div class=\"appliedOfferHead\">Currently Applied Offer</div>\n    <div class=\"appliedOfferTitle\">");
   hashTypes = {};
@@ -38,7 +38,7 @@ function program1(depth0,data) {
   stack1 = helpers.each.call(depth0, "value", "in", "controller.currentlyAppliedOffer", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   else { data.buffer.push(''); }
-
+  
 });
 
 Ember.TEMPLATES["templates/cart"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -47,7 +47,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   var stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
-
+  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n  <div class=\"applicableOfferHead\">Other Applicable Offers!</div>\n  <div class=\"offerCount\">");
   hashTypes = {};
@@ -60,7 +60,7 @@ function program1(depth0,data) {
   return buffer;
   }
 function program2(depth0,data) {
-
+  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n    <div class=\"applicableOffer\">    \n      <div class=\"applicableOfferDesc\">");
   hashTypes = {};
@@ -86,7 +86,7 @@ function program2(depth0,data) {
   return buffer;
   }
 function program3(depth0,data) {
-
+  
   var buffer = '', hashTypes;
   data.buffer.push("\n        <div class=\"applicableOfferTerms\"><strong>Terms:</strong>");
   hashTypes = {};
@@ -103,7 +103,7 @@ function program3(depth0,data) {
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   else { data.buffer.push(''); }
-
+  
 });
 
 Ember.TEMPLATES["templates/couponModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
@@ -112,7 +112,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   var buffer = '', stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
-
+  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n    <script type=\"text/javascript\">\n      // call pricing update\n      $.getJSON($('#updatePricingLink').attr('href'), function(res) {_updateTotals(res);});\n    </script>\n    <table class=\"cont_2 offerTable\">\n      <thead>\n      <tr>\n        <th>Offer Description</th>\n        <th>Valid till</th>\n        <th>Coupon</th>\n      </tr>\n      </thead>\n      <tr>\n        <td width=\"200\">\n          ");
   hashTypes = {};
@@ -131,7 +131,7 @@ function program1(depth0,data) {
   return buffer;
   }
 function program2(depth0,data) {
-
+  
   var buffer = '', hashTypes;
   data.buffer.push("\n            <h3>Terms:</h3>\n            ");
   hashTypes = {};
@@ -141,7 +141,7 @@ function program2(depth0,data) {
   }
 
 function program4(depth0,data) {
-
+  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n\n    ");
   hashTypes = {'controllerBinding': "STRING",'isVisibleBinding': "STRING"};
@@ -157,7 +157,7 @@ function program4(depth0,data) {
   return buffer;
   }
 function program5(depth0,data) {
-
+  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n      The offer associated with this coupon has now been selected. <br/>\n      <script type=\"text/javascript\">\n      // call pricing update\n      $.getJSON($('#updatePricingLink').attr('href'), function(res) {_updateTotals(res);});\n      </script>\n      <table class=\"cont_2 offerTable\">\n        <thead>\n        <tr>\n          <th>Offer Description</th>\n          <th>Valid till</th>\n          <th>Coupon</th>\n        </tr>\n        </thead>\n        <tr>\n          <td width=\"200\">\n            ");
   hashTypes = {};
@@ -176,7 +176,7 @@ function program5(depth0,data) {
   return buffer;
   }
 function program6(depth0,data) {
-
+  
   var buffer = '', hashTypes;
   data.buffer.push("\n              <h3>Terms:</h3>\n              ");
   hashTypes = {};
@@ -198,7 +198,7 @@ function program6(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</div>");
   return buffer;
-
+  
 });
 
 })();
@@ -222,7 +222,11 @@ HK.CartOfferController = Ember.Controller.create({
     errorMessage:"",
     showApply:true,
     showRemove:false,
+<<<<<<< HEAD
     applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",
+=======
+    applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",    
+>>>>>>> 7008dbe5a9c5250b2d2bfd8197f8d1bbd1e53e29
     init:function(){
         this.getRoles();
         this.getOffer();
@@ -273,7 +277,7 @@ HK.CartOfferController = Ember.Controller.create({
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
-            success: function ( data ) {
+            success: function ( data ) {                
                 if(!Ember.empty(data.appliedOffer)){
                     if(data.applicableOffers.length === 0){
                         if(self.get("currentlyAppliedOffer").length === 0){
@@ -290,12 +294,12 @@ HK.CartOfferController = Ember.Controller.create({
                         if(offer.id === parseInt(data.appliedOffer.id)){
                             if(self.get("currentlyAppliedOffer").length === 0){
                                 self.get("currentlyAppliedOffer").pushObject(offer);
-                            }
+                            }                            
                         }
                         else{
                             self.get("applicableOffers").pushObject(offer);
                         }
-                    });
+                    });                    
                 }
                 else{
                     self.set("applicableOffers",data.applicableOffers);
