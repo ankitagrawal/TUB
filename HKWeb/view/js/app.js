@@ -25,7 +25,7 @@ function program1(depth0,data) {
   data.buffer.push("</div>\n          <div class=\"couponPopUpDate\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>\n    <form ");
+  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\">[hide details]</a>\n    </div>\n    <form ");
   hashTypes = {'action': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'action': ("controller.applyURL")

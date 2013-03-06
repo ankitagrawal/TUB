@@ -8,8 +8,8 @@
           <div class="couponPopUpTerms"><strong>Terms:</strong> {{value.terms}}</div>
           <div class="couponPopUpDate">Valid till: {{value.endDate}}</div>
         </div>
-        <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
-        <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
+        <a class="appliedOfferDetails">[show details]</a>
+        <a class="appliedOfferDetails" style="display: none;">[hide details]</a>
     </div>
     <form {{bindAttr action="controller.applyURL"}} method="post">
         <input name="offer" {{bindAttr value="value.id"}} type="hidden">        

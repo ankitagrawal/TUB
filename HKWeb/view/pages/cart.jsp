@@ -42,7 +42,17 @@
     }
 
     $(document).ready(function() {
-
+        $(".appliedOfferDetails").click(function(e){
+            $("#couponPopUp").toggle();
+            $(".appliedOfferDetails").toggle();
+            e.stopPropagation();
+        });
+        $("#container").click(function(){
+            if($("#couponPopUp").css("display") == "block"){
+                $(".appliedOfferDetails").toggle();
+            }
+            $("#couponPopUp").hide();
+        });
       $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
