@@ -244,8 +244,10 @@ public class ApplyCouponAction extends BaseAction {
       if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
         CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(freeVariant).addCartLineItemType(EnumCartLineItemType.Product);
         CartLineItem cartLineItem = cartLineItemService.getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
-        cartLineItem.setQty(0L);
-        cartLineItemService.save(cartLineItem);
+        if(cartLineItem != null){
+          cartLineItem.setQty(0L);
+          cartLineItemService.save(cartLineItem);
+        }
       }
     }
 
