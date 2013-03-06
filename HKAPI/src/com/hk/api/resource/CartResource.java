@@ -236,6 +236,7 @@ public class CartResource extends BaseAction {
   }
 
   public Set<Offer> getApplicableOffers(Order order) {
+    applicableOffers = new HashSet<Offer>();
     Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
     User user = order.getUser();
     if (activeOffersPage != null) {
