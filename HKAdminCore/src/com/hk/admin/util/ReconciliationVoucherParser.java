@@ -57,7 +57,7 @@ public class ReconciliationVoucherParser {
                 Long qty =  XslUtil.getLong( row.getColumnValue(XslConstants.QTY) );
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
-                Date expiryDate = new Date();
+                Date expiryDate = null;
                 if(strExpiryDate != null && !StringUtils.isBlank(strExpiryDate)) {
                     expiryDate = XslUtil.getDate(strExpiryDate);
                     if(expiryDate == null) {
@@ -65,12 +65,12 @@ public class ReconciliationVoucherParser {
                     }
                 }
                 String strMfgDate = row.getColumnValue(XslConstants.MFG_DATE);
-                Date mfgDate = new Date();
+                Date mfgDate = null ;
                 if(strMfgDate != null && !StringUtils.isBlank(strMfgDate)) {
                     mfgDate = XslUtil.getDate(strMfgDate);
-                    /*if(mfgDate == null) {
+                   if(mfgDate == null) {
                         throw new Exception("Incorrect format for mfg date ");
-                    }*/
+                    }
                 }
 
                 ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
