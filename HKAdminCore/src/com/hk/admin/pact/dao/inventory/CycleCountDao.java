@@ -25,11 +25,15 @@ import java.util.Date;
 public interface CycleCountDao {
 
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount ,SkuGroup skuGroup, SkuItem skuItem);
+    public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem);
 
-	public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse);
+    public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse);
 
-	public Page searchCycleList(String auditBy , Long cycleCountStatus ,List<BrandsToAudit> brandsToAuditList, Product product , ProductVariant productVariant ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+    public Page searchCycleList(String auditBy, Long cycleCountStatus, List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+
+    public List<SkuItem> getScannedSkuItems(Long skuGroupId, Long cycleCountId);
+
+    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem);
 
 
 }

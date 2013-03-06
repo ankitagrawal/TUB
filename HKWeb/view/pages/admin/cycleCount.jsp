@@ -120,9 +120,9 @@
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
 					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
-				</div>  <br>
+				</div>  
               <div style ="float:right;width:900px;height:800px;overflow-y:scroll;">
-				<table style="float: right;margin-top:0px">
+				<table style="float: right;margin-top:0px;margin-left:15px;">
 					<thead>
 					<tr>
 						<th>VariantID</th>
@@ -148,7 +148,7 @@
 							<tr class="ccItemRow">
                                 <c:if test="${cCItem.skuItem != null && cCItem.skuGroup == null }">
 
-                                 <td> ${cCItem.skuItem.skuGroup.sku.productVariant.id}</td>          
+                                 <td style="width:75px;"> ${cCItem.skuItem.skuGroup.sku.productVariant.id}</td>          
 
                                 <td> ${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated} </td>
                                 <td> ${cCItem.skuItem.skuGroup.sku.productVariant.product.name} </td>
@@ -205,7 +205,7 @@
 					</c:if>
 
                     <tr>
-                        &nbsp; &nbsp;
+                       
                         <td style="font-weight:bold;" colspan="8">Total</td>
                         <td class="totalQuantity">
                             <label id="scannedValue" style="font-weight:bold;"></label></td>
@@ -227,29 +227,32 @@
 					</shiro:hasPermission>
 
 				</div>
-			</div>
+
+                <div style="margin-top: 100px;margin-bottom: 40px;">
+                <%--<div style="margin:0px auto;width:600px;margin-top: 42px;" align="left">--%>
+                    <fieldset class="right_label" style="margin-left:0;">
+                        <legend style="color:#000;margin-left:25px;background-color:#ebebeb; padding:10px;">Upload Cycle Count Notepad</legend>
+                        <ul>
+                            <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                                <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                                <s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
+                                <li><label>File to Upload</label>
+                                    <s:file id="filebean" name="fileBean" size="30"/>
+                                </li>
+                                <li>
+                                    <s:submit id="uploadnotepad" name="uploadCycleCountNotepad" value="Upload"/>
+                                </li>
+                            </s:form>
+                        </ul>
+                    </fieldset>
+                </div>
+
+            </div>
 		</s:form>
 
         
-        <div style="margin:0px auto;width:1200px;margin-top: 42px;">
-            <fieldset class="right_label">
-                <legend>Upload Cycle Count Notepad</legend>
-                <ul>
-                    <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-                        <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-                        <s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
-                        <li><label>File to Upload</label>
-                            <s:file id="filebean" name="fileBean" size="30"/>
-                        </li>
-                        <li>
-                            <s:submit id="uploadnotepad" name="uploadCycleCountNotepad" value="Upload"/>
-                        </li>
-                    </s:form>
-                </ul>
-            </fieldset>
-        </div>
 
-        <div align="right">
+        <div align="left">
             <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
                 <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
                 <s:submit name="downloadSkuGroupMissedInScanning" value="Download missed batch"/>

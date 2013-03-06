@@ -110,8 +110,6 @@ public class InventoryCheckinAction extends BaseAction {
     private Sku sku;
     private SkuGroup checkinSkuGroup;
     private GrnLineItem grnLineItem;
-    private Long grnLineItemId;
-
     private String productVariantBarcode;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
@@ -542,7 +540,6 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
-        grnLineItem = getGrnLineItemDao().getGrnLineItem(grnLineItemId);
         List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
@@ -827,11 +824,4 @@ public class InventoryCheckinAction extends BaseAction {
         this.grnLineItem = grnLineItem;
     }
 
-    public Long getGrnLineItemId() {
-        return grnLineItemId;
-    }
-
-    public void setGrnLineItemId(Long grnLineItemId) {
-        this.grnLineItemId = grnLineItemId;
-    }
 }

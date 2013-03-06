@@ -1,9 +1,11 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
+<%@ page import="com.hk.admin.util.BarcodeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="StockTransferOut" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId()%>"/>
+<c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
@@ -155,7 +157,13 @@
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-					<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+                  <td>  <c:if test="${stockTransferLineItem.checkedOutSkuGroup.barcode != null}">
+					 ${stockTransferLineItem.checkedOutSkuGroup.barcode}
+                    </c:if>
+                       <c:if test="${stockTransferLineItem.checkedOutSkuGroup.barcode == null}">
+                           ${barcodePrefix}${stockTransferLineItem.checkedOutSkuGroup}
+                      </c:if>
+                  </td>
 					<td>
 							${productVariant.id}
 					</td>

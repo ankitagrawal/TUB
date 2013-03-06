@@ -1,9 +1,11 @@
 <%@ page import="com.hk.constants.sku.EnumSkuItemStatus" %>
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="stockTransferOutId" value="<%=EnumSkuItemStatus.Stock_Transfer_Out.getId()%>"/>
+<c:set var="cycleCountStatusId" value="<%=EnumCycleCountStatus.RequestForApproval.getId()%>"/>
 <%
     UserService userService = ServiceLocatorFactory.getService(UserService.class);
     pageContext.setAttribute("warehouse", userService.getWarehouseForLoggedInUser());
@@ -49,6 +51,14 @@
                                 <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
                                 <s:param name="stockTransfer" value="${viewItem.stockTransferLineItem.stockTransfer}"/>
                                 <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link>
+                        </c:if></td>
+                         <td>
+                        <c:if test="${viewItem.cycleCount != null && viewItem.cycleCount.cycleStatus == cycleCountStatusId}">
+                            <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                                        event="deleteScannedSkuItem">Delete
+                                <s:param name="cycleCount" value="${viewItem.cycleCount}"/>
+                                <s:param name="skuItem" value="${skuItem.id}"/>
+                               </s:link>
                         </c:if></td>
                     </tr>
 

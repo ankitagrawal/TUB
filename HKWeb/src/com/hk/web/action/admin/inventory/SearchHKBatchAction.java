@@ -54,13 +54,10 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-//            SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
-            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+//            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+             skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(),null);
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
-//                if ( skuItemBarcode.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId())){
-//                      itemBarcodePresent = true;
-//                }
             } else {
                 skuGroupList = skuGroupService.getSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
             }

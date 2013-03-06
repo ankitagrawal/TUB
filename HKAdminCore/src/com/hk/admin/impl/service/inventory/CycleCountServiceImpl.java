@@ -95,4 +95,13 @@ public class CycleCountServiceImpl implements CycleCountService {
         return cycleCountItem;
     }
 
+
+     public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId){
+           return cycleCountDao.getScannedSkuItems(skuGroupId,cycleCountId);
+     }
+
+    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem) {
+        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount,skuItem);
+    }
+
 }

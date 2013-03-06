@@ -399,7 +399,8 @@
                 <c:set var="itemCheckedin" value="true" />
                 <ul>
                      <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Barcode
-                <s:param name="grnLineItemId" value="${grnLineItemDto.grnLineItem.id}"/>
+                <%--<s:param name="grnLineItemId" value="${grnLineItemDto.grnLineItem.id}"/>--%>
+                <s:param name="grnLineItem" value="${grnLineItemDto.grnLineItem.id}"/>         
                 <s:param name="grn" value="${pa.grn.id}"/>
                  </s:link>
                 </ul>

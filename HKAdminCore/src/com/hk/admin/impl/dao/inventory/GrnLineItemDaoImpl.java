@@ -15,9 +15,9 @@ import com.hk.domain.sku.Sku;
 import com.hk.impl.dao.BaseDaoImpl;
 
 @Repository
-public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao{
+public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao {
 
-    
+
     @SuppressWarnings("unchecked")
     public GrnLineItem getGrnLineItem(GoodsReceivedNote goodsReceivedNote, ProductVariant productVariant) {
         List<GrnLineItem> grnLineItems = getSession().createQuery("from GrnLineItem li where li.goodsReceivedNote = :goodsReceivedNote and li.sku.productVariant = :productVariant").setParameter(
@@ -26,28 +26,14 @@ public class GrnLineItemDaoImpl extends BaseDaoImpl implements GrnLineItemDao{
     }
 
 
-	 public List<GrnLineItem> getAllGrnLineItemBySku(Sku sku){
-		 DetachedCriteria criteria = DetachedCriteria.forClass(GrnLineItem.class);
-		 if(sku != null){
-		 criteria.add(Restrictions.eq("sku",sku));
-		return (List<GrnLineItem>)findByCriteria(criteria);
-		 }
+    public List<GrnLineItem> getAllGrnLineItemBySku(Sku sku) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(GrnLineItem.class);
+        if (sku != null) {
+            criteria.add(Restrictions.eq("sku", sku));
+            return (List<GrnLineItem>) findByCriteria(criteria);
+        }
 
-		return null;
-	 }
-
-
-
-     public GrnLineItem getGrnLineItem(Long grnLineItemId){
-          return get(GrnLineItem.class, grnLineItemId);
-     }
-
-
-    public List<GrnLineItem> getGrnLineItemList (GoodsReceivedNote goodsReceivedNote){
-         List<GrnLineItem> grnLineItems = new ArrayList<GrnLineItem>();
-         String query = "from  GrnLineItem grn where grn.goodsReceivedNote = :goodsReceivedNote";
-         grnLineItems = (List<GrnLineItem>) getSession().createQuery(query).setParameter("goodsReceivedNote", goodsReceivedNote).list();
-         return grnLineItems;
+        return null;
     }
 
 }

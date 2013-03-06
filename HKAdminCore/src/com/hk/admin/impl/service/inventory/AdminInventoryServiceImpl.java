@@ -44,29 +44,29 @@ import java.util.*;
 public class AdminInventoryServiceImpl implements AdminInventoryService {
 
     @Autowired
-    private BaseDao                         baseDao;
+    private BaseDao baseDao;
     @Autowired
     private AdminProductVariantInventoryDao adminPVIDao;
     @Autowired
     private ProductVariantDamageInventoryDao pVDamageInventoryDao;
     @Autowired
-    private UserService                     userService;
+    private UserService userService;
     @Autowired
-    private SkuService                      skuService;
+    private SkuService skuService;
     @Autowired
-    private InventoryService                inventoryService;
+    private InventoryService inventoryService;
     @Autowired
-    private ProductVariantService           productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private UserManager                     userManager;
+    private UserManager userManager;
     @Autowired
-    private AdminSkuItemDao                 adminSkuItemDao;
+    private AdminSkuItemDao adminSkuItemDao;
     @Autowired
-    private ShippingOrderDao                shippingOrderDao;
+    private ShippingOrderDao shippingOrderDao;
     @Autowired
-    private OrderDao                        orderDao;
+    private OrderDao orderDao;
     @Autowired
-    private ProductVariantInventoryDao      productVariantInventoryDao;
+    private ProductVariantInventoryDao productVariantInventoryDao;
     @Autowired
     private SkuGroupService skuGroupService;
 
@@ -91,12 +91,12 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     public Long getBookedInventory(Sku sku) {
         Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(sku);
         Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(sku.getProductVariant());
-        return bookedInventoryForSku + bookedInventoryForProductVariant;           
+        return bookedInventoryForSku + bookedInventoryForProductVariant;
     }
 
     public Long getBookedInventory(ProductVariant productVariant) {
         //List<Sku> skuList = getSkuService().getSKUsForProductVariant(productVariant);
-	    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+        List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
         if (skuList != null && !skuList.isEmpty()) {
             Long bookedInventoryForSku = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
             Long bookedInventoryForProductVariant = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant);
@@ -116,11 +116,11 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         return netInventory;
     }
 
-	public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant) {
-		List<Sku> variantSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-		Long netInventory = getProductVariantInventoryDao().getNetInventory(variantSkus);
-		return netInventory;
-	}
+    public Long getNetInventoryAtServiceableWarehouses(ProductVariant productVariant) {
+        List<Sku> variantSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+        Long netInventory = getProductVariantInventoryDao().getNetInventory(variantSkus);
+        return netInventory;
+    }
 
     public void adjustInventory(SkuGroup skuGroup, Long qty) {
         int counter = 0;
@@ -150,7 +150,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 //        skuGroup.setSku(sku);
 //        skuGroup.setCreateDate(new Date());
 //        skuGroup = (SkuGroup) getBaseDao().save(skuGroup);
-         SkuGroup skuGroup = createSkuGroupWithoutBarcode(batch,mfgDate,expiryDate,costPrice,mrp,goodsReceivedNote,reconciliationVoucher,stockTransfer,sku );
+        SkuGroup skuGroup = createSkuGroupWithoutBarcode(batch, mfgDate, expiryDate, costPrice, mrp, goodsReceivedNote, reconciliationVoucher, stockTransfer, sku);
         if (skuGroup != null && skuGroup.getId() != null) {
             String skuGroupBarCode = BarcodeUtil.generateBarCodeForSKuGroup(skuGroup.getId());
             skuGroup.setBarcode(skuGroupBarCode);
@@ -161,7 +161,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-     public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
+    public SkuGroup createSkuGroupWithoutBarcode(String batch, Date mfgDate, Date expiryDate, Double costPrice, Double mrp, GoodsReceivedNote goodsReceivedNote, ReconciliationVoucher reconciliationVoucher, StockTransfer stockTransfer, Sku sku) {
         SkuGroup skuGroup = new SkuGroup();
         skuGroup.setBatchNumber(batch);
         skuGroup.setMfgDate(mfgDate);
@@ -178,21 +178,18 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-
     public void createSkuItemsAndCheckinInventory(SkuGroup skuGroup, Long qty, LineItem lineItem, GrnLineItem grnLineItem, RvLineItem rvLineItem,
                                                   StockTransferLineItem stockTransferLineItem, InvTxnType invTxnType, User txnBy) {
         for (int i = 0; i < qty; i++) {
             SkuItem skuItem = new SkuItem();
             skuItem.setSkuGroup(skuGroup);
             skuItem.setCreateDate(new Date());
-	        skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
             skuItem = (SkuItem) getBaseDao().save(skuItem);
 
-//    generating Barcode at Skuitem level
-            String skuItemBarCode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i+1);
-            skuItem.setBarcode(skuItemBarCode);
-
-//            skuItem.setBarcode(skuItem.getId().toString());
+           //  generating Barcode at Skuitem level
+            String skuItemBarcode = BarcodeUtil.generateBarCodeForSKuItem(skuGroup.getId(), i + 1);
+            skuItem.setBarcode(skuItemBarcode);
             skuItem = (SkuItem) getBaseDao().save(skuItem);
 
             this.inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, null, grnLineItem, rvLineItem, stockTransferLineItem, invTxnType, 1L, txnBy);
@@ -216,42 +213,42 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         pvi.setTxnDate(new Date());
         getBaseDao().save(pvi);
 
-	    if (skuItem != null && qty < 0) {
-		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
-		    getBaseDao().save(skuItem);
-	    }
+        if (skuItem != null && qty < 0) {
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
+            getBaseDao().save(skuItem);
+        }
 
-	    if (skuItem != null && qty > 0) {
-		    skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
-		    getBaseDao().save(skuItem);
-	    }
+        if (skuItem != null && qty > 0) {
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+            getBaseDao().save(skuItem);
+        }
 
-	    // Setting checked in qty to make increments in sync with checkin
+        // Setting checked in qty to make increments in sync with checkin
         if (grnLineItem != null && qty > 0) {
             grnLineItem.setCheckedInQty(grnLineItem.getCheckedInQty() + qty);
             getBaseDao().save(grnLineItem);
         }
     }
 
-	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy) {
-		ProductVariantInventory pvi = new ProductVariantInventory();
-		pvi.setSku(sku);
-		pvi.setSkuItem(skuItem);
-		pvi.setStockTransferLineItem(stockTransferLineItem);
+    public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy) {
+        ProductVariantInventory pvi = new ProductVariantInventory();
+        pvi.setSku(sku);
+        pvi.setSkuItem(skuItem);
+        pvi.setStockTransferLineItem(stockTransferLineItem);
         pvi.setInvTxnType(inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKOUT));
-		pvi.setQty(qty);
-		pvi.setTxnBy(txnBy);
-		pvi.setTxnDate(new Date());
-		getBaseDao().save(pvi);
+        pvi.setQty(qty);
+        pvi.setTxnBy(txnBy);
+        pvi.setTxnDate(new Date());
+        getBaseDao().save(pvi);
 
-		if (skuItem != null && qty < 0 ) {
-           skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
-			getBaseDao().save(skuItem);
-		}
+        if (skuItem != null && qty < 0) {
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+            getBaseDao().save(skuItem);
+        }
 
-	}
+    }
 
-	public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
+    public Long countOfCheckedInUnitsForGrnLineItem(GrnLineItem grnLineItem) {
         Long count = getAdminPVIDao().getChechedinItemCount(grnLineItem);
         if (count == null) {
             count = 0L;
@@ -325,44 +322,44 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
     }
 
 
-     public List<VariantConfig> getAllVariantConfig(){
-         return getAdminPVIDao().getAllVariantConfig();
-     }
+    public List<VariantConfig> getAllVariantConfig() {
+        return getAdminPVIDao().getAllVariantConfig();
+    }
 
 
     public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems) {
-         int strLength = 20;
-         SkuItem skuItem = checkedInSkuItems.get(0);
-         Map<Long, String> skuItemBarcodeMap = new HashMap<Long, String>();
-         ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
-         String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-         SkuGroup skuGroup = skuItem.getSkuGroup();
-         Date expiryDate = skuGroup.getExpiryDate();
-         String date = "";
-         if (expiryDate == null) {
-             date = "NA";
-         } else {
-             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-             date = sdf.format(expiryDate);
-         }
-         for (SkuItem checkedInSkuItem : checkedInSkuItems) {
-             String data = "";
-              if (checkedInSkuItem.getSkuGroup().getBarcode() == null && checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX)) {
-               data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                 + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
-              } else {
-                   data = checkedInSkuItem.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                 + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
-              }
-             if (!skuItemBarcodeMap.containsKey(checkedInSkuItem.getId())) {
-                 skuItemBarcodeMap.put(checkedInSkuItem.getId(), data);
-             }
+        int strLength = 20;
+        SkuItem skuItem = checkedInSkuItems.get(0);
+        Map<Long, String> skuItemBarcodeMap = new HashMap<Long, String>();
+        ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+        String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
+        SkuGroup skuGroup = skuItem.getSkuGroup();
+        Date expiryDate = skuGroup.getExpiryDate();
+        String date = "";
+        if (expiryDate == null) {
+            date = "NA";
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            date = sdf.format(expiryDate);
+        }
+        for (SkuItem checkedInSkuItem : checkedInSkuItems) {
+            String data = "";
+            if (checkedInSkuItem.getSkuGroup().getBarcode() == null && checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX)) {
+                data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+            } else {
+                data = checkedInSkuItem.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
+                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+            }
+            if (!skuItemBarcodeMap.containsKey(checkedInSkuItem.getId())) {
+                skuItemBarcodeMap.put(checkedInSkuItem.getId(), data);
+            }
 
-         }
-         return skuItemBarcodeMap;
-     }
+        }
+        return skuItemBarcodeMap;
+    }
 
-    
+
     public BaseDao getBaseDao() {
         return baseDao;
     }
@@ -459,24 +456,24 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         this.productVariantInventoryDao = productVariantInventoryDao;
     }
 
-	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
-		return adminSkuItemDao.getInStockSkuItems(skuGroupList);
-	}
+    public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList) {
+        return adminSkuItemDao.getInStockSkuItems(skuGroupList);
+    }
 
-	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-		return adminSkuItemDao.getInStockSkuItems(skuGroup);
-	}
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+        return adminSkuItemDao.getInStockSkuItems(skuGroup);
+    }
 
-	public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
-		return adminSkuItemDao.getInStockSkuItems(barcode, warehouse);
-	}
+    public List<SkuItem> getInStockSkuItems(String barcode, Warehouse warehouse) {
+        return adminSkuItemDao.getInStockSkuItems(barcode, warehouse);
+    }
 
 
-     public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) {
-            return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem,stockTransferLineItem,grnLineItem,transferQty );
-     }
+    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, Long transferQty) {
+        return adminPVIDao.getCheckedInOrOutSkuItems(rvLineItem, stockTransferLineItem, grnLineItem, transferQty);
+    }
 
-    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant){
-        return adminPVIDao. getCheckedInSkuGroup(brand, warehouse, product,productVariant);
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {
+        return adminPVIDao.getCheckedInSkuGroup(brand, warehouse, product, productVariant);
     }
 }

@@ -2,6 +2,7 @@ package com.hk.admin.impl.dao.inventory;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
@@ -117,42 +118,42 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     */
 
 
-     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-    String sql = "select pvi as productVariantInventory, sg as skuGroup, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
-        + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
-        + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NOT Null and si.barcode not like '%HK-INV-%' ";
-    if (warehouse != null) {
-      sql = sql + " and s.warehouse = :warehouse ";
+    public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
+        String sql = "select pvi as productVariantInventory, sg as skuGroup, sg.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
+                + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
+                + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NOT Null and si.barcode not like '%" + BarcodeUtil.BARCODE_SKU_ITEM_PREFIX + "%' ";
+        if (warehouse != null) {
+            sql = sql + " and s.warehouse = :warehouse ";
+        }
+        sql = sql + " group by sg.id having sum(pvi.qty) > 0";
+
+        Query query = getSession().createQuery(sql).setParameter("brand", brand);
+
+        if (warehouse != null) {
+            query.setParameter("warehouse", warehouse);
+        }
+        query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+
+        return query.list();
     }
-    sql = sql + " group by sg.id having sum(pvi.qty) > 0";
-
-    Query query = getSession().createQuery(sql).setParameter("brand", brand);
-    if (warehouse != null) {
-      query.setParameter("warehouse", warehouse);
-    }
-    query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
-
-    return query.list();
-  }
 
 
+    public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse) {
+        String sql = "select pvi as productVariantInventory, sg as skuGroup, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
+                + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
+                + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NULL and si.barcode like '%" + BarcodeUtil.BARCODE_SKU_ITEM_PREFIX + "%'";
+        if (warehouse != null) {
+            sql = sql + " and s.warehouse = :warehouse ";
+        }
+        sql = sql + " group by si.id having sum(pvi.qty) > 0";
 
-    public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse){
-       String sql = "select pvi as productVariantInventory, sg as skuGroup, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
-        + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
-        + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NULL and si.barcode like '%HK-INV-%'";
-    if (warehouse != null) {
-      sql = sql + " and s.warehouse = :warehouse ";
-    }
-    sql = sql + " group by si.id having sum(pvi.qty) > 0";
+        Query query = getSession().createQuery(sql).setParameter("brand", brand);
+        if (warehouse != null) {
+            query.setParameter("warehouse", warehouse);
+        }
+        query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
 
-    Query query = getSession().createQuery(sql).setParameter("brand", brand);
-    if (warehouse != null) {
-      query.setParameter("warehouse", warehouse);
-    }
-    query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
-
-    return query.list();
+        return query.list();
     }
     /*
      * public List<ProductVariantInventory> getCheckedOutSkuItems(ShippingOrder shippingOrder, LineItem lineItem) {
@@ -272,7 +273,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
             criteria.add(Restrictions.eq("grnLineItem", grnLineItem));
         }
         criteria.add(Restrictions.eq("qty", transferQty));
-        criteria.setProjection(Projections.distinct(Projections.property("skuItem")));         
+        criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
         return (List<SkuItem>) findByCriteria(criteria);
 
     }
@@ -281,7 +282,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {
 
         Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
-        String  productId = null;
+        String productId = null;
         String productVariantId = null;
         if (product != null) {
             productId = product.getId();

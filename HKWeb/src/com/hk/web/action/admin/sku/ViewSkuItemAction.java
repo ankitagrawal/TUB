@@ -2,14 +2,18 @@ package com.hk.web.action.admin.sku;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.StockTransferLineItem;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.constants.sku.EnumSkuItemTransferMode;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.CycleCountService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +31,21 @@ public class ViewSkuItemAction extends BaseAction {
 
     @Autowired
     private AdminInventoryService adminInventoryService;
+    @Autowired
+    private CycleCountService cycleCountService;
     private Long entityId;
     private RvLineItem rvLineItem;
     private StockTransferLineItem stockTransferLineItem;
+    private CycleCount cycleCount;
+    private SkuGroup skuGroup;
     List<SkuItem> skuItemList = new ArrayList<SkuItem>(0);
 
     public Resolution pre() {
+
+        if(entityId == null){
+//            addRedirectAlertMessage("please enter through valid page");
+           return new RedirectResolution("/pages/admin/viewItemBarcode.jsp");
+        }
 
         if (entityId.equals(EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
             skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, -1L);
@@ -40,6 +53,8 @@ public class ViewSkuItemAction extends BaseAction {
             skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, 1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())) {
             skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, -1L);
+        } else if (entityId.equals(EnumSkuItemTransferMode.CYCLE_COUNT.getId()))  {             
+           skuItemList =cycleCountService.getScannedSkuItems(skuGroup.getId(),cycleCount.getId());
         }
                                                         
         return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
@@ -75,6 +90,22 @@ public class ViewSkuItemAction extends BaseAction {
 
     public void setStockTransferLineItem(StockTransferLineItem stockTransferLineItem) {
         this.stockTransferLineItem = stockTransferLineItem;
+    }
+
+    public CycleCount getCycleCount() {
+        return cycleCount;
+    }
+
+    public void setCycleCount(CycleCount cycleCount) {
+        this.cycleCount = cycleCount;
+    }
+
+    public SkuGroup getSkuGroup() {
+        return skuGroup;
+    }
+
+    public void setSkuGroup(SkuGroup skuGroup) {
+        this.skuGroup = skuGroup;
     }
 }
 

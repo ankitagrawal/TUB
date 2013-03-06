@@ -41,4 +41,8 @@ public interface CycleCountService {
 
     public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty);
 
+    public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId);
+
+    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem);
+
 }

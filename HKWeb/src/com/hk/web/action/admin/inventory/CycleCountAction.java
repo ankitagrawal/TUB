@@ -28,6 +28,7 @@ import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.sku.EnumSkuItemTransferMode;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -39,6 +40,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.web.action.admin.sku.ViewSkuItemAction;
 import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -92,6 +94,8 @@ public class CycleCountAction extends BasePaginatedAction {
     private Map<String, String> hkBarcodeErrorsMap = new HashMap<String, String>();
     private Map<Long, Integer> cycleCountPviMap = new HashMap<Long, Integer>();
     private Map<Long, Integer> missedSkuGroupSystemInventoryMap = new HashMap<Long, Integer>();
+    private Map<Long, Integer> skuItemScannedQtyMap = new HashMap<Long, Integer>();
+    private Map<Long, Integer> skuItemSystemQtyMap = new HashMap<Long, Integer>();
     private String cycleCountPVImapString;
     private boolean error = false;
     private Page cycleCountPage;
@@ -105,6 +109,9 @@ public class CycleCountAction extends BasePaginatedAction {
     private Integer cycleCountType;
     private Long cycleCountStatus;
     private List<SkuGroup> missedSkuGroupList = new ArrayList<SkuGroup>();
+    private List<SkuGroup> scannedSkuItemGroupList = new ArrayList<SkuGroup>();
+    private SkuItem skuItem;
+
 
     public Resolution directToCycleCountPage() {
 
@@ -320,18 +327,18 @@ public class CycleCountAction extends BasePaginatedAction {
             if (skuItem != null) {
                 CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
                 if (existingCycleCountItem != null) {
-                    addRedirectAlertMessage(new SimpleMessage(hkBarcode + " --> already Scanned"));
-                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId());
+                    message = hkBarcode + " --> already Scanned";
+                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", true);
                 } else {
                     SkuItem validSkuItem = getValidSkuItem(skuItem);
                     if (validSkuItem == null) {
-                        addRedirectAlertMessage(new SimpleMessage("Invalid Item Barcode for this Audit"));
-                        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId());
+                        message = hkBarcode + " --> Invalid Barcode for this Audit";
+                        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", true);
                     }
                     CycleCountItem validCycleCountItem = cycleCountService.createCycleCountItem(null, skuItem, cycleCount, 1);
                     cycleCountService.save(validCycleCountItem);
-                    addRedirectAlertMessage(new SimpleMessage("Sucessfully Scanned for:" + hkBarcode));
-                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId());
+                    message = "Sucessfully Scanned for:" + hkBarcode;
+                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", false);
                 }
             } else {
 
@@ -454,18 +461,52 @@ public class CycleCountAction extends BasePaginatedAction {
 
         List<CycleCountItem> cycleCountItemList = cycleCount.getCycleCountItems();
         List<SkuGroup> scannedSkuGroupList = new ArrayList<SkuGroup>();
+
+        List<SkuGroup> originalScannedSkuItemList = new ArrayList<SkuGroup>();
+
         if (cycleCountItemList != null) {
             for (CycleCountItem cycleCountItem : cycleCountItemList) {
-                scannedSkuGroupList.add(cycleCountItem.getSkuGroup());
+                if (cycleCountItem.getSkuGroup() != null) {
+                    scannedSkuGroupList.add(cycleCountItem.getSkuGroup());
+                }
+
+                if (cycleCountItem.getSkuItem() != null) {
+                    originalScannedSkuItemList.add(cycleCountItem.getSkuItem().getSkuGroup());
+                }
             }
         }
+
+//    Adding Item level scanned sku groups to get batches that were never scanned.
+
+        for (SkuGroup skuGroup : originalScannedSkuItemList) {
+            if (!skuItemScannedQtyMap.containsKey(skuGroup.getId())) {
+                skuItemScannedQtyMap.put(skuGroup.getId(), 1);
+            } else {
+                int value = skuItemScannedQtyMap.get(skuGroup.getId());
+                skuItemScannedQtyMap.put(skuGroup.getId(), value + 1);
+            }
+
+        }
+
+        Set<SkuGroup> ScannedSkuItemSet = new HashSet<SkuGroup>(originalScannedSkuItemList);
+        scannedSkuItemGroupList = new ArrayList<SkuGroup>(ScannedSkuItemSet);
+
+        scannedSkuGroupList.addAll(scannedSkuItemGroupList);
+
+//        List<SkuGroup> scannedSkuItemGroupList = new ArrayList<SkuGroup>(scannedSkuItemGroupSet);
 
         for (CreateInventoryFileDto createInventoryFileDto : createInventoryFileDtoList) {
             SkuGroup skuGroup = createInventoryFileDto.getSkuGroup();
             int pvi = createInventoryFileDto.getSumQty().intValue();
+
+            if (scannedSkuItemGroupList.contains(skuGroup)) {
+                skuItemSystemQtyMap.put(skuGroup.getId(), pvi);
+            }
             if (scannedSkuGroupList.contains(skuGroup)) {
                 continue;
             }
+
+
             skuGroupList.add(skuGroup);
             missedSkuGroupSystemInventoryMap.put(skuGroup.getId(), pvi);
 
@@ -739,6 +780,16 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
 
+    public Resolution deleteScannedSkuItem() {
+        if (skuItem == null) {
+            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + "- has already been deleted."));
+            return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+        }
+        cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
+        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + "- has been deleted."));
+        return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+    }
+
     public List<CycleCountItem> getCycleCountItems() {
         return cycleCountItems;
     }
@@ -910,5 +961,37 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public void setMissedSkuGroupSystemInventoryMap(Map<Long, Integer> missedSkuGroupSystemInventoryMap) {
         this.missedSkuGroupSystemInventoryMap = missedSkuGroupSystemInventoryMap;
+    }
+
+    public Map<Long, Integer> getSkuItemSystemQtyMap() {
+        return skuItemSystemQtyMap;
+    }
+
+    public void setSkuItemSystemQtyMap(Map<Long, Integer> skuItemSystemQtyMap) {
+        this.skuItemSystemQtyMap = skuItemSystemQtyMap;
+    }
+
+    public Map<Long, Integer> getSkuItemScannedQtyMap() {
+        return skuItemScannedQtyMap;
+    }
+
+    public void setSkuItemScannedQtyMap(Map<Long, Integer> skuItemScannedQtyMap) {
+        this.skuItemScannedQtyMap = skuItemScannedQtyMap;
+    }
+
+    public List<SkuGroup> getScannedSkuItemGroupList() {
+        return scannedSkuItemGroupList;
+    }
+
+    public void setScannedSkuItemGroupList(List<SkuGroup> scannedSkuItemGroupList) {
+        this.scannedSkuItemGroupList = scannedSkuItemGroupList;
+    }
+
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
+
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
     }
 }
