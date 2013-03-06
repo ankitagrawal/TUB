@@ -27,11 +27,6 @@
     HK = Ember.Application.create({});
     HK.contextPath = "${pageContext.request.contextPath}";
 
-    function showCouponDetails(){
-        $("#couponPopUp").toggle();
-        $(".appliedOfferDetails").toggle();
-    }
-
     function applicableOffers(){
         $.ajax({
             url:"core/cart/Cart.action",
