@@ -204,7 +204,7 @@
 			$('#discount').change(function() {
 				var discount = $('#discount').find('option:selected').val();
 				var grandTotal = $('.grandTotal').val();
-				$('#finalPayable').val(parseFloat(grandTotal) - discount).toFixed(0);
+				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
 			});
 		});
 	</script>
