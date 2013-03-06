@@ -7,6 +7,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,7 @@ public class StockTransferDaoImpl extends BaseDaoImpl implements StockTransferDa
             DetachedCriteria userCriteria = stockTransferCriteria.createCriteria("createdBy");
             userCriteria.add(Restrictions.like("login".toLowerCase(), "%" + userLogin.toLowerCase() + "%"));
         }
+	    stockTransferCriteria.addOrder(Order.desc("id"));
         return list(stockTransferCriteria, pageNo, perPage);
     }
 
