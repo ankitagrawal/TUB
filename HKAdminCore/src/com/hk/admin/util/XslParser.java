@@ -159,6 +159,7 @@ public class XslParser {
             boolean productDeleted = false;
             boolean outOfStock = false;
             boolean isJitBoolean = false;
+            boolean isDropShipBoolean = false;
             String refProdId = "";
             Boolean refIsService = false;
             Product refProduct = null;
@@ -266,6 +267,9 @@ public class XslParser {
                     String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
                     isJitBoolean = StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
                     product.setJit(isJitBoolean);
+                    String isDropShip = getCellValue(XslConstants.IS_DROPSHIP, rowMap, headerMap);
+                    isDropShipBoolean = StringUtils.isNotBlank(isDropShip) && isDropShip.trim().toLowerCase().equals("y") ? true : false;
+                    product.setDropShipping(isDropShipBoolean);
                     product.setProductVariants(productVariants);
                     product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
                     productDeleted = true;
