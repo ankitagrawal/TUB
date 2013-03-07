@@ -1,7 +1,8 @@
 require('js/templates');
 
 HK.CartOfferController = Ember.Controller.create({
-    dummyArray:[],
+    finalApplicableOffers:[],
+    array:[],
     isOffer:null,
     showOfferText:false,
     showOfferFlag:false,
@@ -70,6 +71,10 @@ HK.CartOfferController = Ember.Controller.create({
         $("#" + event.context).click();
     },
 
+    scrollToOffer:function(){
+        $('html, body').animate({scrollTop: $(".products_container").height() + 250}, 1000);
+    },
+
     getOffer:function(){
         self = this;
         self.get("applicableOffers").clear();
@@ -81,9 +86,27 @@ HK.CartOfferController = Ember.Controller.create({
                 data.applicableOffers.forEach(function(offer){
                     self.get("applicableOffers").pushObject(Ember.Object.create(offer));
                 });
+                
                 self.get("applicableOffers").forEach(function(offer){
                     offer.set("removeFlag",false);
                 });
+                var num = self.get("applicableOffers").length %3;
+                if(num >0){
+                    for(var i = 0; i< num; i++){
+                        self.get("array").pushObject(self.get("applicableOffers").popObject());
+                    }
+                }
+                var count = 0;
+                var dummyArray = [];
+                self.get("applicableOffers").forEach(function(offer){
+                    dummyArray.pushObject(offer);
+                    count++;
+                    if(count%3 == 0){
+                        self.get("finalApplicableOffers").pushObject(dummyArray);
+                        dummyArray = [];
+                    }
+                });
+                self.get("finalApplicableOffers").pushObject(self.get("array"));
                 if(!Ember.empty(data.appliedOffer)){                    
                     self.get("applicableOffers").forEach(function(offer){
                         if(offer.id === parseInt(data.appliedOffer.id)){
@@ -97,7 +120,7 @@ HK.CartOfferController = Ember.Controller.create({
                         }
                     });                    
                 }
-                if(self.get("applicableOffers").length > 0){
+                if(self.get("finalApplicableOffers").length > 0){
                     self.set("showOfferFlag", true);
                     self.set("showOfferText", true);
                 }

@@ -557,6 +557,7 @@
 
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
 
+<div id="appliedOfferDiv"></div>
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div style="left:0px; border:none" class='right_container coupon'>
@@ -588,7 +589,7 @@
     </div>
 </shiro:lacksRole>
 </div>
-<div id="appliedOfferDiv"></div>
+
 
 <div class='right_container total' style="left: 30px;">
 <h5>Checkout</h5>

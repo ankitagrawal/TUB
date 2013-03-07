@@ -5736,7 +5736,7 @@ color: #e62580;
 .applicableOfferContainer{
     position: relative;
     float: left;
-    width: 70%;
+    width: 73%;
     border-radius: 5px;
     height: auto;
     bottom: 100px;
@@ -5878,6 +5878,24 @@ color: #e62580;
     float: left;
     left: 17%;
     top: -23px;
+    width: 42%;
+}
+
+.offerTextOnTopButton{
+    position: relative;
+    top: -30px;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 5px;
+    background: rgb(184, 229, 255);
+    cursor: pointer;
+    float: left;
+}
+
+.offerRow{
+    position: relative;
+    float: left;
+    width: 100%;
 }
 
 /*

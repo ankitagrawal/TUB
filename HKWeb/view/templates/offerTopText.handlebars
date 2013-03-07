@@ -1,3 +1,4 @@
 {{#if HK.CartOfferController.showOfferText}}
 	<div class="offerTextOnTop">You have {{controller.applicableOffers.length}} offers waiting to be applied</div>
+	<div class="offerTextOnTopButton" {{action scrollToOffer target="controller"}}>Click here</div>
 {{/if}}
