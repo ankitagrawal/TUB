@@ -261,11 +261,12 @@
   </h2>
 
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-    <a href="/" class="back"> &larr; go back to add more products</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 50%;"> &larr; go back to add more products</a>
   </c:if>
   <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-    <a href="/" class="back"> &larr; go back to add products to your shopping cart</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 50%;"> &larr; go back to add products to your shopping cart</a>
   </c:if>
+ <div id="offerTextOnTop"></div>
 </s:layout-component>
 
 <s:layout-component name="cart_items">

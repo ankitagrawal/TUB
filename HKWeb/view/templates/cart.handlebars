@@ -1,10 +1,10 @@
 {{#if HK.CartOfferController.showOfferFlag}}
 {{#view class="applicableOfferContainer" controllerBinding="controller"}}
-  <div class="applicableOfferHead">Coupon codes available</div>
+  <div class="applicableOfferHead">Offers available for your cart</div>
   <div class="gotoCheckout"> <div class="gotoCheckoutInner">GO BACK TO CHECKOUT</div></div>
   {{#each value in controller.applicableOffers}}
     <div class="applicableOffer">    
-      <div class="applicableOfferDesc">{{value.description}}</div>
+      <div class="applicableOfferDesc" style="width: 100%;">{{value.description}}</div>
       {{#if value.terms}}
         <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
       {{/if}}
