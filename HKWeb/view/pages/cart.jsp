@@ -560,7 +560,7 @@
 <div id="appliedOfferDiv"></div>
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div style="left:0px; border:none" class='right_container coupon'>
+    <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>
         <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
             <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
@@ -591,7 +591,7 @@
 </div>
 
 
-<div class='right_container total' style="left: 30px;">
+<div class='right_container total' style="left: 30px;margin-bottom: 2px;width:235px;margin-left: initial;margin-right: initial;">
 <h5>Checkout</h5>
 <br/>
 

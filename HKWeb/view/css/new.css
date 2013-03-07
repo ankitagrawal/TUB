@@ -3187,9 +3187,9 @@ h2.prod_title {
 .step2 .right_container {
     display: inline;
     float: left;
-    width: 235px;
+    width: 190px;
     position: relative;
-    left: 30px;
+    left: 40px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -o-border-radius: 5px;
@@ -3199,7 +3199,9 @@ h2.prod_title {
     border: 1px solid #ddd;
     color: #888;
     padding: 10px 10px;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /* line 1220, ../sass/main.scss */
