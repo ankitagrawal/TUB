@@ -1112,26 +1112,14 @@
 		</example>
 	</function>
 	<function>
-    <description>
-        returns true if filter heads need to be hidden
-    </description>
-    <name>hideFilterHeads</name>
-    <function-class>com.hk.taglibs.Functions</function-class>
-    <function-signature>boolean hideFilterHeads(java.lang.String,java.lang.String,java.lang.String)</function-signature>
-    <example>
-        ${hk:hideFilterHeads(${o1, o2, o3})}
-    </example>
-</function>
-    <function>
-        <description>
-            returns true if product is service
-        </description>
-        <name>isProductService</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>Boolean isProductService(com.hk.domain.catalog.product.Product)</function-signature>
-        <example>
-            ${hk:isProductService(${productId})}
-        </example>
-    </function>
-
+		<description>
+			returns true if filter heads need to be hidden
+		</description>
+		<name>hideFilterHeads</name>
+		<function-class>com.hk.taglibs.Functions</function-class>
+		<function-signature>boolean hideFilterHeads(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+		<example>
+			${hk:hideFilterHeads(${o1, o2, o3})}
+		</example>
+	</function>
 </taglib>
