@@ -27,7 +27,15 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-
+		<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<bean
+						class="com.hk.listener.HKMergeEventListener">
+					</bean>
+				</entry>
+			</map>
+		</property>
 
 
 		<!--<property name="typeDefinitions">

@@ -1,5 +1,6 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
@@ -8,6 +9,8 @@
 <jsp:useBean id="now" class="java.util.Date" scope="request"/>
 <s:layout-component name="htmlHead">
  <c:set var="fromwarehouse" value="${whAction.setWarehouse}"/>
+	<c:set var="STOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getId()%>" />
+	<c:set var="STGenerated" value="<%=EnumStockTransferStatus.Generated.getId()%>" />
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -54,6 +57,25 @@
 				formName.attr('action', formURL+"?stockTransfer=" + ${sta.stockTransfer.id} + "&save=");
 				formName.submit();
 			});
+
+			$('#markAsStockTransferOutCompleted').click(function() {
+				return confirm("Do You want to finish the Transfer Out Process?");
+			});
+
+			updateTotal('.checkedOutQty', '.totalCheckedOutQty', 1);
+			function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+				var total = 0;
+				$.each($(fromTotalClass), function (index, value) {
+					var eachRow = $(value);
+					var eachRowValue = eachRow.html();
+					total += parseFloat(eachRowValue);
+				});
+				if (toHtml == 1) {
+					$(toTotalClass).html(total);
+				} else {
+					$(toTotalClass).val(total.toFixed(2));
+				}
+			}
 
 		});
 	</script>
@@ -114,26 +136,36 @@
 				<td><s:submit name="createOrUpdateStockTransfer" value="Create/Update Stock Transfer" id="createST"/> </td>
 			</tr>
 		</table>
+		<c:if test="${sta.stockTransfer.id != null}">
+			<div>
+				<s:submit name="markAsStockTransferOutCompleted" value="Mark As Stock Transfer Completed"
+				          id="markAsStockTransferOutCompleted"/>
+			</div>
+		</c:if>
 	</s:form>
 	<div class="alertST messages"><s:messages key="generalMessages"/></div>
 
 	<c:if test="${sta.stockTransfer.id != null}">
-		<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
-		<fieldset class="right_label">
-			<legend>Scan Barcode:</legend>
-			<ul>
-				<li>
-					<s:label name="barcode">Product Variant Barcode</s:label>
-					<s:text name="productVariantBarcode" id="productVariantBarcode"/>
-				</li>
-				<li></li>
-			</ul>
-		</fieldset>
-		</s:form>
+		<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+			<s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction" id="stForm2">
+			<fieldset class="right_label">
+				<legend>Scan Barcode:</legend>
+				<ul>
+					<li>
+						<s:label name="barcode">Product Variant Barcode</s:label>
+						<s:text name="productVariantBarcode" id="productVariantBarcode"/>
+					</li>
+					<li></li>
+				</ul>
+			</fieldset>
+			</s:form>
+		</c:if>
 		<table border="1">
 			<thead>
 			<tr>
-				<th>Barcode</th>
+				<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+					<th>Barcode</th>
+				</c:if>
 				<th>VariantID</th>
 				<th>Details</th>
 				<th>Checkedout Qty</th>
@@ -142,7 +174,9 @@
 				<th>Batch Number</th>
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
-				<th>Reduce Qty By 1</th>
+				<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+					<th>Reduce Qty By 1</th>
+				</c:if>
 			</tr>
 			</thead>
 			<tbody id="stTable">
@@ -150,13 +184,15 @@
 				<c:set var="productVariant" value="${stockTransferLineItem.sku.productVariant}"/>
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-					<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+					<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+						<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+					</c:if>
 					<td>
 							${productVariant.id}
 					</td>
 					<td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
 					</td>
-					<td> ${stockTransferLineItem.checkedoutQty}
+					<td class="checkedOutQty"> ${stockTransferLineItem.checkedoutQty}
 					</td>
 					<td>${checkedOutSkuGroup.costPrice}
 					</td>
@@ -168,15 +204,23 @@
 					<td>
 						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
 					<c:if test="${stockTransferLineItem.checkedoutQty > 0}">
-					<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
-						Reduce Qty By 1
-					<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
-					<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
+						<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
+							<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
+								Reduce Qty By 1
+								<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
+								<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
+						</c:if>
 					</c:if>
 				</tr>
 
 			</c:forEach>
 			</tbody>
+			<tfoot>
+			<tr>
+				<td colspan="3">Total</td>
+				<td class="totalCheckedOutQty"></td>
+			</tr>
+			</tfoot>
 		</table>
 	</c:if>
 
