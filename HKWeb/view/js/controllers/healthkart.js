@@ -3,7 +3,7 @@ require('js/templates');
 HK.CartOfferController = Ember.Controller.create({
     finalApplicableOffers:[],
     array:[],
-    totalOffers:0,
+    totalOffers:[],
     isOffer:null,
     showOfferText:false,
     showOfferFlag:false,
@@ -81,13 +81,14 @@ HK.CartOfferController = Ember.Controller.create({
         self.get("applicableOffers").clear();
         self.get("finalApplicableOffers").clear();
         self.get("array").clear();
+        self.get("totalOffers").clear();
         tempArray = [],
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
             success: function ( data ) {
-                self.set("totalOffers", data.applicableOffers.length);
                 data.applicableOffers.forEach(function(offer){
+                    self.get("totalOffers").pushObject(Ember.Object.create(offer));
                     self.get("applicableOffers").pushObject(Ember.Object.create(offer));
                 });
                 
@@ -111,9 +112,11 @@ HK.CartOfferController = Ember.Controller.create({
                     }
                 });
                 self.get("finalApplicableOffers").pushObject(self.get("array"));
+
                 if(!Ember.empty(data.appliedOffer)){                    
-                    self.get("applicableOffers").forEach(function(offer){
-                        if(offer.id === parseInt(data.appliedOffer.id)){
+                    self.get("finalApplicableOffers").forEach(function(array){
+                        array.forEach(function(offer){
+                            if(offer.id === parseInt(data.appliedOffer.id)){
                             if(self.get("currentlyAppliedOffer").length === 0){
                                 self.get("currentlyAppliedOffer").pushObject(offer);
                             }
@@ -122,9 +125,10 @@ HK.CartOfferController = Ember.Controller.create({
                         else{
                             offer.set("removeFlag",false);
                         }
+                        });
                     });                    
                 }
-                if(self.get("finalApplicableOffers").length > 0){
+                if(self.get("totalOffers").length > 0){
                     self.set("showOfferFlag", true);
                     self.set("showOfferText", true);
                 }

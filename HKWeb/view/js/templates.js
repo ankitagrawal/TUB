@@ -290,7 +290,7 @@ function program1(depth0,data) {
   var buffer = '', hashTypes;
   data.buffer.push("\n	<div class=\"offerTextOnTop\">You have ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "controller.totalOffers", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "controller.totalOffers.length", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push(" offers waiting to be applied</div>\n	<div class=\"offerTextOnTopButton\" ");
   hashTypes = {'target': "STRING"};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "scrollToOffer", {hash:{
