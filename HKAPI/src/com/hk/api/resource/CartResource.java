@@ -6,6 +6,7 @@ import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.constants.discount.OfferConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.coupon.CouponType;
@@ -236,32 +237,34 @@ public class CartResource extends BaseAction {
   }
 
   public Set<Offer> getApplicableOffers(Order order) {
-    applicableOffers = new HashSet<Offer>();
-    Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
+    applicableOffers = new HashSet<Offer>();    
     User user = order.getUser();
-    if (activeOffersPage != null) {
-      List<Offer> activeOffers = activeOffersPage.getList();
-      for (Offer activeOffer : activeOffers) {
-        if (activeOffer.getOfferTrigger() != null) {
-          logger.debug("Active Offer ID -> " + activeOffer.getId());
-          OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
-          if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, user) && activeOffer.isShowPromptly()) {
-            if (activeOffer.getOfferAction().getFreeVariant() != null) {
-              ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
-              if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+    if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
+      Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
+      if (activeOffersPage != null) {
+        List<Offer> activeOffers = activeOffersPage.getList();
+        for (Offer activeOffer : activeOffers) {
+          if (activeOffer.getOfferTrigger() != null) {
+            logger.debug("Active Offer ID -> " + activeOffer.getId());
+            OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
+            if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, user) && activeOffer.isShowPromptly()) {
+              if (activeOffer.getOfferAction().getFreeVariant() != null) {
+                ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
+                if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                  applicableOffers.add(activeOffer);
+                }
+              } else {
                 applicableOffers.add(activeOffer);
               }
-            } else {
-              applicableOffers.add(activeOffer);
             }
           }
         }
       }
-    }
-    List<OfferInstance> offerInstances = offerInstanceDao.getActiveOffers(user);
-    for (OfferInstance instance : offerInstances) {
+      List<OfferInstance> offerInstances = offerInstanceDao.getActiveOffers(user);
+      for (OfferInstance instance : offerInstances) {
         if (offerManager.isOfferValidForUser(instance.getOffer(), user)) {
           applicableOffers.add(instance.getOffer());
+        }
       }
     }
     return applicableOffers;
