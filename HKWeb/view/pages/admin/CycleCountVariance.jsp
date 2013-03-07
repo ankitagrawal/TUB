@@ -6,9 +6,14 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="cycleCount" value="<%=EnumSkuItemTransferMode.CYCLE_COUNT.getId()%>"/>
 <c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
+<c:set var="cycleCountStatusId" value="<%=EnumCycleCountStatus.RequestForApproval.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Variance Report">
 <s:layout-component name="heading">
+      <%
+            String messageColor = request.getParameter("messageColor");
+            pageContext.setAttribute("messageColor", messageColor);
+        %>
     <div style="text-align: center;">
         CYCLE COUNT # ${cycle.cycleCount.id}
         BRAND : ${cycle.cycleCount.brandsToAudit.brand}
@@ -16,6 +21,39 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+//             $('.alert').hide();
+                $('.alert').hide();
+
+                $('#productVariantBarcode').focus();
+                $('#productVariantBarcode').keydown(function() {
+                    $('.alertST').hide();
+                });
+
+              if ($('#messageColorParam').val() == "green") {
+                    $('.alertST').find('li').css('font-size', '30px').css('color', 'green');
+                } else {
+                    $('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+                }
+
+
+                $('#stForm2').submit(function() {
+                    var pvb = $('#productVariantBarcode').val();
+                    if (pvb == null || pvb == "") {
+                        alert("Value can't be Empty");
+                        return false;
+                    }
+                });
+                $('#productVariantBarcode').change(function() {
+
+                    var formName = $('#stForm2');
+                    var formURL = formName.attr('action');
+                    formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} + "&deleteScannedSkuItem=");
+                    formName.submit();
+                });
+
+
+
+
             var scannedSum = 0;
             var systemSum = 0;
             var varianceSum = 0;
@@ -50,7 +88,23 @@
 
 <c:set value="<%= EnumCycleCountStatus.Closed.getId()%>" var="closed"/>
 <c:if test="${cycle.cycleCount.cycleStatus < closed }">
-    <table style="margin: 80px auto 81px;">
+      <c:if test="${cycle.cycleCount.cycleStatus == cycleCountStatusId}">
+        <input type="hidden" id="messageColorParam" value="${messageColor}">
+         <div class="alertST messages"><s:messages key="generalMessages"/></div>
+        <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">
+            <fieldset class="right_label">
+                <legend>Scan Barcode to delete:</legend>
+                <ul>
+                    <li>
+                        <s:label name="barcode">Product Variant Barcode</s:label>
+                        <s:text name="hkBarcode" id="productVariantBarcode"/>
+                    </li>
+                    <li></li>
+                </ul>
+            </fieldset>
+           </s:form>
+         </c:if>
+    <table style="margin: 55px auto 81px;">
     <thead>
     <tr>
         <th>VariantID</th>

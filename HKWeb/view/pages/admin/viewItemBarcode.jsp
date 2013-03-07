@@ -56,14 +56,14 @@
                                              value="${viewItem.stockTransferLineItem.stockTransfer}"/>
                                     <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link>
                             </c:if></td>
-                        <td>
-                            <c:if test="${viewItem.cycleCount != null && viewItem.cycleCount.cycleStatus == cycleCountStatusId}">
-                                <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
-                                        event="deleteScannedSkuItem">Delete
-                                    <s:param name="cycleCount" value="${viewItem.cycleCount}"/>
-                                    <s:param name="skuItem" value="${skuItem.id}"/>
-                                </s:link>
-                            </c:if></td>
+                        <%--<td>--%>
+                            <%--<c:if test="${viewItem.cycleCount != null && viewItem.cycleCount.cycleStatus == cycleCountStatusId}">--%>
+                                <%--<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"--%>
+                                        <%--event="deleteScannedSkuItem">Delete--%>
+                                    <%--<s:param name="cycleCount" value="${viewItem.cycleCount}"/>--%>
+                                    <%--<s:param name="skuItem" value="${skuItem.id}"/>--%>
+                                <%--</s:link>--%>
+                            <%--</c:if></td>--%>
                     </tr>
 
                 </c:forEach>
