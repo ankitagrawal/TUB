@@ -8,7 +8,9 @@
       {{#if value.terms}}
         <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
       {{/if}}
-      <div class="endDate">Valid till: {{value.endDate}}</div>
+      {{#if value.endDate}}
+        <div class="endDate">Valid till: {{value.endDate}}</div>
+      {{/if}}
       {{#if value.removeFlag}}
         <div class="appliedButton">APPLIED</div>
         <div class="removeButton">
@@ -22,6 +24,7 @@
           </form>
         </div>
       {{else}}
+      <div class="applyFormButton">
         <form {{bindAttr action="controller.applyURL"}} method="post">
           <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
           <input name="applyOffer" value="APPLY" class="button_raj" type="submit">
@@ -30,6 +33,7 @@
             <input type="hidden" name="__fp" value="CATsOzMhS2E=">
           </div>
         </form>
+      </div>
       {{/if}}
     </div>
   {{/each}}
