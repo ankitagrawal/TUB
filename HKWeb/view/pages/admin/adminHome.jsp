@@ -295,6 +295,9 @@
 	<h3>
 		<s:link beanclass="com.hk.web.action.admin.inventory.POAction">PO List</s:link>
 	</h3>
+    <h3>
+          <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="searchExtraInventory" >ExtraInventory List</s:link>
+      </h3>
       <h3>
           <s:link beanclass="com.hk.web.action.admin.rtv.RTVAction">RTV(Return To Vendor) List</s:link>
       </h3>
@@ -312,6 +315,9 @@
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+
+		 <h3>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
 		<h3>
 			<s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -460,9 +466,9 @@
 <div class="left roundBox">
 	<h2>Healthkart Delivery</h2>
 
-    <h3>
+<%--    <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>--%>
 	<h3>
             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
                     title="Download Healthkart Delivery Runsheet" event="previewRunsheet">Download Delivery Runsheet

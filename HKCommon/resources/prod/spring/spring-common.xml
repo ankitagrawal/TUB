@@ -71,17 +71,16 @@
     
      <bean id="jdbcRealm" class="com.akube.framework.shiro.realm.HibernateSecurityRealm">
     </bean>
-
     <bean id="securityManager" class="com.akube.framework.shiro.manager.ShiroSecurityManager">
-    <!--<bean id="securityManager" class="com.springbook.shiro.SecurityManager">-->
-        
+
         <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
         <property name="realm" ref="jdbcRealm" />
         <property name="sessionMode" value="http" />
-        
+
         <!--property name="sessionMode" value="http"/-->
-        
+
     </bean>
+
 
     
 
@@ -94,6 +93,12 @@
             definition and
          2) even know which Shiro objects require these methods to be
             called. -->
+
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
     <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
@@ -103,7 +108,7 @@
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
         <property name="securityManager" ref="securityManager"/>
     </bean>
-    
+
     
 <!--  <bean id="propertyConfigurer" 
   class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -118,5 +123,9 @@
     </bean>
 <util:properties id="hkEnvProps" location="/WEB-INF/environment.properties" />
 
+    <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
+        <constructor-arg name="address" value="180.149.241.92">
+        </constructor-arg>
+    </bean>
     
 </beans>

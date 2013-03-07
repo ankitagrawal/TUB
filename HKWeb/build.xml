@@ -34,7 +34,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/jsoup-1.6.1.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/testng-5.8-jdk15.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/recaptcha4j-0.0.7.jar" />
-		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.0-incubating-SNAPSHOT.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/shiro-all-1.2.1.jar" />
 		<fileset file="${lib.root.dir}/rest/jackson-core-asl-1.8.5.jar" />
         <fileset file="${lib.root.dir}/rest/jackson-mapper-asl-1.8.5.jar"/>
         <fileset file="${lib.root.dir}/rest/jackson-jaxrs-1.8.5.jar" />
@@ -58,6 +58,10 @@
 		<fileset file="${project.admin.core.dir}/dist/hk-admin-core.jar" />
 		<fileset file="${project.report.dir}/dist/hk-report.jar" />
         <fileset file="${lib.root.dir}/commons/commons-collections-3.1.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar" />
   </path>
 
 

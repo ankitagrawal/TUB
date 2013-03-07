@@ -31,8 +31,28 @@ public enum EnumQuantiumCourierCodes {
 	CS("CS","Card Sent"),
 	RTO("RTO","Return To Origin"),
 	FRK("FRK","Franked"),
-	URO("URO","Undelivered Received at Origin"),
-	URBS("URBS", "Undelivered returned back to Shipper");
+	URO("URO","Undelivered Received at Origin"),	
+	URBS("URBS", "Undelivered returned back to Shipper"),
+
+	CBD("CBD", "Cannot be Delivered"),
+	CBA("CBA", "Could not be Attempted"),
+	RSC("RSC", "Rescheduled"),
+	RSF("RSF", "Refused"),
+	M("M", "Missing"),
+	RAB("RAB", "Received at Branch"),
+	TR("TR", "Transhipment Received"),
+	TS("TS", "Transhipment Sent"),
+	TRFR("TRFR", "Transhipment Received for return"),
+	TSFR("TSFR", "Transhipment Sent For Return"),
+	L("L", "Lost"),
+	DM("DM", "Damaged"),
+	AD("AD","Appointed Delivery"),
+	ADS("ADS","Appointed Delivery Successful"),
+	ADUS("ADUS", "Appointed Delivery UnSuccessful"),
+	RTC("RTC", "Return To Customer"),
+	R("R", "Returned"),
+	RA("RA", "Re Attempt"),
+	D("D", "Delivered");
 
 	private java.lang.String code;
 	private java.lang.String name;

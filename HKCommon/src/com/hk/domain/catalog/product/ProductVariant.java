@@ -8,6 +8,7 @@ import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.*;
 @Table(name = "product_variant")
 public class ProductVariant implements java.io.Serializable {
 
+  @Expose
   @Id
   @Column(name = "id", nullable = false, length = 12)
   private String id;
@@ -29,18 +31,22 @@ public class ProductVariant implements java.io.Serializable {
   @Column(name = "variant_name", nullable = true)
   private String variantName;
 
+  @Expose
   @Column(name = "hk_price", nullable = false)
   private Double hkPrice;
 
+  @Expose
   @Column(name = "b2b_price")
   private Double b2bPrice;
 
+  @Expose
   @Column(name = "marked_price", nullable = false)
   private Double markedPrice;
 
   @Column(name = "discount_percent", nullable = false)
   private Double discountPercent;
 
+  @Expose
   @Column(name = "cost_price", nullable = false)
   private Double costPrice;
 

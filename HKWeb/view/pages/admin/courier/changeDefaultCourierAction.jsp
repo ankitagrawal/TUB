@@ -147,9 +147,17 @@
             <label>Enter Pincode</label>
             <s:text name="pincodeString" id="pincode"/>
             <label>IsCod</label>
-            <s:checkbox name="cod"/>
+            <s:select name="cod">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>IsGround</label>
-            <s:checkbox name="ground"/>
+            <s:select name="ground">
+                <s:option value="">--Select--</s:option>
+                <s:option value="true">Yes</s:option>
+                <s:option value="false">No</s:option>
+            </s:select>
             <label>Select WareHouse</label>
             <s:select name="warehouse" id="warehouse">
                 <option value="">--Select--</option>
@@ -173,6 +181,7 @@
                         <th>Pincode</th>
                         <th>COD</th>
                         <th>Ground Shipping</th>
+                        <th>Mapping Name</th>
                         <th>Estimate Shipping Cost</th>
                         </thead>
                     </tr>
@@ -181,7 +190,7 @@
                         <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                             <td>
                                     ${ctr.index+1}.
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].id" value="${pincodeDefaultCourier.id}"/>
                             </td>
                             <td>
                                 <s:select name="pincodeDefaultCouriers[${ctr.index}].courier" id="courier${ctr.index}">
@@ -196,7 +205,7 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.warehouse.name}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.pincode.pincode}
@@ -204,15 +213,29 @@
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.cod}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].cod" value="${pincodeDefaultCourier.cod}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].cod" value="${pincodeDefaultCourier.cod}"/>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.groundShipping}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].groundShipping" value="${pincodeDefaultCourier.groundShipping}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].groundShipping" value="${pincodeDefaultCourier.groundShipping}"/>
+                            </td>
+                            <td>
+                                <c:if test="${pincodeDefaultCourier.cod == false and pincodeDefaultCourier.groundShipping == false}">
+                                    Prepaid Air
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == true and pincodeDefaultCourier.groundShipping == false}">
+                                    Cod Air
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == false and pincodeDefaultCourier.groundShipping == true}">
+                                    Prepaid Ground
+                                </c:if>
+                                <c:if test="${pincodeDefaultCourier.cod == true and pincodeDefaultCourier.groundShipping == true}">
+                                    Cod Ground
+                                </c:if>
                             </td>
                             <td>
                                     ${pincodeDefaultCourier.estimatedShippingCost}
-                                <s:hidden name="pincodeDefaultCouriers[${ctr.index}].estimatedShippingCost" value="${pincodeDefaultCourier.estimatedShippingCost}"/>
+                                <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].estimatedShippingCost" value="${pincodeDefaultCourier.estimatedShippingCost}"/>
                             </td>
                         </tr>
                     </c:forEach>

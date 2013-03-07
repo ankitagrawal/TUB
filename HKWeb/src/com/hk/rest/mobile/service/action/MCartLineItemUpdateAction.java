@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +86,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
         String message = MHKConstants.STATUS_DONE;
         String status = MHKConstants.STATUS_OK;
         User user = null;
-        if (getSecurityManager().getSubject().getPrincipal() != null) {
-            user = getUserService().getUserById(((Principal) getSecurityManager().getSubject().getPrincipal()).getId());
+        if (SecurityUtils.getSubject().getPrincipal() != null) {
+            user = getUserService().getUserById(((Principal) SecurityUtils.getSubject().getPrincipal()).getId());
             if (user == null) {
                 user = userManager.createAndLoginAsGuestUser(null, null);
             }
@@ -127,7 +128,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                   return JsonUtils.getGsonDefault().toJson(new HealthkartResponse(MHKConstants.STATUS_ERROR, MHKConstants.NO_STEP_UP, cartLineItem.getQty()));
                 }
             }
-            order = orderManager.trimEmptyLineItems(cartLineItem.getOrder());
+            orderManager.trimEmptyLineItems(cartLineItem.getOrder());
+            orderManager.getCartLineItemDao().refresh(order);
         }
 
 
@@ -161,7 +163,8 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 cartItemsList.add(cartItemResponse);
             }
         }
-        order = orderManager.trimEmptyLineItems(order);
+        orderManager.trimEmptyLineItems(order);
+        orderManager.getCartLineItemDao().refresh(order);
         Address address = order.getAddress() != null ? order.getAddress() : new Address();
         PricingDto pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
         Map<String,Object> cartMap = new HashMap<String,Object>();

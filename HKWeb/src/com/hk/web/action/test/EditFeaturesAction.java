@@ -8,11 +8,13 @@ import net.sourceforge.stripes.action.Resolution;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductFeature;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.pact.service.catalog.ProductService;
 
 @Component
 public class EditFeaturesAction extends BaseAction {
@@ -21,8 +23,9 @@ public class EditFeaturesAction extends BaseAction {
   private List<ProductFeature> productFeatures;
   private Product product;
 
-  
-  ProductDao productDao;
+
+  @Autowired
+  ProductService productService;
   
 
   @DefaultHandler
@@ -42,7 +45,7 @@ public class EditFeaturesAction extends BaseAction {
         getBaseDao().save(productFeature);
       }
     }
-    productDao.save(product);
+    productService.save(product);
     return new ForwardResolution("/pages/test/close.jsp");
   }
 

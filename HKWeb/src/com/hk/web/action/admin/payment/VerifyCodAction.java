@@ -3,6 +3,7 @@ package com.hk.web.action.admin.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.manager.SMSManager;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -39,6 +40,8 @@ public class VerifyCodAction extends BaseAction {
     private OrderService        orderService;
     @Autowired
     private OrderLoggingService orderLoggingService;
+    @Autowired
+    AdminOrderService   adminOrderService;
 
     @Validate(required = true)
     private Order               order;
@@ -50,16 +53,14 @@ public class VerifyCodAction extends BaseAction {
         User loggedOnUser = getUserService().getLoggedInUser();
         Map<String, Object> data = new HashMap<String, Object>(2);
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            Payment payment = paymentManager.verifyCodPayment(order.getPayment());
-
-            getOrderService().processOrderForAutoEsclationAfterPaymentConfirmed(order);
-            getOrderService().setTargetDispatchDelDatesOnBO(order);
-            getOrderLoggingService().logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), null);
-
-	        data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
-            data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
-            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
-            return new JsonResolution(healthkartResponse);
+            String comment = "Confirmed By : "+ loggedOnUser +" , through Clicking link Confirm COD" ;
+            Payment payment = adminOrderService.confirmCodOrder(order, comment);
+            if (payment != null) {
+                data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
+                data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
+                HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", data);
+                return new JsonResolution(healthkartResponse);
+            }
         }
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_RELOAD, "Payment Already Verified", data);
         return new JsonResolution(healthkartResponse);

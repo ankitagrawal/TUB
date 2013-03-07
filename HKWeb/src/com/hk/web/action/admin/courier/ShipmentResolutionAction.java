@@ -175,6 +175,7 @@ public class ShipmentResolutionAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
             return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
         }
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Manually Awb Created and Assigned to Shipping Order to create Shipment");
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
