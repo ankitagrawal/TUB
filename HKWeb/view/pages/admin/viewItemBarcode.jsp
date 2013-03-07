@@ -2,10 +2,13 @@
 <%@ page import="com.hk.pact.service.UserService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
+<%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="stockTransferOutId" value="<%=EnumSkuItemStatus.Stock_Transfer_Out.getId()%>"/>
 <c:set var="cycleCountStatusId" value="<%=EnumCycleCountStatus.RequestForApproval.getId()%>"/>
+<c:set var="stockTransferOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getId()%>"/>
+
 <%
     UserService userService = ServiceLocatorFactory.getService(UserService.class);
     pageContext.setAttribute("warehouse", userService.getWarehouseForLoggedInUser());
@@ -45,7 +48,7 @@
                         <td> ${skuItem.skuItemStatus.name} </td>
                         <td> ${skuItem.skuGroup.sku.warehouse.name}</td>
                         <td>
-                            <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id}">
+                            <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id && viewItem.stockTransferLineItem.stockTransfer.stockTransferStatus.id == stockTransferOutInProcess}">
                                 <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
                                         event="revertStockTransferOut">Revert it
                                     <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
