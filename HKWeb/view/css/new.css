@@ -5537,6 +5537,7 @@ color: #e62580;
     word-wrap: break-word;
     height: auto;
     width: 253px;
+    left: 35px;
 }
 
 .appliedOfferHead{
@@ -5738,6 +5739,7 @@ color: #e62580;
     width: 70%;
     border-radius: 5px;
     height: auto;
+    bottom: 100px;
 }
 
 .offerContainer:hover {
@@ -5839,6 +5841,27 @@ color: #e62580;
     position: relative;
     float: left;
     left: 10px;
+}
+
+.appliedOfferText{
+    position: relative;
+    float: left;
+    clear: both;
+    width: 100%;
+    left: 15px;
+    top: 5px;
+    text-decoration: underline;
+    font-size: 13px;
+    font-weight: bold;
+    color: #888;
+}
+
+.appliedOfferNew{
+    left: 30px !important;
+    width: 255px !important;
+    border: 1px solid #DCA !important;
+    background: rgb(248, 255, 163) !important;
+    border-radius: 5px !important;
 }
 
 /*

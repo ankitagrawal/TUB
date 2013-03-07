@@ -5,25 +5,34 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 
 function program1(depth0,data) {
   
-  var buffer = '', hashTypes;
-  data.buffer.push("\n  <div class=\"appliedOffer\">\n    <div class=\"appliedOfferHead\">Currently Applied Offer</div>\n    <div class=\"appliedOfferTitle\">");
+  var buffer = '', stack1, hashTypes;
+  data.buffer.push("\n  <div class=\"applicableOffer appliedOfferNew\">\n    <div class=\"appliedOfferText\">Currently applied offer</div>\n      <div class=\"applicableOfferDesc\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n        <div id=\"couponPopUp\" class=\"couponPopUp\">\n          <img ");
-  hashTypes = {'src': "STRING"};
+  data.buffer.push("</div>\n      ");
+  hashTypes = {};
+  stack1 = helpers['if'].call(depth0, "value.endDate", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        <div class=\"removeButton\" style=\"left: 10px;\">\n          <form ");
+  hashTypes = {'action': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'src': ("controller.imageURL")
+    'action': ("controller.applyURL")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" class=\"popupArrow\"></img>\n          <div class=\"couponPopUpMsg\">");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n          <div class=\"couponPopUpTerms\"><strong>Terms:</strong> ");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.terms", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n          <div class=\"couponPopUpDate\">Valid till: ");
+  data.buffer.push(" method=\"post\">\n            <input name=\"offer\" ");
+  hashTypes = {'value': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'value': ("value.id")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" type=\"hidden\">        \n            <input name=\"removeOffer\" value=\"REMOVE\" style=\"border: 1px solid !important;\" class=\"button_raj\" type=\"submit\">\n            <div style=\"display: none;\">\n              <input type=\"hidden\" name=\"_sourcePage\" value=\"nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ\">\n              <input type=\"hidden\" name=\"__fp\" value=\"CATsOzMhS2E=\">\n            </div>\n          </form>\n        </div>\n    </div>\n");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n        <div class=\"endDate\" style=\"width: 102% !important;\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n        </div>\n        <a class=\"appliedOfferDetails\" onclick=\"showCouponDetails()\">[show details]</a>\n        <a class=\"appliedOfferDetails\" style=\"display: none;\" onclick=\"showCouponDetails()\">[hide details]</a>\n    </div>  \n  </div>  \n");
+  data.buffer.push("</div>\n      ");
   return buffer;
   }
 

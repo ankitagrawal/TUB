@@ -80,6 +80,9 @@ HK.CartOfferController = Ember.Controller.create({
                 if(!Ember.empty(data.appliedOffer)){                    
                     self.get("applicableOffers").forEach(function(offer){
                         if(offer.id === parseInt(data.appliedOffer.id)){
+                            if(self.get("currentlyAppliedOffer").length === 0){
+                                self.get("currentlyAppliedOffer").pushObject(offer);
+                            }
                             offer.set("removeFlag",true);
                         }
                         else{
@@ -110,4 +113,4 @@ HK.CartOfferView = Ember.View.create({
 });
 
 HK.CartOfferView.appendTo('#applicableOfferDiv');
-//HK.AppliedOfferView.appendTo('#appliedOfferDiv');
+HK.AppliedOfferView.appendTo('#appliedOfferDiv');
