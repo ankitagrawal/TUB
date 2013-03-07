@@ -5677,6 +5677,7 @@ color: #e62580;
     font-size: 9px;
     font-style: italic;
     margin-bottom: 2px;
+    width: 100%;
 }
 
 .offerCount{
@@ -5769,7 +5770,7 @@ color: #e62580;
     border-radius: 3px !important;
     position: relative !important;
     float: left !important;
-    left: -121px !important;
+    left: 0px !important;
     width: 60px !important;
     height: 22px !important;
     top: 5px !important;
@@ -5823,7 +5824,7 @@ color: #e62580;
     border-radius: 4px;
     position: relative;
     float: left;
-    left: -121px;
+    left: 10px;
     width: 60px;
     height: 14px;
     top: 14px;
@@ -5831,6 +5832,13 @@ color: #e62580;
     padding-top: 7px;
     background: #ddd;
     text-align: center;
+    margin-right: 10px;
+}
+
+.applyFormButton{
+    position: relative;
+    float: left;
+    left: 10px;
 }
 
 /*

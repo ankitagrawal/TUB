@@ -72,12 +72,13 @@ function program3(depth0,data) {
   hashTypes = {};
   stack1 = helpers['if'].call(depth0, "value.terms", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n      <div class=\"endDate\">Valid till: ");
+  data.buffer.push("\n      ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n      ");
+  stack1 = helpers['if'].call(depth0, "value.endDate", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n      ");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "value.removeFlag", {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "value.removeFlag", {hash:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </div>\n  ");
   return buffer;
@@ -95,6 +96,16 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = '', hashTypes;
+  data.buffer.push("\n        <div class=\"endDate\">Valid till: ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n      ");
+  return buffer;
+  }
+
+function program8(depth0,data) {
+  
+  var buffer = '', hashTypes;
   data.buffer.push("\n        <div class=\"appliedButton\">APPLIED</div>\n        <div class=\"removeButton\">\n          <form ");
   hashTypes = {'action': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
@@ -109,10 +120,10 @@ function program6(depth0,data) {
   return buffer;
   }
 
-function program8(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n        <form ");
+  data.buffer.push("\n      <div class=\"applyFormButton\">\n        <form ");
   hashTypes = {'action': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'action': ("controller.applyURL")
@@ -122,18 +133,18 @@ function program8(depth0,data) {
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'value': ("value.id")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" type=\"hidden\">        \n          <input name=\"applyOffer\" value=\"APPLY\" class=\"button_raj\" type=\"submit\">\n          <div style=\"display: none;\">\n            <input type=\"hidden\" name=\"_sourcePage\" value=\"nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ\">\n            <input type=\"hidden\" name=\"__fp\" value=\"CATsOzMhS2E=\">\n          </div>\n        </form>\n      ");
+  data.buffer.push(" type=\"hidden\">        \n          <input name=\"applyOffer\" value=\"APPLY\" class=\"button_raj\" type=\"submit\">\n          <div style=\"display: none;\">\n            <input type=\"hidden\" name=\"_sourcePage\" value=\"nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ\">\n            <input type=\"hidden\" name=\"__fp\" value=\"CATsOzMhS2E=\">\n          </div>\n        </form>\n      </div>\n      ");
   return buffer;
   }
 
-function program10(depth0,data) {
+function program12(depth0,data) {
   
   
   data.buffer.push("\n  <div class=\"applicableOfferContainer\">\n    <div class=\"applicableOfferHead\">Coupon codes available</div>\n    <div class=\"gotoCheckout\"> <div class=\"gotoCheckoutInner\">GO BACK TO CHECKOUT</div></div>\n    <div class=\"noCoupons\"> NO COUPONS FOR YOU!</div>\n  </div>\n");
   }
 
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "HK.CartOfferController.showOfferFlag", {hash:{},inverse:self.program(10, program10, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "HK.CartOfferController.showOfferFlag", {hash:{},inverse:self.program(12, program12, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   else { data.buffer.push(''); }
   
