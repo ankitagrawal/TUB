@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,7 +173,7 @@ public class MLoginAction extends MBaseAction {
 		String status = MHKConstants.STATUS_OK;
 		try {
 			request.getSession().removeAttribute("userName");
-			getSecurityManager().getSubject().logout();
+			SecurityUtils.getSubject().logout();
 		} catch (Exception e) {
 			message = MHKConstants.STATUS_ERROR;
 			status = MHKConstants.STATUS_ERROR;

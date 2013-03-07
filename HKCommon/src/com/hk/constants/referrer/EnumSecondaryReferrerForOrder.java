@@ -18,7 +18,12 @@ public enum EnumSecondaryReferrerForOrder {
   OHANA(11L, "ohana"),
   OTHERS(12L, "others"),
   NOTIFYME(13L, "notify me"),
-  ENEWSLETTER(14L, "e newsletter"),
+  ENEWSLETTER(14L, "e-newsletter"),
+  CASHBACK_CALLS(15L, "cashback_calls"),
+  RTO_RETRY(16L, "rto_retry"),
+  INBOUND_FWD(17L, "inbound_fwd"),
+  CALLBACK_REQUEST(18L, "callback_request"),
+  EMAIL_REQUEST(19L, "email_request"),
   ;
 
 

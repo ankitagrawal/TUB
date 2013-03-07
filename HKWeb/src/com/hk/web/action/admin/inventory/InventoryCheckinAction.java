@@ -14,6 +14,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
@@ -298,7 +299,6 @@ public class InventoryCheckinAction extends BaseAction {
 
     public Resolution saveStockTransfer() {
         SkuItem skuItem;
-
         if (stockTransfer == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
             return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -331,6 +331,10 @@ public class InventoryCheckinAction extends BaseAction {
         ProductVariant productVariant = skuGroup.getSku().getProductVariant();
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
+        if (sku == null){
+            addRedirectAlertMessage(new SimpleMessage("No Sku Found for ProductVariantId:- " + (productVariant == null ? "" : productVariant.getId())));
+           return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
+        }
 
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
             checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);
@@ -348,6 +352,7 @@ public class InventoryCheckinAction extends BaseAction {
                 skuItem.setSkuGroup(checkinSkuGroup);
                 stockTransfer.setCheckinDate(HKDateUtil.getNow());
                 stockTransfer.setReceivedBy(loggedOnUser);
+	            stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getStockTransferStatus());
                 stockTransferLineItem.setStockTransfer(stockTransfer);
                 stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
                 if (stockTransferLineItem.getCheckedinQty() != null) {

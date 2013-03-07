@@ -61,8 +61,9 @@
               </s:select>
             </c:otherwise>
           </c:choose>   &nbsp; &nbsp;
-        <s:submit name="pre" value="Search PO"/>
-          <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All Extra Inventory PO              
+          <s:checkbox name="extraInventoryCreated"/>Extra Inventory Created &nbsp; &nbsp;
+        <s:submit name="pre" value="Search"/>
+          <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="getExtraInventoryPO" class="addBtn button_orange">All ExInv PO              
           </s:link>
           <s:submit name="generateExcelReport" value="Download to Excel" />
       </s:form>
@@ -91,6 +92,7 @@
         <th>GRNs</th>
 	    <th>Fill Rate</th>
         <th>Actions</th>
+        <th>Extra Inventory Created</th>
         <th>Parent PO</th>
       </tr>
       </thead>
@@ -153,6 +155,12 @@
                 </s:link>
                 </c:if>
 	        </td>
+            <td>
+                <c:if test="${purchaseOrder.extraInventoryCreated}">
+                    <input type="checkbox" name = "" checked />
+                </c:if>
+                <div style="height:50px;background:transparent;position:relative;top:-25px;"></div>
+            </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventory!=null}">
                     <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" event="pre">${purchaseOrder.extraInventory.purchaseOrder.id}

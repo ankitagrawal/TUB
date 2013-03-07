@@ -410,6 +410,7 @@ public class DeliveryStatusUpdateManager {
 			if (shippingOrderList != null && shippingOrderList.size() > 0) {
 				for (ShippingOrder shippingOrderInList : shippingOrderList) {
 					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					logger.debug("response for tracking id :" + trackingId);
 					try {
 						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
 						if (responseElement != null) {
@@ -418,6 +419,7 @@ public class DeliveryStatusUpdateManager {
 							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
 							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
+								logger.debug("status code :" + courierDeliveryStatus);
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
 									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
 										try {
@@ -458,7 +460,7 @@ public class DeliveryStatusUpdateManager {
 							String trckNo = courierTrack.getTrackingNo();
 							String refId = courierTrack.getReferenceNo();
 							courierDeliveryStatus = courierTrack.getAwbStatus();
-							deliveryDateString = courierTrack.getDeliveryDate();
+							deliveryDateString = courierTrack.getDeliveryDateString();
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.INDIAONTIME_DELIVERED)) {
 									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
@@ -466,6 +468,48 @@ public class DeliveryStatusUpdateManager {
 											Date delivery_date = sdf_date.parse(deliveryDateString);
 											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
 
+										} catch (ParseException pe) {
+											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
+											unmodifiedTrackingIds.add(trackingId);
+										}
+									}
+								}
+								statusReceived = true;
+							}
+						}
+					} catch (Exception e) {
+						logger.debug(CourierConstants.EXCEPTION + trackingId);
+					}
+					if(!statusReceived){
+						unmodifiedTrackingIds.add(trackingId);
+					}
+				}
+			}
+		} else if (courierName.equalsIgnoreCase(CourierConstants.FEDEX)){
+			SimpleDateFormat sdf_date = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			courierIdList = new ArrayList<Long>();
+			courierIdList = EnumCourier.getFedexCouriers();
+			shippingOrderList = getAdminShippingOrderService().getShippingOrderListByCouriers(startDate, endDate, courierIdList);
+			ThirdPartyTrackDetails courierTrack = null;
+			boolean statusReceived;
+
+			if (shippingOrderList != null && shippingOrderList.size() > 0) {
+				for (ShippingOrder shippingOrderInList : shippingOrderList) {
+					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					statusReceived = false;
+					try {
+						courierTrack = courierStatusUpdateHelper.updateDeliveryStatusFedex(trackingId);
+						if (courierTrack != null) {
+							String trckNo = courierTrack.getTrackingNo();
+							String refId = courierTrack.getReferenceNo();
+							String courierDeliveryStatus = courierTrack.getAwbStatus();
+							String deliveryDateString = courierTrack.getDeliveryDateString();
+							if (courierDeliveryStatus != null) {
+								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.FEDEX_DELIVERED)) {
+									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
+										try {
+											Date delivery_date = sdf_date.parse(deliveryDateString);
+											ordersDelivered = updateCourierDeliveryStatus(shippingOrderInList, shippingOrderInList.getShipment(), trackingId, delivery_date);
 										} catch (ParseException pe) {
 											logger.debug(CourierConstants.PARSE_EXCEPTION + trackingId);
 											unmodifiedTrackingIds.add(trackingId);

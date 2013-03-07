@@ -155,18 +155,20 @@ public enum EnumShippingOrderStatus {
     public static List<EnumShippingOrderStatus> getStatusForShipmentResolution() {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
                 EnumShippingOrderStatus.SO_OnHold,
-                EnumShippingOrderStatus.SO_ReadyForDropShipping,
-                EnumShippingOrderStatus.SO_Picking,
-                EnumShippingOrderStatus.SO_Installed,
-                EnumShippingOrderStatus.SO_ReadyForProcess,
-                EnumShippingOrderStatus.SO_MarkedForPrinting,
-                EnumShippingOrderStatus.SO_Packed,
-                EnumShippingOrderStatus.SO_CheckedOut);
+                EnumShippingOrderStatus.SO_ReadyForDropShipping
+//                EnumShippingOrderStatus.SO_Picking,
+//                EnumShippingOrderStatus.SO_Installed,
+//                EnumShippingOrderStatus.SO_ReadyForProcess,
+//                EnumShippingOrderStatus.SO_MarkedForPrinting,
+//                EnumShippingOrderStatus.SO_Packed,
+//                EnumShippingOrderStatus.SO_CheckedOut
+        );
     }
 
 
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
-           return Arrays.asList(EnumShippingOrderStatus.SO_Packed,
+           return Arrays.asList(
+//                   EnumShippingOrderStatus.SO_Packed,
                    EnumShippingOrderStatus.SO_CheckedOut,
                    EnumShippingOrderStatus.SO_ReadyForDropShipping);
        }

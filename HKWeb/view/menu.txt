@@ -144,6 +144,7 @@
 ---/sports/fitness-accessories/support-gear/thighs
 ---/sports/fitness-accessories/support-gear/ankle
 --/sports/fitness-accessories/rehabilitation-supports
+--/sports/fitness-accessories/fitness-watches
 --/sports/fitness-accessories/combos
 --/sports/fitness-accessories/miscellaneous-accessories
 --/sports/fitness-accessories/sklz : SKLZ
@@ -169,6 +170,7 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
+--/sports/fitness-equipment/massage-equipments
 --/sports/fitness-equipment/trampolines
 --/sports/fitness-equipment/weighing-scales
 ---/sports/fitness-equipment/weighing-scales/Analog
@@ -236,6 +238,7 @@
 ---/sports/sports-equipment/boxing/accessories
 --/sports/sports-equipment/golf
 --/sports/sports-equipment/skating
+--/sports/sports-equipment/sports-watches
 --/sports/sports-equipment/other-balls
 --/sports/sports-equipment/combos
 --/sports/sports-equipment/sklz : SKLZ
@@ -247,6 +250,7 @@
 --/sports/apparel/bags
 --/sports/apparel/caps
 --/sports/apparel/socks
+--/sports/apparel/tracksuits
 --/sports/apparel/bottles-shakers : Bottles & Shakers
 --/sports/apparel/miscellaneous
 -/sports/footwear
@@ -310,27 +314,35 @@
 ---/health-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
 ---/health-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
 --/health-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
---/health-devices/blood-pressure/ecg : ECG Machines
 --/health-devices/blood-pressure/accessories : BP Accessories
 --/health-devices/blood-pressure/combo : BP Combos
 -/health-devices/respiratory-care
+--/health-devices/respiratory-care/vaporiser : Vaporiser
+--/health-devices/respiratory-care/sleep-apnea
+---/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
 --/health-devices/respiratory-care/nebulizer: Nebulizers
 ---/health-devices/respiratory-care/nebulizer/compressor-nebulizer: Compressor
 ---/health-devices/respiratory-care/nebulizer/ultrasonic-nebulizer: Ultrasonic
 ---/health-devices/respiratory-care/nebulizer/nebulizer-for-kids: Kids Nebulizer
 --/health-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
+--/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
 --/health-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
 ---/health-devices/respiratory-care/pulse-oximeters/fingertip-oximeter: Finger Tip
 ---/health-devices/respiratory-care/pulse-oximeters/Wrist-oximeter: Wrist
 ---/health-devices/respiratory-care/pulse-oximeters/handheld-oximeter: Handheld
---/health-devices/respiratory-care/sleep-apnea
----/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
----/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
----/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
---/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
---/health-devices/respiratory-care/vaporiser : Vaporiser
 -/health-devices/pain-management : Pain Management
---/health-devices/pain-management/crepe-bandages
+--/health-devices/pain-management/massager : Massagers
+---/health-devices/pain-management/massager/handheld
+---/health-devices/pain-management/massager/abdominal-massager : Abdominal
+---/health-devices/pain-management/massager/back-massager : Back
+---/health-devices/pain-management/massager/foot-massager : Foot
+--/health-devices/pain-management/pain-relief : Pain Relief
+---/health-devices/pain-management/pain-relief/pain-therapy
+---/health-devices/pain-management/pain-relief/hot-cold-pack
+---/health-devices/pain-management/pain-relief/heat-therapy
+---/health-devices/pain-management/pain-relief/infrared-massager
 --/health-devices/pain-management/supports : Body Supports
 ---/health-devices/pain-management/supports/cervical-support : Cervical
 ---/health-devices/pain-management/supports/shoulder-support : Shoulder
@@ -347,21 +359,34 @@
 ---/health-devices/pain-management/leg-supports/ankle-support : Ankle
 ---/health-devices/pain-management/leg-supports/foot-support : Foot
 --/health-devices/pain-management/fracture-products : Fracture
---/health-devices/pain-management/massager : Massagers
----/health-devices/pain-management/massager/handheld
----/health-devices/pain-management/massager/abdominal-massager : Abdominal
----/health-devices/pain-management/massager/back-massager : Back
----/health-devices/pain-management/massager/foot-massager : Foot
---/health-devices/pain-management/pain-relief : Pain Relief
----/health-devices/pain-management/pain-relief/pain-therapy
----/health-devices/pain-management/pain-relief/hot-cold-pack
----/health-devices/pain-management/pain-relief/heat-therapy
----/health-devices/pain-management/pain-relief/infrared-massager
+--/health-devices/pain-management/crepe-bandages
 --/health-devices/pain-management/physiotherapy-aids
 ---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/weighing-scales
+---/health-devices/medical-care/weighing-scales/digital
+---/health-devices/medical-care/weighing-scales/analog
+--/health-devices/medical-care/wheel-chair
+---/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
+---/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
+---/health-devices/medical-care/wheel-chair/commode : Commode
+--/health-devices/medical-care/walking-aids
+---/health-devices/medical-care/walking-aids/walking-sticks
+---/health-devices/medical-care/walking-aids/crutches
+---/health-devices/medical-care/walking-aids/walkers
+--/health-devices/medical-care/winter-care
+---/health-devices/medical-care/winter-care/blankets
+---/health-devices/medical-care/winter-care/vaporiser : Steamer
+---/health-devices/medical-care/winter-care/hot-water-bottles
+--/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
+---/health-devices/medical-care/heat-treatment/hot-water-bottles
+---/health-devices/medical-care/heat-treatment/heating-pads
+---/health-devices/medical-care/heat-treatment/hot-cold-pack
+--/health-devices/medical-care/bed : Mattress
+---/health-devices/medical-care/bed/air-bed : Air Bed
+---/health-devices/medical-care/bed/water-bed : Water Bed
 --/health-devices/medical-care/family-care
 ---/health-devices/medical-care/family-care/first-aid
 ---/health-devices/medical-care/family-care/medicine : Medicine Management
@@ -387,28 +412,6 @@
 ---/health-devices/medical-care/baby-care/strollers
 ---/health-devices/medical-care/baby-care/walkers
 ---/health-devices/medical-care/baby-care/stature-meter
---/health-devices/medical-care/winter-care
----/health-devices/medical-care/winter-care/blankets
----/health-devices/medical-care/winter-care/vaporiser : Steamer
----/health-devices/medical-care/winter-care/hot-water-bottles
---/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
----/health-devices/medical-care/heat-treatment/hot-water-bottles
----/health-devices/medical-care/heat-treatment/heating-pads
----/health-devices/medical-care/heat-treatment/hot-cold-pack
---/health-devices/medical-care/weighing-scales
----/health-devices/medical-care/weighing-scales/digital
----/health-devices/medical-care/weighing-scales/analog
---/health-devices/medical-care/walking-aids
----/health-devices/medical-care/walking-aids/walking-sticks
----/health-devices/medical-care/walking-aids/crutches
----/health-devices/medical-care/walking-aids/walkers
---/health-devices/medical-care/wheel-chair
----/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
----/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
----/health-devices/medical-care/wheel-chair/commode : Commode
---/health-devices/medical-care/bed : Mattress
----/health-devices/medical-care/bed/air-bed : Air Bed
----/health-devices/medical-care/bed/water-bed : Water Bed
 -/health-devices/clinical-products
 --/health-devices/clinical-products/stethoscope
 ---/health-devices/clinical-products/stethoscope/general

@@ -77,8 +77,13 @@ public class InventoryServiceImpl implements InventoryService {
         }else{
             //all variants without sku marked out of stock
             //todo check for product oos as well
-            productVariant.setOutOfStock(true);
-            productVariantService.save(productVariant);
+	          List<Sku> skuListToMarkProductOOS = getSkuService().getSKUsForMarkingProductOOS(productVariant);
+	          if(skuListToMarkProductOOS == null || skuListToMarkProductOOS.isEmpty()) {
+		          if (!productVariant.isOutOfStock()) {
+			          productVariant.setOutOfStock(true);
+			          productVariantService.save(productVariant);
+		          }
+	          }
         }
     }
 
@@ -161,7 +166,7 @@ public class InventoryServiceImpl implements InventoryService {
             //First product variant goes out of stock
             productVariant = getProductVariantService().save(productVariant);
             //calling Async method to set all out of stock combos to in stock
-            getComboService().markRelatedCombosOutOfStock(productVariant);
+            getComboService().markProductOutOfStock(productVariant);
             LowInventory lowInventoryInDB = getLowInventoryDao().findLowInventory(productVariant);
             if (lowInventoryInDB == null) {
                 LowInventory lowInventory = new LowInventory();
@@ -181,7 +186,7 @@ public class InventoryServiceImpl implements InventoryService {
             productVariant.setOutOfStock(false);
           //calling Async method to set all out of stock combos to in stock
             productVariant = getProductVariantService().save(productVariant);
-            getComboService().markRelatedCombosOutOfStock(productVariant);
+            getComboService().markProductOutOfStock(productVariant);
             product = productVariant.getProduct();
             getLowInventoryDao().deleteFromLowInventoryList(productVariant);
             if (!isJit && !product.isService() && !product.getDropShipping() && !product.getDeleted()) {

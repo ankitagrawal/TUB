@@ -27,7 +27,15 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-
+		<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<bean
+						class="com.hk.listener.HKMergeEventListener">
+					</bean>
+				</entry>
+			</map>
+		</property>
 
 
 		<!--<property name="typeDefinitions">
@@ -56,6 +64,44 @@
 		</property>
 	</bean>
 
+     <bean id="newSessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+
+		<property name="lobHandler">
+			<ref bean="lobHandler" />
+		</property>
+
+		<property name="packagesToScan">
+			<list>
+				<value>com.hk.domain</value>
+			</list>
+		</property>
+
+		<property name="entityInterceptor">
+			<ref local="defaultHibernateInterceptor" />
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5InnoDBDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.release_mode">
+					on_close
+				</prop>
+				<prop key="hibernate.connection.isolation">1</prop>
+				<prop
+					key="hibernate.bytecode.use_reflection_optimizer">
+					true
+				</prop>
+			</props>
+		</property>
+	</bean>
 
 	<bean id="hibernateTemplate"
 		class="org.springframework.orm.hibernate3.HibernateTemplate">

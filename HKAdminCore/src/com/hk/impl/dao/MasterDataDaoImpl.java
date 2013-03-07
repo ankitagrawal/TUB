@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.pos.DiscountConstants;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -32,6 +33,7 @@ import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.shippingOrder.EnumReplacementOrderReason;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.TicketStatus;
@@ -240,6 +242,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
         courierListForDeliveryMarking.add(CourierConstants.DTDC);
         courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
 		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+		courierListForDeliveryMarking.add(CourierConstants.FEDEX);
         return courierListForDeliveryMarking;
     }
 
@@ -339,6 +342,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         Courier migrateCourier = EnumCourier.MIGRATE.asCourier();
         courierList.remove(migrateCourier);
         return courierList;
+    }
+
+    public List<Courier> getAllActiveCourier() {
+        return courierService.getAllActiveCourier();
     }
 
     public List<ShippingOrderStatus> getSOStatusForReconcilation() {
@@ -487,4 +494,16 @@ public class MasterDataDaoImpl implements MasterDataDao {
 		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
 	}
 
-}
+	public List<EnumCourierOperations> getAllCourierOperations() {
+		return EnumCourierOperations.getAllCourierOperations();
+	}
+
+	public List<EnumCycleCountStatus> getAllCycleCountStatus() {
+		return EnumCycleCountStatus.getAllList();
+	}
+
+	public List<Long> getDiscountsForPOS() {
+		return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
+	}
+	
+	}

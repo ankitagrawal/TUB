@@ -157,13 +157,14 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Transactional
     private Awb attachAwbForShipment(Courier suggestedCourier, ShippingOrder shippingOrder, Double weightInKg) {
-        Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
-        if (suggestedAwb != null) {
-            suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
-        } else {
-            return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
+      Awb suggestedAwb = fetchAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
+      if (suggestedAwb != null) {
+        suggestedAwb = awbService.save(suggestedAwb, EnumAwbStatus.Attach.getId().intValue());
+        if (suggestedAwb == null) {
+          return attachAwbForShipment(suggestedCourier, shippingOrder, weightInKg);
         }
-        return suggestedAwb;
+      }
+      return suggestedAwb;
     }
 
     @Override
@@ -192,6 +193,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Shipment newShipment = null;
         if (shippingOrder.getShipment() != null) {
             Shipment oldShipment = shippingOrder.getShipment();
+            String oldShipmentAwbDetails = oldShipment.getAwb().toString();
             shippingOrder.setShipment(null);
             delete(oldShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
@@ -199,6 +201,9 @@ public class ShipmentServiceImpl implements ShipmentService {
             newShipment = createShipment(shippingOrder, true);
             shippingOrder.setShipment(newShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
+            String newShipmentAwbDetails = newShipment.getAwb().toString();
+            shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getLoggedInUser(), EnumShippingOrderLifecycleActivity.SO_Shipment_Re_Created.asShippingOrderLifecycleActivity(),
+                    oldShipmentAwbDetails + " to --> " + newShipmentAwbDetails);
         }
         return shippingOrder.getShipment();
     }

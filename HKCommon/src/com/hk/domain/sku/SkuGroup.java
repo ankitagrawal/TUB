@@ -25,11 +25,12 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.StockTransfer;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 @Entity
 @Table (name = "sku_group")
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
-public class SkuGroup implements java.io.Serializable {
+public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.AUTO)
@@ -221,4 +222,35 @@ public class SkuGroup implements java.io.Serializable {
 	public void setMrp(Double mrp) {
 		this.mrp = mrp;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof SkuGroup)) {
+			return false;
+		}
+		SkuGroup skuGroup = (SkuGroup) o;
+
+		if (this.id != null && skuGroup.getId() != null) {
+			return this.id.equals(skuGroup.getId());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
+
+	@Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
+	}
+
+    public int compareTo(SkuGroup skuGroup) {
+        return this.getId().compareTo(skuGroup.getId());
+
+    }
 }

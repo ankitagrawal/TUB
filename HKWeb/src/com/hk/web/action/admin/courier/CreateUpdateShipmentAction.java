@@ -34,7 +34,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class CreateUpdateShipmentAction extends BaseAction {
+    public class CreateUpdateShipmentAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(CreateUpdateShipmentAction.class);
 
@@ -71,7 +71,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
         shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 
         if (shippingOrderList.isEmpty()) {
-            addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));
+            addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status i.e it is either already packed/shipped, or not yet checked out"));
             return new RedirectResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
         }
 
@@ -80,6 +80,7 @@ public class CreateUpdateShipmentAction extends BaseAction {
 
         //todo courier such condition should not occur
         if (shipment == null) {
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment was created at dispatch stage");
             shipment = shipmentService.createShipment(shippingOrder, true);
         }
         if (shipment == null) {
@@ -109,14 +110,17 @@ public class CreateUpdateShipmentAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
-        shipmentService.save(shipment);
-        if(!shippingOrder.isDropShipping()){
-            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
+            shipmentService.save(shipment);
+            if (!shippingOrder.isDropShipping()) {
+                shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+            }
+            shippingOrderService.save(shippingOrder);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, shipment.getAwb().toString());
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
         }
-        shippingOrderService.save(shippingOrder);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
-
-        addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
 
