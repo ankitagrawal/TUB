@@ -587,9 +587,9 @@
     </div>
 </shiro:lacksRole>
 </div>
-<div id="applicableOfferDiv"></div>
+<div id="appliedOfferDiv"></div>
 
-<div class='right_container total' style="bottom: 215px;left: 35px;">
+<div class='right_container total' style="left: 30px;">
 <h5>Checkout</h5>
 <br/>
 
@@ -701,6 +701,7 @@
   });
 </script>
 </div>
+<div id="applicableOfferDiv"></div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 

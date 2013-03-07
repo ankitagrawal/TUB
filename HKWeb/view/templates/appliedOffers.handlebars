@@ -1,15 +1,19 @@
 {{#each value in controller.currentlyAppliedOffer}}
-  <div class="appliedOffer">
-    <div class="appliedOfferHead">Currently Applied Offer</div>
-    <div class="appliedOfferTitle">{{value.description}}
-        <div id="couponPopUp" class="couponPopUp">
-          <img {{bindAttr src="controller.imageURL"}} class="popupArrow"></img>
-          <div class="couponPopUpMsg">{{value.description}}</div>
-          <div class="couponPopUpTerms"><strong>Terms:</strong> {{value.terms}}</div>
-          <div class="couponPopUpDate">Valid till: {{value.endDate}}</div>
+  <div class="applicableOffer appliedOfferNew">
+    <div class="appliedOfferText">Currently applied offer</div>
+      <div class="applicableOfferDesc">{{value.description}}</div>
+      {{#if value.endDate}}
+        <div class="endDate" style="width: 102% !important;">Valid till: {{value.endDate}}</div>
+      {{/if}}
+        <div class="removeButton" style="left: 10px;">
+          <form {{bindAttr action="controller.applyURL"}} method="post">
+            <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
+            <input name="removeOffer" value="REMOVE" style="border: 1px solid !important;" class="button_raj" type="submit">
+            <div style="display: none;">
+              <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
+              <input type="hidden" name="__fp" value="CATsOzMhS2E=">
+            </div>
+          </form>
         </div>
-        <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
-        <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
-    </div>  
-  </div>  
+    </div>
 {{/each}}
