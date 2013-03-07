@@ -45,21 +45,22 @@
                         <td> ${skuItem.skuItemStatus.name} </td>
                         <td> ${skuItem.skuGroup.sku.warehouse.name}</td>
                         <td>
-                        <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id}">
-                            <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
+                            <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id}">
+                                <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
                                         event="revertStockTransferOut">Revert it
-                                <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
-                                <s:param name="stockTransfer" value="${viewItem.stockTransferLineItem.stockTransfer}"/>
-                                <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link>
-                        </c:if></td>
-                         <td>
-                        <c:if test="${viewItem.cycleCount != null && viewItem.cycleCount.cycleStatus == cycleCountStatusId}">
-                            <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                                    <s:param name="stliToBeReduced" value="${viewItem.stockTransferLineItem}"/>
+                                    <s:param name="stockTransfer"
+                                             value="${viewItem.stockTransferLineItem.stockTransfer}"/>
+                                    <s:param name="identifiedSkuItemToRevert" value="${skuItem.id}"/> </s:link>
+                            </c:if></td>
+                        <td>
+                            <c:if test="${viewItem.cycleCount != null && viewItem.cycleCount.cycleStatus == cycleCountStatusId}">
+                                <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
                                         event="deleteScannedSkuItem">Delete
-                                <s:param name="cycleCount" value="${viewItem.cycleCount}"/>
-                                <s:param name="skuItem" value="${skuItem.id}"/>
-                               </s:link>
-                        </c:if></td>
+                                    <s:param name="cycleCount" value="${viewItem.cycleCount}"/>
+                                    <s:param name="skuItem" value="${skuItem.id}"/>
+                                </s:link>
+                            </c:if></td>
                     </tr>
 
                 </c:forEach>
@@ -87,7 +88,15 @@
                     <s:param name="stockTransfer" value="${viewItem.stockTransferLineItem.stockTransfer.id}"/>
                     </s:link></h2></span>
             </c:when>
-
+            <c:when test="${viewItem.cycleCount!= null}">
+                <h2>
+                    <s:link
+                            beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                            event="save">&lang;&lang;&lang;
+                    Back to Cycle Count List
+                    <s:param name="cycleCount" value="${viewItem.cycleCount}"/>
+                    </s:link></h2></span>
+            </c:when>
 
             </c:choose>
         </div>

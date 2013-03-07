@@ -43,7 +43,6 @@ public class ViewSkuItemAction extends BaseAction {
     public Resolution pre() {
 
         if(entityId == null){
-//            addRedirectAlertMessage("please enter through valid page");
            return new RedirectResolution("/pages/admin/viewItemBarcode.jsp");
         }
 

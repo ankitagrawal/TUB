@@ -26,24 +26,23 @@ import com.hk.web.action.error.AdminPermissionAction;
 import java.util.List;
 import java.util.ArrayList;
 
-@Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
 public class SearchHKBatchAction extends BaseAction {
 
     private static Logger logger = Logger.getLogger(SearchHKBatchAction.class);
 
 
-	@Autowired
-	SkuGroupService skuGroupService;
-	@Autowired
-	UserService                userService;
+    @Autowired
+    SkuGroupService skuGroupService;
+    @Autowired
+    UserService userService;
 
     @Validate(required = true)
-    private String        hkBarcode;
+    private String hkBarcode;
 
-     private List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
+    private List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
+    private SkuItem skuItemBarcode;
 
-   private  SkuItem skuItemBarcode;
-    private boolean itemBarcodePresent;
 
     @DefaultHandler
     @DontValidate
@@ -54,8 +53,7 @@ public class SearchHKBatchAction extends BaseAction {
     public Resolution showBatchInfo() {
         logger.debug("upc: " + hkBarcode);
         if (StringUtils.isNotBlank(hkBarcode)) {
-//            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
-             skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(),null);
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(hkBarcode, userService.getWarehouseForLoggedInUser().getId(), null);
             if (skuItemBarcode != null) {
                 skuGroupList.add(skuItemBarcode.getSkuGroup());
             } else {
@@ -76,20 +74,12 @@ public class SearchHKBatchAction extends BaseAction {
         this.hkBarcode = hkBarcode;
     }
 
-	public List<SkuGroup> getSkuGroupList() {
-		return skuGroupList;
-	}
-
-	public void setSkuGroupList(List<SkuGroup> skuGroupList) {
-		this.skuGroupList = skuGroupList;
-	}
-
-    public boolean isItemBarcodePresent() {
-        return itemBarcodePresent;
+    public List<SkuGroup> getSkuGroupList() {
+        return skuGroupList;
     }
 
-    public void setItemBarcodePresent(boolean itemBarcodePresent) {
-        this.itemBarcodePresent = itemBarcodePresent;
+    public void setSkuGroupList(List<SkuGroup> skuGroupList) {
+        this.skuGroupList = skuGroupList;
     }
 
     public SkuItem getSkuItemBarcode() {

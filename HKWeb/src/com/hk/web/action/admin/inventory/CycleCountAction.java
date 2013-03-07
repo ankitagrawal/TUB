@@ -462,7 +462,7 @@ public class CycleCountAction extends BasePaginatedAction {
         List<CycleCountItem> cycleCountItemList = cycleCount.getCycleCountItems();
         List<SkuGroup> scannedSkuGroupList = new ArrayList<SkuGroup>();
 
-        List<SkuGroup> originalScannedSkuItemList = new ArrayList<SkuGroup>();
+        List<SkuGroup> originalScannedSkuItemGroupList = new ArrayList<SkuGroup>();
 
         if (cycleCountItemList != null) {
             for (CycleCountItem cycleCountItem : cycleCountItemList) {
@@ -471,14 +471,12 @@ public class CycleCountAction extends BasePaginatedAction {
                 }
 
                 if (cycleCountItem.getSkuItem() != null) {
-                    originalScannedSkuItemList.add(cycleCountItem.getSkuItem().getSkuGroup());
+                    originalScannedSkuItemGroupList.add(cycleCountItem.getSkuItem().getSkuGroup());
                 }
             }
         }
 
-//    Adding Item level scanned sku groups to get batches that were never scanned.
-
-        for (SkuGroup skuGroup : originalScannedSkuItemList) {
+        for (SkuGroup skuGroup : originalScannedSkuItemGroupList) {
             if (!skuItemScannedQtyMap.containsKey(skuGroup.getId())) {
                 skuItemScannedQtyMap.put(skuGroup.getId(), 1);
             } else {
@@ -487,14 +485,11 @@ public class CycleCountAction extends BasePaginatedAction {
             }
 
         }
-
-        Set<SkuGroup> ScannedSkuItemSet = new HashSet<SkuGroup>(originalScannedSkuItemList);
-        scannedSkuItemGroupList = new ArrayList<SkuGroup>(ScannedSkuItemSet);
+        //    Adding Item level scanned sku groups to get batches that were never scanned.
+        Set<SkuGroup> ScannedSkuItemGroupSet = new HashSet<SkuGroup>(originalScannedSkuItemGroupList);
+        scannedSkuItemGroupList = new ArrayList<SkuGroup>(ScannedSkuItemGroupSet);
 
         scannedSkuGroupList.addAll(scannedSkuItemGroupList);
-
-//        List<SkuGroup> scannedSkuItemGroupList = new ArrayList<SkuGroup>(scannedSkuItemGroupSet);
-
         for (CreateInventoryFileDto createInventoryFileDto : createInventoryFileDtoList) {
             SkuGroup skuGroup = createInventoryFileDto.getSkuGroup();
             int pvi = createInventoryFileDto.getSumQty().intValue();
@@ -505,8 +500,6 @@ public class CycleCountAction extends BasePaginatedAction {
             if (scannedSkuGroupList.contains(skuGroup)) {
                 continue;
             }
-
-
             skuGroupList.add(skuGroup);
             missedSkuGroupSystemInventoryMap.put(skuGroup.getId(), pvi);
 
@@ -782,11 +775,11 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public Resolution deleteScannedSkuItem() {
         if (skuItem == null) {
-            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + "- has already been deleted."));
+            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has already been deleted."));
             return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
         }
         cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
-        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + "- has been deleted."));
+        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
         return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
     }
 

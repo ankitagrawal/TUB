@@ -230,76 +230,6 @@ public class InventoryCheckinAction extends BaseAction {
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
                     }
-                    /*if (grn.getGrnStatus().getId().equals(EnumGrnStatus.GoodsReceived.getId())) {
-                             grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckinInProcess.getId()));
-                             getGoodsReceivedNoteDao().save(grn);
-                         } else if (grn.getGrnStatus().getId().equals(EnumGrnStatus.InventoryCheckinInProcess.getId())) {
-                             if (getInventoryService().allInventoryCheckedIn(grn)) {
-                                 grn.setGrnStatus(getGoodsReceivedNoteDao().get(GrnStatus.class, EnumGrnStatus.InventoryCheckedIn.getId()));
-                                 getGoodsReceivedNoteDao().save(grn);
-                                 editPVFillRate(grn);
-                             }
-                         }*/
-
-//    Barcode file generation at sku item level
-                    /*
-                         try {
-                             String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-                             String barcodeFilePath = null;
-                             if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-                                 barcodeFilePath = barcodeGurgaon;
-                             } else {
-                                 barcodeFilePath = barcodeMumbai;
-                             }
-                             barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
-                                     + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
-                             String date = "";
-                             if (expiryDate == null) {
-                                 date = "NA";
-                             } else {
-                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-                                 date = sdf.format(expiryDate);
-                             }
-                           Set <SkuItem> skuItems =  skuGroup.getSkuItems();
-                             String data="";
-                               Map<Long, String > skuItemDataMap =  new HashMap <Long, String > ();
-                              for (SkuItem skuItem1 : skuItems){
-                                  data = skuItem1.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                                                    + StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
-
-                                 if (!skuItemDataMap.containsKey(skuItem1.getId())){
-                                     skuItemDataMap.put(skuItem1.getId(), data);
-                                 }
-                             }
-                              BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
-     //
-                         //Barcode File
-     //					try {
-     //						String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-     //						String barcodeFilePath = null;
-     //						if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-     //							barcodeFilePath = barcodeGurgaon;
-     //						} else {
-     //							barcodeFilePath = barcodeMumbai;
-     //						}
-     //						barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + user.getId() + "_" + user.getName() + "_"
-     //								+ StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
-     //						String date = "";
-     //						if (expiryDate == null) {
-     //							date = "NA";
-     //						} else {
-     //							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-     //							date = sdf.format(expiryDate);
-     //						}
-     //						String data = skuGroup.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-     //								+ StringUtils.substring(productOptionStringBuffer.toString(), 0, strLength) + "\t" + date + "\t" + qty + "\t" + skuGroup.getMrp();
-
-
-
-                         } catch (IOException e) {
-                             logger.error("Exception while appending on barcode file", e);
-
-                         }  */
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
                     return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -349,8 +279,6 @@ public class InventoryCheckinAction extends BaseAction {
         }
 
         SkuGroup skuGroup = null;
-//   for skuitem level barcode
-//        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId());
         SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(), EnumSkuItemStatus.Stock_Transfer_Out.getId());
         if (skuItemBarcode != null) {
             skuGroup = skuItemBarcode.getSkuGroup();
@@ -378,7 +306,7 @@ public class InventoryCheckinAction extends BaseAction {
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
         if (sku == null) {
-            addRedirectAlertMessage(new SimpleMessage("No SKU Found "));
+            addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-"+ (productVariant == null ? "" : productVariant.getId())));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
@@ -403,7 +331,7 @@ public class InventoryCheckinAction extends BaseAction {
                 skuItem.setSkuGroup(checkinSkuGroup);
                 stockTransfer.setCheckinDate(HKDateUtil.getNow());
                 stockTransfer.setReceivedBy(loggedOnUser);
-	            stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getStockTransferStatus());
+                stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getStockTransferStatus());
                 stockTransferLineItem.setStockTransfer(stockTransfer);
                 stockTransferLineItem.setCheckedInSkuGroup(checkinSkuGroup);
                 if (stockTransferLineItem.getCheckedinQty() != null) {
