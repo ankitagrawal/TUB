@@ -172,14 +172,8 @@ function program11(depth0,data) {
   return buffer;
   }
 
-function program13(depth0,data) {
-  
-  
-  data.buffer.push("\n  <div class=\"applicableOfferContainer\">\n    <div class=\"applicableOfferHead\">Coupon codes available</div>\n    <div class=\"gotoCheckout\"> <div class=\"gotoCheckoutInner\">GO BACK TO CHECKOUT</div></div>\n    <div class=\"noCoupons\"> NO COUPONS FOR YOU!</div>\n  </div>\n");
-  }
-
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "HK.CartOfferController.showOfferFlag", {hash:{},inverse:self.program(13, program13, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "HK.CartOfferController.showOfferFlag", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   else { data.buffer.push(''); }
   
