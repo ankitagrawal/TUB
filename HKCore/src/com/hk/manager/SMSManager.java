@@ -1,20 +1,17 @@
 package com.hk.manager;
 
-import java.util.HashMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.courier.Awb;
-import com.hk.domain.courier.Shipment;
 import com.hk.impl.service.SMSService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA. User: Ajeet Date: May 28, 2011 Time: 11:51:32 AM To change this template use File |
@@ -94,7 +91,7 @@ public class SMSManager {
     valuesMap.put("deliveryAgent", agent.getFirstName());
     if (order.isCOD()) {
       valuesMap.put("amount", shippingOrder.getAmount());
-      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliveryCODSMS, valuesMap);
+      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliveryCODSms, valuesMap);
     } else {
       return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliverySMS, valuesMap);
     }
@@ -111,7 +108,7 @@ public class SMSManager {
         public static final String orderDeliveredSMS         = "/sms/orderDeliveredSms.ftl";
 
         public static final String hkReachOutForDeliverySMS         = "/sms/hkReachOutForDeliverySMS.ftl";
-        public static final String hkReachOutForDeliveryCODSMS         = "/sms/hkReachOutForDeliveryCODSMS.ftl";
+        public static final String hkReachOutForDeliveryCODSms = "/sms/hkReachOutForDeliveryCODSms.ftl";
 
         public static final String offerSMS                  = "/offerSMS.ftl";
         public static final String discountCouponSMS         = "/discountCouponSMS.ftl";
