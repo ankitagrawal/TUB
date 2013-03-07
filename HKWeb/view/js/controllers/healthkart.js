@@ -17,7 +17,9 @@ HK.CartOfferController = Ember.Controller.create({
     errorMessage:"",
     showApply:true,
     showRemove:false,
-    applyURL:HK.contextPath + "/core/discount/ApplyCoupon.action",
+    showRemoveButton: false,
+    applyURL: HK.contextPath + "/core/discount/ApplyCoupon.action",
+    imageURL: HK.contextPath + "/images/messageArrowUp.png",
     init:function(){
         this.getRoles();
         this.getOffer();
@@ -68,32 +70,22 @@ HK.CartOfferController = Ember.Controller.create({
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
-            success: function ( data ) {                
-                if(!Ember.empty(data.appliedOffer)){
-                    if(data.applicableOffers.length === 0){
-                        if(self.get("currentlyAppliedOffer").length === 0){
-                            self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
-                        }
-                    }
-                    data.applicableOffers.forEach(function(offer){
-                        self.get("currentlyAppliedOffer").clear();
-                        if(offer.id !== parseInt(data.appliedOffer.id)){
-                            self.get("currentlyAppliedOffer").pushObject(data.appliedOffer);
-                        }
-                    });
-                    data.applicableOffers.forEach(function(offer){
+            success: function ( data ) {
+                data.applicableOffers.forEach(function(offer){
+                    self.get("applicableOffers").pushObject(Ember.Object.create(offer));
+                });
+                self.get("applicableOffers").forEach(function(offer){
+                    offer.set("removeFlag",false);
+                });
+                if(!Ember.empty(data.appliedOffer)){                    
+                    self.get("applicableOffers").forEach(function(offer){
                         if(offer.id === parseInt(data.appliedOffer.id)){
-                            if(self.get("currentlyAppliedOffer").length === 0){
-                                self.get("currentlyAppliedOffer").pushObject(offer);
-                            }                            
+                            offer.set("removeFlag",true);
                         }
                         else{
-                            self.get("applicableOffers").pushObject(offer);
+                            offer.set("removeFlag",false);
                         }
                     });                    
-                }
-                else{
-                    self.set("applicableOffers",data.applicableOffers);
                 }
                 if(self.get("applicableOffers").length > 0){
                     self.set("showOfferFlag", true);
@@ -118,4 +110,4 @@ HK.CartOfferView = Ember.View.create({
 });
 
 HK.CartOfferView.appendTo('#applicableOfferDiv');
-HK.AppliedOfferView.appendTo('#appliedOfferDiv');
+//HK.AppliedOfferView.appendTo('#appliedOfferDiv');

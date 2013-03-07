@@ -3,21 +3,13 @@
     <div class="appliedOfferHead">Currently Applied Offer</div>
     <div class="appliedOfferTitle">{{value.description}}
         <div id="couponPopUp" class="couponPopUp">
-          <div class="popupArrow"></div>
+          <img {{bindAttr src="controller.imageURL"}} class="popupArrow"></img>
           <div class="couponPopUpMsg">{{value.description}}</div>
           <div class="couponPopUpTerms"><strong>Terms:</strong> {{value.terms}}</div>
           <div class="couponPopUpDate">Valid till: {{value.endDate}}</div>
         </div>
         <a class="appliedOfferDetails" onclick="showCouponDetails()">[show details]</a>
         <a class="appliedOfferDetails" style="display: none;" onclick="showCouponDetails()">[hide details]</a>
-    </div>
-    <form {{bindAttr action="controller.applyURL"}} method="post">
-        <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
-        <input name="removeOffer" value="Remove" class="button_raj" style="float: right;left: 0px;margin-bottom: 0px;bottom: 8px;" type="submit">
-        <div style="display: none;">
-          <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
-          <input type="hidden" name="__fp" value="CATsOzMhS2E=">
-        </div>
-    </form>    
+    </div>  
   </div>  
 {{/each}}

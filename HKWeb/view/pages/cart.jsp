@@ -26,22 +26,13 @@
     var timespan = 3000;
     HK = Ember.Application.create({});
     HK.contextPath = "${pageContext.request.contextPath}";
-
     function showCouponDetails(){
         $("#couponPopUp").toggle();
         $(".appliedOfferDetails").toggle();
     }
 
-    function applicableOffers(){
-        $.ajax({
-            url:"core/cart/Cart.action",
-            data:"eklgnm",
-            success:function(data){
-            }
-        });
-    }
-
     $(document).ready(function() {
+
       $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
@@ -268,7 +259,7 @@
       </c:otherwise>
     </c:choose>
   </h2>
-    
+
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
     <a href="/" class="back"> &larr; go back to add more products</a>
   </c:if>
@@ -281,7 +272,7 @@
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
-<div class='products_container' style="min-height: 500px;">
+<div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
     <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
@@ -565,9 +556,9 @@
 
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
 
-<div id="appliedOfferDiv"></div>
+<div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div class='right_container coupon'>
+    <div style="left:0px; border:none" class='right_container coupon'>
         <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
             <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
@@ -595,9 +586,10 @@
 
     </div>
 </shiro:lacksRole>
+</div>
 <div id="applicableOfferDiv"></div>
 
-<div class='right_container total'>
+<div class='right_container total' style="bottom: 215px;left: 35px;">
 <h5>Checkout</h5>
 <br/>
 
