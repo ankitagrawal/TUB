@@ -3,6 +3,7 @@ require('js/templates');
 HK.CartOfferController = Ember.Controller.create({
     finalApplicableOffers:[],
     array:[],
+    totalOffers:0,
     isOffer:null,
     showOfferText:false,
     showOfferFlag:false,
@@ -72,17 +73,20 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     scrollToOffer:function(){
-        $('html, body').animate({scrollTop: $(".products_container").height() + 250}, 1000);
+        $('html, body').animate({scrollTop: $(".products_container").height() + 200}, 1000);
     },
 
     getOffer:function(){
         self = this;
         self.get("applicableOffers").clear();
+        self.get("finalApplicableOffers").clear();
+        self.get("array").clear();
         tempArray = [],
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
             success: function ( data ) {
+                self.set("totalOffers", data.applicableOffers.length);
                 data.applicableOffers.forEach(function(offer){
                     self.get("applicableOffers").pushObject(Ember.Object.create(offer));
                 });
