@@ -1,7 +1,9 @@
 require('js/templates');
 
 HK.CartOfferController = Ember.Controller.create({
+    dummyArray:[],
     isOffer:null,
+    showOfferText:false,
     showOfferFlag:false,
     showCoupon:false,
     isHKUser:false,
@@ -19,7 +21,7 @@ HK.CartOfferController = Ember.Controller.create({
     showRemove:false,
     showRemoveButton: false,
     applyURL: HK.contextPath + "/core/discount/ApplyCoupon.action",
-    imageURL: HK.contextPath + "/images/messageArrowUp.png",
+    imageURL: HK.contextPath + "/images/close.png",
     init:function(){
         this.getRoles();
         this.getOffer();
@@ -63,6 +65,11 @@ HK.CartOfferController = Ember.Controller.create({
             }
         });
     },
+
+    removeOffer:function(event){
+        $("#" + event.context).click();
+    },
+
     getOffer:function(){
         self = this;
         self.get("applicableOffers").clear();
@@ -92,9 +99,11 @@ HK.CartOfferController = Ember.Controller.create({
                 }
                 if(self.get("applicableOffers").length > 0){
                     self.set("showOfferFlag", true);
+                    self.set("showOfferText", true);
                 }
                 else{
                     self.set("showOfferFlag", false);
+                    self.set("showOfferText", false);
                 }
             }
         });
@@ -112,5 +121,11 @@ HK.CartOfferView = Ember.View.create({
     isVisibleBinding:"HK.CartOfferController.showCoupon"
 });
 
+HK.OfferTopTextView = Ember.View.create({
+    templateName:"templates/offerTopText",
+    controllerBinding:"HK.CartOfferController"
+});
+
 HK.CartOfferView.appendTo('#applicableOfferDiv');
 HK.AppliedOfferView.appendTo('#appliedOfferDiv');
+HK.OfferTopTextView.appendTo('#offerTextOnTop');

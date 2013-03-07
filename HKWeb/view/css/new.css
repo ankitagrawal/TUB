@@ -5847,13 +5847,13 @@ color: #e62580;
     position: relative;
     float: left;
     clear: both;
-    width: 100%;
+    width: 90%;
     left: 15px;
     top: 5px;
-    text-decoration: underline;
     font-size: 13px;
     font-weight: bold;
-    color: #888;
+    color:brown;
+    margin-bottom: 3px;
 }
 
 .appliedOfferNew{
@@ -5862,6 +5862,22 @@ color: #e62580;
     border: 1px solid #DCA !important;
     background: rgb(248, 255, 163) !important;
     border-radius: 5px !important;
+}
+
+.offerCloseButton{
+    position: relative;
+    float: left;
+    width: 17px;
+    left: 10px;
+    top: -2px;
+    cursor: pointer;
+}
+
+.offerTextOnTop{
+    position: relative;
+    float: left;
+    left: 17%;
+    top: -23px;
 }
 
 /*
