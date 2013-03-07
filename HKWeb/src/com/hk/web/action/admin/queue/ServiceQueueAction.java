@@ -61,7 +61,7 @@ public class ServiceQueueAction extends BasePaginatedAction {
 
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
-        shippingOrderSearchCriteria.setBaseOrderId(orderId).setGatewayOrderId(gatewayOrderId);
+        shippingOrderSearchCriteria.setBaseOrderId(orderId).setBaseGatewayOrderId(gatewayOrderId);
         shippingOrderSearchCriteria.setServiceOrder(true);
         shippingOrderSearchCriteria.setPaymentStartDate(startDate);
         shippingOrderSearchCriteria.setPaymentEndDate(endDate);
