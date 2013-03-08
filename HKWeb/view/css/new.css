@@ -2990,8 +2990,7 @@ h2.prod_title {
     width: 630px;
     font-size: 12px;
     color: #888;
-    height: auto;
-    min-height: 300px;
+    min-height: 600px;
 }
 
 /* line 1117, ../sass/main.scss */
