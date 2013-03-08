@@ -240,7 +240,7 @@ public class CartResource extends BaseAction {
         applicableOffers = new HashSet<Offer>();
         User user = order.getUser();
         if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
-            Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
+            Page activeOffersPage = offerDao.listAllValid(1, 10);
             if (activeOffersPage != null) {
                 List<Offer> activeOffers = activeOffersPage.getList();
                 for (Offer activeOffer : activeOffers) {
