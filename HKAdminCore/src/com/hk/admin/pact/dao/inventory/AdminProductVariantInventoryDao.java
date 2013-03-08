@@ -27,7 +27,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void removeInventory(SkuItem skuItem);
 
-    public Long getCheckedInPVIAgainstRTO(LineItem lineItem);                                                    
+    public Long getCheckedInPVIAgainstReturn(LineItem lineItem);
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem);
 

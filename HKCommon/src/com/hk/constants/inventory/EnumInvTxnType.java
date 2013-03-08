@@ -2,6 +2,9 @@ package com.hk.constants.inventory;
 
 import com.hk.domain.core.InvTxnType;
 
+import java.util.List;
+import java.util.Arrays;
+
 
 /**
  * Generated
@@ -13,9 +16,9 @@ public enum EnumInvTxnType {
     RV_LOST_PILFERAGE(40L, "Lost/Pilferage against Reconciliation Voucher"),   // -1
     RV_DAMAGED(45L, "Damaged Stock against Reconciliation Voucher"),           // -1
     RV_EXPIRED(50L, "Expired against Reconciliation Voucher"),                 // -1
-    RETURN_CHECKIN_DAMAGED(60L, "Checkin against Damaged Returned items"),     // +1
-	RETURN_CHECKIN_EXPIRED(61L, "Checkin against Expired Returned items"),     // +1
-	RETURN_CHECKIN_GOOD(62L, "Checkin against Returned items in good condition"),                // +1
+    RETURN_CHECKIN_DAMAGED(60L, "Damaged against Returned items"),     // +1
+	RETURN_CHECKIN_EXPIRED(61L, "Expired against Returned items"),     // +1
+	RETURN_CHECKIN_GOOD(62L, "Checkin against Returned items"),                // +1
     CANCEL_CHECKIN(80L, "Checkin against Cancellation"),                       // +1
     TRANSIT_LOST(90L, "Lost during transit"),                                  // -1
     INV_REPEAT_CHECKOUT(100L, "Inventory Checkout against Re-shipping"),       // -1
@@ -48,4 +51,8 @@ public enum EnumInvTxnType {
   public Long getId() {
     return id;
   }
+
+	public static List<Long> getIdsForReturnedGoodsTxnType(){
+		return Arrays.asList(RETURN_CHECKIN_GOOD.getId(), RETURN_CHECKIN_DAMAGED.getId(), RETURN_CHECKIN_EXPIRED.getId());
+	}
 }

@@ -209,5 +209,7 @@
         <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryStatus" />
         <mapping class="com.hk.domain.courier.CourierPickupDetail" />
         <mapping class="com.hk.domain.courier.PickupStatus" />
+        <mapping class="com.hk.domain.reverseOrder.ReverseOrder" />
+        <mapping class="com.hk.domain.reverseOrder.ReverseLineItem" />
     </session-factory>
 </hibernate-configuration>

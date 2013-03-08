@@ -20,5 +20,5 @@ public interface SkuItemDao extends BaseDao {
 
     public SkuItem getSkuItem(SkuGroup skuGroup , SkuItemStatus skuItemStatus);
 
-
+	public void save(SkuItem skuItem);
 }

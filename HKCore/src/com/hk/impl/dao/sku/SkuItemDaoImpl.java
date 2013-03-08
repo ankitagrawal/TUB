@@ -24,6 +24,8 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 	@Autowired
 	SkuGroupDao skuGroupDao;
 
+
+
 	/*public List<SkuGroup> getInStockSkuGroups(Sku sku) {
 		List<SkuGroup> skuGroupList = new ArrayList<SkuGroup>();
 		String skuItemListQuery = "select pvi.skuItem.id from ProductVariantInventory pvi where pvi.skuItem is not null " +
@@ -92,6 +94,10 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 		criteria.add(Restrictions.eq("skuItemStatus", skuItemStatus));
 		List<SkuItem> skuItems = (List<SkuItem>) findByCriteria(criteria);
 		return skuItems == null || skuItems.isEmpty() ? null : skuItems.get(0);
+	}
+
+	public void save(SkuItem skuItem){
+		super.save(skuItem);
 	}
 
 

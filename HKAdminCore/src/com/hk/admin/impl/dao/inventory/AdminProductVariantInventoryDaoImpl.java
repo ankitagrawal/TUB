@@ -68,9 +68,10 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         // getSession().createQuery("delete ").setParameter("skuItem", skuItem).executeUpdate();
     }
 
-    public Long getCheckedInPVIAgainstRTO(LineItem lineItem) {
-        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem and pvi.qty = :qty and pvi.invTxnType.id=" + EnumInvTxnType.RTO_CHECKIN.getId()).setParameter("lineItem",
-                lineItem).setParameter("qty", 1L).uniqueResult();
+    public Long getCheckedInPVIAgainstReturn(LineItem lineItem) {
+        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem and pvi.qty = :qty " +	"and pvi.invTxnType.id " +
+				"in(" + EnumInvTxnType.RETURN_CHECKIN_GOOD.getId() + "," + EnumInvTxnType.RETURN_CHECKIN_DAMAGED.getId() + "," +
+				EnumInvTxnType.RETURN_CHECKIN_EXPIRED.getId() + ")").setParameter("lineItem",lineItem).setParameter("qty", 1L).uniqueResult();
     }
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem) {
