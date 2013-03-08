@@ -142,7 +142,7 @@ public class Product  implements java.io.Serializable {
 
     
     @JsonSkip
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "category_has_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "category_name", nullable = false, updatable = false) })
     private List<Category>       categories       = new ArrayList<Category>(0);
 
