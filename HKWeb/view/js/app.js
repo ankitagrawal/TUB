@@ -385,10 +385,10 @@ HK.CartOfferController = Ember.Controller.create({
 
     getOffer:function(){
         self = this;
-        self.get("applicableOffers").clear();
-        self.get("finalApplicableOffers").clear();
-        self.get("array").clear();
-        self.get("totalOffers").clear();
+        this.get("applicableOffers").clear();
+        this.get("finalApplicableOffers").clear();
+        this.get("array").clear();
+        this.get("totalOffers").clear();
         tempArray = [],
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
