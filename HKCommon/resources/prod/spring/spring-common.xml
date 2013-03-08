@@ -124,7 +124,7 @@
 <util:properties id="hkEnvProps" location="/WEB-INF/environment.properties" />
 
     <bean  id="producerFactory" class="com.hk.hkjunction.producer.ProducerFactory">
-        <constructor-arg name="address" value="180.149.241.92">
+        <constructor-arg name="address" value="172.16.3.92">
         </constructor-arg>
     </bean>
     
