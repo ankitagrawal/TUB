@@ -30,7 +30,7 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getRoles:function(){
-        self = this;
+        var self = this;
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/roles",
             success: function ( data ) {
@@ -77,7 +77,7 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getOffer:function(){
-        self = this;
+        var self = this;
         this.get("applicableOffers").clear();
         this.get("finalApplicableOffers").clear();
         this.get("array").clear();
@@ -130,11 +130,11 @@ HK.CartOfferController = Ember.Controller.create({
                     });                    
                 }
                 if(self.get("totalOffers").length > 0){
-                    self.set("showOfferFlag", true);
+                    $("#appOfferID").show();
                     self.set("showOfferText", true);
                 }
                 else{
-                    self.set("showOfferFlag", false);
+                    $("#appOfferID").hide();
                     self.set("showOfferText", false);
                 }
             }
