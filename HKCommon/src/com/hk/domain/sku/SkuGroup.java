@@ -30,7 +30,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 @Entity
 @Table (name = "sku_group")
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
-public class SkuGroup implements java.io.Serializable {
+public class SkuGroup implements java.io.Serializable ,Comparable<SkuGroup>{
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.AUTO)
@@ -248,4 +248,9 @@ public class SkuGroup implements java.io.Serializable {
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}
+
+    public int compareTo(SkuGroup skuGroup) {
+        return this.getId().compareTo(skuGroup.getId());
+
+    }
 }

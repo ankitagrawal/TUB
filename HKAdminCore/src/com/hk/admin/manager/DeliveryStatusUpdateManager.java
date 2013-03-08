@@ -410,6 +410,7 @@ public class DeliveryStatusUpdateManager {
 			if (shippingOrderList != null && shippingOrderList.size() > 0) {
 				for (ShippingOrder shippingOrderInList : shippingOrderList) {
 					trackingId = shippingOrderInList.getShipment().getAwb().getAwbNumber();
+					logger.debug("response for tracking id :" + trackingId);
 					try {
 						responseElement = courierStatusUpdateHelper.updateDeliveryStatusQuantium(trackingId);
 						if (responseElement != null) {
@@ -418,6 +419,7 @@ public class DeliveryStatusUpdateManager {
 							courierDeliveryStatus = responseElement.getChildText(CourierConstants.QUANTIUM_STATUS);
 							deliveryDateString = responseElement.getChildText(CourierConstants.QUANTIUM_DELIVERY_DATE);
 							if (courierDeliveryStatus != null && deliveryDateString != null) {
+								logger.debug("status code :" + courierDeliveryStatus);
 								if (courierDeliveryStatus.equalsIgnoreCase(CourierConstants.QUANTIUM_DELIVERED)) {
 									if (refId != null && refId.equalsIgnoreCase(shippingOrderInList.getGatewayOrderId()) && trckNo.equalsIgnoreCase(trackingId)) {
 										try {

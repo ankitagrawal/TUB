@@ -4,6 +4,7 @@ import com.akube.framework.gson.JsonUtils;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.core.Pincode;
+import com.hk.domain.core.Country;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.Role;
@@ -14,6 +15,7 @@ import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.core.order.OrderSummaryAction;
@@ -53,8 +55,11 @@ public class MAddressAction extends MBaseAction {
 	AddressBookManager addressManager;
 	@Autowired
 	private PincodeCourierService pincodeCourierService;
-    @Autowired
-    PincodeService pincodeService;
+  @Autowired
+  PincodeService pincodeService;
+  @Autowired
+  AddressDao addressDao;
+
 	private List<Address> addresses = new ArrayList<Address>(1);
 
 	// @Validate(on = "checkout", required = true)
@@ -100,6 +105,8 @@ public class MAddressAction extends MBaseAction {
 					address.setLine2(line2);
 					address.setName(name);
 					address.setPhone(phone);
+          Country country = addressDao.getCountry(80L);
+          address.setCountry(country);
 					if (pincodeCourierService.isCodAllowed(pin))
 						address.setPincode(pincode);
 					else {
