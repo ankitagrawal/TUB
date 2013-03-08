@@ -21,6 +21,7 @@
 <script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
 <script src="${pageContext.request.contextPath}/js/ember.js"></script>
 <script src="${pageContext.request.contextPath}/js/loader.js"></script>
+
   <script type="text/javascript">
     var timeout; //Set globally as it needs to be reset when removeLink is clicked.
     var timespan = 3000;
@@ -556,9 +557,6 @@
     Ember js code for MVC javascript!
 -->
 
-<script src="${pageContext.request.contextPath}/js/app.js"></script>
-
-
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>
@@ -869,7 +867,7 @@
            </tr>
        </table>
    </div>
-
+<script src="${pageContext.request.contextPath}/js/app.js"></script>
 <!-- BLADE pseudo conversion code -->
 <script type="text/javascript">
 <!--
