@@ -5869,34 +5869,40 @@ color: #e62580;
     position: relative;
     float: left;
     width: 17px;
-    left: 10px;
-    top: -2px;
+    left: 15px;
+    top: 2px;
     cursor: pointer;
+    color: brown;
 }
 
 .offerTextOnTop{
     position: relative;
     float: left;
-    left: 17%;
-    top: -23px;
-    width: 42%;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 10px;
+    width: 67%;
+    font-size: 14px;
+    background: rgb(248, 255, 163);
 }
 
 .offerTextOnTopButton{
     position: relative;
-    top: -30px;
-    border: 1px solid;
-    border-radius: 3px;
-    padding: 5px;
-    background: rgb(184, 229, 255);
     cursor: pointer;
     float: left;
+    text-decoration: underline;
 }
 
 .offerRow{
     position: relative;
     float: left;
     width: 100%;
+}
+
+.offerTextOnTopText{
+    position: relative;
+    float: left;
 }
 
 /*

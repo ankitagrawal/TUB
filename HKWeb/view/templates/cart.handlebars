@@ -1,7 +1,6 @@
 <div id="appOfferID">
 {{#view id="applicableOfferContainer" class="applicableOfferContainer" controllerBinding="controller"}}
   <div class="applicableOfferHead">Offers available for your cart</div>
-  <div class="gotoCheckout"> <div class="gotoCheckoutInner">GO BACK TO CHECKOUT</div></div>
   {{#each array in controller.finalApplicableOffers}}
     <div class="offerRow">
       {{#each value in array}}
