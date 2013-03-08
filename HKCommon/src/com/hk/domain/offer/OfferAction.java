@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.hk.domain.catalog.product.ProductGroup;
+import com.hk.domain.catalog.product.ProductVariant;
 
 import java.util.Date;
 
@@ -65,6 +66,10 @@ public class OfferAction implements java.io.Serializable {
 
 	@Column (name = "reward_point_redeem_within_days")
   private Integer rewardPointRedeemWithinDays;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "free_variant_id")
+  private ProductVariant freeVariant;
 
   public Long getId() {
     return this.id;
@@ -174,7 +179,15 @@ public class OfferAction implements java.io.Serializable {
 		this.rewardPointRedeemWithinDays = rewardPointRedeemWithinDays;
 	}
 
-	@Override
+  public ProductVariant getFreeVariant() {
+    return freeVariant;
+  }
+
+  public void setFreeVariant(ProductVariant freeVariant) {
+    this.freeVariant = freeVariant;
+  }
+
+  @Override
   public String toString() {
     return id == null ? "" : id.toString();
   }

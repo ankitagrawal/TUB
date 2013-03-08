@@ -70,10 +70,11 @@
           <li><label>Cashback Offer</label><s:checkbox name="offerActionCreate.cashback"/></li>
           <li><label>Reward Point Limit</label><s:text name="offerActionCreate.rewardPointCashbackLimit"/></li>
           <li><label>Reward Point Discount Percent</label><s:text name="offerActionCreate.rewardPointDiscountPercent"/></li>
-	        <li><label>Reward Points Expiry Date</label><s:text class="date_input endDate" style="width:150px"
+	      <li><label>Reward Points Expiry Date</label><s:text class="date_input endDate" style="width:150px"
                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="offerActionCreate.rewardPointExpiryDate"/>
           </li>
 	        <li><label>Reward Point Redeem Within Days</label><s:text name="offerActionCreate.rewardPointRedeemWithinDays"/></li>
+          <li><label>Free Variant Id:<s:text name="offerActionCreate.freeVariant"/></label>
           <li><label>&nbsp;</label>
 
             <div class="buttons"><s:submit name="create" value="Create New Offer Action"/></div>

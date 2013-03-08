@@ -11695,4 +11695,20 @@
     <changeSet author="Rohit (generated)" id="1362465491508-6">
         <dropColumn columnName="lead_time" tableName="sku"/>
     </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1360060156998-1">
+        <addColumn tableName="offer_action">
+            <column name="free_variant_id" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360060156998-5">
+        <addForeignKeyConstraint baseColumnNames="free_variant_id" baseTableName="offer_action" constraintName="fk_offer_action_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360415137386-1">
+        <addColumn tableName="offer">
+            <column defaultValue="0" name="show_promptly" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
