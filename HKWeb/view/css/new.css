@@ -486,6 +486,11 @@ input[type="button"] .small, .button .small {
 
 /* line 277, ../sass/_base.scss */
 .button_grey {
+    width: 25%;
+    position: relative;
+    float: left;
+    padding: 4px;
+    left: 10px;
     -moz-border-radius: 0.3em;
     -webkit-border-radius: 0.3em;
     -o-border-radius: 0.3em;
@@ -494,7 +499,6 @@ input[type="button"] .small, .button .small {
     border-radius: 0.3em;
     font-weight: bold;
     font-size: 1em;
-    padding: 0.4em 0.8em;
     color: white;
     cursor: pointer;
     border: 2px solid transparent;
