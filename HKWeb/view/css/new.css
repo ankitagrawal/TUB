@@ -486,11 +486,6 @@ input[type="button"] .small, .button .small {
 
 /* line 277, ../sass/_base.scss */
 .button_grey {
-    width: 25%;
-    position: relative;
-    float: left;
-    padding: 4px;
-    left: 10px;
     -moz-border-radius: 0.3em;
     -webkit-border-radius: 0.3em;
     -o-border-radius: 0.3em;
@@ -499,6 +494,7 @@ input[type="button"] .small, .button .small {
     border-radius: 0.3em;
     font-weight: bold;
     font-size: 1em;
+    padding: 0.4em 0.8em;
     color: white;
     cursor: pointer;
     border: 2px solid transparent;
@@ -3187,6 +3183,8 @@ h2.prod_title {
 .step2 .right_container {
     display: inline;
     float: left;
+    margin-left: 5px;
+    margin-right: 5px;
     width: 190px;
     position: relative;
     left: 40px;
@@ -3200,8 +3198,6 @@ h2.prod_title {
     color: #888;
     padding: 10px 10px;
     margin-bottom: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
 }
 
 /* line 1220, ../sass/main.scss */
