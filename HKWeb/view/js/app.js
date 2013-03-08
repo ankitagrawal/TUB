@@ -63,18 +63,14 @@ function program2(depth0,data) {
 Ember.TEMPLATES["templates/cart"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
+  var buffer = '', stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n");
-  hashTypes = {'id': "STRING",'class': "STRING",'controllerBinding': "STRING"};
-  stack1 = helpers.view.call(depth0, {hash:{
-    'id': ("applicableOfferContainer"),
-    'class': ("applicableOfferContainer"),
-    'controllerBinding': ("controller")
-  },inverse:self.noop,fn:self.program(2, program2, data),contexts:[],types:[],hashTypes:hashTypes,data:data});
+  data.buffer.push("\n  <div class=\"applicableOfferHead\">Offers available for your cart</div>\n  <div class=\"gotoCheckout\"> <div class=\"gotoCheckoutInner\">GO BACK TO CHECKOUT</div></div>\n  ");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "array", "in", "controller.finalApplicableOffers", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;
@@ -82,24 +78,14 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n  <div class=\"applicableOfferHead\">Offers available for your cart</div>\n  <div class=\"gotoCheckout\"> <div class=\"gotoCheckoutInner\">GO BACK TO CHECKOUT</div></div>\n  ");
-  hashTypes = {};
-  stack1 = helpers.each.call(depth0, "array", "in", "controller.finalApplicableOffers", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n");
-  return buffer;
-  }
-function program3(depth0,data) {
-  
-  var buffer = '', stack1, hashTypes;
   data.buffer.push("\n    <div class=\"offerRow\">\n      ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "value", "in", "array", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "value", "in", "array", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </div>\n  ");
   return buffer;
   }
-function program4(depth0,data) {
+function program3(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n        <div class=\"applicableOffer\">    \n          <div class=\"applicableOfferDesc\" style=\"width: 92%;\">");
@@ -107,20 +93,20 @@ function program4(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n          ");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "value.terms", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "value.terms", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          ");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "value.endDate", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "value.endDate", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          ");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "value.removeFlag", {hash:{},inverse:self.program(11, program11, data),fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "value.removeFlag", {hash:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </div>\n      ");
   return buffer;
   }
-function program5(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n            <div class=\"applicableOfferTerms\"><strong>Terms:</strong>");
@@ -130,7 +116,7 @@ function program5(depth0,data) {
   return buffer;
   }
 
-function program7(depth0,data) {
+function program6(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n            <div class=\"endDate\">Valid till: ");
@@ -140,7 +126,7 @@ function program7(depth0,data) {
   return buffer;
   }
 
-function program9(depth0,data) {
+function program8(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n            <div class=\"appliedButton\">APPLIED</div>\n            <div class=\"removeButton\">\n              <form ");
@@ -157,7 +143,7 @@ function program9(depth0,data) {
   return buffer;
   }
 
-function program11(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n          <div class=\"applyFormButton\">\n            <form ");
@@ -174,10 +160,16 @@ function program11(depth0,data) {
   return buffer;
   }
 
-  hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "HK.CartOfferController.showOfferFlag", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  data.buffer.push("<div id=\"appOfferID\">\n");
+  hashTypes = {'id': "STRING",'class': "STRING",'controllerBinding': "STRING"};
+  stack1 = helpers.view.call(depth0, {hash:{
+    'id': ("applicableOfferContainer"),
+    'class': ("applicableOfferContainer"),
+    'controllerBinding': ("controller")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  else { data.buffer.push(''); }
+  data.buffer.push("\n</div>");
+  return buffer;
   
 });
 
@@ -337,7 +329,7 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getRoles:function(){
-        self = this;
+        var self = this;
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/roles",
             success: function ( data ) {
@@ -384,7 +376,7 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getOffer:function(){
-        self = this;
+        var self = this;
         this.get("applicableOffers").clear();
         this.get("finalApplicableOffers").clear();
         this.get("array").clear();
@@ -437,11 +429,11 @@ HK.CartOfferController = Ember.Controller.create({
                     });                    
                 }
                 if(self.get("totalOffers").length > 0){
-                    self.set("showOfferFlag", true);
+                    $("#appOfferID").show();
                     self.set("showOfferText", true);
                 }
                 else{
-                    self.set("showOfferFlag", false);
+                    $("#appOfferID").hide();
                     self.set("showOfferText", false);
                 }
             }
