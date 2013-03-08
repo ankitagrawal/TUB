@@ -291,7 +291,6 @@
 <c:if test="${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)>=1}">
 <span id="simpleProductsInCart" style="display: none;">${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)}</span>
 <div class='tabletitle'>
-  <h1>Offer->${cartAction.order.offerInstance.offer.id} - ${cartAction.order.offerInstance.offer.description}</h1>
   <div class='name'>
     Product
   </div>
