@@ -11587,6 +11587,12 @@
            update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
        </sql>
     </changeSet>
+    <changeSet author="Shilpa" id="1361862105941-1">
+        <sql>
+            alter table brands_to_audit add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+            update brands_to_audit set update_dt = audit_date;
+        </sql>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1361868792355-1">
         <createTable tableName="entity_audit_trail">
             <column autoIncrement="true" name="id" type="INT">
