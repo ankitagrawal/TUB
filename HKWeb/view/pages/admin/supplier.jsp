@@ -18,7 +18,13 @@
 			<table>
 				<tr>
 					<td>TIN<span class='aster' title="this field is required">*</span></td>
-					<td><s:text name="supplier.tinNumber"/></td>
+					<c:choose><c:when test="${sma.supplier.id == null}">
+						<td><s:text name="supplier.tinNumber"/></td>
+					</c:when>
+						<c:otherwise>
+							<td><s:text name="supplier.tinNumber" readonly="readonly"/></td>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 				<tr>
 					<td>Supplier Name<span class='aster' title="this field is required">*</span></td>

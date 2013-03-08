@@ -294,7 +294,7 @@
 --/diabetes/weight-management/low-calorie-diet
 -/diabetes/foot-care
 --/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
---/diabetes/foot-care/sock-and-slippers : Socks & Slippers
+--/diabetes/foot-care/shoes-and-slippers : Shoes & Slippers
 --/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
 --/diabetes/foot-care/guards-and-supports : Guards & Supports
 -/diabetes/what-s-new : What's New
