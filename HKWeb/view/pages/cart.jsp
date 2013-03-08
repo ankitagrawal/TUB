@@ -261,10 +261,10 @@
   </h2>
 
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-    <a href="/" class="back" style="position: relative;float: left;width: 50%;"> &larr; go back to add more products</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add more products</a>
   </c:if>
   <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-    <a href="/" class="back" style="position: relative;float: left;width: 50%;"> &larr; go back to add products to your shopping cart</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add products to your shopping cart</a>
   </c:if>
  <div id="offerTextOnTop"></div>
 </s:layout-component>
@@ -273,6 +273,7 @@
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
+<div id="appliedOfferDiv"></div>
 <div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
@@ -557,7 +558,7 @@
 
 <script src="${pageContext.request.contextPath}/js/app.js"></script>
 
-<div id="appliedOfferDiv"></div>
+
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
     <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>

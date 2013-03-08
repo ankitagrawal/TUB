@@ -8,17 +8,12 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n  <div class=\"applicableOffer appliedOfferNew\">\n    <div class=\"appliedOfferText\">Currently applied offer</div>\n    <img ");
-  hashTypes = {'src': "STRING"};
-  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'src': ("controller.imageURL")
-  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" class=\"offerCloseButton\" ");
+  data.buffer.push("\n  <div class=\"applicableOffer appliedOfferNew\">\n    <div class=\"appliedOfferText\">Currently applied offer</div>\n    <div class=\"offerCloseButton\" ");
   hashTypes = {'target': "STRING"};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "removeOffer", "value.id", {hash:{
     'target': ("controller")
   },contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("></img>\n      <div class=\"applicableOfferDesc\" style=\"font-size: 11px;\">");
+  data.buffer.push(">x</div>\n      <div class=\"applicableOfferDesc\" style=\"font-size: 11px;\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n      ");
@@ -68,7 +63,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n  <div class=\"applicableOfferHead\">Offers available for your cart</div>\n  <div class=\"gotoCheckout\"> <div class=\"gotoCheckoutInner\">GO BACK TO CHECKOUT</div></div>\n  ");
+  data.buffer.push("\n  <div class=\"applicableOfferHead\">Offers available for your cart</div>\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "array", "in", "controller.finalApplicableOffers", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -276,15 +271,15 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	<div class=\"offerTextOnTop\">You have ");
+  data.buffer.push("\n	<div class=\"offerTextOnTop\">\n		<div class=\"offerTextOnTopText\">You have <strong>");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "controller.totalOffers.length", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" offers waiting to be applied</div>\n	<div class=\"offerTextOnTopButton\" ");
+  data.buffer.push(" offers</strong> waiting to be applied  &nbsp(</div>\n		<div class=\"offerTextOnTopButton\" ");
   hashTypes = {'target': "STRING"};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "scrollToOffer", {hash:{
     'target': ("controller")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Click here</div>\n");
+  data.buffer.push(">  click here to view</div>)\n	</div>\n");
   return buffer;
   }
 
