@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -606,6 +607,11 @@ public class OrderManager {
               trimmedCartLineItems.add(lineItem);
               Long qty = lineItem.getQty();
               iterator.remove();
+              //check for subscription
+              if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())){
+                  Subscription subscription= subscriptionService.getSubscriptionFromCartLineItem(lineItem);
+                  subscriptionService.abandonSubscription(subscription);
+              }
               order.getCartLineItems().remove(lineItem);
               getBaseDao().delete(lineItem);
               if(qty<=0){
