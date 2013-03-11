@@ -329,8 +329,9 @@ public class Product  implements java.io.Serializable {
     }
 
     public List<Category> getCategories() {
-        Collections.sort(categories, new CategoryComparator());
-        return categories;
+        List<Category> clonedCategories = new ArrayList<Category>(categories);
+        Collections.sort(clonedCategories, new CategoryComparator());
+        return clonedCategories;
     }
 
     public void setCategories(List<Category> categories) {
