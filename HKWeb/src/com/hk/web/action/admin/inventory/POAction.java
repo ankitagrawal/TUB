@@ -96,6 +96,7 @@ public class POAction extends BasePaginatedAction {
 	private PurchaseOrderStatus purchaseOrderStatus;
 	private User approvedBy;
 	private User createdBy;
+  private Boolean extraInventoryCreated;
 
 	private Integer defaultPerPage = 20;
 
@@ -107,8 +108,7 @@ public class POAction extends BasePaginatedAction {
 			if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
 				warehouse = getPrincipalUser().getSelectedWarehouse();
 			}
-			purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,
-					getPageNo(), getPerPage());
+			purchaseOrderPage = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse,extraInventoryCreated, getPageNo(), getPerPage());
 			purchaseOrderList = purchaseOrderPage.getList();
 		}
 		return new ForwardResolution("/pages/admin/poList.jsp");
@@ -130,7 +130,7 @@ public class POAction extends BasePaginatedAction {
 			if (warehouse == null && getPrincipalUser() != null && getPrincipalUser().getSelectedWarehouse() != null) {
 				warehouse = getPrincipalUser().getSelectedWarehouse();
 			}
-			purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse);
+			purchaseOrderList = getPurchaseOrderDao().searchPO(purchaseOrder, purchaseOrderStatus, approvedBy, createdBy, invoiceNumber, tinNumber, supplierName, warehouse, null);
 		}
 
 		if (purchaseOrderList != null) {
@@ -492,5 +492,13 @@ public class POAction extends BasePaginatedAction {
 
   public PurchaseOrderService getPurchaseOrderService() {
     return purchaseOrderService;
+  }
+
+  public Boolean isExtraInventoryCreated() {
+    return extraInventoryCreated;
+  }
+
+  public void setExtraInventoryCreated(Boolean extraInventoryCreated) {
+    this.extraInventoryCreated = extraInventoryCreated;
   }
 }

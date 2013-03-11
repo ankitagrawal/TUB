@@ -55,6 +55,9 @@ public class Offer implements java.io.Serializable {
 	@Column(name = "payment_type", nullable = true)
   private Long paymentType;
 
+  @Column(name = "show_promptly", nullable = false)
+  private boolean showPromptly;
+
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(name = "offer_has_role",
       joinColumns = {@JoinColumn(name = "offer_id", nullable = false, updatable = false)},
@@ -169,7 +172,19 @@ public class Offer implements java.io.Serializable {
 		this.offerEmailDomains = offerEmailDomains;
 	}
 
-	@Override
+  public boolean isShowPromptly() {
+    return showPromptly;
+  }
+
+  public boolean getShowPromptly() {
+    return showPromptly;
+  }
+
+  public void setShowPromptly(boolean showPromptly) {
+    this.showPromptly = showPromptly;
+  }
+
+  @Override
   public String toString() {
     return id == null ? "" : id.toString();
   }

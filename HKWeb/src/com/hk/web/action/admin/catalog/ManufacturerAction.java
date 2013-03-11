@@ -85,8 +85,14 @@ public class ManufacturerAction extends BasePaginatedAction {
     }
 
     public Resolution saveManufacturerDetails() {
-        if (manufacturer.getId() == null)
+        if (manufacturer.getId() == null) {
+	        Manufacturer manufacturerDb = manufacturerDao.findByName(manufacturer.getName().trim());
+	        if(manufacturerDb != null){
+		        addRedirectAlertMessage(new SimpleMessage("Oopps !!! Manufacturer  With Same Name Already Exist"));
+		        return new ForwardResolution("/pages/admin/editManufacturerDetails.jsp");
+	        }
             manufacturerDao.save(manufacturer);
+        }
         else {
             manufacturerDb = getBaseDao().get(Manufacturer.class, manufacturer.getId());
             manufacturerDb.setName(manufacturer.getName().trim());

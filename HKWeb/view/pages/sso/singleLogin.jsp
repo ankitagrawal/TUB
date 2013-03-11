@@ -18,10 +18,10 @@
 </div>
 <div id="container">
     <div class="logo_block">
-        <img src="${httpPath}/images/hk_plus_logo.png" alt="Healthkart Logo" border="0" height="30" width="110">
-        <img src="${httpPath}/images/hk_logo.png" alt="Healthkart Plus Logo" border="0" height="20" width="100">
+        <img src="${httpPath}/images/hkp-logo.jpg" alt="HealthKart Plus Logo" border="0">
+        <img src="${httpPath}/images/hk_logo.png" alt="HealthKart Logo" border="0">
         <div id="newToHealthkart" class="rightcontent">
-            New to healthkart? &nbsp; <a id="newCustomer" class="yellow-button">CREATE AN ACCOUNT</a>
+            New to HealthKart? &nbsp; <a id="newCustomer" class="yellow-button">CREATE AN ACCOUNT</a>
         </div>
         <div id="alreadyHaveAccount" class="rightcontent" style="display: none;">
            Already have an account? &nbsp;<a id="oldCustomer" class="yellow-button">SIGN IN HERE</a>
@@ -76,7 +76,7 @@
                 <c:otherwise>
                     <a class="terms" href="${httpPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
-            </c:choose>| &copy; 2013 Healthkart.com</span>
+            </c:choose>| &copy; 2013 HealthKart.com</span>
             </div>
         </div>
         <div id="signupbox" class="formbox" style="display: none;">
@@ -125,7 +125,7 @@
                 <c:otherwise>
                     <a class="terms" href="${pageContext.request.contextPath}/pages/termsAndConditions.jsp">Terms of Use</a>
                 </c:otherwise>
-            </c:choose> | &copy; 2013 Healthkart.com</span>
+            </c:choose> | &copy; 2013 HealthKart.com</span>
             </div>
         </div>
         <div id="forgetbox" class="formbox" style="display: none;">
@@ -163,7 +163,7 @@
                 </c:choose>
 
                 
-                | &copy; 2013 Healthkart.com</span>
+                | &copy; 2013 HealthKart.com</span>
             </div>
         </div>
     </div>

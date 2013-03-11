@@ -170,6 +170,7 @@
 --/sports/fitness-equipment/bench-equipments
 --/sports/fitness-equipment/heart-rate-monitors
 ---/sports/fitness-equipment/heart-rate-monitors/accessories
+--/sports/fitness-equipment/massage-equipments
 --/sports/fitness-equipment/trampolines
 --/sports/fitness-equipment/weighing-scales
 ---/sports/fitness-equipment/weighing-scales/Analog
@@ -293,7 +294,7 @@
 --/diabetes/weight-management/low-calorie-diet
 -/diabetes/foot-care
 --/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
---/diabetes/foot-care/sock-and-slippers : Socks & Slippers
+--/diabetes/foot-care/shoes-and-slippers : Shoes & Slippers
 --/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
 --/diabetes/foot-care/guards-and-supports : Guards & Supports
 -/diabetes/what-s-new : What's New

@@ -1,10 +1,7 @@
+
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -542,8 +539,6 @@ public class OrderManager {
         }
 
         return getCartLineItemService().save(codLine);
-        // cartLineItem.setLineItemStatus(lineItemStatusDao.find(EnumLineItemStatus.NA.getId()));
-        // return cartLineItemService.save(cartLineItem);
     }
 
     public Order recalAndUpdateAmount(Order order) {
@@ -554,12 +549,6 @@ public class OrderManager {
 
         order.setAmount(pricingDto.getGrandTotalPayable());
 
-        // set order as referred order if this order is using referral coupon and availing discount as well
-        // if (order.getUser().getReferredBy() != null && offerInstance != null && offerInstance.getCoupon() != null &&
-        // offerInstance.getCoupon().getReferrerUser() != null && pricingDto.getTotalDiscount() > 0) {
-        // order.setReferredOrder(true);
-        // }
-
         return getOrderService().save(order);
     }
 
@@ -567,91 +556,70 @@ public class OrderManager {
         return orderPaymentReceieved(payment);
     }
 
-    public Order trimEmptyLineItems(Order order) {
-        // orderDao.refresh(order);
-        Set<Long> comboInstanceIds = new TreeSet<Long>();
-        if (order != null && order.getCartLineItems() != null && !(order.getCartLineItems()).isEmpty()) {
-            for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
-                CartLineItem lineItem = iterator.next();
-                if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())
-                        || lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())) {
-                    if (lineItem.getQty() <= 0) {
-                        iterator.remove();
-                        getCartLineItemDao().delete(lineItem);
-                      logger.debug("Deleting cartLineItem for Product Variant" + lineItem.getProductVariant().getId()+ "because it's quantity is zero");                      
-                    } else {
-                        ProductVariant productVariant = lineItem.getProductVariant();
-                        Product product = productVariant.getProduct();
-                        boolean isService = false;
-                        if (product.isService() != null && product.isService())
-                            isService = true;
-                        boolean isJit = false;
-                        if (product.isJit() != null && product.isJit())
-                            isJit = true;
-                        if (!isJit && !isService) {
-                            //List<Sku> skuList = skuService.getSKUsForProductVariant(productVariant);
-	                        List<Sku> skuList = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
-                            if (skuList != null && !skuList.isEmpty()) {
-                                Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
-                                if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                                    // Check in case of negative unbooked inventory
-                                    if (unbookedInventory < 0) {
-                                        unbookedInventory = 0L;
-                                    }
-                                  //setting productVariant and it's related Combos out of stock
-                                  if(unbookedInventory <= 0L){
-                                    //Firstly setting product variant out of stock
-                                    ProductVariant productVariantOutOfStock = getProductVariantService().getVariantById(lineItem.getProductVariant().getId());
-                                    productVariantOutOfStock.setOutOfStock(true);
-                                    getProductVariantService().save(productVariantOutOfStock);
-                                   //calling Async method to set related combos out of stock
-                                    getComboService().markRelatedCombosOutOfStock(lineItem.getProductVariant());
-                                  }
-                                    if (lineItem.getComboInstance() != null) {
-                                        comboInstanceIds.add(lineItem.getComboInstance().getId());
-                                        lineItem.setQty(0L);
-                                        logger.debug("Setting CartLineITem Qty equals to Zero because unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId()
-                                                + "is less than combo Product Variant Quantity");
-                                    } else {
-                                        lineItem.setQty(unbookedInventory);
-                                        cartLineItemService.save(lineItem);
-                                        logger.debug("Set LineItem Qty equals to available unbooked Inventory: " + unbookedInventory + " for Variant:" + productVariant.getId());
-                                    }
-                                }
-                            }
-                        }
-                        cartLineItemService.save(lineItem);
-                    }
-                }
-            }
-          //Setting Zero quantity to other products of the Combo
-            for (Long comboInstanceId : comboInstanceIds) {
-                for (Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();) {
-                  CartLineItem cartLineItem = iterator.next();
-                    if (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)) {
-                        cartLineItem.setQty(0L);
-                        cartLineItemService.save(cartLineItem);
-                        logger.debug("Setting CartLineITem Qty equals to Zero for Product Variant:" + cartLineItem.getProductVariant().getId()+ "because other product variant in the same combo is set to zero");
-                    }
-                }
-            }
-          // Final check to remove the zero quantity cartLineItem
-          for(Iterator<CartLineItem> iterator = order.getCartLineItems().iterator(); iterator.hasNext();){
-            CartLineItem cartLineItem = iterator.next();
-            if(cartLineItem.getQty()<=0){
-              iterator.remove();
-              getCartLineItemDao().delete(cartLineItem);
-              logger.debug("Deleting cartLineItem for Product Variant" + cartLineItem.getProductVariant().getId()+ "because it's quantity is zero");
-            }
-          }
-          order = getOrderService().save(order);
-        }
-        if (order != null)
-            getOrderDao().refresh(order);
-        return order;
-    }
 
-    public boolean isStepUpAllowed(CartLineItem cartLineItem) {
+  public Set<CartLineItem> trimEmptyLineItems(Order order) {
+      Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+      Set<CartLineItem> trimmedCartLineItems = new HashSet<CartLineItem>();
+      Set<ComboInstance> toBeRemovedComboInstanceSet = new HashSet<ComboInstance>();
+      for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext();) {
+          CartLineItem lineItem = iterator.next();
+          ProductVariant productVariant = lineItem.getProductVariant();
+          Product product = productVariant.getProduct();
+          ComboInstance comboInstance = lineItem.getComboInstance();
+          List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
+
+          if(lineItem.getQty() <= 0){
+           iterator.remove();
+           order.getCartLineItems().remove(lineItem);
+           getBaseDao().delete(lineItem);
+          }
+          else{
+
+          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
+              if (comboInstance != null) {
+                  toBeRemovedComboInstanceSet.add(comboInstance);
+              }
+              lineItem.setQty(0L);
+              continue;
+          }
+
+          if (!(product.isJit() || product.isService())) {
+              Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
+              if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                  // Check in case of negative unbooked inventory
+                  if (comboInstance != null) {
+                      toBeRemovedComboInstanceSet.add(comboInstance);
+                      continue;
+                  }
+                  if (unbookedInventory <= 0) {
+                      unbookedInventory = 0L;
+                  }
+                  lineItem.setQty(unbookedInventory);
+              }
+          }
+        }
+      }
+      for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext(); ) {
+          CartLineItem lineItem = iterator.next();
+          ProductVariant productVariant = lineItem.getProductVariant();
+          if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
+              trimmedCartLineItems.add(lineItem);
+              Long qty = lineItem.getQty();
+              iterator.remove();
+              order.getCartLineItems().remove(lineItem);
+              getBaseDao().delete(lineItem);
+              if(qty<=0){
+              productVariant.setOutOfStock(true);
+              getProductVariantService().save(productVariant);
+              getComboService().markProductOutOfStock(productVariant);
+               }
+          }
+      }
+      order = getOrderService().save(order);
+      return trimmedCartLineItems;
+  }
+
+  public boolean isStepUpAllowed(CartLineItem cartLineItem) {
         ProductVariant productVariant = cartLineItem.getProductVariant();
         Product product = productVariant.getProduct();
         boolean isService = false;

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.shiro.PrincipalImpl;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -118,6 +119,11 @@ public class ProductAction extends BaseAction {
     private ProductVariant             validTryOnProductVariant;
     @Autowired
     TrafficAndUserBrowsingService      trafficAndUserBrowsingService;
+
+    @Override
+    public PrincipalImpl getPrincipal() {
+        return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
+    }
 
     @DefaultHandler
     @DontValidate

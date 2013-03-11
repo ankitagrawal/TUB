@@ -163,6 +163,12 @@
             </li>
 
             <li>
+              <label>Order Ranking*</label>
+              <s:text style="width:200px" name="combo.orderRanking"
+                      value="${comboAction.combo.orderRanking}" placeholder="eg: 10"/>
+            </li>
+
+            <li>
               <label>Marked Price(Auto compute)</label>
                 ${comboAction.combo.markedPrice}
             </li>
