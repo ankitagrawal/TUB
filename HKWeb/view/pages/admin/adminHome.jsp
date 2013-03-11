@@ -172,7 +172,7 @@
 			beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
 
 	<h3><s:link
-			beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+			beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
 	<h3><s:link
 			beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>

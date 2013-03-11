@@ -43,7 +43,7 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component
-public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
+public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
     @Autowired
     private UserService                     userService;
@@ -64,7 +64,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 	@Autowired
 	private SkuItemDao							skuItemDao;
 
-    Map<LineItem, String>                     lineItemRecheckinQtyMap = new HashMap<LineItem, String>();
+    Map<LineItem, String> lineItemRecheckinBarcodeMap = new HashMap<LineItem, String>();
 
     private Long                            orderId;
     private String                          gatewayOrderId;
@@ -74,9 +74,9 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
     private List<LineItem>                  lineItems               = new ArrayList<LineItem>();
 	private String 							conditionOfItem;
 
-    @DefaultHandler
+	@DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinRTOInventory.jsp");
+        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinReturnInventory.jsp");
     }
 
     public Resolution searchOrder() {
@@ -98,13 +98,13 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 			}
 		}
 
-        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinRTOInventory.jsp");
+        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinReturnInventory.jsp");
     }
 
     public Resolution checkinReturnedUnits() {
         User loggedOnUser = userService.getLoggedInUser();
 
-        for (Map.Entry<LineItem, String> lineItemRecheckinQtyMapEntry : lineItemRecheckinQtyMap.entrySet()) {
+        for (Map.Entry<LineItem, String> lineItemRecheckinQtyMapEntry : lineItemRecheckinBarcodeMap.entrySet()) {
             LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             ShippingOrder shippingOrder = lineItem.getShippingOrder();
@@ -175,7 +175,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 			}
         }
 
-        return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+        return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
     }
 
     public Long getOrderId() {
@@ -210,12 +210,12 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
         this.lineItems = lineItems;
     }
 
-	public Map<LineItem, String> getLineItemRecheckinQtyMap() {
-		return lineItemRecheckinQtyMap;
+	public Map<LineItem, String> getLineItemRecheckinBarcodeMap() {
+		return lineItemRecheckinBarcodeMap;
 	}
 
-	public void setLineItemRecheckinQtyMap(Map<LineItem, String> lineItemRecheckinQtyMap) {
-		this.lineItemRecheckinQtyMap = lineItemRecheckinQtyMap;
+	public void setLineItemRecheckinBarcodeMap(Map<LineItem, String> lineItemRecheckinBarcodeMap) {
+		this.lineItemRecheckinBarcodeMap = lineItemRecheckinBarcodeMap;
 	}
 
 	public UserService getUserService() {

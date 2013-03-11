@@ -6,7 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction"
+<s:useActionBean beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
                  var="orderAdmin"/>
 
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus()%>"/>
@@ -64,7 +64,7 @@
 <s:layout-component name="heading">Search Order and Checkin Returned Units</s:layout-component>
 
 <s:layout-component name="content">
-<s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction" method="get"
+<s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction" method="get"
         autocomplete="false">
     <fieldset class="top_label">
         <ul>
@@ -78,7 +78,7 @@
 </s:form>
 
 <c:if test="${orderAdmin.shippingOrder != null}">
-<s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction"
+<s:form beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
         autocomplete="off">
 <s:hidden name="orderId" value="${orderAdmin.shippingOrder.id}"/>
 <c:set var="order" value="${orderAdmin.shippingOrder.baseOrder}"/>
@@ -161,7 +161,7 @@
                             <c:set var="productVariant" value="${lineItem.sku.productVariant}"/>
                             <c:if test="${!productVariant.product.service}">
                                 <c:set value="<%=lineItemGlobalCtr%>" var="lineItemGlobalCtr"/>
-                                <s:hidden name="lineItems[${lineItemGlobalCtr}]" value="${lineItem.id}"/>
+
                                 <tr class="shippingRow">
                                     <td width="250">
                                         <s:hidden name="lineItems[${lineItemGlobalCtr}]" value="${lineItem.id}"/>
@@ -179,22 +179,22 @@
                                     <td title="Re-checkin">
                                        <span class="good">
                                         <label>Good</label>
-                                        <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                            style="width:100px;" class="rto1"/>
+                                        <s:text name="lineItemRecheckinBarcodeMap[${lineItem}]"
+                                            style="width:100px;" class="rto1" />
 
                                           </p>
                                         </span>
                                         <span class="damaged">
                                         <label>Damaged</label>
-                                         <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                             style="width:100px;" class="rto2"/>
+                                         <s:text name="lineItemRecheckinBarcodeMap[${lineItem}]"
+                                             style="width:100px;" class="rto2" />
 
                                           </p>
                                           </span>
                                           <span class="expired">
                                           <label>Expired</label>
-                                            <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                                style="width:100px;" class="rto3"/>
+                                            <s:text name="lineItemRecheckinBarcodeMap[${lineItem}]"
+                                                style="width:100px;" class="rto3" />
 
                                           </p>
                                           </span>
@@ -202,7 +202,7 @@
                                     </td>
                                     <td class="checkedin">
                                         Checked-in Qty:
-                                        <span class="checkedinQty">${hk:getReCheckedinUnitsCount(reverseLineItem.referredLineItem)}</span>
+                                        <span class="checkedinQty">${hk:getReCheckedinUnitsCount(lineItem)}</span>
                                     </td>
                                   <p><p>
 
@@ -222,8 +222,7 @@
                                    value="${reverseLineItem.referredLineItem.sku.productVariant}"/>
                             <c:if test="${!productVariant.product.service}">
                                 <c:set value="<%=lineItemGlobalCtr%>" var="lineItemGlobalCtr"/>
-                                <s:hidden name="lineItems[${lineItemGlobalCtr}]"
-                                          value="${reverseLineItem.referredLineItem.id}"/>
+                                
                                 <tr class="shippingRow">
                                     <td width="250">
                                         <s:hidden name="lineItems[${lineItemGlobalCtr}]"
@@ -242,22 +241,22 @@
                                     <td title="Re-checkin">
                                       <span class="good">
                                       <label>Good</label>
-                                      <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                         style="width:100px;" class="rto1"/>
+                                      <s:text name="lineItemRecheckinBarcodeMap[${reverseLineItem.referredLineItem}]"
+                                         style="width:100px;" class="rto1" />
 
                                        </p>
                                        </span>
                                        <span class="damaged">
                                         <label>Damaged</label>
-                                        <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                            style="width:100px;" class="rto2"/>
+                                        <s:text name="lineItemRecheckinBarcodeMap[${reverseLineItem.referredLineItem}]"
+                                            style="width:100px;" class="rto2" />
 
                                         </p>
                                          </span>
                                          <span class="expired">
                                          <label>Expired</label>
-                                         <s:text name="lineItemRecheckinQtyMap[${reverseLineItem.referredLineItem}]"
-                                                            style="width:100px;" class="rto3"/>
+                                         <s:text name="lineItemRecheckinBarcodeMap[${reverseLineItem.referredLineItem}]"
+                                                            style="width:100px;" class="rto3" />
 
                                          </p>
                                          </span>
