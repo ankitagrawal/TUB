@@ -5,6 +5,8 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumAuditStatus;
+import com.hk.constants.inventory.EnumCycleCountStatus;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -94,9 +96,8 @@ public class BrandsToAuditAction extends BasePaginatedAction {
             }
             if (updateDate == null) {
                 brandsToAudit.setUpdateDate(currentDate);
-                updateDate = currentDate;
             }
-            if (auditDate.compareTo(currentDate) > 0 || updateDate.compareTo(currentDate) > 0 || updateDate.compareTo(auditDate) < 0) {
+            if (auditDate.compareTo(currentDate) > 0) {
                 addRedirectAlertMessage(new SimpleMessage("Invalid date"));
                 return new RedirectResolution(BrandsToAuditAction.class);
             }
@@ -108,6 +109,20 @@ public class BrandsToAuditAction extends BasePaginatedAction {
                     return new RedirectResolution(BrandsToAuditAction.class);
                 }
                 brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
+            } else {
+                if (!(brandsToAudit.getAuditStatus().equals(EnumAuditStatus.Pending.getId()))) {
+                    CycleCount cycleCount = brandsToAudit.getCycleCount();
+                    if (cycleCount != null) {
+                        if (!(cycleCount.getCycleStatus().equals(EnumCycleCountStatus.Closed.getId()))) {
+                            addRedirectAlertMessage(new SimpleMessage("Brand's Cycle Count Already In progress , First Close Cycle Count  " + cycleCount.getId()));
+                            return new RedirectResolution(BrandsToAuditAction.class);
+
+                        }
+
+                    }
+
+                }
+
             }
 
 
