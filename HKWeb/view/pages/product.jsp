@@ -223,15 +223,13 @@
 				Edit Variant Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
-			<!--<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
+			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editProductDetails"
 			        target="_blank"
 			        class="popup">
 				Edit Product Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
-			-->
-			This has been removed for monitoring.
 			<s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
 				Edit Sku Attributes
 				<s:param name="productId" value="${product.id}"/>
