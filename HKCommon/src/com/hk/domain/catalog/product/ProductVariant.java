@@ -8,11 +8,14 @@ import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+import com.hk.pact.service.Trackable;
+import com.hk.pact.service.audit.Auditable;
 import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.util.*;
 
+@Auditable
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "product_variant")
@@ -53,6 +56,7 @@ public class ProductVariant implements java.io.Serializable {
   @JsonSkip
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(name = "product_variant_has_product_option", joinColumns = {@JoinColumn(name = "product_variant_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "product_option_id", nullable = false, updatable = false)})
+  @Trackable
   private List<ProductOption> productOptions = new ArrayList<ProductOption>(0);
 
   @JsonSkip
@@ -77,6 +81,7 @@ public class ProductVariant implements java.io.Serializable {
   private Double shippingAddPrice;
 
   @Column(name = "out_of_stock", nullable = false)
+  @Trackable
   private boolean outOfStock;
 
   @Column(name = "deleted", nullable = false)
