@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hk.domain.catalog.product.EntityAuditTrail;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
@@ -41,8 +42,59 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         if (Product.class.equals(entityClass)) {
             Product newProduct = (Product) event.getOriginal();
             audit(newProduct.getId(), newProduct);
+        }else if(ProductVariant.class.equals(entityClass)){
+            ProductVariant newProductVariant = (ProductVariant) event.getOriginal();
+            audit(newProductVariant.getId(), newProductVariant);  
         }
 
+    }
+    
+    private void audit(String productVariantId, ProductVariant savedProductVariant) {
+        ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId);
+        User loggedUser = getUserService().getLoggedInUser();
+
+        try {
+            EntityAuditTrail eat = new EntityAuditTrail();
+            eat.setEntityId(productVariantId);
+            Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+            String oldJson = "";
+            if (oldProductVariant != null)
+                oldJson = gson.toJson(oldProductVariant);
+            eat.setOldJson(oldJson);
+            //savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
+            String newJson = gson.toJson(savedProductVariant);
+            eat.setNewJson(newJson);
+            if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+                eat.setUserEmail(loggedUser != null ? loggedUser.getEmail() : "system");
+                eat.setCallingClass(Reflection.getCallerClass(2).getName());
+                eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
+                eat.setCreateDt(new Date());
+                Session session = null;
+                try {
+                    SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
+                    session = sessionFactory.openSession();
+                    session.save(eat);
+                } catch (Exception e) {
+                    logger.error("Error while entering audit trail for product->" + productVariantId);
+                } finally {
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            logger.error("Error while entering audit trail for product->" + productVariantId);
+        }
+
+    }
+    
+    public ProductVariant getOriginalProductVariantById(String productVariantId) {
+        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
+        Session session = sessionFactory.openSession();
+        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId", productVariantId).uniqueResult();
+        
+        return productVariant;
     }
 
     public Product getOriginalProductById(String productId) {
