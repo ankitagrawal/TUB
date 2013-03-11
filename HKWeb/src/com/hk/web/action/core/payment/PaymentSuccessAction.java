@@ -98,7 +98,9 @@ public class PaymentSuccessAction extends BaseAction {
             OfferInstance offerInstance = order.getOfferInstance();
             if (offerInstance != null) {
                 Coupon coupon = offerInstance.getCoupon();
-                couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                if (coupon != null) {
+                  couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                }
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
 

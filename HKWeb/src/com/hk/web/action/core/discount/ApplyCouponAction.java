@@ -2,13 +2,12 @@ package com.hk.web.action.core.discount;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Arrays;
 
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.domain.coupon.CouponType;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -22,12 +21,17 @@ import com.akube.framework.stripes.controller.Modal;
 import com.hk.admin.manager.EmployeeManager;
 import com.hk.admin.manager.IHOManager;
 import com.hk.constants.discount.OfferConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.Offer;
 import com.hk.domain.offer.OfferEmailDomain;
+import com.hk.domain.offer.OfferTrigger;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.matcher.CartLineItemMatcher;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.BaseDao;
@@ -35,6 +39,13 @@ import com.hk.pact.dao.coupon.CouponDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.CartLineItemService;
+import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.HealthkartResponse;
+import com.hk.dto.pricing.PricingDto;
+import com.hk.util.OfferTriggerMatcher;
+
+import javax.ws.rs.PathParam;
 
 /**
  * User: rahul Time: 8 Jan, 2010 6:19:28 PM
@@ -62,6 +73,8 @@ public class ApplyCouponAction extends BaseAction {
     private IHOManager         ihoManager;
     @Autowired
     private EmployeeManager    employeeManager;
+    @Autowired
+    private CartLineItemService cartLineItemService;
 
     private String             couponCode;
 
@@ -75,9 +88,13 @@ public class ApplyCouponAction extends BaseAction {
     public static final String error_alreadyApplied     = "error_alreadyApplied";
     public static final String error_alreadyReferrer    = "error_alreadyReferrer";
     public static final String error_referralNotAllowed = "error_referralNotAllowed";
+    public static final String error_couponExpired      = "error_couponExpired";
+    public static final String error_freeVariantStockOver    = "error_freeVariantStockOver";
 
     private OfferInstance      offerInstance;
+    private Offer      offer;
 
+    @DefaultHandler
     public Resolution apply() {
         if (StringUtils.isBlank(couponCode)) {
             message = new LocalizableMessage("/ApplyCoupon.action.coupon.required").getMessage(getContext().getLocale());
@@ -116,6 +133,7 @@ public class ApplyCouponAction extends BaseAction {
                 }
             } else if (!coupon.isValid()) {
                 message = new LocalizableMessage("/ApplyCoupon.action.expired.coupon").getMessage(getContext().getLocale());
+                error = error_couponExpired;
             } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
                 error = error_role;
 	            Offer offer = coupon.getOffer();
@@ -170,14 +188,74 @@ public class ApplyCouponAction extends BaseAction {
                 couponDao.save(coupon);
                 success = true;
 
+              ProductVariant freeVariant = coupon.getOffer().getOfferAction().getFreeVariant();
+              if (freeVariant != null) {
+                //OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(coupon.getOffer().getOfferTrigger(), order.getCartLineItems());
+                //&& offerTriggerMatcher.hasEasyMatch(false)
+                if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                  freeVariant.setQty(1L);
+                  orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
+                  message = "Offer variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
+                } else {
+                  message = "Oops! Offer is over.";
+                  error = error_freeVariantStockOver;
+                }
+              } else {
                 message = new LocalizableMessage("/ApplyCoupon.action.coupon.successfully.applied").getMessage(getContext().getLocale());
+              }
             }
         }
-
         return new ForwardResolution("/pages/modal/applyCoupon.jsp");
     }
 
-    public void setCouponCode(String couponCode) {
+
+
+  public Resolution applyOffer() {
+    User user = getUserService().getUserById(getPrincipal().getId());
+    Order order = orderManager.getOrCreateOrder(user);
+    List<OfferInstance> offerInstances = offerInstanceDao.findActiveOfferInstances(user, offer);
+    if (!offerInstances.isEmpty()) {
+      offerInstance = offerInstances.get(0);
+    } else {
+      offerInstance = offerInstanceDao.createOfferInstance(offer, null, user, offer.getEndDate());
+    }
+    order.setOfferInstance(offerInstance);
+    orderDao.save(order);
+    success = true;
+
+    ProductVariant freeVariant = offer.getOfferAction().getFreeVariant();
+    if (freeVariant != null) {
+      if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+        orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
+      }
+    }
+
+    return new RedirectResolution(CartAction.class);
+
+  }
+
+  public Resolution removeOffer() {
+    User user = getUserService().getUserById(getPrincipal().getId());
+    Order order = orderManager.getOrCreateOrder(user);
+    order.setOfferInstance(null);
+    orderDao.save(order);
+
+    ProductVariant freeVariant = offer.getOfferAction().getFreeVariant();
+    if (freeVariant != null) {
+      if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+        CartLineItemMatcher cartLineItemMatcher = new CartLineItemMatcher().addProductVariant(freeVariant).addCartLineItemType(EnumCartLineItemType.Product);
+        CartLineItem cartLineItem = cartLineItemService.getMatchingCartLineItemFromOrder(order, cartLineItemMatcher);
+        if(cartLineItem != null){
+          cartLineItem.setQty(0L);
+          cartLineItemService.save(cartLineItem);
+        }
+      }
+    }
+
+    return new RedirectResolution(CartAction.class);
+  }
+
+  public void setCouponCode(String couponCode) {
         this.couponCode = couponCode;
     }
 
@@ -273,4 +351,7 @@ public class ApplyCouponAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
+  public void setOffer(Offer offer) {
+    this.offer = offer;
+  }
 }
