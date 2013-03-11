@@ -146,7 +146,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
                    + " from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
                    + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
 */
-        String sql = "select si as skuItem, sg as skuGroup ,si.barcode as barcode, pv as productVariant, p as product,p.name as name, sg.expiryDate as expiryDate "/*,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "*/
+        String sql = "select si as skuItem, sg as skuGroup ,si.barcode as barcode, pv as productVariant, p as product,p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty"/*,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "*/
                            + " from SkuItem si join si.skuItemStatus as sis join si.skuGroup sg join sg.sku s join s.productVariant pv join pv.product p "
                            + " where sis.id = :checkedInSkuItemStatus ";
 
@@ -156,6 +156,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
            if (warehouse != null) {
                sql = sql + " and s.warehouse = :warehouse ";
            }
+           sql = sql + " group by si.id ";
            Query query = getSession().createQuery(sql);
 
            if (brand != null) {
