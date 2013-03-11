@@ -1,0 +1,72 @@
+<div class="modal_header">
+    <div class="jqDrag" style="padding: 5px 3px;">Apply Coupon</div>
+    <a href="#" id="couponModalClose" class="modal_close jqmClose" style=" margin-top: 0px;"><img src="/healthkart/images/spacer.gif" width="21" height="21"/></a>
+</div>
+<div class="modal_content">
+  <p class="lrg em">{{controller.modalData.message}}</p>
+  {{#if controller.modalData.success}}
+    <script type="text/javascript">
+      // call pricing update
+      $.getJSON($('#updatePricingLink').attr('href'), function(res) {_updateTotals(res);});
+    </script>
+    <table class="cont_2 offerTable">
+      <thead>
+      <tr>
+        <th>Offer Description</th>
+        <th>Valid till</th>
+        <th>Coupon</th>
+      </tr>
+      </thead>
+      <tr>
+        <td width="200">
+          {{controller.modalData.offer.description}}
+          <br/>
+          {{#if controller.modalData.offer.terms}}
+            <h3>Terms:</h3>
+            {{controller.modalData.offer.terms}}
+          {{/if}}
+        </td>
+        <td width="150">{{controller.modalData.offer.endDate}}</td>
+        <td width="100">
+          <span class="upc gry sml">{{controller.modalData.coupon.code}}</span>
+        </td>
+      </tr>
+    </table>
+  {{/if}}
+  {{#if controller.modalData.error}}
+
+    {{#view controllerBinding="controller" isVisibleBinding="HK.CartOfferController.showErrAlreadyApplied"}}
+      The offer associated with this coupon has now been selected. <br/>
+      <script type="text/javascript">
+      // call pricing update
+      $.getJSON($('#updatePricingLink').attr('href'), function(res) {_updateTotals(res);});
+      </script>
+      <table class="cont_2 offerTable">
+        <thead>
+        <tr>
+          <th>Offer Description</th>
+          <th>Valid till</th>
+          <th>Coupon</th>
+        </tr>
+        </thead>
+        <tr>
+          <td width="200">
+            {{controller.modalData.offer.description}}
+            <br/>
+            {{#if controller.modalData.offer.terms}}
+              <h3>Terms:</h3>
+              {{controller.modalData.offer.terms}}
+            {{/if}}
+          </td>
+          <td width="150">{{controller.modalData.offer.endDate}}</td>
+          <td width="100">
+            <span class="upc gry sml">{{controller.modalData.coupon.code}}</span>
+          </td>
+        </tr>
+      </table>
+      You can see all your offers by clicking on the "Select Available Offers" link.
+    {{/view}}
+
+    {{controller.errorMessage}}
+  {{/if}}
+</div>
