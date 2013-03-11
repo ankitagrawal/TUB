@@ -107,14 +107,14 @@ public class Product  implements java.io.Serializable {
     @Column(name = "hidden", scale = 0)
     private Boolean              hidden;
 
-    
+    @Expose
     @Column(name = "is_jit", scale = 0)
     private Boolean              isJit;
 
     @Column(name = "is_amazon_product")
     private Boolean              isAmazonProduct;
 
-    
+    @Expose
     @Column(name = "out_of_stock")
     private Boolean              outOfStock =  false;
 
