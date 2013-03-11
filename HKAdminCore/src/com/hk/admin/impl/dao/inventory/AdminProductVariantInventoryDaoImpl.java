@@ -141,9 +141,14 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse) {
 
            Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
+/*
            String sql = "select si as skuItem,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
-                   + " from skuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
+                   + " from SkuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
                    + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
+*/
+        String sql = "select si as skuItem, sg as skuGroup ,si.barcode as barcode, pv as productVariant, p as product,p.name as name, sg.expiryDate as expiryDate "/*,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "*/
+                           + " from SkuItem si join si.skuItemStatus as sis join si.skuGroup sg join sg.sku s join s.productVariant pv join pv.product p "
+                           + " where sis.id = :checkedInSkuItemStatus ";
 
            if (brand != null) {
                sql = sql + " and  p.brand = :brand ";
@@ -151,7 +156,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
            if (warehouse != null) {
                sql = sql + " and s.warehouse = :warehouse ";
            }
-
            Query query = getSession().createQuery(sql);
 
            if (brand != null) {
@@ -159,7 +163,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
            }
            if (warehouse != null) {
                query.setParameter("warehouse", warehouse);               }
-
            query.setParameter("checkedInSkuItemStatus", checkedInSkuItemStatus);
 
            return query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
@@ -172,6 +175,8 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         String sql = "select pvi as productVariantInventory, sg as skuGroup, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
                 + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "
                 + "join sg.sku s join s.productVariant pv join pv.product p where p.brand = :brand and sg.barcode is NULL and si.barcode like '%" + BarcodeUtil.BARCODE_SKU_ITEM_PREFIX + "%'";
+
+
         if (warehouse != null) {
             sql = sql + " and s.warehouse = :warehouse ";
         }
