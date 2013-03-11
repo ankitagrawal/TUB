@@ -105,7 +105,7 @@ public class BusyPopulateItemData {
 			parent_group=p.primary_category ,
 			unit='Pcs',
 			sale_price=pv.hk_price ,
-			purchase_price=sk.cost_price ,
+			purchase_price=pv.cost_price ,
 			mrp=pv.marked_price ,
 			tax_rate_local=t.value,
 			tax_rate_central=t.value ,
