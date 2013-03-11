@@ -86,13 +86,8 @@ public class CreateInventoryFileAction extends BaseAction {
             return new RedirectResolution(CreateInventoryFileAction.class);
         }
         try {
-            // List<CreateInventoryFileDto> inventoryFileList =
-            // productVariantInventoryDao.getDetailsForUncheckedItems(brand);
-//      List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getDetailsForUncheckedItems(brand, userWarehouse);
-            List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getCheckedInSkuGroup(brand, userWarehouse);
-//      inventoryFileList.addAll(inventoryFileListForItemBarcode);
+            List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getDetailsForUncheckedItems(brand, userWarehouse);
             Iterator<CreateInventoryFileDto> iterator = inventoryFileList.iterator();
-
             String barcodeFilePath = null;
             if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
                 barcodeFilePath = barcodeGurgaon;
@@ -179,8 +174,6 @@ public class CreateInventoryFileAction extends BaseAction {
         }
         try {
             List<CreateInventoryFileDto> inventoryFileList = adminproductVariantInventoryDao.getDetailsForUncheckedItems(brand, userWarehouse);
-            List<CreateInventoryFileDto> inventoryFileListForItemBarcode = adminproductVariantInventoryDao.getDetailsForUncheckedItemsWithItemBarcode(brand, userWarehouse);
-            inventoryFileList.addAll(inventoryFileListForItemBarcode);
             Iterator<CreateInventoryFileDto> iterator = inventoryFileList.iterator();
 
             String barcodeFilePath = null;
@@ -199,7 +192,13 @@ public class CreateInventoryFileAction extends BaseAction {
                 CreateInventoryFileDto dto = iterator.next();
                 String date = "";
                 String name = dto.getName();
-                String barcode = dto.getBarcode();
+                String barcode = "";
+                String groupBarcode = dto.getSkuGroup().getBarcode();
+                if (groupBarcode == null) {
+                    barcode = dto.getBarcode();
+                } else {
+                    barcode = groupBarcode;
+                }
                 Date expiryDate = dto.getExpiryDate();
                 Long sumQty = dto.getSumQty();
                 ProductVariant productVariant = dto.getProductVariant();
@@ -209,17 +208,18 @@ public class CreateInventoryFileAction extends BaseAction {
 
                 if (dto.getSkuGroup().getMrp() != null) {
                     markedPrice = dto.getSkuGroup().getMrp();
-                } else {
-                    if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null) {
-                        markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
-                    } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null) {
-                        markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
-                    } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
-                        markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
-                    } else if (productVariant.getMarkedPrice() != null) {
-                        markedPrice = productVariant.getMarkedPrice();
-                    }
                 }
+//                } else {
+//                    if (dto.getProductVariantInventory().getGrnLineItem() != null && dto.getProductVariantInventory().getGrnLineItem().getMrp() != null) {
+//                        markedPrice = dto.getProductVariantInventory().getGrnLineItem().getMrp();
+//                    } else if (dto.getProductVariantInventory().getStockTransferLineItem() != null && dto.getProductVariantInventory().getStockTransferLineItem().getMrp() != null) {
+//                        markedPrice = dto.getProductVariantInventory().getStockTransferLineItem().getMrp();
+//                    } else if (dto.getProductVariantInventory().getRvLineItem() != null && dto.getProductVariantInventory().getRvLineItem().getMrp() != null) {
+//                        markedPrice = dto.getProductVariantInventory().getRvLineItem().getMrp();
+//                    } else if (productVariant.getMarkedPrice() != null) {
+//                        markedPrice = productVariant.getMarkedPrice();
+//                    }
+//                }
 
                 if (expiryDate == null) {
                     date = "NA";
