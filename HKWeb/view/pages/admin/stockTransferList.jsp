@@ -1,10 +1,14 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer List">
+	<c:set var="stStatusClosed" value="<%=EnumStockTransferStatus.Closed.getId()%>" />
+	<c:set var="stStatusCheckoutCompleted" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_Completed.getId()%>" />
+	<c:set var="stStatusCheckinInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
 	<%
 		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -56,6 +60,7 @@
 				<th>Received By</th>
 				<th>Checkout Date</th>
 				<th>Checkin Date</th>
+				<th>Status</th>
 				<th>Actions</th>
 			</tr>
 			</thead>
@@ -68,14 +73,20 @@
 							${stockTransfer.receivedBy.name} <br/>(${stockTransfer.receivedBy.login})</c:if></td>
 					<td><fmt:formatDate value="${stockTransfer.checkoutDate}" type="both" timeStyle="short"/></td>
 					<td><fmt:formatDate value="${stockTransfer.checkinDate}" type="both" timeStyle="short"/></td>
+					<td>${stockTransfer.stockTransferStatus.name}</td>
 					<td>
 						<c:if test="${stockTransfer.fromWarehouse.id == whAction.setWarehouse.id}">
-						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">Edit
+						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="view">View/Edit
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>&nbsp;
-						<c:if test="${stockTransfer.toWarehouse.id == whAction.setWarehouse.id}">
+						<c:if test="${stockTransfer.toWarehouse.id == whAction.setWarehouse.id && (stockTransfer.stockTransferStatus.id == stStatusCheckoutCompleted
+										|| stockTransfer.stockTransferStatus.id == stStatusCheckinInProcess)}">
 						<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="checkinInventoryAgainstStockTransfer">Inventory Checkin
 							<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
+						</c:if>
+						<c:if test="${stockTransfer.toWarehouse.id == whAction.setWarehouse.id && stockTransfer.stockTransferStatus.id == stStatusClosed}">
+							<s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="checkinInventoryAgainstStockTransfer">View Stock Transfer
+								<s:param name="stockTransfer" value="${stockTransfer.id}"/></s:link>
 						</c:if>
                         &nbsp;
                         <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="print" target="_blank">Print
