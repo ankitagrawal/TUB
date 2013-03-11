@@ -52,6 +52,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
     private void audit(String productVariantId, ProductVariant savedProductVariant) {
         ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId);
         User loggedUser = getUserService().getLoggedInUser();
+        oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
 
         try {
             EntityAuditTrail eat = new EntityAuditTrail();
@@ -61,7 +62,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
             if (oldProductVariant != null)
                 oldJson = gson.toJson(oldProductVariant);
             eat.setOldJson(oldJson);
-            //savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
+            savedProductVariant.setOptionsAuditString(savedProductVariant.getOptionsPipeSeparated());
             String newJson = gson.toJson(savedProductVariant);
             eat.setNewJson(newJson);
             if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
@@ -75,7 +76,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     session = sessionFactory.openSession();
                     session.save(eat);
                 } catch (Exception e) {
-                    logger.error("Error while entering audit trail for product->" + productVariantId);
+                    logger.error("Error while entering audit trail for product->" + productVariantId, e);
                 } finally {
                     if (session != null) {
                         session.close();
@@ -84,7 +85,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
             }
         } catch (Exception e) {
-            logger.error("Error while entering audit trail for product->" + productVariantId);
+            logger.error("Error while entering audit trail for product->" + productVariantId, e);
         }
 
     }
@@ -133,7 +134,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     session = sessionFactory.openSession();
                     session.save(eat);
                 } catch (Exception e) {
-                    logger.error("Error while entering audit trail for product->" + productId);
+                    logger.error("Error while entering audit trail for product->" + productId,e);
                 } finally {
                     if (session != null) {
                         session.close();
@@ -142,7 +143,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
             }
         } catch (Exception e) {
-            logger.error("Error while entering audit trail for product->" + productId);
+            logger.error("Error while entering audit trail for product->" + productId,e);
         }
     }
 

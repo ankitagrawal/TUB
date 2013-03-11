@@ -136,7 +136,7 @@ public class Product  implements java.io.Serializable {
     @JoinTable(name = "product_has_related_product", joinColumns = { @JoinColumn(name = "product_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "related_product_id", nullable = false, updatable = false) })
     private List<Product>        relatedProducts  = new ArrayList<Product>(0);
 
-    @Expose
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<ProductVariant> productVariants  = new ArrayList<ProductVariant>(0);
 

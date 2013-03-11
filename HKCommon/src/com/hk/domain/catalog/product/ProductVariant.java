@@ -2,18 +2,36 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
 import com.akube.framework.gson.JsonSkip;
+import com.google.gson.annotations.Expose;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
-import com.hk.pact.service.Trackable;
-import com.hk.pact.service.audit.Auditable;
-import com.google.gson.annotations.Expose;
-
-import javax.persistence.*;
-import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -53,7 +71,6 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "cost_price", nullable = false)
     private Double                    costPrice;
 
-    @Expose
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_variant_has_product_option", joinColumns = { @JoinColumn(name = "product_variant_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "product_option_id", nullable = false, updatable = false) })
@@ -119,7 +136,7 @@ public class ProductVariant implements java.io.Serializable {
 
     @Column(name = "upc")
     private String                    upc;                                                       // Universal Product
-                                                                                                    // Code
+    // Code
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "affiliate_category_name")
@@ -188,6 +205,7 @@ public class ProductVariant implements java.io.Serializable {
     @Column(name = "other_remark")
     private String                    otherRemark;
 
+    @Transient
     @Expose
     private String                    optionsAuditString;
 
@@ -276,9 +294,10 @@ public class ProductVariant implements java.io.Serializable {
     }
 
     public List<ProductOption> getProductOptions() {
-        if (productOptions != null && !productOptions.isEmpty())
-            Collections.sort(productOptions, new ProductOptionComparator());
-        return productOptions;
+        List<ProductOption> clonedProductOptions = new ArrayList<ProductOption>(productOptions);
+        if (clonedProductOptions != null && !clonedProductOptions.isEmpty())
+            Collections.sort(clonedProductOptions, new ProductOptionComparator());
+        return clonedProductOptions;
     }
 
     public void setProductOptions(List<ProductOption> productOptions) {
@@ -286,7 +305,9 @@ public class ProductVariant implements java.io.Serializable {
     }
 
     public List<ProductExtraOption> getProductExtraOptions() {
-        return productExtraOptions;
+        List<ProductExtraOption> clonedProductExtraOptions = new ArrayList<ProductExtraOption>(productExtraOptions);
+        
+        return clonedProductExtraOptions;
     }
 
     public void setProductExtraOptions(List<ProductExtraOption> productExtraOptions) {
@@ -710,6 +731,10 @@ public class ProductVariant implements java.io.Serializable {
 
     public String getOptionsAuditString() {
         return optionsAuditString;
+    }
+
+    public void setOptionsAuditString(String optionsAuditString) {
+        this.optionsAuditString = optionsAuditString;
     }
 
     public List<ComboProduct> getComboProducts() {
