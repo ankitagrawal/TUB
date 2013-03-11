@@ -775,12 +775,46 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
 
+//    public Resolution deleteScannedSkuItem() {
+//
+//        if (cycleCount == null) {
+//            addRedirectAlertMessage(new SimpleMessage("Invalid Cycle Count"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//
+//        if (StringUtil.isBlank(hkBarcode)) {
+//            addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//
+//        User loggedOnUser = null;
+//        if (getPrincipal() != null) {
+//            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+//        }
+//        SkuItem skuItem = findBySkuItem(hkBarcode.trim());
+//        if (skuItem == null) {
+//            addRedirectAlertMessage(new SimpleMessage(" Invalid Barcode"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//        CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+//        if (existingCycleCountItem == null) {
+//            addRedirectAlertMessage(new SimpleMessage( skuItem.getBarcode() + ":Invalid  Item to delete"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//        cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
+//        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
+////        return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+//        return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId()).addParameter("messageColor", "green");
+//    }
+
+
     public Resolution deleteScannedSkuItem() {
 
         if (cycleCount == null) {
             addRedirectAlertMessage(new SimpleMessage("Invalid Cycle Count"));
             return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
         }
+
         if (StringUtil.isBlank(hkBarcode)) {
             addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
             return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
@@ -791,20 +825,46 @@ public class CycleCountAction extends BasePaginatedAction {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         SkuItem skuItem = findBySkuItem(hkBarcode.trim());
-        if (skuItem == null) {
-            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + ": Invalid Barcode"));
-            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+        if (skuItem != null) {
+
+            CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+            if (existingCycleCountItem == null) {
+                addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + ":Invalid  Item to delete"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+            cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
+            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
+
+        } else {
+            SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+            if (skuGroup == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid  Barcode"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+            CycleCountItem existingCycleCountItem = null;
+            for (CycleCountItem cycleCountItem : cycleCount.getCycleCountItems()) {
+                if (skuGroup == cycleCountItem.getSkuGroup()) {
+                    existingCycleCountItem = cycleCountItem;
+                    break;
+                }
+            }
+
+            if (existingCycleCountItem != null && existingCycleCountItem.getScannedQty() > 0) {
+                existingCycleCountItem.setScannedQty(existingCycleCountItem.getScannedQty() - 1);
+                cycleCountService.save(existingCycleCountItem);
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("No Scanned item found"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+
+
         }
-        CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
-        if (existingCycleCountItem == null) {
-            addRedirectAlertMessage(new SimpleMessage( skuItem.getBarcode() + ":Invalid  Item to delete"));
-            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
-        }
-        cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
-        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
-//        return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+//       return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+        addRedirectAlertMessage(new SimpleMessage("Database updated"));
         return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId()).addParameter("messageColor", "green");
     }
+
 
     public List<CycleCountItem> getCycleCountItems() {
         return cycleCountItems;

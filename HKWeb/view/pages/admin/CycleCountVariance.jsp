@@ -10,10 +10,10 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Variance Report">
 <s:layout-component name="heading">
-      <%
-            String messageColor = request.getParameter("messageColor");
-            pageContext.setAttribute("messageColor", messageColor);
-        %>
+    <%
+        String messageColor = request.getParameter("messageColor");
+        pageContext.setAttribute("messageColor", messageColor);
+    %>
     <div style="text-align: center;">
         CYCLE COUNT # ${cycle.cycleCount.id}
         BRAND : ${cycle.cycleCount.brandsToAudit.brand}
@@ -21,37 +21,44 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-//             $('.alert').hide();
-                $('.alert').hide();
+            //             $('.alert').hide();
+            $('.alert').hide();
 
-                $('#productVariantBarcode').focus();
-                $('#productVariantBarcode').keydown(function() {
-                    $('.alertST').hide();
-                });
+            $('#productVariantBarcode').focus();
+            $('#productVariantBarcode').keydown(function() {
+                $('.alertST').hide();
+            });
 
-              if ($('#messageColorParam').val() == "green") {
-                    $('.alertST').find('li').css('font-size', '30px').css('color', 'green');
-                } else {
-                    $('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+            if ($('#messageColorParam').val() == "green") {
+                $('.alertST').find('li').css('font-size', '30px').css('color', 'green');
+            } else {
+                $('.alertST').find('li').css('font-size', '30px').css('color', 'red');
+            }
+
+
+            $('#stForm2').submit(function() {
+                var pvb = $('#productVariantBarcode').val();
+                if (pvb == null || pvb == "") {
+                    alert("Value can't be Empty");
+                    return false;
                 }
+            });
+            $('#productVariantBarcode').change(function() {
+
+                var formName = $('#stForm2');
+                var formURL = formName.attr('action');
+                formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} + "&deleteScannedSkuItem=");
+                formName.submit();
+            });
 
 
-                $('#stForm2').submit(function() {
-                    var pvb = $('#productVariantBarcode').val();
-                    if (pvb == null || pvb == "") {
-                        alert("Value can't be Empty");
-                        return false;
-                    }
-                });
-                $('#productVariantBarcode').change(function() {
-
-                    var formName = $('#stForm2');
-                    var formURL = formName.attr('action');
-                    formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} + "&deleteScannedSkuItem=");
-                    formName.submit();
-                });
-
-
+            $('#ccform').submit(function() {
+                var scannedqty = $('.scannedQty').val()
+                if (scannedqty < 0) {
+                    alert("Scanned Qty cannot be less than 0")
+                    return false;
+                }
+            });
 
 
             var scannedSum = 0;
@@ -88,9 +95,10 @@
 
 <c:set value="<%= EnumCycleCountStatus.Closed.getId()%>" var="closed"/>
 <c:if test="${cycle.cycleCount.cycleStatus < closed }">
-      <c:if test="${cycle.cycleCount.cycleStatus == cycleCountStatusId}">
+    <c:if test="${cycle.cycleCount.cycleStatus == cycleCountStatusId}">
         <input type="hidden" id="messageColorParam" value="${messageColor}">
-         <div class="alertST messages"><s:messages key="generalMessages"/></div>
+
+        <div class="alertST messages"><s:messages key="generalMessages"/></div>
         <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">
             <fieldset class="right_label">
                 <legend>Scan Barcode to delete:</legend>
@@ -102,8 +110,8 @@
                     <li></li>
                 </ul>
             </fieldset>
-           </s:form>
-         </c:if>
+        </s:form>
+    </c:if>
     <table style="margin: 55px auto 81px;">
     <thead>
     <tr>
