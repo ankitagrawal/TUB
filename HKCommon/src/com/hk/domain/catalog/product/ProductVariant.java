@@ -306,7 +306,7 @@ public class ProductVariant implements java.io.Serializable {
 
     public List<ProductExtraOption> getProductExtraOptions() {
         List<ProductExtraOption> clonedProductExtraOptions = new ArrayList<ProductExtraOption>(productExtraOptions);
-        
+
         return clonedProductExtraOptions;
     }
 
@@ -440,15 +440,17 @@ public class ProductVariant implements java.io.Serializable {
 
     private String getOptionsBySeparator(String separator, boolean valueOnly) {
         StringBuffer stringBuffer = new StringBuffer();
-        for (Iterator<ProductOption> productOptionIterator = productOptions.iterator(); productOptionIterator.hasNext();) {
-            ProductOption productOption = productOptionIterator.next();
-            if (valueOnly) {
-                stringBuffer.append(productOption.getValue());
-            } else {
-                stringBuffer.append(productOption.getName()).append(":").append(productOption.getValue());
-            }
-            if (productOptionIterator.hasNext()) {
-                stringBuffer.append(separator);
+        if (productOptions != null && productOptions.size() > 0) {
+            for (Iterator<ProductOption> productOptionIterator = productOptions.iterator(); productOptionIterator.hasNext();) {
+                ProductOption productOption = productOptionIterator.next();
+                if (valueOnly) {
+                    stringBuffer.append(productOption.getValue());
+                } else {
+                    stringBuffer.append(productOption.getName()).append(":").append(productOption.getValue());
+                }
+                if (productOptionIterator.hasNext()) {
+                    stringBuffer.append(separator);
+                }
             }
         }
         return stringBuffer.toString();
