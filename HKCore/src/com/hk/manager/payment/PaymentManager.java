@@ -428,16 +428,17 @@ public class PaymentManager {
 	}
 
 	public Payment fail(String gatewayOrderId) {
-		return fail(gatewayOrderId, null);
+		return fail(gatewayOrderId, null, null);
 	}
 
 	@Transactional
-	public Payment fail(String gatewayOrderId, String gatewayReferenceId) {
+	public Payment fail(String gatewayOrderId, String gatewayReferenceId,String responseMessage) {
 		Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
 			initiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
 			payment = getPaymentService().save(payment);
 		}

@@ -22,8 +22,6 @@
             <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
                 <c:if test="${poa.brandsToAudit.auditStatus == status.id}">${status.name}</c:if>
             </c:forEach> <br/><br/>
-            <label>Update Date*: </label><s:text id="update-date" class="date_input" formatPattern="yyyy-MM-dd"
-                                                 name="brandsToAudit.updateDate"/><br/> <br/>
             <c:if test="${poa.brandsToAudit.id ne null}">
                 <label>Audit Status</label><s:select name="brandsToAudit.auditStatus">
                 <s:option value="${poa.brandsToAudit.auditStatus}" >--Select--</s:option>
