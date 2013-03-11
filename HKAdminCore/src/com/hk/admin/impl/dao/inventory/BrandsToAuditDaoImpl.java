@@ -1,6 +1,7 @@
 package com.hk.admin.impl.dao.inventory;
 
 import com.akube.framework.dao.Page;
+import com.akube.framework.util.BaseUtils;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.domain.inventory.BrandsToAudit;
@@ -10,7 +11,9 @@ import com.hk.impl.dao.BaseDaoImpl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 @SuppressWarnings ("unchecked")
 @Repository
 public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDao {
+
 
     public Page searchAuditList(String brand, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage, Long auditStatus) {
         DetachedCriteria auditCriteria = getBrandsToAuditCriteria(brand, warehouse, auditor, startDate, endDate, auditStatus);
@@ -77,6 +81,13 @@ public class BrandsToAuditDaoImpl extends BaseDaoImpl implements BrandsToAuditDa
     public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus ,Warehouse warehouse) {
         DetachedCriteria brandDetachedCriteria =   getBrandsToAuditCriteria(brand, warehouse, null, null, null, auditStatus);
         return findByCriteria(brandDetachedCriteria);
+    }
+
+    @Transactional
+    public BrandsToAudit save(BrandsToAudit brandsToAudit) {
+        brandsToAudit.setUpdateDate(BaseUtils.getCurrentTimestamp());
+        return (BrandsToAudit) super.save(brandsToAudit);
+
     }
 
 }
