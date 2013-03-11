@@ -44,6 +44,8 @@ public class CreateOfferAction extends BaseAction {
 
   boolean excludeTriggerProducts;
 
+  boolean showPromptly;
+
   String terms;
 
 	Long paymentType;
@@ -68,6 +70,7 @@ public class CreateOfferAction extends BaseAction {
     offer.setOfferIdentifier(offerIdentifier);
     offer.setTerms(terms);
     offer.setPaymentType(paymentType);
+    offer.setShowPromptly(showPromptly);
     offer = (Offer) offerDao.save(offer);
 
     addRedirectAlertMessage(new SimpleMessage("Offer [{0}] successfully created", description));
@@ -145,4 +148,12 @@ public class CreateOfferAction extends BaseAction {
 	public void setPaymentType(Long paymentType) {
 		this.paymentType = paymentType;
 	}
+
+  public boolean isShowPromptly() {
+    return showPromptly;
+  }
+
+  public void setShowPromptly(boolean showPromptly) {
+    this.showPromptly = showPromptly;
+  }
 }
