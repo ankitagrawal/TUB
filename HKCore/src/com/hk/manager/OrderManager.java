@@ -583,7 +583,7 @@ public class OrderManager {
               continue;
           }
 
-          if (!(product.isJit() || product.isService())) {
+          if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
               Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
