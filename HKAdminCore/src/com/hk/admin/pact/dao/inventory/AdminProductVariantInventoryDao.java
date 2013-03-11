@@ -55,4 +55,6 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse);
+
 }

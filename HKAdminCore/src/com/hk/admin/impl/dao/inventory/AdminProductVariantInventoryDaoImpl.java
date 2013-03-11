@@ -138,6 +138,36 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
 
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse) {
+
+           Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
+           String sql = "select si as skuItem,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "
+                   + " from skuItem si join si.skuGroup sg  join si.skuItemStatus as sis "
+                   + " join sg.sku s join s.productVariant pv join pv.product p where sis.id = :checkedInSkuItemStatus ";
+
+           if (brand != null) {
+               sql = sql + " and  p.brand = :brand ";
+           }
+           if (warehouse != null) {
+               sql = sql + " and s.warehouse = :warehouse ";
+           }
+
+           Query query = getSession().createQuery(sql);
+
+           if (brand != null) {
+               query.setParameter("brand", brand);
+           }
+           if (warehouse != null) {
+               query.setParameter("warehouse", warehouse);               }
+
+           query.setParameter("checkedInSkuItemStatus", checkedInSkuItemStatus);
+
+           return query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+
+       }
+
+
+
     public List<CreateInventoryFileDto> getDetailsForUncheckedItemsWithItemBarcode(String brand, Warehouse warehouse) {
         String sql = "select pvi as productVariantInventory, sg as skuGroup, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, sum(pvi.qty) as sumQty, pv as productVariant "
                 + "from ProductVariantInventory pvi join pvi.skuItem si join si.skuGroup sg "

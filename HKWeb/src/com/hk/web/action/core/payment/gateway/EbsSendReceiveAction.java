@@ -103,8 +103,8 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.description, description);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash_decrypted, pass);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash, secure_hash);
-		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
-		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);         
+		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);          
 		return ebsPaymentGatewayWrapper;
 	}                                                                              
 
