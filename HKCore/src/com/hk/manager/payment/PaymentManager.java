@@ -14,6 +14,7 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.user.BillingAddress;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.manager.OrderManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
@@ -24,7 +25,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
-import com.hk.pact.service.codbridge.OrderEventPublisher;
+
 import com.hk.util.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -68,8 +69,8 @@ public class PaymentManager {
 
 	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
 	private Double cashBackLimit;
-//    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
-//    private int maxCODCallCount;
+    @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
+    private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
 	private Long defaultGateway;
 
@@ -309,28 +310,47 @@ public class PaymentManager {
 			order = getOrderManager().orderPaymentReceieved(payment);
             /* Commenting User COD Knowlarity Call */
 
-//			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
-//			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
-//			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-//				/* Make JMS Call For COD Confirmation Only Once*/
-//				if (order.getUserCodCall() == null) {
-//                    try {
-//                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
-//                        UserCodCall userCodCall = null;
-//                        if (messagePublished) {
-//                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
-//                        } else {
-//                            userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
-//                        }
-//                        if (userCodCall != null) {
-//                            orderService.saveUserCodCall(userCodCall);
-//                        }
-//                    } catch (Exception ex) {
-//                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
-//                    }
-//				}
-//			}
-//			}
+			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
+			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
+			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+				/* Make JMS Call For COD Confirmation Only Once*/
+                   Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
+				if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
+                    try {
+                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
+                        UserCodCall userCodCall = null;
+
+                        if (order.getUserCodCall() != null) {
+                            userCodCall = order.getUserCodCall();
+                        }
+
+                        if (messagePublished) {
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_THIRD_PARTY;
+                                userCodCall.setRemark(thirdPartyPending.getName());
+                                userCodCall.setCallStatus(thirdPartyPending.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                            }
+
+                        } else {
+                            if (userCodCall != null) {
+                                EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
+                                userCodCall.setRemark(thirdPartyFailed.getName());
+                                userCodCall.setCallStatus(thirdPartyFailed.getId());
+                            } else {
+                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                            }
+                        }
+                        if (userCodCall != null) {
+                            orderService.saveUserCodCall(userCodCall);
+                        }
+                    } catch (Exception ex) {
+                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+                    }
+				}
+			}
+			}
 		}
         /* Call CodPayment Success */
         notifyPaymentSuccess(order);
@@ -408,16 +428,17 @@ public class PaymentManager {
 	}
 
 	public Payment fail(String gatewayOrderId) {
-		return fail(gatewayOrderId, null);
+		return fail(gatewayOrderId, null, null);
 	}
 
 	@Transactional
-	public Payment fail(String gatewayOrderId, String gatewayReferenceId) {
+	public Payment fail(String gatewayOrderId, String gatewayReferenceId,String responseMessage) {
 		Payment payment = getPaymentService().findByGatewayOrderId(gatewayOrderId);
 		if (payment != null) {
 			initiatePaymentFailureCall(payment.getOrder());
 			payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
 			payment.setGatewayReferenceId(gatewayReferenceId);
+            payment.setResponseMessage(responseMessage);
 			payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.FAILURE));
 			payment = getPaymentService().save(payment);
 		}
@@ -477,7 +498,7 @@ public class PaymentManager {
 			}
            }
         else {
-               logger.error("Null Order Id Recieved");
+               logger.error("Null Order Id Received");
            }
 
 	}

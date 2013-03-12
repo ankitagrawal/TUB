@@ -11587,91 +11587,231 @@
            update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
        </sql>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-1">
-        <createTable tableName="mail">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(45)"/>
-            <column name="content" type="LONGTEXT"/>
-            <column name="amazon_file_path" type="VARCHAR(400)"/>
-            <column name="subject" type="VARCHAR(200)"/>
-        </createTable>
+    <changeSet author="Shilpa" id="1361862105941-1">
+        <sql>
+            alter table brands_to_audit add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+            update brands_to_audit set update_dt = audit_date;
+        </sql>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-2">
-        <createTable tableName="product_review_mail">
+    <changeSet author="Ajeet (generated)" id="1361868792355-1">
+        <createTable tableName="entity_audit_trail">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="time_window_days" type="INT"/>
-            <column name="days_to_send_review_mail_again" type="INT"/>
-            <column name="create_dt" type="DATETIME"/>
-            <column name="update_dt" type="DATETIME"/>
-            <column name="is_enabled" type="TINYINT">
+            <column name="entity_id" type="VARCHAR(45)">
                 <constraints nullable="false"/>
             </column>
-            <column name="deleted" type="TINYINT">
+            <column name="old_json" type="LONGTEXT">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="VARCHAR(20)">
+            <column name="new_json" type="LONGTEXT">
                 <constraints nullable="false"/>
             </column>
-            <column name="mail_id" type="INT">
+            <column defaultValue="admin@healthkart.com" name="user_email" type="VARCHAR(200)">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="last_updated_by" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="test_email_id" type="VARCHAR(50)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-3">
-        <createTable tableName="user_review_mail">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="due_date" type="DATETIME"/>
-            <column name="create_dt" type="DATETIME"/>
-            <column name="update_dt" type="DATETIME"/>
-            <column name="is_mail_sent" type="TINYINT"/>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_review_id" type="INT"/>
-            <column name="base_order_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="sent_date" type="DATETIME"/>
-            <column name="product_variant_id" type="VARCHAR(20)">
+            <column name="calling_class" type="VARCHAR(200)"/>
+            <column name="create_dt" type="DATETIME">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-5">
-        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="product_review_mail"  constraintName="fk_review_mail_product_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1361941166899-1">
+        <addColumn tableName="entity_audit_trail">
+            <column name="stack_trace" type="LONGTEXT"/>
+        </addColumn>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-6">
-        <addForeignKeyConstraint baseColumnNames="last_updated_by" baseTableName="product_review_mail"  constraintName="fk_review_mail_product_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-1">
+        <createTable tableName="change_group">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="entity_id" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifying_user" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="modified_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-7">
-        <addForeignKeyConstraint baseColumnNames="mail_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_mail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mail"  referencesUniqueColumn="false"/>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-2">
+        <createTable tableName="change_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="field_name" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field_type" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="LONGTEXT"/>
+            <column name="new_value" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-8">
-        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    <changeSet author="Vaibhav (generated)" id="1362395307901-11">
+        <addForeignKeyConstraint baseColumnNames="change_group_id" baseTableName="change_item" constraintName="fk_change_item_change_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="change_group" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-9">
-        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="user_review_mail"  constraintName="fk_user_review_mail_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+    <changeSet author="Rohit (generated)" id="1362465491508-1">
+        <createTable tableName="stock_transfer_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-10">
-        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review_mail" constraintName="fk_user_review_mail_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+    <changeSet author="Rohit (generated)" id="1362465491508-2">
+        <addColumn tableName="stock_transfer">
+            <column name="stock_transfer_status_id" type="INT"/>
+        </addColumn>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-11">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+    <changeSet author="Rohit (generated)" id="1362465491508-3">
+        <createIndex indexName="name" tableName="manufacturer" unique="true">
+            <column name="name"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="Ankur (generated)" id="1358841573903-12">
-        <addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
+    <changeSet author="Rohit (generated)" id="1362465491508-4">
+        <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Rohit (generated)" id="1362465491508-5">
+        <dropColumn columnName="cost_price" tableName="sku"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1362465491508-6">
+        <dropColumn columnName="lead_time" tableName="sku"/>
+    </changeSet>
+    <changeSet author="Ankit" id="05-03-2013-01">
+        <sql>
+            update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID004' where issuer_id = 39  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID007' where issuer_id = 36  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID015' where issuer_id = 34  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID014' where issuer_id = 33  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID005' where issuer_id = 32  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID012' where issuer_id = 31  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID001' where issuer_id = 22  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID010' where issuer_id = 21  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID002' where issuer_id = 8  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID006' where issuer_id = 17  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID009' where issuer_id = 20  and gateway_id = 80;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360060156998-1">
+        <addColumn tableName="offer_action">
+            <column name="free_variant_id" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360060156998-5">
+        <addForeignKeyConstraint baseColumnNames="free_variant_id" baseTableName="offer_action" constraintName="fk_offer_action_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360415137386-1">
+        <addColumn tableName="offer">
+            <column defaultValue="0" name="show_promptly" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-1">
+		<createTable tableName="mail">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="name" type="VARCHAR(45)"/>
+			<column name="content" type="LONGTEXT"/>
+			<column name="amazon_file_path" type="VARCHAR(400)"/>
+			<column name="subject" type="VARCHAR(200)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-2">
+		<createTable tableName="product_review_mail">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="time_window_days" type="INT"/>
+			<column name="days_to_send_review_mail_again" type="INT"/>
+			<column name="create_dt" type="DATETIME"/>
+			<column name="update_dt" type="DATETIME"/>
+			<column name="is_enabled" type="TINYINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="deleted" type="TINYINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="product_id" type="VARCHAR(20)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="mail_id" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created_by" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="last_updated_by" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="test_email_id" type="VARCHAR(50)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-3">
+		<createTable tableName="user_review_mail">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="due_date" type="DATETIME"/>
+			<column name="create_dt" type="DATETIME"/>
+			<column name="update_dt" type="DATETIME"/>
+			<column name="is_mail_sent" type="TINYINT"/>
+			<column name="user_id" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="user_review_id" type="INT"/>
+			<column name="base_order_id" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="sent_date" type="DATETIME"/>
+			<column name="product_variant_id" type="VARCHAR(20)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-5">
+		<addForeignKeyConstraint baseColumnNames="created_by" baseTableName="product_review_mail"  constraintName="fk_review_mail_product_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-6">
+		<addForeignKeyConstraint baseColumnNames="last_updated_by" baseTableName="product_review_mail"  constraintName="fk_review_mail_product_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-7">
+		<addForeignKeyConstraint baseColumnNames="mail_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_mail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mail"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-8">
+		<addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_review_mail"  constraintName="fk_mailing_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-9">
+		<addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="user_review_mail"  constraintName="fk_user_review_mail_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-10">
+		<addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review_mail" constraintName="fk_user_review_mail_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-11">
+		<addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user"  referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="Ankur (generated)" id="1358841573903-12">
+		<addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
+	</changeSet>
 </databaseChangeLog>
+        

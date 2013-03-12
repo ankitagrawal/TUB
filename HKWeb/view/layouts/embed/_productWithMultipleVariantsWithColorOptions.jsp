@@ -56,6 +56,10 @@
         </div>
         <c:if test="${hk:isNotBlank(product.productVariants[0].productOptionsWithoutColor)}">
           ${product.productVariants[0].productOptionsWithoutColor}
+           <c:if test="${product.service}" >
+               <br/>
+               ${product.productVariants[0].variantName}
+           </c:if>
         </c:if>
       </div>
     </div>

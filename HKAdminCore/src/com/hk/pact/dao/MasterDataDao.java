@@ -182,4 +182,6 @@ public interface MasterDataDao
 	 public List<EnumCycleCountStatus> getAllCycleCountStatus();
 
      public List<Courier> getAllActiveCourier();
+
+	public List<Long> getDiscountsForPOS();
 }

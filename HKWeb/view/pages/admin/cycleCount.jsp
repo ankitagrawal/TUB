@@ -3,11 +3,11 @@
 <%@ page import="com.hk.domain.cycleCount.CycleCountItem" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-<style>
+<style type="text/css">
 	.scannedBarcode {
-
 		width: 125px
 	}
 
@@ -15,7 +15,6 @@
 		margin-left: 0px
 	}
 </style>
-</sttyle>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Count">
 	<s:layout-component name="htmlHead">
@@ -27,8 +26,41 @@
 					$('#errordiv').hide();
 				});
 
+                $('.scannedBarcode').live("change", function() {
+                    var value = $(this).val();
+                    if (value == null || value.trim() == '') {
+                        return false;
+                    }
+                    else {
+                        $(this).attr("disable", "disable");
+                        return $('.saveform').click();
+                    }
+                });
 
-				$('#uploadnotepad').live("click", function() {
+
+                var scannedSum = 0;
+                var systemSum = 0;
+                var varianceSum = 0;
+                $('.scannedQty').each(function() {
+                    scannedSum = scannedSum + Number($(this).text());
+                });
+                $("#scannedValue").html(scannedSum);
+
+                $('.systemQty').each(function() {
+                    systemSum = systemSum + Number($(this).text());
+                });
+                $("#systemValue").html(systemSum);
+
+                $('.varianceQty').each(function () {
+                    varianceSum = varianceSum + Number($(this).text());
+                });
+                if (varianceSum < 0) {
+                    $("#varianceValue").html(varianceSum).css("color", "red");
+                } else {
+                    $("#varianceValue").html(varianceSum);
+                }
+
+                $('#uploadnotepad').live("click", function() {
 					var filebean = $('#filebean').val();
 					if (filebean == null || filebean == '') {
 						alert('choose file');
@@ -37,16 +69,6 @@
 				});
 
 
-				$('.scannedBarcode').live("change", function() {
-					var value = $(this).val();
-					if (value == null || value.trim() == '') {
-						return false;
-					}
-					else {
-						$(this).attr("disable", "disable");
-						return $('.saveform').click();
-					}
-				});
 			});
 		</script>
 	</s:layout-component>
@@ -98,24 +120,26 @@
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
 					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
-				</div>
+				</div>  <br><br>
 				<table style="float: right;margin-top:0px">
 					<thead>
 					<tr>
 						<th>VariantID</th>
-						<th>Details</th>
+                        <th>Product Name</th>
+                        <th>Variant Option</th>
 						<th>Hk Barcode</th>
+                        <th>Batch</th>
 						<th>Mrp</th>
 						<th>Mfg Date</th>
 						<th>Expiry Date</th>
 						<th>Scanned Qty</th>
-						<th>Total Inventory</th>
-
+						<th>System Quantity</th>
+                        <th>Variance</th>
 
 					</tr>
 					</thead>
 
-
+                    <c:set var="scannedsum" value="0"/>
 					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
 						<c:forEach items="${cycle.cycleCountItems}" var="cCItem" varStatus="ctr">
 							<s:hidden name="cycleCountItems[${ctr.index}]" value="${cCItem.id}"/>
@@ -126,69 +150,91 @@
 								</td>
 
 								<td> ${cCItem.skuGroup.sku.productVariant.product.name} </td>
+                                <td> ${cCItem.skuGroup.sku.productVariant.optionsPipeSeparated} </td>
 								<td> ${cCItem.skuGroup.barcode} </td>
+                                <td>${cCItem.skuGroup.batchNumber}</td>
 								<td> ${cCItem.skuGroup.mrp}</td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
 								<td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
+
 								<c:set value="${cycle.cycleCountPviMap}" var="item"/>
-								<c:choose>
-									<c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
-										<td><span style="color:red"> ${cCItem.scannedQty} </span></td>
-									</c:when>
-									<c:otherwise>
-										<td>${cCItem.scannedQty}</td>
-									</c:otherwise>
-								</c:choose>
 
+                                <c:choose>
 
-								<td>
+                                    <c:when test="${(cCItem.scannedQty) > (item[cCItem.id])}">
 
-										${item[cCItem.id]}
+                                        <td><span style="color:red"><label
+                                                class="scannedQty"> ${cCItem.scannedQty}</label> </span></td>
+
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td><label class="scannedQty"> ${cCItem.scannedQty} </label></td>
+                                    </c:otherwise>
+
+                                </c:choose>
+                                <td>
+									<label class="systemQty">	${item[cCItem.id]}   </label>
 								</td>
+
+                                <td>
+                                    <label class="varianceQty">${(item[cCItem.id]) - (cCItem.scannedQty)}</label>
+                                </td>
+                                
 							</tr>
 
 						</c:forEach>
 					</c:if>
 
-					<tr>
-						<td>
+                    <tr>
+                        &nbsp; &nbsp;
+                        <td style="font-weight:bold;" colspan="8">Total</td>
+                        <td class="totalQuantity">
+                            <label id="scannedValue" style="font-weight:bold;"></label></td>
+                        <td> <label style="font-weight:bold;" id="systemValue"></label></td>
+                         <td><label style="font-weight:bold;" id="varianceValue"></label></td>
+                    </tr>                  
+
+
 							<div style="display:none;">
 								<input type="submit" class="saveform" name="saveScanned"/>
 							</div>
-						</td>
 
-					</tr>
 				</table>
 
 				<div style="margin-top: 60px;margin-bottom: 40px;">
-					<c:if test="${(cycle.cycleCountItems != null)&& (fn:length(cycle.cycleCountItems) > 0)}">
+                    <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
 						<s:submit name="save" value="Freeze"/>
-					</c:if>
+					</shiro:hasPermission>
 
 				</div>
 			</div>
 		</s:form>
 
-		<br/><br/>
+        
+        <div style="margin:0px auto;width:1200px;margin-top: 42px;">
+            <fieldset class="right_label">
+                <legend>Upload Cycle Count Notepad</legend>
+                <ul>
+                    <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                        <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                        <s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
+                        <li><label>File to Upload</label>
+                            <s:file id="filebean" name="fileBean" size="30"/>
+                        </li>
+                        <li>
+                            <s:submit id="uploadnotepad" name="uploadCycleCountNotepad" value="Upload"/>
+                        </li>
+                    </s:form>
+                </ul>
+            </fieldset>
+        </div>
 
-		<div style="margin:0px auto;width:1200px;margin-top: 42px;">
-			<fieldset class="right_label">
-				<legend>Upload Cycle Count Notepad</legend>
-				<ul>
-					<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-						<s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-						 <s:hidden name="cycleCountType" value="${cycleCountTypeV}"/>
-						<li><label>File to Upload</label>
-							<s:file id="filebean" name="fileBean" size="30"/>
-						</li>
-						<li>
-							<s:submit id="uploadnotepad" name="uploadCycleCountNotepad" value="Upload"/>
-						</li>
-					</s:form>
-				</ul>
-			</fieldset>
-		</div>
-
+        <div align="right">
+            <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                <s:submit name="downloadSkuGroupMissedInScanning" value="Download missed batch"/>
+            </s:form>
+        </div>
 
 	</s:layout-component>
 
