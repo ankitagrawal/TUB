@@ -41,7 +41,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n        <div class=\"endDate\" style=\"margin-bottom: 10px;\">Valid till: ");
+  data.buffer.push("\n        <div class=\"offerEndDate\" style=\"margin-bottom: 10px;\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n      ");
@@ -114,7 +114,7 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n            <div class=\"endDate\">Valid till: ");
+  data.buffer.push("\n            <div class=\"offerEndDate\">Valid till: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.endDate", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n          ");
