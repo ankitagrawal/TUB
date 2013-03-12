@@ -194,7 +194,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 Subscription subscription = subscriptionOrder.getSubscription();
                 List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
                         EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscription.setQtyDelivered(subscription.getQty()*(new Long(subscriptionOrders.size())));
+                subscription.setQtyDelivered(subscription.getQtyPerDelivery()*(new Long(subscriptionOrders.size())));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
                 if (subscription.getQty() <= subscription.getQtyDelivered()) {
 
@@ -214,7 +214,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 Subscription subscription = subscriptionOrder.getSubscription();
                 List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
                         EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscription.setQtyDelivered(subscription.getQty()*(new Long(subscriptionOrders.size())));
+                subscription.setQtyDelivered(subscription.getQtyPerDelivery()*(new Long(subscriptionOrders.size())));
                 subscriptionService.save(subscription);
             }
         }
