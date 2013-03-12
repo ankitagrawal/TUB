@@ -212,6 +212,8 @@ public class UserOrderResource {
             userCodCall.setRemark(action + " Request Successful");
             orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
+        } catch (DataIntegrityViolationException dataInt) {
+            logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
         } catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to change order status ", ex);
@@ -219,7 +221,7 @@ public class UserOrderResource {
             try {
                 orderService.saveUserCodCall(userCodCall);
             } catch (DataIntegrityViolationException dataInt) {
-                logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
+                logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status in try catch block: " + dataInt.getMessage());
             } catch (Exception exp) {
                 logger.error("Unable to save user_cod record..", exp);
             }
