@@ -308,14 +308,11 @@ public class PaymentManager {
 			}
 			payment = paymentDao.save(payment);
 			order = getOrderManager().orderPaymentReceieved(payment);
-            /* Commenting User COD Knowlarity Call */
 
-			List<UserCodCall>  userCodCallList = orderService.getAllUserCodCallForToday();
-			if(userCodCallList != null && userCodCallList.size() < maxCODCallCount) {
-			if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-				/* Make JMS Call For COD Confirmation Only Once*/
-                   Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
-				if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
+            if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+                /* Make JMS Call For COD Confirmation Only Once*/
+                Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
+                if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
                     try {
                         boolean messagePublished = orderEventPublisher.publishCODEvent(order);
                         UserCodCall userCodCall = null;
@@ -348,8 +345,8 @@ public class PaymentManager {
                     } catch (Exception ex) {
                         logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                     }
-				}
-			}
+                }
+
 			}
 		}
         /* Call CodPayment Success */
@@ -481,27 +478,26 @@ public class PaymentManager {
 		return paymentDao.save(payment);
 	}
 
-	private void initiatePaymentFailureCall(Order order) {
-           if(order != null){
-			if (order.getUserCodCall() == null) {
-				try {
+    private void initiatePaymentFailureCall(Order order) {
+        if (order != null) {
+            if (order.getUserCodCall() == null) {
+                try {
                     boolean messagePublished = orderEventPublisher.publishPaymentFailureEvent(order);
                     if (messagePublished) {
-                        UserCodCall userCodCall = orderService.createUserCodCall(order,EnumUserCodCalling.PAYMENT_FAILED);
+                        UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PAYMENT_FAILED);
                         if (userCodCall != null) {
                             orderService.saveUserCodCall(userCodCall);
                         }
                     }
-				} catch (Exception ex) {
-					logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
-				}
-			}
-           }
-        else {
-               logger.error("Null Order Id Received");
-           }
+                } catch (Exception ex) {
+                    logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
+                }
+            }
+        } else {
+            logger.error("Null Order Id Received");
+        }
 
-	}
+    }
 
 
 	public void notifyPaymentSuccess(Order order) {

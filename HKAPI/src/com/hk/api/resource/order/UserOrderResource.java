@@ -219,7 +219,11 @@ public class UserOrderResource {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to change order status ", ex);
             userCodCall.setRemark(action + " Request From Admin Failed..");
-            orderService.saveUserCodCall(userCodCall);
+            try{
+                orderService.saveUserCodCall(userCodCall);
+            }catch (Exception ex){
+                logger.error("Unable to save user_cod record..", ex);
+            }
         }
         return response;
     }
