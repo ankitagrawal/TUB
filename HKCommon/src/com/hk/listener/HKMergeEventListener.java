@@ -42,17 +42,19 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         if (Product.class.equals(entityClass)) {
             Product newProduct = (Product) event.getOriginal();
             audit(newProduct.getId(), newProduct);
-        }else if(ProductVariant.class.equals(entityClass)){
+        } else if (ProductVariant.class.equals(entityClass)) {
             ProductVariant newProductVariant = (ProductVariant) event.getOriginal();
-            audit(newProductVariant.getId(), newProductVariant);  
+            audit(newProductVariant.getId(), newProductVariant);
         }
 
     }
-    
+
     private void audit(String productVariantId, ProductVariant savedProductVariant) {
         ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId);
         User loggedUser = getUserService().getLoggedInUser();
-        oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
+        if (oldProductVariant != null) {
+            oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
+        }
 
         try {
             EntityAuditTrail eat = new EntityAuditTrail();
@@ -89,12 +91,13 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         }
 
     }
-    
+
     public ProductVariant getOriginalProductVariantById(String productVariantId) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
         Session session = sessionFactory.openSession();
-        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId", productVariantId).uniqueResult();
-        
+        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId",
+                productVariantId).uniqueResult();
+
         return productVariant;
     }
 
@@ -134,7 +137,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     session = sessionFactory.openSession();
                     session.save(eat);
                 } catch (Exception e) {
-                    logger.error("Error while entering audit trail for product->" + productId,e);
+                    logger.error("Error while entering audit trail for product->" + productId, e);
                 } finally {
                     if (session != null) {
                         session.close();
@@ -143,7 +146,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
             }
         } catch (Exception e) {
-            logger.error("Error while entering audit trail for product->" + productId,e);
+            logger.error("Error while entering audit trail for product->" + productId, e);
         }
     }
 
