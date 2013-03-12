@@ -492,7 +492,7 @@ public class PaymentManager {
                     }
                     orderEventPublisher.publishPaymentFailureEvent(order);
                 } catch (DataIntegrityViolationException dataInt) {
-                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage());
+                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage() + " on time :: " + BaseUtils.getCurrentTimestamp() );
                 } catch (Exception ex) {
                     logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                 }
