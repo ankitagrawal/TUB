@@ -482,13 +482,12 @@ public class PaymentManager {
         if (order != null) {
             if (order.getUserCodCall() == null) {
                 try {
-                    boolean messagePublished = orderEventPublisher.publishPaymentFailureEvent(order);
-                    if (messagePublished) {
-                        UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PAYMENT_FAILED);
-                        if (userCodCall != null) {
-                            orderService.saveUserCodCall(userCodCall);
-                        }
+
+                    UserCodCall userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PAYMENT_FAILED);
+                    if (userCodCall != null) {
+                        orderService.saveUserCodCall(userCodCall);
                     }
+                    orderEventPublisher.publishPaymentFailureEvent(order);
                 } catch (Exception ex) {
                     logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                 }
