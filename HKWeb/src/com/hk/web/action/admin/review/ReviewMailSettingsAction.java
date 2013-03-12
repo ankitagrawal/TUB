@@ -42,19 +42,19 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
 
    private static Logger logger = LoggerFactory.getLogger(ReviewMailSettingsAction.class);
 
-   @Autowired
+	 @Autowired
    ProductReviewMailService productReviewMailService;
 
-    @Autowired
-    UserReviewMailService userReviewMailService;
+   @Autowired
+   UserReviewMailService userReviewMailService;
 
-    @Autowired
-    EmailManager emailManager;
+   @Autowired
+   EmailManager emailManager;
 
-    @Autowired
-    ReviewCollectionFrameworkService reviewCollectionFrameworkService;
+   @Autowired
+   ReviewCollectionFrameworkService reviewCollectionFrameworkService;
 
-    private Order order;
+   private Order order;
 
    @ValidateNestedProperties( {
             @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
@@ -64,12 +64,12 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     })
    private ProductReviewMail productReviewMail;
    private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
-    Page reviewCollectionPage;
+   Page reviewCollectionPage;
 
    @Validate(required = true, on={"createProductSettings", "sendTestEmail","saveProductSettings"})
    private Product product;
 
-    private Mail mail;
+   private Mail mail;
 
     private Integer defaultPerPage = 20;
 

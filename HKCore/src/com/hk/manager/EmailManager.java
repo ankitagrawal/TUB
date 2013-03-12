@@ -1,18 +1,21 @@
 package com.hk.manager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.jsp.PageContext;
 
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductCount;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.review.Mail;
+import com.hk.util.HKImageUtils;
+import com.hk.util.ProductUtil;
 import com.hk.web.AppConstants;
+import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -418,14 +421,47 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
 
         valuesMap.put("user", user);
-        String productVariantName = "";
-        if(productVariant.getVariantName() != null){
-            productVariantName = productVariant.getVariantName();
-            valuesMap.put("product", productVariant.getProduct().getName() +" "+ productVariantName);
+        String productVariantName = productVariant.getProduct().getName() + productVariant.getVariantName();
+        /*if(productVariant.getVariantName() != null){
+            valuesMap.put("product", productVariantName+" "+ productVariant.getVariantName());
         }else
-            valuesMap.put("product", productVariant.getProduct().getName());
+            valuesMap.put("product", productVariantName);
+*/
+	      String productImage = "";
+		    if(productVariant.getMainImageId() != null) {
+			    productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId(),false);
+		    }
+	      else if(productVariant.getProduct().getMainImageId() != null) {
+					productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId(),false);
+	      }
+	      else{
+		      String url = "/images/ProductImages/ProductImagesThumb/"+productVariant.getProduct().getId()+".jpg";
+			    RedirectResolution redirectResolution = new RedirectResolution(url);
+			    url = redirectResolution.getUrl(Locale.getDefault());
+			    productImage = SslUtil.encodeUrlFullForced(WebContext.getRequest(), WebContext.getResponse(), url, null);
+		    }
 
-        HashMap params = new HashMap();
+	      StringBuilder productDiv = new StringBuilder("<div>\n<div style=\"width: 48px; height: 64px; display: inline-block; text-align: center; vertical-align: top\">\n");
+	      productDiv.append("<img style=\"max-height: 64px; max-width: 48px; font-size: 12px;\" src=\""+productImage+"\" alt=\""+productVariantName+"\"/>\n</div>\n");
+	      productDiv.append("<div class=\"name\" style=\"font-size: 14px; line-height: 21px; display: inline-block; width: 310px;\">\n" +productVariantName+"<br/>\n");
+	      if(productVariant.getProductOptions() != null){
+		      productDiv.append("<table style=\"display: inline-block; font-size: 12px;\">\n");
+		      for(ProductOption productOption : productVariant.getProductOptions()){
+			      if(ProductUtil.getVariantValidOptions().contains(productOption.getName().toUpperCase())){
+							productDiv.append("<tr>\n<td style=\"text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;\">"+productOption.getName()+"</td>\n" +
+									"<td style=\"text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;\">");
+	//			      if(Functions.startsWith(productOption.getValue(),"-"))
+					      productDiv.append(productOption.getValue()+"</td>\n</tr>");
+	/*			      else
+					      productDiv.append("&nbsp;"+productOption.getValue()+"</td></tr>");*/
+			      }
+		      }
+		      productDiv.append("</table>\n");
+	      }
+	      productDiv.append("</div>\n</div>");
+		    valuesMap.put("product", productVariantName);
+		    valuesMap.put("productDiv", productDiv);
+	      HashMap params = new HashMap();
         params.put("writeNewReviewByMail","");
         params.put("product",productVariant.getProduct().getId());
         params.put("uid",user.getLogin());
@@ -436,9 +472,10 @@ public class EmailManager {
         String unsubscribeLink = getLinkManager().getUnsubscribeLink(user);
         //String unsubscribeLink = "http://www.healthkart.com/core/email/HKUnsubscribeEmail.action?unsubscribeToken="+user.getUnsubscribeToken();
         valuesMap.put("unsubscribeLink", unsubscribeLink);
-
-        String contextPath = AppConstants.contextPath;
-        valuesMap.put("contextPath", contextPath);
+	      String source = "src";
+	      valuesMap.put("source", source);
+        /*String contextPath = AppConstants.contextPath;
+        valuesMap.put("contextPath", contextPath);*/
 
         //template contents from db
         String mailTemplateContents = mail.getContent();
