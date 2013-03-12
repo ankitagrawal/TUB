@@ -158,7 +158,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         CartLineItemBuilder cartLineItemBuilder = new CartLineItemBuilder();
         cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
         cartLineItemBuilder.forVariantQty(productVariant, subscription.getQtyPerDelivery()).hkPrice(subscription.getHkPriceAtSubscription()).markedPrice(
-                productVariant.getMarkedPrice()).discountOnHkPrice(subscription.getHkPriceAtSubscription() - subscription.getSubscriptionPrice());
+                productVariant.getMarkedPrice()).discountOnHkPrice((subscription.getHkPriceAtSubscription() - subscription.getSubscriptionPrice())*subscription.getQtyPerDelivery());
         CartLineItem cartLineItem = cartLineItemBuilder.build();
         cartLineItem.setOrder(order);
 
