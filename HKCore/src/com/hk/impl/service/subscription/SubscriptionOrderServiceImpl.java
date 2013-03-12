@@ -177,7 +177,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
         Double amount = 0.0D;
         for (CartLineItem cartLineItem : cartLineItems) {
-            amount += cartLineItem.getHkPrice();
+            amount += cartLineItem.getHkPrice()*cartLineItem.getQty()-cartLineItem.getDiscountOnHkPrice();
         }
 
         return automatedOrderService.createNewPayment(order, amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
