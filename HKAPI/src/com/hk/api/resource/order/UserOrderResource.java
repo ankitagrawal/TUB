@@ -184,13 +184,10 @@ public class UserOrderResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         try {
-            if (order.getUserCodCall() == null) {
-                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
-                userCodCall.setRemark(source);
+            userCodCall = order.getUserCodCall();
+            userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_THIRD_PARTY.getId());
+            userCodCall.setRemark(source);
 
-            } else {
-                userCodCall = order.getUserCodCall();
-            }
             if (!(order.isCOD())) {
                 logger.debug("Order is not COD" + order.getId());
                 return Response.status(Response.Status.BAD_REQUEST).build();
@@ -218,7 +215,11 @@ public class UserOrderResource {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to change order status ", ex);
             userCodCall.setRemark(action + " Request From Admin Failed..");
-            orderService.saveUserCodCall(userCodCall);
+            try {
+                orderService.saveUserCodCall(userCodCall);
+            } catch (Exception exp) {
+                logger.error("Unable to save user_cod record..", exp);
+            }
         }
         return response;
     }
