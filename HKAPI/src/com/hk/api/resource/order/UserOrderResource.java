@@ -185,7 +185,8 @@ public class UserOrderResource {
         }
         try {
             if (order.getUserCodCall() == null) {
-                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                userCodCall = order.getUserCodCall();
+                userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_THIRD_PARTY.getId());
                 userCodCall.setRemark(source);
 
             } else {
