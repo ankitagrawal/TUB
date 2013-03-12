@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import com.hk.constants.core.Keys;
@@ -217,6 +218,8 @@ public class UserOrderResource {
             userCodCall.setRemark(action + " Request From Admin Failed..");
             try {
                 orderService.saveUserCodCall(userCodCall);
+            } catch (DataIntegrityViolationException dataInt) {
+                logger.error("Exception in  inserting  Duplicate UserCodCall in Updating COD status: " + dataInt.getMessage());
             } catch (Exception exp) {
                 logger.error("Unable to save user_cod record..", exp);
             }

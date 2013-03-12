@@ -25,6 +25,7 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.hk.util.TokenUtils;
 import org.apache.commons.lang.StringUtils;
@@ -342,6 +343,8 @@ public class PaymentManager {
                         if (userCodCall != null) {
                             orderService.saveUserCodCall(userCodCall);
                         }
+                    } catch (DataIntegrityViolationException dataInt) {
+                        logger.error("Exception in  inserting  Duplicate UserCodCall by publishing COD : " + dataInt.getMessage());
                     } catch (Exception ex) {
                         logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                     }
@@ -488,6 +491,8 @@ public class PaymentManager {
                         orderService.saveUserCodCall(userCodCall);
                     }
                     orderEventPublisher.publishPaymentFailureEvent(order);
+                } catch (DataIntegrityViolationException dataInt) {
+                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage());
                 } catch (Exception ex) {
                     logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                 }
