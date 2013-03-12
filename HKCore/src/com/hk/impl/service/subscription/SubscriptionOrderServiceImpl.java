@@ -214,7 +214,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 Subscription subscription = subscriptionOrder.getSubscription();
                 List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
                         EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
+                subscription.setQtyDelivered(subscription.getQty()*(new Long(subscriptionOrders.size())));
                 subscriptionService.save(subscription);
             }
         }
