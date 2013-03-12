@@ -227,7 +227,9 @@
 					</shiro:hasPermission>
 
 				</div>
-
+                 </div>
+                </s:form>
+        
                 <div style="margin-top: 100px;margin-bottom: 40px;">
                 <%--<div style="margin:0px auto;width:600px;margin-top: 42px;" align="left">--%>
                     <fieldset class="right_label" style="margin-left:0;">
@@ -247,8 +249,8 @@
                     </fieldset>
                 </div>
 
-            </div>
-		</s:form>
+
+
 
         
 
