@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -12,7 +13,9 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
@@ -20,23 +23,33 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.Keys;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
+
+    private static Logger logger = Logger.getLogger(SearchOrderAndReCheckinRTOInventoryAction.class);
 
     @Autowired
     private UserService                     userService;
@@ -57,9 +70,20 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 
     private Long                            orderId;
     private String                          gatewayOrderId;
-
+    File                                    printBarcode;
     private ShippingOrder                   shippingOrder;
     private List<LineItem>                  lineItems               = new ArrayList<LineItem>();
+    private LineItem lineItem;
+
+
+    private List<SkuItem>   reCheckinSkuItems  =  new ArrayList<SkuItem>();
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
+       String barcodeGurgaon;
+
+       @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
+       String barcodeMumbai;
+
 
     @DefaultHandler
     public Resolution pre() {
@@ -79,7 +103,7 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
         User loggedOnUser = userService.getLoggedInUser();
 
         for (Map.Entry<LineItem, Long> lineItemRecheckinQtyMapEntry : lineItemRecheckinQtyMap.entrySet()) {
-            LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();
+            LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();           
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             ShippingOrder shippingOrder = lineItem.getShippingOrder();
             Long recheckinQty = lineItemRecheckinQtyMapEntry.getValue();
@@ -90,6 +114,8 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
                 for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
                     if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
                         recheckinCounter++;
+//                        SkuItem skuItem = checkedOutInventory.getSkuItem();
+//                        reCheckinSkuItems.add(skuItem);
                         getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
                                 null,getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
                         // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
@@ -112,6 +138,67 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
 
         return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
     }
+
+
+    public Resolution downloadBarcode() {           
+           List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null,lineItem, 1L);
+           if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
+               addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+               return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+           }
+
+//           ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+//        SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
+           Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
+
+           String barcodeFilePath = null;
+           Warehouse userWarehouse = null;
+           if (getUserService().getWarehouseForLoggedInUser() != null) {
+               userWarehouse = userService.getWarehouseForLoggedInUser();
+           } else {
+               addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+               return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+           }
+           if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+               barcodeFilePath = barcodeGurgaon;
+           } else {
+               barcodeFilePath = barcodeMumbai;
+           }
+           barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "reCheckin_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+           try {
+               printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+           } catch (IOException e) {
+               logger.error("Exception while appending on barcode file", e);
+           }
+           addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+           return new HTTPResponseResolution();
+
+       }
+
+
+    public class HTTPResponseResolution implements Resolution {
+          public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+              InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));
+              res.setContentType("text/plain");
+              res.setCharacterEncoding("UTF-8");
+              res.setContentLength((int) printBarcode.length());
+              res.setHeader("Content-Disposition", "attachment; filename=\"" + printBarcode.getName() + "\";");
+              OutputStream out = res.getOutputStream();
+
+              // Copy the contents of the file to the output stream
+              byte[] buf = new byte[4096];
+              int count = 0;
+              while ((count = in.read(buf)) >= 0) {
+                  out.write(buf, 0, count);
+              }
+              in.close();
+              out.flush();
+              out.close();
+          }
+
+      }
+
 
     public Long getOrderId() {
         return orderId;
@@ -208,7 +295,28 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
     public void setProductVariantDamageInventoryDao(ProductVariantDamageInventoryDao productVariantDamageInventoryDao) {
         this.productVariantDamageInventoryDao = productVariantDamageInventoryDao;
     }
-    
-    
 
+    public List<SkuItem> getReCheckinSkuItems() {
+        return reCheckinSkuItems;
+    }
+
+    public void setReCheckinSkuItems(List<SkuItem> reCheckinSkuItems) {
+        this.reCheckinSkuItems = reCheckinSkuItems;
+    }
+
+    public LineItem getLineItem() {
+        return lineItem;
+    }
+
+    public void setLineItem(LineItem lineItem) {
+        this.lineItem = lineItem;
+    }
+
+    public File getPrintBarcode() {
+        return printBarcode;
+    }
+
+    public void setPrintBarcode(File printBarcode) {
+        this.printBarcode = printBarcode;
+    }
 }
