@@ -93,7 +93,7 @@ public class SMSManager {
       valuesMap.put("amount", shippingOrder.getAmount());
       return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliveryCODSms, valuesMap);
     } else {
-      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliverySMS, valuesMap);
+      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliverySms, valuesMap);
     }
   }
 
@@ -107,7 +107,7 @@ public class SMSManager {
         public static final String codOrderShippedSMS        = "/sms/codOrderShippedSms.ftl";
         public static final String orderDeliveredSMS         = "/sms/orderDeliveredSms.ftl";
 
-        public static final String hkReachOutForDeliverySMS         = "/sms/hkReachOutForDeliverySMS.ftl";
+        public static final String hkReachOutForDeliverySms = "/sms/hkReachOutForDeliverySms.ftl";
         public static final String hkReachOutForDeliveryCODSms = "/sms/hkReachOutForDeliveryCODSms.ftl";
 
         public static final String offerSMS                  = "/offerSMS.ftl";
