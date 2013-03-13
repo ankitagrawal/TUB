@@ -157,7 +157,7 @@
 			<value>20</value>
 		</property>
 		<property name="initialSize">
-			<value>50</value>
+			<value>30</value>
 		</property>
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
