@@ -11726,4 +11726,10 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Seema (generated)" id="1360415137386-2">
+        <sql>
+            DELETE u1 FROM user_cod_call u1, user_cod_call u2 WHERE u1.id &lt; u2.id AND u1.order_id = u2.order_id;
+            ALTER TABLE user_cod_call ADD UNIQUE(order_id);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
