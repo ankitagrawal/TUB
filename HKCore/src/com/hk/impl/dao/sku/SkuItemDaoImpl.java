@@ -105,6 +105,9 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
             query.setParameter("statusId", statusId);
         }
         List<SkuItem> skuItems = query.list();
+	      if(skuItems != null && skuItems.size() > 1){
+		      logger.error(" barcode -> " + barcode + " resulting in more than on sku_item in warehouse id " + warehouseId);
+	      }
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
