@@ -24,7 +24,6 @@ import java.util.Date;
  */
 public interface CycleCountDao {
 
-
     public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem);
 
     public List<CycleCount> cycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse);

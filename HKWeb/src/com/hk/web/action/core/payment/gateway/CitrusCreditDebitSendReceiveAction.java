@@ -113,7 +113,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.success(gatewayOrderId, ePGTxnID, rrn, responseMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusSESSION_EXPIRED.getId().equals(TxStatus) || EnumCitrusResponseCodes.TxStatusCANCELED.getId().equals(TxStatus)) {
-                paymentManager.fail(gatewayOrderId,ePGTxnID);
+                paymentManager.fail(gatewayOrderId,ePGTxnID,responseMsg);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusFAIL.getId().equals(TxStatus)) {
                 if (EnumCitrusResponseCodes.Rejected_By_Gateway.getId().equals(pgRespCode)) {

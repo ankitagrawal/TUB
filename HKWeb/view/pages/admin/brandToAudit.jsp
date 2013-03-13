@@ -16,34 +16,33 @@
     </s:layout-component>
 
     <s:layout-component name="content">
-
         <s:form beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">
-            <label>Brand*: </label><s:text id="brand-name" name="brandsToAudit.brand"/><br/>
-            <label>Audit Date*: </label><s:text id="audit-date" class="date_input" formatPattern="yyyy-MM-dd"
-                                                name="brandsToAudit.auditDate"/><br/>
-            <c:if test="${poa.brandsToAudit.id != null}">
+            <label>Brand:</label>&nbsp;${poa.brandsToAudit.brand}<br/><br/>
+            <label>Current Audit Status:</label>&nbsp;
+            <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
+                <c:if test="${poa.brandsToAudit.auditStatus == status.id}">${status.name}</c:if>
+            </c:forEach> <br/><br/>
+            <c:if test="${poa.brandsToAudit.id ne null}">
                 <label>Audit Status</label><s:select name="brandsToAudit.auditStatus">
-                <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
+                <s:option value="${poa.brandsToAudit.auditStatus}" >--Select--</s:option>
+                <c:forEach items="<%=EnumAuditStatus.getPossibleStatuses(poa.getBrandsToAudit().getAuditStatus())%>" var="status">
                     <s:option value="${status.id}">${status.name}</s:option>
                 </c:forEach>
             </s:select><br/>
-            </c:if>
+            </c:if><br/><br/>
             <s:hidden name="brandsToAudit" value="${poa.brandsToAudit.id}"/>
             <s:submit name="save" value="Save" id="subBtn"/>
         </s:form>
     </s:layout-component>
 </s:layout-render>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#subBtn').click(function () {
             if ($('#brand-name').val().trim() === "") {
                 alert("Kindly enter all the necessary details!");
                 return false;
-            } else if ($('#audit-date').val().trim() === "") {
-                alert("Kindly enter all the necessary details!");
-                return false;
             }
-
             return true;
         });
     });

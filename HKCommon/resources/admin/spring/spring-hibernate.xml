@@ -27,7 +27,7 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-		<property name="eventListeners">
+		<!--<property name="eventListeners">
 			<map>
 				<entry key="merge">
 					<bean
@@ -35,7 +35,7 @@
 					</bean>
 				</entry>
 			</map>
-		</property>
+		</property>-->
 
 
 		<!--<property name="typeDefinitions">
@@ -64,7 +64,7 @@
 		</property>
 	</bean>
 
-     <bean id="newSessionFactory"
+     <!--<bean id="newSessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 
 		<property name="dataSource">
@@ -101,7 +101,7 @@
 				</prop>
 			</props>
 		</property>
-	</bean>
+	</bean>-->
 
 	<bean id="hibernateTemplate"
 		class="org.springframework.orm.hibernate3.HibernateTemplate">

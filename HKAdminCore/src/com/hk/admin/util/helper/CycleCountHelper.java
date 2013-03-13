@@ -1,20 +1,22 @@
 package com.hk.admin.util.helper;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.util.io.HkXlsWriter;
 import com.hk.constants.XslConstants;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.admin.util.BarcodeUtil;
+import com.hk.pact.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,8 @@ import net.sourceforge.stripes.action.Resolution;
 @Component
 public class CycleCountHelper {
     File xlsFile;
+    @Autowired
+    private UserService userService;
     private static Logger logger = LoggerFactory.getLogger(CycleCountHelper.class);
 
     public File generateReconVoucherAddExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap) {
@@ -76,7 +80,7 @@ public class CycleCountHelper {
     }
 
 
-    public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap, List<SkuGroup> skuGroupList, Map<Long, Integer> missedSkuGroupSystemInventoryMap) {
+    public File generateCompleteCycleCountExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap, List<SkuGroup> skuGroupList, Map<Long, Integer> missedSkuGroupSystemInventoryMap, List<SkuGroup> scannedSkuItemGroupList) {
         this.xlsFile = xlsFile;
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
@@ -93,19 +97,80 @@ public class CycleCountHelper {
         xlsWriter.addHeader(XslConstants.COST, XslConstants.COST);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
 
+
+        List<SkuItem> scannedSkuItems = new ArrayList<SkuItem>();
+
         for (CycleCountItem cycleCountItem : cycleCountItems) {
+            SkuGroup skuGroup = null;
             if (cycleCountItem.getSkuGroup() != null) {
-                SkuGroup skuGroup = cycleCountItem.getSkuGroup();
+                skuGroup = cycleCountItem.getSkuGroup();
+            } else {
+                skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
+                scannedSkuItems.add(cycleCountItem.getSkuItem());
+            }
+            xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
+            xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getProduct().getName());
+            xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
+            if (cycleCountItem.getSkuGroup() != null) {
+                xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
+            } else {
+                xlsWriter.addCell(xlsRow, cycleCountItem.getSkuItem().getBarcode());
+            }
+
+            int scannedQty = cycleCountItem.getScannedQty().intValue();
+            xlsWriter.addCell(xlsRow, scannedQty);
+            int sysQty = 0;
+            if (cycleCountItem.getSkuGroup() != null) {
+                sysQty = cycleCountPVImap.get(cycleCountItem.getId());
+            } else {
+                sysQty = 1;
+            }
+            xlsWriter.addCell(xlsRow, sysQty);
+            int diffQty = sysQty - scannedQty;
+            xlsWriter.addCell(xlsRow, diffQty);
+            String expiryDate = "";
+            if (skuGroup.getExpiryDate() != null) {
+                expiryDate = sdf.format(skuGroup.getExpiryDate());
+            }
+            xlsWriter.addCell(xlsRow, expiryDate);
+            String mfgDate = "";
+            if (skuGroup.getMfgDate() != null) {
+                mfgDate = sdf.format(skuGroup.getMfgDate());
+            }
+            xlsWriter.addCell(xlsRow, mfgDate);
+            Double mrp = 0d;
+            if (skuGroup.getMrp() != null) {
+                mrp = skuGroup.getMrp();
+            }
+            xlsWriter.addCell(xlsRow, mrp);
+            xlsWriter.addCell(xlsRow, skuGroup.getCostPrice());
+
+            xlsRow++;
+
+        }
+
+
+        List<SkuItem> totalSkuItemsForScannedItemGroup = new ArrayList<SkuItem>();
+        for (SkuGroup scannedSkuItemGroup : scannedSkuItemGroupList) {
+            totalSkuItemsForScannedItemGroup.addAll(scannedSkuItemGroup.getSkuItems());
+        }
+
+        totalSkuItemsForScannedItemGroup.removeAll(scannedSkuItems);
+        Collections.sort(totalSkuItemsForScannedItemGroup);
+        /* Add skuitem information of group which were partial scanned */
+
+
+        for (SkuItem skuItem : totalSkuItemsForScannedItemGroup) {
+            SkuGroup skuGroup = skuItem.getSkuGroup();
+            if (skuItem.getSkuItemStatus().getId().equals(EnumSkuItemStatus.Checked_IN.getId()) && skuGroup.getSku().getWarehouse() == userService.getWarehouseForLoggedInUser()) {
                 xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
                 xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getProduct().getName());
                 xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
-                xlsWriter.addCell(xlsRow, skuGroup.getBarcode());
-                int scannedQty = cycleCountItem.getScannedQty().intValue();
-                xlsWriter.addCell(xlsRow, scannedQty);
-                int sysQty = cycleCountPVImap.get(cycleCountItem.getId());
+                xlsWriter.addCell(xlsRow, skuItem.getBarcode());
+                xlsWriter.addCell(xlsRow, "0");
+                int sysQty = 1;
                 xlsWriter.addCell(xlsRow, sysQty);
-                int diffQty = sysQty - scannedQty;
-                xlsWriter.addCell(xlsRow, diffQty);
+                xlsWriter.addCell(xlsRow, sysQty);
                 String expiryDate = "";
                 if (skuGroup.getExpiryDate() != null) {
                     expiryDate = sdf.format(skuGroup.getExpiryDate());

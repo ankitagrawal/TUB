@@ -119,7 +119,7 @@
 			<s:hidden name="cycleCountPVImapString" class="cycleItem" value="${cycle.cycleCountPVImapString}"/>
 			<div style="width:1200px;margin:0px auto">
 				<div style="display: inline-block;">
-					Scan Here HKBarcode<s:text name="hkBarcode" class="scannedBarcode"/>
+					Scan Here HKBarcode<s:text style="width:120px;height:24px;" name="hkBarcode" class="scannedBarcode"/>
 				</div>  
               <div style ="float:right;width:900px;height:800px;overflow-y:scroll;">
 				<table style="float: right;margin-top:0px;margin-left:15px;">
@@ -227,7 +227,9 @@
 					</shiro:hasPermission>
 
 				</div>
-
+                 </div>
+                </s:form>
+        
                 <div style="margin-top: 100px;margin-bottom: 40px;">
                 <%--<div style="margin:0px auto;width:600px;margin-top: 42px;" align="left">--%>
                     <fieldset class="right_label" style="margin-left:0;">
@@ -247,8 +249,8 @@
                     </fieldset>
                 </div>
 
-            </div>
-		</s:form>
+
+
 
         
 

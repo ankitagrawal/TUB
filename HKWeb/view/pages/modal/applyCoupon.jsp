@@ -12,6 +12,8 @@
 <c:set var="error_alreadyApplied" value="<%=ApplyCouponAction.error_alreadyApplied%>"/>
 <c:set var="error_alreadyReferrer" value="<%=ApplyCouponAction.error_alreadyReferrer%>"/>
 <c:set var="error_referralNotAllowed" value="<%=ApplyCouponAction.error_referralNotAllowed%>"/>
+<c:set var="error_couponExpired" value="<%=ApplyCouponAction.error_couponExpired%>"/>
+<c:set var="error_freeVariantStockOver" value="<%=ApplyCouponAction.error_freeVariantStockOver%>"/>
 
 <c:set var="infiniteQty" value="<%=OfferConstants.INFINITE_QTY%>"/>
 
@@ -133,6 +135,12 @@
         </c:if>
         <c:if test="${couponBean.error eq error_referralNotAllowed}">
           You have already signed up without your friend's referral. Sorry :)
+        </c:if>
+        <c:if test="${couponBean.error eq error_couponExpired}">
+          The offer/coupon is expired. Sorry :)
+        </c:if>
+        <c:if test="${couponBean.error eq error_freeVariantStockOver}">
+          Free variant stock is over. Sorry :)
         </c:if>
       </p>
     </c:if>

@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "sku_item")
 /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
-public class SkuItem implements java.io.Serializable {
+public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -94,5 +94,11 @@ public class SkuItem implements java.io.Serializable {
 
 	public void setSkuItemStatus(SkuItemStatus skuItemStatus) {
 		this.skuItemStatus = skuItemStatus;
+	}
+
+    public int compareTo(SkuItem skuItem) {
+		if (this.getId() < skuItem.getId()) return -1;
+		if (this.getId() > skuItem.getId()) return 1;
+		return 0;
 	}
 }

@@ -24,7 +24,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<Awb> awbList;
     private List<Courier> courierList;
     private Long warehouseId;
-    private boolean isServiceOrder = false;
+    private Boolean isServiceOrder = null;
     private Date activityStartDate;
     private Date activityEndDate;
     private String basketCategory;
@@ -32,6 +32,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private String baseGatewayOrderId;
     private Date shipmentStartDate;
     private Date shipmentEndDate;
+    private Date paymentStartDate;
+    private Date paymentEndDate ;
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
@@ -59,7 +61,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setServiceOrder(boolean serviceOrder) {
+    public ShippingOrderSearchCriteria setServiceOrder(Boolean serviceOrder) {
         isServiceOrder = serviceOrder;
         return this;
     }
@@ -198,8 +200,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             warehouseCriteria = criteria.createCriteria("warehouse");
             warehouseCriteria.add(Restrictions.eq("id", warehouseId));
         }
-
-        criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        if (isServiceOrder != null) {
+            criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        }
 
         DetachedCriteria shippingOrderLifecycleCriteria = null;
         if (shippingOrderLifeCycleActivities != null && shippingOrderLifeCycleActivities.size() > 0) {
@@ -221,6 +224,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.setMaxResults(100);
 
         DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
+
+        if (paymentStartDate != null || paymentEndDate != null) {
+            paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
+        }
 
         if (!searchForPrinting) {
             if (sortByPaymentDate) {
@@ -299,5 +306,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setInstallable(boolean installable) {
         this.installable = installable;
+    }
+
+    public void setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+    }
+
+    public void setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
     }
 }

@@ -419,7 +419,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         if (rvLineItem == null) {
             return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
         }
-        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null,null, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution("/pages/admin/reconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
@@ -463,7 +463,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             return new ForwardResolution("/pages/admin/reconciliationVoucherList.jsp");
         }
         for (RvLineItem rvLineItem : rvLineItems) {
-            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, 1L);
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null,null, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
                 SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
                 Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);

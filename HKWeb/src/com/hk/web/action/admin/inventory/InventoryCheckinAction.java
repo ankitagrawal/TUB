@@ -470,7 +470,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
-        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem,null, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -513,7 +513,7 @@ public class InventoryCheckinAction extends BaseAction {
         List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {
-            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, 1L);
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null,1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
 //                SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
                 Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
