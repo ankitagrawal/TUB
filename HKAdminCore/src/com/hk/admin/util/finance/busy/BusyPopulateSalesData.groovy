@@ -67,7 +67,7 @@ public class BusyPopulateSalesData {
                     inner join courier c on aw.courier_id = c.id
                     inner join warehouse w on w.id = so.warehouse_id
 
-                    where (so.shipping_order_status_id in (180, 190, 195, 200, 210, 220, 230, 250, 260) OR  bo.order_staus_id in (30,40,45) )
+                    where (so.shipping_order_status_id in (180, 190, 195, 200, 210, 220, 230, 250, 260) OR  bo.order_status_id in (30,40,45) )
                       and (ship.ship_date > ${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
                       ORDER BY ship.ship_date ASC
                  """) {
