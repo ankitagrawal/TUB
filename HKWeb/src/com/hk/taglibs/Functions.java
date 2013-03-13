@@ -12,8 +12,10 @@ import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.content.HeadingProduct;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
@@ -803,4 +805,19 @@ public class Functions {
 		}
 	}
 
+	public static double getLoyaltyKarmaPointsForUser(Long userId){
+		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
+		if(userId == null){
+			return 0.0;
+		}
+		return loyaltyProgramService.calculateKarmaPoints(userId);
+	}
+
+	public static Badge getBadgeInfoForUser(Long userId){
+		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
+		if(userId == null){
+			return null;
+		}
+		return loyaltyProgramService.getUserBadgeInfo(userId).getBadge();
+	}
 }

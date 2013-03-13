@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.order;
 import java.util.*;
 
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.domain.payment.Payment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private PincodeCourierService pincodeCourierService;
 	@Autowired
     private SMSManager                smsManager;
+
+	@Autowired
+	private LoyaltyProgramService loyaltyProgramService;
+	
 	@Autowired
 	PaymentManager paymentManager;
 
@@ -168,6 +173,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
+
+	        loyaltyProgramService.cancelKarmaPoints(order.getId());
+
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                 emailManager.sendOrderCancelEmailToUser(order);

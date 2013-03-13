@@ -15,6 +15,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
@@ -26,6 +27,8 @@ public interface OrderService {
     public Order find(Long orderId);
 
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
+    
+    public Order findCart(User user, Store store);
 
     public Long getCountOfOrdersWithStatus();
 

@@ -1,7 +1,8 @@
 package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
-import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
@@ -79,6 +80,8 @@ public class PaymentSuccessAction extends BaseAction {
     OrderService orderService;
     @Autowired
     OrderLoggingService orderLoggingService;
+	@Autowired
+	LoyaltyProgramService loyaltyProgramService;
 
     public Resolution pre() {
         payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
@@ -137,7 +140,6 @@ public class PaymentSuccessAction extends BaseAction {
                                 Set<ShippingOrder> shippingOrders = order.getShippingOrders();
                                 if (shippingOrders != null) {
                                     for (ShippingOrder shippingOrder : shippingOrders) {
-                                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.COD_Converter);
                                         shippingOrderService.nullifyCodCharges(shippingOrder);
                                         shipmentService.recreateShipment(shippingOrder);
                                         shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
@@ -162,6 +164,10 @@ public class PaymentSuccessAction extends BaseAction {
             wantedCODCookie.setMaxAge(0);
             httpResponse.addCookie(wantedCODCookie);
         }
+
+	    //Loyalty program
+	    loyaltyProgramService.creditKarmaPoints(order.getId());
+
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
 
