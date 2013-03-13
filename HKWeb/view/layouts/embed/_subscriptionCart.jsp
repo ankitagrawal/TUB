@@ -18,6 +18,7 @@
   Set<Subscription> subscriptions = (Set<Subscription>) pageContext.getAttribute("subscriptions");
   pageContext.setAttribute("subscriptions", subscriptions);
 %>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
   <div class='tabletitle'>
     <div class='name'>
       Subscription
