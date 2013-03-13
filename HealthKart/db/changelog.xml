@@ -11587,6 +11587,12 @@
            update product set order_ranking=100000.0 where order_ranking=0.0 and deleted=1;
        </sql>
     </changeSet>
+    <changeSet author="Shilpa" id="1361862105941-1">
+        <sql>
+            alter table brands_to_audit add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+            update brands_to_audit set update_dt = audit_date;
+        </sql>
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1361868792355-1">
         <createTable tableName="entity_audit_trail">
             <column autoIncrement="true" name="id" type="INT">
@@ -11689,20 +11695,41 @@
     <changeSet author="Rohit (generated)" id="1362465491508-6">
         <dropColumn columnName="lead_time" tableName="sku"/>
     </changeSet>
-     <changeSet author="Ankit (generated)" id="1359711888969-1">
-        <addColumn tableName="rv_line_item">
-            <column name="sku_group_id" type="INT"/>
+    <changeSet author="Ankit" id="05-03-2013-01">
+        <sql>
+            update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID004' where issuer_id = 39  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID007' where issuer_id = 36  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID015' where issuer_id = 34  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID014' where issuer_id = 33  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID005' where issuer_id = 32  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID012' where issuer_id = 31  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID001' where issuer_id = 22  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID010' where issuer_id = 21  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID002' where issuer_id = 8  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID006' where issuer_id = 17  and gateway_id = 80;
+            update gateway_issuer_mapping set issuer_code = 'CID009' where issuer_id = 20  and gateway_id = 80;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360060156998-1">
+        <addColumn tableName="offer_action">
+            <column name="free_variant_id" type="VARCHAR(20)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-1">
-        <addColumn tableName="cycle_count_item">
-            <column name="sku_item_id" type="INT"/>
+    <changeSet author="Ajeet (generated)" id="1360060156998-5">
+        <addForeignKeyConstraint baseColumnNames="free_variant_id" baseTableName="offer_action" constraintName="fk_offer_action_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1360415137386-1">
+        <addColumn tableName="offer">
+            <column defaultValue="0" name="show_promptly" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-3">
-        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
+    <changeSet author="Seema (generated)" id="1360415137386-2">
+        <sql>
+            DELETE u1 FROM user_cod_call u1, user_cod_call u2 WHERE u1.id &lt; u2.id AND u1.order_id = u2.order_id;
+            ALTER TABLE user_cod_call ADD UNIQUE(order_id);
+        </sql>
     </changeSet>
 </databaseChangeLog>
