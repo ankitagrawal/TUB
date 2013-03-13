@@ -104,7 +104,7 @@
                    <tr>
                        <td>
                            ${shipRes.shipment.id}
-                           <s:hidden name="shipment" value="${shipRes.shipment.id}"/>
+                           <input type="hidden" name="shipment" value="${shipRes.shipment.id}"/>
                        </td>
                        <td>
                            <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder">${shipRes.shippingOrder.id}
