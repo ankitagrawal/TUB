@@ -1,3 +1,4 @@
+<%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
@@ -9,6 +10,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
+
+ <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+ <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+ <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+ <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
+
+
+<%
+boolean isSecure = pageContext.getRequest().isSecure();
+pageContext.setAttribute("isSecure", isSecure);
+%>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
   <stripes:layout-component name="contents">
@@ -77,9 +89,12 @@
         <c:set var="variant" value="${lp.variant}"/>
         <c:set var="product" value="${variant.product}"/>
           <div class="span3">
-            <img class="img-rounded"
-                 src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
-                 alt="${product.name}"/>
+          	<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+			   title="${product.name}">
+				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				     title="${product.name}">
+			</a>
+           
             <h4>${product.name}</h4>
             <h6>${lp.points} Points</h6>
 
