@@ -138,7 +138,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 //
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse) {
-
         Long checkedInSkuItemStatus = EnumSkuItemStatus.Checked_IN.getId();
         String sql = "select si as skuItem, sg as skuGroup ,si.barcode as barcode, pv as productVariant, p as product,p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty"/*,  sg as skuGroup, pv as productVariant, p as product, si.barcode as barcode, p.name as name, sg.expiryDate as expiryDate, count(si.id) as sumQty "*/
                 + " from SkuItem si join si.skuItemStatus as sis join si.skuGroup sg join sg.sku s join s.productVariant pv join pv.product p "
@@ -272,7 +271,7 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
 
-    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, Long transferQty) {
+    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty) {
         DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);
         if (rvLineItem != null) {
             criteria.add(Restrictions.eq("rvLineItem", rvLineItem));
@@ -283,34 +282,15 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         if (grnLineItem != null) {
             criteria.add(Restrictions.eq("grnLineItem", grnLineItem));
         }
+
+        if (lineItem != null) {
+            criteria.add(Restrictions.eq("lineItem", lineItem));
+        }
         criteria.add(Restrictions.eq("qty", transferQty));
         criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
         return (List<SkuItem>) findByCriteria(criteria);
 
     }
-
-
-    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem,LineItem lineItem, Long transferQty) {
-           DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);
-           if (rvLineItem != null) {
-               criteria.add(Restrictions.eq("rvLineItem", rvLineItem));
-           }
-           if (stockTransferLineItem != null) {
-               criteria.add(Restrictions.eq("stockTransferLineItem", stockTransferLineItem));
-           }
-           if (grnLineItem != null) {
-               criteria.add(Restrictions.eq("grnLineItem", grnLineItem));
-           }
-
-           if (lineItem != null) {
-               criteria.add(Restrictions.eq("lineItem", lineItem));
-           }
-           criteria.add(Restrictions.eq("qty", transferQty));
-           criteria.setProjection(Projections.distinct(Projections.property("skuItem")));
-           return (List<SkuItem>) findByCriteria(criteria);
-
-       }
-
 
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant) {

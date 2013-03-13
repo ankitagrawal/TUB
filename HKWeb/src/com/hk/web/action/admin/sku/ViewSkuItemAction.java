@@ -47,11 +47,11 @@ public class ViewSkuItemAction extends BaseAction {
         }
 
         if (entityId.equals(EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, -1L);
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null,null, -1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, 1L);
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null,null, 1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, -1L);
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null,null, -1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.CYCLE_COUNT.getId()))  {             
            skuItemList =cycleCountService.getScannedSkuItems(skuGroup.getId(),cycleCount.getId());
         }
