@@ -105,7 +105,7 @@ public class SubscriptionUpdateAction extends BaseAction implements ValidationEr
 
             CartLineItem cartLineItem=subscription.getCartLineItem();
             cartLineItem.setQty(subscription.getQty());
-            cartLineItem.setDiscountOnHkPrice(subscription.getHkPriceAtSubscription()-subscription.getSubscriptionPrice());
+            cartLineItem.setDiscountOnHkPrice((subscription.getHkPriceAtSubscription()-subscription.getSubscriptionPrice())*subscription.getQty());
             cartLineItemService.save(cartLineItem);
 
             healthkartResponse= new HealthkartResponse(HealthkartResponse.STATUS_OK, "");

@@ -463,7 +463,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href'});
+        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href',ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
     });
 
 </script>
