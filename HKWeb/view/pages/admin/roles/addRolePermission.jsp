@@ -13,9 +13,9 @@
             <a href="#" id="buttonRole"> Add New Role or Permission</a> <br/><br/>
             <fieldset id = "addRole">
                 <div class = "new role">
-                    <legend>Add New Role/Permission</legend>  <br/>
-                    <label>Role: </label> <s:text id = "role-name" name="role.name"/> <br/>
-                    <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
+                    <legend>Add New Role/Permission</legend>  <br/> <br/>
+                    <label>Role: </label> &nbsp; <s:text id = "role-name" name="role.name"/> <br/>   <br/><br/>
+                    <label>Permission: </label> &nbsp; <s:text id = "permission-name" name="permission.name"/>
                 </div>
             </fieldset>
                 <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">

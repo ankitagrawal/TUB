@@ -48,7 +48,7 @@ public class AddRolePermissionAction extends BaseAction{
     }
 
     public Resolution linkRoles(){
-        if(role!=null){
+        if(role!=null && userPermissions != null){
             role = roleDao.getRoleByName(role.getName());
             List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
             Set<Permission> permissionList = role.getPermissions();
@@ -64,7 +64,7 @@ public class AddRolePermissionAction extends BaseAction{
             role.setPermissions(permissions);
             roleDao.save(role);
         }
-        if(user!=null){
+        if(user!=null && userRoles != null){
             user = userDao.getUserById(user.getId());
             List<String> userRoleList =new ArrayList<String>(Arrays.asList(userRoles.split(",")));
             Set<Role> roleList = user.getRoles();
@@ -80,7 +80,9 @@ public class AddRolePermissionAction extends BaseAction{
             user.setRoles(roles);
             userDao.save(user);
         }
-        addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
+        if(userPermissions != null || userRoles != null){
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
+        }
         return new RedirectResolution(LinkRoles);
     }
 

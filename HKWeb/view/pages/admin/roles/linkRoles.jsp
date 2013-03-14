@@ -22,27 +22,27 @@
     </s:layout-component>
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="rolePerm">
-            <fieldset>
-                <div align="left">
-                    <legend>Add permissions to role</legend>
+            <fieldset align="left">
+                <div>
+                    <legend>Add permissions to role</legend> <br/><br/><br/>
                     <label>Roles</label>&nbsp;
                     <s:select id = "roleSelect" name="role.name" style="width: 175px;">
                         <s:option value="">---Select Role---</s:option>
                         <s:options-collection collection="${roleList}" value="name" label="name"/>
                     </s:select>
-                </div>
-                <div align="center">
+                </div> <br/><br/>
+                <div>
                     <label>Permissions </label>&nbsp;
-                    <s:select id="mltPermission" name="permissionList"  style="width: 175px;" multiple="true">
+                    <s:select id="mltPermission" name="permissionList"  style="width: 275px; height: 126px; padding: 2" multiple="true">
                         <s:options-collection collection="${permissionList}" value="name" label="name"/>
                     </s:select>
                 </div>
                 <s:hidden name="userPermissions" id="userPermissions"/>
                 <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions"/>
             </fieldset>
-            <fieldset>
-                <div align="left">
-                    <legend>Add roles to user</legend>
+            <fieldset align="right">
+                <div>
+                    <legend>Add roles to user</legend><br/><br/><br/>
                     <label>Users </label>&nbsp;
                     <s:select id="userSelect" name="user.id" style="width: 175px;">
                         <s:option value="">--Select User--</s:option>
@@ -52,10 +52,10 @@
                             </c:if>
                         </c:forEach>
                     </s:select>
-                </div>
-                <div align="center">
+                </div>           <br/><br/>
+                <div >
                     <label>Roles</label>&nbsp;
-                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 175px;">
+                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 275px; height: 126px; padding: 2">
                         <s:options-collection collection="${roleList}" value="name" label="name"/>
                     </s:select>
                 </div>
@@ -68,23 +68,22 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        var bool = false;
         $('#saveRoles').click(function(){
             if($('#userSelect').val() == "" ){
                 alert("Choose valid entries");
                 return false;
             }
             $('#mltRoles').each(function(i,selectedRoles){
-                bool = true;
                 var userRoles = "";
                 userRoles += (userRoles == "") ? "" : ",";
                 userRoles += ($(selectedRoles).val());
-                $('#userRoles').val(userRoles);
+                if(userRoles == "null"){
+                    alert("Select atleast one Role!");
+                    return false;
+                }else{
+                    $('#userRoles').val(userRoles);
+                }
             });
-           if(!bool){
-               alert("Select atleast one Roles!!!");
-               return false;
-           }
         });
         $('#savePermissions').click(function(){
             if($('#roleSelect').val() == ""){
@@ -96,12 +95,13 @@
                 var userPermissions = "";
                 userPermissions += (userPermissions == "") ? "" : ",";
                 userPermissions += ($(selectedPermissions).val());
-                $('#userPermissions').val(userPermissions);
+                if(userPermissions == "null"){
+                    alert("Select atleast one Permission");
+                    return false;
+                }else{
+                    $('#userPermissions').val(userPermissions);
+                }
             });
-            if(!bool){
-                alert("Select atleast one Permission!!!");
-                return false;
-            }
         });
     });
 </script>
