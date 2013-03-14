@@ -227,12 +227,13 @@ public class InventoryServiceImpl implements InventoryService {
     Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
     logger.debug("net inventory " + netInventory);
 
-    ProductVariant productVariant = !skuList.isEmpty() ? skuList.get(0).getProductVariant() : null;
     Long bookedInventory = 0L;
-    if (productVariant != null) {
-      bookedInventory = this.getBookedQty(productVariant);
+    if (!skuList.isEmpty()) {
+      ProductVariant productVariant = skuList.get(0).getProductVariant();
+      bookedInventory = getOrderDao().getBookedQtyOfProductVariantInQueue(productVariant) + this.getBookedQty(skuList);
       logger.debug("booked inventory " + bookedInventory);
     }
+    
     long availableUnbookedInventory = netInventory - bookedInventory;
     logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
     return availableUnbookedInventory;
@@ -254,6 +255,16 @@ public class InventoryServiceImpl implements InventoryService {
       Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant));
       logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
       bookedInventory = bookedInventoryForProductVariant + bookedInventoryForSKUs;
+    }
+    return bookedInventory;
+  }
+
+  private Long getBookedQty(List<Sku> skuList) {
+    Long bookedInventory = 0L;
+    if (skuList != null && !skuList.isEmpty()) {
+      Long bookedInventoryForSKUs = getShippingOrderDao().getBookedQtyOfSkuInQueue(skuList);
+      logger.debug("bookedInventoryForSKUs " + bookedInventoryForSKUs);
+      bookedInventory = bookedInventoryForSKUs;
     }
     return bookedInventory;
   }

@@ -55,7 +55,7 @@ public class ComboDaoImpl extends BaseDaoImpl implements ComboDao {
 	}
 
   public List<Combo> getCombos(ProductVariant productVariant) {
-		return (List<Combo>) getSession().createQuery("select c from Combo c left join c.comboProducts p where p.product = :product").setParameter("product", productVariant.getProduct()).list();
+		return (List<Combo>) getSession().createQuery("select distinct c from Combo c left join c.comboProducts p left join p.allowedProductVariants pv where pv = :productVariant").setParameter("productVariant", productVariant).list();
 	}
 
 }
