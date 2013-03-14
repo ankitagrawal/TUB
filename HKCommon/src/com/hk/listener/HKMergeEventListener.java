@@ -26,6 +26,7 @@ import com.hk.service.ServiceLocatorFactory;
 /**
  * @author vaibhav.adlakha
  */
+@SuppressWarnings("serial")
 public class HKMergeEventListener extends DefaultMergeEventListener {
 
     private static Logger logger = LoggerFactory.getLogger(HKMergeEventListener.class);
@@ -50,7 +51,9 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
     }
 
     private void audit(String productVariantId, ProductVariant savedProductVariant) {
-        ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId);
+        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
+        Session session = sessionFactory.openSession();
+        ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId, session);
         User loggedUser = getUserService().getLoggedInUser();
         if (oldProductVariant != null) {
             oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
@@ -72,10 +75,8 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 eat.setCallingClass(Reflection.getCallerClass(2).getName());
                 eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
                 eat.setCreateDt(new Date());
-                Session session = null;
+
                 try {
-                    SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-                    session = sessionFactory.openSession();
                     session.save(eat);
                 } catch (Exception e) {
                     logger.error("Error while entering audit trail for product->" + productVariantId, e);
@@ -92,47 +93,28 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
     }
 
-    public ProductVariant getOriginalProductVariantById(String productVariantId) {
-        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-        Session session = null;
-        ProductVariant productVariant = null;
-        try {
+    public ProductVariant getOriginalProductVariantById(String productVariantId, Session session) {
 
-            session = sessionFactory.openSession();
-            productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId", productVariantId).uniqueResult();
-        } catch (Exception e) {
-            logger.error("Error while getting original pv ->" + productVariantId, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId",
+                productVariantId).uniqueResult();
 
         return productVariant;
     }
 
-    public Product getOriginalProductById(String productId) {
-        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-        Session session = null;
-        Product product = null;
-        try {
-            session = sessionFactory.openSession();
-            product = (Product) session.createQuery("select p from Product p where p.id=:productId").setString("productId", productId).uniqueResult();
-            if (product != null) {
-                product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
-            }
-        } catch (Exception e) {
-            logger.error("Error while getting original product ->" + productId, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+    public Product getOriginalProductById(String productId, Session session) {
+
+        Product product = (Product) session.createQuery("select p from Product p where p.id=:productId").setString("productId", productId).uniqueResult();
+        if (product != null) {
+            product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
         }
+
         return product;
     }
 
     private void audit(String productId, Product savedProduct) {
-        Product oldProduct = getOriginalProductById(productId);
+        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
+        Session session = sessionFactory.openSession();
+        Product oldProduct = getOriginalProductById(productId, session);
         User loggedUser = getUserService().getLoggedInUser();
 
         try {
@@ -151,10 +133,9 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 eat.setCallingClass(Reflection.getCallerClass(2).getName());
                 eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
                 eat.setCreateDt(new Date());
-                Session session = null;
+
                 try {
-                    SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-                    session = sessionFactory.openSession();
+
                     session.save(eat);
                 } catch (Exception e) {
                     logger.error("Error while entering audit trail for product->" + productId, e);
