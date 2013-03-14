@@ -22,7 +22,7 @@
     </s:layout-component>
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="rolePerm">
-            <fieldset align="left">
+            <fieldset>
                 <div>
                     <legend>Add permissions to role</legend> <br/><br/><br/>
                     <label>Roles</label>&nbsp;
@@ -40,7 +40,7 @@
                 <s:hidden name="userPermissions" id="userPermissions"/>
                 <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions"/>
             </fieldset>
-            <fieldset align="right">
+            <fieldset>
                 <div>
                     <legend>Add roles to user</legend><br/><br/><br/>
                     <label>Users </label>&nbsp;

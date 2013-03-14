@@ -37,7 +37,8 @@ public class AddRolePermissionAction extends BaseAction{
 
     private String userPermissions;
     private String userRoles;
-    private String LinkRoles = "/pages/admin/roles/linkRoles.jsp";
+    private static final String LinkRoles = "/pages/admin/roles/linkRoles.jsp";
+
     @DefaultHandler
     public Resolution pre(){
         return new ForwardResolution("/pages/admin/roles/addRolePermission.jsp");
@@ -47,6 +48,7 @@ public class AddRolePermissionAction extends BaseAction{
         return new ForwardResolution(LinkRoles).addParameter("role",role).addParameter("permission",permission);
     }
 
+    @SuppressWarnings("unchecked")
     public Resolution linkRoles(){
         if(role!=null && userPermissions != null){
             role = roleDao.getRoleByName(role.getName());
