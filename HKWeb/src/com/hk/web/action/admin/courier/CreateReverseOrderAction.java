@@ -5,6 +5,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.Keys;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -12,6 +13,7 @@ import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import com.akube.framework.stripes.action.BaseAction;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
@@ -31,7 +33,10 @@ public class CreateReverseOrderAction extends BaseAction {
 	private Map<LineItem, Long> itemMap = new HashMap<LineItem, Long>();
 
 	private boolean exceededPolicyLimit;
-	private static final int maxPossibleDays = 20;
+
+	@Value("#{hkEnvProps['" + Keys.Env.maxReturnPolicyDays + "']}")
+	private int 	maxReturnPolicyDays;
+
 	private String returnOrderReason;
 
 	@Autowired
@@ -60,7 +65,8 @@ public class CreateReverseOrderAction extends BaseAction {
 					diff = interimSum;
 				}
 
-				if (diff <= maxPossibleDays) {
+
+				if (diff <= maxReturnPolicyDays) {
 					exceededPolicyLimit = false;
 				} else {
 					exceededPolicyLimit = true;

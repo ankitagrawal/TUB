@@ -22,7 +22,6 @@ public class ThirdPartyCourierServiceFactory {
 
 
         if(courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())){
-            //TODO:#vaibhav refactor this hard cording string is bad way of using service locator
             return (ThirdPartyPickupService) ServiceLocatorFactory.getService("FedExPickupServiceImpl");
         }
 

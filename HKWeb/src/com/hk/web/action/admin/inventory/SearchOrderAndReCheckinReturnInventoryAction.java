@@ -73,6 +73,9 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 	private ReverseOrder					reverseOrder;
     private List<LineItem>                  lineItems               = new ArrayList<LineItem>();
 	private String 							conditionOfItem;
+	private static String 					GOOD 	= "good";
+	private static String 					DAMAGED = "damaged";
+	private static String 					EXPIRED = "expired";
 
 	@DefaultHandler
     public Resolution pre() {
@@ -86,7 +89,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
             shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderId);
         }
 
-		if(shippingOrder != null){
+		if(shippingOrder != null){			
 			ShippingOrderStatus status = shippingOrder.getOrderStatus();
 			if(status.equals(EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus()) ||
 					status.equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus())){
@@ -111,29 +114,15 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
             String recheckinBarcode = lineItemRecheckinQtyMapEntry.getValue();
             Long alreadyCheckedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstReturn(lineItem);
             List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
-//            if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
-//                int recheckinCounter = 0;
-//                for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-//                    if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
-//                        recheckinCounter++;
-//                        getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
-//                                null,getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
-//                        // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
-//                        // productVariantInventoryDao.remove(checkedOutInventory.getId());
-//                        inventoryService.checkInventoryHealth(productVariant);
-//                    } else {
-//                        getAdminInventoryService().damageInventoryCheckin(checkedOutInventory.getSkuItem(), lineItem);
-//                    }
-//                }
+
 			if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
 				int recheckinCounter = 0;
-				
 					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
 						String skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
 						if (skuGroupBarcode.equalsIgnoreCase(recheckinBarcode) && checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
 							SkuItem skuItem = checkedOutInventory.getSkuItem();
-							if (conditionOfItem.equals("good")){
+							if (conditionOfItem.equals(GOOD)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
@@ -141,7 +130,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								break;
 							}
 
-							if (conditionOfItem.equals("damaged")){
+							if (conditionOfItem.equals(DAMAGED)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
@@ -149,7 +138,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								break;
 							}
 
-							if (conditionOfItem.equals("expired")){  								
+							if (conditionOfItem.equals(EXPIRED)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
@@ -161,7 +150,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 					}
 
 				if (recheckinCounter != 0){
-					String comments = "Re Checked-in Returned Items: " + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
+					String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
 							productVariant.getOptionsCommaSeparated();
 					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
 //				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, damageComments);
@@ -173,6 +162,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 			else {
 				addRedirectAlertMessage(new SimpleMessage("Oops!!! Either Returned Units are already checked in OR No batch information was there while checking out items."));
 			}
+			orderId = shippingOrder.getId();
         }
 
         return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);

@@ -27,9 +27,9 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
  *
  * This sample code has been tested with JDK 5 and Apache Axis 1.4
  */
-public class FedExPickupUtil {
+public class FedExPickup {
 	//
-	private static Logger logger = LoggerFactory.getLogger(FedExPickupUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(FedExPickup.class);
 
     private String fedExAuthKey;
 
@@ -43,7 +43,7 @@ public class FedExPickupUtil {
 
 	private ShipmentService shipmentService = ServiceLocatorFactory.getService(ShipmentService.class);
 
-	public FedExPickupUtil(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
+	public FedExPickup(String fedExAuthKey, String fedExAccountNo, String fedExMeterNo, String fedExPassword, String fedExServerUrl) {
         this.fedExAuthKey = fedExAuthKey;
         this.fedExAccountNo = fedExAccountNo;
         this.fedExMeterNo = fedExMeterNo;

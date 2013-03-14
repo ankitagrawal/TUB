@@ -23,7 +23,7 @@ public interface ReverseOrderService {
 
 	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap); 	
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage);
 
 	public ReverseOrder getReverseOrderById(Long id);
 

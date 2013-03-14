@@ -6,14 +6,17 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
+import com.hk.constants.core.PermissionConstants;
 
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.XslGenerator;
+import com.hk.web.action.error.AdminPermissionAction;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +61,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@DefaultHandler
 	public Resolution pre() {
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier.getId(), getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
@@ -69,6 +72,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.MARK_PICKED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markPicked(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -78,6 +82,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.MARK_RECEIVED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markReceived(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -87,6 +92,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.MARK_RECONCILED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markReconciled(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -104,6 +110,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		}
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.ADVICE_PROPOSED}, authActionBean = AdminPermissionAction.class)
 	public Resolution adviceProposed(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -113,6 +120,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.EDIT_AWB_NO}, authActionBean = AdminPermissionAction.class)
 	public Resolution editTrack(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -122,6 +130,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 	
+	@Secure(hasAnyPermissions = {PermissionConstants.EDIT_BOOKING_NO}, authActionBean = AdminPermissionAction.class)
 	public Resolution editConfirmationNo(){
 		if(orderRequestId != null){
 			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
@@ -131,8 +140,9 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
 	public Resolution generateExcelForReversePickup(){
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier.getId(), getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
 		addRedirectAlertMessage(new SimpleMessage("Download complete"));

@@ -108,8 +108,6 @@ public class PermissionConstants {
 	public static final String EDIT_PAYMENT_HISTORY                  ="EDIT_PAYMENT_HISTORY";
 	public static final String POPULATE_BUSY_DATA                    ="POPULATE_BUSY_DATA";
 
-	public static final String CREATE_REVERSE_PICKUP_ORDER           ="CREATE_REVERSE_PICKUP_ORDER";
-
 	public static final String DISPATCH_LOT_OPERATIONS               ="DISPATCH_LOT_OPERATIONS";
 
     public static final String  VIEW_DROP_SHIPPING_QUEUE             = "VIEW_DROP_SHIPPING_QUEUE";
@@ -134,5 +132,15 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CHANGE_COURIER = "OPS_MANAGER_SRS_CHANGE_COURIER";
     public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
 	public static final String STORE_MANAGER = "STORE_MANAGER";
+
+	public static final String CREATE_REVERSE_PICKUP_ORDER          = "CREATE_REVERSE_PICKUP_ORDER";
+	public static final String SCHEDULE_COURIER_FOR_PICKUP			= "SCHEDULE COURIER FOR PICKUP";
+	public static final String MARK_PICKED							= "MARK PICKED";
+	public static final String MARK_RECEIVED						= "MARK RECEIVED";
+	public static final String MARK_RECONCILED						= "MARK RECONCILED";
+	public static final String ADVICE_PROPOSED						= "ADVICE_PROPOSED";
+	public static final String EDIT_AWB_NO							= "EDIT AWB NO";
+	public static final String EDIT_BOOKING_NO						= "EDIT BOOKING NO";
+	public static final String GENERATE_EXCEL_FOR_REVERSE_PICKUP	= "GENERATE EXCEL FOR REVERSE PICKUP";
 
 }

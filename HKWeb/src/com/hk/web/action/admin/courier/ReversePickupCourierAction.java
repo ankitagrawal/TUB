@@ -19,11 +19,14 @@ import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.web.action.admin.AdminHomeAction;
+import com.hk.web.action.error.AdminPermissionAction;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stripesstuff.plugin.security.Secure;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -37,7 +40,7 @@ import java.util.List;
  * Time: 12:58:29 PM
  * To change this template use File | Settings | File Templates.
  */
-        
+@Secure(hasAnyPermissions = {PermissionConstants.SCHEDULE_COURIER_FOR_PICKUP}, authActionBean = AdminPermissionAction.class)        
 @Component
 public class ReversePickupCourierAction extends BaseAction {
 
@@ -50,8 +53,7 @@ public class ReversePickupCourierAction extends BaseAction {
 	private Long reverseOrderId;
 	private List<Courier> availableCouriers;
 	private Courier selectedCourier;
-	//private String manualTrackingNo;
-	//private String manualConfNo;
+
 
 	@Autowired
 	ShippingOrderService shippingOrderService;
@@ -100,7 +102,7 @@ public class ReversePickupCourierAction extends BaseAction {
 				}
 			} else{
 				courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, null);
-				//courierPickupDetail = setDetailsForManualRequests(courierPickupDetail, selectedCourier, pickupDate, manualTrackingNo, manualConfNo);
+
 			}
 
 			courierPickupDetail = courierPickupService.save(courierPickupDetail);
@@ -110,16 +112,6 @@ public class ReversePickupCourierAction extends BaseAction {
 		}
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 	}
-
-//	public CourierPickupDetail setDetailsForManualRequests(CourierPickupDetail courierPickupDetail, Courier selectedCourier, Date pickupDate, String manualTrackingNo, String manualConfNo){
-//		if (manualTrackingNo != null) {
-//			courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, manualTrackingNo);
-//		} else {
-//			courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, manualConfNo, null);
-//		}
-//		addRedirectAlertMessage(new SimpleMessage("Pickup Request saved successfully"));
-//		return courierPickupDetail;
-//	}
 
 	public Date getPickupDate() {
 		return pickupDate;

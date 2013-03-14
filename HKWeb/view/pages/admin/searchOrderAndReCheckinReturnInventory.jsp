@@ -279,10 +279,9 @@
             </c:choose>
             <input type="hidden" name="conditionOfItem" id="conditionOfItem">
 
-            <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre"
-                    target="_blank">
-                Order Lifecycle
-                <s:param name="order" value="${order}"/>
+            <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
+                SO Lifecycle
+            <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
             </s:link>
 
             <s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre"

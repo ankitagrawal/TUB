@@ -68,7 +68,6 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 			}
 		}
 
-		//TODO check this
 		if (reverseLineItemSet.size() != 0) {
 			reverseOrder.setReverseLineItems(reverseLineItemSet);
 			Double amount = getAmountForReverseOrder(reverseOrder);
@@ -95,8 +94,8 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         return rvoBaseAmt;
     }
 	
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Courier courier, int page, int perPage){
-        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier, page, perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage){
+        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, page, perPage);
     }
 
 	public ReverseOrder save(ReverseOrder reverseOrder){
