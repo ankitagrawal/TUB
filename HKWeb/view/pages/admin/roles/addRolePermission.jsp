@@ -15,13 +15,6 @@
                 <div class = "new role">
                     <legend>Add New Role/Permission</legend>  <br/>
                     <label>Role: </label> <s:text id = "role-name" name="role.name"/> <br/>
-                <%--</div>
-            </fieldset>
-            <br/>
-            <a href="#" id="buttonPermission"> Add New Permission </a> <br/>
-            <fieldset id = "addPermission">
-                <div class = "new permission">
-                    <legend>Add New Permission</legend>  <br/>--%>
                     <label>Permission: </label> <s:text id = "permission-name" name="permission.name"/>
                 </div>
             </fieldset>
@@ -44,10 +37,6 @@
             $('#buttonRole').hide();
             $('#addRole').show(500);
         });
-        /*$("#buttonPermission").click(function(){
-            $('#buttonPermission').hide();
-            $('#addPermission').show(500);
-        });*/
     });
     $('#role-name').focus();
     $('#permission-name').focus();

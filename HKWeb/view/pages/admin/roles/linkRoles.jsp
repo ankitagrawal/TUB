@@ -21,35 +21,88 @@
         Link Roles To Permissions and Users
     </s:layout-component>
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction">
-            <div>
-                <label>Roles</label>&nbsp;
-                <s:select name="SelectedRoles"  multiple="true">
-                    <c:forEach items="${roleList}" var="roleName">
-                        <s:option value="${roleName.name}">${roleName.name} </s:option>
-                    </c:forEach>
-                </s:select>
-            </div>
-            <br/>
-            <div>
-                <label>Permissions </label>&nbsp;
-                <s:select name="SelectedPermissions"  multiple="true">
-                    <c:forEach items="${permissionList}" var="permissionName">
-                        <s:option value="${permissionName.name}">${permissionName.name} </s:option>
-                    </c:forEach>
-                </s:select>
-            </div>
-            <br/>
-            <div>
-                <label>Users </label>&nbsp;
-                <s:select name="SelectedUsers"  multiple="true">
-                    <c:forEach items="${userList}" var="userName">
-                        <s:option value="${userName.name}">${userName.name} </s:option>
-                    </c:forEach>
-                </s:select>
-            </div>
-            <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em"/>
+        <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="rolePerm">
+            <fieldset>
+                <div align="left">
+                    <legend>Add permissions to role</legend>
+                    <label>Roles</label>&nbsp;
+                    <s:select id = "roleSelect" name="role.name" style="width: 175px;">
+                        <s:option value="">---Select Role---</s:option>
+                        <s:options-collection collection="${roleList}" value="name" label="name"/>
+                    </s:select>
+                </div>
+                <div align="center">
+                    <label>Permissions </label>&nbsp;
+                    <s:select id="mltPermission" name="permissionList"  style="width: 175px;" multiple="true">
+                        <s:options-collection collection="${permissionList}" value="name" label="name"/>
+                    </s:select>
+                </div>
+                <s:hidden name="userPermissions" id="userPermissions"/>
+                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions"/>
+            </fieldset>
+            <fieldset>
+                <div align="left">
+                    <legend>Add roles to user</legend>
+                    <label>Users </label>&nbsp;
+                    <s:select id="userSelect" name="user.id" style="width: 175px;">
+                        <s:option value="">--Select User--</s:option>
+                        <c:forEach items="${userList}" var="userName">
+                            <c:if test="${userName.name != 'Guest' && userName.name != null}">
+                                <s:option value="${userName.id}">${userName.name}, ${userName.login} </s:option>
+                            </c:if>
+                        </c:forEach>
+                    </s:select>
+                </div>
+                <div align="center">
+                    <label>Roles</label>&nbsp;
+                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 175px;">
+                        <s:options-collection collection="${roleList}" value="name" label="name"/>
+                    </s:select>
+                </div>
+                <s:hidden name="userRoles" id="userRoles"  />
+                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="saveRoles"/>
+            </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var bool = false;
+        $('#saveRoles').click(function(){
+            if($('#userSelect').val() == "" ){
+                alert("Choose valid entries");
+                return false;
+            }
+            $('#mltRoles').each(function(i,selectedRoles){
+                bool = true;
+                var userRoles = "";
+                userRoles += (userRoles == "") ? "" : ",";
+                userRoles += ($(selectedRoles).val());
+                $('#userRoles').val(userRoles);
+            });
+           if(!bool){
+               alert("Select atleast one Roles!!!");
+               return false;
+           }
+        });
+        $('#savePermissions').click(function(){
+            if($('#roleSelect').val() == ""){
+                alert("Choose valid entries");
+                return false;
+            }
+            $('#mltPermission').each(function(j,selectedPermissions){
+                bool = true;
+                var userPermissions = "";
+                userPermissions += (userPermissions == "") ? "" : ",";
+                userPermissions += ($(selectedPermissions).val());
+                $('#userPermissions').val(userPermissions);
+            });
+            if(!bool){
+                alert("Select atleast one Permission!!!");
+                return false;
+            }
+        });
+    });
+</script>
 
