@@ -53,24 +53,25 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
     private void audit(String productVariantId, ProductVariant savedProductVariant) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
         Session session = sessionFactory.openSession();
-        ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId, session);
+     //   ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId, session);
         User loggedUser = getUserService().getLoggedInUser();
-        if (oldProductVariant != null) {
+       /* if (oldProductVariant != null) {
             oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
-        }
+        }*/
 
         try {
             EntityAuditTrail eat = new EntityAuditTrail();
             eat.setEntityId(productVariantId);
             Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-            String oldJson = "";
+         /*   String oldJson = "";
             if (oldProductVariant != null)
-                oldJson = gson.toJson(oldProductVariant);
-            eat.setOldJson(oldJson);
+                oldJson = gson.toJson(oldProductVariant);*/
+            //eat.setOldJson(oldJson);
             savedProductVariant.setOptionsAuditString(savedProductVariant.getOptionsPipeSeparated());
             String newJson = gson.toJson(savedProductVariant);
             eat.setNewJson(newJson);
-            if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+            //if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) 
+            //{
                 eat.setUserEmail(loggedUser != null ? loggedUser.getEmail() : "system");
                 eat.setCallingClass(Reflection.getCallerClass(2).getName());
                 eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
@@ -90,7 +91,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
                         logger.info("Closed connection");
                     }
-                }
+                //}
 
             }
         } catch (Exception e) {
@@ -120,21 +121,22 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
     private void audit(String productId, Product savedProduct) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
         Session session = sessionFactory.openSession();
-        Product oldProduct = getOriginalProductById(productId, session);
+        //Product oldProduct = getOriginalProductById(productId, session);
         User loggedUser = getUserService().getLoggedInUser();
 
         try {
             EntityAuditTrail eat = new EntityAuditTrail();
             eat.setEntityId(productId);
             Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-            String oldJson = "";
+          /*  String oldJson = "";
             if (oldProduct != null)
                 oldJson = gson.toJson(oldProduct);
-            eat.setOldJson(oldJson);
+            eat.setOldJson(oldJson);*/
             savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
             String newJson = gson.toJson(savedProduct);
             eat.setNewJson(newJson);
-            if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+            //if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) 
+            //{
                 eat.setUserEmail(loggedUser != null ? loggedUser.getEmail() : "system");
                 eat.setCallingClass(Reflection.getCallerClass(2).getName());
                 eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
@@ -157,7 +159,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     }
                 }
 
-            }
+            //}
         } catch (Exception e) {
             logger.error("Error while entering audit trail for product->" + productId, e);
         }
