@@ -294,10 +294,13 @@ public class ProductVariant implements java.io.Serializable {
     }
 
     public List<ProductOption> getProductOptions() {
-        List<ProductOption> clonedProductOptions = new ArrayList<ProductOption>(productOptions);
-        if (clonedProductOptions != null && !clonedProductOptions.isEmpty())
-            Collections.sort(clonedProductOptions, new ProductOptionComparator());
-        return clonedProductOptions;
+        if (productOptions != null) {
+            List<ProductOption> clonedProductOptions = new ArrayList<ProductOption>(productOptions);
+            if (clonedProductOptions != null && !clonedProductOptions.isEmpty())
+                Collections.sort(clonedProductOptions, new ProductOptionComparator());
+            return clonedProductOptions;
+        }
+        return null;
     }
 
     public void setProductOptions(List<ProductOption> productOptions) {
