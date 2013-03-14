@@ -94,19 +94,39 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
     public ProductVariant getOriginalProductVariantById(String productVariantId) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-        Session session = sessionFactory.openSession();
-        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId",
-                productVariantId).uniqueResult();
+        Session session = null;
+        ProductVariant productVariant = null;
+        try {
+
+            session = sessionFactory.openSession();
+            productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId", productVariantId).uniqueResult();
+        } catch (Exception e) {
+            logger.error("Error while getting original pv ->" + productVariantId, e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
 
         return productVariant;
     }
 
     public Product getOriginalProductById(String productId) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-        Session session = sessionFactory.openSession();
-        Product product = (Product) session.createQuery("select p from Product p where p.id=:productId").setString("productId", productId).uniqueResult();
-        if (product != null) {
-            product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
+        Session session = null;
+        Product product = null;
+        try {
+            session = sessionFactory.openSession();
+            product = (Product) session.createQuery("select p from Product p where p.id=:productId").setString("productId", productId).uniqueResult();
+            if (product != null) {
+                product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
+            }
+        } catch (Exception e) {
+            logger.error("Error while getting original product ->" + productId, e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return product;
     }
