@@ -11730,4 +11730,9 @@
             <column name="return_reason" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Neha (generated)" id="1363262394293-1">
+        <addColumn tableName="reverse_order">
+            <column name="receive_dt" type="DATETIME"/>
+        </addColumn>
+    </changeSet>    
 </databaseChangeLog>
