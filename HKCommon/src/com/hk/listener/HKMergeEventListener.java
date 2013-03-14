@@ -83,10 +83,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 } finally {
                     if (session != null) {
                         logger.info("Closing connection");
+                        session.flush();
                         session.clear();
                         session.close();
-                        session.connection().close();
-                        
+                        // session.connection().close();
+
                         logger.info("Closed connection");
                     }
                 }
@@ -147,10 +148,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 } finally {
                     if (session != null) {
                         logger.info("Closing connection 1");
+                        session.flush();
                         session.clear();
                         session.close();
-                        session.connection().close();
-                        
+                        // session.connection().close();
+
                         logger.info("Closed connection 1");
                     }
                 }
