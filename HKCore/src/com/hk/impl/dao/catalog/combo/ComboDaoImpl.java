@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.order.Order;
@@ -51,6 +52,10 @@ public class ComboDaoImpl extends BaseDaoImpl implements ComboDao {
 
 	public List<Combo> getCombos(Product product) {
 		return (List<Combo>) findByNamedParams("select cp.combo from ComboProduct cp where cp.product = :product", new String[]{"product"}, new Object[]{product});
+	}
+
+  public List<Combo> getCombos(ProductVariant productVariant) {
+		return (List<Combo>) getSession().createQuery("select c from Combo c left join c.comboProducts p where p.product = :product").setParameter("product", productVariant.getProduct()).list();
 	}
 
 }

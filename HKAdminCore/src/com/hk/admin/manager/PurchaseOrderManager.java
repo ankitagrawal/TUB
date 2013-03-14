@@ -15,6 +15,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.core.WarehouseService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class PurchaseOrderManager {
 
 	@Autowired
 	PoLineItemDao poLineItemDao;
+
+  @Autowired
+  WarehouseService warehouseService;
 
 	private List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 	private List<PoLineItem> poLineItemList = new ArrayList<PoLineItem>();
@@ -113,7 +117,12 @@ public class PurchaseOrderManager {
 			}
 			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getCity());
 			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getState());
-			warehouseAddress.append(newline + "TIN: " + purchaseOrder.getWarehouse().getTin());
+			//warehouseAddress.append(newline + "TIN: " + purchaseOrder.getWarehouse().getTin());
+      if (purchaseOrder.getWarehouse().equals(getWarehouseService().getMumbaiWarehouse())) {
+        warehouseAddress.append(newline + "TIN: 27210893736");
+      } else {
+        warehouseAddress.append(newline + "TIN: 06101832036");
+      }
 
 		}
 
@@ -344,4 +353,8 @@ public class PurchaseOrderManager {
 	public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
 		this.purchaseOrderList = purchaseOrderList;
 	}
+
+  public WarehouseService getWarehouseService() {
+    return warehouseService;
+  }
 }
