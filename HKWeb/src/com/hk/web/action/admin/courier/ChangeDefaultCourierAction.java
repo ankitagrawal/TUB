@@ -30,39 +30,39 @@ import java.util.*;
 
 @Component
 public class ChangeDefaultCourierAction extends BaseAction {
-    private static Logger logger = LoggerFactory.getLogger(ChangeDefaultCourierAction.class);
+    private static Logger               logger                 = LoggerFactory.getLogger(ChangeDefaultCourierAction.class);
 
     @Autowired
-    private PincodeService pincodeService;
+    private PincodeService              pincodeService;
     @Autowired
-    XslPincodeParser xslPincodeParser;
+    XslPincodeParser                    xslPincodeParser;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String adminDownloadsPath;
+    String                              adminDownloadsPath;
     @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String adminUploadsPath;
+    String                              adminUploadsPath;
 
-    FileBean fileBean;
+    FileBean                            fileBean;
 
-    private String pincodeString;
-    private Pincode pincode;
+    private String                      pincodeString;
+    private Pincode                     pincode;
     private List<PincodeDefaultCourier> pincodeDefaultCouriers = new ArrayList<PincodeDefaultCourier>();
     private List<PincodeCourierMapping> pincodeCourierMappings;
-    private List<Courier> availableCouriers;
+    private List<Courier>               availableCouriers;
 
-    Warehouse warehouse;
-    Boolean cod;
-    Boolean ground;
+    Warehouse                           warehouse;
+    Boolean                             cod;
+    Boolean                             ground;
 
     @Autowired
-    PincodeCourierService pincodeCourierService;
+    PincodeCourierService               pincodeCourierService;
 
     @DefaultHandler
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_VIEW}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.OPS_MANAGER_CDCA_VIEW }, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         pincode = pincodeService.getByPincode(pincodeString);
         if (pincode == null) {
@@ -71,26 +71,30 @@ public class ChangeDefaultCourierAction extends BaseAction {
         } else {
             availableCouriers = pincodeCourierService.getApplicableCouriers(pincode, null, null, true);
             pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
-            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod!=null ? cod:false, ground!=null?ground:false, true);
+            pincodeCourierMappings = pincodeCourierService.getApplicablePincodeCourierMappingList(pincode, cod != null ? cod : false, ground != null ? ground : false, true);
         }
         return new ForwardResolution("/pages/admin/courier/changeDefaultCourierAction.jsp");
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPDATE}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.OPS_MANAGER_CDCA_UPDATE }, authActionBean = AdminPermissionAction.class)
     public Resolution save() {
         String error = "";
         boolean flag = false;
         for (PincodeDefaultCourier pincodeDefaultCourier : pincodeDefaultCouriers) {
-                boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
-                if (!isDefaultCourierApplicable) {
-                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
-                    flag = true;
-                }
-                Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.getWarehouse());
-                if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId() == null) {
-                    error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:" + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
-                    flag = true;
-                }
+            boolean isDefaultCourierApplicable = pincodeCourierService.isDefaultCourierApplicable(pincode, pincodeDefaultCourier.getCourier(),
+                    pincodeDefaultCourier.isGroundShipping(), pincodeDefaultCourier.isCod());
+            if (!isDefaultCourierApplicable) {
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:"
+                        + pincodeDefaultCourier.isGroundShipping() + " is not a serviceable mapping)-";
+                flag = true;
+            }
+            Courier pincodeDefaultCourierDb = pincodeCourierService.getDefaultCourier(pincode, pincodeDefaultCourier.isCod(), pincodeDefaultCourier.isGroundShipping(),
+                    pincodeDefaultCourier.getWarehouse());
+            if (pincodeDefaultCourierDb != null && pincodeDefaultCourierDb.equals(pincodeDefaultCourier.getCourier()) && pincodeDefaultCourier.getId() == null) {
+                error += "(Courier:" + pincodeDefaultCourier.getCourier().getName() + ",COD:" + pincodeDefaultCourier.isCod() + ",GroundShipping:"
+                        + pincodeDefaultCourier.isGroundShipping() + " is Already present in the Database)-";
+                flag = true;
+            }
         }
 
         if (!flag) {
@@ -98,10 +102,12 @@ public class ChangeDefaultCourierAction extends BaseAction {
                 getBaseDao().save(pincodeDefaultCourier);
             }
             addRedirectAlertMessage(new SimpleMessage("Changes Saved"));
-            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod", cod).addParameter("ground",
+                    ground);
         } else {
             addRedirectAlertMessage(new SimpleMessage("Some Mappings are incorrect" + error));
-            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod",cod).addParameter("ground",ground);
+            return new RedirectResolution(ChangeDefaultCourierAction.class, "search").addParameter("pincodeString", pincodeString).addParameter("cod", cod).addParameter("ground",
+                    ground);
         }
     }
 
@@ -122,7 +128,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_DOWNLOAD}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.OPS_MANAGER_CDCA_DOWNLOAD }, authActionBean = AdminPermissionAction.class)
     public Resolution generatePincodeExcel() throws Exception {
         pincodeDefaultCouriers = pincodeCourierService.searchPincodeDefaultCourierList(pincode, warehouse, cod, ground);
         String excelFilePath = adminDownloadsPath + "/pincodeExcelFiles/pincodesDefaultCouriers_" + System.currentTimeMillis() + ".xls";
@@ -149,7 +155,7 @@ public class ChangeDefaultCourierAction extends BaseAction {
         };
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CDCA_UPLOAD}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = { PermissionConstants.OPS_MANAGER_CDCA_UPLOAD }, authActionBean = AdminPermissionAction.class)
     public Resolution uploadPincodeExcel() throws Exception {
         if (fileBean == null) {
             addRedirectAlertMessage(new SimpleMessage("Please chose a file"));
@@ -198,22 +204,21 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.fileBean = fileBean;
     }
 
-  public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
-    return pincodeDefaultCouriers;
-  }
+    public List<PincodeDefaultCourier> getPincodeDefaultCouriers() {
+        return pincodeDefaultCouriers;
+    }
 
-  public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
-    this.pincodeDefaultCouriers = pincodeDefaultCouriers;
-  }
+    public void setPincodeDefaultCouriers(List<PincodeDefaultCourier> pincodeDefaultCouriers) {
+        this.pincodeDefaultCouriers = pincodeDefaultCouriers;
+    }
 
-  public Warehouse getWarehouse() {
+    public Warehouse getWarehouse() {
         return warehouse;
     }
 
     public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
-
 
     public List<PincodeCourierMapping> getPincodeCourierMappings() {
         return pincodeCourierMappings;
@@ -231,19 +236,28 @@ public class ChangeDefaultCourierAction extends BaseAction {
         this.availableCouriers = availableCouriers;
     }
 
-  public Boolean isCod() {
-    return cod;
-  }
+    public Boolean isCod() {
+        return cod;
+    }
 
-  public void setCod(Boolean cod) {
-    this.cod = cod;
-  }
+    public void setCod(Boolean cod) {
+        this.cod = cod;
+    }
 
-  public Boolean isGround() {
-    return ground;
-  }
+    public Boolean isGround() {
+        return ground;
+    }
 
-  public void setGround(Boolean ground) {
-    this.ground = ground;
-  }
+    public void setGround(Boolean ground) {
+        this.ground = ground;
+    }
+
+    public Boolean getCod() {
+        return cod;
+    }
+
+    public Boolean getGround() {
+        return ground;
+    }
+
 }
