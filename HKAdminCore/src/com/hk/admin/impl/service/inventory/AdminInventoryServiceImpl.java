@@ -333,23 +333,28 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         Map<Long, String> skuItemBarcodeMap = new HashMap<Long, String>();
         ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
         String productOptionStringBuffer = productVariant.getOptionsPipeSeparated();
-        SkuGroup skuGroup = skuItem.getSkuGroup();
-        Date expiryDate = skuGroup.getExpiryDate();
+	      SkuGroup checkedInSkuGroup;// = skuItem.getSkuGroup();
+	      Date expiryDate;// = checkedInSkuGroup.getExpiryDate();
+
+
         String date = "";
-        if (expiryDate == null) {
-            date = "NA";
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-            date = sdf.format(expiryDate);
-        }
+
         for (SkuItem checkedInSkuItem : checkedInSkuItems) {
+		        checkedInSkuGroup = checkedInSkuItem.getSkuGroup();
+		        expiryDate = checkedInSkuGroup.getExpiryDate();
+		        if (expiryDate == null) {
+			        date = "NA";
+		        } else {
+			        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+			        date = sdf.format(expiryDate);
+		        }
             String data = "";
             if (checkedInSkuItem.getSkuGroup().getBarcode() == null && checkedInSkuItem.getBarcode().contains(BarcodeUtil.BARCODE_SKU_ITEM_PREFIX)) {
                 data = checkedInSkuItem.getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
             } else {
                 data = checkedInSkuItem.getSkuGroup().getBarcode() + "\t" + StringUtils.substring(productVariant.getProduct().getName(), 0, strLength) + "\t"
-                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + skuGroup.getMrp();
+                        + StringUtils.substring(productOptionStringBuffer, 0, strLength) + "\t" + date + "\t" + 1 + "\t" + checkedInSkuGroup.getMrp();
             }
             if (!skuItemBarcodeMap.containsKey(checkedInSkuItem.getId())) {
                 skuItemBarcodeMap.put(checkedInSkuItem.getId(), data);
