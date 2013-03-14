@@ -82,7 +82,12 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     logger.error("Error while entering audit trail for product->" + productVariantId, e);
                 } finally {
                     if (session != null) {
+                        logger.info("Closing connection");
+                        session.clear();
                         session.close();
+                        session.connection().close();
+                        
+                        logger.info("Closed connection");
                     }
                 }
 
@@ -141,7 +146,12 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     logger.error("Error while entering audit trail for product->" + productId, e);
                 } finally {
                     if (session != null) {
+                        logger.info("Closing connection 1");
+                        session.clear();
                         session.close();
+                        session.connection().close();
+                        
+                        logger.info("Closed connection 1");
                     }
                 }
 
