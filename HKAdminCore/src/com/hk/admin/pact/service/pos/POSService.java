@@ -35,4 +35,6 @@ public interface POSService {
 
 	public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse);
 
+	public void applyOrderLevelDiscountOnCartLineItems(Order order, Double orderLevelDiscount);
+
 }

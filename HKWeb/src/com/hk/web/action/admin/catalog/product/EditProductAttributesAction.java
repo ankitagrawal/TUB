@@ -3,6 +3,8 @@ package com.hk.web.action.admin.catalog.product;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.pact.service.combo.ComboService;
+import com.hk.pact.service.inventory.InventoryService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -96,6 +98,10 @@ public class EditProductAttributesAction extends BaseAction {
     SupplierDao                   supplierDao;
     @Autowired
     CategoryDaoImpl                   categoryDao;
+    @Autowired
+    InventoryService              inventoryService;
+    @Autowired
+    ComboService                  comboService;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String                preferredZone;
@@ -184,7 +190,12 @@ public class EditProductAttributesAction extends BaseAction {
         product.setManufacturer(manufacturer);
 
         logger.debug( "actual save call start ");
-        getProductService().save(product);
+        product = getProductService().save(product);
+        //Checking inventory of all product variants
+        for(ProductVariant productVariant : product.getProductVariants()){
+            getInventoryService().checkInventoryHealth(productVariant);
+        }
+        getComboService().markProductOutOfStock(product.getProductVariants().get(0));
         logger.debug( "actual save call  ");
         return new ForwardResolution("/pages/close.jsp");
     }
@@ -240,7 +251,8 @@ public class EditProductAttributesAction extends BaseAction {
                 productVariant.setProductExtraOptions(null);
             }
 
-            getProductVariantService().save(productVariant);
+            productVariant = getProductVariantService().save(productVariant);
+            getInventoryService().checkInventoryHealth(productVariant);
             i++;
         }
 
@@ -607,4 +619,11 @@ public class EditProductAttributesAction extends BaseAction {
         this.baseDao = baseDao;
     }
 
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public ComboService getComboService() {
+        return comboService;
+    }
 }

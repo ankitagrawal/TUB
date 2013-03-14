@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -575,7 +576,7 @@ public class OrderManager {
           }
           else{
 
-          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock()) {
+          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
               }
@@ -583,7 +584,7 @@ public class OrderManager {
               continue;
           }
 
-          if (!(product.isJit() || product.isService())) {
+          if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
               Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
@@ -606,6 +607,11 @@ public class OrderManager {
               trimmedCartLineItems.add(lineItem);
               Long qty = lineItem.getQty();
               iterator.remove();
+              //check for subscription
+              if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())){
+                  Subscription subscription= subscriptionService.getSubscriptionFromCartLineItem(lineItem);
+                  subscriptionService.abandonSubscription(subscription);
+              }
               order.getCartLineItems().remove(lineItem);
               getBaseDao().delete(lineItem);
               if(qty<=0){

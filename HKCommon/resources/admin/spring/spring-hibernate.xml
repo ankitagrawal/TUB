@@ -27,7 +27,15 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-
+		<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<bean
+						class="com.hk.listener.HKMergeEventListener">
+					</bean>
+				</entry>
+			</map>
+		</property>
 
 
 		<!--<property name="typeDefinitions">
@@ -60,7 +68,7 @@
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 
 		<property name="dataSource">
-			<ref bean="dataSource" />
+			<ref bean="newDataSource" />
 		</property>
 
 		<property name="lobHandler">
@@ -112,6 +120,50 @@
 		</bean>-->
 
 
+	<bean id="newDataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://DB_SERVER:DB_PORT/DB_NAME</value>
+		</property>
+		<property name="username">
+			<value>DB_USERID</value>
+		</property>
+		<property name="password">
+			<value>DB_PASSWD</value>
+		</property>
+		<property name="maxActive">
+			<value>20</value>
+		</property>
+		<property name="maxWait">
+			<value>15000</value>
+		</property>
+		<property name="removeAbandoned">
+			<value>true</value>
+		</property>
+		<property name="removeAbandonedTimeout">
+			<value>100</value>
+		</property>
+		<property name="validationQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+		<property name="maxIdle">
+			<value>20</value>
+		</property>
+		<property name="initialSize">
+			<value>30</value>
+		</property>
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxOpenPreparedStatements" value="30" />
+		<property name="timeBetweenEvictionRunsMillis" value="-1" />
+		<!--<property name="defaultTransactionIsolation" value="1"/>-->
+	</bean>
+
 
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp.BasicDataSource">
@@ -128,7 +180,7 @@
 			<value>DB_PASSWD</value>
 		</property>
 		<property name="maxActive">
-			<value>50</value>
+			<value>40</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>

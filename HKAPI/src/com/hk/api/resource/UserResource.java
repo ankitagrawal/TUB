@@ -3,6 +3,7 @@ package com.hk.api.resource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import com.akube.framework.stripes.action.BaseAction;
 import com.hk.api.UserAPI;
 import com.hk.api.constants.HKAPITokenTypes;
 import com.hk.api.dto.HKAPIBaseDTO;
@@ -10,7 +11,11 @@ import com.hk.api.dto.user.HKAPIUserDTO;
 import com.hk.api.pact.service.HKAPIUserService;
 import com.hk.api.request.AddRewardPointRequest;
 import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.domain.user.Role;
+import com.hk.domain.user.User;
+import com.hk.dto.user.UserLoginDto;
 import com.hk.util.json.JSONResponseBuilder;
+import com.shiro.PrincipalImpl;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +29,7 @@ import com.hk.api.security.annotation.SecureResource;
 @Path("/user")
 @Component
 @SecureResource(hasAllTokens = {HKAPITokenTypes.USER_ACCESS_TOKEN})
-public class UserResource {
+public class UserResource extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(UserResource.class);
     private UserAPI userAPI;
@@ -100,6 +105,7 @@ public class UserResource {
         return new JSONResponseBuilder().addField("login", login).addField("rewardPoints", eligibleRewardPoints).build();
     }
 
+
     @POST
     @Path("/addRewardPoints")
     @Produces("application/json")
@@ -126,6 +132,11 @@ public class UserResource {
             userAPI = APIRegistry.getUserAPI();
         }
         return userAPI;
+    }
+
+    @Override
+    public PrincipalImpl getPrincipal() {
+        return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
 }
