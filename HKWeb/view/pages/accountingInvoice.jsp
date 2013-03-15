@@ -129,7 +129,16 @@
       <th>Item</th>
       <th>Qty</th>
       <th>Rate (per unit)</th>
-      <th>Tax Rate</th>
+      <th>
+     <c:choose>
+      <c:when test="${orderSummary.invoiceDto.sameState}">
+           Tax Rate            
+      </c:when>
+      <c:otherwise>
+        Tax Rate(CST)
+      </c:otherwise>
+    </c:choose>
+    </th>
       <th>Taxable</th>
       <th>Tax</th>
       <th>Surcharge</th>
@@ -201,7 +210,8 @@
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td>
+      <%-- <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td> --%>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
     </tr>
   </table>
 
@@ -218,7 +228,13 @@
       </td>
     </tr>
     <tr>
-      <th width="17%">VAT Percent</th>
+      <th width="17%"><c:choose><c:when test="${orderSummary.invoiceDto.sameState}">
+           VAT Percent            
+      </c:when>
+      <c:otherwise>
+        CST Percent
+      </c:otherwise>
+    </c:choose></th>
       <th width="5%">Qty</th>
       <th width="10%">Amount</th>
       <th width="16%">Tax on Amount</th>

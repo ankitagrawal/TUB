@@ -34,6 +34,9 @@ public class B2bUserDetails implements java.io.Serializable {
 
   @Column (name = "dl_number", length = 45)
   private String dlNumber;
+  
+  @Column (name = "category_name")
+  private String category;
 
   public Long getId() {
     return this.id;
@@ -67,7 +70,15 @@ public class B2bUserDetails implements java.io.Serializable {
     this.dlNumber = dlNumber;
   }
 
-  @Override
+  public String getCategory() {
+	return category;
+}
+
+public void setCategory(String category) {
+	this.category = category;
+}
+
+@Override
   public String toString() {
     return id == null ? "" : id.toString();
   }

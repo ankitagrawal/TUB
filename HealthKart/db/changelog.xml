@@ -11695,6 +11695,7 @@
     <changeSet author="Rohit (generated)" id="1362465491508-6">
         <dropColumn columnName="lead_time" tableName="sku"/>
     </changeSet>
+<<<<<<< HEAD
     <changeSet author="Ankit" id="05-03-2013-01">
         <sql>
             update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
@@ -11748,4 +11749,12 @@
     <changeSet author="Ankit (generated)" id="1360921695034-3">
         <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
     </changeSet>
+</databaseChangeLog>
+    
+     <changeSet id="2013-02-26-01" author="Nihal">
+    	<addColumn tableName="b2b_user_details">
+    		<column name="category_name" type="VARCHAR(32)"/>
+    	</addColumn>
+    </changeSet>
+    
 </databaseChangeLog>
