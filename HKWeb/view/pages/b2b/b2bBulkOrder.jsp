@@ -11,7 +11,8 @@
 <%@ include file="/layouts/_userData.jsp"%>
 
 <%
-HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
+	HttpServletResponse res = (HttpServletResponse) pageContext
+			.getResponse();
 %>
 <style>
 .b2bTable {
@@ -25,7 +26,6 @@ HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
 	margin-right: 50px;
 	margin-left: 50px;
 }
-
 
 .b2bDiv {
 	position: relative;
@@ -43,8 +43,9 @@ HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
 	margin-bottom: 15px;
 	width: 65% !important;
 }
+
 .b2bDiv th {
-font-weight :  bold !important;
+	font-weight: bold !important;
 }
 </style>
 
@@ -276,7 +277,7 @@ font-weight :  bold !important;
 			</div>
 
 			<div id="b2bTable" class="b2bDiv">
-			<table border="1" width="100%">
+				<table border="1" width="100%">
 
 					<tr height="50px" bgcolor="#EEE8CD">
 						<th align="left" width="10%">Serial No.</th>
@@ -290,46 +291,70 @@ font-weight :  bold !important;
 
 					<tbody id="poTable">
 						<c:if test="${(pa.cartLineItems)!=null}">
-							<c:forEach items="${pa.cartLineItems}" var="lineItem" varStatus="item">
+							<c:forEach items="${pa.cartLineItems}" var="lineItem"
+								varStatus="item">
 								<tr class="bodyTr" style="background-color: #F2F7FB">
 									<td>${item.count}.</td>
-									<td><input name="b2bProductList[${item.count-1}].productId"
-										class="variant b2bTableInput" readonly="readonly" type="text" value="${lineItem.productVariant.id}"/></td>
-									<td align="center"><span id="pvDetails" class="pvDetails">${lineItem.productVariant.product.name} <br><em> ${lineItem.productVariant.optionsCommaSeparated} </em></span></td>
-									<td><div class="img48" style="vertical-align: top;"><img class="prod48" src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${lineItem.productVariant.product.id}.jpg"/></div></td>
+									<td><input
+										name="b2bProductList[${item.count-1}].productId"
+										class="variant b2bTableInput" readonly="readonly" type="text"
+										value="${lineItem.productVariant.id}" /></td>
+									<td align="center"><span id="pvDetails" class="pvDetails">${lineItem.productVariant.product.name}
+											<br> <em>
+												${lineItem.productVariant.optionsCommaSeparated} </em>
+									</span></td>
+									<td><div class="img48" style="vertical-align: top;">
+											<img class="prod48"
+												src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${lineItem.productVariant.product.id}.jpg" />
+										</div></td>
 									<td align="center"><span id="mrp" class="mrp">${lineItem.productVariant.b2bPrice}</span></td>
 									<td><input name="b2bProductList[${item.count-1}].quantity"
-										class="qty b2bTableInput" value="${lineItem.qty}"/></td>
+										class="qty b2bTableInput" value="${lineItem.qty}" /></td>
 									<td align="center"><label id="totalPrice"
-										 class="totalPrice b2bTableInput"
-										>${lineItem.productVariant.b2bPrice*lineItem.qty}</label></td>
+										class="totalPrice b2bTableInput">${lineItem.productVariant.b2bPrice*lineItem.qty}</label></td>
 								</tr>
 								<tr height="10"></tr>
-								<c:set var="newIndex" value="${item.count}" scope="page"/>
+								<c:set var="newIndex" value="${item.count}" scope="page" />
 							</c:forEach>
 						</c:if>
-						<s:hidden id="indexCounter" name="indexCounter" value="${newIndex}"/>
+						<s:hidden id="indexCounter" name="indexCounter"
+							value="${newIndex}" />
 					</tbody>
 				</table>
 			</div>
-			<br/>
-			<div class="left" style="position: relative; float: left; left:15px">
+			<br />
+			<div class="left" style="position: relative; float: left; left: 15px">
 				<span id="variantDetailsInavlid"></span> <a href="#"
 					class="addRowButton" style="font-size: 1.2em">Add new row</a>
 			</div>
-			<div style="text-align: center; font-size: 10px; font-weight: bold; left: 36%;">
+			<div
+				style="text-align: center; font-size: 10px; font-weight: bold; left: 36%;">
 				<h1>
-					<span class="special"> you pay </span> <br> <strong> <span
-						id="summaryGrandTotalPayable">Rs: <label
+					<span class="special"> you pay </span> <br> <strong>
+						<span id="summaryGrandTotalPayable">Rs: <label
 							id="totalPayableAmount" style="font-weight: bold;"></label></span>
 					</strong>
 				</h1>
 
 			</div>
+			<div style="position: relative; float: right; top: -45px; right: 12%">
+				<span class="special"> C-Form </span>
+				<c:choose>
+					<c:when test="${(pa.cFormAvailable)}">
+						<span><input type="checkbox" name="cFormAvailable"
+							id="cFormAvailable" value="${(pa.cFormAvailable)}"></input></span>
+					</c:when>
+					<c:otherwise>
+						<span><input type="checkbox" name="cFormAvailable"
+							id="cFormAvailable"></input></span>
+					</c:otherwise>
+				</c:choose>
+
+			</div>
 
 			<div style="position: relative; float: right; top: -33px">
-				<input type="submit" name="addToCart"
-					value="Save To Cart" class="addToCartButton cta button_green" />
+				<input type="submit" name="addToCart" value="Save To Cart"
+					class="addToCartButton cta button_green" />
 
 			</div>
 
@@ -413,86 +438,79 @@ font-weight :  bold !important;
 					$('.message .line1').html("<strong>" + res1.data.name + "</strong> is added to your shopping cart");
 				} else if (res1.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
 					$('#cart_error1').html(getErrorHtmlFromJsonResponse(res1)).slowFade(3000, 2000);
-				} else if (res1.code == '<%=HealthkartResponse.STATUS_REDIRECT%>') {
-										window.location.replace(res1.data.url);
-									}
-									$('.progressLoader').hide();
-								}
+				} else if (res1.code == '<%=HealthkartResponse.STATUS_REDIRECT%>
+			') {
+						window.location.replace(res1.data.url);
+					}
+					$('.progressLoader').hide();
+				}
 
-								$('.addToCartButton')
-										.click(
-												function(e) {
-													 if ($("#checkBoxEngraving").is(":checked")) {
-														if ($.trim($("#engrave").val()) == '') {
-															alert("Please specify name to be engraved, or uncheck the engraving option");
-															$('.progressLoader').hide();
-															return false;
-														}
-													} 
+				$('.addToCartButton').click(function(e) {
+					if ($("#checkBoxEngraving").is(":checked")) {
+						if ($.trim($("#engrave").val()) == '') {
+							alert("Please specify name to be engraved, or uncheck the engraving option");
+							$('.progressLoader').hide();
+							return false;
+						}
+					}
 
-													/*  if (!window.validateCheckbox) {
+					/*  if (!window.validateCheckbox) {
 
-														$(this).parents().find('.progressLoader').show();
-														$(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
-														$(this).hide();
-														e.stopPropagation();
+						$(this).parents().find('.progressLoader').show();
+						$(this).parent().append('<span class="add_message">added to <s:link beanclass="com.hk.web.action.core.cart.CartAction" id="message_cart_link"><img class="icon16" src="${pageContext.request.contextPath}/images/icons/cart.png"> cart</s:link></span>');
+						$(this).hide();
+						e.stopPropagation();
 
-													} */ 
-												});
+					} */
+				});
 
-								$(".message .close").click(function() {
-									hide_message();
-								});
-								$(document).click(function() {
-									hide_message();
-								});
+				$(".message .close").click(function() {
+					hide_message();
+				});
+				$(document).click(function() {
+					hide_message();
+				});
 
-								function hide_message() {
-									$('.message').animate({
-										top : '-170px',
-										opacity : 0
-									}, 100);
-								}
+				function hide_message() {
+					$('.message').animate({
+						top : '-170px',
+						opacity : 0
+					}, 100);
+				}
 
-								function show_message() {
-									$('.message').css("top", "50px");
-									$('.message').animate({
-										opacity : 1
-									}, 500);
-								}
+				function show_message() {
+					$('.message').css("top", "50px");
+					$('.message').animate({
+						opacity : 1
+					}, 500);
+				}
 
-								$(".top_link, .go_to_top")
-										.click(
-												function(event) {
-													event.preventDefault();
-													$('html,body')
-															.animate(
-																	{
-																		scrollTop : ($(
-																				this.hash)
-																				.offset().top - 45)
-																	}, 300);
-												});
+				$(".top_link, .go_to_top").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({
+						scrollTop : ($(this.hash).offset().top - 45)
+					}, 300);
+				});
 
-								$(document).click(function() {
-									$('.checkboxError').fadeOut();
-								});
+				$(document).click(function() {
+					$('.checkboxError').fadeOut();
+				});
 
-								$('.checkboxError').hide();
-								 $("#checkBoxEngraving").click(function () {
-									var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
-									if ($("#checkBoxEngraving").is(":checked")) {
-										$('#configOptionValueMap option[value=' + stethoscopeConfigOption + ']').attr('selected', 'selected');
-										$(".engraveDiv").show();
-									} else {
-										$('#configOptionValueMap option[value=' + stethoscopeConfigOption + ']').attr('selected', false);
-										$("#engrave").val('');
-										$("#checkBoxEngraving").val(0);
-										$(".engraveDiv").hide();
-									}
-								}); 
+				$('.checkboxError').hide();
+				$("#checkBoxEngraving").click(function() {
+					var stethoscopeConfigOption = $("#stethoscopeConfigOption").val();
+					if ($("#checkBoxEngraving").is(":checked")) {
+						$('#configOptionValueMap option[value=' + stethoscopeConfigOption + ']').attr('selected', 'selected');
+						$(".engraveDiv").show();
+					} else {
+						$('#configOptionValueMap option[value=' + stethoscopeConfigOption + ']').attr('selected', false);
+						$("#engrave").val('');
+						$("#checkBoxEngraving").val(0);
+						$(".engraveDiv").hide();
+					}
+				});
 
-							});
+			});
 		</script>
 	</s:layout-component>
 </s:layout-render>

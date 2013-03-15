@@ -36,6 +36,7 @@ import com.hk.pact.dao.inventory.ProductVariantInventoryDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.B2BOrderService;
 import com.hk.taglibs.Functions;
 import com.hk.web.HealthkartResponse;
 
@@ -74,6 +75,25 @@ public class B2BBulkOrderAction extends BaseAction {
 	Set<CartLineItem> cartLineItems;
 	@Autowired
 	ProductVariantInventoryDao productVariantInventoryDao;
+	@Autowired
+	private B2BOrderService b2bOrderService;
+	private boolean cFormAvailable;
+	
+	public B2BOrderService getB2bOrderService() {
+		return b2bOrderService;
+	}
+
+	public void setB2bOrderService(B2BOrderService b2bOrderService) {
+		this.b2bOrderService = b2bOrderService;
+	}
+
+	public boolean iscFormAvailable() {
+		return cFormAvailable;
+	}
+
+	public void setcFormAvailable(boolean cFormAvailable) {
+		this.cFormAvailable = cFormAvailable;
+	}
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -84,6 +104,7 @@ public class B2BBulkOrderAction extends BaseAction {
 			{
 				order = orderManager.getOrCreateOrder(user);
 				cartLineItems = order.getCartLineItems();
+				cFormAvailable = getB2bOrderService().checkCForm(order);
 			}
 			
 		}
@@ -274,6 +295,7 @@ public class B2BBulkOrderAction extends BaseAction {
 		this.productVariantInventoryDao = productVariantInventoryDao;
 	}
 
-	
+
+
 
 }

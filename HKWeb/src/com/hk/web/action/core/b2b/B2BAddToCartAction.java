@@ -28,6 +28,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.matcher.CartLineItemMatcher;
+import com.hk.domain.order.B2BOrderCheckList;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
@@ -43,6 +44,7 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.dao.user.UserProductHistoryDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.service.order.B2BOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.HealthkartResponse;
@@ -52,7 +54,7 @@ import com.hk.web.action.core.user.SignupAction;
 /**
  * 
  * @author Nihal
- *
+ * 
  */
 
 @Component
@@ -104,8 +106,12 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 	private List<B2BProduct> b2bProductList;
 	private Map<String, B2BProduct> mapB2bProduct;
 
+	private boolean cFormAvailable;
 	@Autowired
 	ProductVariantInventoryDao productVariantInventoryDao;
+	
+	@Autowired
+	B2BOrderService b2bOrderService;
 
 	private Order order;
 
@@ -124,6 +130,7 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 		}
 
 		order = orderManager.getOrCreateOrder(user);
+		//cFormAvailable = getB2bOrderService().checkCForm(order);
 		Map dataMap = new HashMap();
 		HealthkartResponse healthkartResponse;
 		List<String> notAvailableList = new ArrayList<String>();
@@ -163,6 +170,12 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 					mapB2bProduct.put(b2bProduct.getProductId(), b2bProduct);
 				}
 			}
+
+			B2BOrderCheckList b2bOrderCheckList = new B2BOrderCheckList();
+			b2bOrderCheckList.setBase_order_id(order.getId());
+			b2bOrderCheckList.setcForm(iscFormAvailable());
+			getB2bOrderService().saveB2BOrder(b2bOrderCheckList);
+			
 			
 			List<ProductVariant> variants = new ArrayList<ProductVariant>();
 			for (B2BProduct b2bProduct : b2bProductList) {
@@ -193,16 +206,30 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 			return new JsonResolution(healthkartResponse);
 		}
 
-		
-			Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems())
-					.addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-			dataMap.put("itemsInCart", subscriptionCartLineItems.size() + 1L);
-			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,
-					"Product has been added to cart, Check your form", dataMap);
-			noCache();
-			return new JsonResolution(healthkartResponse);
-		
+		Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems())
+				.addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+		dataMap.put("itemsInCart", subscriptionCartLineItems.size() + 1L);
+		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,
+				"Product has been added to cart, Check your form", dataMap);
+		noCache();
+		return new JsonResolution(healthkartResponse);
 
+	}
+
+	public boolean iscFormAvailable() {
+		return cFormAvailable;
+	}
+
+	public void setcFormAvailable(boolean cFormAvailable) {
+		this.cFormAvailable = cFormAvailable;
+	}
+
+	public B2BOrderService getB2bOrderService() {
+		return b2bOrderService;
+	}
+
+	public void setB2bOrderService(B2BOrderService b2bOrderService) {
+		this.b2bOrderService = b2bOrderService;
 	}
 
 	public List<ProductVariant> getProductVariantList() {
