@@ -128,8 +128,11 @@ public class UserOrderResource {
     @Produces("application/json")
     @Encoded
     public Response getUserDetails(@PathParam("phone")
-    long phone, @QueryParam("key")
+    String phone, @QueryParam("key")
     String key) {
+
+        long phoneNo = 0L;
+        phoneNo = Long.parseLong(phone);
 
         Response response = null;
         String decryptKey = CryptoUtil.decrypt(key);
@@ -137,7 +140,7 @@ public class UserOrderResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         try {
-            List<UserDetail> userDetails = userDetailService.findByPhone(phone);
+            List<UserDetail> userDetails = userDetailService.findByPhone(phoneNo);
             ArrayList<APIUserDetail> userDetailList = new ArrayList<APIUserDetail>();
             for (UserDetail userDetail : userDetails) {
                 APIUserDetail apiUserDetail = new APIUserDetail();
@@ -157,7 +160,11 @@ public class UserOrderResource {
             } else {
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }
-        } catch (Exception ex) {
+        }catch (NumberFormatException ex) {
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.error("Wrong input passed from Drishti ");
+        }
+        catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
         }
