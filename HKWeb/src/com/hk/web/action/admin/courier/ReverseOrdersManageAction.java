@@ -45,7 +45,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	private Long reconciliationStatusId;
 	private String shippingOrderId;
 	private String advice;
-	private Courier courier;
+	private Long courierId;
 	private String trackingNo;
 	private String confirmationNo;
 	private File xlsFile;
@@ -61,7 +61,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@DefaultHandler
 	public Resolution pre() {
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier.getId(), getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
@@ -142,7 +142,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
 	public Resolution generateExcelForReversePickup(){
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courier.getId(), getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
 		addRedirectAlertMessage(new SimpleMessage("Download complete"));
@@ -236,12 +236,12 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		this.advice = advice;
 	}
 
-	public Courier getCourier() {
-		return courier;
+	public Long getCourierId() {
+		return courierId;
 	}
 
-	public void setCourier(Courier courier) {
-		this.courier = courier;
+	public void setCourierId(Long courierId) {
+		this.courierId = courierId;
 	}
 
 	public String getTrackingNo() {

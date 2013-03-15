@@ -134,13 +134,13 @@ public class PermissionConstants {
 	public static final String STORE_MANAGER = "STORE_MANAGER";
 
 	public static final String CREATE_REVERSE_PICKUP_ORDER          = "CREATE_REVERSE_PICKUP_ORDER";
-	public static final String SCHEDULE_COURIER_FOR_PICKUP			= "SCHEDULE COURIER FOR PICKUP";
-	public static final String MARK_PICKED							= "MARK PICKED";
-	public static final String MARK_RECEIVED						= "MARK RECEIVED";
-	public static final String MARK_RECONCILED						= "MARK RECONCILED";
+	public static final String SCHEDULE_COURIER_FOR_PICKUP			= "SCHEDULE_COURIER_FOR_PICKUP";
+	public static final String MARK_PICKED							= "MARK_PICKED";
+	public static final String MARK_RECEIVED						= "MARK_RECEIVED";
+	public static final String MARK_RECONCILED						= "MARK_RECONCILED";
 	public static final String ADVICE_PROPOSED						= "ADVICE_PROPOSED";
-	public static final String EDIT_AWB_NO							= "EDIT AWB NO";
-	public static final String EDIT_BOOKING_NO						= "EDIT BOOKING NO";
-	public static final String GENERATE_EXCEL_FOR_REVERSE_PICKUP	= "GENERATE EXCEL FOR REVERSE PICKUP";
+	public static final String EDIT_AWB_NO							= "EDIT_AWB_NO";
+	public static final String EDIT_BOOKING_NO						= "EDIT_BOOKING_NO";
+	public static final String GENERATE_EXCEL_FOR_REVERSE_PICKUP	= "GENERATE_EXCEL_FOR_REVERSE_PICKUP";
 
 }
