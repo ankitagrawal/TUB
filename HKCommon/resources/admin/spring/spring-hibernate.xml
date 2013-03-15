@@ -27,7 +27,7 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-		<property name="eventListeners">
+		<!--<property name="eventListeners">
 			<map>
 				<entry key="merge">
 					<bean
@@ -35,7 +35,7 @@
 					</bean>
 				</entry>
 			</map>
-		</property>
+		</property>-->
 
 
 		<!--<property name="typeDefinitions">
@@ -64,7 +64,7 @@
 		</property>
 	</bean>
 
-     <bean id="newSessionFactory"
+     <!--  <bean id="newSessionFactory"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 
 		<property name="dataSource">
@@ -101,7 +101,7 @@
 				</prop>
 			</props>
 		</property>
-	</bean>
+	</bean>-->
 
 	<bean id="hibernateTemplate"
 		class="org.springframework.orm.hibernate3.HibernateTemplate">
@@ -135,7 +135,7 @@
 			<value>DB_PASSWD</value>
 		</property>
 		<property name="maxActive">
-			<value>20</value>
+			<value>40</value>
 		</property>
 		<property name="maxWait">
 			<value>15000</value>
@@ -144,7 +144,7 @@
 			<value>true</value>
 		</property>
 		<property name="removeAbandonedTimeout">
-			<value>100</value>
+			<value>300</value>
 		</property>
 		<property name="validationQuery">
 			<value>SELECT 1</value>
@@ -156,7 +156,7 @@
 			<value>20</value>
 		</property>
 		<property name="initialSize">
-			<value>30</value>
+			<value>50</value>
 		</property>
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
