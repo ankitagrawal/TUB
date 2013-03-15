@@ -455,7 +455,8 @@ public class XslParser {
                         logger.debug("checkinQty of variant - " + productVariant.getId() + " is - " + checkinQty);
                         if (checkinQty != null && checkinQty > 0) {
                             String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
-                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
+                            SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
+//                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
                                     XslConstants.EXP_DATE, rowMap, headerMap)), 0.0, 0.0, goodsReceivedNote, null, null, null);
                             adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
                                     EnumInvTxnType.INV_CHECKIN), null);

@@ -3,6 +3,7 @@ package com.hk.domain.cycleCount;
 
 
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 
 import javax.persistence.*;
 
@@ -29,8 +30,12 @@ public class CycleCountItem implements java.io.Serializable {
 	private CycleCount cycleCount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sku_group_id", nullable = false)
+	@JoinColumn(name = "sku_group_id")
 	private SkuGroup skuGroup;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sku_item_id")
+	private SkuItem skuItem;
 
 	@Column(name = "scanned_qty", unique = true, nullable = false)
 	private Integer scannedQty;
@@ -102,4 +107,12 @@ public class CycleCountItem implements java.io.Serializable {
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}
+
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
+
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
+    }
 }
