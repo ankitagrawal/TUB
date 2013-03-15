@@ -187,7 +187,7 @@
                                                           </c:forEach>
                                                         </s:select>
                                                   <label>Enter Tracking Number</label>
-                                                  <s:text name="awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
+                                                  <s:text name=   "awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
                                                    <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
                                                    <s:hidden name="awb.cod" value="${shipRes.shippingOrder.COD}"/>
                                                    <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
@@ -235,3 +235,4 @@
          </c:choose>
      </s:form>
     </s:layout-component>
+</s:layout-render>
