@@ -181,9 +181,9 @@ public class ShipmentServiceImpl implements ShipmentService {
         return null;
     }
     @Override
-    public Shipment changeAwb(Shipment shipment,Awb awbNumber,boolean preserveAwb){
+    public Shipment changeAwb(Shipment shipment,Awb newAwb,boolean preserveAwb){
         Awb currentAwb=shipment.getAwb();
-        shipment.setAwb(awbNumber);
+        shipment.setAwb(newAwb);
         shipment = save(shipment);
         changeAwbStatus(currentAwb,preserveAwb);
       return shipment;

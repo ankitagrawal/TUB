@@ -135,12 +135,12 @@ public class ShipmentResolutionAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_AWB}, authActionBean = AdminPermissionAction.class)
     public Resolution createAssignAwbForShipment() {
                 Courier courier = null;
-               Awb awbExist = awbService.findByCourierAwbNumber(courier,awb.getAwbNumber());
-                if(awbExist!=null){
+               Awb awbDb = awbService.findByCourierAwbNumber(courier,awb.getAwbNumber());
+                if(awbDb!=null){
                     addRedirectAlertMessage(new SimpleMessage("Awb Number Already Exist!!!!"));
                     return new RedirectResolution(ShipmentResolutionAction.class);
                 }
-             awb = awbService.save(awb, EnumAwbStatus.Used.getId().intValue());
+             awb = awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
              awb = awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
              addRedirectAlertMessage(new SimpleMessage("Awb Number Created!!!"));
              return new RedirectResolution(ShipmentResolutionAction.class);
@@ -154,9 +154,8 @@ public class ShipmentResolutionAction extends BaseAction {
              return new RedirectResolution(ShipmentResolutionAction.class);
          }
          shipment = shipmentService.changeAwb(shipment,awb,true);
-         addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+newAwbNumber);
-
+         addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
          return new RedirectResolution(ShipmentResolutionAction.class);
      }
 
