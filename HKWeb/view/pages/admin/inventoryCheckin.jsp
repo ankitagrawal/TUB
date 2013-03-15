@@ -91,6 +91,7 @@
           <th width="">UPC</th>
           <th width="">Qty</th>
           <th width="">Checked-in Qty</th>
+          <th width="">Download Barcode</th>
         </tr>
         <c:forEach items="${ica.grn.grnLineItems}" var="grnLineItem" varStatus="ctr">
           <c:set value="${grnLineItem.sku.productVariant}" var="productVariant"/>
@@ -106,8 +107,22 @@
             <td >${productVariant.upc}</td>
             <td class="chkInInfoQty">${grnLineItem.qty}</td>
             <td class="chkInQty" style="color:green; font-weight:bold">${grnLineItem.checkedInQty}</td>
+            <td> <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Download
+                <s:param name="grnLineItem" value="${grnLineItem.id}"/>
+                <%--<s:param name="grnLineItem" value="${grnLineItem.id}"/>--%>
+                <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link></td>
+
           </tr>
         </c:forEach>
+          <tr>
+              <td colspan="2"> <s:link class=" button_green" style="width: 150px; height: 16px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Download All
+                  <s:param name="grn" value="${ica.grn.id}"/>
+            </s:link>
+
+              </td>
+          </tr>
+
       </table>
       <%--<hr/>
       <div style="display:inline;float:right; width:450px">
@@ -130,7 +145,7 @@
             </div>
           </s:form>
         </fieldset>
-      </div>--%>
+      </div>--%>     
 
     </div>
     <script type="text/javascript">

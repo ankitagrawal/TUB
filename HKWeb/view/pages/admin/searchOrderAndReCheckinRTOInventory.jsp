@@ -129,6 +129,13 @@
                           DAMAGE-${hk:getDamageUnitsCount(lineItem)}
                         </td>
                         <td>
+
+                            <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction"
+                                    event="downloadBarcode"> Download
+                                <%--<s:hidden name="lineItem" value="${lineItem.id}"/>--%>
+                                <s:param name="lineItem" value="${lineItem.id}"/>
+                                <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
+                            </s:link>
                             <%--${sh.lineItemStatus.name}--%>
                         </td>
                         <td>

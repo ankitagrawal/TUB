@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.sku.SkuGroup;
 import com.akube.framework.gson.JsonSkip;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
@@ -58,6 +59,10 @@ public class RvLineItem implements java.io.Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "expiry_date", length = 19)
   private Date expiryDate;
+
+   @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sku_group_id")
+	private SkuGroup skuGroup;
 
   @Transient
   private ProductVariant productVariant;
@@ -213,6 +218,14 @@ public class RvLineItem implements java.io.Serializable {
 		return id != null ? id.hashCode() : 0;
 	}
 
+
+    public SkuGroup getSkuGroup() {
+        return skuGroup;
+    }
+
+    public void setSkuGroup(SkuGroup skuGroup) {
+        this.skuGroup = skuGroup;
+    }
 }
 
 
