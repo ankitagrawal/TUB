@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import sun.reflect.Reflection;
 
 import com.akube.framework.gson.JsonUtils;
-import com.akube.framework.util.BaseUtils;
 import com.hk.domain.catalog.product.EntityAuditTrail;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -63,11 +62,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
 
         newJsonBuilder.addField("id", savedProductVariant.getId());
-        newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());
-        newJsonBuilder.addField("b2b_price", savedProductVariant.getB2bPrice());
-        newJsonBuilder.addField("marked_price", savedProductVariant.getMarkedPrice());
-        newJsonBuilder.addField("discount_percent", savedProductVariant.getDiscountPercent());
-        newJsonBuilder.addField("cost_price", savedProductVariant.getCostPrice());
+       // newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());
+        //newJsonBuilder.addField("b2b_price", savedProductVariant.getB2bPrice());
+        //newJsonBuilder.addField("marked_price", savedProductVariant.getMarkedPrice());
+        //newJsonBuilder.addField("discount_percent", savedProductVariant.getDiscountPercent());
+        //newJsonBuilder.addField("cost_price", savedProductVariant.getCostPrice());
         newJsonBuilder.addField("out_of_stock", savedProductVariant.isOutOfStock() ? 1 : 0);
         newJsonBuilder.addField("deleted", savedProductVariant.isDeleted() ? 1 : 0);
 
@@ -83,7 +82,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
         String newProductVariantJson = newJsonBuilder.build();
 
-        if (!BaseUtils.getMD5Checksum(oldProductVariantJson).equals(BaseUtils.getMD5Checksum(newProductVariantJson))) {
+        if (!oldProductVariantJson.equals(newProductVariantJson)) {
             try {
                 EntityAuditTrail eat = new EntityAuditTrail();
                 eat.setEntityId(productVariantId);
@@ -118,11 +117,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 Object[] productVariant = pvProperties.get(0);
 
                 oldProductVariantJsonBuilder.addField("id", productVariant[0]);
-                oldProductVariantJsonBuilder.addField("hk_price", productVariant[1]);
-                oldProductVariantJsonBuilder.addField("b2b_price", productVariant[2]);
-                oldProductVariantJsonBuilder.addField("marked_price", productVariant[3]);
-                oldProductVariantJsonBuilder.addField("discount_percent", productVariant[4]);
-                oldProductVariantJsonBuilder.addField("cost_price", productVariant[5]);
+                //oldProductVariantJsonBuilder.addField("hk_price", productVariant[1]);
+                //oldProductVariantJsonBuilder.addField("b2b_price", productVariant[2]);
+                //oldProductVariantJsonBuilder.addField("marked_price", productVariant[3]);
+                //oldProductVariantJsonBuilder.addField("discount_percent", productVariant[4]);
+                //oldProductVariantJsonBuilder.addField("cost_price", productVariant[5]);
                 oldProductVariantJsonBuilder.addField("out_of_stock", productVariant[6]);
                 oldProductVariantJsonBuilder.addField("deleted", productVariant[7]);
 

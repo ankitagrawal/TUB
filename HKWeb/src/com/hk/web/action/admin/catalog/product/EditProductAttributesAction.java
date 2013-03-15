@@ -97,7 +97,7 @@ public class EditProductAttributesAction extends BaseAction {
     @Autowired
     SupplierDao                   supplierDao;
     @Autowired
-    CategoryDaoImpl                   categoryDao;
+    CategoryDaoImpl               categoryDao;
     @Autowired
     InventoryService              inventoryService;
     @Autowired
@@ -107,7 +107,7 @@ public class EditProductAttributesAction extends BaseAction {
     private String                preferredZone;
     private String                productImageId;
 
-  public Resolution editDescription() {
+    public Resolution editDescription() {
         product = getProductService().getProductById(productId);
         return new ForwardResolution("/pages/editDescription.jsp");
     }
@@ -169,17 +169,17 @@ public class EditProductAttributesAction extends BaseAction {
             product.setGoogleAdDisallowed(Boolean.FALSE);
         }
 
-        if (product.getInstallable() == null)  {
+        if (product.getInstallable() == null) {
             product.setInstallable(Boolean.FALSE);
         }
-        
+
         if (brand == null) {
             addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
-        logger.debug( "loading combo ");
+        logger.debug("loading combo ");
         Combo combo = getBaseDao().get(Combo.class, productId);
-        logger.debug( "got combo ");
+        logger.debug("got combo ");
         Supplier supplier = supplierDao.findByTIN(tin);
         if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
@@ -189,14 +189,21 @@ public class EditProductAttributesAction extends BaseAction {
         product.setBrand(brand);
         product.setManufacturer(manufacturer);
 
-        logger.debug( "actual save call start ");
+        logger.debug("actual save call start ");
         product = getProductService().save(product);
-        //Checking inventory of all product variants
-        for(ProductVariant productVariant : product.getProductVariants()){
-            getInventoryService().checkInventoryHealth(productVariant);
+        // Checking inventory of all product variants
+
+        List<ProductVariant> productVariants = product.getProductVariants();
+
+        if (productVariants != null && productVariants.size() > 0) {
+            for (ProductVariant productVariant : productVariants) {
+                getInventoryService().checkInventoryHealth(productVariant);
+            }
+
+            getComboService().markProductOutOfStock(productVariants.get(0));
         }
-        getComboService().markProductOutOfStock(product.getProductVariants().get(0));
-        logger.debug( "actual save call  ");
+
+        logger.debug("actual save call  ");
         return new ForwardResolution("/pages/close.jsp");
     }
 
@@ -337,30 +344,30 @@ public class EditProductAttributesAction extends BaseAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
-  public Resolution saveFeatures() {
-    logger.debug("product id " + product);
-    if (productFeatures != null) {
-      for (ProductFeature productFeature : productFeatures) {
-        if (productFeature != null) {
-          if (StringUtils.isNotBlank(productFeature.getName())) {
-            logger.debug("productFeature id " + productFeature.getId());
-            productFeature.setProduct(product);
-            getBaseDao().save(productFeature);
-          } else {
-            if (productFeature.getId() != null) {
-              logger.debug("Empty :  " + productFeature.getId());
-              ProductFeature featureToDelete = getBaseDao().get(ProductFeature.class, productFeature.getId());
-              getBaseDao().delete(featureToDelete);
+    public Resolution saveFeatures() {
+        logger.debug("product id " + product);
+        if (productFeatures != null) {
+            for (ProductFeature productFeature : productFeatures) {
+                if (productFeature != null) {
+                    if (StringUtils.isNotBlank(productFeature.getName())) {
+                        logger.debug("productFeature id " + productFeature.getId());
+                        productFeature.setProduct(product);
+                        getBaseDao().save(productFeature);
+                    } else {
+                        if (productFeature.getId() != null) {
+                            logger.debug("Empty :  " + productFeature.getId());
+                            ProductFeature featureToDelete = getBaseDao().get(ProductFeature.class, productFeature.getId());
+                            getBaseDao().delete(featureToDelete);
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+        getProductService().save(product);
+        return new ForwardResolution("/pages/close.jsp");
     }
-    getProductService().save(product);
-    return new ForwardResolution("/pages/close.jsp");
-  }
 
-  public Resolution saveRelatedProducts() {
+    public Resolution saveRelatedProducts() {
         logger.debug("product id " + product);
         List<Product> relatedProductsList = new ArrayList<Product>();
         if (relatedProducts != null) {
@@ -388,7 +395,7 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().getProductById(productId);
         productImages = product.getProductImages();
         if (productImageId != null) {
-            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId),isSecureRequest());
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId), isSecureRequest());
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {
@@ -414,10 +421,10 @@ public class EditProductAttributesAction extends BaseAction {
         return new ForwardResolution("/pages/close.jsp");
     }
 
-   /* public Resolution productBanner() {
-        affiliate = affiliateDao.getAffiliateByCode(affid);
-        return new ForwardResolution("/pages/affiliate/productBanner.jsp");
-    }*/
+    /*
+     * public Resolution productBanner() { affiliate = affiliateDao.getAffiliateByCode(affid); return new
+     * ForwardResolution("/pages/affiliate/productBanner.jsp"); }
+     */
 
     /*
      * public Resolution getClosestServiceCenters() throws IOException { product =
