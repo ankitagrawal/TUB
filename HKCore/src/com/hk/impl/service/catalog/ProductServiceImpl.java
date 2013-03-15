@@ -263,8 +263,6 @@ public class ProductServiceImpl implements ProductService {
     public boolean isComboInStock(Combo combo) {
         if (combo.isDeleted() != null && combo.isDeleted()) {
             return false;
-        } else if (combo.isOutOfStock() != null && combo.isOutOfStock()) {
-            return false;
         } else {
             for (ComboProduct comboProduct : combo.getComboProducts()) {
                 if (!comboProduct.getAllowedProductVariants().isEmpty() && comboProduct.getAllowedInStockVariants().isEmpty()) {
