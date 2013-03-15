@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -13,19 +14,25 @@ import net.sourceforge.stripes.action.SimpleMessage;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
+import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.Keys;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
@@ -33,18 +40,25 @@ import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.reverseOrder.ReverseLineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.web.action.error.AdminPermissionAction;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component
 public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
+	private static Logger logger              = LoggerFactory.getLogger(SearchOrderAndReCheckinReturnInventoryAction.class);
     @Autowired
     private UserService                     userService;
     @Autowired
@@ -63,6 +77,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 	private ReverseOrderService 				reverseOrderService;
 	@Autowired
 	private SkuItemDao							skuItemDao;
+	@Autowired
+	private SkuGroupService 			skuGroupService;
 
     Map<LineItem, String> lineItemRecheckinBarcodeMap = new HashMap<LineItem, String>();
 
@@ -76,6 +92,15 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 	private static String 					GOOD 	= "good";
 	private static String 					DAMAGED = "damaged";
 	private static String 					EXPIRED = "expired";
+	private LineItem 					lineItem;
+	private ReverseLineItem			    reverseLineItem;
+	File 								printBarcode;
+
+	@Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
+    String barcodeGurgaon;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
+    String barcodeMumbai;
 
 	@DefaultHandler
     public Resolution pre() {
@@ -107,19 +132,27 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
     public Resolution checkinReturnedUnits() {
         User loggedOnUser = userService.getLoggedInUser();
 
-        for (Map.Entry<LineItem, String> lineItemRecheckinQtyMapEntry : lineItemRecheckinBarcodeMap.entrySet()) {
-            LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();
+        for (Map.Entry<LineItem, String> lineItemRecheckinBarcodeMapEntry : lineItemRecheckinBarcodeMap.entrySet()) {
+            LineItem lineItem = lineItemRecheckinBarcodeMapEntry.getKey();
             ProductVariant productVariant = lineItem.getSku().getProductVariant();
             ShippingOrder shippingOrder = lineItem.getShippingOrder();
-            String recheckinBarcode = lineItemRecheckinQtyMapEntry.getValue();
+            String recheckinBarcode = lineItemRecheckinBarcodeMapEntry.getValue();
             Long alreadyCheckedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstReturn(lineItem);
             List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
-
+			SkuItem findSkuItemByBarcode;
+			String skuGroupBarcode, skuItemBarcode;
 			if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
 				int recheckinCounter = 0;
 					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-						String skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
-						if (skuGroupBarcode.equalsIgnoreCase(recheckinBarcode) && checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
+						findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+						if(findSkuItemByBarcode != null){
+							skuItemBarcode = findSkuItemByBarcode.getBarcode();
+						} else{
+							skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
+							skuItemBarcode = skuGroupBarcode;
+						}
+
+						if (skuItemBarcode.equalsIgnoreCase(recheckinBarcode) && checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
 							SkuItem skuItem = checkedOutInventory.getSkuItem();
 							if (conditionOfItem.equals(GOOD)){
@@ -153,7 +186,6 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 					String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
 							productVariant.getOptionsCommaSeparated();
 					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
-//				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, damageComments);
 					addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
 				} else{
 					addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesnt match any of the items OR item not in correct status"));
@@ -167,6 +199,68 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
         return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
     }
+
+	public Resolution downloadBarcode() {
+		List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
+		List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
+
+		if (reverseLineItem != null && (reverseLineItem.getReturnQty() == checkedInSkuItems.size())) {
+			addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
+			return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", shippingOrder.getId());
+		} else {
+			checkedOutSkuItems.removeAll(checkedInSkuItems);
+
+			ProductVariant productVariant = lineItem.getSku().getProductVariant();
+			Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedOutSkuItems);
+
+			String barcodeFilePath = null;
+			Warehouse userWarehouse = null;
+			if (getUserService().getWarehouseForLoggedInUser() != null) {
+				userWarehouse = userService.getWarehouseForLoggedInUser();
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+				return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+			}
+			if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+				barcodeFilePath = barcodeGurgaon;
+			} else {
+				barcodeFilePath = barcodeMumbai;
+			}
+			barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "reCheckin_" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+			try {
+				printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+			} catch (IOException e) {
+				logger.error("Exception while appending on barcode file", e);
+			}
+			addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+			return new HTTPResponseResolution();
+		}
+	}
+
+
+	public class HTTPResponseResolution implements Resolution {
+		public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+			InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));
+			res.setContentType("text/plain");
+			res.setCharacterEncoding("UTF-8");
+			res.setContentLength((int) printBarcode.length());
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + printBarcode.getName() + "\";");
+			OutputStream out = res.getOutputStream();
+
+			// Copy the contents of the file to the output stream
+			byte[] buf = new byte[4096];
+			int count = 0;
+			while ((count = in.read(buf)) >= 0) {
+				out.write(buf, 0, count);
+			}
+			in.close();
+			out.flush();
+			out.close();
+		}
+
+	}
+
 
     public Long getOrderId() {
         return orderId;
@@ -282,5 +376,29 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 	public void setConditionOfItem(String conditionOfItem) {
 		this.conditionOfItem = conditionOfItem;
+	}
+
+	public File getPrintBarcode() {
+		return printBarcode;
+	}
+
+	public void setPrintBarcode(File printBarcode) {
+		this.printBarcode = printBarcode;
+	}
+
+	public LineItem getLineItem() {
+		return lineItem;
+	}
+
+	public void setLineItem(LineItem lineItem) {
+		this.lineItem = lineItem;
+	}
+
+	public ReverseLineItem getReverseLineItem() {
+		return reverseLineItem;
+	}
+
+	public void setReverseLineItem(ReverseLineItem reverseLineItem) {
+		this.reverseLineItem = reverseLineItem;
 	}
 }

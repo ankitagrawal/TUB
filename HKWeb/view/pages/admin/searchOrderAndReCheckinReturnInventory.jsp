@@ -27,16 +27,6 @@
                     location.reload();
                     return false;
                 }
-
-//                var shippingRow = $(this).parents('.shippingRow');
-//                var recheckin = shippingRow.find('.checkedinQty').html();
-//                alert(recheckin);
-//                var qty = shippingRow.find('.qty').html();
-//                alert(qty);
-//                if (Math.round(recheckin) == Math.round(qty)) {
-//                    alert("All Items have been checkedIn - plz check.");
-////                    $(this).val(0);
-//                }
             });
 
             $('.good').change(function() {
@@ -204,6 +194,14 @@
                                         Checked-in Qty:
                                         <span class="checkedinQty">${hk:getReCheckedinUnitsCount(lineItem)}</span>
                                     </td>
+                                    <td>
+                                        <%--<shiro:hasPermission name=""--%>
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
+                                                event="downloadBarcode"> Download                                            
+                                            <s:param name="lineItem" value="${lineItem.id}"/>
+                                            <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
+                                        </s:link>
+                                    </td>
                                   <p><p>
 
                                 </tr>
@@ -265,6 +263,15 @@
                                     <td class="checkedin">
                                         Checked-in
                                         Qty:<span class="checkedinQty">${hk:getReCheckedinUnitsCount(reverseLineItem.referredLineItem)}</span>
+                                    </td>
+                                     <td>
+                                        <%--<shiro:hasPermission name=""--%>
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
+                                                event="downloadBarcode"> Download
+                                            <s:param name="reverseLineItem" value="${reverseLineItem.id}"/>
+                                            <s:param name="lineItem" value="${reverseLineItem.referredLineItem.id}"/>
+                                            <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
+                                        </s:link>
                                     </td>
                                     <p><p>
                                 </tr>
