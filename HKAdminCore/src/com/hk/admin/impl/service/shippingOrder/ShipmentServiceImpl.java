@@ -180,6 +180,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         return null;
     }
+    @Override
+    public Shipment changeAwb(Shipment shipment,Awb awbNumber,boolean preserveAwb){
+        Awb currentAwb=shipment.getAwb();
+        shipment.setAwb(awbNumber);
+        shipment = save(shipment);
+        changeAwbStatus(currentAwb,preserveAwb);
+      return shipment;
+    }
 
     public void changeAwbStatus(Awb awb, boolean preserveAwb) {
         if (preserveAwb) {

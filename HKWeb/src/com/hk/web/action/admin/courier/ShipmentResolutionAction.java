@@ -48,6 +48,7 @@ public class ShipmentResolutionAction extends BaseAction {
 
 
     private String gatewayOrderId;
+    private String newAwbNumber;
     private static Logger logger = LoggerFactory.getLogger(ShipmentResolutionAction.class);
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
@@ -131,6 +132,27 @@ public class ShipmentResolutionAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Your Courier has been changed"));
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_AWB}, authActionBean = AdminPermissionAction.class)
+    public Resolution createAssignAwbForShipment() {
+             awb = (Awb) awbService.save(awb, EnumAwbStatus.Used.getId().intValue());
+             addRedirectAlertMessage(new SimpleMessage("Awb Number Created!!!"));
+             return new RedirectResolution(ShipmentResolutionAction.class);
+     }
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_AWB}, authActionBean = AdminPermissionAction.class)
+     public Resolution changeAwb(){
+         Courier courier = null;
+         Awb awb = awbService.findByCourierAwbNumber(courier,newAwbNumber);
+         if(awb==null){
+             addRedirectAlertMessage(new SimpleMessage("Awb Number Doesn't Exist!!!"));
+             return new RedirectResolution(ShipmentResolutionAction.class);
+         }
+         shipment = shipmentService.changeAwb(shipment,awb,true);
+         addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
+         shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+newAwbNumber);
+
+         return new RedirectResolution(ShipmentResolutionAction.class);
+     }
+
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE}, authActionBean = AdminPermissionAction.class)
     public Resolution changeShipmentServiceType() {
@@ -179,6 +201,7 @@ public class ShipmentResolutionAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
+
 
     public Awb getAwb() {
         return awb;
@@ -266,5 +289,11 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public void setShipmentServiceTypeId(Long shipmentServiceTypeId) {
         this.shipmentServiceTypeId = shipmentServiceTypeId;
+    }
+    public String getNewAwbNumber() {
+           return newAwbNumber;
+       }
+    public void setNewAwbNumber(String newAwbNumber) {
+        this.newAwbNumber = newAwbNumber;
     }
 }
