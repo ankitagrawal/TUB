@@ -367,6 +367,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             case 80:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
                 break;
+            case 90:
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
+                break;
         }
 
         RvLineItem rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
