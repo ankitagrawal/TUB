@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 
 public class CreateInventoryFileDto {
     String barcode;
@@ -19,6 +20,7 @@ public class CreateInventoryFileDto {
     Product product;
     ProductVariantInventory productVariantInventory;
     ProductVariant productVariant;
+    SkuItem skuItem;
     
     public String getBarcode() {
       return barcode;
@@ -99,4 +101,12 @@ public class CreateInventoryFileDto {
 	public void setBatchNumber(String batchNumber) {
 		this.batchNumber = batchNumber;
 	}
+
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
+
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
+    }
 }

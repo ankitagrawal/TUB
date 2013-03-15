@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hk.domain.catalog.product.EntityAuditTrail;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
@@ -25,6 +26,7 @@ import com.hk.service.ServiceLocatorFactory;
 /**
  * @author vaibhav.adlakha
  */
+@SuppressWarnings("serial")
 public class HKMergeEventListener extends DefaultMergeEventListener {
 
     private static Logger logger = LoggerFactory.getLogger(HKMergeEventListener.class);
@@ -41,22 +43,78 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         if (Product.class.equals(entityClass)) {
             Product newProduct = (Product) event.getOriginal();
             audit(newProduct.getId(), newProduct);
+        } else if (ProductVariant.class.equals(entityClass)) {
+            ProductVariant newProductVariant = (ProductVariant) event.getOriginal();
+            audit(newProductVariant.getId(), newProductVariant);
         }
 
     }
 
-    public Product getOriginalProductById(String productId) {
+    private void audit(String productVariantId, ProductVariant savedProductVariant) {
         SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
         Session session = sessionFactory.openSession();
+        ProductVariant oldProductVariant = getOriginalProductVariantById(productVariantId, session);
+        User loggedUser = getUserService().getLoggedInUser();
+        if (oldProductVariant != null) {
+            oldProductVariant.setOptionsAuditString(oldProductVariant.getOptionsPipeSeparated());
+        }
+
+        try {
+            EntityAuditTrail eat = new EntityAuditTrail();
+            eat.setEntityId(productVariantId);
+            Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+            String oldJson = "";
+            if (oldProductVariant != null)
+                oldJson = gson.toJson(oldProductVariant);
+            eat.setOldJson(oldJson);
+            savedProductVariant.setOptionsAuditString(savedProductVariant.getOptionsPipeSeparated());
+            String newJson = gson.toJson(savedProductVariant);
+            eat.setNewJson(newJson);
+            if (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) {
+                eat.setUserEmail(loggedUser != null ? loggedUser.getEmail() : "system");
+                eat.setCallingClass(Reflection.getCallerClass(2).getName());
+                eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
+                eat.setCreateDt(new Date());
+
+                try {
+                    session.save(eat);
+                } catch (Exception e) {
+                    logger.error("Error while entering audit trail for product->" + productVariantId, e);
+                } finally {
+                    if (session != null) {
+                        session.close();
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            logger.error("Error while entering audit trail for product->" + productVariantId, e);
+        }
+
+    }
+
+    public ProductVariant getOriginalProductVariantById(String productVariantId, Session session) {
+
+        ProductVariant productVariant = (ProductVariant) session.createQuery("select pv from ProductVariant pv where pv.id=:productVariantId").setString("productVariantId",
+                productVariantId).uniqueResult();
+
+        return productVariant;
+    }
+
+    public Product getOriginalProductById(String productId, Session session) {
+
         Product product = (Product) session.createQuery("select p from Product p where p.id=:productId").setString("productId", productId).uniqueResult();
         if (product != null) {
             product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
         }
+
         return product;
     }
 
     private void audit(String productId, Product savedProduct) {
-        Product oldProduct = getOriginalProductById(productId);
+        SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
+        Session session = sessionFactory.openSession();
+        Product oldProduct = getOriginalProductById(productId, session);
         User loggedUser = getUserService().getLoggedInUser();
 
         try {
@@ -75,13 +133,12 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 eat.setCallingClass(Reflection.getCallerClass(2).getName());
                 eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
                 eat.setCreateDt(new Date());
-                Session session = null;
+
                 try {
-                    SessionFactory sessionFactory = (SessionFactory) ServiceLocatorFactory.getService("newSessionFactory");
-                    session = sessionFactory.openSession();
+
                     session.save(eat);
                 } catch (Exception e) {
-                    logger.error("Error while entering audit trail for product->" + productId);
+                    logger.error("Error while entering audit trail for product->" + productId, e);
                 } finally {
                     if (session != null) {
                         session.close();
@@ -90,7 +147,7 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
             }
         } catch (Exception e) {
-            logger.error("Error while entering audit trail for product->" + productId);
+            logger.error("Error while entering audit trail for product->" + productId, e);
         }
     }
 

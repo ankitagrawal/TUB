@@ -24,10 +24,10 @@ public enum EnumInvTxnType {
     INV_REPEAT_CHECKOUT(100L, "Inventory Checkout against Re-shipping"),       // -1
     STOCK_TRANSFER_CHECKOUT(110L, "Inventory Checkout against Stock-Transfer"),// -1
     STOCK_TRANSFER_CHECKIN(120L, "Inventory Checkin against Stock-Transfer"),  // +1
-	RV_BATCH_MISMATCH(130L,"Inventory Checkout for Batch Mismatch"),           //-1
-	RV_MRP_MISMATCH(140L,"Inventory Checkout for Mrp Mismatch"),               //-1
-	RV_NON_MOVING(150L,"Inventory Checkout for Non Moving Inventory"),         //-1
-  ;
+    RV_BATCH_MISMATCH(130L, "Inventory Checkout for Batch Mismatch"),           //-1
+    RV_MRP_MISMATCH(140L, "Inventory Checkout for Mrp Mismatch"),               //-1
+    RV_NON_MOVING(150L, "Inventory Checkout for Non Moving Inventory"),         //-1
+    RV_FREE_VARIANT_RECONCILE(160L, "Inventory Checkout for Free Variant Reconcile"),;
 
   private String name;
   private Long id;

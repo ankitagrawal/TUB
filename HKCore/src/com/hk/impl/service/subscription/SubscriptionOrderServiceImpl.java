@@ -158,7 +158,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
         CartLineItemBuilder cartLineItemBuilder = new CartLineItemBuilder();
         cartLineItemBuilder.ofType(EnumCartLineItemType.Product);
         cartLineItemBuilder.forVariantQty(productVariant, subscription.getQtyPerDelivery()).hkPrice(subscription.getHkPriceAtSubscription()).markedPrice(
-                productVariant.getMarkedPrice()).discountOnHkPrice(subscription.getHkPriceAtSubscription() - subscription.getSubscriptionPrice());
+                productVariant.getMarkedPrice()).discountOnHkPrice((subscription.getHkPriceAtSubscription() - subscription.getSubscriptionPrice())*subscription.getQtyPerDelivery());
         CartLineItem cartLineItem = cartLineItemBuilder.build();
         cartLineItem.setOrder(order);
 
@@ -177,7 +177,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
 
         Double amount = 0.0D;
         for (CartLineItem cartLineItem : cartLineItems) {
-            amount += cartLineItem.getHkPrice();
+            amount += cartLineItem.getHkPrice()*cartLineItem.getQty()-cartLineItem.getDiscountOnHkPrice();
         }
 
         return automatedOrderService.createNewPayment(order, amount, EnumPaymentMode.SUBSCRIPTION_PAYMENT.asPaymenMode());
@@ -194,7 +194,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 Subscription subscription = subscriptionOrder.getSubscription();
                 List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
                         EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
+                subscription.setQtyDelivered(subscription.getQtyPerDelivery()*(new Long(subscriptionOrders.size())));
                 subscriptionService.updateSubscriptionAfterOrderDelivery(subscription);
                 if (subscription.getQty() <= subscription.getQtyDelivered()) {
 
@@ -214,7 +214,7 @@ public class SubscriptionOrderServiceImpl implements SubscriptionOrderService {
                 Subscription subscription = subscriptionOrder.getSubscription();
                 List<SubscriptionOrder> subscriptionOrders = this.findSubscriptionOrdersForSubscription(subscription,
                         EnumSubscriptionOrderStatus.Delivered.asSubscriptionOrderStatus());
-                subscription.setQtyDelivered(new Long(subscriptionOrders.size()));
+                subscription.setQtyDelivered(subscription.getQtyPerDelivery()*(new Long(subscriptionOrders.size())));
                 subscriptionService.save(subscription);
             }
         }

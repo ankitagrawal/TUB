@@ -1,10 +1,12 @@
 <%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
+<%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+<c:set var="StockTransferIn" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" var="ica"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Stock Transfer Inventory Checkin">
-	<c:set var="stOutCompleted" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_Completed.getId()%>" />
-	<c:set var="stCheckinInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
+    <c:set var="stOutCompleted" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_Completed.getId()%>"/>
+    <c:set var="stCheckinInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>"/>
     <jsp:useBean id="now" class="java.util.Date" scope="request"/>
     <s:layout-component name="htmlHead">
         <%
@@ -46,21 +48,21 @@
                     formName.submit();
                 });
 
-	            updateTotal('.checkedOutQty', '.totalCheckedOutQty', 1);
-	            updateTotal('.checkedInQty', '.totalCheckedInQty', 1);
-	            function updateTotal(fromTotalClass, toTotalClass, toHtml) {
-		            var total = 0;
-		            $.each($(fromTotalClass), function (index, value) {
-			            var eachRow = $(value);
-			            var eachRowValue = eachRow.html();
-			            total += parseFloat(eachRowValue);
-		            });
-		            if (toHtml == 1) {
-			            $(toTotalClass).html(total);
-		            } else {
-			            $(toTotalClass).val(total.toFixed(2));
-		            }
-	            }
+                updateTotal('.checkedOutQty', '.totalCheckedOutQty', 1);
+                updateTotal('.checkedInQty', '.totalCheckedInQty', 1);
+                function updateTotal(fromTotalClass, toTotalClass, toHtml) {
+                    var total = 0;
+                    $.each($(fromTotalClass), function (index, value) {
+                        var eachRow = $(value);
+                        var eachRowValue = eachRow.html();
+                        total += parseFloat(eachRowValue);
+                    });
+                    if (toHtml == 1) {
+                        $(toTotalClass).html(total);
+                    } else {
+                        $(toTotalClass).val(total.toFixed(2));
+                    }
+                }
 
             });
         </script>
@@ -70,30 +72,30 @@
     <s:layout-component name="content">
         <div style="display:inline;float:left;">
             <h2>Item Checkin against Stock Transfer#${ica.stockTransfer.id}</h2>
-	        <s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
-	        <div>
-		        <s:submit name="closeStockTransfer" value="Close Stock Transfer"/>
-		        <s:hidden name="stockTransfer" value="${ica.stockTransfer.id}" />
-	        </div>
-	        </s:form>
+            <s:form beanclass="com.hk.web.action.admin.inventory.StockTransferAction">
+                <div>
+                    <s:submit name="closeStockTransfer" value="Close Stock Transfer"/>
+                    <s:hidden name="stockTransfer" value="${ica.stockTransfer.id}"/>
+                </div>
+            </s:form>
             <input type="hidden" id="messageColorParam" value="${messageColor}">
 
             <div class="alertST messages"><s:messages key="generalMessages"/></div>
             <c:if test="${ica.stockTransfer.id != null}">
-	            <c:if test="${ica.stockTransfer.stockTransferStatus.id == stOutCompleted || ica.stockTransfer.stockTransferStatus.id == stCheckinInProcess}">
-                <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="stForm2">
-                    <fieldset class="right_label">
-                        <legend>Scan Barcode:</legend>
-                        <ul>
-                            <li>
-                                <s:label name="barcode">Product Variant Barcode</s:label>
-                                <s:text name="productVariantBarcode" id="productVariantBarcode"/>
-                            </li>
-                            <li></li>
-                        </ul>
-                    </fieldset>
-                </s:form>
-	            </c:if>
+                <c:if test="${ica.stockTransfer.stockTransferStatus.id == stOutCompleted || ica.stockTransfer.stockTransferStatus.id == stCheckinInProcess}">
+                    <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" id="stForm2">
+                        <fieldset class="right_label">
+                            <legend>Scan Barcode:</legend>
+                            <ul>
+                                <li>
+                                    <s:label name="barcode">Product Variant Barcode</s:label>
+                                    <s:text name="productVariantBarcode" id="productVariantBarcode"/>
+                                </li>
+                                <li></li>
+                            </ul>
+                        </fieldset>
+                    </s:form>
+                </c:if>
                 <table border="1">
                     <thead>
                     <tr>
@@ -106,6 +108,7 @@
                         <th>Batch Number</th>
                         <th>Mfg. Date<br/>(yyyy-MM-dd)</th>
                         <th>Exp. Date<br/>(yyyy-MM-dd)</th>
+                        <th> Item Details</th>
                     </tr>
                     </thead>
                     <tbody id="stTable">
@@ -132,17 +135,22 @@
                                 <fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
                             <td>
                                 <fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
+                            <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+                                View Item Details
+                                <s:param name="stockTransferLineItem" value="${stockTransferLineItem}"/>
+                                <s:param name="entityId" value="${StockTransferIn}"/>
+                            </s:link></td>
                         </tr>
 
                     </c:forEach>
                     </tbody>
-	                <tfoot>
-	                <tr>
-		                <td colspan="2">Total</td>
-		                <td class="totalCheckedOutQty"></td>
-		                <td class="totalCheckedInQty"></td>
-	                </tr>
-	                </tfoot>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2">Total</td>
+                        <td class="totalCheckedOutQty"></td>
+                        <td class="totalCheckedInQty"></td>
+                    </tr>
+                    </tfoot>
                 </table>
             </c:if>
 
