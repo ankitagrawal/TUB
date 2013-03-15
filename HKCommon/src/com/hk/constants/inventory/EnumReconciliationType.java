@@ -15,7 +15,7 @@ public enum EnumReconciliationType {
     BatchMismatch(60L, "Batch Mismatch"),
     MrpMismatch(70L, "Mrp Mismatch"),
     NonMoving(80L, "Non Moving"),
-    Free_Variant_Reconcile(90L, "Free Variant Reconcile");
+    FreeVariantReconcile(90L, "Free Variant Reconcile");
 
   private java.lang.String name;
   private java.lang.Long id;
