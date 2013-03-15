@@ -4,9 +4,11 @@ import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
+import com.hk.constants.core.EnumState;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.dto.TaxComponent;
+import com.hk.pact.service.core.WarehouseService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -14,6 +16,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.FileOutputStream;
 import java.text.NumberFormat;
@@ -29,6 +32,9 @@ import java.text.SimpleDateFormat;
 public class PurchaseOrderPDFGenerator {
     private static Logger logger = LoggerFactory.getLogger(InvoicePDFGenerator.class);
 
+  @Autowired
+  WarehouseService warehouseService;
+
     public void generatePurchaseOrderPdf(String pdfFilePath, PurchaseOrderDto purchaseOrderDto, String logoImagePath) throws Exception {
         PurchaseOrder purchaseOrder = purchaseOrderDto.getPurchaseOrder();
         Document purchaseOrderDocument = new Document();
@@ -43,7 +49,11 @@ public class PurchaseOrderPDFGenerator {
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(), font));
                 addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), font));
-                addressParagraph.add(new Paragraph("TIN: " + purchaseOrder.getWarehouse().getTin(), font));
+                if (purchaseOrder.getWarehouse().equals(getWarehouseService().getMumbaiWarehouse())) {
+                  addressParagraph.add(new Paragraph("TIN: 27210893736", font));
+                } else {
+                  addressParagraph.add(new Paragraph("TIN: 06101832036", font));
+                }
 
                 Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
@@ -176,4 +186,8 @@ public class PurchaseOrderPDFGenerator {
         document.add(footerParagraph);
     }
 
+
+  public WarehouseService getWarehouseService() {
+    return warehouseService;
+  }
 }
