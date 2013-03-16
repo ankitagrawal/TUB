@@ -62,8 +62,11 @@ public class InvoiceDto {
 	String invoiceDLnumber;
 	String replacementOrderString;
 	boolean sameState;
+	private boolean cFormaAvailable;
+	private ShippingOrder ShippingOrder;
+	
 
-	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal) {
+	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal, boolean cFormaAvailable) {
 		if (shippingOrder instanceof ReplacementOrder) {
 			ReplacementOrder replacementOrder = (ReplacementOrder) shippingOrder;
 			replacementOrderString = "The following order is in lieu of order number: "
@@ -146,7 +149,7 @@ public class InvoiceDto {
 			InvoiceLineItemDto invoiceLineItemdto = null;
 			if (invoiceType.equalsIgnoreCase("T")) {
 				
-				invoiceLineItemdto = new B2BInvoiceLineItemDto(productLineItem,state);
+				invoiceLineItemdto = new B2BInvoiceLineItemDto(productLineItem,state, cFormaAvailable);
 			} else {
 				invoiceLineItemdto = new InvoiceLineItemDto(productLineItem);
 			}
@@ -242,6 +245,10 @@ public class InvoiceDto {
 
 	}
 
+	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetails) {
+		this(shippingOrder,b2bUserDetails,false);
+	}
+
 	public void getSummaryMapsForVat(String taxName, InvoiceLineItemDto invoiceLineItemdto) {
 		summaryAmountMap.put(taxName, summaryAmountMap.get(taxName) + invoiceLineItemdto.getTaxable());
 		summaryTaxMap.put(taxName, summaryTaxMap.get(taxName) + invoiceLineItemdto.getTax());
@@ -249,6 +256,16 @@ public class InvoiceDto {
 		summaryQtyMap.put(taxName, summaryQtyMap.get(taxName) + invoiceLineItemdto.getQty());
 		summaryPayableMap.put(taxName,
 				summaryAmountMap.get(taxName) + summaryTaxMap.get(taxName) + summarySurchargeMap.get(taxName));
+	}
+	
+	
+
+	public ShippingOrder getShippingOrder() {
+		return ShippingOrder;
+	}
+
+	public void setShippingOrder(ShippingOrder shippingOrder) {
+		ShippingOrder = shippingOrder;
 	}
 
 	public double getItemsTotal() {
@@ -467,6 +484,14 @@ public class InvoiceDto {
 
 	public void setSameState(boolean sameState) {
 		this.sameState = sameState;
+	}
+
+	public boolean iscFormaAvailable() {
+		return cFormaAvailable;
+	}
+
+	public void setcFormaAvailable(boolean cFormaAvailable) {
+		this.cFormaAvailable = cFormaAvailable;
 	}
 
 	public static void main(String[] args) {

@@ -15,7 +15,7 @@ public class B2bServiceImpl extends BaseDaoImpl implements B2BOrderService {
 		if (order != null && order.isB2bOrder() == true) {
 			Long id = order.getId();
 			B2BOrderCheckList b2bOrderCheckList = (B2BOrderCheckList) getSession()
-					.createQuery("from B2BOrderCheckList bc where bc.id = :id").setParameter("id", id).uniqueResult();
+					.createQuery("from B2BOrderCheckList bc where bc.base_order_id = :id").setParameter("id", id).uniqueResult();
 			if (b2bOrderCheckList != null)
 				return b2bOrderCheckList.iscForm();
 			else

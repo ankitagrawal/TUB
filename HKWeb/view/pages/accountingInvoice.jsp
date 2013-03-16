@@ -12,6 +12,7 @@
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="cFormAvailable" value="${cFormAvailable}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="warehouse" value="${shippingOrder.warehouse}"/>
@@ -135,7 +136,14 @@
            Tax Rate            
       </c:when>
       <c:otherwise>
+      <c:choose>
+      <c:when test="${cFormAvailable}">
         Tax Rate(CST)
+        </c:when>
+        <c:otherwise>
+        Tax Rate
+        </c:otherwise>
+        </c:choose>
       </c:otherwise>
     </c:choose>
     </th>
@@ -231,10 +239,16 @@
       <th width="17%"><c:choose><c:when test="${orderSummary.invoiceDto.sameState}">
            VAT Percent            
       </c:when>
-      <c:otherwise>
-        CST Percent
-      </c:otherwise>
-    </c:choose></th>
+      <c:choose>
+      <c:when test="${cFormAvailable==true}">
+        CST
+        </c:when>
+        <c:otherwise>
+        VAT
+        </c:otherwise>
+        </c:choose>
+      </c:choose>
+    </th>
       <th width="5%">Qty</th>
       <th width="10%">Amount</th>
       <th width="16%">Tax on Amount</th>
