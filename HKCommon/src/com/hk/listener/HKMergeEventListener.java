@@ -134,6 +134,8 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     oldProductVariantJsonBuilder.addField("options", optionsMap);
                 }
 
+            }else{
+              oldProductVariantJsonBuilder.addField("id", "NEW_VARIANT");
             }
         } catch (Exception e) {
             logger.error("Error getting old pv :" + productVariantId);
