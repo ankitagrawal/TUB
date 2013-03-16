@@ -47,358 +47,358 @@ import java.util.*;
 @Component
 public class CartResource extends BaseAction {
 
-    @Autowired
-    private BaseDao baseDao;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private CouponDao couponDao;
-    @Autowired
-    private OfferInstanceDao offerInstanceDao;
-    @Autowired
-    private OrderDao orderDao;
-    @Autowired
-    private OrderManager orderManager;
-    @Autowired
-    private OfferManager offerManager;
-    @Autowired
-    private IHOManager ihoManager;
-    @Autowired
-    private EmployeeManager employeeManager;
+  @Autowired
+  private BaseDao baseDao;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private CouponDao couponDao;
+  @Autowired
+  private OfferInstanceDao offerInstanceDao;
+  @Autowired
+  private OrderDao orderDao;
+  @Autowired
+  private OrderManager orderManager;
+  @Autowired
+  private OfferManager offerManager;
+  @Autowired
+  private IHOManager ihoManager;
+  @Autowired
+  private EmployeeManager employeeManager;
 
-    private String couponCode;
+  private String couponCode;
 
-    private Coupon coupon;
-    private String message;
-    private boolean success = false;
+  private Coupon coupon;
+  private String message;
+  private boolean success = false;
 
-    private String error;
-    public static final String error_role = "error_role";
-    public static final String error_alreadyUsed = "error_alreadyUsed";
-    public static final String error_alreadyApplied = "error_alreadyApplied";
-    public static final String error_alreadyReferrer = "error_alreadyReferrer";
-    public static final String error_referralNotAllowed = "error_referralNotAllowed";
-    public static final String error_couponExpired = "error_couponExpired";
-    public static final String error_freeVariantStockOver = "error_freeVariantStockOver";
+  private String error;
+  public static final String error_role = "error_role";
+  public static final String error_alreadyUsed = "error_alreadyUsed";
+  public static final String error_alreadyApplied = "error_alreadyApplied";
+  public static final String error_alreadyReferrer = "error_alreadyReferrer";
+  public static final String error_referralNotAllowed = "error_referralNotAllowed";
+  public static final String error_couponExpired = "error_couponExpired";
+  public static final String error_freeVariantStockOver = "error_freeVariantStockOver";
 
-    private OfferInstance offerInstance;
-    @Validate(encrypted = true)
-    private Order order;
+  private OfferInstance offerInstance;
+  @Validate(encrypted = true)
+  private Order order;
 
-    @Autowired
-    UserManager userManager;
-    @Autowired
-    OfferDao offerDao;
+  @Autowired
+  UserManager userManager;
+  @Autowired
+  OfferDao offerDao;
 
-    boolean verifyMessage = false;
+  boolean verifyMessage = false;
 
-    Set<Offer> applicableOffers = new HashSet<Offer>();
+  Set<Offer> applicableOffers = new HashSet<Offer>();
 
-    private static Logger logger = LoggerFactory.getLogger(CartResource.class);
+  private static Logger logger = LoggerFactory.getLogger(CartResource.class);
 
-    @GET
-    @Path("/applyCoupon")
-    @Produces("application/json")
-    public String applyCoupon(@QueryParam("couponCode") String couponCode) {
-        if (StringUtils.isBlank(couponCode)) {
-            message = "Please enter a coupon code.";
-            return message;
-        }
+  @GET
+  @Path("/applyCoupon")
+  @Produces("application/json")
+  public String applyCoupon(@QueryParam("couponCode") String couponCode) {
+    if (StringUtils.isBlank(couponCode)) {
+      message = "Please enter a coupon code.";
+      return message;
+    }
 
-        coupon = couponDao.findByCode(couponCode);
-        User user = getUserService().getUserById(getPrincipal().getId());
-        Order order = orderManager.getOrCreateOrder(user);
+    coupon = couponDao.findByCode(couponCode);
+    User user = getUserService().getUserById(getPrincipal().getId());
+    Order order = orderManager.getOrCreateOrder(user);
 
-        // If coupon is NULL
-        // Check if the user has applied an IHO Coupon for the first time
-        // and create the coupon - it will validate and then create coupon
-        if (coupon == null) {
-            coupon = ihoManager.createIHOCoupon(user, couponCode);
-        }
-        if (coupon == null) {
-            coupon = employeeManager.createEmpCoupon(user, couponCode);
-        }
+    // If coupon is NULL
+    // Check if the user has applied an IHO Coupon for the first time
+    // and create the coupon - it will validate and then create coupon
+    if (coupon == null) {
+      coupon = ihoManager.createIHOCoupon(user, couponCode);
+    }
+    if (coupon == null) {
+      coupon = employeeManager.createEmpCoupon(user, couponCode);
+    }
 
-        if (coupon == null) {
-            message = "Coupon code is invalid.";
+    if (coupon == null) {
+      message = "Coupon code is invalid.";
+    } else {
+      List<OfferInstance> offerInstances = offerInstanceDao.findByUserAndCoupon(user, coupon);
+      if (offerInstances != null && !offerInstances.isEmpty()) {
+        offerInstance = offerInstances.get(0);
+      }
+      if (offerInstance != null && !coupon.getRepetitiveUsage()) {
+        if (!offerInstance.isActive()) {
+          error = error_alreadyUsed;
+          message = "This offer has already been used";
         } else {
-            List<OfferInstance> offerInstances = offerInstanceDao.findByUserAndCoupon(user, coupon);
-            if (offerInstances != null && !offerInstances.isEmpty()) {
-                offerInstance = offerInstances.get(0);
-            }
-            if (offerInstance != null && !coupon.getRepetitiveUsage()) {
-                if (!offerInstance.isActive()) {
-                    error = error_alreadyUsed;
-                    message = "This offer has already been used";
-                } else {
-                    error = error_alreadyApplied;
-                    order.setOfferInstance(offerInstance);
-                    message = "You have already added this coupon.";
-                }
-            } else if (!coupon.isValid()) {
-                message = "Coupon code has expired.";
-                error = error_couponExpired;
-            } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
-                error = error_role;
-                Offer offer = coupon.getOffer();
-                if (offer.getOfferEmailDomains().size() > 0) {
-                    message = "The offer is valid for the following domains only:";
-                    for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
-                        message += "<br/>" + offerEmailDomain.getEmailDomain();
-                    }
-                } else {
-                    message = "This offer is not activated for you yet.";
-                }
-            } else if (user.equals(coupon.getReferrerUser())) {
-                message = "You are not allowed to use your own referrer code.";
-            } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
-                error = error_alreadyReferrer;
-                message = "You have already mentioned your referrer.";
-            } else if (coupon.getReferrerUser() != null && coupon.getCouponType() != null && !coupon.getCouponType().getId().equals(EnumCouponType.AFFILIATE.getId())
-                    && user.getCreateDate().before(coupon.getCreateDate())) {
-                error = error_referralNotAllowed;
-                message = "You are not allowed to use this referrer coupon.";
-            } else if (coupon.getReferrerUser() != null && orderDao.getLatestOrderForUser(user) != null) {
-                message = "Coupon can not be applied. This is a referral discount coupon and it is only valid before you place your first order.";
-            } else {
-
-                Date offerInstanceEndDate = null;
-
-                // add referredBy to the user if coupon contains the referrerUser
-                if (coupon.getReferrerUser() != null) {
-                    // add affiliate_to to the user if its an affiliate coupon
-                    CouponType couponType = coupon.getCouponType();
-                    if (couponType != null && couponType.getId().equals(EnumCouponType.AFFILIATE.getId())) {
-                        Assert.assertNull(user.getAffiliateTo());
-                        user.setAffiliateTo(coupon.getReferrerUser());
-                        user = (User) getBaseDao().save(user);
-                    } else { // its a referral coupon
-                        Assert.assertNull(user.getReferredBy());
-                        user.setReferredBy(coupon.getReferrerUser());
-                        user = (User) getBaseDao().save(user);
-                        offerInstanceEndDate = new DateTime().plusDays(OfferConstants.MAX_ALLOWED_DAYS_FOR_15_PERCENT_REFERREL_DISCOUNT).toDate();
-                    }
-                }
-                if (coupon.getRepetitiveUsage()) {
-                    List<OfferInstance> activeOfferInstances = offerInstanceDao.findActiveOfferInstances(user, coupon.getOffer());
-                    if (activeOfferInstances == null || activeOfferInstances.isEmpty()) {
-                        offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
-                    }
-                } else {
-                    offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
-                }
-                order.setOfferInstance(offerInstance);
-                coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
-                couponDao.save(coupon);
-                success = true;
-
-                ProductVariant freeVariant = coupon.getOffer().getOfferAction().getFreeVariant();
-                if (freeVariant != null) {
-                    //OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(coupon.getOffer().getOfferTrigger(), order.getCartLineItems());
-                    //&& offerTriggerMatcher.hasEasyMatch(false)
-                    if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
-                        orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
-                        message = "Free variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
-                    } else {
-                        message = "Oops! Offer is over.";
-                        error = error_freeVariantStockOver;
-                    }
-                } else {
-                    message = "Coupon applied successfully.";
-                }
-            }
+          error = error_alreadyApplied;
+          order.setOfferInstance(offerInstance);
+          message = "You have already added this coupon.";
         }
-        return new JSONResponseBuilder().addField("offerInstance", offerInstance).addField("error", error).build();
-    }
-
-    @GET
-    @Path("/otherApplicableOffers")
-    @Produces("application/json")
-    public String otherApplicableOffers() {
-        User user = null;
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-            if (user == null) {
-                user = userManager.createAndLoginAsGuestUser(null, null);
-            }
+      } else if (!coupon.isValid()) {
+        message = "Coupon code has expired.";
+        error = error_couponExpired;
+      } else if (!offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
+        error = error_role;
+        Offer offer = coupon.getOffer();
+        if (offer.getOfferEmailDomains().size() > 0) {
+          message = "The offer is valid for the following domains only:";
+          for (OfferEmailDomain offerEmailDomain : offer.getOfferEmailDomains()) {
+            message += "<br/>" + offerEmailDomain.getEmailDomain();
+          }
         } else {
-            user = userManager.createAndLoginAsGuestUser(null, null);
+          message = "This offer is not activated for you yet.";
         }
-        Offer appliedOffer = null;
-        if (user != null) {
-            order = orderManager.getOrCreateOrder(user);
-            if (order.getOfferInstance() != null) {
-                appliedOffer = order.getOfferInstance().getOffer();
-            }
-            applicableOffers = this.getApplicableOffers(order);
-        }
+      } else if (user.equals(coupon.getReferrerUser())) {
+        message = "You are not allowed to use your own referrer code.";
+      } else if (coupon.getReferrerUser() != null && user.getReferredBy() != null) {
+        error = error_alreadyReferrer;
+        message = "You have already mentioned your referrer.";
+      } else if (coupon.getReferrerUser() != null && coupon.getCouponType() != null && !coupon.getCouponType().getId().equals(EnumCouponType.AFFILIATE.getId())
+          && user.getCreateDate().before(coupon.getCreateDate())) {
+        error = error_referralNotAllowed;
+        message = "You are not allowed to use this referrer coupon.";
+      } else if (coupon.getReferrerUser() != null && orderDao.getLatestOrderForUser(user) != null) {
+        message = "Coupon can not be applied. This is a referral discount coupon and it is only valid before you place your first order.";
+      } else {
 
-        return new JSONResponseBuilder().addField("applicableOffers", applicableOffers).addField("appliedOffer", appliedOffer).build();
+        Date offerInstanceEndDate = null;
+
+        // add referredBy to the user if coupon contains the referrerUser
+        if (coupon.getReferrerUser() != null) {
+          // add affiliate_to to the user if its an affiliate coupon
+          CouponType couponType = coupon.getCouponType();
+          if (couponType != null && couponType.getId().equals(EnumCouponType.AFFILIATE.getId())) {
+            Assert.assertNull(user.getAffiliateTo());
+            user.setAffiliateTo(coupon.getReferrerUser());
+            user = (User) getBaseDao().save(user);
+          } else { // its a referral coupon
+            Assert.assertNull(user.getReferredBy());
+            user.setReferredBy(coupon.getReferrerUser());
+            user = (User) getBaseDao().save(user);
+            offerInstanceEndDate = new DateTime().plusDays(OfferConstants.MAX_ALLOWED_DAYS_FOR_15_PERCENT_REFERREL_DISCOUNT).toDate();
+          }
+        }
+        if (coupon.getRepetitiveUsage()) {
+          List<OfferInstance> activeOfferInstances = offerInstanceDao.findActiveOfferInstances(user, coupon.getOffer());
+          if (activeOfferInstances == null || activeOfferInstances.isEmpty()) {
+            offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
+          }
+        } else {
+          offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
+        }
+        order.setOfferInstance(offerInstance);
+        coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
+        couponDao.save(coupon);
+        success = true;
+
+        ProductVariant freeVariant = coupon.getOffer().getOfferAction().getFreeVariant();
+        if (freeVariant != null) {
+          //OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(coupon.getOffer().getOfferTrigger(), order.getCartLineItems());
+          //&& offerTriggerMatcher.hasEasyMatch(false)
+          if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+            orderManager.createLineItems(Arrays.asList(freeVariant), order, null, null, null);
+            message = "Free variant successfuly added to your cart. Please <a href='javascript:location.reload();' style='font-size:1.2em;'>refresh</a> your cart.";
+          } else {
+            message = "Oops! Offer is over.";
+            error = error_freeVariantStockOver;
+          }
+        } else {
+          message = "Coupon applied successfully.";
+        }
+      }
+    }
+    return new JSONResponseBuilder().addField("offerInstance", offerInstance).addField("error", error).build();
+  }
+
+  @GET
+  @Path("/otherApplicableOffers")
+  @Produces("application/json")
+  public String otherApplicableOffers() {
+    User user = null;
+    if (getPrincipal() != null) {
+      user = getUserService().getUserById(getPrincipal().getId());
+      if (user == null) {
+        user = userManager.createAndLoginAsGuestUser(null, null);
+      }
+    } else {
+      user = userManager.createAndLoginAsGuestUser(null, null);
+    }
+    Offer appliedOffer = null;
+    if (user != null) {
+      order = orderManager.getOrCreateOrder(user);
+      if (order.getOfferInstance() != null) {
+        appliedOffer = order.getOfferInstance().getOffer();
+      }
+      applicableOffers = this.getApplicableOffers(order);
     }
 
-    public Set<Offer> getApplicableOffers(Order order) {
-        applicableOffers = new HashSet<Offer>();
-        User user = order.getUser();
-        if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
-            Page activeOffersPage = offerDao.listAllValid(1, 10);
-            if (activeOffersPage != null) {
-                List<Offer> activeOffers = activeOffersPage.getList();
-                for (Offer activeOffer : activeOffers) {
-                    if (activeOffer.getOfferTrigger() != null) {
-                        logger.debug("Active Offer ID -> " + activeOffer.getId());
-                        OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
-                        if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, user) && activeOffer.isShowPromptly()) {
-                            if (activeOffer.getOfferAction().getFreeVariant() != null) {
-                                ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
-                                if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
-                                    applicableOffers.add(activeOffer);
-                                }
-                            } else {
-                                applicableOffers.add(activeOffer);
-                            }
-                        }
-                    }
+    return new JSONResponseBuilder().addField("applicableOffers", applicableOffers).addField("appliedOffer", appliedOffer).build();
+  }
+
+  public Set<Offer> getApplicableOffers(Order order) {
+    applicableOffers = new HashSet<Offer>();    
+    User user = order.getUser();
+    if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
+      Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
+      if (activeOffersPage != null) {
+        List<Offer> activeOffers = activeOffersPage.getList();
+        for (Offer activeOffer : activeOffers) {
+          if (activeOffer.getOfferTrigger() != null) {
+            logger.debug("Active Offer ID -> " + activeOffer.getId());
+            OfferTriggerMatcher offerTriggerMatcher = new OfferTriggerMatcher(activeOffer.getOfferTrigger(), order.getCartLineItems());
+            if (offerTriggerMatcher.hasEasyMatch(false) && offerManager.isOfferValidForUser(activeOffer, user) && activeOffer.isShowPromptly()) {
+              if (activeOffer.getOfferAction().getFreeVariant() != null) {
+                ProductVariant freeVariant = activeOffer.getOfferAction().getFreeVariant();
+                if (!freeVariant.isDeleted() && !freeVariant.isOutOfStock()) {
+                  applicableOffers.add(activeOffer);
                 }
+              } else {
+                applicableOffers.add(activeOffer);
+              }
             }
-            List<OfferInstance> offerInstances = offerInstanceDao.getActiveOffers(user);
-            for (OfferInstance instance : offerInstances) {
-                if (offerManager.isOfferValidForUser(instance.getOffer(), user)) {
-                    applicableOffers.add(instance.getOffer());
-                }
-            }
+          }
         }
-        return applicableOffers;
-    }
-
-
-    @GET
-    @Path("/roles")
-    @Produces("application/json")
-    public String getUserRoles() {
-        User user = null;
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
+      }
+      List<OfferInstance> offerInstances = offerInstanceDao.getActiveOffers(user);
+      for (OfferInstance instance : offerInstances) {
+        if (offerManager.isOfferValidForUser(instance.getOffer(), user)) {
+          applicableOffers.add(instance.getOffer());
         }
-        return new JSONResponseBuilder().addField("roles", user.getRoles()).build();
+      }
     }
+    return applicableOffers;
+  }
 
-    @Override
-    public PrincipalImpl getPrincipal() {
-        return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
+
+  @GET
+  @Path("/roles")
+  @Produces("application/json")
+  public String getUserRoles() {
+    User user = null;
+    if (getPrincipal() != null) {
+      user = getUserService().getUserById(getPrincipal().getId());
     }
+    return new JSONResponseBuilder().addField("roles", user.getRoles()).build();
+  }
 
-    public void setCouponCode(String couponCode) {
-        this.couponCode = couponCode;
-    }
+  @Override
+  public PrincipalImpl getPrincipal() {
+    return super.getPrincipal();    //To change body of overridden methods use File | Settings | File Templates.
+  }
 
-    public Coupon getCoupon() {
-        return coupon;
-    }
+  public void setCouponCode(String couponCode) {
+    this.couponCode = couponCode;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public Coupon getCoupon() {
+    return coupon;
+  }
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public String getError() {
-        return error;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public OfferInstance getOfferInstance() {
-        return offerInstance;
-    }
+  public String getError() {
+    return error;
+  }
 
-
-    public CouponDao getCouponDao() {
-        return couponDao;
-    }
-
-    public void setCouponDao(CouponDao couponDao) {
-        this.couponDao = couponDao;
-    }
-
-    public OfferInstanceDao getOfferInstanceDao() {
-        return offerInstanceDao;
-    }
-
-    public void setOfferInstanceDao(OfferInstanceDao offerInstanceDao) {
-        this.offerInstanceDao = offerInstanceDao;
-    }
-
-    public OrderDao getOrderDao() {
-        return orderDao;
-    }
-
-    public void setOrderDao(OrderDao orderDao) {
-        this.orderDao = orderDao;
-    }
-
-    public OrderManager getOrderManager() {
-        return orderManager;
-    }
-
-    public void setOrderManager(OrderManager orderManager) {
-        this.orderManager = orderManager;
-    }
-
-    public OfferManager getOfferManager() {
-        return offerManager;
-    }
-
-    public void setOfferManager(OfferManager offerManager) {
-        this.offerManager = offerManager;
-    }
-
-    public IHOManager getIhoManager() {
-        return ihoManager;
-    }
-
-    public void setIhoManager(IHOManager ihoManager) {
-        this.ihoManager = ihoManager;
-    }
-
-    public EmployeeManager getEmployeeManager() {
-        return employeeManager;
-    }
-
-    public void setEmployeeManager(EmployeeManager employeeManager) {
-        this.employeeManager = employeeManager;
-    }
-
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
-    }
+  public OfferInstance getOfferInstance() {
+    return offerInstance;
+  }
 
 
-    public Order getOrder() {
-        return order;
-    }
+  public CouponDao getCouponDao() {
+    return couponDao;
+  }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+  public void setCouponDao(CouponDao couponDao) {
+    this.couponDao = couponDao;
+  }
+
+  public OfferInstanceDao getOfferInstanceDao() {
+    return offerInstanceDao;
+  }
+
+  public void setOfferInstanceDao(OfferInstanceDao offerInstanceDao) {
+    this.offerInstanceDao = offerInstanceDao;
+  }
+
+  public OrderDao getOrderDao() {
+    return orderDao;
+  }
+
+  public void setOrderDao(OrderDao orderDao) {
+    this.orderDao = orderDao;
+  }
+
+  public OrderManager getOrderManager() {
+    return orderManager;
+  }
+
+  public void setOrderManager(OrderManager orderManager) {
+    this.orderManager = orderManager;
+  }
+
+  public OfferManager getOfferManager() {
+    return offerManager;
+  }
+
+  public void setOfferManager(OfferManager offerManager) {
+    this.offerManager = offerManager;
+  }
+
+  public IHOManager getIhoManager() {
+    return ihoManager;
+  }
+
+  public void setIhoManager(IHOManager ihoManager) {
+    this.ihoManager = ihoManager;
+  }
+
+  public EmployeeManager getEmployeeManager() {
+    return employeeManager;
+  }
+
+  public void setEmployeeManager(EmployeeManager employeeManager) {
+    this.employeeManager = employeeManager;
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
+
+  public void setBaseDao(BaseDao baseDao) {
+    this.baseDao = baseDao;
+  }
 
 
-    public boolean isVerifyMessage() {
-        return verifyMessage;
-    }
+  public Order getOrder() {
+    return order;
+  }
 
-    public UserService getUserService() {
-        return userService;
-    }
+  public void setOrder(Order order) {
+    this.order = order;
+  }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
-    public Set<Offer> getApplicableOffers() {
-        return applicableOffers;
-    }
+  public boolean isVerifyMessage() {
+    return verifyMessage;
+  }
+
+  public UserService getUserService() {
+    return userService;
+  }
+
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
+
+  public Set<Offer> getApplicableOffers() {
+    return applicableOffers;
+  }
 }

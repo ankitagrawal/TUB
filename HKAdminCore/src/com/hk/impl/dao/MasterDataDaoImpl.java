@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.pos.DiscountConstants;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
@@ -499,6 +500,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
 	public List<EnumCycleCountStatus> getAllCycleCountStatus() {
 		return EnumCycleCountStatus.getAllList();
+	}
+
+	public List<Long> getDiscountsForPOS() {
+		return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
 	}
 	
 	}

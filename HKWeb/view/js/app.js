@@ -379,8 +379,9 @@ HK.CartOfferController = Ember.Controller.create({
         self.get("currentlyAppliedOffer").clear();
         tempArray = [],
         $.ajax({
-            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
-
+            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers?"+new Date(),
+//            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
+            
             success: function ( data ) {
                 data.applicableOffers.forEach(function(offer){
                     self.get("totalOffers").pushObject(Ember.Object.create(offer));

@@ -24,7 +24,7 @@
           <li><a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp"><span class="txt-white">Return and Cancellations</span></a>
           </li>
           <li><a href="${pageContext.request.contextPath}/blog" target="_blank"><span class="txt-white">Blog</span></a></li>
-          <li><a href="${pageContext.request.contextPath}/pages/careers-old.jsp"><span class="txt-white">Careers</span></a>
+          <li><a href="${pageContext.request.contextPath}/pages/careers.jsp"><span class="txt-white">Careers</span></a>
           </li>
 
         </ul>

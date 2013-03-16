@@ -7,6 +7,7 @@ import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.domain.inventory.StockTransfer;
@@ -69,14 +70,13 @@ public class StockTransferAction extends BasePaginatedAction {
 
 	private String productVariantBarcode;
 	private StockTransferLineItem stliToBeReduced;
+    private SkuItem identifiedSkuItemToRevert;
 
 	@SuppressWarnings("unchecked")
 	@DefaultHandler
 	public Resolution pre() {
 		stockTransferPage = stockTransferDao.searchStockTransfer(createDate, userLogin, fromWarehouse, toWarehouse, getPageNo(), getPerPage());
 		stockTransferList = stockTransferPage.getList();
-		Comparator comparator = Collections.reverseOrder();
-		Collections.sort(stockTransferList, comparator);
 		return new ForwardResolution("/pages/admin/stockTransferList.jsp");
 	}
 
@@ -95,6 +95,7 @@ public class StockTransferAction extends BasePaginatedAction {
 
 		if (stockTransfer == null || stockTransfer.getId() == null) {
 			stockTransfer = new StockTransfer();
+			stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Generated.getStockTransferStatus());
 		}
 		stockTransfer.setCreateDate(createDate);
 		stockTransfer.setCheckoutDate(checkOutDate);
@@ -107,6 +108,7 @@ public class StockTransferAction extends BasePaginatedAction {
 	}
 
 	public Resolution save() {
+        SkuItem skuItem = null;
 		if (stockTransfer == null) {
 			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
 			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
@@ -122,9 +124,16 @@ public class StockTransferAction extends BasePaginatedAction {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
 		}
 
-		List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
-		if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
-			SkuItem skuItem = inStockSkuItemList.get(0);
+        SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, stockTransfer.getFromWarehouse().getId(),EnumSkuItemStatus.Checked_IN.getId());
+        if (skuItemBarcode != null){
+              skuItem = skuItemBarcode;
+        } else {
+		  List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, stockTransfer.getFromWarehouse());
+               if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
+                 skuItem = inStockSkuItemList.get(0);
+             }
+       }
+		if (skuItem != null) {
 			skuItem.setSkuItemStatus(EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
 			SkuGroup skuGroup = skuItem.getSkuGroup();
 			Sku sku = skuGroup.getSku();
@@ -143,6 +152,11 @@ public class StockTransferAction extends BasePaginatedAction {
 			}
 			stockTransferLineItem = (StockTransferLineItem)baseDao.save(stockTransferLineItem);
 
+			if(stockTransfer.getStockTransferStatus().equals(EnumStockTransferStatus.Generated.getStockTransferStatus())) {
+				stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getStockTransferStatus());
+				baseDao.save(stockTransfer);
+			}
+
      		adminInventoryService.inventoryCheckoutForStockTransfer(sku, skuItem, stockTransferLineItem, -1L, loggedOnUser);
 			getInventoryService().checkInventoryHealth(sku.getProductVariant());
 
@@ -156,21 +170,24 @@ public class StockTransferAction extends BasePaginatedAction {
 	}
 
 	public Resolution revertStockTransferOut() {
-		if (stockTransfer == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
-			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
-		}
+        SkuItem skuItemToBeReverted ;
+        if (identifiedSkuItemToRevert == null){
 
-		if(stliToBeReduced == null) {
-			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer Item chosen"));
-			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
-		}
+            if (stockTransfer == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+                return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+            }
 
-		if(stliToBeReduced.getCheckedoutQty() == 0) {
-			addRedirectAlertMessage(new SimpleMessage("Qty is already 0, cannot reduce further"));
-			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
-		}
+            if(stliToBeReduced == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer Item chosen"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+            }
 
+            if(stliToBeReduced.getCheckedoutQty() == 0) {
+                addRedirectAlertMessage(new SimpleMessage("Qty is already 0, cannot reduce further"));
+                return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
+            }
+        }
 		User loggedOnUser = null;
 		if (getPrincipal() != null) {
 			loggedOnUser = getUserService().getUserById(getPrincipal().getId());
@@ -180,7 +197,11 @@ public class StockTransferAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("Some error occurred. SkuGroup not found"));
 			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
 		}
-		SkuItem skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+        if (identifiedSkuItemToRevert != null){
+           skuItemToBeReverted  =  identifiedSkuItemToRevert;
+        } else {
+		   skuItemToBeReverted = skuGroupService.getSkuItem(skuGroupToBeReverted, EnumSkuItemStatus.Stock_Transfer_Out.getSkuItemStatus());
+        }
 		if(skuItemToBeReverted == null) {
 			addRedirectAlertMessage(new SimpleMessage("Some error occurred. Stock not transferred against this Barcode "));
 			return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId());
@@ -211,6 +232,27 @@ public class StockTransferAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/admin/inventoryCheckinAgainstStockTransfer.jsp");
 	}
 
+	public Resolution markAsStockTransferOutCompleted() {
+		if (stockTransfer == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		}
+		stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Stock_Transfer_Out_Completed.getStockTransferStatus());
+		baseDao.save(stockTransfer);
+		addRedirectAlertMessage(new SimpleMessage("Transfer Out Completed"));
+		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
+	}
+
+	public Resolution closeStockTransfer() {
+		if (stockTransfer == null) {
+			addRedirectAlertMessage(new SimpleMessage("Invalid Stock Transfer"));
+			return new ForwardResolution("/pages/admin/stockTransfer.jsp");
+		}
+		stockTransfer.setStockTransferStatus(EnumStockTransferStatus.Closed.getStockTransferStatus());
+		baseDao.save(stockTransfer);
+		addRedirectAlertMessage(new SimpleMessage("Stock Transfer Closed"));
+		return new RedirectResolution(StockTransferAction.class).addParameter("pre");
+	}
 
 	public Resolution print() {
 		logger.debug("purchaseOrder: " + stockTransfer);
@@ -330,4 +372,12 @@ public class StockTransferAction extends BasePaginatedAction {
 	public void setStliToBeReduced(StockTransferLineItem stliToBeReduced) {
 		this.stliToBeReduced = stliToBeReduced;
 	}
+
+    public SkuItem getIdentifiedSkuItemToRevert() {
+        return identifiedSkuItemToRevert;
+    }
+
+    public void setIdentifiedSkuItemToRevert(SkuItem identifiedSkuItemToRevert) {
+        this.identifiedSkuItemToRevert = identifiedSkuItemToRevert;
+    }
 }

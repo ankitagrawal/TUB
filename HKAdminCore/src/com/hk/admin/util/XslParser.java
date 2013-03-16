@@ -78,53 +78,53 @@ import java.util.regex.Pattern;
 public class XslParser {
 
     @Autowired
-    private BaseDao                  baseDao;
+    private BaseDao baseDao;
 
-    private static Logger            logger         = LoggerFactory.getLogger(XslParser.class);
+    private static Logger logger = LoggerFactory.getLogger(XslParser.class);
 
-    public static Pattern            p              = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
+    public static Pattern p = Pattern.compile("([0-9]*\\.?[0-9]*) ?%");
 
-    private Set<Product>             colProductList = null;
+    private Set<Product> colProductList = null;
 
     @Autowired
-    private PurchaseOrderDao         purchaseOrderDao;
+    private PurchaseOrderDao purchaseOrderDao;
     @Autowired
-    private LowInventoryDao          lowInventoryDao;
+    private LowInventoryDao lowInventoryDao;
     @Autowired
-    private SupplierDao              supplierDao;
+    private SupplierDao supplierDao;
     @Autowired
-    private GrnLineItemDao           grnLineItemDao;
+    private GrnLineItemDao grnLineItemDao;
     @Autowired
-    private PoLineItemDao            poLineItemDao;
+    private PoLineItemDao poLineItemDao;
     @Autowired
-    private RetailLineItemDao        retailLineItemDao;
+    private RetailLineItemDao retailLineItemDao;
     @Autowired
     private AffiliateCategoryDaoImpl affiliateCategoryDao;
 
     @Autowired
-    private ProductService           productService;
+    private ProductService productService;
     @Autowired
-    private ProductVariantService    productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private SkuService               skuService;
+    private SkuService skuService;
     @Autowired
     private ShipmentService shipmentService;
     @Autowired
-    private TaxService               taxService;
+    private TaxService taxService;
     @Autowired
-    private RoleService              roleService;
+    private RoleService roleService;
     @Autowired
-    private CategoryService          categoryService;
+    private CategoryService categoryService;
     @Autowired
-    private WarehouseService         warehouseService;
+    private WarehouseService warehouseService;
     @Autowired
-    private ShippingOrderService     shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private PaymentService           paymentService;
+    private PaymentService paymentService;
     @Autowired
-    private AdminInventoryService    adminInventoryService;
+    private AdminInventoryService adminInventoryService;
     @Autowired
-    private InventoryService         inventoryService;
+    private InventoryService inventoryService;
     @Autowired
     CourierService courierService;
 
@@ -159,6 +159,7 @@ public class XslParser {
             boolean productDeleted = false;
             boolean outOfStock = false;
             boolean isJitBoolean = false;
+            boolean isDropShipBoolean = false;
             String refProdId = "";
             Boolean refIsService = false;
             Product refProduct = null;
@@ -266,6 +267,9 @@ public class XslParser {
                     String isJit = getCellValue(XslConstants.IS_JIT, rowMap, headerMap);
                     isJitBoolean = StringUtils.isNotBlank(isJit) && isJit.trim().toLowerCase().equals("y") ? true : false;
                     product.setJit(isJitBoolean);
+                    String isDropShip = getCellValue(XslConstants.IS_DROPSHIP, rowMap, headerMap);
+                    isDropShipBoolean = StringUtils.isNotBlank(isDropShip) && isDropShip.trim().toLowerCase().equals("y") ? true : false;
+                    product.setDropShipping(isDropShipBoolean);
                     product.setProductVariants(productVariants);
                     product.setRelatedProducts(getRelatedProductsFromExcel(getCellValue(XslConstants.RELATED_PRODUCTS, rowMap, headerMap)));
                     productDeleted = true;
@@ -451,7 +455,8 @@ public class XslParser {
                         logger.debug("checkinQty of variant - " + productVariant.getId() + " is - " + checkinQty);
                         if (checkinQty != null && checkinQty > 0) {
                             String batch = getCellValue(XslConstants.BATCH_NUMBER, rowMap, headerMap);
-                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
+                            SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
+//                            SkuGroup skuGroup = adminInventoryService.createSkuGroup(batch, getDate(getCellValue(XslConstants.MFG_DATE, rowMap, headerMap)), getDate(getCellValue(
                                     XslConstants.EXP_DATE, rowMap, headerMap)), 0.0, 0.0, goodsReceivedNote, null, null, null);
                             adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, checkinQty, null, grnLineItem, null, null, getInventoryService().getInventoryTxnType(
                                     EnumInvTxnType.INV_CHECKIN), null);
@@ -628,7 +633,7 @@ public class XslParser {
         Map<Integer, String> rowMap;
         Set<RetailLineItem> retailLineItemList = new HashSet<RetailLineItem>();
         int rowCount = 0;
-		int rowsUpdated = 0;
+        int rowsUpdated = 0;
         try {
             headerMap = getRowMap(objRowIt);
             while (objRowIt.hasNext()) {
@@ -639,10 +644,10 @@ public class XslParser {
                 Courier courier = courierService.getCourierByName(getCellValue(ReportConstants.COURIER, rowMap, headerMap));
                 Double shippingCharge = getDouble(getCellValue(ReportConstants.SHIPPING_CHARGE, rowMap, headerMap));
                 Double collectionCharge = getDouble(getCellValue(ReportConstants.COLLECTION_CHARGE, rowMap, headerMap));
-				Double extraCharge = getDouble(getCellValue(ReportConstants.EXTRA_CHARGES, rowMap, headerMap));
+                Double extraCharge = getDouble(getCellValue(ReportConstants.EXTRA_CHARGES, rowMap, headerMap));
                 shippingCharge = (shippingCharge == null ? 0.0 : shippingCharge);
                 collectionCharge = (collectionCharge == null ? 0.0 : collectionCharge);
-				extraCharge = (extraCharge == null ? 0.0 : extraCharge);
+                extraCharge = (extraCharge == null ? 0.0 : extraCharge);
                 // System.out.println("shippingOrder->" + shippingOrder + " awb->" + awb + " courier->" + courier +
                 // "shippingcharge->" + shippingCharge + " collectionCharge->" + collectionCharge);
                 if (shippingOrder == null) { // || (awb == null && courier == null) ){
@@ -673,10 +678,10 @@ public class XslParser {
                 }
                 shipment.setCollectionCharge(collectionCharge);
                 shipment.setShipmentCharge(shippingCharge);
-				shipment.setExtraCharge(extraCharge);
+                shipment.setExtraCharge(extraCharge);
                 shipment.setShippingOrder(shippingOrder);
                 shipmentService.save(shipment);
-				rowsUpdated += 1;
+                rowsUpdated += 1;
 
                 /*
                  * if (courier != null) { productLineItemsByCourier =
@@ -696,9 +701,9 @@ public class XslParser {
                  * productLineItem.getHkPrice() * productLineItem.getQty(); totalItemsInCourier +=
                  * productLineItem.getQty(); }
                  *//**
-                     * This for loop is added to distribute the shipping charges as per the weight of each product
-                     * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
-                     */
+                 * This for loop is added to distribute the shipping charges as per the weight of each product
+                 * variant. And this is set to 0 when the product variant has 0 value due to insufficient data.
+                 */
                 /*
                  * for (LineItem productLineItem : productLineItems) {
                  *//*
@@ -747,7 +752,7 @@ public class XslParser {
                 IOUtils.closeQuietly(poiInputStream);
             }
         }
-		messagePostUpdation += "No. of Rows updated successfully: "+ rowsUpdated +".<br/>";
+        messagePostUpdation += "No. of Rows updated successfully: " + rowsUpdated + ".<br/>";
         logger.debug("parsing collection and shipping charges for orders  : " + objInFile.getAbsolutePath() + " completed ");
         logger.debug("message post updation " + messagePostUpdation);
         return messagePostUpdation;
@@ -844,7 +849,7 @@ public class XslParser {
     /**
      * reads all column values that start with the prefix VAR_ returns a list of product options option name = value of
      * string minus the VAR_ prefix option value = value in the cell
-     * 
+     *
      * @param productOptionsStr
      * @return
      */
@@ -954,7 +959,7 @@ public class XslParser {
      * Here parent relationships are set . left most category is the parent. <p/> Eg: <p/> <p/> Category String =
      * Diabetes>Testing Supplies>Meters>GLUCOCARD01| Home Health Devices>Diabetes Meters>Blood Glucose
      * Meters>GLUCOCARD01 <p/> <p/> Parsing is done as follows for the above string: <p/> <p/>
-     * 
+     * <p/>
      * <pre>
      *   [diabetes: Diabetes ()]
      * &lt;p/&gt;
@@ -965,13 +970,13 @@ public class XslParser {
      *                                    {display name-&gt; for UI}
      * &lt;p/&gt;
      * </pre>
-     * 
+     * <p/>
      * <p/> <p/> and so on... <p/> [diabetes>testing supplies>meters: Meters (Testing Supplies)] [diabetes>testing
      * supplies>meters>glucocard01: GLUCOCARD01 (Meters)] [home health devices: Home Health Devices ()] [home health
      * devices>diabetes meters: Diabetes Meters (Home Health Devices)] [home health devices>diabetes meters>blood
      * glucose meters: Blood Glucose Meters (Diabetes Meters)] [home health devices>diabetes meters>blood glucose
      * meters>glucocard01: GLUCOCARD01 (Blood Glucose Meters)]
-     * 
+     *
      * @param categoryString
      * @return
      */

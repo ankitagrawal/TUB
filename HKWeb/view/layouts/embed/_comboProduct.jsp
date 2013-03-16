@@ -187,7 +187,7 @@
   </div>
   <div class="right_col">
     <c:choose>
-      <c:when test="${hk:isComboInStock(combo)}">
+      <c:when test="${!combo.outOfStock}">
         <s:submit name="addToCart" value="Buy Now" class="addToCartButton cta"/>
       </c:when>
       <c:otherwise>

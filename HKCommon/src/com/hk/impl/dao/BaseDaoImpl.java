@@ -401,6 +401,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public void flush() {
         getHibernateTemplate().flush();
     }
+    
+    @Override
+    public SQLQuery createSqlQuery(String queryString) {
+      return getSession().createSQLQuery(queryString);
+    }
+
 
     @SuppressWarnings("unchecked")
     private int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {
