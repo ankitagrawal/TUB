@@ -232,6 +232,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         logger.debug("Trying to manually escalate order#" + shippingOrder.getId());
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                if(!(shippingOrder.isServiceOrder())){
                 User adminUser = getUserService().getAdminUser();
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
                     Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
@@ -260,7 +261,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 							return false;
 						}
 					}
-
+            }
                 return true;
             }
         } else {

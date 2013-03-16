@@ -175,6 +175,12 @@
 					return false;
 				}
 
+				var discount = $('#discount').find('option:selected').val();
+				var grandTotal = $('.grandTotal').val();
+				if(parseFloat(discount) > grandTotal) {
+					alert('Discount cannot be more than the total amount');
+					return false;
+				}
 			});
 
 			$('#paymentMode').change(function() {
@@ -195,6 +201,11 @@
 				$('#newAddress').val(true);
 			});
 
+			$('#discount').change(function() {
+				var discount = $('#discount').find('option:selected').val();
+				var grandTotal = $('.grandTotal').val();
+				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
+			});
 		});
 	</script>
 </s:layout-component>
@@ -313,8 +324,20 @@
 				</tbody>
 				<tfoot>
 				<tr>
-					<td colspan="5" align="right"><b>Grand Total</b></td>
+					<td colspan="5" align="right"><b>Total</b></td>
 					<td><s:text name="grandTotal" value="${pos.grandTotal}" class="grandTotal" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td colspan="4"></td>
+					<td align="right"><b>Discount (In Rupees)</b></td>
+					<td><s:select name="discount" value="${pos.discount}" id="discount">
+						<s:option value="">-Select</s:option>
+						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="discountsForPOS" />
+					</s:select></td>
+				</tr>
+				<tr>
+					<td colspan="5" align="right"><b>Final Payable</b></td>
+					<td><input type="text" id="finalPayable" readonly="readonly"/></td>
 				</tr>
 				<tr><td><b>Order ID</b></td><td colspan="3">${pos.order.id}</td>
 					<td align="right"><b>Payment Mode</b></td>

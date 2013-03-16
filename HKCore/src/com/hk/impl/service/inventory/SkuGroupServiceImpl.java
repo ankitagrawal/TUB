@@ -26,66 +26,71 @@ import org.springframework.stereotype.Service;
 @Service
 public class SkuGroupServiceImpl implements SkuGroupService {
 
-	@Autowired
-	SkuGroupDao skuGroupDao;
-	@Autowired
-	SkuItemDao skuItemDao;
+    @Autowired
+    SkuGroupDao skuGroupDao;
+    @Autowired
+    SkuItemDao skuItemDao;
 
-	//SkuGroupDao Methods
-	public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant) {
-		return skuGroupDao.getAllCheckedInBatches(productVariant);
-	}
+    //SkuGroupDao Methods
+    public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant) {
+        return skuGroupDao.getAllCheckedInBatches(productVariant);
+    }
 
-	public List<SkuGroup> getAllCheckedInBatches(Sku sku) {
-		return skuGroupDao.getAllCheckedInBatches(sku);
-	}
+    public List<SkuGroup> getAllCheckedInBatches(Sku sku) {
+        return skuGroupDao.getAllCheckedInBatches(sku);
+    }
 
-	public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
-		return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
-	}
+    public SkuGroup getInStockSkuGroup(String barcode, Long warehouseId) {
+        return skuGroupDao.getInStockSkuGroup(barcode, warehouseId);
+    }
 
-	public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
-		return skuGroupDao.getCurrentCheckedInBatchGrn(grn, sku);
-	}
+    public List<SkuGroup> getCurrentCheckedInBatchGrn(GoodsReceivedNote grn, Sku sku) {
+        return skuGroupDao.getCurrentCheckedInBatchGrn(grn, sku);
+    }
 
-	public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku) {
-		return skuGroupDao.getCurrentCheckedInBatchNotInGrn(grn, sku);
-	}
+    public List<SkuGroup> getCurrentCheckedInBatchNotInGrn(GoodsReceivedNote grn, Sku sku) {
+        return skuGroupDao.getCurrentCheckedInBatchNotInGrn(grn, sku);
+    }
 
-	public List<SkuGroup> getInStockSkuGroupByQty(Sku sku) {
-		return skuGroupDao.getInStockSkuGroupByQty(sku);
-	}
+    public List<SkuGroup> getInStockSkuGroupByQty(Sku sku) {
+        return skuGroupDao.getInStockSkuGroupByQty(sku);
+    }
 
-	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
-		return skuGroupDao.getSkuGroupsByBatch(batch, sku);
-	}
+    public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku) {
+        return skuGroupDao.getSkuGroupsByBatch(batch, sku);
+    }
 
-	public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
-		return skuGroupDao.getSkuGroup(barcode, warehouseId);
-	}
-
-
-	//SkuItemDao Methods
-	public List<SkuGroup> getInStockSkuGroups(Sku sku) {
-		return skuItemDao.getInStockSkuGroups(sku);
-	}
-
-	public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
-		return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
-	}
+    public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId) {
+        return skuGroupDao.getSkuGroup(barcode, warehouseId);
+    }
 
 
-	public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
-		return skuItemDao.getInStockSkuItems(skuGroup);
-	}
+    //SkuItemDao Methods
+    public List<SkuGroup> getInStockSkuGroups(Sku sku) {
+        return skuItemDao.getInStockSkuGroups(sku);
+    }
 
-	public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
-		return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
-	}
+    public SkuGroup getMinMRPUnbookedSkuGroup(ProductVariant productVariant, Long bookedQty) {
+        return skuItemDao.getMinMRPUnbookedSkuGroup(productVariant, bookedQty);
+    }
 
-	public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
-		return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);
-	}
+
+    public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+        return skuItemDao.getInStockSkuItems(skuGroup);
+    }
+
+    public SkuItem getSkuItem(SkuGroup skuGroup, SkuItemStatus skuItemStatus) {
+        return skuItemDao.getSkuItem(skuGroup, skuItemStatus);
+    }
+
+    public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId) {
+        return skuGroupDao.getSkuGroupsByBarcodeForStockTransfer(barcode, warehouseId);
+    }
+
+
+    public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
+        return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId);
+    }
 
 
 }
