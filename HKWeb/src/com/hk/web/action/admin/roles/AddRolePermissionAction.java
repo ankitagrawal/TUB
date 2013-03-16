@@ -37,6 +37,7 @@ public class AddRolePermissionAction extends BaseAction{
 
     private String userPermissions;
     private String userRoles;
+    Set<Permission> permissionList = new HashSet<Permission>();
     private static final String LinkRoles = "/pages/admin/roles/linkRoles.jsp";
 
     @DefaultHandler
@@ -53,7 +54,7 @@ public class AddRolePermissionAction extends BaseAction{
         if(role!=null && userPermissions != null){
             role = roleDao.getRoleByName(role.getName());
             List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
-            Set<Permission> permissionList = role.getPermissions();
+            permissionList = role.getPermissions();
             for(Permission permission1: permissionList){
                 if (!userPermissionList.contains(permission1.getName())){
                     userPermissionList.add(permission1.getName());
@@ -145,6 +146,14 @@ public class AddRolePermissionAction extends BaseAction{
     public void setUser(User user1){
         this.user = user1;
     }
+/*
+    public Set<Permission> getPermissionList(){
+        return this.permissionList;
+    }
+
+    public void setPermissionList(Set<Permission> permissionList1){
+        this.permissionList = permissionList1;
+    }*/
 
     public Permission getPermission(){
         return permission;

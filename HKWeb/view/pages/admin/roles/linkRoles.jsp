@@ -12,6 +12,7 @@
     <s:layout-component name="htmlHead">
         <%
             RoleDao roleDao = ServiceLocatorFactory.getService(RoleDao.class);
+         //   pageContext.setAttribute("roleDao",roleDao);
             pageContext.setAttribute("roleList", roleDao.getAll(Role.class));
             pageContext.setAttribute("permissionList",roleDao.getAll(Permission.class));
             pageContext.setAttribute("userList",roleDao.getAll(User.class));
@@ -21,24 +22,31 @@
         Link Roles To Permissions and Users
     </s:layout-component>
     <s:layout-component name="content">
-        <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" var="rolePerm">
+        <s:form beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" name="rolePermLink">
             <fieldset>
-                <div>
-                    <legend>Add permissions to role</legend> <br/><br/><br/>
+                <legend>Add permissions to role</legend> <br/><br/><br/>
+                <div align="center">
                     <label>Roles</label>&nbsp;
-                    <s:select id = "roleSelect" name="role.name" style="width: 175px;">
+                    <s:select id = "roleSelect" name="role.name" style="width: 175px;" onchange="display(this.value);">
+                        <%--document.rolePermLink.role.name.options[document.rolePermLink.role.name.selectedIndex].value--%>
                         <s:option value="">---Select Role---</s:option>
                         <s:options-collection collection="${roleList}" value="name" label="name"/>
                     </s:select>
                 </div> <br/><br/>
                 <div>
-                    <label>Permissions </label>&nbsp;
-                    <s:select id="mltPermission" name="permissionList"  style="width: 275px; height: 126px; padding: 2" multiple="true">
-                        <s:options-collection collection="${permissionList}" value="name" label="name"/>
-                    </s:select>
+                    <div>
+                        <label>Permissions </label>&nbsp;
+                        <s:select id="mltPermission" name="permissionList"  style="width: 275px; height: 126px; padding: 2" multiple="true">
+                            <s:options-collection collection="${permissionList}" value="name" label="name"/>
+                        </s:select>
+                        <label> Existing Permissions to Role </label>
+                        <s:select name="currPermissions" id="currPerm" style="width: 275px; height: 126px; padding: 2" multiple="true">
+                            <s:option value="">----Select atleast one Role----</s:option>
+                        </s:select>
+                    </div>
                 </div>
                 <s:hidden name="userPermissions" id="userPermissions"/>
-                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions"/>
+                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions" />
             </fieldset>
             <fieldset>
                 <div>
@@ -52,7 +60,7 @@
                             </c:if>
                         </c:forEach>
                     </s:select>
-                </div>           <br/><br/>
+                </div><br/><br/>
                 <div >
                     <label>Roles</label>&nbsp;
                     <s:select id="mltRoles" name="roleList" multiple="true" style="width: 275px; height: 126px; padding: 2">
@@ -67,6 +75,12 @@
 </s:layout-render>
 
 <script type="text/javascript">
+    function display(chosen){
+        var z;
+        //var x = roleDao.getRoleByName(chosen).permissions;
+      // $('#currPerm').options = x;
+    }
+
     $(document).ready(function(){
         $('#saveRoles').click(function(){
             if($('#userSelect').val() == "" ){

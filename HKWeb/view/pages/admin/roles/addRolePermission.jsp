@@ -10,20 +10,27 @@
 
     <s:layout-component name="content">
         <s:form beanclass = "com.hk.web.action.admin.roles.AddRolePermissionAction" >
-            <a href="#" id="buttonRole"> Add New Role or Permission</a> <br/><br/>
+            <a href="#" id="buttonRole"> Add New Role</a> <br/><br/>
             <fieldset id = "addRole">
                 <div class = "new role">
-                    <legend>Add New Role/Permission</legend>  <br/> <br/>
-                    <label>Role: </label> &nbsp; <s:text id = "role-name" name="role.name"/> <br/>   <br/><br/>
-                    <label>Permission: </label> &nbsp; <s:text id = "permission-name" name="permission.name"/>
+                    <legend>Add New Role</legend>  <br/> <br/>
+                    <label>Role: </label> &nbsp; <s:text id = "role-name" name="role.name"/><br/>
+                    <s:submit name="saveRoleAndPermission" value="save"/>
                 </div>
             </fieldset>
-                <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">
-                    <s:submit name="saveRoleAndPermission" value="save"/>  <br/><br/>
-                    <div>Link Roles to Permissions and Users</div>
-                    <s:param name="role" value="${roleBean.role}"/>
-                    <s:param name="permission" value="${roleBean.permission}"/>
-                </s:link>
+            <a href="#" id="buttonPermission"> Add New Permission</a> <br/><br/>
+            <fieldset id = "addPermission">
+                <div class = "new permission">
+                    <legend>Add New Permission</legend>  <br/> <br/>
+                    <label>Permission: </label> &nbsp; <s:text id = "permission-name" name="permission.name"/><br/>
+                    <s:submit name="saveRoleAndPermission" value="save"/>
+                </div>
+            </fieldset>
+            <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">
+                <div>Link Roles to Permissions and Users</div>
+                <s:param name="role" value="${roleBean.role}"/>
+                <s:param name="permission" value="${roleBean.permission}"/>
+            </s:link>
         </s:form>
     </s:layout-component>
 
@@ -36,6 +43,11 @@
         $("#buttonRole").click(function(){
             $('#buttonRole').hide();
             $('#addRole').show(500);
+        });
+
+        $("#buttonPermission").click(function(){
+            $('#buttonPermission').hide();
+            $('#addPermission').show(500);
         });
     });
     $('#role-name').focus();
