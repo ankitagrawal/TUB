@@ -11714,14 +11714,15 @@
     <changeSet author="Neha (generated)" id="1360566211728-5">
         <addForeignKeyConstraint baseColumnNames="referred_line_item_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
     </changeSet>
-<<<<<<< HEAD
+
     <changeSet author="Neha (generated)" id="1360566211728-6">
         <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Neha (generated)" id="1361432007800-1">
         <addColumn tableName="replacement_order">
             <column name="reverse_order_id" type="INT"/>
-=======
+        </addColumn>
+    </changeSet>
     <changeSet author="Ankit" id="05-03-2013-01">
         <sql>
             update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
@@ -11741,7 +11742,6 @@
     <changeSet author="Ajeet (generated)" id="1360060156998-1">
         <addColumn tableName="offer_action">
             <column name="free_variant_id" type="VARCHAR(20)"/>
->>>>>>> master
         </addColumn>
     </changeSet>
     <changeSet author="Neha (generated)" id="1361432007800-2">

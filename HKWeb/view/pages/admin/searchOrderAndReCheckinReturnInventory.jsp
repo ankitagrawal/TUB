@@ -3,6 +3,7 @@
 <%@ page import="com.hk.constants.*" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -195,12 +196,13 @@
                                         <span class="checkedinQty">${hk:getReCheckedinUnitsCount(lineItem)}</span>
                                     </td>
                                     <td>
-                                        <%--<shiro:hasPermission name=""--%>
-                                        <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
-                                                event="downloadBarcode"> Download                                            
-                                            <s:param name="lineItem" value="${lineItem.id}"/>
-                                            <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
-                                        </s:link>
+                                        <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+                                            <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
+                                                    event="downloadBarcode"> Download
+                                                <s:param name="lineItem" value="${lineItem.id}"/>
+                                                <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
+                                            </s:link>
+                                        </shiro:hasPermission>
                                     </td>
                                   <p><p>
 
@@ -265,13 +267,15 @@
                                         Qty:<span class="checkedinQty">${hk:getReCheckedinUnitsCount(reverseLineItem.referredLineItem)}</span>
                                     </td>
                                      <td>
-                                        <%--<shiro:hasPermission name=""--%>
-                                        <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
-                                                event="downloadBarcode"> Download
-                                            <s:param name="reverseLineItem" value="${reverseLineItem.id}"/>
-                                            <s:param name="lineItem" value="${reverseLineItem.referredLineItem.id}"/>
-                                            <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
-                                        </s:link>
+                                         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+                                             <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
+                                                     event="downloadBarcode"> Download
+                                                 <s:param name="reverseLineItem" value="${reverseLineItem.id}"/>
+                                                 <s:param name="lineItem"
+                                                          value="${reverseLineItem.referredLineItem.id}"/>
+                                                 <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
+                                             </s:link>
+                                         </shiro:hasPermission>
                                     </td>
                                     <p><p>
                                 </tr>
