@@ -6,6 +6,8 @@ import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -85,6 +87,7 @@ public class CreateReverseOrderAction extends BaseAction {
 	public Resolution submit(){		
 		ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason);
 		reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
 	}
 

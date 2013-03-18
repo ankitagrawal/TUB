@@ -215,4 +215,12 @@ public class AccountingInvoiceAction extends BaseAction {
 	public void setReverseOrderInvoiceDto(ReverseOrderInvoiceDto reverseOrderInvoiceDto) {
 		this.reverseOrderInvoiceDto = reverseOrderInvoiceDto;
 	}
+
+	public InvoiceDto getInvoiceDto() {
+		return invoiceDto;
+	}
+
+	public void setInvoiceDto(InvoiceDto invoiceDto) {
+		this.invoiceDto = invoiceDto;
+	}
 }

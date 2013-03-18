@@ -192,7 +192,8 @@
             </fieldset>
 
             <fieldset style="display:none;" id="is-replacement">
-                <h4>Replacement</h4>
+                <h4>Replacement for Customer Return</h4>
+                <span style="color:red">Note the returned items in the Reverse order invoice</span>
                 <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
@@ -225,7 +226,11 @@
 	                                Variant: ${lineItem.cartLineItem.productVariant.id}
                                 </td>
                                 <td>${lineItem.qty}</td>
-                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>
+                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" class="qty" />
+                                <script type="text/javascript">
+                                    $('.qty').val(0);
+                                </script>
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>
