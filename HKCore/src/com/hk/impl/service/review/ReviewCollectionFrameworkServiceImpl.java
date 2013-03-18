@@ -96,27 +96,16 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                 }else{
                     logger.info(userReviewMail.getUser() + "is not subscribed");
                 }
+                if(!userReviewMail.getIsMailSent()){
+                    userReviewMail.setIsExpired(true);
+                    userReviewMailService.save(userReviewMail);
+                }
             }
         }else{
             logger.info("No user to email today");
         }
     }
 
-    private Set<CartLineItem> keepOneVariantOfProduct(Set<CartLineItem> cartLineItems){
-        Set<CartLineItem> currentLineItems = new HashSet<CartLineItem>(cartLineItems);
-        for(CartLineItem cartLineItem : cartLineItems){
-            boolean firstTime = true;
-            for(CartLineItem cartLineItem1 : cartLineItems){
-                if(cartLineItem.getProductVariant().getProduct().equals(cartLineItem1.getProductVariant().getProduct())){
-                    if(firstTime)
-                        firstTime = false;
-                    else
-                        currentLineItems.remove(cartLineItem1);
-                }
-            }
-        }
-        return currentLineItems;
-    }
     public void doUserEntryForReviewMail(Order order){
         User user = order.getUser();
         boolean isUserUnsubscribed = EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.UNSUBSCRIBED , user.getSubscribedMask());

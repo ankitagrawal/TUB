@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.review.UserReviewMail;
 import com.hk.pact.service.review.UserReviewMailService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -42,6 +43,7 @@ import com.hk.util.SeoManager;
 public class ProductReviewAction extends BasePaginatedAction {
 
     private Product          product;
+	private ProductVariant   productVariant;
     private String           uid;
     private Double           starRating = 3.0;
     private Page             productReviewPage;
@@ -90,6 +92,7 @@ public class ProductReviewAction extends BasePaginatedAction {
     }
 
     public Resolution writeNewReviewByMail(){
+	    product = productVariant.getProduct();
         review = new UserReview();
         review.setPostedBy(userService.findByLogin(uid));
         review.setStarRating(starRating);
@@ -214,5 +217,13 @@ public class ProductReviewAction extends BasePaginatedAction {
 
     public void setUrm(Long urm) {
         this.urm = urm;
+    }
+
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
     }
 }

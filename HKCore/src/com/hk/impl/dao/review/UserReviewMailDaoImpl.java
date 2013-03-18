@@ -18,7 +18,7 @@ import java.util.List;
 public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMailDao {
 
     public List<UserReviewMail> getAllUserReviewMailByDueDate(Date date){
-        return findByNamedParams("from UserReviewMail urm where date(urm.dueDate) <= :date AND urm.isMailSent = false", new String[]{"date"}, new Object[]{date});
+        return findByNamedParams("from UserReviewMail urm where date(urm.dueDate) <= :date AND urm.isMailSent = false AND urm.isExpired = false", new String[]{"date"}, new Object[]{date});
     }
 
     public UserReviewMail getUserReviewMailByOrder(Order order){
@@ -42,7 +42,7 @@ public class UserReviewMailDaoImpl extends BaseDaoImpl implements UserReviewMail
 
     public UserReviewMail getByUserAndProduct(User user, Product product){
 
-        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant.product = :product ORDER BY urm.updateDt DESC", new String[]{"user", "product"}, new Object[]{user, product});
+        List<UserReviewMail> result = findByNamedParams("from UserReviewMail urm where urm.user = :user AND urm.productVariant.product = :product AND urm.isExpired = false ORDER BY urm.updateDt DESC", new String[]{"user", "product"}, new Object[]{user, product});
         if(result !=null && result.size()>0){
             return result.get(0);
         }else

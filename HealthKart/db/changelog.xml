@@ -11775,7 +11775,7 @@
 			<column name="due_date" type="DATETIME"/>
 			<column name="create_dt" type="DATETIME"/>
 			<column name="update_dt" type="DATETIME"/>
-			<column name="is_mail_sent" type="TINYINT"/>
+			<column defaultValue="0" name="is_mail_sent" type="TINYINT"/>
 			<column name="user_id" type="INT">
 				<constraints nullable="false"/>
 			</column>
@@ -11813,5 +11813,17 @@
 	<changeSet author="Ankur (generated)" id="1358841573903-12">
 		<addForeignKeyConstraint baseColumnNames="user_review_id" baseTableName="user_review_mail"  constraintName="fk_review_mail_user_user_review1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_review"  referencesUniqueColumn="false"/>
 	</changeSet>
+    <changeSet author="Ankur (generated)" id="1363612581975-1">
+        <addColumn tableName="user_review">
+            <column name="product_variant_id" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankur (generated)" id="1363612581975-2">
+        <addColumn tableName="user_review_mail">
+            <column defaultValue="0" name="is_expired" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankur (generated)" id="1363612581975-3">
+        <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review" constraintName="fk_user_review_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
-        

@@ -54,7 +54,10 @@ public class UserReviewMail  implements java.io.Serializable {
 
 
     @Column(name="is_mail_sent")
-    private Boolean isMailSent;
+    private Boolean isMailSent = false;
+
+    @Column(name="is_expired")
+    private Boolean isExpired = false;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="sent_date", length=19)
@@ -127,7 +130,15 @@ public class UserReviewMail  implements java.io.Serializable {
         return this.sentDate;
     }
 
-    public void setSentDate(Date sentDate) {
+	public Boolean getIsExpired() {
+		return isExpired;
+	}
+
+	public void setIsExpired(Boolean expired) {
+		isExpired = expired;
+	}
+
+	public void setSentDate(Date sentDate) {
         this.sentDate = sentDate;
     }
     @Override
