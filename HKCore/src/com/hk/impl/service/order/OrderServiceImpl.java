@@ -426,6 +426,7 @@ public class OrderServiceImpl implements OrderService {
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
+
         for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
             if (cartlineitems != null && cartlineitems.size() > 0) {
 

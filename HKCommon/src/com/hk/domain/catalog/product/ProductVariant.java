@@ -2,36 +2,15 @@ package com.hk.domain.catalog.product;
 
 // Generated 10 Mar, 2011 5:37:39 PM by Hibernate Tools 3.2.4.CR1
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import com.akube.framework.gson.JsonSkip;
 import com.google.gson.annotations.Expose;
 import com.hk.constants.core.EnumRole;
 import com.hk.domain.affiliate.AffiliateCategory;
-import com.hk.domain.catalog.product.combo.ComboProduct;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.core.ProductVariantServiceType;
+
+import javax.persistence.*;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -80,10 +59,6 @@ public class ProductVariant implements java.io.Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "product_variant_has_product_extra_option", joinColumns = { @JoinColumn(name = "product_variant_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "product_extra_option_id", nullable = false, updatable = false) })
     private List<ProductExtraOption>  productExtraOptions = new ArrayList<ProductExtraOption>(0);
-
-    @JsonSkip
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "allowedProductVariants")
-    private List<ComboProduct>        comboProducts       = new ArrayList<ComboProduct>();
 
     @Column(name = "shipping_base_qty", nullable = false)
     private Long                      shippingBaseQty;
@@ -530,7 +505,7 @@ public class ProductVariant implements java.io.Serializable {
 
     /**
      * For reading in jsp EL
-     * 
+     *
      * @return
      */
     public Boolean getOutOfStock() {
@@ -547,7 +522,7 @@ public class ProductVariant implements java.io.Serializable {
 
     /**
      * For reading in jsp EL
-     * 
+     *
      * @return
      */
     public Boolean getDeleted() {
@@ -742,11 +717,4 @@ public class ProductVariant implements java.io.Serializable {
         this.optionsAuditString = optionsAuditString;
     }
 
-    public List<ComboProduct> getComboProducts() {
-        return comboProducts;
-    }
-
-    public void setComboProducts(List<ComboProduct> comboProducts) {
-        this.comboProducts = comboProducts;
-    }
 }

@@ -2,10 +2,11 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="com.hk.domain.catalog.product.ProductVariant" %>
+<%@ page import="com.hk.admin.util.BarcodeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-
+<c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
 <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
 <script>
     <s:useActionBean beanclass="com.hk.web.action.admin.queue.JobCartAction" var="ica"/>
@@ -140,7 +141,12 @@
                             ${VarSkuGroup.batchNumber}
                     </td>
                     <td width="70px">
+                         <c:if test="${VarSkuGroup.barcode != null}">
                             ${VarSkuGroup.barcode}
+                          </c:if>
+                          <c:if test="${VarSkuGroup.barcode == null}">
+                           ${barcodePrefix}${VarSkuGroup.id}
+                          </c:if>
                     </td>
 
                     <td width="70px">
