@@ -143,7 +143,7 @@ public class ShipmentResolutionAction extends BaseAction {
              awb = awbService.save(awb, EnumAwbStatus.Unused.getId().intValue());
              awb = awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
              addRedirectAlertMessage(new SimpleMessage("Awb Number Created!!!"));
-             return new RedirectResolution(ShipmentResolutionAction.class);
+             return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
      }
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_AWB}, authActionBean = AdminPermissionAction.class)
      public Resolution changeAwb(){
@@ -156,7 +156,7 @@ public class ShipmentResolutionAction extends BaseAction {
          shipment = shipmentService.changeAwb(shipment,awb,true);
          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+newAwbNumber);
          addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
-         return new RedirectResolution(ShipmentResolutionAction.class);
+        return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
      }
 
 

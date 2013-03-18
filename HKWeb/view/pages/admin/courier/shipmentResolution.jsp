@@ -200,7 +200,7 @@
                                                    <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
                                                    <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
                                                    <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
-                                                  <s:submit name="createAssignAwbForShipment" value="SAVE" id="saveawb"/>
+                                                  <s:submit name="createAssignAwbForShipment" value="Save" id="saveawb"/>
                                                   </fieldset>
                                                   </s:form>
                                          </div>
