@@ -27,7 +27,7 @@
 				<value>com.hk.domain</value>
 			</list>
 		</property>
-		<!--<property name="eventListeners">
+		<property name="eventListeners">
 			<map>
 				<entry key="merge">
 					<bean
@@ -35,7 +35,7 @@
 					</bean>
 				</entry>
 			</map>
-		</property>-->
+		</property>
 
 
 		<!--<property name="typeDefinitions">
@@ -120,7 +120,7 @@
 		</bean>-->
 
 
-	<bean id="newDataSource"
+<!--  <bean id="newDataSource"
 		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName">
 			<value>com.mysql.jdbc.Driver</value>
@@ -160,9 +160,9 @@
 		</property>
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />
-		<property name="timeBetweenEvictionRunsMillis" value="-1" />
+		<property name="timeBetweenEvictionRunsMillis" value="-1" />-->	
 		<!--<property name="defaultTransactionIsolation" value="1"/>-->
-	</bean>
+	<!--  </bean> -->
 
 
 	<bean id="dataSource"
