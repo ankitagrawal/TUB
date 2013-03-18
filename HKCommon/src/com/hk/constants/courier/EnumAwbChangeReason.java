@@ -13,9 +13,7 @@ import java.util.List;
 public enum EnumAwbChangeReason {
         DUMMY_AWB(10L, "Dummy_Awb"),
         B2B_ORDER(20L, "B2b_Order"),
-        CC_REQUEST(30L,"CC_Request"),
-        BRIGHT_MOVEMENT(40L,"Bright_Movement"),
-        RTO_DUE_TO_ODA(50L,"RTO_due_to_ODA"),
+        CHANGED_BY_COURIER(30L,"Changed_By_Courier"),
         OTHERS(90L,"Others");
 
         private String name;
@@ -41,7 +39,7 @@ public enum EnumAwbChangeReason {
             this.id = id;
         }
     public static List<EnumAwbChangeReason> getAllAwbChangeReason() {
-            return Arrays.asList(DUMMY_AWB, B2B_ORDER, CC_REQUEST, BRIGHT_MOVEMENT, RTO_DUE_TO_ODA, OTHERS);
+            return Arrays.asList(DUMMY_AWB, B2B_ORDER,CHANGED_BY_COURIER, OTHERS);
         }
 }
 
