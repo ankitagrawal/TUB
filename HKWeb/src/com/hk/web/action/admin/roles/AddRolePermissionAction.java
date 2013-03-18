@@ -8,9 +8,11 @@ import com.hk.domain.user.User;
 import com.hk.pact.dao.RoleDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.RoleService;
+import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -36,6 +38,7 @@ public class AddRolePermissionAction extends BaseAction{
     private RoleService roleService;
 
     private String userPermissions;
+    private String deletePermissions;
     private String userRoles;
     Set<Permission> permissionList = new HashSet<Permission>();
     private static final String LinkRoles = "/pages/admin/roles/linkRoles.jsp";
@@ -54,8 +57,7 @@ public class AddRolePermissionAction extends BaseAction{
         if(role!=null && userPermissions != null){
             role = roleDao.getRoleByName(role.getName());
             List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
-            permissionList = role.getPermissions();
-            for(Permission permission1: permissionList){
+            for(Permission permission1: role.getPermissions()){
                 if (!userPermissionList.contains(permission1.getName())){
                     userPermissionList.add(permission1.getName());
                 }
@@ -67,6 +69,20 @@ public class AddRolePermissionAction extends BaseAction{
             role.setPermissions(permissions);
             roleDao.save(role);
         }
+
+        if(role!=null && deletePermissions != null){
+            role = roleDao.getRoleByName(role.getName());
+            List<String> deletePermissionList = new ArrayList<String> (Arrays.asList(deletePermissions.split(",")));
+            Set<Permission> permissions = new HashSet<Permission>();
+            for(Permission permission1 : role.getPermissions()){
+                if(!deletePermissionList.contains(permission1.getName())){
+                    permissions.add(permission1);
+                }
+            }
+            role.setPermissions(permissions);
+            roleDao.save(role);
+        }
+
         if(user!=null && userRoles != null){
             user = userDao.getUserById(user.getId());
             List<String> userRoleList =new ArrayList<String>(Arrays.asList(userRoles.split(",")));
@@ -83,7 +99,8 @@ public class AddRolePermissionAction extends BaseAction{
             user.setRoles(roles);
             userDao.save(user);
         }
-        if(userPermissions != null || userRoles != null){
+
+        if(userPermissions != null || userRoles != null || deletePermissions != null){
             addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
         }
         return new RedirectResolution(LinkRoles);
@@ -112,6 +129,25 @@ public class AddRolePermissionAction extends BaseAction{
             }
         }
         return new RedirectResolution(AddRolePermissionAction.class);
+    }
+
+    public Resolution getPermissions(){
+        HealthkartResponse HKResponse = null;
+        Map dataMap = new HashMap();
+        if(roleName != null ){
+            Role role = roleDao.getRoleByName(roleName);
+            permissionList = role.getPermissions();
+            if(permissionList.size() != 0 ){
+                for(Permission permission1 : permissionList){
+                    dataMap.put(permission1.getName(),permission1.getName());
+                }HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,"Valid Permissions",dataMap);
+            }else{
+                HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"No permissions for this Role");
+            }
+        }else{
+            HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"Invalid Role");
+        }
+        return new JsonResolution(HKResponse);
     }
 
     public RoleDao getRoleDao(){
@@ -146,14 +182,6 @@ public class AddRolePermissionAction extends BaseAction{
     public void setUser(User user1){
         this.user = user1;
     }
-/*
-    public Set<Permission> getPermissionList(){
-        return this.permissionList;
-    }
-
-    public void setPermissionList(Set<Permission> permissionList1){
-        this.permissionList = permissionList1;
-    }*/
 
     public Permission getPermission(){
         return permission;
@@ -193,6 +221,14 @@ public class AddRolePermissionAction extends BaseAction{
 
     public void setUserPermissions(String userPermissions) {
         this.userPermissions = userPermissions;
+    }
+
+    public String getDeletePermissions() {
+        return deletePermissions;
+    }
+
+    public void setDeletePermissions(String deletePermissions1) {
+        this.deletePermissions = deletePermissions1;
     }
 
     public String getUserRoles() {
