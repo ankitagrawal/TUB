@@ -95,9 +95,6 @@
 
 	<link href="${pageContext.request.contextPath}/css/jquery.jqzoom.css" rel="stylesheet" type="text/css"/>	
 	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jqzoom-core.js"></script>
-	<c:if test="${!empty subscriptionProduct}">
-		<script type="text/javascript" src="<hk:vhostJs/>/js/jquery-ui.min.js"></script>
-	</c:if>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.jcarousel.min.js"></script>
 
     <c:if test="${!empty pa.productReferrerId}">
@@ -158,6 +155,10 @@
 		});
 
 	</script>
+
+  <c:if test="${product.primaryCategory.name == 'eye'}">
+    <script src="http://resources.flixstock.com/flixstock.js"></script>
+  </c:if>
 
 </s:layout-component>
 

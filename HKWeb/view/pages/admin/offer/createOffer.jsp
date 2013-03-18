@@ -55,9 +55,6 @@
               <label>Offer Terms</label><s:textarea name="terms"/>
           </li>
           <li><label>Exclude Trigger products</label><s:checkbox name="excludeTriggerProducts"/></li>
-          <li><label>&nbsp;</label>
-            <div class="buttons"><s:submit name="create" value="Create Offer"/></div>
-          </li>
 	        <li>
 		        <label>Applicable Payment Type</label><s:select name="paymentType">
 		        <c:forEach items="<%=EnumPaymentType.getAllPaymentTypes()%>" var="pType">
@@ -65,6 +62,12 @@
 		        </c:forEach>
 	        </s:select>
 	        </li>
+          <li>
+              <label>Show Promptly</label><s:checkbox name="showPromptly"/>
+          </li>
+           <li><label>&nbsp;</label>
+            <div class="buttons"><s:submit name="create" value="Create Offer"/></div>
+          </li>
         </ul>
       </fieldset>
     </s:form>

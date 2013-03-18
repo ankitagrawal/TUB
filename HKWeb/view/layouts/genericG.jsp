@@ -61,9 +61,9 @@
 
   </div>
 
-  <s:layout-component name="zopim">
+  <%--<s:layout-component name="zopim">
     <jsp:include page="/includes/_zopim.jsp"/>
-  </s:layout-component>
+  </s:layout-component>--%>
 
   </body>
   </html>

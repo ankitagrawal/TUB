@@ -68,7 +68,7 @@
 	}
 	pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
 
-	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
+	Map<String, List<ProductOptionDto>> filterMap =  catalogFilter.getFilterOptions(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
 	pageContext.setAttribute("filterMap", filterMap);
 
 %>
@@ -301,14 +301,14 @@
 						<%--Do Nothing--%>
 					</c:when>
 					<c:otherwise>
-						<div class="">
+						<div>
 							<h5 class='heading1' style="padding:5px;background-color:#DDD;">
 									<a title="Collapse" style="float:left; font-size:1.2em;color:black;cursor:pointer;padding-right:2px;"
 								   onclick="toggle('body${headCtr.index}', this)">-</a>${filter.key}
 								<a class="filterCatalogFormButton" style="cursor:pointer;float:right;margin-right:10px;color:black;font-size:.9em;font-weight:normal;">Filter</a>
 
 							</h5>
-							<ul style="padding-left:10px;" id="body${headCtr.index}">
+							<ul style="padding-left:10px;max-height:200px;overflow-y:auto;" id="body${headCtr.index}">
 								<c:forEach items="${filter.value}" var="option">
 									<li style="vertical-align:middle;" class="filterOptionLi">
 										<c:choose>

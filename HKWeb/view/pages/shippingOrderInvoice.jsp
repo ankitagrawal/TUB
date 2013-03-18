@@ -260,13 +260,6 @@ ORDER INVOICE <c:choose>
     </c:if>
 </div>
 
-<div class="grid_12">
-    <c:if test="${baseOrder.userComments != null}">
-        <hr/>
-        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
-        <hr/>
-    </c:if>
-</div>
 
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
@@ -300,6 +293,15 @@ ORDER INVOICE <c:choose>
     </c:choose>
 
 </div>
+<div class="clear"></div>
+<div class="grid_12">
+    <c:if test="${baseOrder.userComments != null}">
+        <hr/>
+        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
+        <hr/>
+    </c:if>
+</div>
+
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 <div class="grid_12">
@@ -425,6 +427,10 @@ ORDER INVOICE <c:choose>
 
     </table>
 
+    <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
+    <h4> You have ordered an equipment that requires installation/configuration.
+        <br/>Please contact HealthKart Customer Care at 0124-4616444 - so that we can arrange for the Technician's visit.</h4>
+    </c:if>
 
     <h3>Order Summary</h3>
     <table cellspacing="0">
@@ -476,11 +482,6 @@ ORDER INVOICE <c:choose>
             </td>
         </tr>
     </table>
-
-  <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4616444</h6>
-   </c:if>
-
 
 </div>
 

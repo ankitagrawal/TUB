@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -25,6 +26,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.exception.NoSkuException;
 import com.hk.exception.OrderSplitException;
@@ -424,6 +426,7 @@ public class OrderServiceImpl implements OrderService {
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
+
         for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
             if (cartlineitems != null && cartlineitems.size() > 0) {
 
@@ -758,5 +761,25 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderAlreadyExists;
     }
 
+
+
+	@Transactional
+	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
+		return (UserCodCall)baseDao.save(userCodCall);
+	}
+
+	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling) {
+		UserCodCall userCodCall = new UserCodCall();
+		userCodCall.setBaseOrder(order);
+		userCodCall.setRemark(enumUserCodCalling.getName());
+		userCodCall.setCallStatus(enumUserCodCalling.getId());
+		userCodCall.setCreateDate(new Date());
+		return userCodCall;
+
+	}
+
+	public List<UserCodCall> getAllUserCodCallForToday(){
+	return 	orderDao.getAllUserCodCallOfToday();
+	}
 
 }

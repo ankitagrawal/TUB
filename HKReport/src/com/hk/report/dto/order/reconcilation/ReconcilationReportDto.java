@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.hk.domain.courier.Courier;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.Address;
 import com.hk.domain.warehouse.Warehouse;
 
 
@@ -27,6 +28,7 @@ public class ReconcilationReportDto {
     Warehouse warehouse;
     Courier courier;
 	ShippingOrder shippingOrder;
+	Address address;
 
     public String getInvoiceId() {
         return invoiceId;
@@ -171,5 +173,13 @@ public class ReconcilationReportDto {
 
 	public void setShippingOrder(ShippingOrder shippingOrder) {
 		this.shippingOrder = shippingOrder;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }

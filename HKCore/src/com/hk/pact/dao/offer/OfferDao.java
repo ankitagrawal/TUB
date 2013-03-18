@@ -8,6 +8,8 @@ public interface OfferDao extends BaseDao {
 
     public Page listAllValid(int pageNo, int perPage);
 
+    public Page listAllValidShowPromptly(int pageNo, int perPage);
+
     public Page listAll(int pageNo, int perPage);
 
     public Offer findByIdentifier(String offerIdentifier);

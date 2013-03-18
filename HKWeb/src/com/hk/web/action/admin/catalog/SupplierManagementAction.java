@@ -267,4 +267,10 @@ public class SupplierManagementAction extends BasePaginatedAction {
         params.add("supplierName");
         return params;
     }
+
+    public Boolean getStatus() {
+        return status;
+    }
+    
+    
 }

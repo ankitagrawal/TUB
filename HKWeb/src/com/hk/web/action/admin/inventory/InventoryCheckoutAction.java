@@ -30,11 +30,13 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -52,11 +54,11 @@ import com.hk.taglibs.Functions;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKOUT }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKOUT}, authActionBean = AdminPermissionAction.class)
 @Component
 public class InventoryCheckoutAction extends BaseAction {
 
-    private static Logger                   logger = LoggerFactory.getLogger(InventoryCheckoutAction.class);
+    private static Logger logger = LoggerFactory.getLogger(InventoryCheckoutAction.class);
 
     // UserDao userDao;
     // ProductVariantDao productVariantDao;
@@ -66,52 +68,53 @@ public class InventoryCheckoutAction extends BaseAction {
     // OrderStatusDao orderStatusDao;
     // ShippingOrderDao shippingOrderDao;
     @Autowired
-    private AdminSkuItemDao                 skuItemDao;
+    private AdminSkuItemDao skuItemDao;
     @Autowired
-    private LineItemDao                     lineItemDao;
+    private LineItemDao lineItemDao;
     @Autowired
-    private SkuGroupService                  skuGroupService;
+    private SkuGroupService skuGroupService;
     @Autowired
-    private ProductVariantDao               productVariantDao;
+    private ProductVariantDao productVariantDao;
     @Autowired
     private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
     @Autowired
-    private ShippingOrderService            shippingOrderService;
+    private ShippingOrderService shippingOrderService;
     @Autowired
-    private UserService                     userService;
+    private UserService userService;
     @Autowired
-    private ShippingOrderStatusService      shippingOrderStatusService;
+    private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    private OrderStatusService              orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
-    private OrderService                    orderService;
+    private OrderService orderService;
     @Autowired
-    private AdminInventoryService           adminInventoryService;
+    private AdminInventoryService adminInventoryService;
     @Autowired
-    private InventoryService                inventoryService;
+    private InventoryService inventoryService;
     @Autowired
-    private SkuService                      skuService;
+    private SkuService skuService;
     @Autowired
-    private ProductVariantService           productVariantService;
+    private ProductVariantService productVariantService;
     @Autowired
-    private OrderManager                    orderManager;
+    private OrderManager orderManager;
     @Autowired
-    BinManager                              binManager;
+    BinManager binManager;
     @Autowired
-    BrandsToAuditDao                        brandsToAuditDao;
+    BrandsToAuditDao brandsToAuditDao;
 
-    private ShippingOrder                   shippingOrder;
+    private ShippingOrder shippingOrder;
 
-    private LineItem                        lineItem;
-    private String                          upc;
-    private ProductVariant                  productVariant;
-    private Long                            qty;
-    private SkuGroup                        skuGroup;
-    private String                          invoiceNumber;
-    private String                          gatewayOrderId;
+    private LineItem lineItem;
+    private String upc;
+    private ProductVariant productVariant;
+    private Long qty;
+    private SkuGroup skuGroup;
+    private String invoiceNumber;
+    private String gatewayOrderId;
     // private boolean wronglyPickedBox = false;
     // private SkuGroup earlierSkuGroup;
-    List<SkuGroup>                          skuGroups;
+    List<SkuGroup> skuGroups;
+    private SkuItem skuItemBarcode;
 
     @DefaultHandler
     public Resolution pre() {
@@ -141,7 +144,7 @@ public class InventoryCheckoutAction extends BaseAction {
     }
 
     public Resolution findSkuGroups() {
-        SkuGroup skuGroupBarcode;
+        SkuGroup skuGroupBarcode = null;
         // earlierSkuGroup = null;
         /* List<SkuGroup> inStockSkuGroupList; */
         /* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); */
@@ -149,24 +152,33 @@ public class InventoryCheckoutAction extends BaseAction {
         logger.debug("upc: " + upc);
 
         if (StringUtils.isNotBlank(upc)) {
-	        //TODO: Fetch available sku groups
-            skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
+            //TODO: Fetch available sku groups
+
+//   first check for skuitem Barcode
+            skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+//       SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(upc, userService.getWarehouseForLoggedInUser().getId(),);
+            if (skuItemBarcode != null) {
+                skuGroupBarcode = skuItemBarcode.getSkuGroup();
+            } else {
+                skuGroupBarcode = skuGroupService.getInStockSkuGroup(upc, userService.getWarehouseForLoggedInUser().getId());
+            }
             if (skuGroupBarcode != null && skuGroupBarcode.getSku() != null) {
                 productVariant = skuGroupBarcode.getSku().getProductVariant();
                 skuGroups = new ArrayList<SkuGroup>();
                 skuGroups.add(skuGroupBarcode);
+            }
 
-                /*
-                 * inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku()); if
-                 * (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) { if (inStockSkuGroupList.size() ==
-                 * 1) { if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) { skuGroups =
-                 * inStockSkuGroupList.subList(0, 1); } else { addRedirectAlertMessage(new SimpleMessage("Selected item
-                 * not found in inventory list, please contact Admin. ")); upc = null; } } else { if
-                 * (upc.equalsIgnoreCase(inStockSkuGroupList.get(0).getBarcode())) { skuGroups =
-                 * inStockSkuGroupList.subList(0, 1); } else { earlierSkuGroup = inStockSkuGroupList.get(0);
-                 * wronglyPickedBox = true; upc = null; } } }
-                 */
-            } else {
+            /*
+            * inStockSkuGroupList = skuItemDao.getInStockSkuGroups(skuGroupBarcode.getSku()); if
+            * (inStockSkuGroupList != null && inStockSkuGroupList.size() > 0) { if (inStockSkuGroupList.size() ==
+            * 1) { if (upc.equalsIgnoreCase(skuGroupBarcode.getBarcode())) { skuGroups =
+            * inStockSkuGroupList.subList(0, 1); } else { addRedirectAlertMessage(new SimpleMessage("Selected item
+            * not found in inventory list, please contact Admin. ")); upc = null; } } else { if
+            * (upc.equalsIgnoreCase(inStockSkuGroupList.get(0).getBarcode())) { skuGroups =
+            * inStockSkuGroupList.subList(0, 1); } else { earlierSkuGroup = inStockSkuGroupList.get(0);
+            * wronglyPickedBox = true; upc = null; } } }
+            */
+            else {
                 List<ProductVariant> pvList = productVariantDao.findVariantListFromUPC(upc);
                 if (pvList != null && !pvList.isEmpty()) {
                     productVariant = pvList.get(0);
@@ -210,7 +222,34 @@ public class InventoryCheckoutAction extends BaseAction {
 
             if (skuGroup != null) {
                 if (lineItem == null) {
-                    lineItem = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+                    //There can be more than one line item corresponding to a Sku, and a Shipping Order only in case of lenses
+                    //So, to handle these cases, list of line items are being fetched, instead of only unique line item.
+                    List<LineItem> lineItemsForSOBySku = lineItemDao.getLineItem(skuGroup.getSku(), shippingOrder);
+                    if (lineItemsForSOBySku != null) {
+                        if (lineItemsForSOBySku.size() == 1) {         //for normal case
+                            lineItem = lineItemsForSOBySku.get(0);
+                        } else if (lineItemsForSOBySku.size() > 1) { //for lens case
+                            for (LineItem lineItemBySku : lineItemsForSOBySku) {
+                                Long checkedOutItemCountForLineItem = adminProductVariantInventoryDao.getCheckedoutItemCount(lineItemBySku);
+                                if (checkedOutItemCountForLineItem == null) {
+                                    checkedOutItemCountForLineItem = 0L;
+                                }
+
+                                //checkedOutItemCountForLineItem should never be positive, because sum(qty) in PVI against any line item should be <=0
+                                //If the case arrives, there would be some problem in the PVI data, tech would handle it manually.
+                                if (checkedOutItemCountForLineItem > 0) {
+                                    addRedirectAlertMessage(new SimpleMessage("Oops!! Item could not be checked Out. Please contact tech support"));
+                                    return new RedirectResolution(InventoryCheckoutAction.class).addParameter("findSkuGroups").addParameter("shippingOrder", shippingOrder.getId()).addParameter("upc",
+                                            skuGroup.getSku().getProductVariant().getUpc());
+                                }
+
+                                if (lineItemBySku.getQty() > Math.abs(checkedOutItemCountForLineItem)) {
+                                    lineItem = lineItemBySku;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
                 if (lineItem != null) {
                     ProductVariant variant = skuGroup.getSku().getProductVariant();
@@ -223,12 +262,18 @@ public class InventoryCheckoutAction extends BaseAction {
                         }
 
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
-
-                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+                            SkuItem skuItem;
+                            if (skuItemBarcode != null) {
+                                skuItem = skuItemBarcode;
+                            } else {
+                                skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
+                            }
+//                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+//                            if (inStockSkuItems != null && inStockSkuItems.size() > 0)
+                            if (skuItem != null) {
+                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), skuItem, lineItem, shippingOrder, null, null, null,
                                         getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
-                                binManager.removeBinAllocated(inStockSkuItems.get(0));
+                                binManager.removeBinAllocated(skuItem);
                                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
                                 String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
@@ -237,19 +282,19 @@ public class InventoryCheckoutAction extends BaseAction {
                                 addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
                             }
 
-                        } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
-                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
-                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
-                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
-                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
-                                binManager.removeBinAllocated(inStockSkuItems.get(0));
-                                addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
-
-                                String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
-                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
-                            } else {
-                                addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
-                            }
+//                        } else if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Shipped.getId())) {
+//                            List<SkuItem> inStockSkuItems = skuItemDao.getInStockSkuItems(skuGroup);
+//                            if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
+//                                getAdminInventoryService().inventoryCheckinCheckout(skuGroup.getSku(), inStockSkuItems.get(0), lineItem, shippingOrder, null, null, null,
+//                                        getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_REPEAT_CHECKOUT), -1L, loggedOnUser);
+//                                binManager.removeBinAllocated(inStockSkuItems.get(0));
+//                                addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
+//
+//                                String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
+//                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedout, comments);
+//                            } else {
+//                                addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
+//                            }
                         } else {
                             addRedirectAlertMessage(new SimpleMessage("Oops!! All SkuItem Units for the In-process LineItem are already checked out."));
                         }
@@ -469,9 +514,17 @@ public class InventoryCheckoutAction extends BaseAction {
         this.productVariantService = productVariantService;
     }
 
+    public SkuItem getSkuItemBarcode() {
+        return skuItemBarcode;
+    }
+
+    public void setSkuItemBarcode(SkuItem skuItemBarcode) {
+        this.skuItemBarcode = skuItemBarcode;
+    }
+
     /*
-     * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
-     */
+    * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
+    */
 
     /*
      * public void setWronglyPickedBox(boolean wronglyPickedBox) { this.wronglyPickedBox = wronglyPickedBox; }
@@ -480,5 +533,7 @@ public class InventoryCheckoutAction extends BaseAction {
     /*
      * public SkuGroup getEarlierSkuGroup() { return earlierSkuGroup; } public void setEarlierSkuGroup(SkuGroup
      * earlierSkuGroup) { this.earlierSkuGroup = earlierSkuGroup; }
+     *
+     *
      */
 }

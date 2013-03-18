@@ -21,7 +21,7 @@ public class SolrProduct {
 
     @Field
     private
-    String brand;
+    List<String> brand;
 
     @Field
     private
@@ -59,6 +59,10 @@ public class SolrProduct {
     @Field
     private
     List<String> category;
+
+    @Field
+    private
+    List<String> categoryDisplayName;
 
     @Field
     private
@@ -220,11 +224,11 @@ public class SolrProduct {
         this.id = id;
     }
 
-    public String getBrand() {
+    public List<String> getBrand() {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public void setBrand(List<String> brand) {
         this.brand = brand;
     }
 
@@ -276,7 +280,15 @@ public class SolrProduct {
         this.category = category;
     }
 
-    public String getH1() {
+    public List<String> getCategoryDisplayName() {
+      return categoryDisplayName;
+    }
+
+    public void setCategoryDisplayName(List<String> categoryDisplayName) {
+      this.categoryDisplayName = categoryDisplayName;
+    }
+
+  public String getH1() {
         return h1;
     }
 
