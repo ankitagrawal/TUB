@@ -186,12 +186,14 @@
                                                               <s:option value="${courier.id}">${courier.name}</s:option>
                                                           </c:forEach>
                                                         </s:select>
-                                                  <label>Enter Tracking Number</label>
+                                                      <br><br>
                                                       Select Reason for Changing the Courier or Awb
                                                              <s:select name="reasoning" id="reasoning">
                                                                  <s:option value="">-------Select-------</s:option>
                                                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbChangeReason" value="name" label="name"/>
                                                              </s:select>
+                                                      <br>
+                                                      <label>Enter Tracking Number</label>
                                                   <s:text name=   "awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
                                                    <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
                                                    <s:hidden name="awb.cod" value="${shipRes.shippingOrder.COD}"/>
