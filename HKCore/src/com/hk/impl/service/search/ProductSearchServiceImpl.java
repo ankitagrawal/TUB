@@ -454,7 +454,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     private SearchException wrapException(String msg, Exception ex) {
-        logger.error(msg, ex);
+        logger.error(msg);
         return new SearchException(SEARCH_SERVER, msg, ex);
     }
 
