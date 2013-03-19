@@ -33,8 +33,8 @@ public class AdminEmailCampaignServiceImpl implements AdminEmailCampaignService 
     return getAdminEmailCampaignDao().getEmailCampaignSentCount(emailCampaign);
   }
 
-  public void uploadEmailContent(File emailContent){
-    S3Utils.uploadMultipleData(awsAccessKey, awsSecretKey, emailContent, awsBucket);
+  public Boolean uploadEmailContent(File emailContent){
+    return S3Utils.uploadMultipleData(awsAccessKey, awsSecretKey, emailContent, awsBucket);
   }
 
   public void uploadHtml(File htmlFile, String key){
