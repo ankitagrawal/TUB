@@ -52,17 +52,7 @@ public class AddRolePermissionAction extends BaseAction{
     }
 
     @SuppressWarnings("unchecked")
-    public Resolution linkRoles(){
-        if(role!=null && userPermissions != null){
-            role = roleDao.getRoleByName(role.getName());
-            List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
-            Set<Permission> permissions = new HashSet<Permission>();
-            for(String permissionName : userPermissionList){
-                permissions.add(roleDao.getPermissionByName(permissionName));
-            }
-            role.setPermissions(permissions);
-            roleDao.save(role);
-        }
+    public Resolution saveRoles(){
         if(user!=null && userRoles != null){
             user = userDao.getUserById(user.getId());
             List<String> userRoleList =new ArrayList<String>(Arrays.asList(userRoles.split(",")));
@@ -80,7 +70,26 @@ public class AddRolePermissionAction extends BaseAction{
             userDao.save(user);
         }
 
-        if(userPermissions != null || userRoles != null ){
+        if(userRoles != null ){
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
+        }
+        return new RedirectResolution(LinkRoles);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Resolution savePermissions(){
+        if(role!=null && userPermissions != null){
+            role = roleDao.getRoleByName(role.getName());
+            List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
+            Set<Permission> permissions = new HashSet<Permission>();
+            for(String permissionName : userPermissionList){
+                permissions.add(roleDao.getPermissionByName(permissionName));
+            }
+            role.setPermissions(permissions);
+            roleDao.save(role);
+        }
+
+        if(userPermissions != null ){
             addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
         }
         return new RedirectResolution(LinkRoles);

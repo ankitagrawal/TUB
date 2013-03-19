@@ -16,7 +16,7 @@
                     <legend>Add New Role</legend>  <br/> <br/>
                     <label style="float:left;width:300px;">Name of new Role: </label> &nbsp;
                     <s:text style= "width:200px;" id = "role-name" name="role.name"/> <br/>
-                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save"/>
+                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save" id="saveRole"/>
                 </div>
             </fieldset>
             <a href="#" id="buttonPermission"> Add New Permission</a> <br/><br/>
@@ -25,7 +25,7 @@
                     <legend>Add New Permission</legend>  <br/> <br/>
                     <label style="float:left;width:300px;">Name of a new Permission: </label> &nbsp;
                     <s:text style="width:200px;" id = "permission-name" name="permission.name"/><br/>
-                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save"/>
+                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save" id="savePerm"/>
                 </div>
             </fieldset>
             <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">
@@ -51,7 +51,21 @@
             $('#buttonPermission').hide();
             $('#addPermission').show(500);
         });
+
+        $("#saveRole").click(function(){
+            if($("#role-name").val() == ""){
+                alert("Add a role");
+                return false;
+            }
+        });
+        $("#savePerm").click(function(){
+            if($("#permission-name").val() == "" ){
+                alert("Add a permission");
+                return false;
+            }
+        });
     });
+
     $('#role-name').focus();
     $('#permission-name').focus();
 </script>

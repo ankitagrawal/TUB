@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <s:hidden name="userPermissions" id="userPermissions"/>
-                <s:submit name="linkRoles" value="Save Permissions for Role" style="font-size:0.9em" id="savePermissions" />
+                <s:submit name="savePermissions" value="Save Permissions for Role" style="font-size:0.9em" id="savePermissions" />
             </fieldset>
             <fieldset>
                 <div>
@@ -71,7 +71,7 @@
                     </s:select>
                 </div>
                 <s:hidden name="userRoles" id="userRoles"  />
-                <s:submit name="linkRoles" value="Save Roles to User" style="font-size:0.9em" id="saveRoles"/>
+                <s:submit name="saveRoles" value="Save Roles to User" style="font-size:0.9em" id="saveRoles"/>
             </fieldset>
         </s:form>
     </s:layout-component>
@@ -98,7 +98,7 @@
         });
         $('#saveRoles').click(function(){
             if($('#userSelect').val() == "" ){
-                alert("Choose valid entries");
+                alert("Choose valid user");
                 return false;
             }
             $('#mltRoles').each(function(i,selectedRoles){
