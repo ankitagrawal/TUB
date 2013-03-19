@@ -20,6 +20,9 @@ public enum EnumProductReferrer {
   replenish_email(16L, "replenish-email"),
   notify_email(17L, "notify-email"),
   email_newsletter(18L, "email_newsletter"),
+  homePageBanner(19L, "home_page_banner"),
+  categoryHomePage(20L, "category_home_page"),
+  categoryHomePageBanner(21L, "category_home_page_banner"),
 	;
 
   private String name;
