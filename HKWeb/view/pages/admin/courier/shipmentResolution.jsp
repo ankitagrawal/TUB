@@ -161,24 +161,18 @@
               Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
                <br>
               <s:submit name="changeCourier" value="Save" id="changeCourier"/>
-
                </fieldset>
+
+               <fieldset>
                <c:set var="soShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"  />
                <c:if test="${shipRes.shippingOrder.shippingOrderStatus.id eq soShipped}" >
                <div class="clear"></div>
-               <fieldset>
                    <h2>Change AWB</h2>
                    <br>
                    Old Awb Number <span style="color:blue;"> ${shipRes.shipment.awb.awbNumber}</span>
-                   <fieldset>
+                   Courier Name  <span style="color:blue;"> ${shipRes.shipment.awb.courier.name}</span>
                                     <c:if test="${shipRes.shippingOrder!=null}">
-                                    Please Click on the below Button to create New AWB
-                                    <div class="clear"></div>
-                                    <br>
-                                          <input type="button" value="Create Awb" class="orange" id="createAwb" />
-                                         <div style="display:none" id="displayAwb" >
-                                        <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
-                                                  <fieldset>
+                                                    <br><br>
                                                    <label>Enter Courier Id</label>
                                                      <s:select name="awb.courier"  id="status">
                                                          <s:option value="">--Select--</s:option>
@@ -192,7 +186,7 @@
                                                                  <s:option value="">-------Select-------</s:option>
                                                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbChangeReason" value="name" label="name"/>
                                                              </s:select>
-                                                      <br>
+                                                      <br><br>
                                                       <label>Enter Tracking Number</label>
                                                   <s:text name=   "awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
                                                    <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
@@ -200,18 +194,13 @@
                                                    <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
                                                    <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
                                                    <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
+                                                      <br><br>
+                                                      Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
+                                                      <br>
                                                   <s:submit name="createAssignAwbForShipment" value="Save" id="saveawb"/>
-                                                  </fieldset>
-                                                  </s:form>
-                                         </div>
-                                    </c:if>
-                      </fieldset>
-                   <br>
-                   New Awb Number <s:text name="newAwbNumber" style="width: 200px;"/>
-                   <br><br>
-                   <s:submit name="changeAwb" value="Save" id="changeAwb"/>
+                                                    </c:if>
+                                                </c:if>
                </fieldset>
-               </c:if>
 
                <fieldset>
                <h2>Change Shipment Service Type</h2>
