@@ -9,22 +9,22 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
-	<%
-		Product product_productThumb = (Product) pageContext.getAttribute("product");
-		if (product_productThumb == null) {
-			ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
-			String product_productThumbId = (String) pageContext.getAttribute("productId");
-			product_productThumb = productDao.getProductById(product_productThumbId);
-		}
+  <%
+    Product product_productThumb = (Product) pageContext.getAttribute("product");
+    if (product_productThumb == null) {
+      ProductDao productDao = ServiceLocatorFactory.getService(ProductDao.class);
+      String product_productThumbId = (String) pageContext.getAttribute("productId");
+      product_productThumb = productDao.getProductById(product_productThumbId);
+    }
 
-		pageContext.setAttribute("product", product_productThumb);
+    pageContext.setAttribute("product", product_productThumb);
 
-        if (product_productThumb instanceof Combo){
-            ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
-            Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
-            pageContext.setAttribute("combo", combo);
-        }
-	%>
+    if (product_productThumb instanceof Combo) {
+      ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
+      Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
+      pageContext.setAttribute("combo", combo);
+    }
+  %>
 	<style type="text/css">
 		.opaque {
 			opacity: 0.4;
@@ -57,7 +57,7 @@
 				</div>
 				<div>
 					<span style="height:20px;max-width:190px;">
-						<s:link href="${product.productURL}" title="${product.name}" class="prod_link">
+						<s:link href="${product.productURL}?productReferrerId=${productReferrerId}" title="${product.name}" class="prod_link">
 							${product.name}
 						</s:link>
 					</span>
