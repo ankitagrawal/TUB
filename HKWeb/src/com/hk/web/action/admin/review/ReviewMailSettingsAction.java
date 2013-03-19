@@ -9,19 +9,15 @@ import com.hk.domain.order.Order;
 import com.hk.domain.review.Mail;
 import com.hk.domain.review.ProductReviewMail;
 import com.hk.manager.EmailManager;
-import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.service.review.ProductReviewMailService;
 import com.hk.pact.service.review.ReviewCollectionFrameworkService;
 import com.hk.pact.service.review.UserReviewMailService;
-//import com.hk.web.validation.MailTypeConverter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
-import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
-import net.sourceforge.stripes.validation.ValidationMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +56,7 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
             @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"})
     })
    private ProductReviewMail productReviewMail;
    private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
