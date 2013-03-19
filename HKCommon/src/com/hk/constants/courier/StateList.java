@@ -36,7 +36,7 @@ public class StateList {
   public static final String ASSAM = "ASSAM";
   public static final String WEST_BENGAL = "WEST BENGAL";
   public static final String JHARKHAND = "JHARKHAND";
-  public static final String ORRISA = "ORRISA";
+  public static final String ORRISA = "ODISHA";
   public static final String CHHATISGARH = "CHHATISGARH";
   public static final String MADHYA_PRADESH = "MADHYA PRADESH";
   public static final String GUJARAT = "GUJARAT";
