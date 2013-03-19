@@ -47,7 +47,13 @@
                $('#displayAwb').show();
             });
             $('#saveawb').click(function(){
+                var status = $('#status').val();
+                var reasoning = $('#reasoning1').val();
                 var awbBarvalue=  $('#awbNumber').val();
+                if(status == "" || reasoning == "" || awbBarvalue == ""){
+                   alert("Please Enter all Values");
+                    return false;
+                }
                 $('#awbBarCode').attr('value',awbBarvalue);
             });
         });
@@ -182,7 +188,7 @@
                                                         </s:select>
                                                       <br><br>
                                                       Select Reason for Changing the Courier or Awb
-                                                             <s:select name="reasoning" id="reasoning">
+                                                             <s:select name="reasoning" id="reasoning1">
                                                                  <s:option value="">-------Select-------</s:option>
                                                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbChangeReason" value="name" label="name"/>
                                                              </s:select>
