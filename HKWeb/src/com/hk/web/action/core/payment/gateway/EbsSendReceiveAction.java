@@ -19,6 +19,7 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +106,10 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.secure_hash, secure_hash);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
+        String issuerCode = data.getPaymentMethod();
+        if(issuerCode != null && StringUtils.isNotBlank(issuerCode)){
+            ebsPaymentGatewayWrapper.addParameter("payment_option", data.getPaymentMethod());
+        }
 		return ebsPaymentGatewayWrapper;
 	}                                                                              
 
