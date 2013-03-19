@@ -14,6 +14,7 @@ public enum EnumAwbChangeReason {
         DUMMY_AWB(10L, "Dummy_Awb"),
         B2B_ORDER(20L, "B2b_Order"),
         CHANGED_BY_COURIER(30L,"Changed_By_Courier"),
+        DUPLICATE_AWB(40L,"Duplicate_Awb"),
         OTHERS(90L,"Others");
 
         private String name;
@@ -39,7 +40,7 @@ public enum EnumAwbChangeReason {
             this.id = id;
         }
     public static List<EnumAwbChangeReason> getAllAwbChangeReason() {
-            return Arrays.asList(DUMMY_AWB, B2B_ORDER,CHANGED_BY_COURIER, OTHERS);
+            return Arrays.asList(DUMMY_AWB, B2B_ORDER,CHANGED_BY_COURIER,DUPLICATE_AWB, OTHERS);
         }
 }
 
