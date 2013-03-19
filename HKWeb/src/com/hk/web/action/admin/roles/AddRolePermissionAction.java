@@ -12,7 +12,6 @@ import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -57,11 +56,6 @@ public class AddRolePermissionAction extends BaseAction{
         if(role!=null && userPermissions != null){
             role = roleDao.getRoleByName(role.getName());
             List<String> userPermissionList = new ArrayList<String> (Arrays.asList(userPermissions.split(",")));
-            for(Permission permission1: role.getPermissions()){
-                if (!userPermissionList.contains(permission1.getName())){
-                    userPermissionList.add(permission1.getName());
-                }
-            }
             Set<Permission> permissions = new HashSet<Permission>();
             for(String permissionName : userPermissionList){
                 permissions.add(roleDao.getPermissionByName(permissionName));
@@ -69,20 +63,6 @@ public class AddRolePermissionAction extends BaseAction{
             role.setPermissions(permissions);
             roleDao.save(role);
         }
-
-        if(role!=null && deletePermissions != null){
-            role = roleDao.getRoleByName(role.getName());
-            List<String> deletePermissionList = new ArrayList<String> (Arrays.asList(deletePermissions.split(",")));
-            Set<Permission> permissions = new HashSet<Permission>();
-            for(Permission permission1 : role.getPermissions()){
-                if(!deletePermissionList.contains(permission1.getName())){
-                    permissions.add(permission1);
-                }
-            }
-            role.setPermissions(permissions);
-            roleDao.save(role);
-        }
-
         if(user!=null && userRoles != null){
             user = userDao.getUserById(user.getId());
             List<String> userRoleList =new ArrayList<String>(Arrays.asList(userRoles.split(",")));
@@ -100,7 +80,7 @@ public class AddRolePermissionAction extends BaseAction{
             userDao.save(user);
         }
 
-        if(userPermissions != null || userRoles != null || deletePermissions != null){
+        if(userPermissions != null || userRoles != null ){
             addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully"));
         }
         return new RedirectResolution(LinkRoles);
@@ -121,7 +101,7 @@ public class AddRolePermissionAction extends BaseAction{
         if(permission != null){
             if(!getRoleService().listAllPermissions().contains(permission)){
                 permissionName = permission.getName();
-                logger.debug("Permission Name : " + roleName);
+                logger.debug("Permission Name : " + permissionName);
                 getRoleDao().save(permission);
                 addRedirectAlertMessage(new SimpleMessage("Permission Added Successfully"));
             }else{
@@ -137,10 +117,13 @@ public class AddRolePermissionAction extends BaseAction{
         if(roleName != null ){
             Role role = roleDao.getRoleByName(roleName);
             permissionList = role.getPermissions();
+            List<String> permissions  = new ArrayList<String>();
             if(permissionList.size() != 0 ){
                 for(Permission permission1 : permissionList){
-                    dataMap.put(permission1.getName(),permission1.getName());
-                }HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,"Valid Permissions",dataMap);
+                    permissions.add(permission1.getName());
+                }
+                dataMap.put("permission",permissions);
+                HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK,"Valid Permissions",dataMap);
             }else{
                 HKResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR,"No permissions for this Role");
             }
@@ -156,15 +139,6 @@ public class AddRolePermissionAction extends BaseAction{
 
     public void setRoleDao(RoleDao roleDao1){
         this.roleDao = roleDao1;
-    }
-
-
-    public UserDao getUserDao(){
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao1){
-        this.userDao = userDao1;
     }
 
     public Role getRole(){

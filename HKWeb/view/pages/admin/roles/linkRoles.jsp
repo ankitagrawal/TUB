@@ -35,22 +35,21 @@
                         <s:options-collection collection="${roleList}" value="name" label="name"/>
                     </s:select>
                 </div> <br/><br/>
-                <div>
-                    <div>
+                <div style="width:1160px;margin:10px;float: left;">
+                    <div style="float: left;">
                         <label>Permissions </label>&nbsp;
-                        <s:select id="mltPermission" name="permissionList"  style="width: 275px; height: 126px; padding: 2" multiple="true">
+                        <s:select name="allPermission" id= "mltPerm" style="width : 275px; padding: 2">
+                            <s:option value="">---Select one permission to add---</s:option>
                             <s:options-collection collection="${permissionList}" value="name" label="name"/>
                         </s:select> &nbsp;&nbsp;&nbsp;
-                        <label> Existing Permissions to Role </label>
-                        <s:select name="currPermissions" id="currPerm" style="width: 275px; height: 126px; padding: 2" multiple="true">
-                            <s:option value="">---Select to delete---</s:option>
-                        </s:select>
+                    </div>
+                    <div style="float: right;width:730px;">
+                        <label style="float:left;width:265px;"> Add/Delete Permissions to save : </label>
+                        <ul id="currPerm" style="float: right;min-width:380px;margin:0 40px 0 0 ;height:100px;overflow-y: scroll; background-color:#F2F7FB; padding: 10px;border:1px solid #A2C4E5; "/>
                     </div>
                 </div>
                 <s:hidden name="userPermissions" id="userPermissions"/>
-                <s:hidden name="deletePermissions" id="delPermissions"/>
-                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="savePermissions" />
-                <s:submit name="linkRoles" value="deletePermissions" style="font-size: 0.9em" id="deletePermissions"/>
+                <s:submit name="linkRoles" value="Save Permissions for Role" style="font-size:0.9em" id="savePermissions" />
             </fieldset>
             <fieldset>
                 <div>
@@ -65,33 +64,33 @@
                         </c:forEach>
                     </s:select>
                 </div><br/><br/>
-                <div >
-                    <label>Roles</label>&nbsp;
-                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 275px; height: 126px; padding: 2">
-                        <s:options-collection collection="${roleList}" value="name" label="name"/>
+                <div>
+                    <label style="float:left;width:265px;">Add Roles to User</label>&nbsp;
+                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 275px; height: 126px; ">
+                        <s:options-collection collection="${roleList}" value="name" label="name"/><br/>
                     </s:select>
                 </div>
                 <s:hidden name="userRoles" id="userRoles"  />
-                <s:submit name="linkRoles" value="linkRoles" style="font-size:0.9em" id="saveRoles"/>
+                <s:submit name="linkRoles" value="Save Roles to User" style="font-size:0.9em" id="saveRoles"/>
             </fieldset>
         </s:form>
     </s:layout-component>
 </s:layout-render>
 
 <script type="text/javascript">
-
     $(document).ready(function(){
         $("#roleSelect").change(function(){
-            var r = $(this).val();
-            $.getJSON($("#getPerm").attr('href'),{roleName : r}, function(result){
+            var role = $(this).val();
+            $.getJSON($("#getPerm").attr('href'),{roleName : role}, function(result){
                         if (result.code == '<%=HealthkartResponse.STATUS_OK%>') {
                             $("#currPerm").empty();
-                            $('<option />', {value: "", text: "----Select to Delete---"}).appendTo($("#currPerm"));
-                            $.each(result.data, function(key,val){
-                                $('<option />', {value: val, text: val}).appendTo($("#currPerm"));
-                            });
+                            var permissions = result.data.permission;
+                            for(var i = 0; i < permissions.length; i++){
+                                $('#currPerm').append("<li style='margin-top:0;' class='delPermission'><a href='javascript:void(0)' > " + permissions[i] + "</a></li>");
+                            }
                         }else {
                             alert(result.message);
+                            $("#currPerm").empty();
                             return false;
                         }
                     }
@@ -114,40 +113,40 @@
                 }
             });
         });
-        $('#savePermissions').click(function(){
+        $("#mltPerm").change(function(){
             if($('#roleSelect').val() == ""){
-                alert("Choose valid entries");
+                alert("Kindly choose a role");
                 return false;
             }
-            $('#mltPermission').each(function(j,selectedPermissions){
-                var userPermissions = "";
-                userPermissions += (userPermissions == "") ? "" : ",";
-                userPermissions += ($(selectedPermissions).val());
-                if(userPermissions == "null"){
-                    alert("Select atleast one Permission to link to this Role");
+            var x = false;
+            $("#currPerm li a").map(function() {
+                if($(this).text().trim()==  $("#mltPerm").val()){
+                    x = true;
+                    alert("This already exists");
                     return false;
-                }else{
-                    $('#userPermissions').val(userPermissions);
                 }
             });
+            if($(this).val()!= "" && x == false){
+                $('#currPerm').append("<li style='margin-top:0;' class='delPermission'><a href='javascript:void(0)' >" + $(this).val() + "</a></li>");
+            }
         });
-
-        $('#deletePermissions').click(function(){
+        $(".delPermission").live("click",function(){
+            $(this).remove();
+        });
+        $("#savePermissions").click(function(){
             if($('#roleSelect').val() == ""){
                 alert("Choose valid entries");
                 return false;
             }
-            $('#currPerm').each(function(j,selectedPermissions){
-                var deletePermissions = "";
-                deletePermissions += (deletePermissions == "") ? "" : ",";
-                deletePermissions += ($(selectedPermissions).val());
-                if(deletePermissions == "null"){
-                    alert("Select atleast one Permission to delete");
-                    return false;
-                }else{
-                    $('#delPermissions').val(deletePermissions);
-                }
-            });
+            var values = $("#currPerm li a").map(function() {
+                return $(this).text().trim();
+            }).get();
+            if(values == ""){
+                alert("No permissions to save");
+                return false;
+            }else{
+                $('#userPermissions').val(values);
+            }
         });
     });
 </script>

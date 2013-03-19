@@ -14,16 +14,18 @@
             <fieldset id = "addRole">
                 <div class = "new role">
                     <legend>Add New Role</legend>  <br/> <br/>
-                    <label>Role: </label> &nbsp; <s:text id = "role-name" name="role.name"/><br/>
-                    <s:submit name="saveRoleAndPermission" value="save"/>
+                    <label style="float:left;width:300px;">Name of new Role: </label> &nbsp;
+                    <s:text style= "width:200px;" id = "role-name" name="role.name"/> <br/>
+                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save"/>
                 </div>
             </fieldset>
             <a href="#" id="buttonPermission"> Add New Permission</a> <br/><br/>
             <fieldset id = "addPermission">
                 <div class = "new permission">
                     <legend>Add New Permission</legend>  <br/> <br/>
-                    <label>Permission: </label> &nbsp; <s:text id = "permission-name" name="permission.name"/><br/>
-                    <s:submit name="saveRoleAndPermission" value="save"/>
+                    <label style="float:left;width:300px;">Name of a new Permission: </label> &nbsp;
+                    <s:text style="width:200px;" id = "permission-name" name="permission.name"/><br/>
+                    <s:submit style="float:left;" name="saveRoleAndPermission" value="save"/>
                 </div>
             </fieldset>
             <s:link beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction" event="linkRolePermission">
