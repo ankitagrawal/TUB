@@ -157,27 +157,33 @@ public class ReconciliationVoucherParser {
                 String itemBarcode = row.getColumnValue(XslConstants.ITEM_BARCODE);
                 String variantId = row.getColumnValue(XslConstants.VARIANT_ID);
                 String reconReason = row.getColumnValue(XslConstants.RECON_REASON);
+                String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
+                String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
+                String qtyString = row.getColumnValue(XslConstants.QTY);
+                String systemQtyString = row.getColumnValue(XslConstants.SYSTEM_QTY);
+                String mrpString = row.getColumnValue(XslConstants.MRP);
+                String costString = row.getColumnValue(XslConstants.COST);
+
                 Double mrp = null;
                 Double cost = null;
                 Long qtyForDeletion = null;
                 Long systemQty = null;
-                String mrpString = row.getColumnValue(XslConstants.MRP);
+
+
                 if (mrpString != null && !StringUtils.isBlank(mrpString)) {
                     mrp = XslUtil.getDouble(mrpString);
                 }
-                String costString = row.getColumnValue(XslConstants.COST);
 
                 if (costString != null && !StringUtils.isBlank(costString)) {
                     cost = XslUtil.getDouble(costString);
                 }
-                String qtyString = row.getColumnValue(XslConstants.QTY);
-                String systemQtyString = row.getColumnValue(XslConstants.SYSTEM_QTY);
                 if (qtyString != null && !StringUtils.isBlank(qtyString)) {
                     qtyForDeletion = XslUtil.getLong(qtyString);
                 }
                 if (systemQtyString != null && !StringUtils.isBlank(systemQtyString)) {
                     systemQty = XslUtil.getLong(systemQtyString);
                 }
+
 
                 if (qtyForDeletion == null || qtyForDeletion <= 0) {
                     throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
@@ -187,14 +193,12 @@ public class ReconciliationVoucherParser {
                     throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
                 }
 
-                String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
-                String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
-                SkuGroup skuGroup = null;
-                SkuItem skuItem = null;
                 if (groupBarcode == null && itemBarcode == null && variantId == null && reconReason == null && mrp == null && cost == null && qtyForDeletion == null &&
                         batchNumber == null && strExpiryDate == null) {
                     return rvLineItems;
                 }
+
+
                 if (reconReason == null) {
                     throw new Exception("Blank Recon Reason  @ Row:" + rowCount);
                 }
@@ -202,6 +206,9 @@ public class ReconciliationVoucherParser {
                 if (reconciliationType == null) {
                     throw new Exception("Invalid Recon Reason  @ Row:" + rowCount);
                 }
+
+                SkuGroup skuGroup = null;
+                SkuItem skuItem = null;
                 if (groupBarcode != null && !StringUtils.isBlank(groupBarcode)) {
                     List<SkuGroup> skuGroupList = skuGroupService.getSkuGroup(groupBarcode.trim(), warehouse.getId());
                     if (skuGroupList == null || skuGroupList.isEmpty()) {
@@ -217,7 +224,6 @@ public class ReconciliationVoucherParser {
                     if (skuItem == null) {
                         throw new Exception("Invalid Item Barcode  @ Row:" + rowCount);
                     }
-                    skuGroup = skuItem.getSkuGroup();
                 } else {
                     throw new Exception("Invalid Barcode  @ Row:" + rowCount);
                 }
@@ -264,7 +270,11 @@ public class ReconciliationVoucherParser {
 
                 if (productVariant != null) {
                     RvLineItem rvLineItem = new RvLineItem();
-                    rvLineItem.setSkuGroup(skuGroup);
+                    if (skuGroup != null) {
+                        rvLineItem.setSkuGroup(skuGroup);
+                    } else {
+                        rvLineItem.setSkuItem(skuItem);
+                    }
                     rvLineItem.setProductVariant(productVariant);
                     rvLineItem.setBatchNumber(batchNumber);
                     rvLineItem.setQty(qtyForDeletion);

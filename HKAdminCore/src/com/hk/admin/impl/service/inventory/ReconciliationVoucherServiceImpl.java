@@ -310,31 +310,29 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         return rvLineItem;
     }
 
+
     @Transactional
     public void reconcileSubtractRV(ReconciliationVoucher reconciliationVoucher, List<RvLineItem> rvLineItemList) {
         for (RvLineItem rvLineItem : rvLineItemList) {
             ReconciliationType reconciliationType = rvLineItem.getReconciliationType();
             if (rvLineItem.getSkuItem() != null) {
                 rvLineItem.setSkuGroup(rvLineItem.getSkuItem().getSkuGroup());
-                reconcileSKUItems(reconciliationVoucher, reconciliationType, rvLineItem.getSkuItem(), null, rvLineItem);
+                reconcileSKUItems(reconciliationVoucher, reconciliationType, rvLineItem.getSkuItem(), "Uploaded By Excel By Batches");
             } else {
                 SkuGroup skuGroup = rvLineItem.getSkuGroup();
                 List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
                 int qty = rvLineItem.getQty().intValue();
                 while (qty > 0) {
-                    reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItemList.get(qty - 1), null, rvLineItem);
+                    reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItemList.get(qty - 1), "Uploaded by Excel By Item Barcode");
                     qty--;
                 }
             }
         }
     }
 
-    public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks) {
-        return reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItem, remarks, null);
-    }
 
 
-    private RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks, RvLineItem rvLineItem) {
+    public  RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks) {
         SkuGroup skuGroup = skuItem.getSkuGroup();
         Sku sku = skuGroup.getSku();
         int subtractionType = reconciliationType.getId().intValue();
@@ -370,8 +368,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.FreeVariant.getSkuItemStatus());
                 break;
         }
-        if (rvLineItem == null) {
-            rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
+
+            RvLineItem rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
             if (rvLineItem == null) {
                 rvLineItem = createRVLineItemWithBasicDetails(skuGroup, sku);
             }
@@ -386,7 +384,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 rvLineItem.setQty(1L);
             }
 
-        }
+
         skuItem = skuGroupService.saveSkuItem(skuItem);
         rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
         adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
