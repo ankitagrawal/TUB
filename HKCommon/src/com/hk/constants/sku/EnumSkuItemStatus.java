@@ -18,7 +18,8 @@ public enum EnumSkuItemStatus {
     Lost(60L, "Lost"),
     BatchMismatch(70L, "Batch Mismatch"),
     MrpMismatch(80L, "Mrp Mismatch"),
-    FreeVariant(90L, "Free Variant");
+    FreeVariant(90L, "Free Variant"),
+    NonMoving(100L, "Non Moving");
 
     private Long id;
 	private String name;

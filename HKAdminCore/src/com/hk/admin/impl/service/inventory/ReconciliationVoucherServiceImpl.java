@@ -363,6 +363,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 break;
             case 80:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.NonMoving.getSkuItemStatus());
                 break;
             case 90:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
