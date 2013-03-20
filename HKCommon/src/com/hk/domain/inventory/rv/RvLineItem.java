@@ -21,6 +21,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.sku.SkuItem;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 
@@ -60,12 +61,15 @@ public class RvLineItem implements java.io.Serializable {
   @Column(name = "expiry_date", length = 19)
   private Date expiryDate;
 
-   @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sku_group_id")
-	private SkuGroup skuGroup;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sku_group_id")
+    private SkuGroup skuGroup;
 
-  @Transient
-  private ProductVariant productVariant;
+    @Transient
+    private ProductVariant productVariant;
+
+    @Transient
+    private SkuItem skuItem;
 
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -225,6 +229,14 @@ public class RvLineItem implements java.io.Serializable {
 
     public void setSkuGroup(SkuGroup skuGroup) {
         this.skuGroup = skuGroup;
+    }
+
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
+
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
     }
 }
 

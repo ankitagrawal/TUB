@@ -101,4 +101,22 @@ public class SkuItem implements java.io.Serializable,Comparable<SkuItem> {
 		if (this.getId() > skuItem.getId()) return 1;
 		return 0;
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SkuItem)) {
+            return false;
+        }
+        SkuItem skuItem = (SkuItem) o;
+
+        if (this.id != null && skuItem.getId() != null) {
+            return this.id.equals(skuItem.getId());
+        }
+        return false;
+    }
+
+
 }

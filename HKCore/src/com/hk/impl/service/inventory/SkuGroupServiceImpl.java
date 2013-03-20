@@ -31,6 +31,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     @Autowired
     SkuItemDao skuItemDao;
 
+
     //SkuGroupDao Methods
     public List<SkuGroup> getAllCheckedInBatches(ProductVariant productVariant) {
         return skuGroupDao.getAllCheckedInBatches(productVariant);
@@ -90,6 +91,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId) {
         return skuItemDao.getSkuItemByBarcode(barcode, warehouseId, statusId);
+    }
+
+    public SkuItem saveSkuItem(SkuItem skuItem) {
+        return (SkuItem) skuItemDao.save(skuItem);
     }
 
 

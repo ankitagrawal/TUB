@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -24,11 +25,13 @@ import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -52,6 +55,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     SkuItemDao skuItemDao;
     @Autowired
     UserService userService;
+    @Autowired
+    SkuGroupService skuGroupService;
 
     @Autowired
     ProductVariantDao productVariantDao;
@@ -76,7 +81,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     private ProductVariantService productVariantService;
 
 
-    public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher) {
+    public void reconcileAddRV(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher) {
 
 
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
@@ -97,7 +102,35 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             if (rvLineItem.getQty() != null && rvLineItem.getQty() == 0 && rvLineItem.getId() != null) {
                 getBaseDao().delete(rvLineItem);
             } else if (rvLineItem.getId() == null) {
-                if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Add.getId())) {
+
+
+                int additionType = rvLineItem.getReconciliationType().getId().intValue();
+                InvTxnType invTxnType = null;
+
+                switch (additionType) {
+                    case 10:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN);
+                        break;
+                    case 30:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED);
+                        break;
+                    case 40:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED);
+                        break;
+                    case 60:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_BATCH_MISMATCH);
+                        break;
+                    case 70:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
+                        break;
+                    case 80:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
+                        break;
+                    case 90:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
+                        break;
+                }
+
                     rvLineItem.setSku(sku);
                     rvLineItem.setReconciliationVoucher(reconciliationVoucher);
                     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
@@ -111,70 +144,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     rvLineItem.setReconciledQty(rvLineItem.getQty());
                     rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
 
-                } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Subtract.getId())) {
-                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
-                    if (!instockSkuItems.isEmpty()) {
-                        rvLineItem.setSku(sku);
-                        rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-
-                        if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
-                            // Delete from available batches.
-                            int counter = 0;
-                            for (SkuItem instockSkuItem : instockSkuItems) {
-                                if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem, null,
-                                            EnumInvTxnType.RV_LOST_PILFERAGE.asInvTxnType(), -1L, loggedOnUser);
-                                    counter++;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Damage.getId())) {
-                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
-                    int counter = 0;
-                    if (!instockSkuItems.isEmpty()) {
-                        rvLineItem.setSku(sku);
-                        rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-                        if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
-                            // Delete from available batches.
-                            for (SkuItem instockSkuItem : instockSkuItems) {
-                                if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem, null,
-                                            EnumInvTxnType.RV_DAMAGED.asInvTxnType(), -1L, loggedOnUser);
-                                    adminInventoryService.damageInventoryCheckin(instockSkuItem, null);
-                                    counter++;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else if (rvLineItem.getReconciliationType().getId().equals(EnumReconciliationType.Expired.getId())) {
-                    List<SkuItem> instockSkuItems = adminSkuItemDao.getInStockSkuItemsBySku(sku);
-                    int counter = 0;
-                    if (!instockSkuItems.isEmpty()) {
-                        rvLineItem.setSku(sku);
-                        rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                        rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-                        if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
-                            // Delete from available batches.
-                            for (SkuItem instockSkuItem : instockSkuItems) {
-                                if (counter < Math.abs(rvLineItem.getQty())) {
-                                    adminInventoryService.inventoryCheckinCheckout(sku, instockSkuItem, null, null, null, rvLineItem, null,
-                                            EnumInvTxnType.RV_EXPIRED.asInvTxnType(), -1L, loggedOnUser);
-                                    // inventoryService.damageInventoryCheckin(instockSkuItem, null);
-                                    counter++;
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
 
                 // Check inventory health now.
                 inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
@@ -198,7 +167,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         return (ReconciliationVoucher) baseDao.save(reconciliationVoucher);
 
     }
-
+    /* Commenting code for Bulk reconcile and save
     public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList) {
         User loggedOnUser = userService.getLoggedInUser();
         if (rvLineItem.getId() == null) {
@@ -301,8 +270,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
         return rvLineItem;
     }
+   */
 
-
+    /* Commenting Code for bulk reconcile
     public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher) {
         logger.debug("rvLineItems@Save: " + rvLineItems.size());
 
@@ -321,7 +291,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
         }
     }
-
+    */
     public void delete(ReconciliationVoucher reconciliationVoucher) {
         getBaseDao().delete(reconciliationVoucher);
     }
@@ -341,8 +311,31 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         return rvLineItem;
     }
 
+    @Transactional
+    public void reconcileSubtractRV(ReconciliationVoucher reconciliationVoucher, List<RvLineItem> rvLineItemList) {
+        for (RvLineItem rvLineItem : rvLineItemList) {
+            ReconciliationType reconciliationType = rvLineItem.getReconciliationType();
+            if (rvLineItem.getSkuItem() != null) {
+                rvLineItem.setSkuGroup(rvLineItem.getSkuItem().getSkuGroup());
+                reconcileSKUItems(reconciliationVoucher, reconciliationType, rvLineItem.getSkuItem(), null, rvLineItem);
+            } else {
+                SkuGroup skuGroup = rvLineItem.getSkuGroup();
+                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+                int qty = rvLineItem.getQty().intValue();
+                while (qty > 0) {
+                    reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItemList.get(qty - 1), null, rvLineItem);
+                    qty--;
+                }
+            }
+        }
+    }
 
     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks) {
+        return reconcileSKUItems(reconciliationVoucher, reconciliationType, skuItem, remarks, null);
+    }
+
+
+    private RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks, RvLineItem rvLineItem) {
         SkuGroup skuGroup = skuItem.getSkuGroup();
         Sku sku = skuGroup.getSku();
         int subtractionType = reconciliationType.getId().intValue();
@@ -351,41 +344,50 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         switch (subtractionType) {
             case 30:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
                 break;
             case 40:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
                 break;
             case 50:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_LOST_PILFERAGE);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.Lost.getSkuItemStatus());
                 break;
             case 60:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_BATCH_MISMATCH);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.BatchMismatch.getSkuItemStatus());
                 break;
             case 70:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MRP_MISMATCH);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.MrpMismatch.getSkuItemStatus());
                 break;
             case 80:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
                 break;
             case 90:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
+                skuItem.setSkuItemStatus(EnumSkuItemStatus.FreeVariant.getSkuItemStatus());
                 break;
         }
-
-        RvLineItem rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
         if (rvLineItem == null) {
-            rvLineItem = createRVLineItemWithBasicDetails(skuGroup, sku);
+            rvLineItem = reconciliationVoucherDao.getRvLineItems(reconciliationVoucher, sku, skuGroup, reconciliationType);
+            if (rvLineItem == null) {
+                rvLineItem = createRVLineItemWithBasicDetails(skuGroup, sku);
+            }
+            rvLineItem.setReconciliationType(reconciliationType);
+            rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+            rvLineItem.setRemarks(remarks);
+            if (rvLineItem.getReconciledQty() != null) {
+                rvLineItem.setReconciledQty(rvLineItem.getReconciledQty() + 1L);
+                rvLineItem.setQty(rvLineItem.getQty() + 1L);
+            } else {
+                rvLineItem.setReconciledQty(1L);
+                rvLineItem.setQty(1L);
+            }
+
         }
-        rvLineItem.setReconciliationType(reconciliationType);
-        rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-        rvLineItem.setRemarks(remarks);
-        if (rvLineItem.getReconciledQty() != null) {
-            rvLineItem.setReconciledQty(rvLineItem.getReconciledQty() + 1L);
-            rvLineItem.setQty(rvLineItem.getQty() + 1L);
-        } else {
-            rvLineItem.setReconciledQty(1L);
-            rvLineItem.setQty(1L);
-        }
+        skuItem = skuGroupService.saveSkuItem(skuItem);
         rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
         adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
                 invTxnType, -1L, userService.getLoggedInUser());
@@ -396,9 +398,5 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         return rvLineItem;
     }
 
-
-    /*public List<RvLineItem> getRvLineItems (ReconciliationVoucher reconciliationVoucher){
-        return reconciliationVoucherDao.getRvLineItems(reconciliationVoucher);
-    }*/
 
 }

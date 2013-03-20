@@ -149,20 +149,23 @@
                     <td><fmt:formatDate value="${cCItem.skuGroup.mfgDate}" type="date"/></td>
                     <td><fmt:formatDate value="${cCItem.skuGroup.expiryDate}" type="date"/></td>
                     <td>
-                        <c:choose>
-                            <c:when test="${cycle.cycleCount.cycleStatus >= approved}">
-                                <label class="scannedQty"> ${cCItem.scannedQty} </label>
-                            </c:when>
-                            <c:otherwise>
-                                <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
-                                    <input type="text" name="cycleCountItems[${ctr.index}].scannedQty"
-                                           class="scannedQty" value="${cCItem.scannedQty}"/>
-                                </shiro:hasPermission>
-                                <shiro:lacksPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
-                                    <label class="scannedQty"> ${cCItem.scannedQty} </label>
-                                </shiro:lacksPermission>
-                            </c:otherwise>
-                        </c:choose>
+                        <label class="scannedQty"> ${cCItem.scannedQty} </label>
+
+
+                        <%--<c:choose>--%>
+                            <%--<c:when test="${cycle.cycleCount.cycleStatus >= approved}">--%>
+                                <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
+                            <%--</c:when>--%>
+                            <%--<c:otherwise>--%>
+                                <%--<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
+                                    <%--<input type="text" name="cycleCountItems[${ctr.index}].scannedQty"--%>
+                                           <%--class="scannedQty" value="${cCItem.scannedQty}"/>--%>
+                                <%--</shiro:hasPermission>--%>
+                                <%--<shiro:lacksPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
+                                    <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
+                                <%--</shiro:lacksPermission>--%>
+                            <%--</c:otherwise>--%>
+                        <%--</c:choose>--%>
                     </td>
                     <c:set value="${cycle.cycleCountPviMap}" var="item"/>
                     <td><label class="systemQty">${item[cCItem.id]}</label></td>
@@ -263,6 +266,14 @@
         </div>
 
     </s:form>
+    <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+        <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+        <c:if test="${cycle.cycleCount.cycleStatus == pendingForApproval}">
+            <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
+                <s:submit name="moveToInProgressStatus" value="MoveToInProgress"/>
+            </shiro:hasPermission>
+        </c:if>
+    </s:form>
     </div>
 </c:if>
 
@@ -274,12 +285,24 @@
 
     </div>
     <fieldset class="right_label" style="display: inline-block">
-        <legend>Download Reconciliation Add Excel</legend>
+        <legend>Download Add RV Excel</legend>
         <ul>
             <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
                 <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
                 <li>
-                    <s:submit name="generateReconAddExcel" value="RvAdd"/>
+                    <s:submit name="generateReconAddExcel" value="Add RV"/>
+                </li>
+            </s:form>
+        </ul>
+    </fieldset>
+
+    <fieldset class="right_label" style="display: inline-block">
+        <legend>Download Subtract RV Excel</legend>
+        <ul>
+            <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                <li>
+                    <s:submit name="generateSubtractRVExcel" value="Subtract RV"/>
                 </li>
             </s:form>
         </ul>

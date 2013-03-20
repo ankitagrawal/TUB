@@ -1,5 +1,10 @@
 package com.hk.admin.util.helper;
 
+import com.hk.admin.util.XslUtil;
+import com.hk.constants.inventory.EnumReconciliationType;
+import com.hk.domain.cycleCount.CycleCount;
+import com.hk.domain.inventory.rv.ReconciliationType;
+import com.hk.pact.service.inventory.SkuGroupService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
@@ -35,6 +40,8 @@ public class CycleCountHelper {
     File xlsFile;
     @Autowired
     private UserService userService;
+    @Autowired
+    SkuGroupService skuGroupService;
     private static Logger logger = LoggerFactory.getLogger(CycleCountHelper.class);
 
     public File generateReconVoucherAddExcel(List<CycleCountItem> cycleCountItems, File xlsFile, Map<Long, Integer> cycleCountPVImap) {
@@ -48,6 +55,7 @@ public class CycleCountHelper {
         xlsWriter.addHeader(XslConstants.MFG_DATE, XslConstants.MFG_DATE);
         xlsWriter.addHeader(XslConstants.MRP, XslConstants.MRP);
         xlsWriter.addHeader(XslConstants.COST, XslConstants.COST);
+        xlsWriter.addHeader(XslConstants.RECON_REASON, XslConstants.RECON_REASON);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
 
         for (CycleCountItem cycleCountItem : cycleCountItems) {
@@ -72,6 +80,69 @@ public class CycleCountHelper {
 
             xlsWriter.addCell(xlsRow, skuGroup.getMrp());
             xlsWriter.addCell(xlsRow, skuGroup.getCostPrice());
+            xlsWriter.addCell(xlsRow, "");
+            xlsRow++;
+        }
+        xlsWriter.writeData(xlsFile, "Sheet1");
+        return xlsFile;
+
+    }
+
+
+    public File generateSubtractRvExcel(List<CycleCountItem> cycleCountItems, File xlsFile) {
+        this.xlsFile = xlsFile;
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+        int xlsRow = 1;
+        xlsWriter.addHeader(XslConstants.GROUP_BARCODE, XslConstants.GROUP_BARCODE);
+        xlsWriter.addHeader(XslConstants.ITEM_BARCODE, XslConstants.ITEM_BARCODE);
+        xlsWriter.addHeader(XslConstants.VARIANT_ID, XslConstants.VARIANT_ID);
+        xlsWriter.addHeader(XslConstants.QTY, XslConstants.QTY);
+        xlsWriter.addHeader(XslConstants.BATCH_NUMBER, XslConstants.BATCH_NUMBER);
+        xlsWriter.addHeader(XslConstants.EXP_DATE, XslConstants.EXP_DATE);
+        xlsWriter.addHeader(XslConstants.MFG_DATE, XslConstants.MFG_DATE);
+        xlsWriter.addHeader(XslConstants.MRP, XslConstants.MRP);
+        xlsWriter.addHeader(XslConstants.COST, XslConstants.COST);
+        xlsWriter.addHeader(XslConstants.RECON_REASON, XslConstants.RECON_REASON);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+
+        for (CycleCountItem cycleCountItem : cycleCountItems) {
+            String groupBarcode = "";
+            String itemBarcode = "";
+            SkuGroup skuGroup = null;
+            if (cycleCountItem.getSkuGroup() == null) {
+                xlsWriter.addCell(xlsRow, "");
+            } else {
+                skuGroup = cycleCountItem.getSkuGroup();
+                groupBarcode = skuGroup.getBarcode();
+                xlsWriter.addCell(xlsRow, groupBarcode);
+            }
+            if (cycleCountItem.getSkuItem() == null) {
+                xlsWriter.addCell(xlsRow, "");
+            } else {
+                skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
+                itemBarcode = cycleCountItem.getSkuItem().getBarcode();
+                xlsWriter.addCell(xlsRow, itemBarcode);
+            }
+            xlsWriter.addCell(xlsRow, skuGroup.getSku().getProductVariant().getId());
+            int systemQty = cycleCountItem.getSystemQty();
+            int scannedQty = cycleCountItem.getScannedQty();
+            int qtyToSubtract = Math.abs(systemQty - scannedQty);
+            xlsWriter.addCell(xlsRow, qtyToSubtract);
+            xlsWriter.addCell(xlsRow, skuGroup.getBatchNumber());
+            String expiryDate = "";
+            if (skuGroup.getExpiryDate() != null) {
+                expiryDate = sdf.format(skuGroup.getExpiryDate());
+            }
+            xlsWriter.addCell(xlsRow, expiryDate);
+            String mfgDate = "";
+            if (skuGroup.getMfgDate() != null) {
+                mfgDate = sdf.format(skuGroup.getMfgDate());
+            }
+            xlsWriter.addCell(xlsRow, mfgDate);
+
+            xlsWriter.addCell(xlsRow, skuGroup.getMrp());
+            xlsWriter.addCell(xlsRow, skuGroup.getCostPrice());
+            xlsWriter.addCell(xlsRow, "");
 
             xlsRow++;
         }
@@ -327,6 +398,115 @@ public class CycleCountHelper {
 
 
         return barcodeQtyMap;
+    }
+
+    public Map<SkuGroup, List<SkuItem>> populateScannedSkuItemsBySkuGroupMap(List<CycleCountItem> cycleCountItems) {
+        Map<SkuGroup, List<SkuItem>> totalScannedSkuItemBySkuGroup = new HashMap<SkuGroup, List<SkuItem>>();
+        for (CycleCountItem cycleCountItem : cycleCountItems) {
+            if (cycleCountItem.getSkuItem() != null) {
+                SkuItem skuItem = cycleCountItem.getSkuItem();
+                if (totalScannedSkuItemBySkuGroup.containsKey(skuItem.getSkuGroup())) {
+                    List<SkuItem> alreadyStoredSkuItemList = totalScannedSkuItemBySkuGroup.get(skuItem.getSkuGroup());
+                    alreadyStoredSkuItemList.add(cycleCountItem.getSkuItem());
+                    totalScannedSkuItemBySkuGroup.put(skuItem.getSkuGroup(), alreadyStoredSkuItemList);
+                } else {
+                    List<SkuItem> skuItemList = new ArrayList<SkuItem>();
+                    skuItemList.add(skuItem);
+                    totalScannedSkuItemBySkuGroup.put(skuItem.getSkuGroup(), skuItemList);
+                }
+            }
+        }
+        return totalScannedSkuItemBySkuGroup;
+    }
+
+
+    public void generateCycleCountItemsCombiningSkuGroupAndSkuItemScanning(CycleCount cycleCount, Map<Long, Integer> cycleCountPviMap, List<SkuGroup> skuGroupNeverScanned, Map<Long, Integer> missedSkuGroupSystemInventoryMap, File excelFile) {
+
+        List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
+        List<CycleCountItem> cycleCountItemListForRVSubtract = new ArrayList<CycleCountItem>();
+        Map<SkuGroup, List<SkuItem>> scannedSkuItemsMapOriginal = populateScannedSkuItemsBySkuGroupMap(cycleCountItems);
+        Map<SkuGroup, List<SkuItem>> scannedSkuItemsBySkuGroupMap = scannedSkuItemsMapOriginal;
+
+        for (CycleCountItem cycleCountItem : cycleCountItems) {
+            int systemQty = 0, scannedQty = 0;
+            SkuGroup skuGroup = null;
+            if (cycleCountItem.getSkuGroup() != null) {
+                systemQty = cycleCountPviMap.get(cycleCountItem.getId());
+                scannedQty = cycleCountItem.getScannedQty();
+
+            } else {
+                skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
+                if (scannedSkuItemsBySkuGroupMap.containsKey(skuGroup)) {
+                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+                    if (skuItemList != null) {
+                        systemQty = skuItemList.size();
+                    }
+                    scannedQty = scannedSkuItemsBySkuGroupMap.get(cycleCountItem.getSkuGroup()).size();
+                    scannedSkuItemsBySkuGroupMap.remove(cycleCountItem.getSkuGroup());
+                } else {
+                    continue;
+                }
+            }
+            cycleCountItem.setScannedQty(scannedQty);
+            cycleCountItem.setSystemQty(systemQty);
+            if (systemQty - scannedQty > 0) {
+                cycleCountItemListForRVSubtract.add(cycleCountItem);
+            }
+
+
+        }
+
+        filterBySkuItemAndSkuGroup(cycleCountItemListForRVSubtract, scannedSkuItemsMapOriginal, skuGroupNeverScanned, missedSkuGroupSystemInventoryMap, excelFile);
+
+
+    }
+
+    private void filterBySkuItemAndSkuGroup(List<CycleCountItem> cycleCountItemListForRVSubtract, Map<SkuGroup, List<SkuItem>> scannedSkuItemsMapOriginal, List<SkuGroup> skuGroupNeverScanned, Map<Long, Integer> missedSkuGroupSystemInventoryMap, File excelFile) {
+        List<CycleCountItem> finalListOfCycleCountItemsList = new ArrayList<CycleCountItem>();
+        for (CycleCountItem cycleCountItem : cycleCountItemListForRVSubtract) {
+            SkuGroup skuGroup = cycleCountItem.getSkuGroup();
+            if (scannedSkuItemsMapOriginal.containsKey(skuGroup)) {
+                List<SkuItem> skuItemListShouldNotBeDeleted = scannedSkuItemsMapOriginal.get(skuGroup);
+                List<SkuItem> inStockSkuItem = skuGroupService.getInStockSkuItems(skuGroup);
+                inStockSkuItem.removeAll(skuItemListShouldNotBeDeleted);
+                List<SkuItem> skuItemShouldBeDeleted = inStockSkuItem;
+                List<CycleCountItem> cycleCountItemListForDeletion = createCycleCountItemsForSkuItemsEligibleForDeletion(skuItemShouldBeDeleted, cycleCountItem);
+                finalListOfCycleCountItemsList.addAll(cycleCountItemListForDeletion);
+            } else {
+                cycleCountItem.setSkuItem(null);
+                finalListOfCycleCountItemsList.add(cycleCountItem);
+            }
+
+        }
+
+        for (SkuGroup skuGroup : skuGroupNeverScanned) {
+            CycleCountItem cycleCountItemAtSkUGroupLevel = new CycleCountItem();
+            cycleCountItemAtSkUGroupLevel.setSkuGroup(skuGroup);
+            cycleCountItemAtSkUGroupLevel.setSystemQty(missedSkuGroupSystemInventoryMap.get(skuGroup.getId()));
+            cycleCountItemAtSkUGroupLevel.setScannedQty(0);
+            finalListOfCycleCountItemsList.add(cycleCountItemAtSkUGroupLevel);
+        }
+
+        generateSubtractRvExcel(finalListOfCycleCountItemsList, excelFile);
+
+    }
+
+
+    private List<CycleCountItem> createCycleCountItemsForSkuItemsEligibleForDeletion(List<SkuItem> skuItemShouldBeDeleted, CycleCountItem cycleCountItem) {
+        List<CycleCountItem> cycleCountItemListForSkuItems = new ArrayList<CycleCountItem>();
+
+        int qtyToBeDeleted = cycleCountItem.getSystemQty() - cycleCountItem.getScannedQty();
+        while (qtyToBeDeleted > 0) {
+            CycleCountItem cycleCountItemAtSkuItemLevel = new CycleCountItem();
+            cycleCountItemAtSkuItemLevel.setSystemQty(1);
+            cycleCountItemAtSkuItemLevel.setScannedQty(0);
+            cycleCountItemAtSkuItemLevel.setCycleCount(cycleCountItem.getCycleCount());
+            SkuItem skuItem = skuItemShouldBeDeleted.get(qtyToBeDeleted - 1);
+            cycleCountItemAtSkuItemLevel.setSkuItem(skuItem);
+            cycleCountItemListForSkuItems.add(cycleCountItemAtSkuItemLevel);
+            qtyToBeDeleted--;
+        }
+        return cycleCountItemListForSkuItems;
     }
 
 
