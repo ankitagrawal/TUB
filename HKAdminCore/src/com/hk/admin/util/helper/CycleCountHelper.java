@@ -425,7 +425,7 @@ public class CycleCountHelper {
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
         List<CycleCountItem> cycleCountItemListForRVSubtract = new ArrayList<CycleCountItem>();
         Map<SkuGroup, List<SkuItem>> scannedSkuItemsMapOriginal = populateScannedSkuItemsBySkuGroupMap(cycleCountItems);
-        Map<SkuGroup, List<SkuItem>> scannedSkuItemsBySkuGroupMap = scannedSkuItemsMapOriginal;
+        Map<SkuGroup, List<SkuItem>> scannedSkuItemsBySkuGroupMap = new HashMap<SkuGroup, List<SkuItem>>(scannedSkuItemsMapOriginal);
 
         for (CycleCountItem cycleCountItem : cycleCountItems) {
             int systemQty = 0, scannedQty = 0;
@@ -441,8 +441,9 @@ public class CycleCountHelper {
                     if (skuItemList != null) {
                         systemQty = skuItemList.size();
                     }
-                    scannedQty = scannedSkuItemsBySkuGroupMap.get(cycleCountItem.getSkuGroup()).size();
-                    scannedSkuItemsBySkuGroupMap.remove(cycleCountItem.getSkuGroup());
+                    cycleCountItem.setSkuGroup(skuGroup);
+                    scannedQty = scannedSkuItemsBySkuGroupMap.get(skuGroup).size();
+                    scannedSkuItemsBySkuGroupMap.remove(skuGroup);
                 } else {
                     continue;
                 }
@@ -482,6 +483,7 @@ public class CycleCountHelper {
         for (SkuGroup skuGroup : skuGroupNeverScanned) {
             CycleCountItem cycleCountItemAtSkUGroupLevel = new CycleCountItem();
             cycleCountItemAtSkUGroupLevel.setSkuGroup(skuGroup);
+            cycleCountItemAtSkUGroupLevel.setSkuItem(null);
             cycleCountItemAtSkUGroupLevel.setSystemQty(missedSkuGroupSystemInventoryMap.get(skuGroup.getId()));
             cycleCountItemAtSkUGroupLevel.setScannedQty(0);
             finalListOfCycleCountItemsList.add(cycleCountItemAtSkUGroupLevel);
@@ -503,6 +505,7 @@ public class CycleCountHelper {
             cycleCountItemAtSkuItemLevel.setCycleCount(cycleCountItem.getCycleCount());
             SkuItem skuItem = skuItemShouldBeDeleted.get(qtyToBeDeleted - 1);
             cycleCountItemAtSkuItemLevel.setSkuItem(skuItem);
+            cycleCountItemAtSkuItemLevel.setSkuGroup(null);
             cycleCountItemListForSkuItems.add(cycleCountItemAtSkuItemLevel);
             qtyToBeDeleted--;
         }

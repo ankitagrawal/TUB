@@ -157,13 +157,31 @@ public class ReconciliationVoucherParser {
                 String itemBarcode = row.getColumnValue(XslConstants.ITEM_BARCODE);
                 String variantId = row.getColumnValue(XslConstants.VARIANT_ID);
                 String reconReason = row.getColumnValue(XslConstants.RECON_REASON);
-                Double mrp = XslUtil.getDouble(row.getColumnValue(XslConstants.MRP));
-                Double cost = XslUtil.getDouble(row.getColumnValue(XslConstants.COST));
-                Long qty = XslUtil.getLong(row.getColumnValue(XslConstants.QTY));
+                Double mrp = null;
+                Double cost = null;
+                Long qty = null;
+                String mrpString = row.getColumnValue(XslConstants.MRP);
+                if (mrpString != null && !StringUtils.isBlank(mrpString)) {
+                    mrp = XslUtil.getDouble(mrpString);
+                }
+                String costString = row.getColumnValue(XslConstants.COST);
+
+                if (costString != null && !StringUtils.isBlank(costString)) {
+                    cost = XslUtil.getDouble(costString);
+                }
+                String qtyString = row.getColumnValue(XslConstants.QTY);
+                if (qtyString != null && !StringUtils.isBlank(qtyString)) {
+                    qty = XslUtil.getLong(qtyString);
+                }
+
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
                 SkuGroup skuGroup = null;
                 SkuItem skuItem = null;
+                if (groupBarcode == null && itemBarcode == null && variantId == null && reconReason == null && mrp == null && cost == null && qty == null &&
+                        batchNumber == null && strExpiryDate == null) {
+                    return rvLineItems;
+                }
                 if (reconReason == null) {
                     throw new Exception("Blank Recon Reason  @ Row:" + rowCount);
                 }
@@ -171,11 +189,18 @@ public class ReconciliationVoucherParser {
                 if (reconciliationType == null) {
                     throw new Exception("Invalid Recon Reason  @ Row:" + rowCount);
                 }
-                if (groupBarcode != null) {
+                if (groupBarcode != null && !StringUtils.isBlank(groupBarcode)) {
                     List<SkuGroup> skuGroupList = skuGroupService.getSkuGroup(groupBarcode.trim(), warehouse.getId());
+                    if (skuGroupList == null || skuGroupList.isEmpty()) {
+                        throw new Exception("Invalid Group Barcode  @ Row:" + rowCount);
+                    }
                     skuGroup = skuGroupList.get(0);
-                } else if (itemBarcode != null) {
+                } else if (itemBarcode != null && !StringUtils.isBlank(itemBarcode)) {
                     skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), null);
+                    if (skuItem == null) {
+                        throw new Exception("Invalid Item Barcode  @ Row:" + rowCount);
+                    }
+                    skuGroup = skuItem.getSkuGroup();
                 } else {
                     throw new Exception("Invalid Barcode  @ Row:" + rowCount);
                 }
@@ -225,11 +250,7 @@ public class ReconciliationVoucherParser {
 
                 if (productVariant != null) {
                     RvLineItem rvLineItem = new RvLineItem();
-                    if (skuGroup != null) {
-                        rvLineItem.setSkuGroup(skuGroup);
-                    } else if (skuItem != null) {
-                        rvLineItem.setSkuItem(skuItem);
-                    }
+                    rvLineItem.setSkuGroup(skuGroup);
                     rvLineItem.setProductVariant(productVariant);
                     rvLineItem.setBatchNumber(batchNumber);
                     rvLineItem.setQty(qty);
@@ -239,8 +260,9 @@ public class ReconciliationVoucherParser {
                     rvLineItem.setExpiryDate(expiryDate);
                     rvLineItem.setSku(sku);
                     rvLineItem.setReconciliationType(reconciliationType);
-                    rvLineItems.add(rvLineItem);
                     rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+                    rvLineItems.add(rvLineItem);
+
                     rowCount++;
                 }
             }
