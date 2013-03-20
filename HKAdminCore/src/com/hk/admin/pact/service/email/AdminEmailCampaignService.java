@@ -10,7 +10,7 @@ public interface AdminEmailCampaignService {
 
   public Long getEmailCampaignSentCount(EmailCampaign emailCampaign);
 
-  public void uploadEmailContent(File emailContent);
+  public Boolean uploadEmailContent(File emailContent);
 
   public void uploadHtml(File htmlFile, String key);
 

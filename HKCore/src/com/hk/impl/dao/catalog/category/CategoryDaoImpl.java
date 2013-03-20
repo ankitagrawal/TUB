@@ -34,10 +34,11 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     String queryString = "select distinct p.brand from Product p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted and p.hidden <> 1 order by p.brand asc";
     List<String> allBrands = findByNamedParams(queryString, new String[]{"primaryCategory", "deleted"}, new Object[]{primaryCategory.getName(), false});
 
-    queryString = "select distinct p.brand from Combo p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted and p.hidden <> 1 order by p.brand asc";
+    /*queryString = "select distinct p.brand from Combo p where p.primaryCategory.name = :primaryCategory and p.deleted=:deleted and p.hidden <> 1 order by p.brand asc";
     List<String> comboBrands = findByNamedParams(queryString, new String[]{"primaryCategory", "deleted"}, new Object[]{primaryCategory.getName(), false});
 
     allBrands.removeAll(comboBrands);
+*/    
     return allBrands;
   }
 

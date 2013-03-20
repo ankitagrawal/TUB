@@ -1,5 +1,6 @@
 package com.hk.manager;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import com.hk.domain.catalog.product.ProductVariant;
@@ -85,6 +86,16 @@ public class LinkManager {
 
     public String getCartUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/cart/Cart.action");
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getReviewPageLink(HashMap params){
+        RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
+        return getUrlFromResolution(redirectResolution);
+    }
+
+    public String getUnsubscribeLink(User user){
+        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken",user.getUnsubscribeToken());
         return getUrlFromResolution(redirectResolution);
     }
 
