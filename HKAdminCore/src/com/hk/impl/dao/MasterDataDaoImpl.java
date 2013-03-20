@@ -463,6 +463,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumCourierChangeReason.getAllCourierChangeReasons();
     }
 
+    public List<EnumAwbChangeReason> getAllAwbChangeReason(){
+          return EnumAwbChangeReason.getAllAwbChangeReason();
+      }
+
     public List<Warehouse> getAllWarehouse() {
         return warehouseService.getAllWarehouses();
     }
