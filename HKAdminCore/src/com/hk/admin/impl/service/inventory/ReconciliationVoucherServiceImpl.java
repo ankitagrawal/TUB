@@ -103,7 +103,6 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 getBaseDao().delete(rvLineItem);
             } else if (rvLineItem.getId() == null) {
 
-
                 int additionType = rvLineItem.getReconciliationType().getId().intValue();
                 InvTxnType invTxnType = null;
 
@@ -131,18 +130,18 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                         break;
                 }
 
-                    rvLineItem.setSku(sku);
-                    rvLineItem.setReconciliationVoucher(reconciliationVoucher);
-                    rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-                    if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
-                        // Create batch and checkin inv
+                rvLineItem.setSku(sku);
+                rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+                rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
+                if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
+                    // Create batch and checkin inv
 //                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
-                        SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
-                        adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, EnumInvTxnType.RV_CHECKIN.asInvTxnType(), loggedOnUser);
-                        rvLineItem.setSkuGroup(skuGroup);
-                    }
-                    rvLineItem.setReconciledQty(rvLineItem.getQty());
-                    rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
+                    SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
+                    adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, invTxnType, loggedOnUser);
+                    rvLineItem.setSkuGroup(skuGroup);
+                }
+                rvLineItem.setReconciledQty(rvLineItem.getQty());
+                rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
 
 
                 // Check inventory health now.

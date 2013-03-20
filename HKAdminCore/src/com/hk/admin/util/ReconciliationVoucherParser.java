@@ -66,8 +66,10 @@ public class ReconciliationVoucherParser {
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
                 String reconReason = row.getColumnValue(XslConstants.RECON_REASON);
-
-                ReconciliationType reconciliationType = EnumReconciliationType.Add.asReconciliationType();
+                if (reconReason == null || StringUtils.isBlank(reconReason)) {
+                    throw new Exception("Enter Recon Reason @ Row " + rowCount);
+                }
+                ReconciliationType reconciliationType = null;
                 if (reconReason != null && !StringUtils.isBlank(reconReason)) {
                     reconciliationType = EnumReconciliationType.getAddReconciliationTypeByName(reconReason);
                     if (reconciliationType == null) {
