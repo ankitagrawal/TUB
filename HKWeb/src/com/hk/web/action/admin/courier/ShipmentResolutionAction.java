@@ -156,7 +156,7 @@ public class ShipmentResolutionAction extends BaseAction {
                 }
                   if(bool) {
                       addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
-                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, reasoning);
+                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Reason to change Awb--> "+reasoning);
                   }
                      return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
      }
