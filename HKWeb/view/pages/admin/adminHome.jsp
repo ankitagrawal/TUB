@@ -443,6 +443,7 @@
 			beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Product Review Mail Settings</s:link></h3>
 
 </div>
 
@@ -471,9 +472,9 @@
 <div class="left roundBox">
 	<h2>Healthkart Delivery</h2>
 
-<%--    <h3>
+    <h3>
         <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>--%>
+                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
 	<h3>
             <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
                     title="Download Healthkart Delivery Runsheet" event="previewRunsheet">Download Delivery Runsheet

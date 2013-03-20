@@ -119,7 +119,7 @@ public class InventoryServiceImpl implements InventoryService {
     Product product = productVariant.getProduct();
     boolean nonJitValidProduct = product.isJit() != null && !product.isJit()
         && product.isService() != null && !product.isService()
-        && !product.getDropShipping() && !product.getDeleted();
+        && !product.getDropShipping();
     logger.debug("nonJitValidProduct: " + nonJitValidProduct);
     Long aggCutOffInv = getAggregateCutoffInventory(skuList);
     if (nonJitValidProduct) {
