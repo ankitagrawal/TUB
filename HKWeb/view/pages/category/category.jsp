@@ -9,6 +9,7 @@
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
