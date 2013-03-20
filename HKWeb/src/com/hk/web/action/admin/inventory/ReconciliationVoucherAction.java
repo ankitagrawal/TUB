@@ -660,4 +660,5 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
 }
