@@ -102,6 +102,7 @@ public class CycleCountHelper {
         xlsWriter.addHeader(XslConstants.MFG_DATE, XslConstants.MFG_DATE);
         xlsWriter.addHeader(XslConstants.MRP, XslConstants.MRP);
         xlsWriter.addHeader(XslConstants.COST, XslConstants.COST);
+        xlsWriter.addHeader(XslConstants.SYSTEM_QTY, XslConstants.SYSTEM_QTY);
         xlsWriter.addHeader(XslConstants.RECON_REASON, XslConstants.RECON_REASON);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
 
@@ -142,6 +143,7 @@ public class CycleCountHelper {
 
             xlsWriter.addCell(xlsRow, skuGroup.getMrp());
             xlsWriter.addCell(xlsRow, skuGroup.getCostPrice());
+            xlsWriter.addCell(xlsRow, cycleCountItem.getSystemQty());
             xlsWriter.addCell(xlsRow, "");
 
             xlsRow++;

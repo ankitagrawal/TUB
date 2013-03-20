@@ -159,7 +159,8 @@ public class ReconciliationVoucherParser {
                 String reconReason = row.getColumnValue(XslConstants.RECON_REASON);
                 Double mrp = null;
                 Double cost = null;
-                Long qty = null;
+                Long qtyForDeletion = null;
+                Long systemQty = null;
                 String mrpString = row.getColumnValue(XslConstants.MRP);
                 if (mrpString != null && !StringUtils.isBlank(mrpString)) {
                     mrp = XslUtil.getDouble(mrpString);
@@ -170,15 +171,27 @@ public class ReconciliationVoucherParser {
                     cost = XslUtil.getDouble(costString);
                 }
                 String qtyString = row.getColumnValue(XslConstants.QTY);
+                String systemQtyString = row.getColumnValue(XslConstants.SYSTEM_QTY);
                 if (qtyString != null && !StringUtils.isBlank(qtyString)) {
-                    qty = XslUtil.getLong(qtyString);
+                    qtyForDeletion = XslUtil.getLong(qtyString);
+                }
+                if (systemQtyString != null && !StringUtils.isBlank(systemQtyString)) {
+                    systemQty = XslUtil.getLong(systemQtyString);
+                }
+
+                if (qtyForDeletion == null || qtyForDeletion <= 0) {
+                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
+                }
+
+                if (systemQty == null || systemQty <= 0) {
+                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
                 }
 
                 String batchNumber = row.getColumnValue(XslConstants.BATCH_NUMBER);
                 String strExpiryDate = row.getColumnValue(XslConstants.EXP_DATE);
                 SkuGroup skuGroup = null;
                 SkuItem skuItem = null;
-                if (groupBarcode == null && itemBarcode == null && variantId == null && reconReason == null && mrp == null && cost == null && qty == null &&
+                if (groupBarcode == null && itemBarcode == null && variantId == null && reconReason == null && mrp == null && cost == null && qtyForDeletion == null &&
                         batchNumber == null && strExpiryDate == null) {
                     return rvLineItems;
                 }
@@ -194,7 +207,11 @@ public class ReconciliationVoucherParser {
                     if (skuGroupList == null || skuGroupList.isEmpty()) {
                         throw new Exception("Invalid Group Barcode  @ Row:" + rowCount);
                     }
-                    skuGroup = skuGroupList.get(0);
+                    skuGroup = getSkuGroupWithSystemQty(skuGroupList, systemQty.intValue());
+                    if (skuGroup == null) {
+                        throw new Exception("System Qty for Barcode :" + groupBarcode + " is less than Qty in Excel" + rowCount);
+                    }
+
                 } else if (itemBarcode != null && !StringUtils.isBlank(itemBarcode)) {
                     skuItem = skuGroupService.getSkuItemByBarcode(itemBarcode.trim(), warehouse.getId(), null);
                     if (skuItem == null) {
@@ -232,9 +249,6 @@ public class ReconciliationVoucherParser {
                     throw new Exception("Incorrect product variant @ Row:" + rowCount);
                 }
 
-                if (qty == null || qty <= 0) {
-                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
-                }
 
                 if (mrp == null || mrp <= 0) {
                     throw new Exception("MRP should be greater than zero @ Row : " + rowCount);
@@ -253,7 +267,7 @@ public class ReconciliationVoucherParser {
                     rvLineItem.setSkuGroup(skuGroup);
                     rvLineItem.setProductVariant(productVariant);
                     rvLineItem.setBatchNumber(batchNumber);
-                    rvLineItem.setQty(qty);
+                    rvLineItem.setQty(qtyForDeletion);
                     rvLineItem.setMrp(mrp);
                     rvLineItem.setCostPrice(cost);
                     rvLineItem.setMfgDate(mfgDate);
@@ -276,5 +290,16 @@ public class ReconciliationVoucherParser {
 
     public ProductVariantService getProductVariantService() {
         return productVariantService;
+    }
+
+    public SkuGroup getSkuGroupWithSystemQty(List<SkuGroup> skuGroupList, int qty) {
+        for (SkuGroup skuGroup : skuGroupList) {
+            List<SkuItem> inStockSkuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+            int systemQty = inStockSkuItemList.size();
+            if (systemQty == qty) {
+                return skuGroup;
+            }
+        }
+        return null;
     }
 }
