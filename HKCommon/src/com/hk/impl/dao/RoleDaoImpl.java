@@ -1,16 +1,16 @@
 package com.hk.impl.dao;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.RoleConstants;
+import com.hk.domain.user.Permission;
+import com.hk.domain.user.Role;
+import com.hk.pact.dao.RoleDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.hk.constants.core.EnumRole;
-import com.hk.constants.core.RoleConstants;
-import com.hk.domain.user.Role;
-import com.hk.pact.dao.RoleDao;
+import java.util.Iterator;
+import java.util.List;
 
 @Repository
 public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
@@ -68,6 +68,10 @@ public class RoleDaoImpl extends BaseDaoImpl implements RoleDao {
         DetachedCriteria criteria = DetachedCriteria.forClass(Role.class);
         criteria.add(Restrictions.in("name", hrRoles));
         return findByCriteria(criteria);
+    }
+
+    public Permission getPermissionByName(String permissionName){
+        return get(Permission.class,permissionName);
     }
 
 }

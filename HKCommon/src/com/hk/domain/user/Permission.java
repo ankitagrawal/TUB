@@ -48,7 +48,7 @@ public class Permission {
 
     Permission that = (Permission) o;
 
-    if (!name.equals(that.name)) return false;
+    if (!name.equalsIgnoreCase(that.name)) return false;
 
     return true;
   }
