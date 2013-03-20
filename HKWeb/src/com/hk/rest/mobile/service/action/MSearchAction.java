@@ -100,7 +100,7 @@ public class MSearchAction extends MBaseAction {
 				}
 			} catch (Exception e) {
 				try{
-				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
+				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA. " + e.getMessage());
 				productPage = productDao.getProductByName(query, onlyCOD, includeCombo, pageNo, perPage);
 				productList = productPage.getList();
 				for (Product product : productList) {

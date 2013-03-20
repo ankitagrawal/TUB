@@ -17,6 +17,8 @@ import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
+import com.hk.domain.review.Mail;
+import com.hk.pact.service.review.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -104,6 +106,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     private WarehouseService warehouseService;
     @Autowired
     private ConsignmentService consignmentService;
+    @Autowired
+    private MailService mailService;
 
     public List<PaymentStatus> getPaymentStatusList() {
         return getBaseDao().getAll(PaymentStatus.class);
@@ -224,6 +228,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumReconciliationType.getSubtractReconciliationType();
     }
 
+    public List<Mail> getAllMailType(){
+        return mailService.getAllMailType();
+    }
+
 	public List<EmailType> getEmailTypeList() {
         return getBaseDao().getAll(EmailType.class);
     }
@@ -255,6 +263,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public void setStoreService(StoreService storeService) {
         this.storeService = storeService;
+    }
+
+    public MailService getMailService() {
+        return mailService;
+    }
+
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
     }
 
     public UserService getUserService() {
@@ -457,6 +473,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
     public List<EnumCourierChangeReason> getAllCourierChangeReason(){
         return EnumCourierChangeReason.getAllCourierChangeReasons();
     }
+
+    public List<EnumAwbChangeReason> getAllAwbChangeReason(){
+          return EnumAwbChangeReason.getAllAwbChangeReason();
+      }
 
     public List<Warehouse> getAllWarehouse() {
         return warehouseService.getAllWarehouses();
