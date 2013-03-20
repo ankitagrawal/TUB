@@ -125,6 +125,10 @@ public class ShippingOrder implements java.io.Serializable {
         this.shippingOrderStatus = shippingOrderStatus;
     }
 
+    public ShippingOrderStatus getShippingOrderStatus() {
+        return shippingOrderStatus;
+    }
+
     public Double getAmount() {
         return amount;
     }
