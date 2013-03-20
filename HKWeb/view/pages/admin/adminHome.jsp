@@ -365,6 +365,11 @@
 		<s:link beanclass="com.hk.web.action.admin.inventory.ForecastExcelAction">Upload Forecast Demand Excel</s:link>
 	</h3>
 
+    <shiro:hasRole name="<%=RoleConstants.GOD%>">
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction">Close Grns</s:link>
+        </h3>
+    </shiro:hasRole>
 
 </div>
 
@@ -438,6 +443,7 @@
 			beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
 
 	<h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Product Review Mail Settings</s:link></h3>
 
 </div>
 

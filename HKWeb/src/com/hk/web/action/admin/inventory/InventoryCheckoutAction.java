@@ -193,8 +193,10 @@ public class InventoryCheckoutAction extends BaseAction {
                         addRedirectAlertMessage(new SimpleMessage("HKBarcoded Variant. Please scan HK Barcode to Checkout."));
                         upc = null;
                     } else {
-                        skuGroups = adminInventoryService.getInStockSkuGroups(upc);
-                        logger.debug("skuGroups: " + skuGroups.size());
+                        addRedirectAlertMessage(new SimpleMessage("Please do checkout with HK Barcode "));
+                        upc = null;
+//                        skuGroups = adminInventoryService.getInStockSkuGroups(upc);
+//                        logger.debug("skuGroups: " + skuGroups.size());
                     }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
