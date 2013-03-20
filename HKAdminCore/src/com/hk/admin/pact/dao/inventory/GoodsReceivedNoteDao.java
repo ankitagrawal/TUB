@@ -29,7 +29,7 @@ public interface GoodsReceivedNoteDao extends BaseDao {
 
     public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled);
 
-    public List<GoodsReceivedNote> listGRNsCheckinCompletedTwoWeekBefore(Date twoWeekBeforedate);
+    public List<GoodsReceivedNote> checkinCompletedGrns(Date startDate);
 
 
 }

@@ -133,11 +133,10 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
     }
 
 
-    public List<GoodsReceivedNote> listGRNsCheckinCompletedTwoWeekBefore(Date startDate) {
-        String sql = "select o from GoodsReceivedNote o where o.grnDate <= (:startDate) and o.grnStatus.id = :grnStatusValue";
+    public List<GoodsReceivedNote> checkinCompletedGrns(Date startDate) {
+        String sql = "select o from GoodsReceivedNote o where o.createDate <= (:startDate) and o.grnStatus.id = :grnStatusValue";
         Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatusValue", EnumGrnStatus.InventoryCheckedIn.getId());
-        List<GoodsReceivedNote> grns = query.list();
-        return grns;
+        return query.list();
     }
 
 }

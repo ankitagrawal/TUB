@@ -32,21 +32,20 @@ public class GrnCloseAction extends BaseAction {
         int dayAgo = 21;
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DAY_OF_YEAR, - dayAgo);
-        Date twoWeekBeforedate = cal.getTime();
-        List<GoodsReceivedNote> checkinCompltedGrns = goodsReceivedNoteDao.listGRNsCheckinCompletedTwoWeekBefore(twoWeekBeforedate);
-        if (checkinCompltedGrns != null && checkinCompltedGrns.size() > 0) {
-            for (GoodsReceivedNote grn : checkinCompltedGrns) {
+        cal.add(Calendar.DAY_OF_YEAR, -dayAgo);
+        Date startDate = cal.getTime();
+        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompletedGrns(startDate);
+        if (checkedInGrns != null && checkedInGrns.size() > 0) {
+            for (GoodsReceivedNote grn : checkedInGrns) {
                 grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
             }
-            getBaseDao().saveOrUpdate(checkinCompltedGrns);
-            addRedirectAlertMessage(new SimpleMessage("Grns created" + dayAgo + " days before are now closed"));
+            getBaseDao().saveOrUpdate(checkedInGrns);
+            addRedirectAlertMessage(new SimpleMessage(checkedInGrns.size() + " Grns created : " + dayAgo + " days ago are closed now."));
         } else {
-            addRedirectAlertMessage(new SimpleMessage("No Grn founds in Checkin Completed State"));
+            addRedirectAlertMessage(new SimpleMessage("No Grn has been found in Checkin Completed State"));
         }
 
         return new RedirectResolution(AdminHomeAction.class);
     }
-
 
 }
