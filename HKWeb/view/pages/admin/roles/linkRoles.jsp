@@ -49,13 +49,13 @@
                     </div>
                 </div>
                 <s:hidden name="userPermissions" id="userPermissions"/>
-                <s:submit name="savePermissions" value="Save Permissions for Role" style="font-size:0.9em" id="savePermissions" />
+                <s:submit name="savePermissions" value="Save Permissions for Role" style="font-size:0.9em;float: center;width: 351px;margin-left: 390px;margin-top: 20px;" id="savePermissions" />
             </fieldset>
-            <fieldset>
+            <fieldset style="height: 250px;">
                 <div>
                     <legend>Add roles to user</legend><br/><br/><br/>
-                    <label>Users </label>&nbsp;
-                    <s:select id="userSelect" name="user.id" style="width: 175px;">
+                    <label style="margin-left:70px;">Users </label>&nbsp;
+                    <s:select id="userSelect" name="user.id" style="width: 225px;">&nbsp;&nbsp;
                         <s:option value="">--Select User--</s:option>
                         <c:forEach items="${userList}" var="userName">
                             <c:if test="${userName.name != 'Guest' && userName.name != null}">
@@ -63,15 +63,13 @@
                             </c:if>
                         </c:forEach>
                     </s:select>
-                </div><br/><br/>
-                <div>
-                    <label style="float:left;width:265px;">Add Roles to User</label>&nbsp;
-                    <s:select id="mltRoles" name="roleList" multiple="true" style="width: 275px; height: 126px; ">
+                    <label style="width: 490px;margin-left: 90px;">Add Roles to User</label>&nbsp;
+                    <s:select id="mltRoles" name="roleList" multiple="true" style="width:338px; float: right;margin-right: 200px;height: 120px;">
                         <s:options-collection collection="${roleList}" value="name" label="name"/><br/>
                     </s:select>
                 </div>
                 <s:hidden name="userRoles" id="userRoles"  />
-                <s:submit name="saveRoles" value="Save Roles to User" style="font-size:0.9em" id="saveRoles"/>
+                <s:submit name="saveRoles" value="Save Roles to User" style="font-size:0.9em;float: center;width: 351px;margin-left: 390px;margin-top: 20px;" id="saveRoles"/>
             </fieldset>
         </s:form>
     </s:layout-component>
@@ -148,6 +146,7 @@
                 $('#userPermissions').val(values);
             }
         });
+        $("#currPerm").attr('title', 'Click to delete a permission');
     });
 </script>
 
