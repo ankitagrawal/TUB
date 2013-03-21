@@ -392,13 +392,16 @@ public class InventoryCheckoutAction extends BaseAction {
             }
             if (sku != null) {
                 List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                if (skuGroupList != null && skuGroupList.size() == 1) {
-                    List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
-                    subtractInventory(inStockSkuItems, qty.intValue(), sku);
+                if (skuGroupList != null) {
+                    if (skuGroupList != null && skuGroupList.size() == 1) {
+                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
+                        subtractInventory(inStockSkuItems, qty.intValue(), sku);
+                    } else {
+                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
+                    }
                 } else {
-                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
+                    addRedirectAlertMessage(new SimpleMessage(" Operation Failed :: NO Inventory "));
                 }
-
             }
         } else {
             addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Invalid Product Variant Id"));
@@ -412,13 +415,13 @@ public class InventoryCheckoutAction extends BaseAction {
         if (inStockSkuItems != null) {
             systemQty = inStockSkuItems.size();
             if (inStockSkuItems.size() >= qty) {
-                adminInventoryService.subtractInventoryForPV(inStockSkuItems,qty,sku);
+                adminInventoryService.subtractInventoryForPV(inStockSkuItems, qty, sku);
                 addRedirectAlertMessage(new SimpleMessage("Sucessfully Subtracted"));
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Batch contains Qty " + systemQty + "only"));
             }
         } else {
-            addRedirectAlertMessage(new SimpleMessage("ZERO Inventory"));
+            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: NO Inventory"));
         }
 
     }
