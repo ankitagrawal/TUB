@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Category Home">
 
 
     <s:layout-component name="heading">Category</s:layout-component>
@@ -55,21 +55,6 @@
         <div class="cl"></div>
 
         <div class="left roundBox">
-            <h2>Pricing Management</h2>
-
-            <h3>
-                <s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update Variant Price
-                    <br/><span class="sml gry" style="color:red">(List of Variants - MRP Mismatch)</span>
-                </s:link>
-            </h3>
-
-            <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link>
-            </h3>
-        </div>
-
-        <div class="cl"></div>
-
-        <div class="left roundBox">
             <h2>New Products Cataloging</h2>
 
             <h3><s:link
@@ -80,8 +65,23 @@
                 <s:link beanclass="com.hk.web.action.admin.sku.SkuParseExcelAction">Upload SKU Excel</s:link></h3>
 
             <h3><s:link
-                        beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
+                    beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
 
+        </div>
+
+        <div class="cl"></div>
+
+        <div class="left roundBox">
+            <h2>Pricing Management</h2>
+
+            <h3>
+                <s:link beanclass="com.hk.web.action.admin.catalog.product.UpdatePvPriceAction">Update Variant Price
+                    <br/><span class="sml gry" style="color:red">(List of Variants - MRP Mismatch)</span>
+                </s:link>
+            </h3>
+
+            <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link>
+            </h3>
         </div>
 
         <div class="cl"></div>
@@ -114,15 +114,6 @@
                     beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s)
                 <br/><span class="sml gry">(includes excels)</span></s:link></h3>
 
-        </div>
-
-        <div class="cl"></div>
-
-
-        <div class="left roundBox">
-            <h2>Action Queue</h2>
-                <h3><s:link
-                        beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
         </div>
 
         <div class="cl"></div>
@@ -172,6 +163,16 @@
             <h3>
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
         </div>
+
+        <div class="cl"></div>
+
+
+        <div class="left roundBox">
+            <h2>Action Queue</h2>
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
+        </div>
+
 
 
     </s:layout-component>

@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Operations Home">
 
 <s:layout-component name="heading">Operations</s:layout-component>
 <s:layout-component name="content">
