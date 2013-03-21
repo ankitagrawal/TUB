@@ -7,13 +7,13 @@
 
 <s:layout-component name="heading">Category</s:layout-component>
 <s:layout-component name="content">
-<style type="text/css">
-  .float {
-    float:left;
-    position:relative;
-    height:200px;
-  }
-</style>
+<%--<style type="text/css">--%>
+  <%--.float {--%>
+    <%--float:left;--%>
+    <%--position:relative;--%>
+    <%--height:200px;--%>
+  <%--}--%>
+<%--</style>--%>
 <div class="float roundBox">
     <h2>Purchasing</h2>
 

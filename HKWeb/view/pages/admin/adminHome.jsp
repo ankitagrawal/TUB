@@ -101,60 +101,6 @@
 <div class="cl"></div>
 
 <div class="left roundBox">
-    <h2>Category Managers</h2>
-
-    <h3>
-        <s:link
-                beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/>
-        </s:link>
-    </h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.catalog.ParseExcelAction">Upload Catalog Excel<br/></s:link>
-    </h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.marketing.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
-                class="pseudoSplitBaseOrder">
-            Base Order Split Analytics
-        </s:link>
-    </h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.warehouse.VariantPreferredWarehouseAction"
-                class="warehouseDecider">
-            Variant/SO Preferred Warehouse Decider
-        </s:link>
-    </h3>
-
-    <h3>
-        <s:link
-                beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction">Create new product and product variant</s:link></h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">Create Combo</s:link></h3>
-
-
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s)
-    </s:link> </h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.TryOnXmlsUploadAction" event="pre">Generate Update Eye Try On</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.inventory.EditSimilarProductsAction">Similar Products</s:link></h3>
-
-
-</div>
-
-<div class="cl"></div>
-
-<div class="left roundBox">
     <h2>Warehouse</h2>
     <c:if test="${whAction.setWarehouse != null}">
     <h3><s:link
