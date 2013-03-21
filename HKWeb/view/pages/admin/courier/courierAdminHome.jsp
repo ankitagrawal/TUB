@@ -150,14 +150,10 @@
 <div class="left roundBox">
     <h2>Courier Shipment Reporting</h2>
 
-    <shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-                    event="generateCourierReport">Add/Edit Hub
-                <s:param name="courierDownloadFunctionality" value="false"/>
-            </s:link>
-        </h3>
-    </shiro:hasRole>
+    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+                event="generateCourierReport">Download Courier Excel
+        <s:param name="courierDownloadFunctionality" value="false"/>
+    </s:link></h3>
 
 </div>
 
