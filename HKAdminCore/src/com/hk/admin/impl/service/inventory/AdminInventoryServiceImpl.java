@@ -526,6 +526,7 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
 
             //set sku item status to Product_variant_ Audited
             skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
+            skuItem = skuGroupService.saveSkuItem(skuItem);
         }
 
         // Check inventory health now.
