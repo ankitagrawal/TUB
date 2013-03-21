@@ -34,7 +34,7 @@
 
     $(document).ready(function() {
 
-      $('.lineItemQty').blur(function() {
+        $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
         var lineItemQty = $(this).val();
@@ -553,9 +553,7 @@
 </c:if>
 </c:if>
 </div>
-<!--
-    Ember js code for MVC javascript!
--->
+
 
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
@@ -567,11 +565,12 @@
             <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
                     class="button_grey">Apply</s:link>
         </shiro:hasAnyRoles>
+
         <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
             Got a discount coupon?
             <br/>
             <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
-                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
+                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
             </s:link>
             to redeem it.
             <br/>

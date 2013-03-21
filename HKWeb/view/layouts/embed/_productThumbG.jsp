@@ -40,7 +40,7 @@
 		<c:if test="${!product.googleAdDisallowed && !product.deleted}">
 			<div class='grid_4 product'>
 				<div class='img128 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
-					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
+					<s:link href="${product.productURL}?productReferrerId=${productReferrerId}" class="prod_link" title="${product.name}">
 						<c:choose>
 							<c:when test="${product.mainImageId != null}">
 								<hk:productImage
