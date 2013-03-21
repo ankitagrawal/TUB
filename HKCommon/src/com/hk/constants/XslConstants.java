@@ -155,6 +155,9 @@ public class XslConstants {
     public static final String SCANNED_QTY = "SCANNED QTY";
     public static final String SYSTEM_QTY = "SYSTEM QTY";
     public static final String VARINACE_QTY = "VARINACE QTY";
+    public static final String GROUP_BARCODE = "GROUP BARCODE";
+    public static final String ITEM_BARCODE = "ITEM BARCODE";
+    public static final String RECON_REASON = "RECON REASON";
 
     public static final String SHIPMENT_STATUS = "SHIPMENT STATUS";
 }

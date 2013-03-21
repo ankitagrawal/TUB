@@ -2,7 +2,6 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.ReconciliationVoucherDao;
@@ -18,19 +17,16 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -125,7 +121,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
-    public Resolution parse() throws Exception {
+    public Resolution parseAddRVExcel() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
@@ -134,8 +130,26 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
         try {
             //reconciliationVoucher has warehouse and reconciliation date
-            rvLineItems = rvParser.readAndCreateRVLineItems(excelFilePath, "Sheet1", reconciliationVoucher);
-            save();
+            rvLineItems = rvParser.readAndCreateAddRVLineItems(excelFilePath, "Sheet1", reconciliationVoucher);
+            reconcileAdd();
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+        }
+        return new RedirectResolution(ReconciliationVoucherAction.class);
+    }
+
+    public Resolution parseSubtractRVExcel() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+
+        try {
+            //reconciliationVoucher has warehouse and reconciliation date
+            List<RvLineItem> rvLineItemList = rvParser.readAndCreateSubtractRVLineItems(excelFilePath, "Sheet1", reconciliationVoucher);
+            reconciliationVoucherService.reconcileSubtractRV(reconciliationVoucher, rvLineItemList);
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
@@ -163,21 +177,21 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
-    public Resolution save() {
+    public Resolution reconcileAdd() {
 
         User loggedOnUser = null;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         if (rvLineItems != null && rvLineItems.size() > 0) {
-            reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
+            reconciliationVoucherService.reconcileAddRV(loggedOnUser, rvLineItems, reconciliationVoucher);
             addRedirectAlertMessage(new SimpleMessage("Changes saved."));
         }
 
         return new RedirectResolution(ReconciliationVoucherAction.class);
     }
 
-
+   /* Commenting  Code for Bulk save and reconcile
     public Resolution saveAll() {
         Map<RvLineItem, String> rvNotSavedMap = new HashMap<RvLineItem, String>();
         List<RvLineItem> rvLineItemsCorrectSize = new ArrayList<RvLineItem>();
@@ -289,6 +303,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         return new JsonResolution(healthkartResponse);
     }
 
+     */
 
     public Resolution create() {
         User loggedOnUser = null;
@@ -303,7 +318,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/editReconciliationVoucher.jsp").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
     }
 
-
+   /*  Commenting code for bulk Reconcile
     @JsonHandler
     public Resolution getBatchDetails() {
         HealthkartResponse healthkartResponse;
@@ -327,6 +342,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         }
 
     }
+
 
     private List<SkuItem> getInStockSkuItemsForEnteredBatch(String batchNumber, String productVariantId) {
         List<SkuItem> skuItemList = null;
@@ -373,6 +389,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         }
         return skuItemList;
     }
+
+      */
 
     public Resolution SubtractReconciled() {
         SkuItem skuItem = null;
