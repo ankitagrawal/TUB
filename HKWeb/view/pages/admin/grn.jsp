@@ -480,11 +480,11 @@
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
-        <td>
-            <s:link  beanclass="com.hk.web.action.admin.inventory.GRNAction" event="deleteGrnLineItem"><span style="color:#ff0000;">delete</span>
-            <s:param name="grnLineItem" value="${grnLineItemDto.grnLineItem.id}"/>
-        </s:link>
-        </td>
+        <%--<td>--%>
+            <%--<s:link  beanclass="com.hk.web.action.admin.inventory.GRNAction" event="deleteGrnLineItem"><span style="color:#ff0000;">delete</span>--%>
+            <%--<s:param name="grnLineItem" value="${grnLineItemDto.grnLineItem.id}"/>--%>
+        <%--</s:link>--%>
+        <%--</td>--%>
         </tr>
 	</c:forEach>
 	</tbody>
