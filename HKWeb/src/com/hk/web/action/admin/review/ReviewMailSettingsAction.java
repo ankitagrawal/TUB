@@ -9,19 +9,16 @@ import com.hk.domain.order.Order;
 import com.hk.domain.review.Mail;
 import com.hk.domain.review.ProductReviewMail;
 import com.hk.manager.EmailManager;
-import com.hk.pact.dao.email.EmailRecepientDao;
+import com.hk.pact.service.review.MailService;
 import com.hk.pact.service.review.ProductReviewMailService;
 import com.hk.pact.service.review.ReviewCollectionFrameworkService;
 import com.hk.pact.service.review.UserReviewMailService;
-//import com.hk.web.validation.MailTypeConverter;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
-import com.akube.framework.stripes.action.BaseAction;
 import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
-import net.sourceforge.stripes.validation.ValidationMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//import com.hk.web.validation.MailTypeConverter;
+
 
 @CustomPopulationStrategy(BeanFirstPopulationStrategy.class)
 @Component
@@ -40,40 +39,43 @@ import java.util.Set;
 public class ReviewMailSettingsAction extends BasePaginatedAction {
 
 
-   private static Logger logger = LoggerFactory.getLogger(ReviewMailSettingsAction.class);
+    private static Logger logger = LoggerFactory.getLogger(ReviewMailSettingsAction.class);
 
-	 @Autowired
-   ProductReviewMailService productReviewMailService;
+    @Autowired
+    ProductReviewMailService productReviewMailService;
 
-   @Autowired
-   UserReviewMailService userReviewMailService;
+    @Autowired
+    UserReviewMailService userReviewMailService;
 
-   @Autowired
-   EmailManager emailManager;
+    @Autowired
+    MailService mailService;
 
-   @Autowired
-   ReviewCollectionFrameworkService reviewCollectionFrameworkService;
+    @Autowired
+    EmailManager emailManager;
 
-   private Order order;
+    @Autowired
+    ReviewCollectionFrameworkService reviewCollectionFrameworkService;
 
-   @ValidateNestedProperties( {
+    private Order order;
+
+    @ValidateNestedProperties( {
             @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
     })
-   private ProductReviewMail productReviewMail;
-   private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
-   Page reviewCollectionPage;
+    private ProductReviewMail productReviewMail;
+    private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
+    Page reviewCollectionPage;
 
-   @Validate(required = true, on={"createProductSettings", "sendTestEmail","saveProductSettings"})
-   private Product product;
+    @Validate(required = true, on={"createProductSettings", "sendTestEmail","saveProductSettings"})
+    private Product product;
 
-   private Mail mail;
+    private Mail mail;
 
     private Integer defaultPerPage = 20;
 
-   private boolean editSettings = false;
+    private boolean editSettings = false;
 
     @DefaultHandler
     public Resolution pre(){
@@ -103,6 +105,10 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     }
 
     public Resolution create(){
+        if(mailService.getAllMailType() == null || mailService.getAllMailType().size() == 0 ){
+            addRedirectAlertMessage(new SimpleMessage("You need to create atleast one mail template before creating any product's settings"));
+            return new RedirectResolution(ReviewMailSettingsAction.class);
+        }
         return new ForwardResolution("/pages/admin/review/productReviewMailSettings.jsp");
     }
     public Resolution createProductSettings(){
@@ -174,7 +180,14 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
     }
 
     public Resolution sendDueEmail(){
-        reviewCollectionFrameworkService.sendDueEmails();
+        int noOfEmailsSent = reviewCollectionFrameworkService.sendDueEmails();
+        String message = "";
+        if(noOfEmailsSent == 0)
+            message = "No Email sent.";
+        else
+            message = noOfEmailsSent + " emails sent";
+
+        addRedirectAlertMessage(new SimpleMessage(message));
         return new RedirectResolution(ReviewMailSettingsAction.class);
     }
 
