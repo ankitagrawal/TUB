@@ -7,7 +7,7 @@
             $(document).ready(function () {
                 $('.submit').click(function () {
                     var qty = $('#qty').val();
-                    if (qty == null || qty.trim() == '' || isNaN(qty)) {
+                    if (qty == null || qty.trim() == '' || isNaN(qty) || qty == 0) {
                         alert('Plz enter qty in numbers');
                         return false;
                     }
