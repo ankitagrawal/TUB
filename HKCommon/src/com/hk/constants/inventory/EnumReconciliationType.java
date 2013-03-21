@@ -20,7 +20,8 @@ public enum EnumReconciliationType {
     NonMoving(80L, "Non Moving"),
     FreeVariant(90L, "Free Variant"),
     CustomerReturn(100L, "Customer Return"),
-    PharmaReturn(110L, "Pharma Return");
+    PharmaReturn(110L, "Pharma Return"),
+    ProductVariantAudited(120L,"Product Variant Audited");
 
 
     private java.lang.String name;
@@ -50,7 +51,7 @@ public enum EnumReconciliationType {
 
     public static List<ReconciliationType> getSubtractReconciliationType() {
         return Arrays.asList(Subtract.asReconciliationType(), Damage.asReconciliationType(), Expired.asReconciliationType(), Lost.asReconciliationType(),
-                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType());
+                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType(),ProductVariantAudited.asReconciliationType());
     }
 
 

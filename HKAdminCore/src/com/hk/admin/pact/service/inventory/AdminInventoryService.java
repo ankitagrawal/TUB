@@ -88,6 +88,4 @@ public interface AdminInventoryService {
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
 
     public void deleteInventory(GrnLineItem grnLineItem);
-
-    public void subtractInventoryForPV(List<SkuItem> inStockSkuItems, int qty, Sku sku);
 }

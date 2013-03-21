@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.exception.NoSkuException;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -117,7 +115,6 @@ public class InventoryCheckoutAction extends BaseAction {
     // private SkuGroup earlierSkuGroup;
     List<SkuGroup> skuGroups;
     private SkuItem skuItemBarcode;
-    private Warehouse warehouse;
 
     @DefaultHandler
     public Resolution pre() {
@@ -367,86 +364,6 @@ public class InventoryCheckoutAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
-    public Resolution directToSubtractPVInventoryFromSingleBatchPage() {
-        warehouse = userService.getWarehouseForLoggedInUser();
-        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
-    }
-
-
-    public Resolution directToSubtractPVInventoryFromAnyBatchPage() {
-        warehouse = userService.getWarehouseForLoggedInUser();
-        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromAnyBatch.jsp");
-    }
-
-    public Resolution subtractInventoryForPVFromSingleBatch() {
-        if (warehouse == null) {
-            warehouse = userService.getWarehouseForLoggedInUser();
-        }
-        if (productVariant != null) {
-            //get Sku
-            Sku sku = null;
-            try {
-                sku = skuService.getSKU(productVariant, warehouse);
-            } catch (NoSkuException ex) {
-                addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Sku is not created in system"));
-            }
-            if (sku != null) {
-                List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                if (skuGroupList != null) {
-                    if (skuGroupList != null && skuGroupList.size() == 1) {
-                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
-                        subtractInventory(inStockSkuItems, qty.intValue(), sku);
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
-                    }
-                } else {
-                    addRedirectAlertMessage(new SimpleMessage(" Operation Failed :: NO Inventory "));
-                }
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Invalid Product Variant Id"));
-        }
-        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
-
-    }
-
-    private void subtractInventory(List<SkuItem> inStockSkuItems, int qty, Sku sku) {
-        long systemQty = 0;
-        if (inStockSkuItems != null) {
-            systemQty = inStockSkuItems.size();
-            if (inStockSkuItems.size() >= qty) {
-                adminInventoryService.subtractInventoryForPV(inStockSkuItems, qty, sku);
-                addRedirectAlertMessage(new SimpleMessage("Sucessfully Subtracted"));
-            } else {
-                addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Batch contains Qty " + systemQty + "only"));
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: NO Inventory"));
-        }
-
-    }
-
-
-    public Resolution subtractInventoryForPVFromAnyBatch() {
-        if (productVariant != null) {
-            //get Sku
-            try {
-                Sku sku = skuService.getSKU(productVariant, warehouse);
-                if (sku != null) {
-                    List<SkuItem> inStockSkuItems = skuGroupService.getCheckedInSkuItems(sku);
-                    subtractInventory(inStockSkuItems, qty.intValue(), sku);
-                }
-            } catch (NoSkuException sku) {
-                addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Sku is not created in system"));
-            }
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Invalid Product Variant Id"));
-        }
-        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
-
-    }
-
-
     public ShippingOrder getShippingOrder() {
         return shippingOrder;
     }
@@ -607,14 +524,6 @@ public class InventoryCheckoutAction extends BaseAction {
         this.skuItemBarcode = skuItemBarcode;
     }
 
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
     /*
     * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
     */
@@ -629,6 +538,4 @@ public class InventoryCheckoutAction extends BaseAction {
      *
      *
      */
-
-
 }

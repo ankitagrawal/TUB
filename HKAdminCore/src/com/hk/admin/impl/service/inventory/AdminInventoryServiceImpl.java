@@ -514,26 +514,4 @@ public class AdminInventoryServiceImpl implements AdminInventoryService {
         }
     }
 
-
-    @Transactional
-    public void subtractInventoryForPV(List<SkuItem> inStockSkuItems, int qty, Sku sku) {
-        User loggedOnUser = userService.getLoggedInUser();
-        for (int i = 0; i < qty; i++) {
-            SkuItem skuItem = inStockSkuItems.get(i);
-            //Delete -1 entry in PVI
-            inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
-
-            //set sku item status to Product_variant_ Audited
-            skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
-            skuItem = skuGroupService.saveSkuItem(skuItem);
-        }
-
-        // Check inventory health now.
-        inventoryService.checkInventoryHealth(sku.getProductVariant());
-
-
-    }
-
-
 }

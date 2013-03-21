@@ -334,6 +334,20 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     }
 
 
+    public ReconciliationVoucher createReconciliationVoucher(ReconciliationType reconciliationType , String remark) {
+        User loggedOnUser = userService.getLoggedInUser();
+        ReconciliationVoucher reconciliationVoucher = new ReconciliationVoucher();
+        reconciliationVoucher.setReconciliationType(reconciliationType);
+        reconciliationVoucher.setCreateDate(new Date());
+        reconciliationVoucher.setCreatedBy(loggedOnUser);
+        reconciliationVoucher.setWarehouse(userService.getWarehouseForLoggedInUser());
+        reconciliationVoucher.setRemarks(remark);
+        reconciliationVoucher.setReconciliationDate(new Date());
+        reconciliationVoucher = (ReconciliationVoucher) reconciliationVoucherDao.save(reconciliationVoucher);
+        return reconciliationVoucher;
+    }
+
+
     @Transactional
     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks) {
         SkuGroup skuGroup = skuItem.getSkuGroup();
@@ -402,6 +416,32 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         // Check inventory health now.
         inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
         return rvLineItem;
+    }
+
+
+    @Transactional
+    public RvLineItem reconcileInventoryForPV(RvLineItem rvLineItem, List<SkuItem> inStockSkuItems, Sku sku) {
+        RvLineItem rvLineItemSaved = null;
+        User loggedOnUser = userService.getLoggedInUser();
+        int deleteQty = rvLineItem.getQty().intValue();
+        for (int i = 0; i < deleteQty; i++) {
+            SkuItem skuItem = inStockSkuItems.get(i);
+            //Delete -1 entry in PVI
+            adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
+                    inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
+
+            //set sku item status to Product_variant_ Audited
+            skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
+            skuItem = skuGroupService.saveSkuItem(skuItem);
+        }
+
+        // Check inventory health now.
+        inventoryService.checkInventoryHealth(sku.getProductVariant());
+        //save RvLine item
+        rvLineItem.setSku(sku);
+        rvLineItem.setReconciledQty(rvLineItem.getQty());
+        rvLineItemSaved = (RvLineItem) reconciliationVoucherDao.save(rvLineItem);
+        return rvLineItemSaved;
     }
 
 

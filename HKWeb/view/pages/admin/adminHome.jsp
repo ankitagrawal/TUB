@@ -236,6 +236,10 @@
     </h3>
     <c:if test="${whAction.setWarehouse != null}">
         <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                    event="directToSubtractPVInventoryFromAnyBatchPage">Subtract Inventory By PV</s:link></h3>
+
+        <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
         <h3>
@@ -250,9 +254,8 @@
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
-
         <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction"
+            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
                     event="directToSubtractPVInventoryFromSingleBatchPage">Subtract Inventory By Variant For Single Batch</s:link></h3>
     </c:if>
     <h3>
