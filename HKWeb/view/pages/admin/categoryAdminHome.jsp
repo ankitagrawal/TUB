@@ -87,6 +87,18 @@
         <div class="cl"></div>
 
         <div class="left roundBox">
+            <h2>Combos and Subscriptions</h2>
+
+            <h3>
+                <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">Create Combo</s:link></h3>
+
+            <h3><s:link
+                    beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s)
+                <br/><span class="sml gry">(includes excels)</span></s:link></h3>
+
+        </div>
+
+        <div class="left roundBox">
             <h2>Catalog Maintenance</h2>
 
             <h3>
@@ -98,21 +110,7 @@
                 <s:link beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">Bulk Edit Product And Variant Attributes</s:link></h3>
 
             <h3>
-                    <s:link beanclass="com.hk.web.action.admin.sku.SkuAction">Add/Edit SKUs</s:link></h3>
-
-        </div>
-
-        <div class="cl"></div>
-
-        <div class="left roundBox">
-            <h2>Combos and Subscriptions</h2>
-
-            <h3>
-                <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateEditComboAction">Create Combo</s:link></h3>
-
-            <h3><s:link
-                    beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s)
-                <br/><span class="sml gry">(includes excels)</span></s:link></h3>
+                <s:link beanclass="com.hk.web.action.admin.sku.SkuAction">Add/Edit SKUs</s:link></h3>
 
         </div>
 
