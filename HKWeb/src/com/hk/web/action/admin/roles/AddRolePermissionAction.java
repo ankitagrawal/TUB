@@ -98,19 +98,20 @@ public class AddRolePermissionAction extends BaseAction{
     @SuppressWarnings("unchecked")
     public Resolution saveRoleAndPermission(){
         if(role!=null){
-            if(getRoleService().listAllRoles().contains(role)){
+            roleName = role.getName();
+            logger.debug("role Name : " + roleName);
+            if( getRoleService().getRoleByName(roleName) != null){
                 addRedirectAlertMessage(new SimpleMessage("This role already exists"));
-            }else{
-                roleName = role.getName();
-                logger.debug("role Name : " + roleName);
+            }
+            else{
                 getRoleDao().save(role);
                 addRedirectAlertMessage(new SimpleMessage("Role Added Successfully"));
             }
         }
         if(permission != null){
-            if(!getRoleService().listAllPermissions().contains(permission)){
-                permissionName = permission.getName();
-                logger.debug("Permission Name : " + permissionName);
+            permissionName = permission.getName();
+            logger.debug("Permission Name : " + permissionName);
+            if(getRoleDao().getPermissionByName(permissionName) == null){
                 getRoleDao().save(permission);
                 addRedirectAlertMessage(new SimpleMessage("Permission Added Successfully"));
             }else{
