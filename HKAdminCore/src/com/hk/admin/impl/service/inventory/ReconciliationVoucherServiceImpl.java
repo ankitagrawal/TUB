@@ -317,9 +317,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         for (RvLineItem rvLineItem : rvLineItemList) {
             ReconciliationType reconciliationType = rvLineItem.getReconciliationType();
             if (rvLineItem.getSkuItem() != null) {
+                //Uploaded Sku Item Level Wise
                 rvLineItem.setSkuGroup(rvLineItem.getSkuItem().getSkuGroup());
                 reconcileSKUItems(reconciliationVoucher, reconciliationType, rvLineItem.getSkuItem(), "Uploaded By Excel By Batches");
             } else {
+                //Uploaded By Sku Group Level
                 SkuGroup skuGroup = rvLineItem.getSkuGroup();
                 List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
                 int qty = rvLineItem.getQty().intValue();

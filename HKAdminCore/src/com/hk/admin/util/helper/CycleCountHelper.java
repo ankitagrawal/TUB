@@ -428,7 +428,7 @@ public class CycleCountHelper {
         return totalScannedSkuItemBySkuGroup;
     }
 
-
+    //Creating Cycle Count items For Batch Level and Item Level Barcode
     public void generateCycleCountItemsCombiningSkuGroupAndSkuItemScanning(CycleCount cycleCount, Map<Long, Integer> cycleCountPviMap, List<SkuGroup> skuGroupNeverScanned, Map<Long, Integer> missedSkuGroupSystemInventoryMap, File excelFile) {
 
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
@@ -439,11 +439,13 @@ public class CycleCountHelper {
         for (CycleCountItem cycleCountItem : cycleCountItems) {
             int systemQty = 0, scannedQty = 0;
             SkuGroup skuGroup = null;
+            //Batch Level Scanning
             if (cycleCountItem.getSkuGroup() != null) {
                 systemQty = cycleCountPviMap.get(cycleCountItem.getId());
                 scannedQty = cycleCountItem.getScannedQty();
 
             } else {
+                //Item Level Scanning
                 skuGroup = cycleCountItem.getSkuItem().getSkuGroup();
                 if (scannedSkuItemsBySkuGroupMap.containsKey(skuGroup)) {
                     List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
@@ -477,6 +479,7 @@ public class CycleCountHelper {
         for (CycleCountItem cycleCountItem : cycleCountItemListForRVSubtract) {
             SkuGroup skuGroup = cycleCountItem.getSkuGroup();
             if (scannedSkuItemsMapOriginal.containsKey(skuGroup)) {
+                //Item Scanned by Item Level Barcode
                 List<SkuItem> skuItemListShouldNotBeDeleted = scannedSkuItemsMapOriginal.get(skuGroup);
                 List<SkuItem> inStockSkuItem = skuGroupService.getInStockSkuItems(skuGroup);
                 inStockSkuItem.removeAll(skuItemListShouldNotBeDeleted);
@@ -484,6 +487,7 @@ public class CycleCountHelper {
                 List<CycleCountItem> cycleCountItemListForDeletion = createCycleCountItemsForSkuItemsEligibleForDeletion(skuItemShouldBeDeleted, cycleCountItem);
                 finalListOfCycleCountItemsList.addAll(cycleCountItemListForDeletion);
             } else {
+                //Item Scanned by Batch Level(SkuGroup) Barcode
                 cycleCountItem.setSkuItem(null);
                 finalListOfCycleCountItemsList.add(cycleCountItem);
             }
@@ -492,7 +496,7 @@ public class CycleCountHelper {
 
         for (SkuGroup skuGroup : skuGroupNeverScanned) {
             CycleCountItem cycleCountItemAtSkUGroupLevel = new CycleCountItem();
-            //for batches which item level barcode are not generated
+            //for batches which are not scanned in CC and  whose item level barcode are not generated yet
             if (skuGroup.getBarcode() != null) {
                 cycleCountItemAtSkUGroupLevel.setSkuGroup(skuGroup);
                 cycleCountItemAtSkUGroupLevel.setSkuItem(null);
@@ -500,7 +504,7 @@ public class CycleCountHelper {
                 cycleCountItemAtSkUGroupLevel.setScannedQty(0);
                 finalListOfCycleCountItemsList.add(cycleCountItemAtSkUGroupLevel);
             } else {
-                //batches on item level , create cyclecountlineitem for every skuitem
+                //Sku Item which are never scanned in CC and whose item level barcode are generated
                 List<SkuItem> checkedInSkuItem = skuGroupService.getInStockSkuItems(skuGroup);
                 List<CycleCountItem> cycleCountItemListForDeletion = createCycleCountItemsForSkuItemsEligibleForDeletion(checkedInSkuItem, cycleCount);
                 finalListOfCycleCountItemsList.addAll(cycleCountItemListForDeletion);
@@ -512,7 +516,7 @@ public class CycleCountHelper {
 
     }
 
-
+    //Create CC item s for all Sku Item of missed Sku Group ,They will be added in Excel sheet in the same form
     private List<CycleCountItem> createCycleCountItemsForSkuItemsEligibleForDeletion(List<SkuItem> skuItemShouldBeDeleted, CycleCount cycleCount) {
         List<CycleCountItem> cycleCountItemListForSkuItems = new ArrayList<CycleCountItem>();
         for (SkuItem skuItem : skuItemShouldBeDeleted) {
@@ -528,7 +532,7 @@ public class CycleCountHelper {
         return cycleCountItemListForSkuItems;
     }
 
-
+    //Create Cycle count Item for every Sku Item Which are not Scanned , They will be added in Excel sheet in the same form
     private List<CycleCountItem> createCycleCountItemsForSkuItemsEligibleForDeletion(List<SkuItem> skuItemShouldBeDeleted, CycleCountItem cycleCountItem) {
         List<CycleCountItem> cycleCountItemListForSkuItems = new ArrayList<CycleCountItem>();
 
