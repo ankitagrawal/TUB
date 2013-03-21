@@ -529,7 +529,7 @@
 
 </div>
 
-<script type="text/javascript">
+<%--<script type="text/javascript">
     $(document).ready(function() {
         var max_ht = 0;
         $('.roundBox').each(function() {
@@ -542,7 +542,7 @@
             $(this).height(max_ht);
         });
     });
-</script>
+</script>--%>
 
 <!-- Script to render JIRA issue collector Form -->
 <script type="text/javascript"
