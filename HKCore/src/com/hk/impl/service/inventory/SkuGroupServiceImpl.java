@@ -69,7 +69,7 @@ public class SkuGroupServiceImpl implements SkuGroupService {
     }
 
     public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem) {
-        return skuGroupDao.getSkuGroupByGrn(grnLineItem);
+        return skuGroupDao.getSkuGroupByGrnLineItem(grnLineItem);
     }
 
     @Transactional
