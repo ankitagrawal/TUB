@@ -378,6 +378,7 @@ public class InventoryCheckoutAction extends BaseAction {
             if (sku != null) {
                 List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
                 if (skuGroupList != null && skuGroupList.size() == 1) {
+                    User loggedOnUser = userService.getLoggedInUser();
                     //Delete -1 entry in PVI
                     List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
                     if (inStockSkuItems != null && inStockSkuItems.size() >= qty) {
@@ -386,13 +387,18 @@ public class InventoryCheckoutAction extends BaseAction {
                             SkuItem skuItem = inStockSkuItems.get(index);
                             getAdminInventoryService().inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
                                     getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
+                             //set sku item status to Product_variant_ Audited
 
+                            //
 
 
 
                             index++;
                             qty--;
                         }
+
+                        // Check inventory health now.
+                        inventoryService.checkInventoryHealth(sku.getProductVariant());
 
                     } else {
 
