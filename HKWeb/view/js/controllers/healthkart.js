@@ -22,6 +22,9 @@ HK.CartOfferController = Ember.Controller.create({
     showApply:true,
     showRemove:false,
     showRemoveButton: false,
+    loginURL: HK.contextPath + "/core/auth/Login.action",
+    cartURL: HK.contextPath + "/core/cart/Cart.action",
+    loginWithRedirectURL: HK.contextPath + "/core/auth/Login.action" + "?redirectUrl=" + HK.contextPath + "/core/cart/Cart.action",
     applyURL: HK.contextPath + "/core/discount/ApplyCoupon.action",
     imageURL: HK.contextPath + "/images/close.png",
     init:function(){
@@ -58,7 +61,7 @@ HK.CartOfferController = Ember.Controller.create({
                     self.set("isTempUser", false);
                 }
 
-                if($.inArray("HK_UNVERIFIED", self.get("roles"))> -1){
+                if($.inArray("HKUNVERIFIED", self.get("roles"))> -1){
                     self.set("isHKUnverified", true);
                 }
                 else{
@@ -85,8 +88,7 @@ HK.CartOfferController = Ember.Controller.create({
         self.get("currentlyAppliedOffer").clear();
         tempArray = [],
         $.ajax({
-            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers?"+new Date(),
-//            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
+            url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
             success: function ( data ) {
                 data.applicableOffers.forEach(function(offer){
