@@ -21,34 +21,20 @@
 <script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
 <script src="${pageContext.request.contextPath}/js/ember.js"></script>
 <script src="${pageContext.request.contextPath}/js/loader.js"></script>
+
   <script type="text/javascript">
     var timeout; //Set globally as it needs to be reset when removeLink is clicked.
     var timespan = 3000;
     HK = Ember.Application.create({});
     HK.contextPath = "${pageContext.request.contextPath}";
-
-    function applicableOffers(){
-        $.ajax({
-            url:"core/cart/Cart.action",
-            data:"eklgnm",
-            success:function(data){
-            }
-        });
+    function showCouponDetails(){
+        $("#couponPopUp").toggle();
+        $(".appliedOfferDetails").toggle();
     }
 
     $(document).ready(function() {
-        $(".appliedOfferDetails").click(function(e){
-            $("#couponPopUp").toggle();
-            $(".appliedOfferDetails").toggle();
-            e.stopPropagation();
-        });
-        $("#container").click(function(){
-            if($("#couponPopUp").css("display") == "block"){
-                $(".appliedOfferDetails").toggle();
-            }
-            $("#couponPopUp").hide();
-        });
-      $('.lineItemQty').blur(function() {
+
+        $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
         var lineItemQty = $(this).val();
@@ -274,20 +260,22 @@
       </c:otherwise>
     </c:choose>
   </h2>
-    
+
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-    <a href="/" class="back"> &larr; go back to add more products</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add more products</a>
   </c:if>
   <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-    <a href="/" class="back"> &larr; go back to add products to your shopping cart</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add products to your shopping cart</a>
   </c:if>
+ <div id="offerTextOnTop"></div>
 </s:layout-component>
 
 <s:layout-component name="cart_items">
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
-<div class='products_container' style="min-height: 500px;">
+<div id="appliedOfferDiv"></div>
+<div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
     <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
@@ -565,16 +553,11 @@
 </c:if>
 </c:if>
 </div>
-<!--
-    Ember js code for MVC javascript!
--->
 
-<script src="${pageContext.request.contextPath}/js/app.js"></script>
 
 <div class="offerContainer">
-<div id="appliedOfferDiv"></div>
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div style="left:0px; border:none" class='right_container coupon'>
+    <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>
         <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
             <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
@@ -582,11 +565,12 @@
             <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
                     class="button_grey">Apply</s:link>
         </shiro:hasAnyRoles>
+
         <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
             Got a discount coupon?
             <br/>
             <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
-                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
+                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
             </s:link>
             to redeem it.
             <br/>
@@ -602,10 +586,10 @@
 
     </div>
 </shiro:lacksRole>
-<div id="applicableOfferDiv"></div>
 </div>
 
-<div class='right_container total'>
+
+<div class='right_container total' style="left: 30px;margin-bottom: 2px;width:235px;margin-left: initial;margin-right: initial;">
 <h5>Checkout</h5>
 <br/>
 
@@ -717,6 +701,7 @@
   });
 </script>
 </div>
+<div id="applicableOfferDiv"></div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 
@@ -881,7 +866,7 @@
            </tr>
        </table>
    </div>
-
+<script src="${pageContext.request.contextPath}/js/app.js"></script>
 <!-- BLADE pseudo conversion code -->
 <script type="text/javascript">
 <!--

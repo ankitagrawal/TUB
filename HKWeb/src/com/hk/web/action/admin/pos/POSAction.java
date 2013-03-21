@@ -87,6 +87,7 @@ public class POSAction extends BaseAction {
 	private String addressCity;
 	private String addressState;
 	private String addressPincode;
+	private Double discount;
 
 	@Autowired
 	private UserService userService;
@@ -232,6 +233,10 @@ public class POSAction extends BaseAction {
 		}
 		order.setAmount(grandTotal);
 		order = posService.createCartLineItems(posLineItems, order);
+		if(discount != null) {
+			posService.applyOrderLevelDiscountOnCartLineItems(order, discount);
+			order.setAmount(grandTotal - discount);
+		}
 
 		Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), null, null, null);
 
@@ -460,5 +465,13 @@ public class POSAction extends BaseAction {
 
 	public void setAddressPincode(String addressPincode) {
 		this.addressPincode = addressPincode;
+	}
+
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 }

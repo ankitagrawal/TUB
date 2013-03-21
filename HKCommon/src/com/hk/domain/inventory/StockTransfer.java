@@ -72,6 +72,10 @@ public class StockTransfer implements java.io.Serializable , Comparable<StockTra
 	@JoinColumn(name = "to_warehouse_id",  nullable = false)
 	private Warehouse toWarehouse;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "stock_transfer_status_id")
+	private StockTransferStatus stockTransferStatus;
+
 	public Long getId() {
 		return id;
 	}
@@ -153,7 +157,15 @@ public class StockTransfer implements java.io.Serializable , Comparable<StockTra
 		this.toWarehouse = toWarehouse;
 	}
 
-    @Override
+	public StockTransferStatus getStockTransferStatus() {
+		return stockTransferStatus;
+	}
+
+	public void setStockTransferStatus(StockTransferStatus stockTransferStatus) {
+		this.stockTransferStatus = stockTransferStatus;
+	}
+
+	@Override
     public String toString() {
         return id == null ? "" : id.toString();
     }

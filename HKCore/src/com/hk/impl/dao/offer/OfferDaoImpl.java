@@ -24,6 +24,15 @@ public class OfferDaoImpl extends BaseDaoImpl implements OfferDao {
         return list(criteria, pageNo, perPage);
     }
 
+  public Page listAllValidShowPromptly(int pageNo, int perPage) {
+      DetachedCriteria criteria = DetachedCriteria.forClass(Offer.class);
+      criteria.add(Restrictions.eq("showPromptly", Boolean.TRUE));
+      criteria.add(Restrictions.ge("endDate", new Date()));
+      criteria.addOrder(Order.desc("id"));
+      return list(criteria, pageNo, perPage);
+  }
+
+
     public Page listAll(int pageNo, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Offer.class);
         criteria.addOrder(Order.desc("id"));

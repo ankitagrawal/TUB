@@ -2990,7 +2990,8 @@ h2.prod_title {
     width: 630px;
     font-size: 12px;
     color: #888;
-    min-height: 600px;
+    height: auto;
+    min-height: 300px;
 }
 
 /* line 1117, ../sass/main.scss */
@@ -3186,19 +3187,21 @@ h2.prod_title {
 .step2 .right_container {
     display: inline;
     float: left;
-    width: 235px;
+    width: 190px;
     position: relative;
-    border: 1px solid #ddd;
-    left: 30px;
+    left: 40px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -o-border-radius: 5px;
     -ms-border-radius: 5px;
     -khtml-border-radius: 5px;
     border-radius: 5px;
+    border: 1px solid #ddd;
     color: #888;
     padding: 10px 10px;
-    margin-bottom: 2px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /* line 1220, ../sass/main.scss */
@@ -5536,6 +5539,7 @@ color: #e62580;
     word-wrap: break-word;
     height: auto;
     width: 253px;
+    left: 35px;
 }
 
 .appliedOfferHead{
@@ -5568,18 +5572,18 @@ color: #e62580;
 .couponPopUp{
     position: absolute;
     float: left;
-    border: 1px solid #DCA;
     border-radius: 9px;
     width: 200px;
     min-height: 50px;
     height: auto;
-    background: #fffAF0;
     box-shadow: 2px 2px 2px 0px;
     word-wrap: break-word;
     display: none;
-    left: 17%;
+    left: 16%;
     top: 20px;
     z-index: 1000;
+    border: 1px solid #DCA;
+    background: #fffAF0;
 }
 
 .couponPopUpMsg{
@@ -5617,11 +5621,10 @@ color: #e62580;
 }
 
 .popupArrow{
-    z-index: -4;
     position: relative;
     float: left;
-    right: -72%;
-    top: -12px;
+    left: 75%;
+    top: -12px
 }
 
 .applicableOfferDesc{
@@ -5640,41 +5643,44 @@ color: #e62580;
     float: left;
     left: 6px;
     top: 5px;
-    font-weight: bold;
+    font-size: 16px;
     margin-bottom: 10px;
     color: #888;
 }
 
 .applicableOffer{
     left: 3px;
-    width: 97%;
+    width: 202px;
     height: auto;
     border-radius: 8px;
     position: relative;
     float: left;
-    clear: both;
     margin-bottom: 5px;
     word-wrap: break-word;
+    border: 1px solid #ddd;
+    margin-right: 8px;
 }
 
 .applicableOfferTerms{
     position: relative;
     float: left;
-    left: 16px;
+    left: 15px;
     color: #888;
     word-wrap: break-word;
     height: auto;
     width: 90%;
-    margin-bottom: 2px
+    margin-bottom: 2px;
+    font-size: 11px;
 }
 
-.endDate{
+.offerEndDate{
     position: relative;
     float: left;
-    left: 16px;
-    font-size: 10px;
+    left: 15px;
+    font-size: 9px;
     font-style: italic;
     margin-bottom: 2px;
+    width: 100%;
 }
 
 .offerCount{
@@ -5732,26 +5738,13 @@ color: #e62580;
 .applicableOfferContainer{
     position: relative;
     float: left;
-    width: 258px;
-    max-height: 145px;
+    width: 73%;
     border-radius: 5px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: auto;
 }
 
 .offerContainer:hover {
     border-color: #f87500;
-}
-
-.offerContainer{
-    position: relative;
-    height: auto;
-    width:auto;
-    float: left;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    left: 30px;
-    margin-bottom: 10px;
 }
 
 .appliedOfferContainer{
@@ -5760,15 +5753,164 @@ color: #e62580;
     border: 1px solid;
 }
 
-.button_raj{
-    width: 67px;
-    height: 25px;
+.offerContainer{
     position: relative;
     float: left;
-    font-size: 10px !important;
+    left: 30px;
+    border: 1px solid rgb(190, 190, 190);
+    border-radius:5px;
+    margin-bottom: 10px;
+    height: auto;
+}
+
+.button_raj{
+    background: initial !important;
+    color: black !important;
+    font-size: 9px !important;
+    font-weight: initial !important;
+    border: 1px solid rgb(91, 208, 253) !important;
+    height: 22px !important;
+    border-radius: 3px !important;
+    position: relative !important;
+    float: left !important;
+    left: 0px !important;
+    width: 60px !important;
+    height: 22px !important;
+    top: 5px !important;
+}
+
+.applicableOfferBottomContainer{
+    position: relative;
+    float: left;
+    clear: both;
+    width: 70%;
+    height: auto;
+}
+
+.gotoCheckout{
+    position: relative;
+    float: left;
+    left: 60px;
+    top: 5px;
+    margin-bottom: 23px;
+    margin-right: 35%;
+    border: 1px solid rgb(91, 208, 253);
+    border-radius: 2px;
+    height: 15px;
+    cursor: pointer;
+    width: 120px;
+}
+
+.gotoCheckoutInner{
+    position: relative;
+    float: left;
+    font-size: 9px;
+    top: 3px;
+    left: 3px;
+}
+
+.removeButton{
+    position: relative;
+    float: left;
+    width: 0px;
+}
+
+.noCoupons{
+    position: relative;
+    float: left;
+}
+
+.appliedButton{
+    font-size: 9px;
+    color: black;
+    font-weight: bold;
+    border-radius: 4px;
+    position: relative;
+    float: left;
+    left: 10px;
+    width: 60px;
+    height: 14px;
+    top: 14px;
+    border: 1px solid #ddd;
+    padding-top: 7px;
+    background: #ddd;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.applyFormButton{
+    position: relative;
+    float: left;
+    left: 10px;
+}
+
+.appliedOfferText{
+    position: relative;
+    float: left;
+    clear: both;
+    width: 90%;
     left: 15px;
-    background: #aaaaaa !important;
-    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.1)), color-stop(100%, rgba(255, 255, 255, 0))) !important;
+    top: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    color:brown;
+    margin-bottom: 3px;
+}
+
+.appliedOfferNew{
+    left: 30px !important;
+    width: 255px !important;
+    border: 1px solid #DCA !important;
+    background: rgb(248, 255, 163) !important;
+    border-radius: 5px !important;
+}
+
+.offerCloseButton{
+    position: relative;
+    float: left;
+    width: 17px;
+    left: 15px;
+    top: 2px;
+    cursor: pointer;
+    color: brown;
+}
+
+.offerTextOnTop{
+    position: relative;
+    float: left;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 10px;
+    width: 67%;
+    font-size: 14px;
+    background: rgb(248, 255, 163);
+}
+
+.offerTextOnTopButton{
+    position: relative;
+    cursor: pointer;
+    float: left;
+    text-decoration: underline;
+}
+
+.offerRow{
+    position: relative;
+    float: left;
+    width: 100%;
+}
+
+.offerTextOnTopText{
+    position: relative;
+    float: left;
+}
+
+.loginLinkCSS{
+    position: relative;
+    float: left;
+    left: 16px;
+    margin-bottom: 7px;
+    margin-top: 5px;
 }
 
 /*
