@@ -14,7 +14,7 @@
     <%--height:200px;--%>
   <%--}--%>
 <%--</style>--%>
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Purchasing</h2>
 
     <h3>
@@ -33,7 +33,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Receiving Issues</h2>
 
     <h3>
@@ -51,7 +51,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Pricing Management</h2>
 
     <h3>
@@ -66,7 +66,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>New Products Cataloging</h2>
 
     <h3><s:link
@@ -83,7 +83,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Catalog Maintenance</h2>
 
     <h3>
@@ -103,7 +103,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Combos and Subscriptions</h2>
 
     <h3>
@@ -115,7 +115,7 @@
 <div class="cl"></div>
 
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Action Queue</h2>
 
     <c:if test="${whAction.setWarehouse == null}">
@@ -127,7 +127,7 @@
 <div class="cl"></div>
 
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Marketing Related Tasks</h2>
 
     <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
@@ -138,7 +138,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Eye Category Config</h2>
 
     <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
@@ -149,7 +149,7 @@
 
 <div class="cl"></div>
 
-<div class="float roundBox">
+<div class="left roundBox">
     <h2>Inventory</h2>
 
     <h3>
