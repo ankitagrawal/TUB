@@ -1,5 +1,6 @@
 package com.hk.impl.service.inventory;
 
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.dao.sku.SkuGroupDao;
 import com.hk.pact.dao.sku.SkuItemDao;
@@ -12,9 +13,11 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,6 +68,15 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuGroupDao.getSkuGroup(barcode, warehouseId);
     }
 
+    public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem) {
+        return skuGroupDao.getSkuGroupByGrn(grnLineItem);
+    }
+
+    @Transactional
+    public void deleteSkuGroup(SkuGroup skuGroup) {
+        skuGroupDao.delete(skuGroup);
+    }
+
 
     //SkuItemDao Methods
     public List<SkuGroup> getInStockSkuGroups(Sku sku) {
@@ -95,6 +107,16 @@ public class SkuGroupServiceImpl implements SkuGroupService {
 
     public SkuItem saveSkuItem(SkuItem skuItem) {
         return (SkuItem) skuItemDao.save(skuItem);
+    }
+
+    @Transactional
+    public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup) {
+        Set<SkuItem> skuItemList = skuGroup.getSkuItems();
+        skuGroup.setSkuItems(null);
+        skuGroup = (SkuGroup) skuGroupDao.save(skuGroup);
+        for (SkuItem skuItem : skuItemList) {
+            skuItemDao.delete(skuItem);
+        }
     }
 
 

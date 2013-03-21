@@ -3,6 +3,7 @@ package com.hk.impl.dao.sku;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -178,6 +179,12 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return skuGroups;
     }
 
+    public List<SkuGroup> getSkuGroupByGrn(GrnLineItem grnLineItem) {
+
+        List<SkuGroup> skuGroups = getSession().createQuery("from SkuGroup  sg  where  sg.goodsReceivedNote  is not null  and  sg.goodsReceivedNote =:grn and  sg.sku =:sku")
+                .setParameter("grn", grnLineItem.getGoodsReceivedNote()).setParameter("sku", grnLineItem.getSku()).list();
+        return skuGroups;
+    }
 
 
 }

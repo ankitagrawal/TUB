@@ -17,5 +17,9 @@ public interface GrnLineItemService {
 
 	public Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote grn ,Sku sku);
 
+    public boolean ifAllSkuItemInCheckedInStatus(GrnLineItem grnLineItem);
+
+    public void delete(GrnLineItem grnLineItem);
+
 
 }
