@@ -239,7 +239,7 @@ public class CartResource extends BaseAction {
   public Set<Offer> getApplicableOffers(Order order) {
     applicableOffers = new HashSet<Offer>();    
     User user = order.getUser();
-    if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
+    //if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
       Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
       if (activeOffersPage != null) {
         List<Offer> activeOffers = activeOffersPage.getList();
@@ -266,7 +266,7 @@ public class CartResource extends BaseAction {
           applicableOffers.add(instance.getOffer());
         }
       }
-    }
+    //}
     return applicableOffers;
   }
 
