@@ -264,14 +264,17 @@
         </div>
 
         <div align="left">
-            <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
-                <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
-                    <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-                    <label>Delete All Scanned Batches For PV</label>
-                    <s:text name="productVariantId"/>
-                    <s:submit name="deleteAllScannedBatchForPVId" value="deleteAllBatches"/>
-                </s:form>
-            </shiro:hasPermission>
+            <fieldset class="right_label" style="margin-left:0;">
+                Delete Scanned Batches for Product Variant in Cycle Count View Only.
+                <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
+                    <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                        <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                        <label>Delete All Scanned Batches For Product Variant</label>
+                        <s:text name="productVariantId"/>
+                        <s:submit name="deleteAllScannedBatchForPVId" value="deleteAllScannedBatches"/>
+                    </s:form>
+                </shiro:hasPermission>
+            </fieldset>
         </div>
 
 	</s:layout-component>

@@ -99,18 +99,19 @@
         <input type="hidden" id="messageColorParam" value="${messageColor}">
 
         <div class="alertST messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">
-            <fieldset class="right_label">
-                <legend>Scan Barcode to delete:</legend>
-                <ul>
-                    <li>
-                        <s:label name="barcode">Product Variant Barcode</s:label>
-                        <s:text name="hkBarcode" id="productVariantBarcode"/>
-                    </li>
-                    <li></li>
-                </ul>
-            </fieldset>
-        </s:form>
+        <!-- commenting code For Time Being !-->
+        <%--<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">--%>
+            <%--<fieldset class="right_label">--%>
+                <%--<legend>Scan Barcode to delete:</legend>--%>
+                <%--<ul>--%>
+                    <%--<li>--%>
+                        <%--<s:label name="barcode">Product Variant Barcode</s:label>--%>
+                        <%--<s:text name="hkBarcode" id="productVariantBarcode"/>--%>
+                    <%--</li>--%>
+                    <%--<li></li>--%>
+                <%--</ul>--%>
+            <%--</fieldset>--%>
+        <%--</s:form>--%>
     </c:if>
     <table style="margin: 55px auto 81px;">
     <thead>
