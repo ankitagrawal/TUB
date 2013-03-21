@@ -260,6 +260,23 @@
                 <s:submit name="downloadSkuGroupMissedInScanning" value="Download missed batch"/>
             </s:form>
         </div>
+         <div style="height: 100px;">
+        </div>
+
+        <div align="left">
+            <fieldset class="right_label" style="margin-left:0;">
+                <legend>Delete All Scanned Batches For Product Variant in Cycle Count View Only</legend>
+                <br/>
+                <br/>
+                <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">
+                    <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
+                        <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
+                        <s:text name="productVariantId"/>
+                        <s:submit name="deleteAllScannedBatchForPVId" value="deleteAllScannedBatches"/>
+                    </s:form>
+                </shiro:hasPermission>
+            </fieldset>
+        </div>
 
 	</s:layout-component>
 

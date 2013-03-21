@@ -366,58 +366,85 @@ public class InventoryCheckoutAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
-    public Resolution directToDeleteProductVariantInventoryPage() {
+    public Resolution directToSubtractPVInventoryFromSingleBatchPage() {
         warehouse = userService.getWarehouseForLoggedInUser();
-        return new RedirectResolution("/pages/admin/inventory/deleteProductVariantInventory.jsp");
+        return new RedirectResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
     }
 
-    public Resolution deleteInventoryForProductVariantFromSingleBatch() {
+
+    public Resolution directToSubtractPVInventoryFromAnyBatchPage() {
+        warehouse = userService.getWarehouseForLoggedInUser();
+        return new RedirectResolution("/pages/admin/inventory/subtractPVInventoryFromAnyBatch.jsp");
+    }
+
+    public Resolution subtractInventoryForPVFromSingleBatch() {
         if (productVariant != null) {
-            //get Sku group
+            //get Sku
             Sku sku = skuService.getSKU(productVariant, warehouse);
             if (sku != null) {
                 List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
                 if (skuGroupList != null && skuGroupList.size() == 1) {
-                    User loggedOnUser = userService.getLoggedInUser();
-                    //Delete -1 entry in PVI
                     List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
-                    if (inStockSkuItems != null && inStockSkuItems.size() >= qty) {
-                        int index = 0;
-                        while (qty > 0) {
-                            SkuItem skuItem = inStockSkuItems.get(index);
-                            getAdminInventoryService().inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
-                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
-                             //set sku item status to Product_variant_ Audited
-
-                            //
-
-
-
-                            index++;
-                            qty--;
-                        }
-
-                        // Check inventory health now.
-                        inventoryService.checkInventoryHealth(sku.getProductVariant());
-
-                    } else {
-
-
-                    }
-
-
+                    subtractInventory(inStockSkuItems, qty, sku);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
                 }
-                else {
-                  addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
-              }
 
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Sku is not created in system"));
             }
         }
-
+        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
 
     }
+
+    private void subtractInventory(List<SkuItem> inStockSkuItems, Long qty, Sku sku) {
+        long systemQty = 0;
+        if (inStockSkuItems != null) {
+            systemQty = inStockSkuItems.size();
+            if (inStockSkuItems.size() >= qty) {
+                User loggedOnUser = userService.getLoggedInUser();
+                for (int i = 0; i < qty; i++) {
+                    SkuItem skuItem = inStockSkuItems.get(i);
+                    //Delete -1 entry in PVI
+                    getAdminInventoryService().inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
+                            getInventoryService().getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
+
+                    //set sku item status to Product_variant_ Audited
+                    skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
+                }
+
+                // Check inventory health now.
+                inventoryService.checkInventoryHealth(sku.getProductVariant());
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Batch contains Qty " + systemQty + "only"));
+            }
+        }
+        else {
+            addRedirectAlertMessage(new SimpleMessage("ZERO Inventory"));
+        }
+
+    }
+
+
+    public Resolution subtractInventoryForPVFromAnyBatch() {
+        if (productVariant != null) {
+            //get Sku
+            Sku sku = skuService.getSKU(productVariant, warehouse);
+            if (sku != null) {
+                List<SkuItem> inStockSkuItems = skuGroupService.getCheckedInSkuItems(sku);
+                subtractInventory(inStockSkuItems, qty, sku);
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Sku is not created in system"));
+            }
+        }
+        return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
+
+    }
+
+
+
 
     public ShippingOrder getShippingOrder() {
         return shippingOrder;

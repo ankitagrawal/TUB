@@ -105,11 +105,12 @@
 
     <h3>
         <s:link
-                beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/><span class="sml gry">(also shows Inventory status)</span></s:link>
+                beanclass="com.hk.web.action.admin.catalog.GenerateExcelAction">Generate Catalog Excel by Category<br/>
+        </s:link>
     </h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.catalog.ParseExcelAction">Upload Catalog Excel<br/><span class="sml gry" style="color:red">(SKUs need to be created manually for new variants)</span></s:link>
+            beanclass="com.hk.web.action.admin.catalog.ParseExcelAction">Upload Catalog Excel<br/></s:link>
     </h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.marketing.AmazonParseExcelAction">Upload Amazon Excel</s:link></h3>
@@ -141,7 +142,8 @@
 
     <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RecentlyAddedProductsAction">Recently Added Products</s:link></h3>
     <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.RelatedProductAction">Update Related Products</s:link></h3>
-    <h3><s:link beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s) <br/><span class="sml gry">(includes excels)</span></s:link> </h3>
+    <h3><s:link beanclass="com.hk.web.action.admin.catalog.subscription.CreateEditSubscriptionProductAction">Create/edit Subscription(s)
+    </s:link> </h3>
     <h3><s:link beanclass="com.hk.web.action.admin.store.StorePricingAction">Store pricing</s:link></h3>
     <h3><s:link beanclass="com.hk.web.action.admin.catalog.product.AddEyeConfigAction">Add Eye Config</s:link></h3>
     <h3><s:link beanclass="com.hk.web.action.admin.catalog.TryOnXmlsUploadAction" event="pre">Generate Update Eye Try On</s:link></h3>
@@ -208,86 +210,6 @@
 <div class="cl"></div>
 
 <div class="left roundBox">
-    <h2>Courier and Services</h2>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction"
-                class="calculator">
-            Shipment Cost Calculator Action
-        </s:link>
-    </h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.courier.MasterPincodeAction">Update Master Pincode List</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.StateCourierServiceAction">State Courier Service Info</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.courier.CourierAWBAction">Update Courier AWB numbers</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.ChangeDefaultCourierAction">Change Default Courier</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.PincodeCourierMappingAction">Pincode Courier Mapping</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.CreateUpdateShipmentAction">Change Update Shipment</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">Shipment Resolution</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.shipment.UpdateDeliveryStatusAction">Update Delivery Status of AFL,Chhotu,Delhivery,BlueDart,DTDC</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.shipment.ParseCourierDeliveryStatusExcelAction">Upload Courier Delivery Status Excel</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.shipment.ParseCourierCollectionChargeExcelAction">Upload Courier Collection Charge Excel</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.shipment.ParseEstimatedCourierExpensesExcelAction">Upload Estimated Courier Collection Charges</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">Change shipment details</s:link></h3>
-
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.courier.CreateUpdateCourierPricingAction">Change Courier Pricing details</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.courier.AddCourierAction">Add Courier and Courier Group</s:link></h3>
-
-    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-                event="generateCourierReport">Download Courier Excel
-        <s:param name="courierDownloadFunctionality" value="false"/>
-    </s:link></h3>
-
-    <!--<shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
-		<h3>
-			<s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-					event="generateCourierReport">Add/Edit Hub
-				<s:param name="courierDownloadFunctionality" value="false"/>
-			</s:link>
-		</h3>
-	</shiro:hasRole>
-
--->
-    <shiro:hasPermission name="<%=PermissionConstants.DISPATCH_LOT_OPERATIONS%>">
-        <h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction">Create New Dispatch Lot
-        </s:link>
-        </h3>
-
-        <h3><s:link beanclass="com.hk.web.action.admin.courier.DispatchLotAction" event="showDispatchLotList">
-            Dispatch Lot List</s:link></h3>
-    </shiro:hasPermission>
-
-</div>
-
-<div class="cl"></div>
-
-
-<div class="left roundBox">
     <h2>Inventory Management</h2>
 
     <h3>
@@ -328,6 +250,10 @@
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
+
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction"
+                    event="directToSubtractPVInventoryFromSingleBatchPage">Subtract Inventory By Variant For Single Batch</s:link></h3>
     </c:if>
     <h3>
         <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link>
@@ -472,64 +398,7 @@
 
 </div>
 
-<div class="left roundBox">
-    <h2>Healthkart Delivery</h2>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="Download Healthkart Delivery Worksheet">Mark Shipments Inward at Hub</s:link></h3>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
-                title="Download Healthkart Delivery Runsheet" event="previewRunsheet">Download Delivery Runsheet
-            <s:param name="runsheetPreview" value="false"/>
-        </s:link></h3>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDRunsheetAction"
-                title="View Runsheets" >View/Edit Runsheets
-        </s:link>
-    </h3>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="View Consignments" event="searchConsignments" >View/Edit Consignments
-        </s:link>
-    </h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
-                title="View Payments History" event="searchPaymentReconciliation" >View Payments History
-        </s:link>
-    </h3>
-
-
-        <%--<shiro:hasPermission name="<%=EnumPermission.VIEW_CONSIGNMENT_TRACKING%>" >--%>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction"
-                title="Track Consignment" event="trackConsignment">Track Consignment
-            <s:param name="doTracking" value="false"/>
-        </s:link>
-    </h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDPaymentReconciliationAction"
-                title="View Payments History" event="hkDeliveryreports" >HKDelivery Reports
-        </s:link>
-    </h3>
-
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction"
-                title="Add/Edit Hub">Add/Edit Hub
-        </s:link>
-    </h3>
-    <h3>
-        <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDHubAction" event="addUserToHub"
-                title="Add agent">Add/Remove agent to hub
-        </s:link>
-    </h3>
-
-
-</div>
-
-<script type="text/javascript">
+<%--<script type="text/javascript">
     $(document).ready(function() {
         var max_ht = 0;
         $('.roundBox').each(function() {
@@ -542,7 +411,7 @@
             $(this).height(max_ht);
         });
     });
-</script>
+</script>--%>
 
 <!-- Script to render JIRA issue collector Form -->
 <script type="text/javascript"
