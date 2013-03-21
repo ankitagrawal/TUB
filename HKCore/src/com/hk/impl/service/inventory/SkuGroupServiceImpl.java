@@ -64,6 +64,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         return skuGroupDao.getSkuGroup(barcode, warehouseId);
     }
 
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku){
+        return skuGroupDao.getAllInStockSkuGroups(sku);
+    }
+
 
     //SkuItemDao Methods
     public List<SkuGroup> getInStockSkuGroups(Sku sku) {

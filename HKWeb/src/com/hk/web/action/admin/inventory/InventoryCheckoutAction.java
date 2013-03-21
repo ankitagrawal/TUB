@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -115,6 +116,7 @@ public class InventoryCheckoutAction extends BaseAction {
     // private SkuGroup earlierSkuGroup;
     List<SkuGroup> skuGroups;
     private SkuItem skuItemBarcode;
+    private Warehouse warehouse;
 
     @DefaultHandler
     public Resolution pre() {
@@ -364,6 +366,53 @@ public class InventoryCheckoutAction extends BaseAction {
         return new JsonResolution(healthkartResponse);
     }
 
+    public Resolution directToDeleteProductVariantInventoryPage() {
+        warehouse = userService.getWarehouseForLoggedInUser();
+        return new RedirectResolution("/pages/admin/inventory/deleteProductVariantInventory.jsp");
+    }
+
+    public Resolution deleteInventoryForProductVariantFromSingleBatch() {
+        if (productVariant != null) {
+            //get Sku group
+            Sku sku = skuService.getSKU(productVariant, warehouse);
+            if (sku != null) {
+                List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
+                if (skuGroupList != null && skuGroupList.size() == 1) {
+                    //Delete -1 entry in PVI
+                    List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
+                    if (inStockSkuItems != null && inStockSkuItems.size() >= qty) {
+                        int index = 0;
+                        while (qty > 0) {
+                            SkuItem skuItem = inStockSkuItems.get(index);
+                            getAdminInventoryService().inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
+                                    getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKOUT), -1L, loggedOnUser);
+
+
+
+
+                            index++;
+                            qty--;
+                        }
+
+                    } else {
+
+
+                    }
+
+
+                }
+                else {
+                  addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Inventory Present in Multiple batches , "));
+              }
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Operation Failed ::Sku is not created in system"));
+            }
+        }
+
+
+    }
+
     public ShippingOrder getShippingOrder() {
         return shippingOrder;
     }
@@ -524,6 +573,14 @@ public class InventoryCheckoutAction extends BaseAction {
         this.skuItemBarcode = skuItemBarcode;
     }
 
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
     /*
     * public boolean isWronglyPickedBox() { return wronglyPickedBox; }
     */
@@ -538,4 +595,6 @@ public class InventoryCheckoutAction extends BaseAction {
      *
      *
      */
+
+
 }

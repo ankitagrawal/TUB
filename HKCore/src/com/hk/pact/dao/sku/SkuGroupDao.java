@@ -33,4 +33,6 @@ public interface SkuGroupDao extends BaseDao {
 
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
+
 }

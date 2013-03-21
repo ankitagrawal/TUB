@@ -36,6 +36,8 @@ public interface SkuGroupService {
 
     public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId);
 
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
+
 
     //SkuItemDao Methods
 
