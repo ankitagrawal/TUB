@@ -193,8 +193,14 @@ function program14(depth0,data) {
 
 function program16(depth0,data) {
   
-  
-  data.buffer.push("\n              <div class=\"loginLinkCSS\">\n                <a class=\"lrg\" href=\"/healthkart/core/user/MyAccount.action?pre=\">Verify your account</a> to apply\n              </div>\n            ");
+  var buffer = '', hashTypes;
+  data.buffer.push("\n              <div class=\"loginLinkCSS\">\n                <a class=\"lrg\" ");
+  hashTypes = {'href': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'href': ("controller.verifyActionURL")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" >Verify your account</a> to apply\n              </div>\n            ");
+  return buffer;
   }
 
   data.buffer.push("<div id=\"appOfferID\">\n");
@@ -358,6 +364,7 @@ HK.CartOfferController = Ember.Controller.create({
     showApply:true,
     showRemove:false,
     showRemoveButton: false,
+    verifyActionURL: HK.contextPath + "/core/user/MyAccount.action",
     loginURL: HK.contextPath + "/core/auth/Login.action",
     cartURL: HK.contextPath + "/core/cart/Cart.action",
     loginWithRedirectURL: HK.contextPath + "/core/auth/Login.action" + "?redirectUrl=" + HK.contextPath + "/core/cart/Cart.action",

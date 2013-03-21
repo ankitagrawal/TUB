@@ -48,7 +48,7 @@
 
             {{#if controller.isHKUnverified}}
               <div class="loginLinkCSS">
-                <a class="lrg" href="/healthkart/core/user/MyAccount.action?pre=">Verify your account</a> to apply
+                <a class="lrg" {{bindAttr href = "controller.verifyActionURL"}} >Verify your account</a> to apply
               </div>
             {{/if}}
 

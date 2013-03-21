@@ -22,6 +22,7 @@ HK.CartOfferController = Ember.Controller.create({
     showApply:true,
     showRemove:false,
     showRemoveButton: false,
+    verifyActionURL: HK.contextPath + "/core/user/MyAccount.action",
     loginURL: HK.contextPath + "/core/auth/Login.action",
     cartURL: HK.contextPath + "/core/cart/Cart.action",
     loginWithRedirectURL: HK.contextPath + "/core/auth/Login.action" + "?redirectUrl=" + HK.contextPath + "/core/cart/Cart.action",
