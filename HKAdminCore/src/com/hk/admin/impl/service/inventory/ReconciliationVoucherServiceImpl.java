@@ -397,6 +397,8 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         if (reconciliationType.getId().equals(EnumReconciliationType.Damage.getId())) {
             adminInventoryService.damageInventoryCheckin(skuItem, null);
         }
+        // Check inventory health now.
+        inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
         return rvLineItem;
     }
 

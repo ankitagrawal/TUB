@@ -408,7 +408,7 @@ public class CycleCountHelper {
     }
 
 
-
+    // populate Map of SkuGroup and List of SkuItems for Items Scanned by Item Level Barcode
     public Map<SkuGroup, List<SkuItem>> populateScannedSkuItemsBySkuGroupMap(List<CycleCountItem> cycleCountItems) {
         Map<SkuGroup, List<SkuItem>> totalScannedSkuItemBySkuGroup = new HashMap<SkuGroup, List<SkuItem>>();
         for (CycleCountItem cycleCountItem : cycleCountItems) {

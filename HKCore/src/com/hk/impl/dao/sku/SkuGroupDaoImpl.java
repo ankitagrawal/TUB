@@ -179,7 +179,7 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 		return skuGroups;
     }
 
-    public List<SkuGroup> getSkuGroupByGrn(GrnLineItem grnLineItem) {
+    public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem) {
 
         List<SkuGroup> skuGroups = getSession().createQuery("from SkuGroup  sg  where  sg.goodsReceivedNote  is not null  and  sg.goodsReceivedNote =:grn and  sg.sku =:sku")
                 .setParameter("grn", grnLineItem.getGoodsReceivedNote()).setParameter("sku", grnLineItem.getSku()).list();

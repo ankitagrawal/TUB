@@ -62,7 +62,7 @@ public class GrnLineItemServiceImpl implements GrnLineItemService {
         return grnLineItemQtyAlreadySet;
     }
 
-    public boolean ifAllSkuItemInCheckedInStatus(GrnLineItem grnLineItem) {
+    public boolean isAllSkuItemInCheckedInStatus(GrnLineItem grnLineItem) {
         List<SkuGroup> skuGroupList = skuGroupService.getSkuGroupByGrnLineItem(grnLineItem);
         if (skuGroupList != null) {
             for (SkuGroup skuGroup : skuGroupList) {

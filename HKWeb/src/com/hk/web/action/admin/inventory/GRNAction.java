@@ -6,9 +6,6 @@ import com.hk.admin.dto.inventory.GRNDto;
 import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
-import com.hk.admin.pact.service.rtv.ExtraInventoryService;
-import com.hk.constants.rtv.EnumExtraInventoryStatus;
-import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
@@ -37,7 +34,6 @@ import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
-import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
@@ -437,7 +433,7 @@ public class GRNAction extends BasePaginatedAction {
         if (grnLineItem != null) {
             grn = grnLineItem.getGoodsReceivedNote();
             if (grnLineItem.getCheckedInQty() != null) {
-                boolean status = grnLineItemService.ifAllSkuItemInCheckedInStatus(grnLineItem);
+                boolean status = grnLineItemService.isAllSkuItemInCheckedInStatus(grnLineItem);
                 if (status) {
                     //Delete Inventory
                     ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
