@@ -116,7 +116,7 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
-        String sql = "select SkuItem  from SkuItem si where  si.skuItemStatus.id =:checkedInStatusId  and  si.skuGroup.sku =: sku";
+        String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku";
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
         return query.list();
     }
