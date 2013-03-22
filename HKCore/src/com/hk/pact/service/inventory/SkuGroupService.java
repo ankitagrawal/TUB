@@ -1,5 +1,6 @@
 package com.hk.pact.service.inventory;
 
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
@@ -36,6 +37,10 @@ public interface SkuGroupService {
 
     public List<SkuGroup> getSkuGroup(String barcode, Long warehouseId);
 
+    public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
+
+    public void deleteSkuGroup(SkuGroup skuGroup);
+
 
     //SkuItemDao Methods
 
@@ -50,6 +55,10 @@ public interface SkuGroupService {
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
 
     public SkuItem getSkuItemByBarcode(String barcode, Long warehouseId, Long statusId);
+
+    public SkuItem saveSkuItem(SkuItem skuItem);
+
+    public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
 
 

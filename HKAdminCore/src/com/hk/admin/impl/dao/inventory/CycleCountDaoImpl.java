@@ -13,13 +13,16 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.akube.framework.dao.Page;
+import com.hk.pact.dao.BaseDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.Expression;
 import org.hibernate.Criteria;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Date;
@@ -36,6 +39,9 @@ import java.util.ArrayList;
  */
 @Repository
 public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
+
+    @Autowired
+    BaseDao baseDao;
 
     public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem) {
         DetachedCriteria cycleCountItemCriteria = getCycleCountItemCriteria(cycleCount, skuGroup, skuItem);
@@ -141,5 +147,21 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
         }
     }
 
+    @Transactional
+    public void deleteCycleCountItem(CycleCountItem cycleCountItem) {
+        CycleCount cycleCount = cycleCountItem.getCycleCount();
+        List<CycleCountItem> AllCycleCountItems = cycleCount.getCycleCountItems();
+        AllCycleCountItems.remove(cycleCountItem);
+        getBaseDao().save(cycleCount);
+        delete(cycleCountItem);
+    }
 
+
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
+
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 }

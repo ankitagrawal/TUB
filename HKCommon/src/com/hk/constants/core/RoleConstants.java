@@ -5,6 +5,7 @@ public class RoleConstants {
     public static final String GOD                           = "GOD";
     public static final String ADMIN                         = "ADMIN";
     public static final String ROCKSTAR                      = "ROCKSTAR";
+    public static final String ROLE_MANAGER                  = "ROLE_MANAGER";
     public static final String HK_USER                       = "HK_USER";
     public static final String COUPON_BLOCKED                = "COUPON_BLOCKED";
     public static final String B2B_USER                      = "B2B_USER";

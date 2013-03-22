@@ -25,6 +25,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -344,6 +345,16 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         query.setParameter("checkedInSkuItemStatus", checkedInSkuItemStatus);
 
         return query.setResultTransformer(Transformers.aliasToBean(CreateInventoryFileDto.class)).list();
+
+    }
+
+    @Transactional
+    public void deletePVIBySkuItem(List<SkuItem> skuItemList) {
+        List<ProductVariantInventory> productVariantInventoryList = getSession().createQuery("from ProductVariantInventory pvi where pvi.skuItem in(:skuItemList)")
+                .setParameterList("skuItemList", skuItemList).list();
+        if (productVariantInventoryList != null && productVariantInventoryList.size() > 0) {
+            deleteAll(productVariantInventoryList);
+        }
 
     }
 

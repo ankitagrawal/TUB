@@ -5,6 +5,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="RvLineItemOut" value="<%=EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId()%>"/>
@@ -170,14 +171,29 @@
         </table>
 
     </s:form>
-    <style type="text/css">
-        #reconciliedqty {
-            border: none;
-            width: 13px;
-        }
 
 
-    </style>
+    <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
+        <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
+            <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+            <fieldset>
+                <legend>Upload Excel to Subtract RV</legend>
+                <br/>
+        (GROUP BARCODE,ITEM BARCODE,VARIANT_ID, QTY, BATCH_NUMBER, EXP_DATE(yyyy/MM), MFG_DATE(yyyy/MM), MRP, COST,RECON REASON) as excel headers
+
+                <br/><br/>
+
+                <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+
+                <div class="buttons">
+                    <s:submit name="parseSubtractRVExcel" value="Create RV LineItems"/>
+                </div>
+
+            </fieldset>
+        </s:form>
+    </shiro:hasRole>
+
+
     <script type="text/javascript">
         $(document).ready(function() {
 
