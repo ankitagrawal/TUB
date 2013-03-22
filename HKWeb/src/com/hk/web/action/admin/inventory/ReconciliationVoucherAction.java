@@ -673,6 +673,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     public Resolution uploadSubtractExcelForProductAuditedForSingleBatch() throws Exception {
         StringBuilder errors = new StringBuilder("");
+        rvParser.setMessage(new StringBuilder(""));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
@@ -736,6 +737,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     public Resolution uploadSubtractExcelForProductAuditedForAnyBatch() throws Exception {
         StringBuilder errors = new StringBuilder("");
+        //make error empty
+        rvParser.setMessage(new StringBuilder(""));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);

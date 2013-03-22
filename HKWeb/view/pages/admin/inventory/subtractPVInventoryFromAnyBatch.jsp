@@ -192,6 +192,12 @@
 </s:layout-component>
 
 <s:layout-component name="content">
+    <div>
+        <c:if test="${pa.errorMessage != null}">
+            <span style="color: #ff0000; font-size: 13px;"> ${pa.errorMessage} </span>
+
+        </c:if>
+    </div>
     <div style="display: none;">
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails">
@@ -199,16 +205,12 @@
     </div>
     <div>
     </div>
-    <div >
-        <c:if test="${pa.errorMessage != null}">
-        <span style="color: #ff0000; font-size: 13px;"> ${pa.errorMessage}  </span>
-        </c:if>
-    </div>
     <h2>Product Variant Audit</h2>
 
     <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
     <s:form id="reconForm" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+        <s:hidden name="errorMessage" value=""/>
         <table>
             <tr>
                 <td>Reconciliation Date</td>
@@ -267,7 +269,7 @@
 
                                 <c:set var="productAuditedTypeName"
                                        value="<%=EnumReconciliationType.ProductVariantAudited.getName()%>"/>
-                                ${productAuditedTypeName}
+                                    ${productAuditedTypeName}
 
                             </td>
                             <td><s:text name="rvLineItems[${ctr.index}].reconciledQty" id="reconciliedqty"
@@ -309,6 +311,7 @@
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
             <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
                 <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                <s:hidden name="errorMessage" value=""/>
                 <fieldset>
                     <legend>Upload Excel To Subtract By Variant</legend>
                     <br/>

@@ -194,16 +194,17 @@
 </s:layout-component>
 
 <s:layout-component name="content">
+    <div>
+        <c:if test="${pa.errorMessage != null}">
+            <span style="color: #ff0000; font-size: 13px;"> ${pa.errorMessage} </span>
+        </c:if>
+    </div>
     <div style="display: none;">
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails">
         </s:link>
     </div>
-    <div >
-      <c:if test="${pa.errorMessage != null}">
-        <span style="color: #ff0000; font-size: 13px;">  ${pa.errorMessage} </span>
-      </c:if>
-    </div>
+
 
     <div>
     </div>
