@@ -2,6 +2,8 @@ package com.hk.impl.service.review;
 
 import java.util.List;
 
+import com.hk.domain.review.UserReview;
+import com.hk.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Double getProductStarRating(Product product) {
         return reviewDao.getAverageRating(product);
+    }
+
+    public UserReview getReviewByUserAndProduct(User user, Product product){
+        return reviewDao.getReviewByUserAndProduct(user,product);
     }
 
     @Override

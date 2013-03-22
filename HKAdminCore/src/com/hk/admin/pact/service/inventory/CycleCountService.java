@@ -45,4 +45,6 @@ public interface CycleCountService {
 
     public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem);
 
+    public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount , ProductVariant productVariant);
+
 }
