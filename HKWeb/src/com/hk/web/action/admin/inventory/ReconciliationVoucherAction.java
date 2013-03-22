@@ -672,7 +672,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
     public Resolution uploadSubtractExcelForProductAuditedForSingleBatch() throws Exception {
-        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries  Failed : ");
+        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries :");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
@@ -734,7 +734,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
 
     public Resolution uploadSubtractExcelForProductAuditedForAnyBatch() throws Exception {
-        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries  Failed : ");
+        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries : ");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
