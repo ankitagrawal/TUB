@@ -692,11 +692,11 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 int qty = rvLineItem.getQty().intValue();
                 SkuGroup skuGroup = null;
                 List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                if (skuGroupList != null) {
+                if (skuGroupList.size() > 0) {
                     if (skuGroupList.size() == 1) {
                         skuGroup = skuGroupList.get(0);
                         List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup);
-                        if (inStockSkuItems != null) {
+                        if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                             int systemQty = inStockSkuItems.size();
                             if (systemQty >= qty) {
                                 rvLineItem.setSkuGroup(skuGroup);
@@ -749,7 +749,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             errorMessage.append(rvParser.getMessage());
             for (RvLineItem rvLineItem : rvLineItems) {
                 List<SkuItem> inStockSkuItems = skuGroupService.getCheckedInSkuItems(rvLineItem.getSku());
-                if (inStockSkuItems != null) {
+                if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                     int systemQty = 0;
                     int deleteQty = rvLineItem.getQty().intValue();
                     systemQty = inStockSkuItems.size();
@@ -760,7 +760,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                         errorMessage.append(" Batch contains Qty  " + systemQty + "  only For " + rvLineItem.getSku().getProductVariant().getId());
                     }
                 } else {
-                    errorMessage.append("  || ").append("No Inventory  For @t For " + rvLineItem.getSku().getProductVariant().getId());
+                    errorMessage.append("  || ").append("No Inventory  For " + rvLineItem.getSku().getProductVariant().getId());
                 }
             }
         } catch (Exception e) {
