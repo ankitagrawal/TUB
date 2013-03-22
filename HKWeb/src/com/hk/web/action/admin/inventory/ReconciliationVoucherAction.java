@@ -546,7 +546,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public Resolution createProductAuditedForSingleBatchPage() {
         User loggedOnUser = userService.getLoggedInUser();
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
-            String remark = " Variant Audited By Single Batch";
+            String remark = " Subtract Inventory Variant By Single Batch";
             reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.ProductVariantAudited.asReconciliationType(), remark);
         } else {
             rvLineItems = reconciliationVoucher.getRvLineItems();
@@ -564,7 +564,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     public Resolution createProductAuditedForAnyBatchPage() {
         User loggedOnUser = userService.getLoggedInUser();
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
-            String remark = " Variant Audited By Any Batch";
+            String remark = " Subtract Inventory Variant Any Batch";
             reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.ProductVariantAudited.asReconciliationType(), remark);
         } else {
             rvLineItems = reconciliationVoucher.getRvLineItems();
