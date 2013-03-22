@@ -212,16 +212,17 @@
           Status: <span
               class="${shippingOrder.shippingOrderStatus.id == shippingOrderStatusCancelled ? 'cancelledText' : ''}">${shippingOrder.orderStatus.name}</span>&nbsp;&nbsp;&nbsp;&nbsp;
           <c:if test="${shippingOrder.shipment !=null}">
-            Track Link: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction"
-                                target="_blank">
+            Courier: ${shippingOrder.shipment.awb.courier.name} &nbsp;&nbsp;
+            Tracking Id: <s:link beanclass="com.hk.web.action.core.order.TrackCourierAction"
+                                 target="_blank">
             <s:param name="courierId" value="${shippingOrder.shipment.awb.courier.id}"/>
             <s:param name="shippingOrder" value="${shippingOrder.id}"/>
             <s:param name="trackingId" value="${shippingOrder.shipment.awb.awbNumber}"/>
-            Courier: ${shippingOrder.shipment.awb.courier.name} &nbsp;&nbsp;&nbsp;&nbsp;
-            Tracking Id: ${shippingOrder.shipment.awb.awbNumber} &nbsp;&nbsp;&nbsp;&nbsp;
+            ${shippingOrder.shipment.awb.awbNumber}
           </s:link>
+            &nbsp;&nbsp;&nbsp;&nbsp;
           </c:if>
-          Promised date of dispatch: <fmt:formatDate value="${shippingOrder.targetDispatchDate}"
+          Promised Dispatch Date: <fmt:formatDate value="${shippingOrder.targetDispatchDate}"
                                                      type="both"
                                                      timeStyle="short"/>
 
