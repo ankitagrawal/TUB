@@ -223,8 +223,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
           </c:if>
           <br/>Promised Dispatch Date: <fmt:formatDate value="${shippingOrder.targetDispatchDate}"
-                                                     type="both"
-                                                     timeStyle="short"/>
+                                                     pattern="MMM dd, yyyy "/>
 
         </h5>
       </td>
