@@ -224,14 +224,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(Surcharge.class);
     }
 
-	public List<ReconciliationType> getReconciliationTypeList() {
-		List<ReconciliationType> reconciliationList = getBaseDao().getAll(ReconciliationType.class);
-		ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
-		ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
-		reconciliationList.remove(add);
-		reconciliationList.remove(subtract);
-		return reconciliationList;
-	}
+    public List<ReconciliationType> getReconciliationTypeList() {
+        return EnumReconciliationType.getSubtractReconciliationType();
+    }
 
     public List<Mail> getAllMailType(){
         return mailService.getAllMailType();
@@ -504,10 +499,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ReconciliationType> getAddReconciliationTypeList() {
-        List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
-        ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
-        reconciliationList.add(addReconType);
-        return reconciliationList;
+       return EnumReconciliationType.getAddReconciliationType();
     }
 
 	public List<PaymentMode> getPaymentModeForStore() {

@@ -83,6 +83,9 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
 
 
     public List<SkuItem> getInStockSkuItems(SkuGroup skuGroup) {
+        if (skuGroup == null) {
+            return new ArrayList<SkuItem>();
+        }
         DetachedCriteria skuItemCriteria = getSkuItemCriteria(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
         return findByCriteria(skuItemCriteria);
     }

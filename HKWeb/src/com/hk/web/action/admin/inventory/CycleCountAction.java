@@ -6,8 +6,10 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.dao.Page;
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
@@ -28,7 +30,6 @@ import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.sku.EnumSkuItemTransferMode;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -40,7 +41,6 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.web.action.admin.sku.ViewSkuItemAction;
 import net.sourceforge.stripes.action.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -112,7 +112,7 @@ public class CycleCountAction extends BasePaginatedAction {
     private List<SkuGroup> missedSkuGroupList = new ArrayList<SkuGroup>();
     private List<SkuGroup> scannedSkuItemGroupList = new ArrayList<SkuGroup>();
     private SkuItem skuItem;
-    private String productVariantBarcode;
+    private String productVariantId;
 
 
     public Resolution directToCycleCountPage() {
@@ -301,15 +301,17 @@ public class CycleCountAction extends BasePaginatedAction {
         cycleCountItems = cycleCount.getCycleCountItems();
         int newEntryInMap = 0;
         for (CycleCountItem cycleCountItem : cycleCountItems) {
-            if (!(cycleCountPviMap.containsKey(cycleCountItem.getId()))) {
-                //new entry added by another auditor
-                newEntryInMap++;
-                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
-                int pvi = 0;
-                if (skuItemList != null) {
-                    pvi = skuItemList.size();
+            if (cycleCountItem.getSkuGroup() != null) {
+                if (!(cycleCountPviMap.containsKey(cycleCountItem.getId()))) {
+                    //new entry added by another auditor
+                    newEntryInMap++;
+                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+                    int pvi = 0;
+                    if (skuItemList != null) {
+                        pvi = skuItemList.size();
+                    }
+                    cycleCountPviMap.put(cycleCountItem.getId(), pvi);
                 }
-                cycleCountPviMap.put(cycleCountItem.getId(), pvi);
             }
         }
         if (cycleCountPviMap != null && cycleCountPviMap.size() > 0) {
@@ -392,7 +394,7 @@ public class CycleCountAction extends BasePaginatedAction {
                     hkBarcodeErrorsMap.put(hkBarcode, message);
                 }
                 if (message == null) {
-                    message = "Sucessfully Scanned for " + hkBarcode;
+                    message = "Successfully Scanned for " + hkBarcode;
                 }
             }
         }
@@ -533,24 +535,26 @@ public class CycleCountAction extends BasePaginatedAction {
         }
         cycleCount = getCycleCount();
         cycleCountItems = cycleCount.getCycleCountItems();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         /*get all skuGroup  missed in Scanning   */
         missedSkuGroupList = missedSkuGroupInScanning(cycleCount);
         return new ForwardResolution("/pages/admin/CycleCountVariance.jsp");
     }
 
-    private void populateScannedPviVarianceMap(List<CycleCountItem> cycleCountItems) {
+    private void populateScannedSkuGroupSystemQtyMap(List<CycleCountItem> cycleCountItems) {
         cycleCountPviMap = new HashMap<Long, Integer>();
         for (CycleCountItem cycleCountItem : cycleCountItems) {
-            List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
-            int pvi = 0;
-            if (skuItemList != null) {
-                pvi = skuItemList.size();
+            if (cycleCountItem.getSkuGroup() != null) {
+                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+                int pvi = 0;
+                if (skuItemList != null) {
+                    pvi = skuItemList.size();
+                }
+                cycleCountPviMap.put(cycleCountItem.getId(), pvi);
             }
-            cycleCountPviMap.put(cycleCountItem.getId(), pvi);
         }
-
     }
+
 
     public Resolution saveVariance() {
         for (CycleCountItem cycleCountItem : cycleCountItems) {
@@ -572,9 +576,10 @@ public class CycleCountAction extends BasePaginatedAction {
 
 
     public Resolution generateReconAddExcel() {
+
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
         List<CycleCountItem> cycleCountItemsForAddRecon = new ArrayList<CycleCountItem>();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         for (CycleCountItem cycleCountItem : cycleCountItems) {
             int pvi = cycleCountPviMap.get(cycleCountItem.getId());
             int scannedQty = cycleCountItem.getScannedQty();
@@ -588,13 +593,25 @@ public class CycleCountAction extends BasePaginatedAction {
         final File excelFile = new File(excelFilePath);
         cycleCountHelper.generateReconVoucherAddExcel(cycleCountItemsForAddRecon, excelFile, cycleCountPviMap);
         return cycleCountHelper.download();
+    }
 
+
+    public Resolution generateSubtractRVExcel() {
+        List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
+        List<SkuGroup> skuGroupNeverScanned = missedSkuGroupInScanning(cycleCount);
+        Date todayDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + "CycleCount_" + cycleCount.getId() + "_RvSubtract" + sdf.format(todayDate) + ".xls";
+        final File excelFile = new File(excelFilePath);
+        cycleCountHelper.generateCycleCountItemsCombiningSkuGroupAndSkuItemScanning(cycleCount, cycleCountPviMap, skuGroupNeverScanned,missedSkuGroupSystemInventoryMap, excelFile);
+        return cycleCountHelper.download();
     }
 
 
     public Resolution generateCompleteCycleExcel() {
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         List<SkuGroup> skuGroupList = missedSkuGroupInScanning(cycleCount);
         Date todayDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -866,6 +883,25 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
 
+    public Resolution moveToInProgressStatus() {
+        cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+        cycleCount = cycleCountService.save(cycleCount);
+        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("cycleCountPVImapString", cycleCountPVImapString);
+
+    }
+
+    public Resolution deleteAllScannedBatchForPVId() {
+        ProductVariant productVariant = productVariantService.getVariantById(productVariantId.trim());
+        if (productVariant != null) {
+            cycleCountService.deleteAllCycleCountItemsOfProductVariant(cycleCount, productVariant);
+        } else {
+            message = "Invalid Variant ID";
+        }
+        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).
+                addParameter("message", message).addParameter("error", error);
+
+    }
+
     public List<CycleCountItem> getCycleCountItems() {
         return cycleCountItems;
     }
@@ -1071,11 +1107,12 @@ public class CycleCountAction extends BasePaginatedAction {
         this.skuItem = skuItem;
     }
 
-    public String getProductVariantBarcode() {
-        return productVariantBarcode;
+
+    public String getProductVariantId() {
+        return productVariantId;
     }
 
-    public void setProductVariantBarcode(String productVariantBarcode) {
-        this.productVariantBarcode = productVariantBarcode;
+    public void setProductVariantId(String productVariantId) {
+        this.productVariantId = productVariantId;
     }
 }

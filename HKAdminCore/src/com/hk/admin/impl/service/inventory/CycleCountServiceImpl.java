@@ -18,7 +18,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.akube.framework.dao.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -102,6 +104,24 @@ public class CycleCountServiceImpl implements CycleCountService {
 
     public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem) {
         cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount,skuItem);
+    }
+
+    @Transactional
+    public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount, ProductVariant productVariant) {
+        List<CycleCountItem> deleteCycleCountItemList = new ArrayList<CycleCountItem>();
+        List<CycleCountItem> cycleCountItemList = cycleCount.getCycleCountItems();
+        for (CycleCountItem cycleCountItem : cycleCountItemList) {
+            if (cycleCountItem.getSkuGroup() != null && cycleCountItem.getSkuGroup().getSku().getProductVariant().getId().equals(productVariant.getId())) {
+                deleteCycleCountItemList.add(cycleCountItem);
+            } else if (cycleCountItem.getSkuItem() != null && (cycleCountItem.getSkuItem().getSkuGroup().getSku().getProductVariant().getId().equals(productVariant.getId()))) {
+                deleteCycleCountItemList.add(cycleCountItem);
+            }
+        }
+
+        for (CycleCountItem cycleCountItem : deleteCycleCountItemList) {
+            cycleCountDao.deleteCycleCountItem(cycleCountItem);
+        }
+
     }
 
 }

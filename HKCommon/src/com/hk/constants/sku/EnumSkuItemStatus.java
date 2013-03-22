@@ -10,11 +10,18 @@ import com.hk.domain.sku.SkuItemStatus;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumSkuItemStatus {
-	Checked_IN(10L, "CHECKED IN"),
-	Checked_OUT(20L, "CHECKED OUT"),
-	Stock_Transfer_Out(30L, "Stock Transfer Out");
+    Checked_IN(10L, "CHECKED IN"),
+    Checked_OUT(20L, "CHECKED OUT"),
+    Stock_Transfer_Out(30L, "Stock Transfer Out"),
+    Damaged(40L, "Damaged"),
+    Expired(50L, "Expired"),
+    Lost(60L, "Lost"),
+    BatchMismatch(70L, "Batch Mismatch"),
+    MrpMismatch(80L, "Mrp Mismatch"),
+    FreeVariant(90L, "Free Variant"),
+    NonMoving(100L, "Non Moving");
 
-	private Long id;
+    private Long id;
 	private String name;
 
 	EnumSkuItemStatus(Long id, String name) {
