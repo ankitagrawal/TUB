@@ -162,6 +162,18 @@
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
         </div>
 
+        <div class="cl"></div>
+
+        <div class="left roundBox">
+            <h2>Services</h2>
+
+            <h3><s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction">Service Queue</s:link></h3>
+
+            <h3>
+                <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
+
+        </div>
+
 
     </s:layout-component>
 </s:layout-render>

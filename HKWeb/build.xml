@@ -130,7 +130,7 @@
 	<target name="compile.groovy" depends="prepare" description="Compile Java classes for project">
 		<groovyc srcdir="src" destdir="${package.target.dir}" fork="true" listfiles="true">
 			<classpath refid="compile.classpath" />
-			<javac debug="${compiler.debug}">
+			<javac debug="${compiler.debug}">                                                  
 			</javac>
 		</groovyc>
 
