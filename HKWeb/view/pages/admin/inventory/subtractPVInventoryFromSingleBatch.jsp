@@ -213,6 +213,7 @@
     <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
     <s:form id="reconForm" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
         <s:hidden class="reconciliationId" name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+        <s:hidden name="errorMessage" value=""/>
         <table>
             <tr>
                 <td>Reconciliation Date</td>
@@ -312,6 +313,7 @@
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
             <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
                 <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                <s:hidden name="errorMessage" value=""/>
                 <fieldset>
                     <legend>Upload Excel To Subtract By Variant</legend>
                     <br/>

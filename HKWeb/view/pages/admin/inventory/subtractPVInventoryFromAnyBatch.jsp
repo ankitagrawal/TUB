@@ -248,6 +248,7 @@
             <tbody id="poTable">
             <c:forEach var="rvLineItem" items="${pa.reconciliationVoucher.rvLineItems}" varStatus="ctr">
                 <c:set var="productVariant" value="${rvLineItem.sku.productVariant}"/>
+
                 <c:choose>
                     <c:when test="${(rvLineItem.reconciledQty == 0) || (rvLineItem.reconciledQty < rvLineItem.qty)}">
                         <tr count="${ctr.index}" id="rowno" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">

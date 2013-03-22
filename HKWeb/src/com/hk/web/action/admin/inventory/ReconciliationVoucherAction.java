@@ -728,7 +728,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         }
         errorMessage = null;
         errorMessage = errors.toString();
-        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromAnyBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId())
+        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromSingleBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId())
                 .addParameter("errorMessage", errorMessage);
 
 
