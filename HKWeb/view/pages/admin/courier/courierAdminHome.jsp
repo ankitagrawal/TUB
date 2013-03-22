@@ -37,9 +37,15 @@
     <h2>Shipment Associated Tasks</h2>
 
     <h3>
-        <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
-            Shipment Resolution Screen
-        </s:link>
+           <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
+               Shipment Resolution Screen
+           </s:link>
+       </h3>
+
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction">
+                Change Shipping Order Status
+            </s:link>
     </h3>
 
     <c:if test="${whAction.setWarehouse != null}">

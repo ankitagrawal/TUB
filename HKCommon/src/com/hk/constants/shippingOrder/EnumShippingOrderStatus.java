@@ -166,6 +166,23 @@ public enum EnumShippingOrderStatus {
         );
     }
 
+    public static List<EnumShippingOrderStatus> getStatusForShippingOrderChange() {
+        Long shippingOrderStatusId;
+         int shippingOrderStatusIdIntValue = shippingOrderStatusId.intValue();
+         switch(shippingOrderStatusIdIntValue){
+             case EnumShippingOrderStatus.SO_Delivered.getId().intValue() :
+
+             break;
+             default:
+             return null;
+             break;
+         }
+            return Arrays.asList(
+                    EnumShippingOrderStatus.SO_Shipped,
+                    EnumShippingOrderStatus.SO_Delivered
+            );
+        }
+
 
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
            return Arrays.asList(
