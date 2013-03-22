@@ -608,7 +608,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     List<SkuItem> inStockSkuItems = null;
                     if (singleBatch) {
                         List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                        if (skuGroupList.size() == 0) {
+                        if (skuGroupList.size() > 0) {
                             if (skuGroupList.size() == 1) {
                                 inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
                             } else {
