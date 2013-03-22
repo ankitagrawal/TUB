@@ -142,8 +142,20 @@
 						--><span style="clear:both;margin-top: 5px;font-size:.9em;">Get ${variant.freeProductVariant.product.name} Free With Every Purchase!</span>
                         </div>
 				  </c:if>
-				<s:submit name="addToCart" value="Place Order"
-				          class="addToCartButton cta button_green"/>
+        <c:choose>
+          <c:when test="${product.productVariants[0].outOfStock}">
+            <div><span class="outOfStock">Sold Out</span></div>
+
+            <div align="center"><s:link beanclass="com.hk.web.action.core.user.NotifyMeAction"
+                                        class="notifyMe button_orange"><b>Notify
+              Me!!</b>
+              <s:param name="productVariant" value="${product.productVariants[0]}"/> </s:link></div>
+          </c:when>
+          <c:otherwise>
+            <s:submit name="addToCart" value="Place Order"
+                      class="addToCartButton cta button_green"/>
+          </c:otherwise>
+        </c:choose>
 			</div>
 		</div>
 	</s:form>
