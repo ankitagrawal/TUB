@@ -222,7 +222,7 @@
           </s:link>
             &nbsp;&nbsp;&nbsp;&nbsp;
           </c:if>
-          Promised Dispatch Date: <fmt:formatDate value="${shippingOrder.targetDispatchDate}"
+          <br/>Promised Dispatch Date: <fmt:formatDate value="${shippingOrder.targetDispatchDate}"
                                                      type="both"
                                                      timeStyle="short"/>
 
