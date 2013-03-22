@@ -49,6 +49,8 @@ public class ReconciliationVoucherParser {
     @Autowired
     SkuGroupService skuGroupService;
 
+    StringBuilder message = new StringBuilder("");
+
 
     //private ReconciliationVoucher reconciliationVoucher;
 
@@ -331,11 +333,13 @@ public class ReconciliationVoucherParser {
                 try {
                     sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
                 } catch (NoSkuException ex) {
-                    throw new Exception("Sku is not generated in system:" + rowCount);
+                    message.append("Sku is not generated in system: For :" + variantId);
+                    continue;
                 }
 
                 if (qty == null || qty <= 0) {
-                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
+                    message.append("Qty should be greater than zero For :" + variantId);
+                    continue;
                 }
                 if (productVariant != null) {
                     RvLineItem rvLineItem = new RvLineItem();
@@ -372,11 +376,13 @@ public class ReconciliationVoucherParser {
                 try {
                     sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
                 } catch (NoSkuException ex) {
-                    throw new Exception("Sku is not generated in system:" + rowCount);
+                    message.append("Sku is not generated in system: For :" + variantId);
+                    continue;
                 }
 
                 if (qty == null || qty <= 0) {
-                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
+                    message.append("Qty should be greater than zero For :" + variantId);
+                    continue;
                 }
 
                 if (productVariant != null) {
@@ -397,5 +403,11 @@ public class ReconciliationVoucherParser {
         return rvLineItems;
     }
 
+    public StringBuilder getMessage() {
+        return message;
+    }
 
+    public void setMessage(StringBuilder message) {
+        this.message = message;
+    }
 }

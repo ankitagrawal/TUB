@@ -668,6 +668,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             //reconciliationVoucher has warehouse and reconciliation date
             String remark = "Excel Upload for Variant Audited";
             rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAuditedForSingleBatch(excelFilePath, "Sheet1", reconciliationVoucher);
+            errorMessage.append("  || ");
+            errorMessage.append(rvParser.getMessage());
 
             for (RvLineItem rvLineItem : rvLineItems) {
                 Sku sku = rvLineItem.getSku();
@@ -710,7 +712,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
         }
         addRedirectAlertMessage(new SimpleMessage(errorMessage.toString()));
-        return new RedirectResolution(ReconciliationVoucherAction.class);
+        return new RedirectResolution(ReconciliationVoucherAction.class,"create").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 
 
     }
@@ -728,7 +730,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             //reconciliationVoucher has warehouse and reconciliation date
             String remark = "Excel Upload for Variant Audited";
             rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAuditedForAnyBatch(excelFilePath, "Sheet1", reconciliationVoucher);
-
+            errorMessage.append("  || ");
+            errorMessage.append(rvParser.getMessage());
             for (RvLineItem rvLineItem : rvLineItems) {
                 List<SkuItem> inStockSkuItems = skuGroupService.getCheckedInSkuItems(rvLineItem.getSku());
                 if (inStockSkuItems != null) {
