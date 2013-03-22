@@ -199,6 +199,12 @@
                 event="getPVDetails">
         </s:link>
     </div>
+    <div >
+      <c:if test="${pa.errorMessage != null}">
+        <span style="color: #ff0000; font-size: 13px;">  ${pa.errorMessage} </span>
+      </c:if>
+    </div>
+
     <div>
     </div>
     <h2>Product Variant Audit</h2>

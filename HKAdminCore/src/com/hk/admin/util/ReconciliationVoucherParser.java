@@ -332,13 +332,13 @@ public class ReconciliationVoucherParser {
 
                 try {
                     sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
-                } catch (NoSkuException ex) {
-                    message.append("Sku is not generated in system: For :" + variantId);
+                } catch (Exception ex) {
+                    message.append("<br/>").append("Sku is not generated in system: For :" + variantId);
                     continue;
                 }
 
                 if (qty == null || qty <= 0) {
-                    message.append("Qty should be greater than zero For :" + variantId);
+                    message.append("<br/>").append("Qty should be greater than zero For :" + variantId);
                     continue;
                 }
                 if (productVariant != null) {
@@ -375,12 +375,14 @@ public class ReconciliationVoucherParser {
 
                 try {
                     sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
-                } catch (NoSkuException ex) {
+                } catch (Exception ex) {
+                    message.append("<br/>");
                     message.append("Sku is not generated in system: For :" + variantId);
                     continue;
                 }
 
                 if (qty == null || qty <= 0) {
+                    message.append("<br/>");
                     message.append("Qty should be greater than zero For :" + variantId);
                     continue;
                 }

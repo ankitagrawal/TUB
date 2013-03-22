@@ -199,6 +199,11 @@
     </div>
     <div>
     </div>
+    <div >
+        <c:if test="${pa.errorMessage != null}">
+        <span style="color: #ff0000; font-size: 13px;"> ${pa.errorMessage}  </span>
+        </c:if>
+    </div>
     <h2>Product Variant Audit</h2>
 
     <h2>RV No # ${pa.reconciliationVoucher.id}</h2>
