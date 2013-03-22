@@ -4,6 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Category Admin Home">
+    <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 
     <s:layout-component name="heading">Category</s:layout-component>
     <s:layout-component name="content">
@@ -159,6 +160,18 @@
                         event="listOutOfStock">Out of Stock List</s:link></h3>
             <h3>
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
+        </div>
+
+        <div class="cl"></div>
+
+        <div class="left roundBox">
+            <h2>Services</h2>
+
+            <h3><s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction">Service Queue</s:link></h3>
+
+            <h3>
+                <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
+
         </div>
 
 
