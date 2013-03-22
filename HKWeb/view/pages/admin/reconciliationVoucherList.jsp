@@ -13,7 +13,9 @@
        WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
        pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
 	   Long addId = EnumReconciliationType.Add.getId();
+       Long productAuditedId = EnumReconciliationType.ProductVariantAudited.getId();
 	   pageContext.setAttribute("addId", addId);
+       pageContext.setAttribute("productAuditedId", productAuditedId);
    %>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -106,8 +108,17 @@
 				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
 		          </c:when>
 		          <c:otherwise>
-			          <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="create">Edit
-				          <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
+                      <c:choose>
+                       <c:when test="${reconvoucher.reconciliationType.id == productAuditedId }">
+                           <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="directToShowProductAuditedInventoryPage">Product Audit
+                               <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
+                       </c:when>
+                       <c:otherwise>
+                           <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="create">Edit
+                               <s:param name="reconciliationVoucher" value="${reconvoucher.id}"/></s:link>
+                       </c:otherwise>
+                      </c:choose>
+
 		          </c:otherwise>
 	          </c:choose>
           </td>

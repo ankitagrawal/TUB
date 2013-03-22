@@ -543,31 +543,46 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
 
     }
 
-
-    public Resolution directToSubtractPVInventoryFromSingleBatchPage() {
+    public Resolution createProductAuditedForSingleBatchPage() {
         User loggedOnUser = userService.getLoggedInUser();
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
-            String remark = " Variant Audited By Single Batch";
-            reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.Subtract.asReconciliationType(), remark);
+            String remark = " Variant Audited By Multiple Batch";
+            reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.ProductVariantAudited.asReconciliationType(), remark);
         } else {
             rvLineItems = reconciliationVoucher.getRvLineItems();
         }
+        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromSingleBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 
+    }
+
+    public Resolution directToSubtractPVInventoryFromSingleBatchPage() {
+        rvLineItems = reconciliationVoucher.getRvLineItems();
         return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromSingleBatch.jsp");
     }
 
 
-    public Resolution directToSubtractPVInventoryFromAnyBatchPage() {
+    public Resolution createProductAuditedForAnyBatchPage() {
         User loggedOnUser = userService.getLoggedInUser();
         if (reconciliationVoucher == null || reconciliationVoucher.getId() == null) {
             String remark = " Variant Audited By Multiple Batch";
-            reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.Subtract.asReconciliationType(), remark);
+            reconciliationVoucher = reconciliationVoucherService.createReconciliationVoucher(EnumReconciliationType.ProductVariantAudited.asReconciliationType(), remark);
         } else {
             rvLineItems = reconciliationVoucher.getRvLineItems();
         }
+        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromAnyBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+
+    }
+
+
+    public Resolution directToSubtractPVInventoryFromAnyBatchPage() {
+        rvLineItems = reconciliationVoucher.getRvLineItems();
         return new ForwardResolution("/pages/admin/inventory/subtractPVInventoryFromAnyBatch.jsp");
     }
 
+    public Resolution directToShowProductAuditedInventoryPage() {
+        rvLineItems = reconciliationVoucher.getRvLineItems();
+        return new ForwardResolution("/pages/admin/inventory/showProductAuditedInventory.jsp");
+    }
 
     public HealthkartResponse subtractInventory(boolean singleBatch) {
         HealthkartResponse healthkartResponse = null;
@@ -712,7 +727,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
         }
         addRedirectAlertMessage(new SimpleMessage(errorMessage.toString()));
-        return new RedirectResolution(ReconciliationVoucherAction.class,"create").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromSingleBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 
 
     }
@@ -753,7 +768,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
         }
         addRedirectAlertMessage(new SimpleMessage(errorMessage.toString()));
-        return new RedirectResolution(ReconciliationVoucherAction.class,"create").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
+        return new RedirectResolution(ReconciliationVoucherAction.class, "directToSubtractPVInventoryFromAnyBatchPage").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 
 
     }
