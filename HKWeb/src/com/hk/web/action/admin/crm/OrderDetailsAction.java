@@ -7,7 +7,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.List;
  * User: Pratham
  * Date: 22/03/13  Time: 11:46
 */
-public class OrderJanamPatniAction extends BaseAction {
+public class OrderDetailsAction extends BaseAction {
 
     Long orderId;
     String gatewayOrderId;
@@ -42,7 +41,7 @@ public class OrderJanamPatniAction extends BaseAction {
         }else{
             addRedirectAlertMessage(new SimpleMessage("Invalid Order Id"));
         }
-        return new ForwardResolution("/pages/admin/order/orderOnePage.jsp");
+        return new ForwardResolution("/pages/admin/order/orderDetails.jsp");
     }
 
     public Long getOrderId() {
