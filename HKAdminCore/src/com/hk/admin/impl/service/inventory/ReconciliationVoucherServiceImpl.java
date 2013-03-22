@@ -120,10 +120,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     case 60:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_BATCH_MISMATCH);
                         break;
-                    case 70:
+                    case 100:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
                         break;
-                    case 80:
+                    case 110:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
                         break;
                     case 90:

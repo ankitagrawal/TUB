@@ -613,7 +613,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             rvLineItem.setReconciliationVoucher(reconciliationVoucher);
                             rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, sku);
                         } else {
-                            return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Batch contains Qty  " + systemQty + "Only");
+                            return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Batch contains Qty  " + systemQty + "  only");
                         }
                     } else {
                         return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: NO Inventory");
@@ -653,6 +653,34 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
             healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "successful", dataMap);
         }
         return new JsonResolution(healthkartResponse);
+    }
+
+
+    public Resolution uploadSubtractExcelForProductAudited() throws Exception {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+
+        try {
+            //reconciliationVoucher has warehouse and reconciliation date
+            String remark = "Excel Upload for Variant Audited";
+            rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAudited(excelFilePath, "Sheet1", reconciliationVoucher);
+
+            for (RvLineItem rvLineItem : rvLineItems) {
+                List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(rvLineItem.getSkuGroup());
+                rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, rvLineItem.getSku());
+
+            }
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+        }
+        return new RedirectResolution(ReconciliationVoucherAction.class);
+
+
     }
 
 

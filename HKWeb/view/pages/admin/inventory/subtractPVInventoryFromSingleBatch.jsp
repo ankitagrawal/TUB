@@ -298,8 +298,29 @@
         <div class="variantDetails info"></div>
         <br/>
         <a href="editReconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
-
     </s:form>
+
+
+    <div>
+        <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
+            <s:form beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">
+                <s:hidden name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                <fieldset>
+                    <legend>Upload Excel To Subtract By Variant</legend>
+                    <br/>
+                    (VARIANT_ID, QTY) as excel headers
+                    <br/><br/>
+
+                    <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+
+                    <div class="buttons">
+                        <s:submit name="uploadSubtractExcelForProductAudited" value="Subtract"/>
+                    </div>
+
+                </fieldset>
+            </s:form>
+        </shiro:hasRole>
+    </div>
     <style type="text/css">
         #reconciliedqty {
             border: none;
