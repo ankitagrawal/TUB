@@ -50,8 +50,8 @@ public enum EnumReconciliationType {
 
 
     public static List<ReconciliationType> getSubtractReconciliationType() {
-        return Arrays.asList(Subtract.asReconciliationType(), Damage.asReconciliationType(), Expired.asReconciliationType(), Lost.asReconciliationType(),
-                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType(),ProductVariantAudited.asReconciliationType());
+        return Arrays.asList( Damage.asReconciliationType(), Expired.asReconciliationType(), Lost.asReconciliationType(),
+                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType());
     }
 
 

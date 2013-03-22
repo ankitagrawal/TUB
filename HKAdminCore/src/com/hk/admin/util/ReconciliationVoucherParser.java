@@ -315,7 +315,7 @@ public class ReconciliationVoucherParser {
     }
 
 
-    public List<RvLineItem> readAndCreateAddSubtractRvLineItemForProductAudited(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher) throws Exception {
+    public List<RvLineItem> readAndCreateAddSubtractRvLineItemForProductAuditedForSingleBatch(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher) throws Exception {
         List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
         ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
         Iterator<HKRow> rowIterator = parser.parse();
@@ -327,7 +327,48 @@ public class ReconciliationVoucherParser {
                 Long qty = XslUtil.getLong(row.getColumnValue(XslConstants.QTY));
                 ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
                 Sku sku = null;
-                SkuGroup skuGroup = null;
+
+                try {
+                    sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
+                } catch (NoSkuException ex) {
+                    throw new Exception("Sku is not generated in system:" + rowCount);
+                }
+
+                if (qty == null || qty <= 0) {
+                    throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
+                }
+                if (productVariant != null) {
+                    RvLineItem rvLineItem = new RvLineItem();
+                    rvLineItem.setProductVariant(productVariant);
+                    rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+                    rvLineItem.setQty(qty);
+                    rvLineItem.setSku(sku);
+                    rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+                    rvLineItems.add(rvLineItem);
+                    rowCount++;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
+            throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
+        }
+        return rvLineItems;
+    }
+
+
+    public List<RvLineItem> readAndCreateAddSubtractRvLineItemForProductAuditedForAnyBatch(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher) throws Exception {
+        List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+        ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
+        Iterator<HKRow> rowIterator = parser.parse();
+        int rowCount = 1;
+        try {
+            while (rowIterator.hasNext()) {
+                HKRow row = rowIterator.next();
+                String variantId = row.getColumnValue(XslConstants.VARIANT_ID);
+                Long qty = XslUtil.getLong(row.getColumnValue(XslConstants.QTY));
+                ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+                Sku sku = null;
+
                 try {
                     sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
                 } catch (NoSkuException ex) {
@@ -338,33 +379,12 @@ public class ReconciliationVoucherParser {
                     throw new Exception("Qty should be greater than zero @ Row :" + rowCount);
                 }
 
-                List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                if (skuGroupList != null) {
-                    if (skuGroupList.size() == 1) {
-                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
-                        int deleteQty = qty.intValue();
-                        int systemQty = inStockSkuItems.size();
-                        if (systemQty < deleteQty) {
-                            throw new Exception("Upload Failed :: Batch contains Qty: " + systemQty + "only");
-                        }
-                        skuGroup = skuGroupList.get(0);
-
-                    } else {
-                        throw new Exception("Upload failed Multiple Batches present @ :" + rowCount);
-                    }
-
-                } else {
-                    throw new Exception("Upload Failed :: No Inventory  For @ :" + rowCount);
-                }
-
-
                 if (productVariant != null) {
                     RvLineItem rvLineItem = new RvLineItem();
                     rvLineItem.setProductVariant(productVariant);
                     rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
                     rvLineItem.setQty(qty);
                     rvLineItem.setSku(sku);
-                    rvLineItem.setSkuGroup(skuGroup);
                     rvLineItem.setReconciliationVoucher(reconciliationVoucher);
                     rvLineItems.add(rvLineItem);
                     rowCount++;

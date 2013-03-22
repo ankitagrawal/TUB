@@ -656,8 +656,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
     }
 
 
-    public Resolution uploadSubtractExcelForProductAudited() throws Exception {
-
+    public Resolution uploadSubtractExcelForProductAuditedForSingleBatch() throws Exception {
+        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries  Failed : ");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
         File excelFile = new File(excelFilePath);
@@ -667,18 +667,90 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
         try {
             //reconciliationVoucher has warehouse and reconciliation date
             String remark = "Excel Upload for Variant Audited";
-            rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAudited(excelFilePath, "Sheet1", reconciliationVoucher);
+            rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAuditedForSingleBatch(excelFilePath, "Sheet1", reconciliationVoucher);
 
             for (RvLineItem rvLineItem : rvLineItems) {
-                List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(rvLineItem.getSkuGroup());
-                rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, rvLineItem.getSku());
+                Sku sku = rvLineItem.getSku();
+                String VariantId = sku.getProductVariant().getId();
+                int qty = rvLineItem.getQty().intValue();
+                SkuGroup skuGroup = null;
+                List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
+                if (skuGroupList != null) {
+                    if (skuGroupList.size() == 1) {
+                        skuGroup = skuGroupList.get(0);
+                        List<SkuItem> inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroup);
+                        if (inStockSkuItems != null) {
+                            int systemQty = inStockSkuItems.size();
+                            if (systemQty >= qty) {
+                                rvLineItem.setSkuGroup(skuGroup);
+                                rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, rvLineItem.getSku());
+                            } else {
+                                errorMessage.append("Batch contains Qty: " + systemQty + " only for  " + VariantId);
+
+                            }
+
+                        } else {
+                            errorMessage.append("  || ").append("No Inventory  For " + VariantId);
+
+                        }
+                    } else {
+                        errorMessage.append("  || ").append("Upload failed Multiple Batches present For " + VariantId);
+
+                    }
+
+                } else {
+                    errorMessage.append("  || ").append("No Inventory  For @t For " + VariantId);
+
+                }
+
 
             }
         } catch (Exception e) {
             logger.error("Exception while reading excel sheet.", e);
             addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
         }
+        addRedirectAlertMessage(new SimpleMessage(errorMessage.toString()));
         return new RedirectResolution(ReconciliationVoucherAction.class);
+
+
+    }
+
+
+    public Resolution uploadSubtractExcelForProductAuditedForAnyBatch() throws Exception {
+        StringBuilder errorMessage = new StringBuilder("Operation Failed For Below Entries  Failed : ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminUploadsPath + "/rvFiles/" + reconciliationVoucher.getId() + sdf.format(new Date()) + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+
+        try {
+            //reconciliationVoucher has warehouse and reconciliation date
+            String remark = "Excel Upload for Variant Audited";
+            rvLineItems = rvParser.readAndCreateAddSubtractRvLineItemForProductAuditedForAnyBatch(excelFilePath, "Sheet1", reconciliationVoucher);
+
+            for (RvLineItem rvLineItem : rvLineItems) {
+                List<SkuItem> inStockSkuItems = skuGroupService.getCheckedInSkuItems(rvLineItem.getSku());
+                if (inStockSkuItems != null) {
+                    int systemQty = 0;
+                    int deleteQty = rvLineItem.getQty().intValue();
+                    systemQty = inStockSkuItems.size();
+                    if (systemQty >= deleteQty) {
+                        rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, rvLineItem.getSku());
+                    } else {
+                        errorMessage.append("   ||      ");
+                        errorMessage.append(" Batch contains Qty  " + systemQty + "  only For " + rvLineItem.getSku().getProductVariant().getId());
+                    }
+                } else {
+                    errorMessage.append("  || ").append("No Inventory  For @t For " + rvLineItem.getSku().getProductVariant().getId());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception while reading excel sheet.", e);
+            addRedirectAlertMessage(new SimpleMessage("Upload failed - " + e.getMessage()));
+        }
+        addRedirectAlertMessage(new SimpleMessage(errorMessage.toString()));
+        return new RedirectResolution(ReconciliationVoucherAction.class,"create").addParameter("reconciliationVoucher", reconciliationVoucher.getId());
 
 
     }

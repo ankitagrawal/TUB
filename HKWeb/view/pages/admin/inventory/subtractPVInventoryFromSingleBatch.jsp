@@ -314,7 +314,7 @@
                     <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
 
                     <div class="buttons">
-                        <s:submit name="uploadSubtractExcelForProductAudited" value="Subtract"/>
+                        <s:submit name="uploadSubtractExcelForProductAuditedForSingleBatch" value="Subtract"/>
                     </div>
 
                 </fieldset>
