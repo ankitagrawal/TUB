@@ -587,7 +587,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                 try {
                     sku = skuService.getSKU(productVariant, warehouse);
                 } catch (NoSkuException ex) {
-                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed ::Sku is not created in system");
+                    return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed ::Sku is not created in system");
                 }
                 if (sku != null) {
                     List<SkuItem> inStockSkuItems = null;
@@ -597,10 +597,10 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             if (skuGroupList != null && skuGroupList.size() == 1) {
                                 inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
                             } else {
-                                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Inventory Present in Multiple batches ");
+                                return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Inventory Present in Multiple batches ");
                             }
                         } else {
-                            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: NO Inventory ");
+                            return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: NO Inventory ");
                         }
                     } else {
                         inStockSkuItems = skuGroupService.getCheckedInSkuItems(sku);
@@ -613,17 +613,17 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                             rvLineItem.setReconciliationVoucher(reconciliationVoucher);
                             rvLineItemSaved = reconciliationVoucherService.reconcileInventoryForPV(rvLineItem, inStockSkuItems, sku);
                         } else {
-                            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Batch contains Qty  " + systemQty + "Only");
+                            return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Batch contains Qty  " + systemQty + "Only");
                         }
                     } else {
-                        healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: NO Inventory");
+                        return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: NO Inventory");
                     }
 
                 } else {
-                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Sku Not Created in System");
+                    return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Sku Not Created in System");
                 }
             } else {
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed ::Invalid Product Variant Id ");
+                return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed ::Invalid Product Variant Id ");
             }
 
 

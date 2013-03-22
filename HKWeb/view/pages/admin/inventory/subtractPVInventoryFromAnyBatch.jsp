@@ -15,7 +15,7 @@
 
     <%
         MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
-        List<ReconciliationType> reconciliationTypeList = masterDataDao.getReconciliationTypeList();
+        List<ReconciliationType> reconciliationTypeList = masterDataDao.getProductAuditedReconVoucherType();
         pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
     %>
 
@@ -44,7 +44,9 @@
                 '">' + "${reconciliationTypeVar.name}" + '</option>';
                 </c:forEach>
 
-                var link = '<s:link  class ="singlesave" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="directToSubtractPVInventoryFromAnyBatchPage">Subtract</s:link>';
+                var label = '<label> Product Variant Audited </label>';
+
+                var link = '<s:link  class ="singlesave button_orange" beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="directToSubtractPVInventoryFromAnyBatchPage">Subtract</s:link>';
 
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
@@ -60,26 +62,11 @@
                                 '  </td>' +
 
                                 '<td>' +
-                                reconciliationTypeOptions +
+                                label +
                                 '</select>' +
                                 '<input type="hidden" value="finance" class="reconciliationTypeIdentifier"/>' +
 
                                 '</td>' +
-                                '  <td>' +
-                                '    <input class="costPrice" type="text" name="rvLineItems[' + nextIndex + '].costPrice" />' +
-                                '  </td>' +
-                                '  <td>' +
-                                '    <input class="mrp" type="text" name="rvLineItems[' + nextIndex + '].mrp" />' +
-                                '  </td>' +
-                                '  <td>' +
-                                '    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="rvLineItems[' + nextIndex + '].mfgDate" />' +
-                                '  </td>' +
-                                '  <td>' +
-                                '    <input class="date_input" formatPattern="yyyy-MM-dd" type="text" name="rvLineItems[' + nextIndex + '].expiryDate" />' +
-                                '  </td>' +
-                                '  <td>' +
-                                '    <textarea rows="4"  class ="textare" columns="10" name="rvLineItems[' + nextIndex + '].remarks" style="height:50px;"/>' +
-                                '  </td>' +
                                 '<td>' +
                                 '<input type="text" id="reconciliedqty" value="0" name="rvLineItems[' + nextIndex + '].reconciledQty" readonly="readonly" />' +
                                 '</td>' +
@@ -102,8 +89,6 @@
                         $('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse: ${whAction.setWarehouse.id}},
                         function (res) {
                             if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                                variantRow.find('.mrp').val(res.data.variant.markedPrice);
-                                variantRow.find('.costPrice').val(res.data.variant.costPrice);
                                 productVariantDetails.html(
                                         res.data.product + '<br/>' +
                                                 res.data.options
@@ -124,7 +109,7 @@
                 var qty = $('#quantity').val();
                 var variant = $('.variant').val();
                 if (qty == null || qty.trim() == '' || variant == null || variant.trim() == '') {
-                    alert("ProductVariant/Qty/Batch are mandatory");
+                    alert("ProductVariant/Qty are mandatory");
                     return false;
                 }
                 if (qty == 0) {
@@ -139,7 +124,7 @@
                     sep = '&';
                 });
                 var reconciliationId = $('.reconciliationId').val();
-                queryString = queryString + '&reconciliationVoucher='+reconciliationId;
+                queryString = queryString + '&reconciliationVoucher=' + reconciliationId;
                 var href = $('#reconForm').attr('action');
                 curEle.css("display", "none");
                 $('.addRowButton').hide();
@@ -158,10 +143,6 @@
                                 curEle.parents('tr').find('input,select,textarea').each(function () {
                                     if ($(this).attr('type') == 'hidden') {
                                         $(this).replaceWith('');
-                                    }
-                                    else if ($(this).tagName == 'textarea') {
-
-                                        $(this).replaceWith($(this).text());
                                     }
                                     else {
                                         if ($(this).attr('id') == 'reconciliedqty') {
@@ -252,13 +233,8 @@
                 <th>VariantID</th>
                 <th>Details</th>
                 <th>Qty<br/>Only(+)</th>
-                <th>Reconciliation Type<br/>(New)</th>
-                <th>Cost Price<br/>(Without TAX)</th>
-                <th>MRP</th>
-                <th>Mfg. Date<br/>(yyyy-MM-dd)</th>
-                <th>Exp. Date<br/>(yyyy-MM-dd)</th>
-                <th>Remarks</th>
-                <th>Reconcilied Qty</th>
+                <th>Reconciliation Type</th>
+                <th>Subtracted Qty</th>
 
             </tr>
             </thead>
@@ -283,39 +259,17 @@
                             <td class="reconciliationType">
                                 <input type="hidden" value="finance"
                                        class="reconciliationTypeIdentifier"/>
-                                <s:select name="rvLineItems[${ctr.index}].reconciliationType"
-                                          value="<%=EnumReconciliationType.ProductVariantAudited.asReconciliationType()%>"
-                                          class="valueChange">
-                                    <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                               serviceProperty="reconciliationTypeList" value="id"
-                                                               label="name"/>
-                                </s:select>
-                            </td>
-                            <td>
-                                <s:text name="rvLineItems[${ctr.index}].costPrice" value=" ${rvLineItem.costPrice}"/>
-                            </td>
-                            <td>
-                                <s:text name="rvLineItems[${ctr.index}].mrp" value="${rvLineItem.mrp}"/>
-                            </td>
 
-                            <td>
-                                <s:text name="rvLineItems[${ctr.index}].mfgDate" value="${rvLineItem.mfgDate}"
-                                        formatPattern="yyyy-MM-dd"/>
-                            </td>
-                            <td>
-                                <s:text name="rvLineItems[${ctr.index}].expiryDate" value="${rvLineItem.expiryDate}"
-                                        formatPattern="yyyy-MM-dd"/>
-                            </td>
-                            <td>
-                                <s:textarea style="height:60px;" name="rvLineItems[${ctr.index}].remarks"
-                                            value="${rvLineItem.remarks}"/>
+                                <c:set var="productAuditedTypeName"
+                                       value="<%=EnumReconciliationType.ProductVariantAudited.getName()%>"/>
+                                ${productAuditedTypeName}
 
                             </td>
                             <td><s:text name="rvLineItems[${ctr.index}].reconciledQty" id="reconciliedqty"
                                         value="${rvLineItem.reconciledQty}" readonly="readonly"/>
                             </td>
                             <td>
-                                <s:link class="singlesave"
+                                <s:link class="singlesave button_orange"
                                         beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
                                         event="directToSubtractPVInventoryFromAnyBatchPage">Subtract</s:link>
                             </td>
@@ -333,15 +287,6 @@
                             </td>
                             <td>${rvLineItem.reconciliationType.name}
                             </td>
-                            <td>${rvLineItem.costPrice}
-                            </td>
-                            <td>${rvLineItem.mrp}
-                            </td>
-                            <td>
-                                <fmt:formatDate value="${rvLineItem.mfgDate}" type="both"/></td>
-                            <td>
-                                <fmt:formatDate value="${rvLineItem.expiryDate}" type="both"/></td>
-                            <td>${rvLineItem.remarks}</td>
                             <td>${rvLineItem.reconciledQty}</td>
                         </tr>
                     </c:otherwise>

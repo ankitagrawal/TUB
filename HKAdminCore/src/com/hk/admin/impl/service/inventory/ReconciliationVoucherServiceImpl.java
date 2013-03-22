@@ -440,6 +440,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         //save RvLine item
         rvLineItem.setSku(sku);
         rvLineItem.setReconciledQty(rvLineItem.getQty());
+        rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
         rvLineItemSaved = (RvLineItem) reconciliationVoucherDao.save(rvLineItem);
         return rvLineItemSaved;
     }
