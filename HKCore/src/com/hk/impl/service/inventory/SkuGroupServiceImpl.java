@@ -77,6 +77,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         skuGroupDao.delete(skuGroup);
     }
 
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku) {
+        return skuGroupDao.getAllInStockSkuGroups(sku);
+    }
+
 
     //SkuItemDao Methods
     public List<SkuGroup> getInStockSkuGroups(Sku sku) {
@@ -117,6 +121,10 @@ public class SkuGroupServiceImpl implements SkuGroupService {
         for (SkuItem skuItem : skuItemList) {
             skuItemDao.delete(skuItem);
         }
+    }
+
+    public List<SkuItem> getCheckedInSkuItems(Sku sku) {
+        return skuItemDao.getCheckedInSkuItems(sku);
     }
 
 

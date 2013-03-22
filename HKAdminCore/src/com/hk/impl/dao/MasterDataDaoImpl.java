@@ -517,5 +517,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	public List<Long> getDiscountsForPOS() {
 		return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
 	}
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType(){
+       return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    }
 	
 	}

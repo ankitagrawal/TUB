@@ -41,6 +41,8 @@ public interface SkuGroupService {
 
     public void deleteSkuGroup(SkuGroup skuGroup);
 
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
+
 
     //SkuItemDao Methods
 
@@ -60,6 +62,7 @@ public interface SkuGroupService {
 
     public void deleteAllSkuItemsOfSkuGroup(SkuGroup skuGroup);
 
+    public List<SkuItem> getCheckedInSkuItems(Sku sku);
 
 
 }
