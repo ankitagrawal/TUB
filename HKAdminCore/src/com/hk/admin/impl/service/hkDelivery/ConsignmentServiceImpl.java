@@ -273,6 +273,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 	      Hub deliveryHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
 	      ConsignmentLifecycleStatus consignmentLifecycleStatus = consignmentDao.get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
         List<Consignment> consignmentList = new ArrayList<Consignment>();
+	      List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         for (ConsignmentDto consignmentDto : consignmentDtoList) {
             if (!consignmentDto.getTransferredToAgent().getId().equals(agent.getId())) {
                 runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
@@ -280,11 +281,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
                 consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
                 runsheet = runsheetService.updateRunsheetParams(runsheet, consignmentDto);
                 consignment.setRunsheet(runsheet);
-	              createConsignmentTracking(runsheet.getHub(),deliveryHub,  loggedOnUser, consignment, consignmentLifecycleStatus, "",  runsheet);
+	              consignmentTrackingList.add(createConsignmentTracking(runsheet.getHub(),deliveryHub,  loggedOnUser, consignment, consignmentLifecycleStatus, "",  runsheet));
                 consignmentList.add(consignment);
             }
         }
         saveConsignments(consignmentList);
+	      saveConsignmentTracking(consignmentTrackingList);
         return consignmentList;
     }
 
