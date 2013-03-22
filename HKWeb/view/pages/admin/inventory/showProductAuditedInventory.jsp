@@ -5,21 +5,14 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.inventory.EnumReconciliationType" %>
+<%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Edit Reconciliation Voucher">
     <jsp:useBean id="now" class="java.util.Date" scope="request"/>
-    <s:layout-component name="htmlHead">
-
-        <%
-            MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
-            List<ReconciliationType> reconciliationTypeList = masterDataDao.getProductAuditedReconVoucherType();
-            pageContext.setAttribute("reconciliationTypeList", reconciliationTypeList);
-        %>
-
-    </s:layout-component>
+    <c:set var="RvLineItemOut" value="<%=EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId()%>"/>
 
     <s:layout-component name="content">
         <h2>Product Variant Audit</h2>
@@ -70,6 +63,11 @@
                 <td>${rvLineItem.reconciliationType.name}
                 </td>
                 <td>${rvLineItem.reconciledQty}</td>
+                <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+                    View Item Details
+                    <s:param name="rvLineItem" value="${rvLineItem.id}"/>
+                    <s:param name="entityId" value="${RvLineItemOut}"/>
+                </s:link></td>
                 </c:forEach>
             </tbody>
         </table>

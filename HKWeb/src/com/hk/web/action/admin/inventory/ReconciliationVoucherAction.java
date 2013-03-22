@@ -608,8 +608,8 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                     List<SkuItem> inStockSkuItems = null;
                     if (singleBatch) {
                         List<SkuGroup> skuGroupList = skuGroupService.getAllInStockSkuGroups(sku);
-                        if (skuGroupList != null) {
-                            if (skuGroupList != null && skuGroupList.size() == 1) {
+                        if (skuGroupList.size() == 0) {
+                            if (skuGroupList.size() == 1) {
                                 inStockSkuItems = skuGroupService.getInStockSkuItems(skuGroupList.get(0));
                             } else {
                                 return new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Operation Failed :: Inventory Present in Multiple batches ");
@@ -621,7 +621,7 @@ public class ReconciliationVoucherAction extends BasePaginatedAction {
                         inStockSkuItems = skuGroupService.getCheckedInSkuItems(sku);
                     }
                     long systemQty = 0;
-                    if (inStockSkuItems != null) {
+                    if (inStockSkuItems != null && inStockSkuItems.size() > 0) {
                         int deleteQty = rvLineItem.getQty().intValue();
                         systemQty = inStockSkuItems.size();
                         if (systemQty >= deleteQty) {
