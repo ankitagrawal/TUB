@@ -170,7 +170,7 @@ public enum EnumShippingOrderStatus {
         Long shippingOrderStatusId;
          int shippingOrderStatusIdIntValue = shippingOrderStatusId.intValue();
          switch(shippingOrderStatusIdIntValue){
-             case EnumShippingOrderStatus.SO_Delivered.getId().intValue() :
+             case EnumShippingOrderStatus.SO_Delivered.getId() :
 
              break;
              default:
