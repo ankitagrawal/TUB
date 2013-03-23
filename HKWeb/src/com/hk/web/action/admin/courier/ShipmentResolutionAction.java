@@ -140,6 +140,7 @@ public class ShipmentResolutionAction extends BaseAction {
                Awb awbDb = awbService.findByCourierAwbNumber(courier,awb.getAwbNumber());
                 if(awbDb==null){
                     awb = awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
+                    awb = awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
                     shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "New AwbNumber "+awb.getAwbNumber() +"  is Created");
                     shipment = shipmentService.changeAwb(shipment,awb,preserveAwb);
                     shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+awb.getAwbNumber());
