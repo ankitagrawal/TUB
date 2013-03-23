@@ -30,6 +30,11 @@
                 <div style="float:left;">
                     <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
                             event="subtractReconciliation">Subtract/Delete Reconciliation Voucher</s:link>
+                    <br/><br/> <br/>
+                    <s:link
+                            beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                            event="createProductAuditedForSingleBatchPage"><span
+                            style="color:#0000ff;font-weight: bold; ">Subtract RV Variant For Single Batch</span></s:link>
                 </div>
 
                 <div style="float:right;">
@@ -140,6 +145,14 @@
             </table>
             <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
             <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
+
+            <fieldset style="float:right;text-align:center;height:60px;">
+                <legend>RV Variant For Any Batch</legend>
+                <br/>
+                <s:link class="button_orange" style="float:center;height:40px"
+                        beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                        event="createProductAuditedForAnyBatchPage">Rv By Any Batch </s:link>
+            </fieldset>
         </div>
     </s:layout-component>
 </s:layout-render>

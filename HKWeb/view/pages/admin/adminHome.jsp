@@ -202,9 +202,6 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
-                    event="createProductAuditedForSingleBatchPage">Subtract Inventory By Variant For Single Batch</s:link></h3>
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -213,9 +210,6 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
 
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
-                    event="createProductAuditedForAnyBatchPage">Subtract Inventory PV For Any Batch</s:link></h3>
     </c:if>
     <h3>
         <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link>
