@@ -288,7 +288,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
                 loggedOnUser = getUserService().getUserById(getPrincipal().getId());
             }
 
-            transferredConsignments = consignmentService.updateTransferredConsignments(consignmentDtoList, agent);
+            transferredConsignments = consignmentService.updateTransferredConsignments(consignmentDtoList, agent, loggedOnUser);
             if(transferredConsignments != null && transferredConsignments.size()>0) {
             consignments = new TreeSet(CollectionUtils.subtract(consignmentService.getConsignmentsFromConsignmentDtos(consignmentDtoList),transferredConsignments));
             } else {

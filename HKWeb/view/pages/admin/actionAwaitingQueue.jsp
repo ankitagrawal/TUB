@@ -408,7 +408,12 @@
             <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
                 <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
                     <div id="orderDetails-${order.id}" class="detailDiv">
-                        <div class="headingLabel">Order Details: ${order.store.prefix}</div>
+                        <div class="headingLabel">Order Details: ${order.store.prefix}
+                          <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
+                                  style="float:right;background:#EEE;padding:2px;color:black;" target="_blank">
+                            <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+                            View Details
+                          </s:link> </div>
                         <div class="floatleft">
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>

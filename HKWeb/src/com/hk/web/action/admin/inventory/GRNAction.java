@@ -4,9 +4,8 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.GRNDto;
 import com.hk.admin.manager.GRNManager;
-import com.hk.admin.pact.service.rtv.ExtraInventoryService;
-import com.hk.constants.rtv.EnumExtraInventoryStatus;
-import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
@@ -34,6 +33,7 @@ import com.hk.dto.TaxComponent;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.util.XslGenerator;
@@ -78,6 +78,13 @@ public class GRNAction extends BasePaginatedAction {
 	private PoLineItemService poLineItemService;
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
+    @Autowired
+    GrnLineItemService grnLineItemService;
+    @Autowired
+    AdminInventoryService adminInventoryService;
+    @Autowired
+    InventoryService inventoryService;
+
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -106,6 +113,7 @@ public class GRNAction extends BasePaginatedAction {
 	public Double surcharge;
 	private Map<Sku, Boolean> skuIsNew = new HashMap<Sku, Boolean>();
 	private Integer defaultPerPage = 20;
+    private GrnLineItem grnLineItem;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -420,6 +428,26 @@ public class GRNAction extends BasePaginatedAction {
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
+   //commenting Delete Link on Grn Line item
+//    public Resolution deleteGrnLineItem() {
+//        if (grnLineItem != null) {
+//            grn = grnLineItem.getGoodsReceivedNote();
+//            if (grnLineItem.getCheckedInQty() != null) {
+//                boolean status = grnLineItemService.isAllSkuItemInCheckedInStatus(grnLineItem);
+//                if (status) {
+//                    //Delete Inventory
+//                    ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+//                    adminInventoryService.deleteInventory(grnLineItem);
+//                    //Check inventory health
+//                    inventoryService.checkInventoryHealth(productVariant);
+//
+//
+//                }
+//            }
+//        }
+//        return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
+//
+//    }
 
 	public List<GoodsReceivedNote> getGrnList() {
 		return grnList;
@@ -679,4 +707,12 @@ public class GRNAction extends BasePaginatedAction {
 		params.add("warehouse");
 		return params;
 	}
+
+    public GrnLineItem getGrnLineItem() {
+        return grnLineItem;
+    }
+
+    public void setGrnLineItem(GrnLineItem grnLineItem) {
+        this.grnLineItem = grnLineItem;
+    }
 }

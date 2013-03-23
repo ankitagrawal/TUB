@@ -1,24 +1,5 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
@@ -37,6 +18,19 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -160,7 +154,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private List<ShippingOrder> getShippingOrdersForPrintingInCategory() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
 
-        shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10);
+        shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 60);
         // shippingOrdersList = shippingOrdersPage.getList();
         shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
         return shippingOrdersList;
