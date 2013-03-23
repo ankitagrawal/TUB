@@ -98,7 +98,7 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
 	public List<SkuGroup> getAllInStockSkuGroups(Sku sku) {
 
 		String query = "select distinct si.skuGroup from SkuItem si where si.skuItemStatus.id = " + EnumSkuItemStatus.Checked_IN.getId() +
-				" and si.skuGroup.sku = :sku ";
+				" and si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc  ";
 		List<SkuGroup> skuGroupList = findByNamedParams(query, new String[]{"sku"}, new Object[]{sku});
 		//List<SkuGroup> skuGroupList = (List<SkuGroup>) getSession().createQuery(query).setParameter("sku", sku).list();
 

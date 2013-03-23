@@ -64,10 +64,17 @@
       ${debitNoteSummary.debitNote.warehouse.city} &nbsp;
       -${debitNoteSummary.debitNote.warehouse.pincode} <br/>
       ${debitNoteSummary.debitNote.warehouse.state}<br/>
-      TIN: ${debitNoteSummary.debitNote.warehouse.tin}
+       <c:choose>
+        <c:when test="${debitNoteSummary.debitNote.warehouse.state == 'HARYANA'}">
+          <p> TIN# 06101832036</p>
+        </c:when>
+        <c:when test="${debitNoteSummary.debitNote.warehouse.state  == 'MAHARASHTRA'}">
+          <p> TIN# 27210893736</p>
+        </c:when>
+      </c:choose>
     </td>
     <td align="right">
-      <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>
+      <%--<img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>--%>
     </td>
   </tr>
 </table>

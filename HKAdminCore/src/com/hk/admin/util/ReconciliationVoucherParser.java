@@ -8,6 +8,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.exception.NoSkuException;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
@@ -47,6 +48,8 @@ public class ReconciliationVoucherParser {
     SkuService skuService;
     @Autowired
     SkuGroupService skuGroupService;
+
+    StringBuilder message = new StringBuilder("");
 
 
     //private ReconciliationVoucher reconciliationVoucher;
@@ -311,5 +314,102 @@ public class ReconciliationVoucherParser {
             }
         }
         return null;
+    }
+
+
+    public List<RvLineItem> readAndCreateAddSubtractRvLineItemForProductAuditedForSingleBatch(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher) throws Exception {
+        List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+        ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
+        Iterator<HKRow> rowIterator = parser.parse();
+        int rowCount = 1;
+        try {
+            while (rowIterator.hasNext()) {
+                HKRow row = rowIterator.next();
+                String variantId = row.getColumnValue(XslConstants.VARIANT_ID);
+                Long qty = XslUtil.getLong(row.getColumnValue(XslConstants.QTY));
+                ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+                Sku sku = null;
+
+                try {
+                    sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
+                } catch (Exception ex) {
+                    message.append("<br/>").append("Sku is not generated in system: For :" + variantId);
+                    continue;
+                }
+
+                if (qty == null || qty <= 0) {
+                    message.append("<br/>").append("Qty should be greater than zero For :" + variantId);
+                    continue;
+                }
+                if (productVariant != null) {
+                    RvLineItem rvLineItem = new RvLineItem();
+                    rvLineItem.setProductVariant(productVariant);
+                    rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+                    rvLineItem.setQty(qty);
+                    rvLineItem.setSku(sku);
+                    rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+                    rvLineItems.add(rvLineItem);
+                    rowCount++;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
+            throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
+        }
+        return rvLineItems;
+    }
+
+
+    public List<RvLineItem> readAndCreateAddSubtractRvLineItemForProductAuditedForAnyBatch(String excelFilePath, String sheetName, ReconciliationVoucher reconciliationVoucher) throws Exception {
+        List<RvLineItem> rvLineItems = new ArrayList<RvLineItem>();
+        ExcelSheetParser parser = new ExcelSheetParser(excelFilePath, sheetName);
+        Iterator<HKRow> rowIterator = parser.parse();
+        int rowCount = 1;
+        try {
+            while (rowIterator.hasNext()) {
+                HKRow row = rowIterator.next();
+                String variantId = row.getColumnValue(XslConstants.VARIANT_ID);
+                Long qty = XslUtil.getLong(row.getColumnValue(XslConstants.QTY));
+                ProductVariant productVariant = getProductVariantService().getVariantById(variantId);
+                Sku sku = null;
+
+                try {
+                    sku = skuService.getSKU(productVariant, reconciliationVoucher.getWarehouse());
+                } catch (Exception ex) {
+                    message.append("<br/>");
+                    message.append("Sku is not generated in system: For :" + variantId);
+                    continue;
+                }
+
+                if (qty == null || qty <= 0) {
+                    message.append("<br/>");
+                    message.append("Qty should be greater than zero For :" + variantId);
+                    continue;
+                }
+
+                if (productVariant != null) {
+                    RvLineItem rvLineItem = new RvLineItem();
+                    rvLineItem.setProductVariant(productVariant);
+                    rvLineItem.setReconciliationType(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+                    rvLineItem.setQty(qty);
+                    rvLineItem.setSku(sku);
+                    rvLineItem.setReconciliationVoucher(reconciliationVoucher);
+                    rvLineItems.add(rvLineItem);
+                    rowCount++;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception @ Row:" + (rowCount + 1) + e.getMessage());
+            throw new Exception("Exception @ Row:" + (rowCount + 1) + ": " + e.getMessage(), e);
+        }
+        return rvLineItems;
+    }
+
+    public StringBuilder getMessage() {
+        return message;
+    }
+
+    public void setMessage(StringBuilder message) {
+        this.message = message;
     }
 }
