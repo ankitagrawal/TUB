@@ -154,7 +154,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private List<ShippingOrder> getShippingOrdersForPrintingInCategory() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
 
-        shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 30);
+        shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 60);
         // shippingOrdersList = shippingOrdersPage.getList();
         shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
         return shippingOrdersList;
