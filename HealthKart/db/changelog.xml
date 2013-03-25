@@ -11848,4 +11848,9 @@
     <changeSet author="Ankur (generated)" id="1363612581975-3">
         <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review" constraintName="fk_user_review_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-03-25-01">
+        <addColumn tableName="shipping_order">
+            <column defaultValue="0" name="contains_jit_products" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

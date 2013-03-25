@@ -50,6 +50,8 @@ public class SplitShippingOrderAction extends BaseAction {
 
     private boolean dropShipItemPresentInSelectedItems;
     private boolean dropShipItemPresentInRemainingItems;
+    private boolean jitItemPresentInSelectedItems;
+    private boolean jitItemPresentInRemainingItems;
 
     @DontValidate
     @DefaultHandler
@@ -84,6 +86,12 @@ public class SplitShippingOrderAction extends BaseAction {
                     break;
                 }
             }
+            for (LineItem remainingLineItem : originalShippingItems) {
+                if ((remainingLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInRemainingItems = true;
+                    break;
+                }
+            }
 
             ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
             newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
@@ -97,7 +105,14 @@ public class SplitShippingOrderAction extends BaseAction {
                 if ((selectedLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
                     dropShipItemPresentInSelectedItems = true;
                 }
-
+                lineItemDao.save(selectedLineItem);
+            }
+            for (LineItem selectedLineItem : selectedLineItems) {
+                selectedLineItem.setShippingOrder(newShippingOrder);
+                if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInSelectedItems = true;
+                    break;
+                }
                 lineItemDao.save(selectedLineItem);
             }
             shippingOrderDao.refresh(newShippingOrder);
@@ -106,6 +121,11 @@ public class SplitShippingOrderAction extends BaseAction {
                 newShippingOrder.setDropShipping(true);
             } else {
                 newShippingOrder.setDropShipping(false);
+            }
+            if (jitItemPresentInSelectedItems) {
+                newShippingOrder.setContainsJitProducts(true);
+            } else {
+                newShippingOrder.setContainsJitProducts(false);
             }
             ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
             newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
@@ -126,6 +146,11 @@ public class SplitShippingOrderAction extends BaseAction {
                 shippingOrder.setDropShipping(true);
             } else {
                 shippingOrder.setDropShipping(false);
+            }
+            if (jitItemPresentInRemainingItems) {
+                shippingOrder.setContainsJitProducts(true);
+            } else {
+                shippingOrder.setContainsJitProducts(false);
             }
             shippingOrder = shippingOrderService.save(shippingOrder);
 

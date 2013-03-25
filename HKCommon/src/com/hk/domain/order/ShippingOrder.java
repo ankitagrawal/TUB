@@ -96,18 +96,28 @@ public class ShippingOrder implements java.io.Serializable {
      */
 
     @Column(name = "last_esc_date", nullable = true)
-    private Date                        lastEscDate;
+    private Date lastEscDate;
 
     @Column(name = "target_dispatch_date", nullable = true)
-    private Date                        targetDispatchDate;
+    private Date targetDispatchDate;
 
     @Column(name = "target_del_date", nullable = true)
-    private Date                        targetDelDate;
+    private Date targetDelDate;
 
 
     @Column(name = "drop_shipping")
-     private boolean                    isDropShipping;
+    private boolean isDropShipping;
 
+    @Column(name = "contains_jit_products")
+    private boolean containsJitProducts;
+
+    public boolean containsJitProducts() {
+        return containsJitProducts;
+    }
+
+    public void setContainsJitProducts(boolean containsJitProducts) {
+        this.containsJitProducts = containsJitProducts;
+    }
 
     public Long getId() {
         return this.id;

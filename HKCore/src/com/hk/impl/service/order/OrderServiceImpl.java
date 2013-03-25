@@ -439,14 +439,17 @@ public class OrderServiceImpl implements OrderService {
                         if (dummyOrder.getCartLineItemList().size() > 0) {
                             Warehouse warehouse = dummyOrder.getWarehouse();
                             boolean isDropShipped = false;
+                            boolean containsJitProducts = false;
                             ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
                             for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
                                 isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
+                                containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
                                 Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
                                 LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                                 shippingOrder.getLineItems().add(shippingOrderLineItem);
                             }
                             shippingOrder.setDropShipping(isDropShipped);
+                            shippingOrder.setContainsJitProducts(containsJitProducts);
                             shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
                             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));

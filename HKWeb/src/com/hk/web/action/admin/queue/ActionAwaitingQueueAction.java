@@ -104,6 +104,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private boolean sortByPaymentDate = true;
     private boolean sortByScore = true;
     private Boolean dropShip = null;
+    private Boolean containsJit = null;
 
     @DontValidate
     @DefaultHandler
@@ -223,7 +224,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (dropShip != null){
            orderSearchCriteria.setDropShip(dropShip);
         }
-
+        if (containsJit != null){
+            orderSearchCriteria.setContainsJit(containsJit);
+        }
         logger.debug("basketCategories : " + basketCategories.size());
         Set<String> basketCategoryList = new HashSet<String>();
         for (String category : basketCategories) {
@@ -408,6 +411,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("sortByPaymentDate");
         params.add("sortByScore");
         params.add("dropShip");
+        params.add("containsJit");
 
         // params.add("orderLifecycleActivity");
         // params.add("shippingOrderStatus");
@@ -519,5 +523,16 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
+    }
+
+    public Boolean isContainsJit() {
+        return containsJit;
+    }
+    public Boolean getContainsJit() {
+        return containsJit;
+    }
+
+    public void setContainsJit(Boolean containsJit) {
+        this.containsJit = containsJit;
     }
 }

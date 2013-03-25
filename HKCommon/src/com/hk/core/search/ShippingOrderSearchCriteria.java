@@ -44,6 +44,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Zone zone;
     private Set<String> shippingOrderCategories;
     private boolean dropShipping = false;
+    private boolean containsJitProducts = false;
     private boolean installable = false;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
@@ -257,6 +258,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         if (isDropShipping()) {
             criteria.add(Restrictions.eq("isDropShipping", dropShipping));
         }
+        if (containsJitProducts()) {
+            criteria.add(Restrictions.eq("containsJitProducts", containsJitProducts));
+        }
 
          if (isInstallable()){
                 lineItemsCriteria = criteria.createCriteria("lineItems");
@@ -272,6 +276,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         */
 
         return criteria;
+    }
+
+    public boolean containsJitProducts() {
+        return containsJitProducts;
+    }
+
+    public void setContainsJitProducts(boolean containsJitProducts) {
+        this.containsJitProducts = containsJitProducts;
     }
 
     public Date getLastEscStartDate() {
