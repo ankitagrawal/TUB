@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -128,6 +129,20 @@ public class InventoryCheckoutAction extends BaseAction {
         } else if (!EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId())) {
             addRedirectAlertMessage(new SimpleMessage("Order is not in picking cannot proceed to checkout"));
         } else {
+            // Stop checkout if  Brand's Audit is in progress
+            List<String> brandsToExclude = null;
+            Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
+            brandsToExclude = brandsToAuditDao.brandsToBeAudited(warehouse);
+            if (brandsToExclude != null) {
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                    if (StringUtils.isNotBlank(brandName) && brandsToExclude.contains(brandName.toLowerCase())) {
+                        addRedirectAlertMessage(new SimpleMessage("Cannot Checkout , Audit is going on for brand  :: " + brandName));
+                        return new RedirectResolution(InventoryCheckoutAction.class);
+                    }
+                }
+            }
+
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();
             if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
@@ -138,6 +153,7 @@ public class InventoryCheckoutAction extends BaseAction {
                 }
                 return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
             }
+
         }
         addRedirectAlertMessage(new SimpleMessage("No Such Order OR Invalid line item status OR All items are checkedout"));
         return new RedirectResolution(InventoryCheckoutAction.class);

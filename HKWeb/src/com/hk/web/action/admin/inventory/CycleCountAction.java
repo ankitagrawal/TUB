@@ -1023,6 +1023,7 @@ public class CycleCountAction extends BasePaginatedAction {
         params.add("auditorLogin");
         params.add("startDate");
         params.add("endDate");
+        params.add("cycleCountStatus");
         return params;
     }
 

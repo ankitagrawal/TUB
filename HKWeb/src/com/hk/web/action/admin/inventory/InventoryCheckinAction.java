@@ -2,6 +2,7 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
@@ -85,6 +86,8 @@ public class InventoryCheckinAction extends BaseAction {
     private SkuGroupService skuGroupService;
     @Autowired
     BaseDao baseDao;
+    @Autowired
+    BrandsToAuditDao brandsToAuditDao;
 
     private List<SkuGroup> skuGroupList;
 
@@ -190,6 +193,8 @@ public class InventoryCheckinAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
             return new RedirectResolution(InventoryCheckinAction.class);
         }
+
+
         logger.debug("upc: " + upc);
         try {
             ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
@@ -197,6 +202,16 @@ public class InventoryCheckinAction extends BaseAction {
                 productVariant = getProductVariantService().getVariantById(upc);
             }
             if (productVariant != null) {
+                List<String> brandsToExclude = null;
+                brandsToExclude = brandsToAuditDao.brandsToBeAudited(userWarehouse);
+                String brand = productVariant.getProduct().getBrand();
+                if (brandsToExclude != null) {
+                    if (brandsToExclude.contains(brand.toLowerCase())) {
+                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
+                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+                    }
+                }
+
                 Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
                 Long askedQty = 0L;
                 GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
@@ -306,7 +321,7 @@ public class InventoryCheckinAction extends BaseAction {
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
         if (sku == null) {
-            addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-"+ (productVariant == null ? "" : productVariant.getId())));
+            addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-" + (productVariant == null ? "" : productVariant.getId())));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
@@ -470,7 +485,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
-        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem,null, 1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -513,7 +528,7 @@ public class InventoryCheckinAction extends BaseAction {
         List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {
-            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null,1L);
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
 //                SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
                 Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
