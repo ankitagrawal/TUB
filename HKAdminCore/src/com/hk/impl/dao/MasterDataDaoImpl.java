@@ -224,14 +224,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return getBaseDao().getAll(Surcharge.class);
     }
 
-	public List<ReconciliationType> getReconciliationTypeList() {
-		List<ReconciliationType> reconciliationList = getBaseDao().getAll(ReconciliationType.class);
-		ReconciliationType add = EnumReconciliationType.Add.asReconciliationType();
-		ReconciliationType subtract = EnumReconciliationType.Subtract.asReconciliationType();
-		reconciliationList.remove(add);
-		reconciliationList.remove(subtract);
-		return reconciliationList;
-	}
+    public List<ReconciliationType> getReconciliationTypeList() {
+        return EnumReconciliationType.getSubtractReconciliationType();
+    }
 
     public List<Mail> getAllMailType(){
         return mailService.getAllMailType();
@@ -479,6 +474,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumCourierChangeReason.getAllCourierChangeReasons();
     }
 
+    public List<EnumAwbChangeReason> getAllAwbChangeReason(){
+          return EnumAwbChangeReason.getAllAwbChangeReason();
+      }
+
     public List<Warehouse> getAllWarehouse() {
         return warehouseService.getAllWarehouses();
     }
@@ -500,10 +499,7 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ReconciliationType> getAddReconciliationTypeList() {
-        List<ReconciliationType> reconciliationList = new ArrayList<ReconciliationType>();
-        ReconciliationType addReconType = EnumReconciliationType.Add.asReconciliationType();
-        reconciliationList.add(addReconType);
-        return reconciliationList;
+       return EnumReconciliationType.getAddReconciliationType();
     }
 
 	public List<PaymentMode> getPaymentModeForStore() {
@@ -521,5 +517,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
 	public List<Long> getDiscountsForPOS() {
 		return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
 	}
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType(){
+       return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    }
 	
 	}

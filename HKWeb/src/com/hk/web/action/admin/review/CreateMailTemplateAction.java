@@ -125,8 +125,8 @@ public class CreateMailTemplateAction extends BaseAction {
                     ftlContents = HKFileUtils.fileToString(ftlFile);
                     logger.info("ftl generated");
 
-//                    contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
-                    contentUploaded = true;
+                    contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
+//                  contentUploaded = true;
 
                     FileUtils.deleteQuietly(ftlFile);
                     if(contentUploaded){
@@ -177,7 +177,7 @@ public class CreateMailTemplateAction extends BaseAction {
             htmlcontent = StringUtils.replace(htmlcontent, "${reviewLink}",reviewLink);
             FileUtils.writeStringToFile(htmlFile, htmlcontent);
             mail.setContent(htmlcontent);
-//            adminEmailCampaignService.uploadHtml(htmlFile, htmlKey);
+            adminEmailCampaignService.uploadHtml(htmlFile, htmlKey);
             logger.info("uploaded changed html to s3 for mail Template: " + mail.getName());
 
             mail = mailService.save(mail);

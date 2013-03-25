@@ -2,6 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.courier.EnumAwbChangeReason;
 import com.hk.constants.courier.EnumCourierChangeReason;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -173,6 +174,8 @@ public interface MasterDataDao
 
   public List<EnumCourierChangeReason> getAllCourierChangeReason();
 
+    public List<EnumAwbChangeReason> getAllAwbChangeReason();
+
     public List<Courier> getCouriersForDispatchLot();
 
 	public List<PaymentMode> getPaymentModeForStore();
@@ -184,4 +187,6 @@ public interface MasterDataDao
      public List<Courier> getAllActiveCourier();
 
 	public List<Long> getDiscountsForPOS();
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType();
 }

@@ -34,5 +34,7 @@ public interface CycleCountDao {
 
     public void removeScannedSkuItemFromCycleCountItem(CycleCount cycleCount, SkuItem skuItem);
 
+    public void deleteCycleCountItem(CycleCountItem cycleCountItem);
+
 
 }

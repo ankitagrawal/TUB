@@ -89,10 +89,6 @@ Hi ${user.name}, welcome to HealthKart.com
                   style="color:#FF0000; font-weight:bold; ">${user.email}</span></td>
         </tr>
         <tr>
-          <td align="left" height="30px" valign="middle" bgcolor="#ececec" style="padding-left:10px">Password: <span
-                  style="color:#FF0000; font-weight:bold; "> ${user.password}</span></td>
-        </tr>
-        <tr>
           <td align="left" valign="top">&nbsp;</td>
         </tr>
         <tr>

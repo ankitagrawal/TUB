@@ -259,6 +259,7 @@ public class EditProductAttributesAction extends BaseAction {
             }
 
             productVariant = getProductVariantService().save(productVariant);
+            if(!(productVariant.getProduct().isJit() || productVariant.getProduct().isService()))
             getInventoryService().checkInventoryHealth(productVariant);
             i++;
         }

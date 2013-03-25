@@ -62,7 +62,7 @@ public class ReviewMailSettingsAction extends BasePaginatedAction {
             @Validate(field = "timeWindowDays", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "daysToSendReviewMailAgain", required = true, on = {"createProductSettings","saveProductSettings"}),
             @Validate(field = "mail", required = true, on = {"createProductSettings","saveProductSettings"}),
-            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"}),
+            @Validate(field = "testEmailId", required = true, on = {"createProductSettings","saveProductSettings"})
     })
     private ProductReviewMail productReviewMail;
     private List<ProductReviewMail> productReviewMailList = new ArrayList<ProductReviewMail>();
