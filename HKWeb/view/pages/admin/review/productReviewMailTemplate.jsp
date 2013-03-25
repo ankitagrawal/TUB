@@ -19,7 +19,7 @@
                 <c:if test="${cmta.editTemplate}">
                     <s:hidden name="mail.id"/>
                 </c:if>
-                <p>Available variables are productName,productDiv(This is for displaying the product option in Email), user.name, reviewLink</p>
+                <p>Available variables are productName,productOptionDiv, user.name, reviewLink.</p>
                 <ul class="mail">
                     <li>
                         <label>Mail Template Name*</label>
