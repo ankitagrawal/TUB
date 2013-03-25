@@ -318,7 +318,7 @@
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 
     <h3><s:link
-            beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Product Review Mail Settings</s:link></h3>
+            beanclass="com.hk.web.action.admin.review.ReviewMailSettingsAction">Review Collection Framework</s:link></h3>
 
 </div>
 
