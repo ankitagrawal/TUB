@@ -296,6 +296,14 @@ Ph. ${order.address.phone}<br/>
       $("#reAssignToPackingQueue").hide();
     }
   });
+  
+  var selectedSOStatus = $("select[name='shippingOrderStatus']").val()
+  
+  if(selectedSOStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>){
+  	$("#reAssignToPackingQueue").show();
+  }else{
+  	$("#reAssignToPackingQueue").hide();
+  }
 
   /*$('.lineItemCheckBox').click(function() {
    $(this).parent().parent("tr").toggleClass('highlight');

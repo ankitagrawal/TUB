@@ -410,7 +410,7 @@
                     <div id="orderDetails-${order.id}" class="detailDiv">
                         <div class="headingLabel">Order Details: ${order.store.prefix}
                           <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
-                                  style="float:right;background:#EEE;padding:2px;color:black;" target="_blank">
+                                  style="float:right;background:#EEE;padding:3px;color:black;border:2px solid #AAA" target="_blank">
                             <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
                             View Details
                           </s:link> </div>
