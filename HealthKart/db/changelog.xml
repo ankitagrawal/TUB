@@ -11853,4 +11853,14 @@
             <column defaultValue="0" name="contains_jit_products" type="TINYINT"/>
         </addColumn>
     </changeSet>
-</databaseChangeLog>
+    <changeSet author="Pratham (generated)" id="2013-03-25-02">
+        <sql>
+            update shipping_order so
+            join line_item li on li.shipping_order_id=so.id
+            join sku sk on li.sku_id=sk.id
+            join product_variant pv on sk.product_variant_id=pv.id
+            join product p on pv.product_id=p.id
+            set so.contains_jit_products=1
+            where p.is_jit=1;
+        </sql>
+    </changeSet></databaseChangeLog>
