@@ -17,6 +17,7 @@
     border-bottom: 0;
   }
 </style>
+
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
     <img src="${pageContext.request.contextPath}/images/banners/top/Home-Gym-Banner.gif" alt="Build Your Dream Gym at Home, Starting From Rs. 10,000.00">
@@ -25,14 +26,13 @@
     var params = {};
     params['srcUrl'] = document.location.href;
     params['topLevelCategory'] = $('#topCategoryContainer').html();
-    $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
 
-    $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
+    $('#discountCouponModal').jqm({trigger: '#sendCouponLink'});
+    $("#discountCouponModal").append($('<iframe id="raj_frame" src="https://docs.google.com/spreadsheet/embeddedform?formkey=dFFBeGVKUzR6dl9NTkJsVUNlQWRYZnc6MQ" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+    $("#discountCouponModal").addClass("raj_modal");
 
   </script>
 </div>
-
-<div class=""></div>
 
 <%--   <div style="font-family: Lucida Grande, Lucida Sans Unicode, Lucida Sans, Geneva, Verdana, sans-serif; text-align:center; background-color: #ffffcc; border: 1px solid #cccc00; color: #ffffff; width: 950px; margin-left: auto; margin-right: auto; margin-bottom: 5px; border-radius: 5px; padding: 5px; line-height: 1.5em; box-shadow: inset 0 0 3px #aaa;">
   <a href="http://www.facebook.com/healthkart?sk=app_130363280399851" target="_blank">Claim your <span style="font-weight:bolder;">Introductory 10% Cash Back </span> on sports and fitness accessories via our facebook page</a>
