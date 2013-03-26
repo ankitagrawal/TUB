@@ -11867,7 +11867,7 @@
     <changeSet author="Pratham (generated)" id="1364284236844-1">
         <createTable tableName="lifecycle_reason">
             <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="primary_attribution" type="VARCHAR(45)"/>
             <column name="secondary_attribution" type="VARCHAR(45)"/>

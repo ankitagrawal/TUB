@@ -258,6 +258,7 @@ public class ShippingOrder implements java.io.Serializable {
 	Shipping orders that have a amount = 0 should be shipped with non-COD courier, irrespective of the payment mode (this includes shipping of free products)
 	 */
     @Transient
+    @Deprecated
     public boolean isCOD() {
         return this.amount != 0 && EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
     }
