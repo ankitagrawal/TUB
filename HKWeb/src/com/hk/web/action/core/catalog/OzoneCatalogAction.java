@@ -39,7 +39,7 @@ public class OzoneCatalogAction extends BaseAction {
         List<Product> healthDevicesProduct = getProductService().getAllProductByCategory(CategoryConstants.HEALTH_DEVICES);
         diabetesProduct.addAll(healthDevicesProduct);
         products = diabetesProduct;
-        return new ForwardResolution("/pages/vizuryCatalog.jsp");
+        return new ForwardResolution("/pages/ozoneCatalog.jsp");
     }
 
     public List<Product> getProducts() {
