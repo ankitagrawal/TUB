@@ -11871,15 +11871,11 @@
             </column>
             <column name="primary_attribution" type="VARCHAR(45)"/>
             <column name="secondary_attribution" type="VARCHAR(45)"/>
-            <column name="shipping_order_lifecycle_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="shipping_order_lifecycle_id" type="INT"/>
             <column name="reason_id" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="order_lifecycle_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
+            <column name="order_lifecycle_id" type="INT"/>
             <column name="create_dt" type="DATETIME"/>
         </createTable>
     </changeSet>
@@ -11892,9 +11888,6 @@
             <column name="secondary_classification" type="VARCHAR(100)"/>
             <column name="type" type="VARCHAR(45)"/>
         </createTable>
-    </changeSet>
-    <changeSet author="Pratham (generated)" id="1364284236844-3">
-        <addPrimaryKey columnNames="id, order_lifecycle_id" tableName="lifecycle_reason"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1364284236844-4">
         <addForeignKeyConstraint baseColumnNames="order_lifecycle_id" baseTableName="lifecycle_reason"
