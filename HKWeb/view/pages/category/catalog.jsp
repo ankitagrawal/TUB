@@ -179,12 +179,6 @@
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
 
-<div class="banner_raj" id="banner_raj">click here!</div>
-<div class="raj_modal">
-<div class="banner_raj_modal" id="banner_raj_modal">
-    <iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dFFBeGVKUzR6dl9NTkJsVUNlQWRYZnc6MQ" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
-</div>
-</div>
 <div class='catalog_header'>
 
   <div class="content">

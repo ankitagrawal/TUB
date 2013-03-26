@@ -37,9 +37,6 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $("#searchbox").autocomplete({url:'${pageContext.request.contextPath}/autocomplete-search/'});
-        $("#banner_raj").click(function(){
-            $("#banner_raj_modal").css("display", "block");
-        });
     });
   </script>
 
