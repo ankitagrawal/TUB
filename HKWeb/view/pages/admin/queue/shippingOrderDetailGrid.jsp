@@ -9,6 +9,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -565,7 +566,8 @@
         </c:if>
         <s:select name="shippingOrder.reason">
             <option value="">Choose Reason</option>
-            <c:forEach items="${hk:getReasonsByType('Escalate_Back')}" var="reason">
+            <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
+            <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
                 <s:option value="${reason.id}">${reason.primaryClassification}</s:option>
             </c:forEach>
         </s:select>

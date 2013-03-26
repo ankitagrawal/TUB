@@ -375,10 +375,15 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     @Override
     public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason) {
         ShippingOrderLifecycle shippingOrderLifecycle = logShippingOrderActivity(shippingOrder, enumShippingOrderLifecycleActivity);
-        LifecycleReason lifecycleReason = new LifecycleReason();
-        lifecycleReason.setShippingOrderLifecycle(shippingOrderLifecycle);
-        lifecycleReason.setReason(reason);
-        getShippingOrderDao().save(lifecycleReason);
+        if(reason != null){
+            logger.error("reason is " + reason.getPrimaryClassification());
+            LifecycleReason lifecycleReason = new LifecycleReason();
+            lifecycleReason.setShippingOrderLifecycle(shippingOrderLifecycle);
+            lifecycleReason.setReason(reason);
+            getShippingOrderDao().save(lifecycleReason);
+        } else{
+            logger.error("reason is null");
+        }
     }
 
 

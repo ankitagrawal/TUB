@@ -15,6 +15,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
+<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -362,10 +363,11 @@
                         </c:forEach>
                     </div>
                 </li>
+                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
                 <li><label style="float:left;width: 60px;">Escalate_Back Reasons</label>
 
                     <div class="checkBoxList">
-                        <c:forEach items="${hk:getReasonsByType('Escalated_Back')}" var="reason"
+                        <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason"
                                    varStatus="ctr">
                             <label><s:checkbox name="reasons[${ctr.index}]"
                                                value="${reason.id}"/> ${reason.primaryClassification}</label>
