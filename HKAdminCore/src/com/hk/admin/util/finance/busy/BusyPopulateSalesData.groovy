@@ -58,7 +58,7 @@ public class BusyPopulateSalesData {
 							so.accounting_invoice_number_id as vch_no,
 							u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
-							w.name as warehouse, w.id as warehouse_id, so.amount as net_amount,
+							w.name as warehouse, w.id as warehouse_id, sum(li.reward_point_discount)+so.amount AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
 							so.shipping_order_status_id , ship.return_date as return_date
 							from line_item li
@@ -99,7 +99,7 @@ public class BusyPopulateSalesData {
       String narration;
       byte out_of_state;
       String against_form;
-      Long net_amount;
+      Double net_amount;
       byte imported_flag;
 
 
