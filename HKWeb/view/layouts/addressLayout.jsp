@@ -155,8 +155,8 @@
 	<div class="error" style="background-color:salmon; width:280px; margin-top: 10px; padding: 5px;"></div>
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
-	<div class="row">
-		<s:label class="rowLabel" name="Name*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="Name*"/>
 		<s:text name="address.name"  class="rowText"/>
 	</div>
 
@@ -164,8 +164,8 @@
 	<div style="margin-top:10px;"></div>
 
 
-	<div class="row">
-		<s:label class="rowLabel" name="Address Line1*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="Address Line1*"/>
 		<s:text name="address.line1" class="rowText" id="line1"/>
 	</div>
 
@@ -173,8 +173,8 @@
 	<div style="margin-top:10px;"></div>
 
 
-	<div class="row">
-		<s:label class="rowLabel" name="Address Line2"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="Address Line2"/>
 		<s:text name="address.line2" id="line2" style="width: 250px !important;"/>
 	</div>
 
@@ -182,24 +182,24 @@
 	<div style="margin-top:10px;"></div>
 
 
-	<div class="row">
-		<s:label class="rowLabel" name="Pincode*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="Pincode*"/>
 		<s:text name="address.pincode" class="rowText" id="pin" maxlength="6"/>
 	</div>
 
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 
-	<div class="row">
-		<s:label class="rowLabel" name="City*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="City*"/>
 		<s:text style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" name="address.city" class="rowText" id="cityselect" title="enter city name"/>
 	</div>
 
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 
-	<div class="row">
-		<s:label class="rowLabel" name="State*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="State*"/>
 
 		<s:select name="address.state" id="stateselect" style="width:260px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" >
 			<s:option value=""> ----------------- Select State --------------- </s:option>
@@ -212,8 +212,8 @@
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 
-	<div class="row">
-		<s:label class="rowLabel" name="Phone/Mobile*"/>
+	<div class="row" style="padding-left:initial;">
+		<s:label class="rowLabel widthInitial" name="Phone/Mobile*"/>
 		<s:text name="address.phone" class="rowText" id="phone"/>
 	</div>
         <div class="clear"></div>

@@ -37,26 +37,41 @@
             src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
 </s:layout-component>
 <s:layout-component name="steps">
-    <div class='steps'><s:link
+    <div class='steps'>
+        <hr noshade class="stepLine">
+        <s:link
             beanclass="com.hk.web.action.core.user.SelectAddressAction"
             style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step1">
-            <h2>Step 1</h2>
+        <div class='newStep' id="step1">
+            <div class="newStepCount">1</div>
 
-            <div class='small'>Select shipping address</div>
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
         </div>
     </s:link> <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction"
                       style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step2">
-            <h2>Step 2</h2>
+        <div class='newStep ' id="step2">
+            <div class="newStepCount">2</div>
 
-            <div class='small'>Confirm your order</div>
+            <div class='newStepText'>
+                Confirm your order
+            </div>
         </div>
     </s:link>
-        <div class='step current_step'>
-            <h2>Step 3</h2>
+        <div class='newStep '>
+            <div class="newStepCount current_step">3</div>
 
-            <div class='small'>Choose Payment Method</div>
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
         </div>
     </div>
 </s:layout-component>

@@ -50,30 +50,38 @@
 
   <s:layout-component name="steps">
     <div class='steps'>
+        <hr noshade class="stepLine">
       <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step'>
-          <h2>Step 1</h2>
+        <div class='newStep'>
+            <div class="newStepCount">1</div>
 
-          <div class='small'>
-            Select shipping address
-          </div>
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
         </div>
       </s:link>
 
-      <div class='step current_step'>
-        <h2>Step 2</h2>
+      <div class='newStep '>
+          <div class="newStepCount current_step">2</div>
 
-        <div class='small'>
-          Confirm your order
-        </div>
+          <div class='newStepText'>
+              Confirm your order
+          </div>
       </div>
-      <div class='step'>
-        <h2>Step 3</h2>
+      <div class='newStep'>
+          <div class="newStepCount">3</div>
 
-        <div class='small'>
-          Choose Payment Method
-        </div>
+          <div class='newStepText'>
+              Choose Payment Method
+          </div>
       </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
+        </div>
     </div>
   </s:layout-component>
 
@@ -162,11 +170,16 @@
     </c:if>
     <div class="right_container" style="left: 40px;">
       <div class="title">
-        <h5>
-          Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
-        </h5>
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
+          <div style="margin:10px; padding-top:0px">
+              <div class="buttons">
+                  <s:submit name="orderReviewed" value="Make Payment" class="requiredFieldValidator"/>
+              </div>
+          </div>
+            <h5>
+                Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
+            </h5>
         <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:175px;height:110px"/>
           <%--<div class="title">
             <h5>
@@ -178,11 +191,6 @@
 		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
 		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
 	      </div>
-          <div style="margin:10px; padding-top:10px">
-            <div class="buttons">
-              <s:submit name="orderReviewed" value="Make Payment" class="requiredFieldValidator"/>
-            </div>
-          </div>
 
       </div>
       </s:form>

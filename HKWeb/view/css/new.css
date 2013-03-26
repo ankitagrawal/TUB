@@ -5913,6 +5913,59 @@ color: #e62580;
     margin-top: 5px;
 }
 
+.newStepCount{
+    width: 30px;
+    height: 23px;
+    border-radius: 15px;
+    position: relative;
+    padding-top: 5px;
+    float: left;
+    left: 40%;
+    margin-bottom: 10px;
+    background: #ddd;
+    font-size: 14px;
+    z-index: 1;
+}
+
+.newStep{
+    position: relative;
+    float: left;
+    margin-right: 10px;
+    margin-left: 10px;
+    left: 35px;
+}
+
+.newStepText{
+    position: relative;
+    float: left;
+    clear: both;
+    font-size: 12px;
+}
+
+.current_step {
+    font-weight: bold;
+    padding-top: 7px;
+}
+
+.stepLine{
+    position: absolute;
+    float: left;
+    width: 80%;
+    top: 5px;
+}
+
+.widthInitial{
+    width: 100px !important;
+    margin-right: 10px;
+}
+
+.shippingAddressheading{
+    color: #3379bb;
+    position: relative;
+    float: left;
+}
+
+
 /*
 slider pager end
 */

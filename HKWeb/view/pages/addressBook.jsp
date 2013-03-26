@@ -55,25 +55,32 @@
 
 <s:layout-component name="steps">
     <div class='steps'>
-        <div class='step current_step'>
-            <h2>Step 1</h2>
-
-            <div class='small'>
+        <hr noshade class="stepLine">
+        <div class='newStep '>
+            <div class="newStepCount current_step">1</div>
+            <div class='newStepText'>
                 Select A shipping address
             </div>
         </div>
-        <div class='step'>
-            <h2>Step 2</h2>
+        <div class='newStep'>
+            <div class="newStepCount">2</div>
 
-            <div class='small'>
+            <div class='newStepText'>
                 Confirm your order
             </div>
         </div>
-        <div class='step'>
-            <h2>Step 3</h2>
+        <div class='newStep'>
+            <div class="newStepCount">3</div>
 
-            <div class='small'>
+            <div class='newStepText'>
                 Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
             </div>
         </div>
     </div>
@@ -183,13 +190,14 @@
         <div class='or'>
             or
         </div>
-        <div class='right'>
-            <h3>
-                Add a new shipping address
-            </h3>
+                <h3 class="shippingAddressheading">
+                    Add a new shipping address
+                </h3>
+        <div class='right' style="width: 440px;background: initial;">
 
-            <div class="addressContainer shipping_address">
-                <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
+
+            <div class="addressContainer shipping_address" style="left: 5px;">
+                <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;" >
                     <s:layout-render name="/layouts/addressLayout.jsp" />
                     <s:hidden name="countryId" value="${countryId}"/>
                     <s:submit name="create" value="Use this address and continue" style="margin:15px 0 0 26px;width:260px;position: static;" class="button"/>
