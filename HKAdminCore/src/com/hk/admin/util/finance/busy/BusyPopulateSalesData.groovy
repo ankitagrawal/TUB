@@ -49,6 +49,8 @@ public class BusyPopulateSalesData {
       lastUpdateDate = "2009-01-01";
     }
 
+	  lastUpdateDate = "2012-03-31";
+
     sql.eachRow("""
 
 							select so.id as shipping_order_id,
