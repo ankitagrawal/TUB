@@ -5,8 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.shippingOrder.LifecycleReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -338,7 +340,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         save(shippingOrder);
     }
 
-    public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
+    public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity) {
         User loggedOnUser = getUserService().getLoggedInUser();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
@@ -346,20 +348,20 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         }
 
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
-        logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, null);
+        return logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, null);
     }
 
-    public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
+    public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments) {
         User loggedOnUser = getUserService().getLoggedInUser();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = shippingOrder.getBaseOrder().getUser();
         }
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
-        logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, comments);
+        return logShippingOrderActivity(shippingOrder, loggedOnUser, orderLifecycleActivity, comments);
     }
 
-    public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments) {
+    public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments) {
 
         ShippingOrderLifecycle shippingOrderLifecycle = new ShippingOrderLifecycle();
         shippingOrderLifecycle.setShippingOrder(shippingOrder);
@@ -367,17 +369,23 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrderLifecycle.setUser(user);
         shippingOrderLifecycle.setComments(comments);
         shippingOrderLifecycle.setActivityDate(new Date());
-        getShippingOrderDao().save(shippingOrderLifecycle);
+        return (ShippingOrderLifecycle) getShippingOrderDao().save(shippingOrderLifecycle);
     }
 
     @Override
+    public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason) {
+        ShippingOrderLifecycle shippingOrderLifecycle = logShippingOrderActivity(shippingOrder, enumShippingOrderLifecycleActivity);
+        LifecycleReason lifecycleReason = new LifecycleReason();
+        lifecycleReason.setShippingOrderLifecycle(shippingOrderLifecycle);
+        lifecycleReason.setReason(reason);
+        getShippingOrderDao().save(lifecycleReason);
+    }
+
+
+    @Override
     public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder) {
-        if (getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
-                && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0) {
-            return true;
-        }
-        ;
-        return false; // To change body of implemented methods use File | Settings | File Templates.
+        return getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
+                && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0;
     }
 
     //todo courier refactor

@@ -11863,4 +11863,45 @@
             set so.contains_jit_products=1
             where p.is_jit=1;
         </sql>
+        <changeSet author="Pratham (generated)" id="1364284236844-1">
+            <createTable tableName="lifecycle_reason">
+                <column autoIncrement="true" name="id" type="INT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="primary_attribution" type="VARCHAR(45)"/>
+                <column name="secondary_attribution" type="VARCHAR(45)"/>
+                <column name="shipping_order_lifecycle_id" type="INT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="reason_id" type="INT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="order_lifecycle_id" type="INT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="create_dt" type="DATETIME"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="Pratham (generated)" id="1364284236844-2">
+            <createTable tableName="reason">
+                <column autoIncrement="true" name="id" type="INT">
+                    <constraints nullable="false" primaryKey="true"/>
+                </column>
+                <column name="primary_classification" type="VARCHAR(100)"/>
+                <column name="secondary_classification" type="VARCHAR(100)"/>
+                <column name="type" type="VARCHAR(45)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="Pratham (generated)" id="1364284236844-3">
+            <addPrimaryKey columnNames="id, order_lifecycle_id" tableName="lifecycle_reason"/>
+        </changeSet>
+        <changeSet author="Pratham (generated)" id="1364284236844-4">
+            <addForeignKeyConstraint baseColumnNames="order_lifecycle_id" baseTableName="lifecycle_reason" constraintName="fk_lifecycle_reason_order_lifecycle1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="order_lifecycle" referencesUniqueColumn="false"/>
+        </changeSet>
+        <changeSet author="Pratham (generated)" id="1364284236844-5">
+            <addForeignKeyConstraint baseColumnNames="reason_id" baseTableName="lifecycle_reason" constraintName="fk_lifecycle_reason_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reason" referencesUniqueColumn="false"/>
+        </changeSet>
+        <changeSet author="Pratham (generated)" id="1364284236844-6">
+            <addForeignKeyConstraint baseColumnNames="shipping_order_lifecycle_id" baseTableName="lifecycle_reason" constraintName="fk_lifecycle_reason_shipping_order_lifecycle1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order_lifecycle" referencesUniqueColumn="false"/>
+        </changeSet>
     </changeSet></databaseChangeLog>

@@ -362,6 +362,17 @@
                         </c:forEach>
                     </div>
                 </li>
+                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+
+                    <div class="checkBoxList">
+                        <c:forEach items="${hk:getReasonsByType('Escalated_Back')}" var="reason"
+                                   varStatus="ctr">
+                            <label><s:checkbox name="reasons[${ctr.index}]"
+                                               value="${reason.id}"/> ${reason.primaryClassification}</label>
+                            <br/>
+                        </c:forEach>
+                    </div>
+                </li>
 
                 <%--<li><label>Per Page</label><s:select name="defaultPerPage">
                   <s:option value="30">30</s:option>

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.analytics.Reason;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -93,6 +94,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
     private List<ShippingOrderStatus> shippingOrderStatuses = new ArrayList<ShippingOrderStatus>();
     private List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities = new ArrayList<ShippingOrderLifeCycleActivity>();
+    private List<Reason> reasons = new ArrayList<Reason>();
     private List<PaymentMode> paymentModes = new ArrayList<PaymentMode>();
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
@@ -176,6 +178,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		}
 		*/
         orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
+        orderSearchCriteria.setReasonList(reasons);
 
 
         List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
@@ -403,6 +406,14 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.shippingOrderLifecycleActivities = shippingOrderLifecycleActivities;
     }
 
+    public List<Reason> getReasons() {
+        return reasons;
+    }
+
+    public void setReasons(List<Reason> reasons) {
+        this.reasons = reasons;
+    }
+
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
         params.add("startDate");
@@ -468,6 +479,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 params.add("shippingOrderLifecycleActivities[" + ctr7 + "]");
             }
             ctr7++;
+        }
+        int ctr8 = 0;
+        for (Reason reason : reasons) {
+            if (reason != null) {
+                params.add("reasons[" + ctr8 + "]");
+            }
+            ctr8++;
         }
 
         return params;

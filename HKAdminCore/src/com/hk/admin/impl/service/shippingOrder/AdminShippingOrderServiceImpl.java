@@ -296,7 +296,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason());
 
         getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;

@@ -563,6 +563,12 @@
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
+        <s:select name="shippingOrder.reason">
+            <option value="">Choose Reason</option>
+            <c:forEach items="${hk:getReasonsByType('Escalate_Back')}" var="reason">
+                <s:option value="${reason.id}">${reason.primaryClassification}</s:option>
+            </c:forEach>
+        </s:select>
     </td>
 </c:if>
 <c:if test="${isDropShipQueue == true}">

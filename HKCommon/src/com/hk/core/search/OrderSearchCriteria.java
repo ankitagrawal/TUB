@@ -1,5 +1,6 @@
 package com.hk.core.search;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -49,6 +50,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
+    private List<Reason> reasonList;
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
@@ -82,6 +84,11 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setSOLifecycleActivityList(List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList) {
         this.SOLifecycleActivityList = SOLifecycleActivityList;
+    }
+
+    public OrderSearchCriteria setReasonList(List<Reason> reasonList) {
+        this.reasonList = reasonList;
+        return this;
     }
 
     public OrderSearchCriteria setEmail(String email) {
@@ -195,6 +202,15 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             }
                 shippingLifeCycleCriteria =  shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
                 shippingLifeCycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", SOLifecycleActivityList));
+
+            DetachedCriteria lifecycleCriteria = null;
+            if (reasonList != null && !reasonList.isEmpty()) {
+                if (lifecycleCriteria == null) {
+                    lifecycleCriteria = shippingLifeCycleCriteria.createCriteria("lifecycleReasons");
+                }
+                lifecycleCriteria.add(Restrictions.in("reason", reasonList));
+            }
+
 
         }
 
