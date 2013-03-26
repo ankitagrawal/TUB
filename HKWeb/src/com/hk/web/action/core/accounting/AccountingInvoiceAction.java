@@ -22,6 +22,7 @@ import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
+import com.hk.pact.service.order.B2BOrderService;
 
 @Component
 public class AccountingInvoiceAction extends BaseAction {
@@ -35,6 +36,8 @@ public class AccountingInvoiceAction extends BaseAction {
     OrderManager           orderManager;
     @Autowired
     B2bUserDetailsDao      b2bUserDetailsDao;
+    
+    private boolean cFormaAvailable;
 
     /*
      * @Validate(required = true, encrypted = true) private AccountingInvoice accountingInvoice;
@@ -45,6 +48,8 @@ public class AccountingInvoiceAction extends BaseAction {
     private InvoiceDto     invoiceDto;
     // private Order order;
     private B2bUserDetails b2bUserDetails;
+    @Autowired
+	B2BOrderService b2bOrderService;
     
     private List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
 
@@ -56,12 +61,14 @@ public class AccountingInvoiceAction extends BaseAction {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
-
+            cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
             if(replacementOrder != null){
-              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails);
+              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails, cFormaAvailable);
+              //invoiceDto.setcFormaAvailable(cFormaAvailable);
             }
             else{
-              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
+              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails,cFormaAvailable);
+              //invoiceDto.setcFormaAvailable(cFormaAvailable);
             }
             return new ForwardResolution("/pages/accountingInvoice.jsp");
         } else {
@@ -184,4 +191,21 @@ public class AccountingInvoiceAction extends BaseAction {
     public List<EnumTax> getEnumTaxes() {
         return enumTaxes;
     }
+
+	public boolean iscFormaAvailable() {
+		return cFormaAvailable;
+	}
+
+	public void setcFormaAvailable(boolean cFormaAvailable) {
+		this.cFormaAvailable = cFormaAvailable;
+	}
+
+	public B2BOrderService getB2bOrderService() {
+		return b2bOrderService;
+	}
+
+	public void setB2bOrderService(B2BOrderService b2bOrderService) {
+		this.b2bOrderService = b2bOrderService;
+	}
+    
 }

@@ -11848,4 +11848,22 @@
     <changeSet author="Ankur (generated)" id="1363612581975-3">
         <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review" constraintName="fk_user_review_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1364216900002-1">
+        <createTable tableName="b2b_order_checklist">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="c_form" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1364216900002-2">
+        <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+
 </databaseChangeLog>
