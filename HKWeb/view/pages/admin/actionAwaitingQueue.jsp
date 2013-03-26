@@ -362,7 +362,7 @@
                         </c:forEach>
                     </div>
                 </li>
-                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+                <li><label style="float:left;width: 60px;">Escalate_Back Reasons</label>
 
                     <div class="checkBoxList">
                         <c:forEach items="${hk:getReasonsByType('Escalated_Back')}" var="reason"
