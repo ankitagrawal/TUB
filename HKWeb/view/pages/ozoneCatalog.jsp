@@ -14,7 +14,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.OzoneCatalogAction" var="ozoneBean"/>
 <products>
     <c:forEach items="${ozoneBean.products}" var="product">
-        <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
+        <c:if test="${fn:length(product.productVariants) > 0 && !product.deleted && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
             <product id="${product.id}" stock="${!product.outOfStock}">
                 <name><![CDATA[${hk:escapeXML(product.name)}]]></name>
                 <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
