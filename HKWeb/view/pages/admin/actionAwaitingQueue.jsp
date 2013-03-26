@@ -378,6 +378,16 @@
                  </s:select>
                       </div>
             </li>
+                <li>
+                    <label style="float:left;width: 60px;">Has JIT</label>
+                    <div class="checkBoxList">
+                        <s:select name="containsJit" value="">
+                            <s:option value="">--Select--</s:option>
+                            <s:option value="0">N</s:option>
+                            <s:option value="1">Y</s:option>
+                        </s:select>
+                    </div>
+                </li>
 
 
                 <div class="buttons">
@@ -408,7 +418,12 @@
             <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
                 <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
                     <div id="orderDetails-${order.id}" class="detailDiv">
-                        <div class="headingLabel">Order Details: ${order.store.prefix}</div>
+                        <div class="headingLabel">Order Details: ${order.store.prefix}
+                          <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
+                                  style="float:right;background:#EEE;padding:3px;color:black;border:2px solid #AAA" target="_blank">
+                            <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+                            View Details
+                          </s:link> </div>
                         <div class="floatleft">
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>

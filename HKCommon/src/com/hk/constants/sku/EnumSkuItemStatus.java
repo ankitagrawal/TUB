@@ -19,7 +19,8 @@ public enum EnumSkuItemStatus {
     BatchMismatch(70L, "Batch Mismatch"),
     MrpMismatch(80L, "Mrp Mismatch"),
     FreeVariant(90L, "Free Variant"),
-    NonMoving(100L, "Non Moving");
+    NonMoving(100L, "Non Moving"),
+    ProductVariantAudited(110L, "Product Variant Audited");
 
     private Long id;
 	private String name;

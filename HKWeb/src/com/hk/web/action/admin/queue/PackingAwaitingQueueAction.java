@@ -93,7 +93,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
+        /**
+         * commenting this line for now, since due to some bug some orders do not have eclation activity logged, when that is fixed, uncomment this
+         */
+        //shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());

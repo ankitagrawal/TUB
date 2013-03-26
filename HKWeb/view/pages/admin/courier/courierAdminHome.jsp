@@ -59,7 +59,7 @@
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">
-            Pincode Default Courier
+            Change SO Status
         </s:link>
     </h3>
 

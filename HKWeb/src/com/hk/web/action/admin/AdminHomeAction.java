@@ -39,6 +39,8 @@ public class AdminHomeAction extends BaseAction {
               return new ForwardResolution("/pages/admin/categoryAdminHome.jsp");
           }else if(user.getRoles().contains(EnumRole.OPS_MANAGER.toRole())){
               return new ForwardResolution("/pages/admin/courier/courierAdminHome.jsp");
+          }else if(user.getRoles().contains(EnumRole.CUSTOMER_SUPPORT.toRole())){
+              return new ForwardResolution("/pages/admin/crm/customerSupportAdminHome.jsp");
           }
       }
     return new ForwardResolution("/pages/admin/adminHome.jsp");
