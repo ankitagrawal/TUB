@@ -19,7 +19,6 @@ import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,7 +73,7 @@ public class ShippingOrderAction extends BaseAction {
 
   public Resolution markOrderCustomerReturn() {
     getBaseDao().save(shippingOrder);
-    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Return, customerReturnReason);
+    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Return, null, customerReturnReason);
 		return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderId", shippingOrder.getId());
 	}
 

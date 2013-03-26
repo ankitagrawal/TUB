@@ -744,7 +744,7 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                            CourierConstants.DROP_SHIPPED_ORDER);
+                            null, CourierConstants.DROP_SHIPPED_ORDER);
                 }
             }
             // auto escalate shipping orders if possible

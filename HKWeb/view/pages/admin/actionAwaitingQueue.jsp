@@ -352,47 +352,20 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+                <li>
+                    <label style="float:left;width: 60px;">Drop Ship </label>
 
                     <div class="checkBoxList">
-                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
-                                   varStatus="ctr">
-                            <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
-                                               value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
-                            <br/>
-                        </c:forEach>
+                        <s:select name="dropShip" value="">
+                            <s:option value="">--Select--</s:option>
+                            <s:option value="0">N</s:option>
+                            <s:option value="1">Y</s:option>
+                        </s:select>
                     </div>
                 </li>
-                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
-                <li><label style="float:left;width: 60px;">Escalate_Back Reasons</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason"
-                                   varStatus="ctr">
-                            <label><s:checkbox name="reasons[${ctr.index}]"
-                                               value="${reason.id}"/> ${reason.primaryClassification}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
-
-                <%--<li><label>Per Page</label><s:select name="defaultPerPage">
-                  <s:option value="30">30</s:option>
-                  <s:option value="60">60</s:option>
-                  <s:option value="120">120</s:option>
-                </s:select></li>--%>
-            <li>
-                 <label style="float:left;width: 60px;">Drop Ship </label>
-                  <div class="checkBoxList">
-                 <s:select name="dropShip" value="">
-                                        <s:option value="">--Select--</s:option>
-                                        <s:option value="0">N</s:option>
-                                        <s:option value="1">Y</s:option>
-                 </s:select>
-                      </div>
-            </li>
                 <li>
                     <label style="float:left;width: 60px;">Has JIT</label>
+
                     <div class="checkBoxList">
                         <s:select name="containsJit" value="">
                             <s:option value="">--Select--</s:option>
@@ -402,6 +375,30 @@
                     </div>
                 </li>
 
+                <li>
+                    <%--<label style="float:left;width: 60px;">SO Lifecycle</label>--%>
+
+                    <div class="checkBoxList">
+                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
+                                   varStatus="ctr">
+                                <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                                   value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
+                            <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
+                                <%--<li><label>Reason</label>--%>
+                                    <%--<div class="checkBoxList">--%>
+                                        <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
+                                                   varStatus="rctr1">
+                                            <label><s:checkbox name="reasons[${rctr1.index}]"
+                                                               value="${reason.id}"/> ${reason.primaryClassification}</label>
+                                            <%--<br/>--%>
+                                        </c:forEach>
+                                    <%--</div>--%>
+                                <%--</li>--%>
+                            </c:if>
+                            <br/>
+                        </c:forEach>
+                    </div>
+                </li>
 
                 <div class="buttons">
                     <s:submit name="pre" value="Search"/>

@@ -17,6 +17,7 @@
     Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
+    Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
     Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
     Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
 
@@ -25,6 +26,11 @@
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isProcessingQueue != null) {
+        pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
+    } else {
+        pageContext.setAttribute("isProcessingQueue", false);
     }
     if (isDropShipQueue != null) {
         pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
@@ -564,13 +570,15 @@
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
-        <s:select name="shippingOrder.reason">
-            <option value="">Choose Reason</option>
-            <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
-            <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
-                <s:option value="${reason.id}">${reason.primaryClassification}</s:option>
-            </c:forEach>
-        </s:select>
+        <c:if test="${isProcessingQueue == true}">
+            <select name="shippingOrderReason_${shippingOrder.id}" class="shippingOrderReason_${shippingOrder.id}">
+                <option value="">Choose Reason</option>
+                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
+                <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
+                    <option value="${reason.id}">${reason.primaryClassification}</option>
+                </c:forEach>
+            </select>
+        </c:if>
     </td>
 </c:if>
 <c:if test="${isDropShipQueue == true}">

@@ -102,6 +102,14 @@ public class ShippingOrderLifecycle implements java.io.Serializable, Comparable<
         this.activityDate = activityDate;
     }
 
+    public List<LifecycleReason> getLifecycleReasons() {
+        return lifecycleReasons;
+    }
+
+    public void setLifecycleReasons(List<LifecycleReason> lifecycleReasons) {
+        this.lifecycleReasons = lifecycleReasons;
+    }
+
     public int compareTo(ShippingOrderLifecycle shippingOrderLifecycle) {
         if (this.getActivityDate() != null && shippingOrderLifecycle.getActivityDate() != null) {
             int val = this.getActivityDate().compareTo(shippingOrderLifecycle.getActivityDate());
