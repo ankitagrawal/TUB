@@ -1,119 +1,101 @@
-/nutrition
--/nutrition/sports-nutrition
---/nutrition/sports-nutrition/proteins
---/nutrition/sports-nutrition/creatine
---/nutrition/sports-nutrition/pre-workout : Pre Workout
---/nutrition/sports-nutrition/intra-workout  :Intra Workout
---/nutrition/sports-nutrition/post-workout : Post Workout
---/nutrition/sports-nutrition/weight-gainer : Mass Gainer
---/nutrition/sports-nutrition/glutamine
---/nutrition/sports-nutrition/Bars-Energy-Drinks  : Bars & Energy Drinks
---/nutrition/sports-nutrition/fat-burner
---/nutrition/sports-nutrition/more...   : Other Supplements
---/nutrition/sports-nutrition/shakers-accessories        :Shakers & Accessories
---/nutrition/sports-nutrition/muscle-building-combos :Supersavers !!!
---/nutrition/sports-nutrition/nutrition-plan: Nutrition Plan
--/nutrition/dietary-supplements : Dietary Supplements
---/nutrition/dietary-supplements/multivitamins :  Multivitamins
----/nutrition/dietary-supplements/multivitamins/men-s-health  :Men's Health
----/nutrition/dietary-supplements/multivitamins/women-s-health   :Women's Health
----/nutrition/dietary-supplements/multivitamins/teen-s-health      :Teen's Health
---/nutrition/dietary-supplements/vitamin-a-z  : Vitamin A-Z
---/nutrition/dietary-supplements/all-minerals           :All Minerals
---/nutrition/dietary-supplements/anti-oxidant            : Anti-Oxidant
---/nutrition/dietary-supplements/fishoil-omegas   :Fishoil & Omegas
---/nutrition/dietary-supplements/hair-skin-nails  :Hair,Skin & Nails
---/nutrition/dietary-supplements/bones             :Bones
---/nutrition/dietary-supplements/eye               :Eye
---/nutrition/dietary-supplements/herbal-cleanser :Herbal Cleanser
---/nutrition/dietary-supplements/herbal-teas
---/nutrition/dietary-supplements/herbs-a-z  :Herbs A-Z
--/nutrition/condition-specific-supplements : Condition Specific
---/nutrition/condition-specific-supplements/cardiovascular
---/nutrition/condition-specific-supplements/joint-muscle    :Joint & Muscle
---/nutrition/condition-specific-supplements/stress-anxiety  :Stress & Anxiety
---/nutrition/condition-specific-supplements/digestion
---/nutrition/condition-specific-supplements/immunity
---/nutrition/condition-specific-supplements/blood-sugar :Diabetic Care
---/nutrition/condition-specific-supplements/brain-memory     :Brain & Memory
---/nutrition/condition-specific-supplements/vitality :Sexual Health
---/nutrition/condition-specific-supplements/energy-endurance     :Energy & Endurance
---/nutrition/condition-specific-supplements/daily-nutrition-combos :Everyday Supersavers!!!
--/nutrition/weight-management
---/nutrition/weight-management/fat-burner
---/nutrition/weight-management/appetite-control :Appetite Control
---/nutrition/weight-management/weight-maintenance :Weight Maintenance
---/nutrition/weight-management/meal-replacement :Meal Replacement
---/nutrition/weight-management/low-calorie-food
---/nutrition/weight-management/sweetener
---/nutrition/weight-management/diet-plan: Diet Plan
--/nutrition/specialty-nutrition  :Specialty Nutrition
---/nutrition/specialty-nutrition/ayurveda :Ayurveda
----/nutrition/specialty-nutrition/ayurveda/skin-hair-care  :Skin & Hair Care
----/nutrition/specialty-nutrition/ayurveda/cardiovascular
----/nutrition/specialty-nutrition/ayurveda/joint-muscle    :Joint & Muscle
----/nutrition/specialty-nutrition/ayurveda/stress-anxiety  :Stress & Anxiety
----/nutrition/specialty-nutrition/ayurveda/digestion
----/nutrition/specialty-nutrition/ayurveda/kidney-care     :Kidney Care
----/nutrition/specialty-nutrition/ayurveda/Stones
----/nutrition/specialty-nutrition/ayurveda/hangover-pills  :Hangover Pills
----/nutrition/specialty-nutrition/ayurveda/uterine-tonic   :Uterine Tonic
----/nutrition/specialty-nutrition/ayurveda/respiratory-care  :Respiratory Care
----/nutrition/specialty-nutrition/ayurveda/liver-care      :Liver Care
----/nutrition/specialty-nutrition/ayurveda/sleep-care      :Sleep Care
----/nutrition/specialty-nutrition/ayurveda/piles-fistula   :Piles & Fistula
----/nutrition/specialty-nutrition/ayurveda/laxative
----/nutrition/specialty-nutrition/ayurveda/natural-protein :Natural Protein
----/nutrition/specialty-nutrition/ayurveda/immunity
----/nutrition/specialty-nutrition/ayurveda/diet-pills      :Diet Pills
----/nutrition/specialty-nutrition/ayurveda/anti-allergy    :Anti Allergy
----/nutrition/specialty-nutrition/ayurveda/fibre
----/nutrition/specialty-nutrition/ayurveda/juices
----/nutrition/specialty-nutrition/ayurveda/blood-sugar :Diabetic Care
----/nutrition/specialty-nutrition/ayurveda/brain-memory     :Brain & Memory
----/nutrition/specialty-nutrition/ayurveda/vitality :Sexual Health
----/nutrition/specialty-nutrition/ayurveda/revitalize     :Revitalize
---/nutrition/specialty-nutrition/gluten-free-food  :Gluten Free Food
---/nutrition/specialty-nutrition/organic-food    :Organic Food
---/nutrition/specialty-nutrition/diabetic-food  :Diabetic Food
---/nutrition/specialty-nutrition/disorder-specific     :Disorder Specific
---/nutrition/specialty-nutrition/healthy-food  :Healthy Food
----/nutrition/specialty-nutrition/healthy-food/snacks
----/nutrition/specialty-nutrition/healthy-food/cereals
----/nutrition/specialty-nutrition/healthy-food/bars
----/nutrition/specialty-nutrition/healthy-food/food-preparations
----/nutrition/specialty-nutrition/healthy-food/daily-need       :Daily Need
---/nutrition/specialty-nutrition/infants  : Infants
---/nutrition/specialty-nutrition/kids  :Kids
---/nutrition/specialty-nutrition/mother : Mother
--/nutrition/fitness-accessories :Fitness Accessories
---/nutrition/fitness-accessories/abs-core : Abs & Core
----/nutrition/fitness-accessories/abs-core/pilates-yoga : Pilates & Yoga
----/nutrition/fitness-accessories/abs-core/fitness-mats
----/nutrition/fitness-accessories/abs-core/gym-balls
----/nutrition/fitness-accessories/abs-core/abs-oblique-trainers : Abs/Oblique Trainers
---/nutrition/fitness-accessories/strength-training
----/nutrition/fitness-accessories/strength-training/upper-body
----/nutrition/fitness-accessories/strength-training/arm-leg-weights : Arm & Leg Weights
----/nutrition/fitness-accessories/strength-training/medicine-balls
----/nutrition/fitness-accessories/strength-training/dumbbells
----/nutrition/fitness-accessories/strength-training/kettlebells
---/nutrition/fitness-accessories/aerobics-general-fitness : Aerobics & General Fitness
----/nutrition/fitness-accessories/aerobics-general-fitness/aerobic-steppers
----/nutrition/fitness-accessories/aerobics-general-fitness/hand-grips
----/nutrition/fitness-accessories/aerobics-general-fitness/jump-ropes
----/nutrition/fitness-accessories/aerobics-general-fitness/resistance-bands
---/nutrition/fitness-accessories/support-gear
----/nutrition/fitness-accessories/support-gear/hand-wrist : Hand & Wrist
----/nutrition/fitness-accessories/support-gear/back
----/nutrition/fitness-accessories/support-gear/knee
----/nutrition/fitness-accessories/support-gear/elbow
----/nutrition/fitness-accessories/support-gear/thighs
----/nutrition/fitness-accessories/support-gear/ankle
---/nutrition/fitness-accessories/rehabilitation-supports
---/nutrition/fitness-accessories/combos
---/nutrition/fitness-accessories/miscellaneous-accessories
---/nutrition/fitness-accessories/sklz : SKLZ
+/sports-nutrition
+-/sports-nutrition/protein : Protein
+--/sports-nutrition/protein/whey-protein : Whey Protein
+--/sports-nutrition/protein/casein-protein : Casein Protein
+--/sports-nutrition/protein/soy-protein : Soy Protein
+--/sports-nutrition/protein/egg-protein : Egg Protein
+--/sports-nutrition/protein/mass-gainer : Mass Gainer
+--/sports-nutrition/protein/ready-to-drink : Ready To Drink
+--/sports-nutrition/protein/protein-bars : Protein Bars
+--/sports-nutrition/protein/super-savers : Super Savers
+-/sports-nutrition/pre-workout : Pre-Workout
+--/sports-nutrition/pre-workout/creatine : Creatine
+--/sports-nutrition/pre-workout/glutamine : Glutamine
+--/sports-nutrition/pre-workout/nitric-oxide : Nitric Oxide
+--/sports-nutrition/pre-workout/zma : ZMA
+-/sports-nutrition/post-workout : Post-Workout
+--/sports-nutrition/post-workout/carb-blends : Carb Blends
+--/sports-nutrition/post-workout/creatine-blends : Creatine Blends
+--/sports-nutrition/post-workout/electrolytes : Electrolytes
+--/sports-nutrition/post-workout/hardcore : Hardcore
+-/sports-nutrition/weight-management
+--/sports-nutrition/weight-management/fat-burner : Fat Burner
+--/sports-nutrition/weight-management/weight-gainer : Weight Gainer
+--/sports-nutrition/weight-management/meal-replacement : Meal Replacement
+--/sports-nutrition/weight-management/appetite-control : Appetite Control
+--/sports-nutrition/weight-management/sweeteners
+--/sports-nutrition/weight-management/diet-plans : Diet Plans
+-/sports-nutrition/workout-essentials : Workout Essentials
+--/sports-nutrition/workout-essentials/multivitamins : Multivitamins
+--/sports-nutrition/workout-essentials/amino-acids-bcaa : Amino Acids / BCAA
+--/sports-nutrition/workout-essentials/liver-support : Liver Support
+--/sports-nutrition/workout-essentials/detox-supplements : Detox Supplements
+--/sports-nutrition/workout-essentials/joint-support : Joint Support
+--/sports-nutrition/workout-essentials/other-support : Other Support
+-/sports-nutrition/accessories
+--/sports-nutrition/accessories/shakers
+--/sports-nutrition/accessories/storage
+--/sports-nutrition/accessories/gloves-straps-belts : Gloves/Straps/Belts
+--/sports-nutrition/accessories/apparel
+--/sports-nutrition/accessories/tanning-creams-lotions : Tanning Creams/Lotions
+
+
+/health-nutrition
+-/health-nutrition/shop-by-concern
+--/health-nutrition/shop-by-concern/arthiritis-support
+--/health-nutrition/shop-by-concern/diabetes-support
+--/health-nutrition/shop-by-need/hair-skin-nails:Hair/ Skin/ Nails
+--/health-nutrition/shop-by-concern/fertility-support
+--/health-nutrition/shop-by-need/bone-muscle:Bone/ Muscle
+--/health-nutrition/shop-by-concern/eye-health
+--/health-nutrition/shop-by-concern/immunity
+--/health-nutrition/shop-by-concern/other-concerns
+
+-/health-nutrition/shop-by-need
+--/health-nutrition/shop-by-need/men-health
+--/health-nutrition/shop-by-need/women-health
+--/health-nutrition/shop-by-need/prenatal-care
+--/health-nutrition/shop-by-need/post-pregnency
+--/health-nutrition/shop-by-need/children
+--/health-nutrition/shop-by-need/elderly-care
+--/health-nutrition/shop-by-need/sexual-wellness
+--/health-nutrition/shop-by-need/other-needs
+
+-/health-nutrition/weight-management
+--/health-nutrition/weight-management/fat-metabolism : Fat Burners
+--/health-nutrition/weight-management/weight-gain
+--/health-nutrition/weight-management/meal-replacement
+--/health-nutrition/weight-management/low-calorie-food
+--/health-nutrition/weight-management/sweeteners
+--/health-nutrition/weight-management/diets
+
+-/health-nutrition/dietary-supplements
+--/health-nutrition/dietary-supplements/vitamins
+--/health-nutrition/dietary-supplements/minerals
+--/health-nutrition/dietary-supplements/herbs
+--/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
+--/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
+--/health-nutrition/dietary-supplements/combination : Multi-supplements
+--/health-nutrition/dietary-supplements/condition-specific
+--/health-nutrition/dietary-supplements/other-supplements
+
+-/health-nutrition/healthy-food
+--/health-nutrition/healthy-food/beverages
+--/health-nutrition/healthy-food/organic
+--/health-nutrition/healthy-food/gluten-free
+--/health-nutrition/healthy-food/drinks-and-powders
+--/health-nutrition/healthy-food/breakfasts-and-snacks
+--/health-nutrition/healthy-food/food-preparation
+--/health-nutrition/healthy-food/disorder-specific
+--/health-nutrition/healthy-food/other-foods
+
+-/health-nutrition/alternative-remedies
+--/health-nutrition/alternative-remedies/formulations
+--/health-nutrition/alternative-remedies/juices
+--/health-nutrition/alternative-remedies/single-herb
+--/health-nutrition/alternative-remedies/green-supplement
+--/health-nutrition/alternative-remedies/other-remedies
+
 
 /sports : Sports & Fitness
 -/sports/fitness-accessories
@@ -270,40 +252,41 @@
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
 
-/diabetes
--/diabetes/devices : Monitoring Devices
---/diabetes/devices/meters : Glucose Meters
---/diabetes/devices/bp-monitor : BP Monitors
---/diabetes/devices/body-fat-monitor: Body Fat Monitors
---/diabetes/devices/step-counter: Step Counters
--/diabetes/testing-supplies
---/diabetes/testing-supplies/strips
---/diabetes/testing-supplies/lancets
---/diabetes/testing-supplies/lancing-devices
---/diabetes/testing-supplies/insulin-supplies
--/diabetes/diabetic-food
---/diabetes/diabetic-food/sweetener
---/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
---/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
---/diabetes/diabetic-food/diabetic-supplements
--/diabetes/weight-management
---/diabetes/weight-management/weighing-scales : Weighing Scales
---/diabetes/weight-management/body-fat-monitor
---/diabetes/weight-management/treadmills
---/diabetes/weight-management/step-counter
---/diabetes/weight-management/low-calorie-diet
--/diabetes/foot-care
---/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
---/diabetes/foot-care/sock-and-slippers : Shoes & Slippers
---/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
---/diabetes/foot-care/guards-and-supports : Guards & Supports
--/diabetes/what-s-new : What's New
---/diabetes/what-s-new/just-in  :Just In
---/diabetes/what-s-new/combos
---/diabetes/what-s-new/diabetes-checkups : Diabetes Checkups
---/diabetes/what-s-new/diabetes-management : Diabetes Management
+
 
 /health-devices : Health Devices
+-/health-devices/diabetes
+--/health-devices/diabetes/devices : Monitoring Devices
+---/health-devices/diabetes/devices/meters : Glucose Meters
+---/health-devices/diabetes/devices/bp-monitor : BP Monitors
+---/health-devices/diabetes/devices/body-fat-monitor: Body Fat Monitors
+---/health-devices/diabetes/devices/step-counter: Step Counters
+--/health-devices/diabetes/testing-supplies
+---/health-devices/diabetes/testing-supplies/strips
+---/health-devices/diabetes/testing-supplies/lancets
+---/health-devices/diabetes/testing-supplies/lancing-devices
+---/health-devices/diabetes/testing-supplies/insulin-supplies
+--/health-devices/diabetes/diabetic-food
+---/health-devices/diabetes/diabetic-food/sweetener
+---/health-devices/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
+---/health-devices/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
+---/health-devices/diabetes/diabetic-food/diabetic-supplements
+--/health-devices/diabetes/weight-management
+---/health-devices/diabetes/weight-management/weighing-scales : Weighing Scales
+---/health-devices/diabetes/weight-management/body-fat-monitor
+---/health-devices/diabetes/weight-management/treadmills
+---/health-devices/diabetes/weight-management/step-counter
+---/health-devices/diabetes/weight-management/low-calorie-diet
+--/health-devices/diabetes/foot-care
+---/health-devices/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
+---/health-devices/diabetes/foot-care/sock-and-slippers : Socks & Slippers
+---/health-devices/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
+---/health-devices/diabetes/foot-care/guards-and-supports : Guards & Supports
+--/health-devices/diabetes/what-s-new : What's New
+---/health-devices/diabetes/what-s-new/just-in  :Just In
+---/health-devices/diabetes/what-s-new/combos
+---/health-devices/diabetes/what-s-new-/health-devices/diabetes-checkups : Diabetes Checkups
+---/health-devices/diabetes/what-s-new-/health-devices/diabetes-management : Diabetes Management
 -/health-devices/blood-pressure
 --/health-devices/blood-pressure/arm-bp-monitor : Arm BP Monitor
 --/health-devices/blood-pressure/wrist-bp-monitor : Wrist BP Monitor
@@ -314,35 +297,27 @@
 ---/health-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
 ---/health-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
 --/health-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
+--/health-devices/blood-pressure/ecg : ECG Machines
 --/health-devices/blood-pressure/accessories : BP Accessories
 --/health-devices/blood-pressure/combo : BP Combos
 -/health-devices/respiratory-care
---/health-devices/respiratory-care/vaporiser : Vaporiser
---/health-devices/respiratory-care/sleep-apnea
----/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
----/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
----/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
 --/health-devices/respiratory-care/nebulizer: Nebulizers
 ---/health-devices/respiratory-care/nebulizer/compressor-nebulizer: Compressor
 ---/health-devices/respiratory-care/nebulizer/ultrasonic-nebulizer: Ultrasonic
 ---/health-devices/respiratory-care/nebulizer/nebulizer-for-kids: Kids Nebulizer
 --/health-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
---/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
 --/health-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
 ---/health-devices/respiratory-care/pulse-oximeters/fingertip-oximeter: Finger Tip
 ---/health-devices/respiratory-care/pulse-oximeters/Wrist-oximeter: Wrist
 ---/health-devices/respiratory-care/pulse-oximeters/handheld-oximeter: Handheld
+--/health-devices/respiratory-care/sleep-apnea
+---/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
+--/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
+--/health-devices/respiratory-care/vaporiser : Vaporiser
 -/health-devices/pain-management : Pain Management
---/health-devices/pain-management/massager : Massagers
----/health-devices/pain-management/massager/handheld
----/health-devices/pain-management/massager/abdominal-massager : Abdominal
----/health-devices/pain-management/massager/back-massager : Back
----/health-devices/pain-management/massager/foot-massager : Foot
---/health-devices/pain-management/pain-relief : Pain Relief
----/health-devices/pain-management/pain-relief/pain-therapy
----/health-devices/pain-management/pain-relief/hot-cold-pack
----/health-devices/pain-management/pain-relief/heat-therapy
----/health-devices/pain-management/pain-relief/infrared-massager
+--/health-devices/pain-management/crepe-bandages
 --/health-devices/pain-management/supports : Body Supports
 ---/health-devices/pain-management/supports/cervical-support : Cervical
 ---/health-devices/pain-management/supports/shoulder-support : Shoulder
@@ -359,34 +334,21 @@
 ---/health-devices/pain-management/leg-supports/ankle-support : Ankle
 ---/health-devices/pain-management/leg-supports/foot-support : Foot
 --/health-devices/pain-management/fracture-products : Fracture
---/health-devices/pain-management/crepe-bandages
+--/health-devices/pain-management/massager : Massagers
+---/health-devices/pain-management/massager/handheld
+---/health-devices/pain-management/massager/abdominal-massager : Abdominal
+---/health-devices/pain-management/massager/back-massager : Back
+---/health-devices/pain-management/massager/foot-massager : Foot
+--/health-devices/pain-management/pain-relief : Pain Relief
+---/health-devices/pain-management/pain-relief/pain-therapy
+---/health-devices/pain-management/pain-relief/hot-cold-pack
+---/health-devices/pain-management/pain-relief/heat-therapy
+---/health-devices/pain-management/pain-relief/infrared-massager
 --/health-devices/pain-management/physiotherapy-aids
 ---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
---/health-devices/medical-care/weighing-scales
----/health-devices/medical-care/weighing-scales/digital
----/health-devices/medical-care/weighing-scales/analog
---/health-devices/medical-care/wheel-chair
----/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
----/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
----/health-devices/medical-care/wheel-chair/commode : Commode
---/health-devices/medical-care/walking-aids
----/health-devices/medical-care/walking-aids/walking-sticks
----/health-devices/medical-care/walking-aids/crutches
----/health-devices/medical-care/walking-aids/walkers
---/health-devices/medical-care/winter-care
----/health-devices/medical-care/winter-care/blankets
----/health-devices/medical-care/winter-care/vaporiser : Steamer
----/health-devices/medical-care/winter-care/hot-water-bottles
---/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
----/health-devices/medical-care/heat-treatment/hot-water-bottles
----/health-devices/medical-care/heat-treatment/heating-pads
----/health-devices/medical-care/heat-treatment/hot-cold-pack
---/health-devices/medical-care/bed : Mattress
----/health-devices/medical-care/bed/air-bed : Air Bed
----/health-devices/medical-care/bed/water-bed : Water Bed
 --/health-devices/medical-care/family-care
 ---/health-devices/medical-care/family-care/first-aid
 ---/health-devices/medical-care/family-care/medicine : Medicine Management
@@ -412,6 +374,28 @@
 ---/health-devices/medical-care/baby-care/strollers
 ---/health-devices/medical-care/baby-care/walkers
 ---/health-devices/medical-care/baby-care/stature-meter
+--/health-devices/medical-care/winter-care
+---/health-devices/medical-care/winter-care/blankets
+---/health-devices/medical-care/winter-care/vaporiser : Steamer
+---/health-devices/medical-care/winter-care/hot-water-bottles
+--/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
+---/health-devices/medical-care/heat-treatment/hot-water-bottles
+---/health-devices/medical-care/heat-treatment/heating-pads
+---/health-devices/medical-care/heat-treatment/hot-cold-pack
+--/health-devices/medical-care/weighing-scales
+---/health-devices/medical-care/weighing-scales/digital
+---/health-devices/medical-care/weighing-scales/analog
+--/health-devices/medical-care/walking-aids
+---/health-devices/medical-care/walking-aids/walking-sticks
+---/health-devices/medical-care/walking-aids/crutches
+---/health-devices/medical-care/walking-aids/walkers
+--/health-devices/medical-care/wheel-chair
+---/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
+---/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
+---/health-devices/medical-care/wheel-chair/commode : Commode
+--/health-devices/medical-care/bed : Mattress
+---/health-devices/medical-care/bed/air-bed : Air Bed
+---/health-devices/medical-care/bed/water-bed : Water Bed
 -/health-devices/clinical-products
 --/health-devices/clinical-products/stethoscope
 ---/health-devices/clinical-products/stethoscope/general
@@ -440,6 +424,41 @@
 ---/health-devices/clinical-products/devices/fetal-doppler
 ---/health-devices/clinical-products/devices/suction-devices
 ---/health-devices/clinical-products/devices/knee-hammer
+
+/home-living:Home & Living
+-/home-living/breakfast-maker:Breakfast Maker
+--/home-living/breakfast-maker/sandwich-toaster:Sandwich Toaster
+--/home-living/breakfast-maker/toaster:Pop-up Toaster
+--/home-living/breakfast-maker/coffee-maker:Coffee Maker
+--/home-living/breakfast-maker/kettles:Kettles
+-/home-living/mix-grind-chop:Mix,Grind & Chop
+--/home-living/mix-grind-chop/juicer-mixer-grinder:Juicer Mixer Grinder
+---/home-living/mix-grind-chop/juicer-mixer-grinder/juicer:Juicer
+---/home-living/mix-grind-chop/juicer-mixer-grinder/mixer-grinder:Mixer Grinder 
+---/home-living/mix-grind-chop/juicer-mixer-grinder/jmg:Juicer Mixer Grinder
+--/home-living/mix-grind-chop/hand-blender:Hand Blender
+--/home-living/mix-grind-chop/food-processor:Food Processor
+--/home-living/mix-grind-chop/chopper:Chopper
+-/home-living/clean-Purify:Clean & Purify
+--/home-living/clean-Purify/vaccum-cleaner:Vaccum Cleaner
+--/home-living/clean-Purify/water-purifier:Water Purifier
+--/home-living/clean-Purify/veg-purifier:Vegetable Purifier
+-/home-living/cook-fry:Cook & Fry
+--/home-living/cook-fry/induction-cooktop:Induction Cooktop
+--/home-living/cook-fry/cooker:Cooker
+---/home-living/cook-fry/cooker/rice-cooker:Rice Cooker
+---/home-living/cook-fry/cooker/Pressure-cooker:Pressure Cooker
+--/home-living/cook-fry/steamer-fryer:Steamer & Fryer
+--/home-living/cook-fry/microwave:Microwave & OTG
+---/home-living/cook-fry/microwave/solo:Solo
+---/home-living/cook-fry/microwave/grill:Grill
+---/home-living/cook-fry/microwave/convection:Convection
+---/home-living/cook-fry/microwave/OTG:OTG
+-/home-living/iron-lights:Home Appliances
+--/home-living/iron-lights/iron:Iron
+---/home-living/iron-lights/iron/dry:Dry Iron
+---/home-living/iron-lights/iron/steam:Steam Iron
+--/home-living/iron-lights/lights:Emergency Light
 
 /eye
 -/eye/lenses
@@ -915,7 +934,7 @@
 
 /services
 -/services/health-checkups
---/services/health-checkups/diabetes
+--/services/health-checkups-/health-devices/diabetes
 --/services/health-checkups/thyroid
 ---/services/health-checkups/thyroid/combos
 --/services/health-checkups/complete-health-checkups :Complete Health Checkups
@@ -938,7 +957,7 @@
 --/services/health-programs/physiotherapy
 --/services/health-programs/eye
 --/services/health-programs/dental
---/services/health-programs/diabetes-management  :Diabetes Management
+--/services/health-programs-/health-devices/diabetes-management  :Diabetes Management
 --/services/health-programs/elderly-care :Elderly Care
 --/services/health-programs/health-management :Health Management
 ---/services/health-programs/health-management/men
@@ -958,3 +977,6 @@
 --/services/hair-spa-beauty/skin-care :Skin Care
 --/services/hair-spa-beauty/hair-treatment  :Hair Treatment
 --/services/hair-spa-beauty/bridal-packages  :Bridal Packages
+
+
+
