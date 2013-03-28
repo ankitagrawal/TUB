@@ -573,7 +573,7 @@
     <c:if test="${hasAction == true || isDropShipQueue == true}">
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
             <c:if test="${isProcessingQueue == true || isShipmentQueue == true || isDropShipQueue == true}">
-                <s:select name="shippingOrderReason_${shippingOrder.id}"
+                <select name="shippingOrderReason_${shippingOrder.id}"
                           class="shippingOrderReason_${shippingOrder.id}">
                     <option value="">Choose Reason</option>
                     <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
@@ -581,7 +581,7 @@
                         <option value="${reason.id}">${reason.primaryClassification}
                             - ${reason.secondaryClassification}</option>
                     </c:forEach>
-                </s:select>
+                </select>
             </c:if>
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
