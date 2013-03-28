@@ -383,18 +383,20 @@
                                    varStatus="ctr">
                                 <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
                                                    value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
+                            <span style="margin-left:30px;">
                             <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
                                 <%--<li><label>Reason</label>--%>
-                                    <%--<div class="checkBoxList">--%>
-                                        <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
-                                                   varStatus="rctr1">
-                                            <label><s:checkbox name="reasons[${rctr1.index}]"
-                                                               value="${reason.id}"/> ${reason.primaryClassification}</label>
-                                            <%--<br/>--%>
-                                        </c:forEach>
-                                    <%--</div>--%>
+                                <%--<div class="checkBoxList">--%>
+                                <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
+                                           varStatus="rctr1">
+                                    <label><s:checkbox name="reasons[${rctr1.index}]"
+                                                       value="${reason.id}"/> ${reason.primaryClassification}</label>
+                                    <%--<br/>--%>
+                                </c:forEach>
+                                <%--</div>--%>
                                 <%--</li>--%>
                             </c:if>
+                            </span>
                             <br/>
                         </c:forEach>
                     </div>

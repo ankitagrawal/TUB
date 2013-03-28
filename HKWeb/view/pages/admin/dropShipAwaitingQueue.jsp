@@ -191,6 +191,8 @@
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
+              var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
+              var reason = $(reasonId);
               $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
               $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
               index++;
