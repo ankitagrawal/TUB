@@ -387,9 +387,9 @@
 
                     <div class="checkBoxList">
                         <label style="float:left;width: 60px;">Sort by</label>
-                        <s:checkbox name="sortByPaymentDate" value="${sortByPaymentDate}">Payment Date</s:checkbox>
-                        <s:checkbox name="sortByDispatchDate" value="${sortByDispatchDate}">Dispatch Date</s:checkbox>
-                        <s:checkbox name="sortByScore" value="${sortByDispatchDate}">Order Score</s:checkbox>
+                        <label><s:checkbox name="sortByPaymentDate" value="${sortByPaymentDate}"/>Payment Date</label>
+                        <label><s:checkbox name="sortByDispatchDate" value="${sortByDispatchDate}"/>Dispatch Date</label>
+                        <label><s:checkbox name="sortByScore" value="${sortByDispatchDate}"/>Order Score</label>
                     </div>
 
                 </li>
