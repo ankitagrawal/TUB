@@ -50,7 +50,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
-    private List<Reason> reasonList;
+    private Set<Reason> reasonList;
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
@@ -86,7 +86,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         this.SOLifecycleActivityList = SOLifecycleActivityList;
     }
 
-    public OrderSearchCriteria setReasonList(List<Reason> reasonList) {
+    public OrderSearchCriteria setReasonList(Set<Reason> reasonList) {
         this.reasonList = reasonList;
         return this;
     }
