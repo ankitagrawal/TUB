@@ -275,7 +275,8 @@
 
     </script>
 </s:layout-component>
-<s:layout-component name="heading">Action Awaiting Queue
+<s:layout-component name="heading">
+    <div class="actionQueue">Action Awaiting Queue</div>
     <%--<span style="float:right;">
       <label style="font-size:.7em; color:black; font-weight:normal;">Avg. time for COD Confirmation(hh:mm:ss):</label>
         ${actionBean.codConfirmationTime}
@@ -283,8 +284,8 @@
 </s:layout-component>
 <s:layout-component name="content">
 
-<fieldset class="top_label">
-    <ul>
+<fieldset style="margin: 10px;" class="top_label">
+    <ul style="margin-top: 0px;">
         <div class="grouped grid_12">
             <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" method="get" autocomplete="false">
                 <li><label>Order ID</label> <s:text name="orderId"/> &nbsp; <label>Gateway Order ID</label> <s:text
@@ -384,10 +385,10 @@
                             <s:option value="1">Y</s:option>
                         </s:select>
                     </div>
-                    <div style="float:left;width: 60px;">Sort by
-                        <label><s:checkbox name="sortByPaymentDate" value="${actionQueueBean.sortByPaymentDate}"/>Payment Date</label>
-                        <label><s:checkbox name="sortByDispatchDate" value="${actionQueueBean.sortByDispatchDate}"/>Dispatch Date</label>
-                        <label><s:checkbox name="sortByScore" value="${actionQueueBean.sortByScore}"/>Order Score</label>
+                    <div style="float:left;">Sort by
+                        <div><s:checkbox name="sortByPaymentDate" value="${actionQueueBean.sortByPaymentDate}"/>Payment Date</div>
+                        <div><s:checkbox name="sortByDispatchDate" value="${actionQueueBean.sortByDispatchDate}"/>Dispatch Date</div>
+                        <div><s:checkbox name="sortByScore" value="${actionQueueBean.sortByScore}"/>Order Score</div>
                     </div>
 
 

@@ -5939,6 +5939,16 @@ color: #e62580;
 .newBoxItem label{
     font-size: 10px;
 }
+
+.actionQueue{
+    position: relative;
+    margin: 0px;
+    left: 20px;
+}
+
+.trimPadding{
+    padding: 5px 5px !important;
+}
 /*
 slider pager end
 */
