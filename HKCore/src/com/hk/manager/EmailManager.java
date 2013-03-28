@@ -420,7 +420,7 @@ public class EmailManager {
     public boolean sendProductReviewEmail(User user, ProductVariant productVariant, Mail mail, String testEmailId, long userReviewMailId){
         HashMap valuesMap = new HashMap();
         valuesMap.put("user", user);
-        String productVariantName = productVariant.getProduct().getName() + productVariant.getVariantName();
+        String productVariantName = productVariant.getProduct().getName() + (productVariant.getVariantName() == null ? "" : productVariant.getVariantName()) ;
         /*if(productVariant.getVariantName() != null){
             valuesMap.put("product", productVariantName+" "+ productVariant.getVariantName());
         }else
@@ -456,8 +456,8 @@ public class EmailManager {
             productDiv.append("</table>\n");
         }
         productDiv.append("</div>\n</div>");
-        valuesMap.put("product", productVariantName);
-        valuesMap.put("productDiv", productDiv);
+        valuesMap.put("productName", productVariantName);
+        valuesMap.put("productOptionDiv", productDiv);
 
         HashMap params = new HashMap();
         params.put("writeNewReviewByMail","");
@@ -465,7 +465,7 @@ public class EmailManager {
         params.put("uid",user.getLogin());
         params.put("urm",userReviewMailId);
         String review_link = getLinkManager().getReviewPageLink(params);
-        valuesMap.put("review_link", review_link);
+        valuesMap.put("review_Link", review_link);
 
         String unsubscribeLink = getLinkManager().getUnsubscribeLink(user);
         valuesMap.put("unsubscribeLink", unsubscribeLink);
