@@ -106,7 +106,7 @@
 <tr id="shippingOrder-${shippingOrder.id}"
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
-<td id="shippingOrderDetail-${shippingOrder.id}">
+<td id="shippingOrderDetail-${shippingOrder.id}" style="width: 300px;">
     <div class="floatleft">
         Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
     </div>
