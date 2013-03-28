@@ -178,8 +178,11 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		}
 		*/
         orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
-        orderSearchCriteria.setReasonList(reasons);
-
+        List<Reason> reasonList = new ArrayList<Reason>();
+        for (Reason reason : reasonList) {
+            reasonList.add(reason);
+        }
+        orderSearchCriteria.setReasonList(reasonList);
 
         List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
         for (PaymentMode paymentMode : paymentModes) {
