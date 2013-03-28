@@ -575,13 +575,11 @@
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
             <c:if test="${isProcessingQueue == true || isDropShipQueue == true || isShipmentQueue == true}">
-                <s:select name="shippingOrderReason_${shippingOrder.id}"
-                          class="shippingOrderReason_${shippingOrder.id}">
+                <s:select name="shippingOrderReason_${shippingOrder.id}" class="shippingOrderReason_${shippingOrder.id}">
                     <option value="">Choose Reason</option>
                     <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
                     <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
-                        <option value="${reason.id}">${reason.primaryClassification}
-                            - ${reason.secondaryClassification}</option>
+                        <option value="${reason.id}">${reason.primaryClassification} - ${reason.secondaryClassification}</option>
                     </c:forEach>
                 </s:select>
             </c:if>
