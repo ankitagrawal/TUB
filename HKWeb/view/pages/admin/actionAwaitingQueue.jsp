@@ -384,13 +384,12 @@
                             <s:option value="1">Y</s:option>
                         </s:select>
                     </div>
-
-                    <div class="checkBoxList">
-                        <label style="float:left;width: 60px;">Sort by</label>
-                        <label><s:checkbox name="sortByPaymentDate" value="${sortByPaymentDate}"/>Payment Date</label>
-                        <label><s:checkbox name="sortByDispatchDate" value="${sortByDispatchDate}"/>Dispatch Date</label>
-                        <label><s:checkbox name="sortByScore" value="${sortByDispatchDate}"/>Order Score</label>
+                    <div style="float:left;width: 60px;">Sort by
+                        <label><s:checkbox name="sortByPaymentDate" value="${actionQueueBean.sortByPaymentDate}"/>Payment Date</label>
+                        <label><s:checkbox name="sortByDispatchDate" value="${actionQueueBean.sortByDispatchDate}"/>Dispatch Date</label>
+                        <label><s:checkbox name="sortByScore" value="${actionQueueBean.sortByScore}"/>Order Score</label>
                     </div>
+
 
                 </li>
 
