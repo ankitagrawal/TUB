@@ -570,10 +570,10 @@
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
-        <c:if test="${isProcessingQueue == true}">
+        <c:if test="${isProcessingQueue == true || isDropShipQueue == true}">
             <select name="shippingOrderReason_${shippingOrder.id}" class="shippingOrderReason_${shippingOrder.id}">
                 <option value="">Choose Reason</option>
-                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>
+                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
                 <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
                     <option value="${reason.id}">${reason.primaryClassification}</option>
                 </c:forEach>
