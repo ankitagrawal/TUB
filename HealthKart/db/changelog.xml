@@ -11910,4 +11910,32 @@
                                  referencedColumnNames="id" referencedTableName="shipping_order_lifecycle"
                                  referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham" id="2013-03-28-01">
+        <sql>
+            INSERT INTO `reason` (`id`, `primary_classification`, `secondary_classification`, `type`) VALUES
+            (10, 'Invalid Pincode', NULL, 'SO Shipment Not Created'),
+            (20, 'Suggested Courier not found', NULL, 'SO Shipment Not Created'),
+            (30, 'Courier service not available here', NULL, 'SO Shipment Not Created'),
+            (40, 'No shipment for drop shipped orders', NULL, 'SO Shipment Not Created'),
+            (110, 'BO is a referred Order', NULL, 'SO Could not be Auto-escalated'),
+            (120, 'Drop Shipped Order', NULL, 'SO Could not be Auto-escalated'),
+            (130, 'Order contains JIT Products', NULL, 'SO Could not be Auto-escalated'),
+            (140, 'Contains prescription glasses', NULL, 'SO Could not be Auto-escalated'),
+            (150, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Auto-escalated'),
+            (160, 'Payment Status is AuthPending-Error', NULL, 'SO Could not be Auto-escalated'),
+            (170, 'Shipment Not Created', NULL, 'SO Could not be Auto-escalated'),
+            (210, 'Shipment Not Created', NULL, 'SO Could not be Manually-escalated'),
+            (220, 'Payment Status is AuthPending/Error', NULL, 'SO Could not be Manually-escalated'),
+            (230, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Manually-escalated'),
+            (310, 'Customer Request', 'Product Change', 'SO Escalated Back To Action Queue'),
+            (320, 'Customer Request', 'Cancellation ', 'SO Escalated Back To Action Queue'),
+            (330, 'Customer Request', 'Put on Hold', 'SO Escalated Back To Action Queue'),
+            (340, 'Product Not Available', 'Damaged', 'SO Escalated Back To Action Queue'),
+            (350, 'Product Not Available', 'Expired', 'SO Escalated Back To Action Queue'),
+            (360, 'Product Not Available', 'Inventory Mismatch', 'SO Escalated Back To Action Queue'),
+            (370, 'Mrp Mismatch', 'Greater than', 'SO Escalated Back To Action Queue'),
+            (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue'),
+            (381, 'Could not assign Awb', NULL, 'SO Shipment Not Created');
+        </sql>
+    </changeSet>
 </databaseChangeLog>
