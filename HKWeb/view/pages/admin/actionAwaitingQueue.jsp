@@ -54,6 +54,8 @@
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.core.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.slide.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     <style type="text/css">
         .fieldLabel {
@@ -243,6 +245,19 @@
                 });
             });
 
+            /*if ($('#newBoxCheck').prop('checked')) {
+                console.log("hi");
+            } else {
+            }*/
+
+            $("input[type='checkbox']").change(function (event) {
+                if($("#newBoxAdmin"+this.id).css("display") == "block"){
+                    $("#newBoxAdmin"+this.id).hide("slide", { direction: "up" }, 300);
+                }
+                else if($("#newBoxAdmin"+this.id).css("display") == "none"){
+                    $("#newBoxAdmin"+this.id).show("slide", { direction: "up" }, 300);
+                }
+            });
             /*$('.orderCheckBox').click(function() {
              if ($(this).attr("checked") == "checked") {
              $(this).parents('.orderRow').find('.lineItemCheckBox').each(function() {
@@ -378,26 +393,32 @@
                 <li>
                     <%--<label style="float:left;width: 60px;">SO Lifecycle</label>--%>
 
-                    <div class="checkBoxList">
+                    <div class="checkBoxList" style="width: 100%;">
                         <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
                                    varStatus="ctr">
-                                <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
-                                                   value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
+                                <div class="newBoxLabel">
+                                    <s:checkbox id="${ctr.index}" name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                                   value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}
                             <span style="margin-left:30px;">
-                            <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
+
+                                <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
                                 <%--<li><label>Reason</label>--%>
                                 <%--<div class="checkBoxList">--%>
+                                <div id="newBoxAdmin${ctr.index}"  class="newBox">
                                 <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
                                            varStatus="rctr1">
+                                    <div class="newBoxItem">
                                     <label><s:checkbox name="reasons[${rctr1.index}]"
-                                                       value="${reason.id}"/> ${reason.primaryClassification}</label>
+                                                       value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                        </div>
                                     <%--<br/>--%>
                                 </c:forEach>
+                                    </div>
                                 <%--</div>--%>
                                 <%--</li>--%>
                             </c:if>
                             </span>
-                            <br/>
+                                </div>
                         </c:forEach>
                     </div>
                 </li>
