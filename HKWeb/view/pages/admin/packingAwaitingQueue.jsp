@@ -127,7 +127,8 @@
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                    shippingOrders="${shipmentQueueBean.shippingOrderList}" isProcessingQueue="true"/>
-  <div>
+    <div id="hiddenShippingIds"></div>
+    <div>
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
