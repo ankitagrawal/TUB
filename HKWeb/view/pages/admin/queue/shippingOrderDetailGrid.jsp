@@ -570,9 +570,9 @@
             </c:choose>
         </c:otherwise>
     </c:choose>
-    <c:if test="${hasAction == true}">
+    <c:if test="${hasAction == true || isDropShipQueue == true}">
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
-            <c:if test="${isProcessingQueue == true || isDropShipQueue == true || isShipmentQueue == true}">
+            <c:if test="${isProcessingQueue == true || isShipmentQueue == true}">
                 <s:select name="shippingOrderReason_${shippingOrder.id}"
                           class="shippingOrderReason_${shippingOrder.id}">
                     <option value="">Choose Reason</option>
@@ -587,24 +587,17 @@
         </c:if>
     </c:if>
 </td>
-<c:if test="${isDropShipQueue == true}">
-    <td>
-        <c:if test="${shippingOrder.shipment != null}">
-            <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
-        </c:if>
-    </td>
-</c:if>
 <c:if test="${isServiceQueue== true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id == paymentStatusAuthPending}">
-         <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
-            (move back to action queue)
-         </s:link>
+            <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting"
+                    dataId="${shippingOrder.id}" class="movetoactionqueue">
+                (move back to action queue)
+            </s:link>
         </c:if>
-</td>
+    </td>
 </c:if>
 </c:forEach>
 </tr>
-<%--</c:forEach>--%>
 </table>
 </s:layout-definition>

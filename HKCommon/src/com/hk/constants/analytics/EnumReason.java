@@ -8,8 +8,8 @@ import com.hk.domain.analytics.Reason;
 */
 public enum EnumReason {
 
-    PINCODE_INVALID(10L, "Pincode could not be found in system", EnumReasonType.ShipmentNotCreated),
-    SUGGESTED_COURIER_NOT_FOUND(20L, "Suggested Courier is not found", EnumReasonType.ShipmentNotCreated),
+    PINCODE_INVALID(10L, "Invalid Pincode", EnumReasonType.ShipmentNotCreated),
+    SUGGESTED_COURIER_NOT_FOUND(20L, "Suggested Courier not found", EnumReasonType.ShipmentNotCreated),
     COURIER_SERVICE_INFO_NOT_FOUND(30L, "Courier service not available here", EnumReasonType.ShipmentNotCreated),
     DROP_SHIPPED_ORDER(40L, "No shipment for drop shipped orders", EnumReasonType.ShipmentNotCreated),
     AWB_NOT_ASSIGNED(50L, "Could not assign Awb", EnumReasonType.ShipmentNotCreated),
