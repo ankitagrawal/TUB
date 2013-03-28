@@ -179,9 +179,11 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		}
 		*/
         orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
-        List<Reason> reasonList = new ArrayList<Reason>();
+        Set<Reason> reasonList = new HashSet<Reason>();
         for (Reason reason : reasons) {
-            reasonList.add(reason);
+            if (reason != null) {
+                reasonList.add(reason);
+            }
         }
         orderSearchCriteria.setReasonList(reasonList);
 

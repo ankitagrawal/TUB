@@ -245,10 +245,13 @@
                 });
             });
 
-            /*if ($('#newBoxCheck').prop('checked')) {
-                console.log("hi");
-            } else {
-            }*/
+            $(':checkbox').filter(function() {
+                    if(this.id.match(/raj/)){
+                        if($("#" + this.id).is(":checked")){
+                            $("#newBoxAdmin"+this.id).show("slide", { direction: "up" }, 300);
+                        }
+                    }
+                    });
 
             $("input[type='checkbox']").change(function (event) {
                 if($("#newBoxAdmin"+this.id).css("display") == "block"){
@@ -256,6 +259,16 @@
                 }
                 else if($("#newBoxAdmin"+this.id).css("display") == "none"){
                     $("#newBoxAdmin"+this.id).show("slide", { direction: "up" }, 300);
+                }
+            });
+            $("div").click(function (event) {
+                var index = this.id.search("div");
+                var id = this.id.substring(index+3);
+                if($("#newBoxAdminraj"+id).css("display") == "block"){
+                }
+                else if($("#newBoxAdminraj"+id).css("display") == "none"){
+                    $("#newBoxAdminraj"+id).show("slide", { direction: "up" }, 300);
+                    $("#raj" + id).prop('checked', true);
                 }
             });
             /*$('.orderCheckBox').click(function() {
@@ -400,14 +413,15 @@
                         <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
                                    varStatus="ctr">
                                 <div class="newBoxLabel">
-                                    <s:checkbox id="${ctr.index}" name="shippingOrderLifecycleActivities[${ctr.index}]"
-                                                   value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}
+                                    <s:checkbox id="raj${ctr.index}" style="position: relative;float: left;" name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                                   value="${shippingOrderLifecycleActivity.id}"/>
+                                                   <div id="div${ctr.index}" style="position: relative;float: left;top: 3px;">${shippingOrderLifecycleActivity.name}</div>
                             <span style="margin-left:30px;">
 
                                 <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
                                 <%--<li><label>Reason</label>--%>
                                 <%--<div class="checkBoxList">--%>
-                                <div id="newBoxAdmin${ctr.index}"  class="newBox">
+                                <div id="newBoxAdminraj${ctr.index}"  class="newBox">
                                 <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
                                            varStatus="rctr1">
                                     <div class="newBoxItem">
