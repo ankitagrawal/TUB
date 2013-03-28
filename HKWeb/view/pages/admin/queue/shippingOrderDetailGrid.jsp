@@ -9,6 +9,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -16,14 +17,26 @@
     Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
+    Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
     Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
     Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
+    Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
 
 
     if (isActionQueue != null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isShipmentQueue != null) {
+        pageContext.setAttribute("isShipmentQueue", isShipmentQueue);
+    } else {
+        pageContext.setAttribute("isShipmentQueue", false);
+    }
+    if (isProcessingQueue != null) {
+        pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
+    } else {
+        pageContext.setAttribute("isProcessingQueue", false);
     }
     if (isDropShipQueue != null) {
         pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
@@ -93,7 +106,7 @@
 <tr id="shippingOrder-${shippingOrder.id}"
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
-<td id="shippingOrderDetail-${shippingOrder.id}">
+<td id="shippingOrderDetail-${shippingOrder.id}" style="width: 300px;">
     <div class="floatleft">
         Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
     </div>
@@ -557,32 +570,34 @@
             </c:choose>
         </c:otherwise>
     </c:choose>
-</td>
-<c:if test="${hasAction == true}">
-    <td>
+    <c:if test="${hasAction == true || isDropShipQueue == true}">
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+            <c:if test="${isProcessingQueue == true || isShipmentQueue == true || isDropShipQueue == true}">
+                <s:select name="shippingOrderReason_${shippingOrder.id}"
+                          class="shippingOrderReason_${shippingOrder.id}">
+                    <option value="">Choose Reason</option>
+                    <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
+                    <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
+                        <option value="${reason.id}">${reason.primaryClassification}
+                            - ${reason.secondaryClassification}</option>
+                    </c:forEach>
+                </s:select>
+            </c:if>
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
-    </td>
-</c:if>
-<c:if test="${isDropShipQueue == true}">
-    <td>
-        <c:if test="${shippingOrder.shipment != null}">
-            <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
-        </c:if>
-    </td>
-</c:if>
+    </c:if>
+</td>
 <c:if test="${isServiceQueue== true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id == paymentStatusAuthPending}">
-         <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
-            (move back to action queue)
-         </s:link>
+            <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting"
+                    dataId="${shippingOrder.id}" class="movetoactionqueue">
+                (move back to action queue)
+            </s:link>
         </c:if>
-</td>
+    </td>
 </c:if>
 </c:forEach>
 </tr>
-<%--</c:forEach>--%>
 </table>
 </s:layout-definition>

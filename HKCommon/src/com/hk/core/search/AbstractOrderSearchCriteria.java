@@ -18,6 +18,7 @@ public abstract class AbstractOrderSearchCriteria {
 
     protected boolean          sortByPaymentDate = true;
     protected boolean          sortByScore       = true;
+    protected boolean          sortByDispatchDate       = true;
 
     private boolean            orderAsc          = false;
     private boolean            sortByUpdateDate  = true;
@@ -51,6 +52,11 @@ public abstract class AbstractOrderSearchCriteria {
 
     public AbstractOrderSearchCriteria setSortByScore(boolean sortByScore) {
         this.sortByScore = sortByScore;
+        return this;
+    }
+
+    public AbstractOrderSearchCriteria setSortByDispatchDate(boolean sortByDispatchDate) {
+        this.sortByDispatchDate = sortByDispatchDate;
         return this;
     }
 

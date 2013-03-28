@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -37,10 +38,12 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
+    private List<Reason> reasonList;
 
     private boolean searchForPrinting = false;
     private Date lastEscStartDate;
     private Date lastEscEndDate;
+    private Date targetDispatchDate;
     private Zone zone;
     private Set<String> shippingOrderCategories;
     private boolean dropShipping = false;
@@ -54,6 +57,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public ShippingOrderSearchCriteria setShippingOrderLifeCycleActivities(List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities) {
         this.shippingOrderLifeCycleActivities = shippingOrderLifeCycleActivities;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setReasonList(List<Reason> reasonList) {
+        this.reasonList = reasonList;
         return this;
     }
 
@@ -212,6 +220,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderLifecycleCriteria = criteria.createCriteria("shippingOrderLifecycles");
             }
             shippingOrderLifecycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity.id", shippingOrderLifeCycleIds));
+            DetachedCriteria lifecycleCriteria = null;
+            if (reasonList != null && !reasonList.isEmpty()) {
+                if (lifecycleCriteria == null) {
+                    lifecycleCriteria = shippingOrderLifecycleCriteria.createCriteria("lifecycleReasons");
+                }
+                lifecycleCriteria.add(Restrictions.in("reason", reasonList));
+            }
         }
 
         if (activityStartDate != null || activityEndDate != null) {

@@ -2,7 +2,6 @@ package com.hk.web.action.admin.shipment;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
 
@@ -14,10 +13,8 @@ import com.hk.admin.manager.DeliveryStatusUpdateManager;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.ShippingOrder;
@@ -26,7 +23,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.web.action.error.AdminPermissionAction;
 
 import java.util.Date;
-import java.util.Calendar;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_DELIVERY_QUEUE}, authActionBean = AdminPermissionAction.class)
 public class ChangeShipmentDetailsAction extends BaseAction {
@@ -99,7 +95,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 			}
 		}
 		comments = "Status changed from change shipment detail screen  from  " + originalShippingOrderStatus.getName() + " to " + shippingOrder.getOrderStatus().getName();
-		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, null, comments);
 		visible = false;
 		addRedirectAlertMessage(new SimpleMessage("Status Saved  : " + shippingOrder.getOrderStatus().getName()));
 		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");
@@ -110,7 +106,7 @@ public class ChangeShipmentDetailsAction extends BaseAction {
 		shippingOrder.setShipment(shipment);
 		adminShippingOrderService.markShippingOrderAsLost(shippingOrder);
 		comments = "Status changed from " + originalShippingOrderStatus.getName() + " to " + shippingOrder.getOrderStatus().getName();
-		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, comments);
+		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_StatusChanged, null, comments);
 		visible = false;
 		addRedirectAlertMessage(new SimpleMessage("Changes Saved."));
 		return new ForwardResolution("/pages/admin/changeShippingStatus.jsp");

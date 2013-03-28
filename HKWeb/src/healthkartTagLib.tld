@@ -1122,4 +1122,16 @@
 			${hk:hideFilterHeads(${o1, o2, o3})}
 		</example>
 	</function>
+    <function>
+        <description>
+            returns true if filter heads need to be hidden
+        </description>
+        <name>getReasonsByType</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getReasonsByType(java.lang.String)</function-signature>
+        <example>
+            ${hk:getReasonsByType(${o1})}
+        </example>
+    </function>
+
 </taglib>

@@ -186,11 +186,16 @@
   });
 
   $('.shippingOrderActionBtn').click(function() {
+      var index = 0;
       $('.shippingOrderDetailCheckbox').each(function() {
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
-              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+              var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
+              var reason = $(reasonId);
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+']" value="' + $(this).attr('dataId') + '"/>');
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
+              index++;
           }
       });
       return true;

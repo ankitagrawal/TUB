@@ -179,11 +179,11 @@ public class FedExCourierUtil {
             logger.info("FedEx awb number could not be generated: error response notification");
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                    noAwbMessage);
+                    null, noAwbMessage);
         } catch (Exception e) {
             logger.error("Exception while getting awb number from FedEx: Axis fault");
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                    AXIS_FAULT);
+                    null, AXIS_FAULT);
         }
         return null;
     }
