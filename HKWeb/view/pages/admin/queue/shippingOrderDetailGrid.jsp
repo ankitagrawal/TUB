@@ -20,12 +20,18 @@
     Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
     Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
     Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
+    Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
 
 
     if (isActionQueue != null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isShipmentQueue != null) {
+        pageContext.setAttribute("isShipmentQueue", isShipmentQueue);
+    } else {
+        pageContext.setAttribute("isShipmentQueue", false);
     }
     if (isProcessingQueue != null) {
         pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
@@ -568,16 +574,18 @@
 <c:if test="${hasAction == true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+            <c:if test="${isProcessingQueue == true || isDropShipQueue == true || isShipmentQueue == true}">
+                <s:select name="shippingOrderReason_${shippingOrder.id}"
+                          class="shippingOrderReason_${shippingOrder.id}">
+                    <option value="">Choose Reason</option>
+                    <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
+                    <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
+                        <option value="${reason.id}">${reason.primaryClassification}
+                            - ${reason.secondaryClassification}</option>
+                    </c:forEach>
+                </s:select>
+            </c:if>
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
-        </c:if>
-        <c:if test="${isProcessingQueue == true || isDropShipQueue == true}">
-            <select name="shippingOrderReason_${shippingOrder.id}" class="shippingOrderReason_${shippingOrder.id}">
-                <option value="">Choose Reason</option>
-                <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
-                <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
-                    <option value="${reason.id}">${reason.primaryClassification}</option>
-                </c:forEach>
-            </select>
         </c:if>
     </td>
 </c:if>

@@ -132,7 +132,7 @@
 <s:form beanclass="com.hk.web.action.admin.queue.DropShippingAwaitingQueueAction" autocomplete="off">
 
 
-  <s:layout-render name="/layouts/embed/pginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
+  <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                    shippingOrders="${shipmentQueueBean.shippingOrderList}" isDropShipQueue="true"/>
@@ -193,7 +193,7 @@
           if (isChecked) {
               var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
               var reason = $(reasonId);
-              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+']" value="' + $(this).attr('dataId') + '"/>');
               $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
               index++;
           }

@@ -80,7 +80,7 @@
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
       <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
       <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                       shippingOrders="${shipmentQueueBean.shippingOrderList}" showCourier="true"/>
+                       shippingOrders="${shipmentQueueBean.shippingOrderList}" showCourier="true" isShipmentQueue="true"/>
       <div>
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
