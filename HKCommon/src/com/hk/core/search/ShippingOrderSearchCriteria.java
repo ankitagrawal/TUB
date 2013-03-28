@@ -43,6 +43,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean searchForPrinting = false;
     private Date lastEscStartDate;
     private Date lastEscEndDate;
+    private Date targetDispatchDate;
     private Zone zone;
     private Set<String> shippingOrderCategories;
     private boolean dropShipping = false;

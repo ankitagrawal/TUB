@@ -141,21 +141,22 @@
   <%--</c:if>--%>
 </s:form>
 <script type="text/javascript">
-  $('.shippingOrderActionBtn').click(function() {
-      var index = 0;
-    $('.shippingOrderDetailCheckbox').each(function() {
-      var shippingOrderDetailCheckbox = $(this);
-      var isChecked = shippingOrderDetailCheckbox.attr('checked');
-      if (isChecked) {
-          var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
-          var reason = $(reasonId);
-        $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+']" value="' + $(this).attr('dataId') + '"/>');
-        $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
-          index++;
-      }
+
+    $('.shippingOrderActionBtn').click(function() {
+        var index = 0;
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            if (isChecked) {
+                var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
+                var reason = $(reasonId);
+                $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+']" value="' + $(this).attr('dataId') + '"/>');
+                $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
+                index++;
+            }
+        });
+        return true;
     });
-    return true;
-  });
 
   $("select[name='shippingOrderStatus']").change(function() {
     var selectedOrderStatus = $(this).val();

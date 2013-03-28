@@ -168,12 +168,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 User adminUser = getUserService().getAdminUser();
                 Order order = shippingOrder.getBaseOrder();
+/*
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
                     String comments = "Please do a manual approval";
                     logShippingOrderActivity(shippingOrder, adminUser,
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.BO_Referred_Order.asReason(), comments);
                     return false;
                 }
+*/
                 if (shippingOrder.isDropShipping()) {
                     logShippingOrderActivity(shippingOrder, adminUser,
                             getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
