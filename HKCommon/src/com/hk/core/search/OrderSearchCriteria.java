@@ -41,6 +41,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date                      paymentEndDate;
 
     private Boolean                  dropShip;
+    private Boolean                  containsJit;
 
     /**
      * shipping order fields
@@ -230,7 +231,9 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         if(dropShip != null  )  {
              shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
          }
-        return criteria;
+        if(containsJit != null  )  {
+            shippingOrderCriteria.add(Restrictions.eq("containsJitProducts",containsJit));
+        }        return criteria;
     }
 
     public Boolean isDropShip() {
@@ -239,5 +242,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
+    }
+
+    public Boolean containsJit() {
+        return containsJit;
+    }
+
+    public void setContainsJit(Boolean containsJit) {
+        this.containsJit = containsJit;
     }
 }
