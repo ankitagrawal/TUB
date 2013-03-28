@@ -572,7 +572,7 @@
     </c:choose>
     <c:if test="${hasAction == true || isDropShipQueue == true}">
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
-            <c:if test="${isProcessingQueue == true || isShipmentQueue == true}">
+            <c:if test="${isProcessingQueue == true || isShipmentQueue == true || isDropShipQueue == true}">
                 <s:select name="shippingOrderReason_${shippingOrder.id}"
                           class="shippingOrderReason_${shippingOrder.id}">
                     <option value="">Choose Reason</option>

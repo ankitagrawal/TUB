@@ -317,10 +317,6 @@
                         <label><s:checkbox name="storeId"
                                            value="${store.id}"/> ${store.prefix}</label>
                     </c:forEach>
-                    <label>Sort by date : ${sortByPaymentDate}</label>
-                    <s:checkbox name="sortByPaymentDate"/>
-                    <label>Sort by score : ${sortByScore}</label>
-                    <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
                     <label style="float:left;width:50px;">Payment Modes</label>
@@ -388,10 +384,17 @@
                             <s:option value="1">Y</s:option>
                         </s:select>
                     </div>
+
+                    <div class="checkBoxList">
+                        <label style="float:left;width: 60px;">Sort by</label>
+                        <s:checkbox name="sortByPaymentDate" value="${sortByPaymentDate}">Payment Date</s:checkbox>
+                        <s:checkbox name="sortByDispatchDate" value="${sortByDispatchDate}">Dispatch Date</s:checkbox>
+                        <s:checkbox name="sortByScore" value="${sortByDispatchDate}">Order Score</s:checkbox>
+                    </div>
+
                 </li>
 
                 <li>
-                    <%--<label style="float:left;width: 60px;">SO Lifecycle</label>--%>
 
                     <div class="checkBoxList" style="width: 100%;">
                         <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
