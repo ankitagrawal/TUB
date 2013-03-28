@@ -11917,6 +11917,7 @@
             (20, 'Suggested Courier not found', NULL, 'SO Shipment Not Created'),
             (30, 'Courier service not available here', NULL, 'SO Shipment Not Created'),
             (40, 'No shipment for drop shipped orders', NULL, 'SO Shipment Not Created'),
+            (50, 'Could not assign Awb', NULL, 'SO Shipment Not Created'),
             (110, 'BO is a referred Order', NULL, 'SO Could not be Auto-escalated'),
             (120, 'Drop Shipped Order', NULL, 'SO Could not be Auto-escalated'),
             (130, 'Order contains JIT Products', NULL, 'SO Could not be Auto-escalated'),
@@ -11934,8 +11935,7 @@
             (350, 'Product Not Available', 'Expired', 'SO Escalated Back To Action Queue'),
             (360, 'Product Not Available', 'Inventory Mismatch', 'SO Escalated Back To Action Queue'),
             (370, 'Mrp Mismatch', 'Greater than', 'SO Escalated Back To Action Queue'),
-            (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue'),
-            (381, 'Could not assign Awb', NULL, 'SO Shipment Not Created');
+            (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue');
         </sql>
     </changeSet>
 </databaseChangeLog>
