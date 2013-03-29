@@ -107,57 +107,43 @@
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
 <td id="shippingOrderDetail-${shippingOrder.id}" style="width: 300px;">
-    <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
+<div class="floatleft">
+    Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score},  <span
+        style="margin-left:10px;">
+                    Basket: <strong>${shippingOrder.basketCategory}</strong></span>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
                 <span
-                        style="margin-left:10px;"> Basket: <strong>${shippingOrder.basketCategory}</strong></span>
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
-                <span
-                        style="margin-left:10px;"> </span>
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
-                                             pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
-    </div>
-    <div class="clear"></div>
-    <c:if test="${isActionQueue == true || isSearchShippingOrder}">
-        <div class="floatleft">
-            Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
-        </div>
-        <div class="clear"></div>
-    </c:if>
-    <c:if test="${isActionQueue == false}">
-        <div class="floatleft">
-            <span> Mode: <strong>${payment.paymentMode.name}</strong></span>
-            <c:if test="${payment.gateway != null}">
-                <span style="margin-left:30px;">Gateway: ${payment.gateway.name}</span>
-            </c:if>
-            <span style="margin-left:10px;"> Status: <strong>${payment.paymentStatus.name}</strong></span>
-        </div>
-        <div class="clear"></div>
-        <div class="floatleft">
-            <!-- Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/> -->
-            Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
-        </div>
-        <div class="clear"></div>
-        <div class="floatleft">
-            Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-            Score : ${shippingOrder.baseOrder.score}
-        </div>
-        <div class="clear"></div>
-         <div class="floatleft">
-            Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
-        </div>
-        <div class="clear"></div>
-    </c:if>
+                        style="margin-left:10px;">Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
+ </span>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
+                                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
+</div>
+<div class="clear"></div>
+<div class="floatleft">
+    <%--<fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>--%>
+    Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+        <strong>(${hk:periodFromNow(shippingOrder.lastEscDate)})</strong>
+</div>
+<div class="clear"></div>
+<div class="floatleft">
+    Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
+    <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
+</div>
+<div class="clear"></div>
+<div class="floatleft">
+    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
+</div>
+<div class="clear"></div>
     <div class="floatleft">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
         <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO

@@ -399,9 +399,9 @@
                         </s:select>
                     </div>
                     <div style="float:left;">Sort by
-                        <div><s:checkbox name="sortByPaymentDate" value="${actionQueueBean.sortByPaymentDate}"/>Payment Date</div>
-                        <div><s:checkbox name="sortByDispatchDate" value="${actionQueueBean.sortByDispatchDate}"/>Dispatch Date</div>
-                        <div><s:checkbox name="sortByScore" value="${actionQueueBean.sortByScore}"/>Order Score</div>
+                        <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
+                        <div><s:checkbox name="sortByScore"/>Order Score</div>
                     </div>
 
 
@@ -477,6 +477,7 @@
                         <div class="floatleft">
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
+                            <strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong>
                         </div>
                         <div class="floatright">
                             (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
