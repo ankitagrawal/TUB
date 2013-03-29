@@ -90,6 +90,16 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+    public ShippingOrderSearchCriteria setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
+        return this;
+    }
+
     public ShippingOrderSearchCriteria setAwbList(List<Awb> awbList) {
         this.awbList = awbList;
         return this;
@@ -335,11 +345,4 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         this.installable = installable;
     }
 
-    public void setPaymentStartDate(Date paymentStartDate) {
-        this.paymentStartDate = paymentStartDate;
-    }
-
-    public void setPaymentEndDate(Date paymentEndDate) {
-        this.paymentEndDate = paymentEndDate;
-    }
 }
