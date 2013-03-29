@@ -100,6 +100,8 @@
     <td>${debitNoteSummary.debitNote.supplier.contactPerson}</td>
     <td><b>Contact Number</b></td>
     <td>${debitNoteSummary.debitNote.supplier.contactNumber}</td>
+    <td><b>Tin</b></td>
+    <td>${debitNoteSummary.debitNote.supplier.tinNumber}</td>
   </tr>
 </table>
 
