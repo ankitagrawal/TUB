@@ -9,6 +9,7 @@ import com.hk.constants.analytics.EnumReason;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,10 +165,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
      */
     public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
-        if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
+        Payment payment = shippingOrder.getBaseOrder().getPayment();
+        if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 User adminUser = getUserService().getAdminUser();
-                Order order = shippingOrder.getBaseOrder();
 /*
                 if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
                     String comments = "Please do a manual approval";

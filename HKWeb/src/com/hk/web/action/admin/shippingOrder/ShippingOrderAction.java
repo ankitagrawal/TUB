@@ -157,6 +157,8 @@ public class ShippingOrderAction extends BaseAction {
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting)));
+        shippingOrderSearchCriteria.setPaymentStatuses(EnumPaymentStatus.getEscalablePaymentStatuses());
+        shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
             shippingOrderService.autoEscalateShippingOrder(toBeEscalateShippingOrder);

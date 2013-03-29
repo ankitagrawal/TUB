@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -38,6 +39,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
+    private List<PaymentStatus>       paymentStatuses;
     private List<Reason> reasonList;
 
     private boolean searchForPrinting = false;
@@ -97,6 +99,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public ShippingOrderSearchCriteria setCourierList(List<Courier> courierList) {
         this.courierList = courierList;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setPaymentStatuses(List<PaymentStatus> paymentStatuses) {
+        this.paymentStatuses = paymentStatuses;
         return this;
     }
 
@@ -240,6 +247,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.setMaxResults(100);
 
         DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
+
+        if (paymentStatuses != null && paymentStatuses.size() > 0) {
+            paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
+        }
 
         if (paymentStartDate != null || paymentEndDate != null) {
             paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
