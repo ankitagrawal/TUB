@@ -292,7 +292,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
 
