@@ -264,6 +264,55 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false;
     }
 
+    @Override
+    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
+        logger.debug("Trying to autoEscalate order#" + shippingOrder.getId());
+        Payment payment = shippingOrder.getBaseOrder().getPayment();
+        User adminUser = getUserService().getAdminUser();
+        if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
+            if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                if (shippingOrder.isDropShipping()) {
+                    logShippingOrderActivity(shippingOrder, adminUser,
+                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
+                    return false;
+                }
+                if (shippingOrder.isServiceOrder()) {
+                    return true;
+                }
+                if (shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()) {
+                    Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
+                    if (newShipment == null) {
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.ShipmentNotCreated.asReason(), null);
+                        return false;
+                    }
+                }
+                for (LineItem lineItem : shippingOrder.getLineItems()) {
+                    if (lineItem.getCartLineItem().getCartLineItemConfig() != null) {
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
+                        return false;
+                    }
+                    Long availableUnbookedInv = getInventoryService().getUnbookedInventoryInProcessingQueue(Arrays.asList(lineItem.getSku())); // This
+                    if (availableUnbookedInv <= 0) {
+                        String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = " + availableUnbookedInv;
+                        logger.debug(comments);
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventory.asReason(), comments);
+                        return false;
+                    }
+                }
+                return true;
+            }
+        } else {
+            logShippingOrderActivity
+                    (shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
+                            EnumReason.InvalidPaymentStatus.asReason(), null);
+            return false;
+        }
+        return false;
+    }
+
     @Transactional
     public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
         if (isShippingOrderAutoEscalable(shippingOrder)) {

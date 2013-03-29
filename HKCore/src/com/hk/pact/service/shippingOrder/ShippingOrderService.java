@@ -53,6 +53,8 @@ public interface ShippingOrderService {
 
 	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
 
+    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder);
+
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
 	/**

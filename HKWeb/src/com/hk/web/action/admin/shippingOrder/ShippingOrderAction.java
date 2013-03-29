@@ -161,7 +161,9 @@ public class ShippingOrderAction extends BaseAction {
         shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
-            shippingOrderService.autoEscalateShippingOrder(toBeEscalateShippingOrder);
+            if(shippingOrderService.isShippingOrderAutomaticallyManuallyEscalable(toBeEscalateShippingOrder)){
+                shippingOrderService.escalateShippingOrderFromActionQueue(toBeEscalateShippingOrder, true);
+            }
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
