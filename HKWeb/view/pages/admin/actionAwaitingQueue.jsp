@@ -471,11 +471,10 @@
                         <div class="floatleft">
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
-                            <strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong>
                         </div>
                         <div class="floatleft">
-                            <span style="margin-left:30px;"> Target Dispatch Date: <fmt:formatDate value="${order.targetDispatchDate}" type="both"/></span>
-                            <strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong>
+                            Target Dispatch Date: <fmt:formatDate value="${order.targetDispatchDate}" type="date"/>
+                            <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong></span>
                         </div>
                         <div class="floatright">
                             (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">

@@ -130,7 +130,7 @@
     Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
 </div>
 <div class="clear"></div>
-<c:if test="${hasAction == false}">
+<c:if test="${isActionQueue == false}">
     <div class="floatleft">
         Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
     </div>
