@@ -74,6 +74,7 @@
 <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
 <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusCancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
@@ -142,13 +143,15 @@
     </div>
     <div class="clear"></div>
 </c:if>
-<div class="floatleft">
-    Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-</div>
-<div class="clear"></div>
-<div class="floatleft">
-    <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
-</div>
+<c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
+    <div class="floatleft">
+        Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
+    </div>
+    <div class="clear"></div>
+    <div class="floatleft">
+        <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
+    </div>
+</c:if>
 <div class="clear"></div>
     <div class="floatleft">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
