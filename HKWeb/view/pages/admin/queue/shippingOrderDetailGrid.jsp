@@ -127,7 +127,9 @@
 <div class="floatleft">
     Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
                                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
-    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
+    <span
+            style="margin-left:10px;">
+    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/></span>
 </div>
 <div class="clear"></div>
 <c:if test="${isActionQueue == false}">
