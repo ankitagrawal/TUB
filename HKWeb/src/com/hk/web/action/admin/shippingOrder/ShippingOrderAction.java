@@ -7,16 +7,22 @@ import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
+import edu.emory.mathcs.backport.java.util.Arrays;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -24,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -35,6 +42,8 @@ public class ShippingOrderAction extends BaseAction {
 
 	@Autowired
 	private ShippingOrderService shippingOrderService;
+    @Autowired
+    private ShippingOrderStatusService shippingOrderStatusService;
 	@Autowired
 	private AdminShippingOrderService adminShippingOrderService;
 	@Autowired
@@ -146,7 +155,17 @@ public class ShippingOrderAction extends BaseAction {
 		return new JsonResolution(healthkartResponse);
 	}
 
-	public ShippingOrder getShippingOrder() {
+    public Resolution bulkEscalateShippingOrder() {
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setShippingOrderStatusList((List<ShippingOrderStatus>) EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+        List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
+        for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
+            shippingOrderService.autoEscalateShippingOrder(toBeEscalateShippingOrder);
+        }
+        return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
+    }
+
+        public ShippingOrder getShippingOrder() {
 		return shippingOrder;
 	}
 

@@ -49,7 +49,6 @@ public class BulkOrderSplitterAction extends BaseAction {
 	public Resolution bulkSplitOrders() {
 		OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
 		orderSearchCriteria.setOrderStatusList(orderStatusService.getOrderStatuses(Arrays.asList(EnumOrderStatus.Placed)));
-        orderSearchCriteria.setStoreId(1L);  //todo only hk orders will be bulk split
 
 		List<Order> orderList = orderService.searchOrders(orderSearchCriteria);
 		if (orderList != null) {
