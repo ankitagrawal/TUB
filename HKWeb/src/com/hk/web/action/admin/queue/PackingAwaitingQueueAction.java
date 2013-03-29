@@ -58,6 +58,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     private String                     baseGatewayOrderId;
     private Date                       startDate;
     private Date                       endDate;
+    private Date                       paymentStartDate;
+    private Date                       paymentEndDate;
     private Category                   category;
     private ShippingOrderStatus        shippingOrderStatus;
     private Integer                    defaultPerPage    = 30;
@@ -99,6 +101,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
          */
         //shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
+        //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
+        shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
@@ -249,5 +253,21 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
+    }
+
+    public Date getPaymentStartDate() {
+        return paymentStartDate;
+    }
+
+    public void setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+    }
+
+    public Date getPaymentEndDate() {
+        return paymentEndDate;
+    }
+
+    public void setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
     }
 }

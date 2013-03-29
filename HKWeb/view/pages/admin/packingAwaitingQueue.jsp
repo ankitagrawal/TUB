@@ -92,6 +92,12 @@
         <label>End
           Date </label><s:text class="date_input endDate" style="width:150px"
                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+          <label>Payment Start
+              Date </label><s:text class="date_input startDate" style="width:150px"
+                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
+          <label>Payment End
+              Date </label><s:text class="date_input endDate" style="width:150px"
+                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
         <label>Status </label>
         <s:select name="shippingOrderStatus">
           <option value="">Any order status</option>
