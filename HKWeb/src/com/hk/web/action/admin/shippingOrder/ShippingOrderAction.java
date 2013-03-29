@@ -28,6 +28,7 @@ import net.sourceforge.stripes.action.RedirectResolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +157,7 @@ public class ShippingOrderAction extends BaseAction {
 
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList((List<ShippingOrderStatus>) EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()));
         shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
