@@ -127,21 +127,25 @@
 <div class="floatleft">
     Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
                                          pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
+    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
 </div>
 <div class="clear"></div>
-<div class="floatleft">
-    <%--<fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/>--%>
-    Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+<c:if test="${hasAction == false}">
+    <div class="floatleft">
+        Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+    </div>
+    <div class="clear"></div>
+    <div class="floatleft">
         <strong>(${hk:periodFromNow(shippingOrder.lastEscDate)})</strong>
-</div>
-<div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+</c:if>
 <div class="floatleft">
     Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-    <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
 </div>
 <div class="clear"></div>
 <div class="floatleft">
-    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
+    <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
 </div>
 <div class="clear"></div>
     <div class="floatleft">

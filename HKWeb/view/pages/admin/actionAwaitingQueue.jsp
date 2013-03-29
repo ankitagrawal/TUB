@@ -417,10 +417,7 @@
                                                    value="${shippingOrderLifecycleActivity.id}"/>
                                                    <div id="div${ctr.index}" style="position: relative;float: left;top: 3px;">${shippingOrderLifecycleActivity.name}</div>
                             <span style="margin-left:30px;">
-
                                 <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
-                                <%--<li><label>Reason</label>--%>
-                                <%--<div class="checkBoxList">--%>
                                 <div id="newBoxAdminraj${ctr.index}"  class="newBox">
                                 <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
                                            varStatus="rctr1">
@@ -428,11 +425,8 @@
                                     <label><s:checkbox name="reasons[${rctr1.index}]"
                                                        value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
                                         </div>
-                                    <%--<br/>--%>
                                 </c:forEach>
                                     </div>
-                                <%--</div>--%>
-                                <%--</li>--%>
                             </c:if>
                             </span>
                                 </div>
@@ -477,6 +471,10 @@
                         <div class="floatleft">
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
+                            <strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong>
+                        </div>
+                        <div class="floatleft">
+                            <span style="margin-left:30px;"> Target Dispatch Date: <fmt:formatDate value="${order.targetDispatchDate}" type="both"/></span>
                             <strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong>
                         </div>
                         <div class="floatright">
