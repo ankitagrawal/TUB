@@ -134,14 +134,18 @@
 </div>
 <div class="clear"></div>
 <c:if test="${isActionQueue == false}">
-    <div class="floatleft">
-        Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
-    </div>
-    <div class="clear"></div>
-    <div class="floatleft">
-        <strong>(${hk:periodFromNow(shippingOrder.lastEscDate)})</strong>
-    </div>
-    <div class="clear"></div>
+    <c:if test="${shippingOrder.lastEscDate != null}">
+        <div class="floatleft">
+            Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
+        </div>
+        <div class="clear"></div>
+        <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
+            <div class="floatleft">
+                <strong>(${hk:periodFromNow(shippingOrder.lastEscDate)})</strong>
+            </div>
+            <div class="clear"></div>
+        </c:if>
+    </c:if>
 </c:if>
 <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
     <div class="floatleft">
