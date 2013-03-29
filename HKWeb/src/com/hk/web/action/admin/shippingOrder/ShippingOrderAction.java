@@ -21,7 +21,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -158,6 +157,7 @@ public class ShippingOrderAction extends BaseAction {
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList((List<ShippingOrderStatus>) EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus());
+        shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
             shippingOrderService.autoEscalateShippingOrder(toBeEscalateShippingOrder);
