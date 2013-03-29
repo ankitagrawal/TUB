@@ -65,6 +65,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private static final int           PICKING            = 2;
     private Date                       startDate;
     private Date                       endDate;
+    private Date                       paymentStartDate;
+    private Date                       paymentEndDate;
 
     private String                     brand;
 
@@ -126,7 +128,10 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         } else if (startDate != null && endDate != null) {
             shippingOrderSearchCriteria.setLastEscStartDate(startDate);
             shippingOrderSearchCriteria.setLastEscEndDate(endDate);
-        }else if(courier !=null){
+        } else if (paymentStartDate != null && paymentEndDate != null) {
+            shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
+            shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
+        } else if(courier !=null){
             List<Courier> couriers = new ArrayList<Courier>();
             couriers.add(courier);
             shippingOrderSearchCriteria.setCourierList(couriers);
@@ -377,4 +382,21 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         this.courier = courier;
     }
 
+    public Date getPaymentStartDate() {
+        return paymentStartDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+    }
+
+    public Date getPaymentEndDate() {
+        return paymentEndDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
+    }
 }
