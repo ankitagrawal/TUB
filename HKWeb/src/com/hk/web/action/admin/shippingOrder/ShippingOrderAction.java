@@ -12,7 +12,6 @@ import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
@@ -23,8 +22,8 @@ import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -157,8 +156,7 @@ public class ShippingOrderAction extends BaseAction {
 
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting.asShippingOrderStatus()));
-        shippingOrderSearchCriteria.setDropShipping(false);
+        shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting)));
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
             shippingOrderService.autoEscalateShippingOrder(toBeEscalateShippingOrder);
