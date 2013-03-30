@@ -170,8 +170,10 @@
     var selectedOrderStatus = $(this).val();
     if (selectedOrderStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>) {
       $("#reAssignToPackingQueue").show();
+        $("#markAll").show();
     } else {
       $("#reAssignToPackingQueue").hide();
+        $("#markAll").hide();
     }
   });
   
