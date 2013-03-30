@@ -142,6 +142,8 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
 
 <p style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</p>
 
+<#include "orderNote.ftl">
+
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
 <#include "footer.ftl">
 </body>
