@@ -131,6 +131,7 @@
 
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
+  <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                    shippingOrders="${shipmentQueueBean.shippingOrderList}" isProcessingQueue="true"/>
     <div id="hiddenShippingIds"></div>
@@ -182,9 +183,19 @@
   	$("#reAssignToPackingQueue").hide();
   }
 
-  /*$('.lineItemCheckBox').click(function() {
-   $(this).parent().parent("tr").toggleClass('highlight');
-   });*/
+    $('#markAll').click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            shippingOrderDetailCheckbox.attr("checked", true);
+        });
+        return false;
+    });
+
+
+    /*$('.lineItemCheckBox').click(function() {
+     $(this).parent().parent("tr").toggleClass('highlight');
+     });*/
 </script>
 
 </s:layout-component>
