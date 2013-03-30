@@ -4,7 +4,6 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
     <title>Payment authorization pending for Order ID ${order.gatewayOrderId}</title>
 </head>
 <body>
-<#include "header.ftl">
 <p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
 <p style="margin-bottom:1em">

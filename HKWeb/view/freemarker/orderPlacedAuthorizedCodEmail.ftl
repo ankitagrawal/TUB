@@ -4,7 +4,7 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
     <title>Cash-on-Delivery Order Id ${order.gatewayOrderId} received.</title>
 </head>
 <body>
-<#include "header.ftl">
+<#--<#include "header.ftl">-->
 <p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
 <p style="margin-bottom:1em">
@@ -145,6 +145,5 @@ Cash-on-Delivery Order Id ${order.gatewayOrderId} received.
 <#include "orderNote.ftl">
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
 </body>
 </html>
