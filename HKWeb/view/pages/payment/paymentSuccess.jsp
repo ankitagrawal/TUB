@@ -253,11 +253,13 @@
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
             </div>--%>
-            <jsp:include page="/includes/checkoutNotice.jsp"/>
 
             <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
+
+            <jsp:include page="/includes/checkoutNotice.jsp"/>
+
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                 <div class='promos'>
                     <div class='prom yellow help' style="width: 95%; padding:5px;">
