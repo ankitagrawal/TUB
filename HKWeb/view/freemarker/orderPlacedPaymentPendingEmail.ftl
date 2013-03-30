@@ -170,6 +170,5 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 <#include "orderNote.ftl">
 
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
 </body>
 </html>
