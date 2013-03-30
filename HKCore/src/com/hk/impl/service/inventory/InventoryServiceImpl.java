@@ -70,7 +70,7 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public void checkInventoryHealth(ProductVariant productVariant) {
-    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+    List<Sku> skuList = getSkuService().getSKUsForMarkingProductOOS(productVariant);
     if (skuList != null && !skuList.isEmpty()) {
       checkInventoryHealth(skuList, productVariant);
     } else {
