@@ -40,7 +40,7 @@
       </s:layout-component>
       <div class="current_step_content step2 shopping_cart">
         <s:layout-component name="checkout_notice">
-          <%--<jsp:include page="/includes/checkoutNotice.jsp"/>--%>
+          <jsp:include page="/includes/checkoutNotice.jsp"/>
         </s:layout-component>
         <s:layout-component name="cart_title"/>
         <s:layout-component name="cart_items"/>
