@@ -179,8 +179,10 @@
   
   if(selectedSOStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>){
   	$("#reAssignToPackingQueue").show();
+  	$("#markAll").show();
   }else{
   	$("#reAssignToPackingQueue").hide();
+  	$("#markAll").hide();
   }
 
     $('#markAll').click(function() {
