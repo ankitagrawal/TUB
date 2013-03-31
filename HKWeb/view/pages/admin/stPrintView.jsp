@@ -110,10 +110,10 @@
 			${stockTransferBean.stockTransfer.toWarehouse.city},
 			${stockTransferBean.stockTransfer.toWarehouse.state}<br>
 			<c:choose>
-				<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'HARYANA'}">
+				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'HARYANA'}">
 					<p> TIN# 06101832036</p>
 				</c:when>
-				<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'MAHARASHTRA'}">
+				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'MAHARASHTRA'}">
 					<p> TIN# 27210893736</p>
 				</c:when>
 			</c:choose>
