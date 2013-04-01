@@ -22,6 +22,7 @@
     <h1>Shop by Brand</h1>
 
     <c:forEach items="${brandAction.categories}" var="category">
+      <div id="${category}">&nbsp;</div>
       <div class="brandBox">
         <a href="${pageContext.request.contextPath}/${category.name}"><h4>${category.displayName}</h4></a>
         <table width="100%">

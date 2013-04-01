@@ -3,6 +3,7 @@ package com.hk.impl.service.order;
 import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.CourierConstants;
@@ -744,7 +745,7 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                            CourierConstants.DROP_SHIPPED_ORDER);
+                            EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
                 }
             }
             // auto escalate shipping orders if possible

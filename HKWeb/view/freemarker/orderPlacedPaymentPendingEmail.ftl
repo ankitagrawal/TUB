@@ -4,7 +4,6 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
     <title>Payment authorization pending for Order ID ${order.gatewayOrderId}</title>
 </head>
 <body>
-<#include "header.ftl">
 <p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
 <p style="margin-bottom:1em">
@@ -167,7 +166,8 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
 
 <p style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</p>
 
+<#include "orderNote.ftl">
+
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
 </body>
 </html>

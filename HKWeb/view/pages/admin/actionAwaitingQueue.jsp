@@ -15,6 +15,7 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
+<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -53,6 +54,8 @@
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.core.js"></script>
+    <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/jquery.effects.slide.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     <style type="text/css">
         .fieldLabel {
@@ -242,6 +245,32 @@
                 });
             });
 
+            $(':checkbox').filter(function() {
+                    if(this.id.match(/raj/)){
+                        if($("#" + this.id).is(":checked")){
+                            $("#newBoxAdmin"+this.id).show("slide", { direction: "up" }, 300);
+                        }
+                    }
+                    });
+
+            $("input[type='checkbox']").change(function (event) {
+                if($("#newBoxAdmin"+this.id).css("display") == "block"){
+                    $("#newBoxAdmin"+this.id).hide("slide", { direction: "up" }, 300);
+                }
+                else if($("#newBoxAdmin"+this.id).css("display") == "none"){
+                    $("#newBoxAdmin"+this.id).show("slide", { direction: "up" }, 300);
+                }
+            });
+            $("div").click(function (event) {
+                var index = this.id.search("div");
+                var id = this.id.substring(index+3);
+                if($("#newBoxAdminraj"+id).css("display") == "block"){
+                }
+                else if($("#newBoxAdminraj"+id).css("display") == "none"){
+                    $("#newBoxAdminraj"+id).show("slide", { direction: "up" }, 300);
+                    $("#raj" + id).prop('checked', true);
+                }
+            });
             /*$('.orderCheckBox').click(function() {
              if ($(this).attr("checked") == "checked") {
              $(this).parents('.orderRow').find('.lineItemCheckBox').each(function() {
@@ -259,7 +288,8 @@
 
     </script>
 </s:layout-component>
-<s:layout-component name="heading">Action Awaiting Queue
+<s:layout-component name="heading">
+    <div class="actionQueue">Action Awaiting Queue</div>
     <%--<span style="float:right;">
       <label style="font-size:.7em; color:black; font-weight:normal;">Avg. time for COD Confirmation(hh:mm:ss):</label>
         ${actionBean.codConfirmationTime}
@@ -267,8 +297,8 @@
 </s:layout-component>
 <s:layout-component name="content">
 
-<fieldset class="top_label">
-    <ul>
+<fieldset style="margin: 10px;" class="top_label">
+    <ul style="margin-top: 0px;">
         <div class="grouped grid_12">
             <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" method="get" autocomplete="false">
                 <li><label>Order ID</label> <s:text name="orderId"/> &nbsp; <label>Gateway Order ID</label> <s:text
@@ -301,10 +331,6 @@
                         <label><s:checkbox name="storeId"
                                            value="${store.id}"/> ${store.prefix}</label>
                     </c:forEach>
-                    <label>Sort by date : ${sortByPaymentDate}</label>
-                    <s:checkbox name="sortByPaymentDate"/>
-                    <label>Sort by score : ${sortByScore}</label>
-                    <s:checkbox name="sortByScore"/>
                 </li>
                 <li>
                     <label style="float:left;width:50px;">Payment Modes</label>
@@ -351,35 +377,20 @@
                     </div>
                 </li>
 
-                <li><label style="float:left;width: 60px;">SO Lifecycle</label>
+                <li>
+                    <label style="float:left;width: 60px;">Drop Ship </label>
 
                     <div class="checkBoxList">
-                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
-                                   varStatus="ctr">
-                            <label><s:checkbox name="shippingOrderLifecycleActivities[${ctr.index}]"
-                                               value="${shippingOrderLifecycleActivity.id}"/> ${shippingOrderLifecycleActivity.name}</label>
-                            <br/>
-                        </c:forEach>
+                        <s:select name="dropShip" value="">
+                            <s:option value="">--Select--</s:option>
+                            <s:option value="0">N</s:option>
+                            <s:option value="1">Y</s:option>
+                        </s:select>
                     </div>
                 </li>
-
-                <%--<li><label>Per Page</label><s:select name="defaultPerPage">
-                  <s:option value="30">30</s:option>
-                  <s:option value="60">60</s:option>
-                  <s:option value="120">120</s:option>
-                </s:select></li>--%>
-            <li>
-                 <label style="float:left;width: 60px;">Drop Ship </label>
-                  <div class="checkBoxList">
-                 <s:select name="dropShip" value="">
-                                        <s:option value="">--Select--</s:option>
-                                        <s:option value="0">N</s:option>
-                                        <s:option value="1">Y</s:option>
-                 </s:select>
-                      </div>
-            </li>
                 <li>
                     <label style="float:left;width: 60px;">Has JIT</label>
+
                     <div class="checkBoxList">
                         <s:select name="containsJit" value="">
                             <s:option value="">--Select--</s:option>
@@ -387,8 +398,41 @@
                             <s:option value="1">Y</s:option>
                         </s:select>
                     </div>
+                    <div style="float:left;">Sort by
+                        <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
+                        <div><s:checkbox name="sortByScore"/>Order Score</div>
+                    </div>
+
+
                 </li>
 
+                <li>
+
+                    <div class="checkBoxList" style="width: 100%;">
+                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
+                                   varStatus="ctr">
+                                <div class="newBoxLabel">
+                                    <s:checkbox id="raj${ctr.index}" style="position: relative;float: left;" name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                                   value="${shippingOrderLifecycleActivity.id}"/>
+                                                   <div id="div${ctr.index}" style="position: relative;float: left;top: 3px;">${shippingOrderLifecycleActivity.name}</div>
+                            <span style="margin-left:30px;">
+                                <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
+                                <div id="newBoxAdminraj${ctr.index}"  class="newBox">
+                                <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
+                                           varStatus="rctr1">
+                                    <div class="newBoxItem">
+                                    <label><s:checkbox name="reasons[${rctr1.index}]"
+                                                       value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                        </div>
+                                </c:forEach>
+                                    </div>
+                            </c:if>
+                            </span>
+                                </div>
+                        </c:forEach>
+                    </div>
+                </li>
 
                 <div class="buttons">
                     <s:submit name="pre" value="Search"/>
@@ -428,6 +472,12 @@
                             Gateway Order Id: <strong>${order.gatewayOrderId}</strong>
                             <span style="margin-left:30px;"> Basket category: <strong>${order.basketCategory}</strong></span>
                         </div>
+                        <c:if test="${order.targetDispatchDate != null}">
+                            <div class="floatleft" style="color:red">
+                                Target Dispatch Date: <fmt:formatDate value="${order.targetDelDate}" type="date"/>
+                                <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDelDate)})</strong></span>
+                            </div>
+                        </c:if>
                         <div class="floatright">
                             (<s:link beanclass="com.hk.web.action.core.accounting.BOInvoiceAction" event="pre" target="_blank">
                             <s:param name="order" value="${order}"/> Invoice

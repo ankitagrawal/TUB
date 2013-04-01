@@ -11863,4 +11863,79 @@
             set so.contains_jit_products=1
             where p.is_jit=1;
         </sql>
-    </changeSet></databaseChangeLog>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-1">
+        <createTable tableName="lifecycle_reason">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="primary_attribution" type="VARCHAR(45)"/>
+            <column name="secondary_attribution" type="VARCHAR(45)"/>
+            <column name="shipping_order_lifecycle_id" type="INT"/>
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_lifecycle_id" type="INT"/>
+            <column name="create_dt" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-2">
+        <createTable tableName="reason">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="primary_classification" type="VARCHAR(100)"/>
+            <column name="secondary_classification" type="VARCHAR(100)"/>
+            <column name="type" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-4">
+        <addForeignKeyConstraint baseColumnNames="order_lifecycle_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_order_lifecycle1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="order_lifecycle"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-5">
+        <addForeignKeyConstraint baseColumnNames="reason_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_reason1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="reason"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-6">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_lifecycle_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_shipping_order_lifecycle1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="shipping_order_lifecycle"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-03-28-01">
+        <sql>
+            INSERT INTO `reason` (`id`, `primary_classification`, `secondary_classification`, `type`) VALUES
+            (10, 'Invalid Pincode', NULL, 'SO Shipment Not Created'),
+            (20, 'Suggested Courier not found', NULL, 'SO Shipment Not Created'),
+            (30, 'Courier service not available here', NULL, 'SO Shipment Not Created'),
+            (40, 'No shipment for drop shipped orders', NULL, 'SO Shipment Not Created'),
+            (50, 'Could not assign Awb', NULL, 'SO Shipment Not Created'),
+            (110, 'BO is a referred Order', NULL, 'SO Could not be Auto-escalated'),
+            (120, 'Drop Shipped Order', NULL, 'SO Could not be Auto-escalated'),
+            (130, 'Order contains JIT Products', NULL, 'SO Could not be Auto-escalated'),
+            (140, 'Contains prescription glasses', NULL, 'SO Could not be Auto-escalated'),
+            (150, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Auto-escalated'),
+            (160, 'Payment Status is AuthPending-Error', NULL, 'SO Could not be Auto-escalated'),
+            (170, 'Shipment Not Created', NULL, 'SO Could not be Auto-escalated'),
+            (210, 'Shipment Not Created', NULL, 'SO Could not be Manually-escalated'),
+            (220, 'Payment Status is AuthPending/Error', NULL, 'SO Could not be Manually-escalated'),
+            (230, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Manually-escalated'),
+            (310, 'Customer Request', 'Product Change', 'SO Escalated Back To Action Queue'),
+            (320, 'Customer Request', 'Cancellation ', 'SO Escalated Back To Action Queue'),
+            (330, 'Customer Request', 'Put on Hold', 'SO Escalated Back To Action Queue'),
+            (340, 'Product Not Available', 'Damaged', 'SO Escalated Back To Action Queue'),
+            (350, 'Product Not Available', 'Expired', 'SO Escalated Back To Action Queue'),
+            (360, 'Product Not Available', 'Inventory Mismatch', 'SO Escalated Back To Action Queue'),
+            (370, 'Mrp Mismatch', 'Greater than', 'SO Escalated Back To Action Queue'),
+            (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

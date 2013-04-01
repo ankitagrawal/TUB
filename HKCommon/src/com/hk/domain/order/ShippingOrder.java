@@ -3,6 +3,7 @@ package com.hk.domain.order;
 import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
@@ -89,6 +90,9 @@ public class ShippingOrder implements java.io.Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
+
+    @Transient
+    private Reason reason;
 
     /*
      * @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "refShippingOrder") private Set<ReplacementOrder>
@@ -254,6 +258,7 @@ public class ShippingOrder implements java.io.Serializable {
 	Shipping orders that have a amount = 0 should be shipped with non-COD courier, irrespective of the payment mode (this includes shipping of free products)
 	 */
     @Transient
+    @Deprecated
     public boolean isCOD() {
         return this.amount != 0 && EnumPaymentMode.COD.getId().equals(getBaseOrder().getPayment().getPaymentMode().getId());
     }
@@ -323,5 +328,12 @@ public class ShippingOrder implements java.io.Serializable {
     public void setDropShipping(boolean dropShipping) {
         isDropShipping = dropShipping;
     }
-    
+
+    public Reason getReason() {
+        return reason;
+    }
+
+    public void setReason(Reason reason) {
+        this.reason = reason;
+    }
 }
