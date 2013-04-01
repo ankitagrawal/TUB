@@ -144,9 +144,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 }
             }
 
-            Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
-            shippingOrder.setCategories(categories);
-            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
             shippingOrder = getShippingOrderService().save(shippingOrder);
@@ -155,6 +152,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * id
              */
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setCategories(categories);
+            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
 			//shipmentService.createShipment(shippingOrder);

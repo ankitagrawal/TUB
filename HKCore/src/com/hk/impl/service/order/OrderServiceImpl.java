@@ -481,9 +481,6 @@ public class OrderServiceImpl implements OrderService {
                             }
                             shippingOrder.setDropShipping(isDropShipped);
                             shippingOrder.setContainsJitProducts(containsJitProducts);
-                            Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
-                            shippingOrder.setCategories(categories);
-                            shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
                             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
                             shippingOrder = shippingOrderService.save(shippingOrder);
@@ -492,6 +489,10 @@ public class OrderServiceImpl implements OrderService {
                              * shipping order gateway id
                              */
                             shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+                            shippingOrder = shippingOrderService.save(shippingOrder);
+                            Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
+                            shippingOrder.setCategories(categories);
+                            shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
                             shippingOrder = shippingOrderService.save(shippingOrder);
                             shippingOrders.add(shippingOrder);
                         }
@@ -682,6 +683,7 @@ public class OrderServiceImpl implements OrderService {
         ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
         shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
         shippingOrder = getShippingOrderService().save(shippingOrder);
+        shippingOrder.setCategories(getCategoriesForShippingOrder(shippingOrder));
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */

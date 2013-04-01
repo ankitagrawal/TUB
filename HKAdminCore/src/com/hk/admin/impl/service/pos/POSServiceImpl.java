@@ -163,14 +163,15 @@ public class POSServiceImpl implements POSService {
 				throw new NoSkuException(productVariant, warehouse);
 			}
 		}
-        Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
-        shippingOrder.setCategories(categories);
-        shippingOrder.setBasketCategory(orderService.getBasketCategory(categories).getName());
 		shippingOrder.setAmount(order.getAmount());
 		shippingOrder = shippingOrderService.save(shippingOrder);
 
 		shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
 		shippingOrder = shippingOrderService.save(shippingOrder);
+        Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+        shippingOrder.setCategories(categories);
+        shippingOrder.setBasketCategory(orderService.getBasketCategory(categories).getName());
+        shippingOrder = shippingOrderService.save(shippingOrder);
 		return shippingOrder;
 	}
 

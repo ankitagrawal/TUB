@@ -49,6 +49,7 @@ public class ReplacementOrderHelper {
         replacementOrder.setCancellationType(shippingOrder.getCancellationType());
         replacementOrder.setCancellationRemark(shippingOrder.getCancellationRemark());
         replacementOrder.setBasketCategory(shippingOrder.getBasketCategory());
+        replacementOrder.setCategories(shippingOrder.getCategories());
         replacementOrder.setServiceOrder(shippingOrder.isServiceOrder());
         replacementOrder.setVersion(shippingOrder.getVersion());
         replacementOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
