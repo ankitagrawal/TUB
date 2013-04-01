@@ -117,7 +117,7 @@ public class ShippingOrder implements java.io.Serializable {
     private boolean containsJitProducts;
 
     @JsonSkip
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shipping_order")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderCategory>        categories        = new HashSet<ShippingOrderCategory>();
 
     public boolean containsJitProducts() {
