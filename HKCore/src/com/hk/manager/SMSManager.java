@@ -1,16 +1,17 @@
 package com.hk.manager;
 
-import java.util.HashMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.Address;
+import com.hk.domain.user.User;
 import com.hk.impl.service.SMSService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA. User: Ajeet Date: May 28, 2011 Time: 11:51:32 AM To change this template use File |
@@ -81,6 +82,21 @@ public class SMSManager {
         return false;
     }
 
+  public boolean sendHKReachOutForDeliverySMS(Shipment shipment, User agent) {
+    HashMap valuesMap = new HashMap();
+    ShippingOrder shippingOrder = shipment.getShippingOrder();
+    Order order = shippingOrder.getBaseOrder();
+    valuesMap.put("customer", order.getUser().getName());
+    valuesMap.put("orderId", shippingOrder.getId());
+    valuesMap.put("deliveryAgent", agent.getFirstName());
+    if (order.isCOD()) {
+      valuesMap.put("amount", shippingOrder.getAmount());
+      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliveryCODSms, valuesMap);
+    } else {
+      return smsService.sendSMSUsingTemplate(order.getAddress().getPhone(), SMSTemplateConstants.hkReachOutForDeliverySms, valuesMap);
+    }
+  }
+
     public static class SMSTemplateConstants {
 
         public static final String orderPlacedSMS            = "/sms/orderPlacedSms.ftl";
@@ -90,6 +106,9 @@ public class SMSManager {
         public static final String orderShippedSMS           = "/sms/orderShippedSms.ftl";
         public static final String codOrderShippedSMS        = "/sms/codOrderShippedSms.ftl";
         public static final String orderDeliveredSMS         = "/sms/orderDeliveredSms.ftl";
+
+        public static final String hkReachOutForDeliverySms = "/sms/hkReachOutForDeliverySms.ftl";
+        public static final String hkReachOutForDeliveryCODSms = "/sms/hkReachOutForDeliveryCODSms.ftl";
 
         public static final String offerSMS                  = "/offerSMS.ftl";
         public static final String discountCouponSMS         = "/discountCouponSMS.ftl";

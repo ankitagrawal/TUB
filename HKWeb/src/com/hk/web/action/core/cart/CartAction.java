@@ -1,9 +1,6 @@
 package com.hk.web.action.core.cart;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -18,11 +15,9 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.subscription.EnumSubscriptionStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.SubscriptionFilter;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.ComboInstance;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
@@ -63,6 +58,8 @@ public class CartAction extends BaseAction {
     private Long                itemsInCart   = 0L;
     private String              freebieBanner;
     private Set<Subscription>   subscriptions;
+    private Set<CartLineItem>   trimCartLineItems;
+    private Integer               sizeOfCLI;
 
     @Autowired
     private UserService         userService;
@@ -91,106 +88,69 @@ public class CartAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        // TODO: # warehouse fix this.
-
-        User user = null;
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
-            if (user == null) {
-                user = userManager.createAndLoginAsGuestUser(null, null);
-            }
-        } else {
+        User user = getPrincipalUser();
+        if (user == null) {
             user = userManager.createAndLoginAsGuestUser(null, null);
         }
-        if (user != null) {
-            order = orderManager.getOrCreateOrder(user);
-            Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-            Set<Long> comboInstanceIds = new TreeSet<Long>();
-            for (CartLineItem lineItem : cartLineItems) {
-                if (lineItem != null && lineItem.getProductVariant() != null) {
-                    ProductVariant productVariant = lineItem.getProductVariant();
-                    if ((productVariant.getProduct().isDeleted() != null && productVariant.getProduct().isDeleted()) || productVariant.isDeleted() || productVariant.isOutOfStock()) {
-                        lineItem.setQty(0L);
-                        if (lineItem.getComboInstance() != null) {
-                            comboInstanceIds.add(lineItem.getComboInstance().getId());
-                        }
-                    }
-                }
-            }
-            for (Long comboInstanceId : comboInstanceIds) {
-                for (CartLineItem cartLineItem : cartLineItems) {
-                    if (cartLineItem.getComboInstance() != null && cartLineItem.getComboInstance().getId().equals(comboInstanceId)) {
-                        cartLineItem.setQty(0L);
-                    }
-                }
-            }
-            // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
-            order = orderManager.trimEmptyLineItems(order);
+        order = orderManager.getOrCreateOrder(user);
+        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
 
-            if (order != null && cartLineItems != null) {
-                itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
-            }
+        trimCartLineItems = orderManager.trimEmptyLineItems(order);
+        sizeOfCLI = order.getCartLineItems().size();
+        if (order != null && cartLineItems != null) {
+            itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+        }
 
             /* Check if user is referred and has referral coupon to apply. If yes, apply automatically */
-            if (user.getReferredBy() != null) {
-                Coupon coupon = (user.getReferredBy()).getReferrerCoupon();
-                if (coupon != null && coupon.isValid()) {
-                    List<OfferInstance> offerInstances = offerInstanceDao.findByUserAndCoupon(user, coupon);
-                    if (offerInstances == null || offerInstances.isEmpty()) {
-                        if (offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
-                            Date offerInstanceEndDate = new DateTime().plusDays(OfferConstants.MAX_ALLOWED_DAYS_FOR_15_PERCENT_REFERREL_DISCOUNT).toDate();
-                            OfferInstance offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
-                            order.setOfferInstance(offerInstance);
-                            coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
-                            couponDao.save(coupon);
-                        } else {
-                            verifyMessage = true;
-                        }
+        if (user.getReferredBy() != null) {
+            Coupon coupon = (user.getReferredBy()).getReferrerCoupon();
+            if (coupon != null && coupon.isValid()) {
+                List<OfferInstance> offerInstances = offerInstanceDao.findByUserAndCoupon(user, coupon);
+                if (offerInstances == null || offerInstances.isEmpty()) {
+                    if (offerManager.isOfferValidForUser(coupon.getOffer(), user)) {
+                        Date offerInstanceEndDate = new DateTime().plusDays(OfferConstants.MAX_ALLOWED_DAYS_FOR_15_PERCENT_REFERREL_DISCOUNT).toDate();
+                        OfferInstance offerInstance = offerInstanceDao.createOfferInstance(coupon.getOffer(), coupon, user, offerInstanceEndDate);
+                        order.setOfferInstance(offerInstance);
+                        coupon.setAlreadyUsed(coupon.getAlreadyUsed() + 1);
+                        couponDao.save(coupon);
+                    } else {
+                        verifyMessage = true;
                     }
                 }
-            }
-
-            if (order.getOfferInstance() != null && !order.getOfferInstance().isValid()) {
-                offerInstanceDao.save(order.getOfferInstance());
-                order.setOfferInstance(null);
-                order = orderDao.save(order);
-            }
-
-            Address address = order.getAddress() != null ? order.getAddress() : new Address();
-            /*
-             * Set<CartLineItem> cartLineItemsSet = new HashSet<CartLineItem>();
-             * cartLineItemsSet.addAll(cartLineItems);
-             */
-            pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
-
-            Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-            if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-                subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
-                itemsInCart += subscriptions.size();
             }
         }
 
+        if (order.getOfferInstance() != null && !order.getOfferInstance().isValid()) {
+            offerInstanceDao.save(order.getOfferInstance());
+            order.setOfferInstance(null);
+            order = orderDao.save(order);
+        }
+
+        Address address = order.getAddress() != null ? order.getAddress() : new Address();
+        pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), address, 0D), address);
+
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+            subscriptions = new SubscriptionFilter(order.getSubscriptions()).addSubscriptionStatus(EnumSubscriptionStatus.InCart).filter();
+            itemsInCart += subscriptions.size();
+        }
         freebieBanner = cartFreebieService.getFreebieBanner(order);
         return new ForwardResolution("/pages/cart.jsp");
     }
 
     @DontValidate
     public Resolution getCartItems() {
-        User user = null;
-        if (getPrincipal() != null) {
-            user = getUserService().getUserById(getPrincipal().getId());
-            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+        User user = getPrincipalUser();
+        if (user == null) {
+            user = userManager.createAndLoginAsGuestUser(null, null);
         }
-        if (user != null) {
-            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
-            if (order != null) {
-                Set<CartLineItem> cartLineItems = order.getCartLineItems();
-                if (cartLineItems != null && !cartLineItems.isEmpty()) {
-                    Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
-                    if (order != null && productCartLineItems != null) {
-                        itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
-                    }
+        order = orderManager.getOrCreateOrder(user);
+        if (order != null) {
+            Set<CartLineItem> cartLineItems = order.getCartLineItems();
+            if (cartLineItems != null && !cartLineItems.isEmpty()) {
+                Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                if (order != null && productCartLineItems != null) {
+                    itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
                 }
                 int inCartSubscriptions = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
                 itemsInCart += inCartSubscriptions;
@@ -201,7 +161,7 @@ public class CartAction extends BaseAction {
 
     /**
      * method used to update the latest pricing, for eg when an offer is applied/changed
-     * 
+     *
      * @return
      */
     @JsonHandler
@@ -216,12 +176,7 @@ public class CartAction extends BaseAction {
     }
 
     public Resolution checkout() {
-        orderManager.trimEmptyLineItems(order);
-        /*
-         * for (Iterator<LineItem> lineItemIterator = order.getProductCartLineItems().iterator();
-         * lineItemIterator.hasNext();) { LineItem lineItem = lineItemIterator.next(); lineItemDao.save(lineItem); }
-         */
-
+//        orderManager.trimEmptyLineItems(order);
         return new RedirectResolution(SelectAddressAction.class);
     }
 
@@ -291,4 +246,20 @@ public class CartAction extends BaseAction {
     public OrderDao getOrderDao() {
         return orderDao;
     }
+
+  public Set<CartLineItem> getTrimCartLineItems() {
+    return trimCartLineItems;
+  }
+
+  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
+    this.trimCartLineItems = trimCartLineItems;
+  }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
 }

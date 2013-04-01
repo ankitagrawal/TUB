@@ -99,9 +99,10 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                         <br/>
 
                         If you have any questions, you can chat online with our Customer Care or call them at
-                        0124-4502930 . We will send another email once your order ships.<br/>
+                        0124-4616444 . We will send another email once your order ships.<br/>
                         <br/>
 
+                        <#include "orderNote.ftl">
 
                         Healthy Shopping!<br/>
 
@@ -143,7 +144,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                     <td align="right" valign="middle"
                         style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
                             href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;|
-                        &nbsp;t: 0124-4502930
+                        &nbsp;t: 0124-4616444
                     </td>
                 </tr>
             </table>
@@ -154,7 +155,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
             style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
 
             Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br/>
-            &copy; 2011 HealthKart.com. All Rights Reserved.
+            &copy; 2013 HealthKart.com. All Rights Reserved.
         </td>
     </tr>
 </table>

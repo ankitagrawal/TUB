@@ -63,7 +63,7 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
                 shipment.setEmailSent(true);
                 shipmentService.save(shipment);
             }
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShippedEmailFired, "");
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShippedEmailFired);
         }
 
         addRedirectAlertMessage(new SimpleMessage("Shipping emails for [" + shippingOrderList.size() + "] Shipping Orders have been sent."));

@@ -79,9 +79,13 @@ public class CourierConstants {
 	public static final String QUANTIUM_TRACKING_NO = "TrackingNo";
 	public static final String QUANTIUM_REF_NO = "Reference";
 	public static final String QUANTIUM_STATUS = "CurrentStatus";
-	public static final String QUANTIUM_DELIVERED = "DS";
+	public static final String QUANTIUM_DELIVERED = "D";
 	public static final String QUANTIUM_DELIVERY_DATE = "LastUpdatedDate";
 	public static final String QUANTIUM_INVALID_NO = "Invalid Tracking NO";
+
+
+	public static final String INDIAONTIME_DELIVERED = "DELIVERED";
+	public static final String FEDEX_DELIVERED = "Delivered";
 
     //Constants for Healthkart Delivery
     public static final String HKDELIVERY_WORKSHEET_FOLDER = "hkDeliveryWorksheet";

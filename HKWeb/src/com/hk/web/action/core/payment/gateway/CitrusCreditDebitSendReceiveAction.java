@@ -64,7 +64,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.email, user.getEmail());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressStreet1, address.getLine1());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressCity, address.getCity());
-        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressZip, address.getPin());
+        citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressZip, address.getPincode());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressState, address.getState());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressCountry, "INDIA");
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.merchantTxnId, merchantTxnId);
@@ -113,7 +113,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.success(gatewayOrderId, ePGTxnID, rrn, responseMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusSESSION_EXPIRED.getId().equals(TxStatus) || EnumCitrusResponseCodes.TxStatusCANCELED.getId().equals(TxStatus)) {
-                paymentManager.fail(gatewayOrderId,ePGTxnID);
+                paymentManager.fail(gatewayOrderId,ePGTxnID,responseMsg);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusFAIL.getId().equals(TxStatus)) {
                 if (EnumCitrusResponseCodes.Rejected_By_Gateway.getId().equals(pgRespCode)) {

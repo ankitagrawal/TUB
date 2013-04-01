@@ -22,11 +22,11 @@
           <li><label>Order ID</label> <s:text name="orderId"/></li>
           <li><label>Gateway Order ID</label> <s:text name="gatewayOrderId" id="gatewayOrderId"/></li>
           <li>
-            <label> Order Start
+            <label> Payment Start
               date</label><s:text class="date_input startDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
           </li>
           <li>
-            <label>Order End
+            <label>Payment End
               date</label><s:text class="date_input endDate" style="width:150px" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
           </li>
           <div class="buttons"><s:submit name="searchOrders" value="Search"/></div>
@@ -42,7 +42,7 @@
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${serviceQueueBean}"/>
     <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                     shippingOrders="${serviceQueueBean.shippingOrderList}"/>
+                     shippingOrders="${serviceQueueBean.shippingOrderList}" isServiceQueue="true"/>
 
     <div>
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${serviceQueueBean}"/>
@@ -79,6 +79,17 @@
       });
       return true;
     });
+
+
+    $('.movetoactionqueue').click(function (e) {
+        e.preventDefault();
+        var ele = $(this);
+        var link = ele.attr('href') + '&';
+        link += "shippingOrderList[]=" + ele.attr("dataId");
+        location.href = link;
+    });
+
+
 
   </script>
 

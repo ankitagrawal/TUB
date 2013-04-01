@@ -9,7 +9,9 @@
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -42,6 +44,8 @@
 </c:if>
 
 <s:layout-component name="htmlHead">
+  <!--google remarketing page type-->
+  <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
@@ -230,7 +234,7 @@
         <div class="grid_24" style="width: 950px;">
           <c:forEach var="headingProduct" items='${hk:getHeadingProductsSortedByRank(heading.id)}' begin="0" end="5">
             <div class="grid_4 alpha omega">
-              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}'/>
+              <s:layout-render name="/layouts/embed/_productThumbG.jsp" product='${headingProduct.product}' productReferrerId="<%=EnumProductReferrer.categoryHomePage.getId()%>"/>
             </div>
           </c:forEach>
         </div>

@@ -60,6 +60,7 @@ $(document).ready(function () {
 						'<td><input type="text" class="taxCategory" readonly="readonly" name="poLineItems[' + nextIndex + '].taxCategory"/></td>' +
 						'<td></td>' +
 						'<td></td>' +
+						'<td></td>' +
 						'<td class="last30DaysSales"></td>' +
 						'  <td>' +
 						'    <input type="text" name="poLineItems[' + nextIndex + '].qty" class="quantity valueChange" />' +
@@ -86,7 +87,7 @@ $(document).ready(function () {
 		return false;
 	});
 
-	$('.valueChange').live("change", function () {
+	$('.valueChange').live("change", function () {        
 		var valueChangeRow = $(this).parents('.lineItemRow');
 		var costPrice = valueChangeRow.find('.costPrice').val();
 		var mrp = valueChangeRow.find('.mrp').val();
@@ -415,6 +416,7 @@ function temp() {
 		<th>Details</th>
 		<th>Tax<br/>Category</th>
 		<th>Current Inventory <br>Selected Warehouse</th>
+		<th>Current Inventory <br>All Warehouses<br>(excluding store)</th>
 		<th>Current Inventory <br>All Warehouses</th>
 		<th>Last 30 days Sale</th>
 		<th>Qty</th>
@@ -491,6 +493,9 @@ function temp() {
 				${hk:netInventory(sku)}
 		</td>
 		<td>
+				${hk:netInventoryAtServiceableWarehouses(productVariant)}
+		</td>
+		<td>
 				${hk:netInventory(productVariant)}
 		</td>
 		<td>
@@ -544,7 +549,7 @@ function temp() {
 	<tfoot>
 	<tr>
 		&nbsp; &nbsp;
-		<td colspan="11">Total</td>
+		<td colspan="12">Total</td>
 		<td colspan="6" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseOrderDto.totalTaxable"
 		            value="${pa.purchaseOrderDto.totalTaxable}"/></td>

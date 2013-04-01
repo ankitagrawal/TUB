@@ -4,20 +4,28 @@ import com.akube.framework.service.BasePaymentGatewayWrapper;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.PaymentMode;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.user.BillingAddress;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
 import com.hk.web.action.core.auth.LoginAction;
+import com.hk.web.action.core.cart.CartAction;
+import com.hk.web.action.core.order.OrderSummaryAction;
 import com.hk.web.factory.PaymentModeActionFactory;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.HttpCache;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -29,8 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Author: Pratham
@@ -42,8 +49,10 @@ public class PaymentAction extends BaseAction {
 
     private PaymentMode paymentMode;
     private Gateway gateway;
-    private Long billingAddressId;
+    Long billingAddressId;
     private static Logger logger = LoggerFactory.getLogger(PaymentAction.class);
+//    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
+//    private Integer               sizeOfCLI;
 
     @Validate(required = true)
     Issuer issuer;
@@ -58,6 +67,9 @@ public class PaymentAction extends BaseAction {
     OrderManager orderManager;
 
     @Autowired
+    AddressDao addressDao;
+
+    @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
     /*
    algorithm to route multiple gateways, first let the customer choose the issuer now based on the issuer, get all the damn gateways that serve it, alongwith the priority assigned by admin
@@ -68,6 +80,18 @@ public class PaymentAction extends BaseAction {
         if (order.getOrderStatus().getId().equals(EnumOrderStatus.InCart.getId())) {
             // recalculate the pricing before creating a payment.
             order = orderManager.recalAndUpdateAmount(order);
+//            trimCartLineItems = orderManager.trimEmptyLineItems(order);
+//            sizeOfCLI = trimCartLineItems.size();
+//            if(trimCartLineItems!=null && trimCartLineItems.size()>0){
+//                if(order.getCartLineItems()==null || order.getCartLineItems().size()==0){
+//                    return new RedirectResolution(CartAction.class);
+//                }
+//                return new ForwardResolution(OrderSummaryAction.class).addParameter("trim",true).addParameter("sizeOfCLI",sizeOfCLI);
+//            }
+            BillingAddress billingAddress = null;
+            if(billingAddressId != null){
+                billingAddress = addressDao.getBillingAddressById(billingAddressId);
+            }
 
             String issuerCode = null;
             if (issuer != null) {
@@ -106,7 +130,7 @@ public class PaymentAction extends BaseAction {
             paymentMode = EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode();
 
             // first create a payment row, this will also contain the payment checksum
-            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer);
+            Payment payment = paymentManager.createNewPayment(order, paymentMode, BaseUtils.getRemoteIpAddrForUser(getContext()), gateway, issuer, billingAddress);
 
             if (gateway != null) {
                 Class actionClass = PaymentModeActionFactory.getActionClassForPayment(gateway, issuer.getIssuerType());

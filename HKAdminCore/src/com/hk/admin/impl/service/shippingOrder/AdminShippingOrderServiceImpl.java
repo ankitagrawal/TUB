@@ -83,7 +83,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
                 Awb awbToRemove = shippingOrder.getShipment().getAwb();
-                awbService.removeAwbForShipment(shippingOrder.getShipment().getAwb().getCourier(),awbToRemove);
+                awbService.preserveAwb(awbToRemove);
                 Shipment shipmentToDelete = shippingOrder.getShipment();
                 shippingOrder.setShipment(null);
 	            shipmentService.delete(shipmentToDelete);
@@ -213,7 +213,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder markShippingOrderAsRTO(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Returned));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_RTO));
         shippingOrder.getShipment().setReturnDate(new Date());
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Returned);
@@ -236,7 +236,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
 	    if(rtoReason != null){
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, rtoReason.getName());
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, null, rtoReason.getName());
 	    }
 	    else{
 		    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
@@ -256,7 +256,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
         if (shipment != null) {
             shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
-            getShipmentService().saveShipmentDate(shipment);
+            shipment.setShipDate(new Date());
+            getShipmentService().save(shipment);
         }
 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
@@ -291,11 +292,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
         getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;

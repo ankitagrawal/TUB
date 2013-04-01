@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hk.constants.user.EnumEmailSubscriptions;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
+import org.apache.shiro.SecurityUtils;
 import static com.hk.constants.user.EnumEmailSubscriptions.*;
 
 @Service
@@ -31,8 +31,6 @@ public class UserServiceImpl implements UserService {
     private UserDao         userDao;
     @Autowired
     private UserCartDao     userCartDao;
-    @Autowired
-    private SecurityManager securityManager;
     @Autowired
     private StoreService    storeService;
 
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private PrincipalImpl getPrincipal() {
-        return (PrincipalImpl) getSecurityManager().getSubject().getPrincipal();
+        return (PrincipalImpl)  SecurityUtils.getSubject().getPrincipal();
     }
 
     public Page getMailingList(Category category, int pageNo, int perPage) {
@@ -193,14 +191,6 @@ public class UserServiceImpl implements UserService {
 
     public void setUserCartDao(UserCartDao userCartDao) {
         this.userCartDao = userCartDao;
-    }
-
-    public SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
     }
 
     public StoreService getStoreService() {

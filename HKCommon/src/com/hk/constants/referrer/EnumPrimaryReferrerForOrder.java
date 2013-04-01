@@ -14,7 +14,9 @@ public enum EnumPrimaryReferrerForOrder {
   OTHERS(6L, "other"),
   RFERRAL(7L, "referred"),
   AFFILIATE(8L, "affiliate"),
-  OUT_BOUND(9L, "out-bound")  ;
+  OUT_BOUND(9L, "out-bound"),
+  NUTRITION_CALLING(10L, "nutrition_calling"),  
+  ;
 
   private java.lang.String name;
   private java.lang.Long id;

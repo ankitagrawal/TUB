@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -31,6 +30,9 @@ import com.google.gson.JsonParser;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.exception.HealthkartCheckedException;
+import com.hk.admin.util.courier.thirdParty.IndiaOntimeCourierTrack;
+import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
+import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +45,7 @@ import com.hk.exception.HealthkartCheckedException;
 public class CourierStatusUpdateHelper {
 
 	private static Logger logger = LoggerFactory.getLogger(CourierStatusUpdateHelper.class);
-	private BufferedReader bufferedReader = null;
+	private BufferedReader bufferedReader;
 	private URL url = null;
 	private SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String authenticationIdForDelhivery = "9aaa943a0c74e29b340074d859b2690e07c7fb25";
@@ -97,7 +99,9 @@ public class CourierStatusUpdateHelper {
 			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 		} finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -144,7 +148,9 @@ public class CourierStatusUpdateHelper {
 			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
 		} finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException ioe) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -191,7 +197,9 @@ public class CourierStatusUpdateHelper {
 		}
 		finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -240,7 +248,9 @@ public class CourierStatusUpdateHelper {
 		}
 		finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -291,7 +301,9 @@ public class CourierStatusUpdateHelper {
 
         } finally {
             try {
-                bufferedReader.close();
+                if(bufferedReader != null){
+					bufferedReader.close();
+				}
             } catch (IOException e) {
                 logger.debug(CourierConstants.IO_EXCEPTION +courierName+ trackingId);
                 throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -344,7 +356,9 @@ public class CourierStatusUpdateHelper {
 
 		} finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -414,7 +428,9 @@ public class CourierStatusUpdateHelper {
 
 		} finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -468,7 +484,9 @@ public class CourierStatusUpdateHelper {
 
 		} finally {
 			try {
-				bufferedReader.close();
+				if(bufferedReader != null){
+					bufferedReader.close();
+				}
 			} catch (IOException e) {
 				logger.debug(CourierConstants.IO_EXCEPTION + courierName + trackingId);
 				throw new HealthkartCheckedException(CourierConstants.IO_EXCEPTION + trackingId);
@@ -477,6 +495,44 @@ public class CourierStatusUpdateHelper {
 		}
 		return xmlElement;
 	}
+
+	public ThirdPartyTrackDetails updateDeliveryStatusIndiaOntime(String trackingId) throws HealthkartCheckedException {
+
+		ThirdPartyTrackDetails trackDetails = null;
+		courierName = EnumCourier.IndiaOnTime.getName();
+
+		//added for debugging
+		//trackingId = "70004207501";
+		try{
+			trackDetails = new IndiaOntimeCourierTrack().trackShipment(trackingId);
+			
+		} catch (NullPointerException npe) {
+			logger.debug(CourierConstants.NULL_POINTER_EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.NULL_POINTER_EXCEPTION + trackingId);
+
+		} catch (Exception e) {
+			logger.debug(CourierConstants.EXCEPTION + courierName + trackingId);
+			throw new HealthkartCheckedException(CourierConstants.EXCEPTION + trackingId);
+		}
+		return trackDetails;
+	}
+
+	public ThirdPartyTrackDetails updateDeliveryStatusFedex(String trackingId) throws HealthkartCheckedException {
+		ThirdPartyTrackDetails trackDetails = null;
+		courierName = EnumCourier.FedEx.getName();
+
+		//added for debugging
+		//trackingId = "794136824680";
+		try{
+			trackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);
+
+		}  catch (Exception e) {
+			logger.debug(e.getMessage() + courierName + trackingId);
+			throw new HealthkartCheckedException(e.getMessage() + trackingId);
+		}
+		return trackDetails;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public String getHkDeliveryStatusForUser(String status) {

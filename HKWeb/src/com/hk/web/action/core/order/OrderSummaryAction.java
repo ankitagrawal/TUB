@@ -1,10 +1,13 @@
 package com.hk.web.action.core.order;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.LocalizableMessage;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.core.HealthkartConstants;
+import org.apache.commons.collections.CollectionUtils;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -46,6 +50,8 @@ public class OrderSummaryAction extends BaseAction {
     @Autowired
     private CourierService     courierService;
     @Autowired
+    private PincodeCourierService pincodeCourierService;
+    @Autowired
     UserDao                    userDao;
     @Autowired
     OrderManager               orderManager;
@@ -70,6 +76,8 @@ public class OrderSummaryAction extends BaseAction {
     private boolean            codAllowedOnGroundShipping;
     private Double             cashbackOnGroundshipped;
     Map<String, String>        codFailureMap = new HashMap<String, String>();
+    private Set<CartLineItem>  trimCartLineItems;// = new HashSet<CartLineItem>();
+    private Integer            sizeOfCLI;
 
     // COD related changes
     @Autowired
@@ -93,48 +101,40 @@ public class OrderSummaryAction extends BaseAction {
         User user = getUserService().getUserById(getPrincipal().getId());
         // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         order = orderManager.getOrCreateOrder(user);
-        // Trimming empty line items once again.
-        orderManager.trimEmptyLineItems(order);
+        trimCartLineItems = orderManager.trimEmptyLineItems(order);
+         sizeOfCLI = order.getCartLineItems().size();
+
         // OfferInstance offerInstance = order.getOfferInstance();
         Double rewardPointsUsed = 0D;
         redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
         if (useRewardPoints)
             rewardPointsUsed = redeemableRewardPoints;
-        if (order.getAddress() == null) {
-            return new RedirectResolution(SelectAddressAction.class);
-        }
 
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
 
         order.setRewardPointsUsed(rewardPointsUsed);
         order = (Order) getBaseDao().save(order);
         if (order.getAddress() == null) {
-            // addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.address.not.selected"));
             return new RedirectResolution(SelectAddressAction.class);
-        } else if (pricingDto.getProductLineCount() == 0) {
-            addRedirectAlertMessage(new LocalizableMessage("/CheckoutAction.action.checkout.not.allowed.on.empty.cart"));
-            return new RedirectResolution(CartAction.class);
         }
 
         Address address = order.getAddress();
-        String pin = address != null ? address.getPin() : null;
+        String pin = address != null ? address.getPincode().getPincode() : null;
 
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
 
-        // Ground Shipping logic starts ---
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
         if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
             groundShippedItemPresent = true;
-            groundShippingAllowed = courierService.isGroundShippingAllowed(pin);
+            groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(pin);
         }
-        // Ground Shipping logic ends --
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
-        availableCourierList = courierService.getAvailableCouriers(order);
+        availableCourierList = pincodeCourierService.getAvailableCouriers(order);
         if (availableCourierList != null && availableCourierList.size() == 0) {
             availableCourierList = null;
         }
@@ -249,4 +249,20 @@ public class OrderSummaryAction extends BaseAction {
     public void setCodFailureMap(Map<String, String> codFailureMap) {
         this.codFailureMap = codFailureMap;
     }
+
+  public Set<CartLineItem> getTrimCartLineItems() {
+    return trimCartLineItems;
+  }
+
+  public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
+    this.trimCartLineItems = trimCartLineItems;
+  }
+
+  public Integer getSizeOfCLI() {
+    return sizeOfCLI;
+  }
+
+  public void setSizeOfCLI(Integer sizeOfCLI) {
+    this.sizeOfCLI = sizeOfCLI;
+  }
 }

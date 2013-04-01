@@ -9,7 +9,7 @@ Order Cancellation for Order ID ${order.gatewayOrderId}
 
 <p style="margin-bottom:1em">We have cancelled your order id ${order.gatewayOrderId}.</p>
 <p style="margin-bottom:1em">In case of any confusion, please feel free to contact us about this on our customer care email - info@healthkart.com
-  or our customer care phone on 0124-4502930
+  or our customer care phone on 0124-4616444
 </p>
 
 <div>
@@ -146,7 +146,7 @@ Order Cancellation for Order ID ${order.gatewayOrderId}
       <#if order.address.line2??>
         ${order.address.line2}<br/>
       </#if>
-      ${order.address.city} - ${order.address.pin}<br/>
+      ${order.address.city} - ${order.address.pincode.pincode}<br/>
       ${order.address.state} (India)<br/>
     Ph: ${order.address.phone}<br/>
   </p>

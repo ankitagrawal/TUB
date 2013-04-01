@@ -24,6 +24,7 @@ import org.hibernate.engine.PersistenceContext;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -42,6 +43,7 @@ import com.hk.pact.dao.BaseDao;
 public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     @Autowired
+    @Qualifier("sessionFactory")
     public void init(SessionFactory factory) {
         setSessionFactory(factory);
     }
@@ -399,6 +401,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     public void flush() {
         getHibernateTemplate().flush();
     }
+    
+    @Override
+    public SQLQuery createSqlQuery(String queryString) {
+      return getSession().createSQLQuery(queryString);
+    }
+
 
     @SuppressWarnings("unchecked")
     private int count(DetachedCriteria criteria, boolean hasDistinctRootEntity) {

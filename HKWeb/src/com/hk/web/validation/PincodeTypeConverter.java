@@ -20,29 +20,21 @@ import com.hk.pact.dao.BaseDao;
 public class PincodeTypeConverter implements TypeConverter<Pincode> {
 
     public void setLocale(Locale locale) {
-    // nothing
   }
 
-   //PincodeDao pincodeDao;
     @Autowired
     private BaseDao baseDao;
 
-  public Pincode convert(String id, Class<? extends Pincode> aClass, Collection<ValidationError> validationErrors) {
-    Long idLong = null;
-    try {
-      idLong = Long.parseLong(id);
-    } catch (NumberFormatException e) {
-    }
-    if (idLong == null) {
-      return null;
-    } else {
-        return getBaseDao().get(Pincode.class, idLong);
-   //   return pincodeDao.find(idLong);
+    public Pincode convert(String id, Class<? extends Pincode> aClass, Collection<ValidationError> validationErrors) {
+        if (id == null) {
+            return null;
+        } else {
+            return getBaseDao().get(Pincode.class, id);
+            // return categoryDao.getCategoryByName(id);
+        }
     }
 
-  }
-  
-  public BaseDao getBaseDao() {
+    public BaseDao getBaseDao() {
       return baseDao;
   }
 

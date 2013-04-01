@@ -103,7 +103,7 @@
             <div class='city'>${billingAddress.city}</div>
             <div class='state'>${billingAddress.state}</div>
 
-           <c:set var="countryId" value="${billingAddress.countryId}" />
+           <c:set var="countryId" value="${billingAddress.country.id}" />
               <input type="hidden" value="${countryId}" class="countryId">
            <div class='country'>${hk:getCountry(countryId).name}</div>
 
@@ -136,8 +136,7 @@
           street2 = addressBlock.find('.street2').text();
           city = addressBlock.find('.city').text();
           state = addressBlock.find('.state').text();
-//          country = addressBlock.find('.country').text();
-            countryId = addressBlock.find('.countryId').val();
+          countryId = addressBlock.find('.countryId').val();
           pin = addressBlock.find('.pin').text();
           phone = addressBlock.find('.phone').text();
           id = addressBlock.find('.address_id').val();
@@ -147,13 +146,9 @@
             form.find("input[type='text'][name='address.line2']").val(street2);
           }
           form.find("input[type='text'][name='address.city']").val(city);
-//          form.find("input[type='text'][name='address.state']").val(state);
           form.find("[name='address.state']").val(state.toUpperCase());
-//          form.find("[name='address.countryId']").val(country.toUpperCase());
-
-//           form.find("input[type='text'][name='address.countryId']").val();
-            $('select').val(countryId);
-            form.find("input[type='text'][name='address.pin']").val(pin);
+          $('select').val(countryId);
+          form.find("input[type='text'][name='pin']").val(pin);
           form.find("input[type='text'][name='address.phone']").val(phone);
           form.find("input[type='hidden'][name='address.id']").val(id);
         });
@@ -205,12 +200,9 @@
           <s:errors/>
         </div>
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm"
-                onsubmit="return validateForm()" method="post" name="BillingAddressForm">
+        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm" onsubmit="return validateForm()" method="post" name="BillingAddressForm">
         <s:hidden name="issuer" value="${issuerPaypal}"/>
-        <s:hidden name="address.id"/>
         <span class="aster special">(Fields marked * are required.)</span>
-
           <div class='label'>Name<span class="aster">*</span></div>
           <s:text name="address.name" maxlength = "80"/>
           <div class='label'>Address Line 1<span class="aster">*</span></div>
@@ -222,20 +214,15 @@
           <div class='label'>State<span class="aster">*</span></div>
           <s:text name="address.state" maxlength = "50"/>
            <div class='label'>Country<span class="aster">*</span></div>
-          <s:select name="address.countryId" style="width:310px;">
+          <s:select name="countryId" style="width:310px;">
               <s:option value="">-select-</s:option>
               <c:forEach items="${countryList}" var="country">
                   <s:option value="${country.id}">${country.name}</s:option>
            </c:forEach>
           </s:select>
-
-            <%--<s:select name="country" value="${countr}">--%>
-                <%--<s:option value="">-Select-</s:option>--%>
-                <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCountry" value="id" label="name"/>--%>
-            <%--</s:select>--%>
-
           <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="address.pin" class="pincode" maxlength="20"/>
+          <s:text name="pin" class="pincode" maxlength="20"/>
+          <s:hidden name="address.pincode" value="-1"/>
           <div class='label'>Phone / Mobile<span class="aster">*</span></div>
           <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
           <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
@@ -254,14 +241,13 @@
       <script type="text/javascript">
            function validateForm()
     {
-//        var numbers = /^[0-9]+$/;
         var billingAddressName = document.forms["BillingAddressForm"]["address.name"].value;
         var billingAddressLine1 = document.forms["BillingAddressForm"]["address.line1"].value;
         var billingAddressCity = document.forms["BillingAddressForm"]["address.city"].value;
         var billingAddressState = document.forms["BillingAddressForm"]["address.state"].value;
-        var billingAddressPin = document.forms["BillingAddressForm"]["address.pin"].value;
+        var billingAddressPin = document.forms["BillingAddressForm"]["pin"].value;
         var billingAddressPhone = document.forms["BillingAddressForm"]["address.phone"].value;
-        var billingAddressCountry = document.forms["BillingAddressForm"]["address.countryId"].value;
+        var billingAddressCountry = document.forms["BillingAddressForm"]["countryId"].value;
         if (billingAddressName == null || billingAddressName == "")
         {
             alert("Name must be filled out");
@@ -306,11 +292,6 @@
     </div>
   </div>
 </s:layout-component>
-<s:layout-component name="zopim">
-  <jsp:include page="/includes/_zopim.jsp"/>
-</s:layout-component>
-
-<s:layout-component name="footer"> </s:layout-component>
 
 </s:layout-render>
 

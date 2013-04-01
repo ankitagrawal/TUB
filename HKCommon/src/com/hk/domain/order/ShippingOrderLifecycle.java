@@ -1,20 +1,13 @@
 package com.hk.domain.order;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.user.User;
 
 @Entity
@@ -33,6 +26,9 @@ public class ShippingOrderLifecycle implements java.io.Serializable, Comparable<
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shipping_order_id")
     private ShippingOrder                  shippingOrder;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrderLifecycle")
+    private List<LifecycleReason> lifecycleReasons = new ArrayList<LifecycleReason>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_by_user_id", nullable = false)
@@ -104,6 +100,14 @@ public class ShippingOrderLifecycle implements java.io.Serializable, Comparable<
 
     public void setActivityDate(Date activityDate) {
         this.activityDate = activityDate;
+    }
+
+    public List<LifecycleReason> getLifecycleReasons() {
+        return lifecycleReasons;
+    }
+
+    public void setLifecycleReasons(List<LifecycleReason> lifecycleReasons) {
+        this.lifecycleReasons = lifecycleReasons;
     }
 
     public int compareTo(ShippingOrderLifecycle shippingOrderLifecycle) {

@@ -3,6 +3,7 @@ package com.hk.impl.dao.shippingOrder;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Repository;
@@ -34,9 +35,15 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
         return criteria.list();
     }
 
-	public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivity(Long shippingOrderId, Long shippingOrderLifeCycleActivityId) {
+    public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivities(Long shippingOrderId, List<Long> shippingOrderLifeCycleActivityIds) {
 		return findByNamedParams("select sl from ShippingOrderLifecycle sl where sl.shippingOrder.id = :shippingOrderId " +
-				" and sl.shippingOrderLifeCycleActivity.id = :shippingOrderLifeCycleActivityId ", new String[]{"shippingOrderId", "shippingOrderLifeCycleActivityId"},
-				new Object[]{shippingOrderId, shippingOrderLifeCycleActivityId});
+				" and sl.shippingOrderLifeCycleActivity.id in (:shippingOrderLifeCycleActivityIds) ", new String[]{"shippingOrderId", "shippingOrderLifeCycleActivityIds"},
+				new Object[]{shippingOrderId, shippingOrderLifeCycleActivityIds});
 	}
+
+    @Override
+    public List<Reason> getReasonsByType(String type) {
+        String queryString = "from Reason r where r.type=:type";
+        return findByNamedParams(queryString, new String[]{"type"}, new Object[]{type});
+    }
 }

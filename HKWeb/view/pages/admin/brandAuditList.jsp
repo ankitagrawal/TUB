@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.inventory.EnumAuditStatus" %>
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Brand Audit List">
@@ -45,7 +46,8 @@
                 </c:forEach>
             </s:select>
                 <label>Audit Status</label><s:select name="auditStatus">
-                <s:option value="<%=EnumAuditStatus.Pending.getId()%>" >--Select--</s:option>
+               <%-- <s:option value="<%=EnumAuditStatus.Pending.getId()%>" >--Select--</s:option>--%>
+                <s:option value="">---Select----</s:option>
                 <c:forEach items="<%=EnumAuditStatus.getAllList()%>" var="status">
                     <s:option value="${status.id}">${status.name}</s:option>
                 </c:forEach>
@@ -53,10 +55,6 @@
                 <s:submit name="pre" value="Search"/>
             </s:form>
         </fieldset>
-
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${poa}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${poa}"/>
-
         <table class="zebra_vert">
             <thead>
             <tr>
@@ -84,13 +82,48 @@
                         </c:forEach>
                     </td>
                     <td>
-                        <c:set var = "auditStats" value="<%=EnumAuditStatus.Pending.getId()%>"/>
-                        <c:if test="${auditBrand.auditStatus == auditStats }">
-                            <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
-                                <s:param name="brandsToAudit" value="${auditBrand.id}"/>
-                                Edit
-                            </s:link>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${auditBrand.cycleCount != null}">
+                                <c:set value="<%=EnumCycleCountStatus.InProgress.getId()%>" var="inProgress"/>
+                                <c:choose>
+                                    <c:when test="${auditBrand.cycleCount.cycleStatus == inProgress}">
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
+                                            <s:param name="brandsToAudit" value="${auditBrand.id}"/>
+                                            Edit Audit Status
+                                        </s:link>
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                                                event="directToCycleCountPage">
+                                            <s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+                                            <s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
+                                            <span style="color:brown;">Edit Cycle Count</span>
+                                        </s:link>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                                                event="save">
+                                            <s:param name="cycleCount" value="${auditBrand.cycleCount.id}"/>
+                                            <span style="color:brown;">View Cycle Count</span>
+                                        </s:link>
+                                    </c:otherwise>
+
+                                </c:choose>
+                            </c:when>
+
+                            <c:otherwise>
+                                <c:set value="<%= EnumAuditStatus.Pending.getId() %>" var="pending"/>
+                                <c:if test="${auditBrand.auditStatus == pending}">
+                                    <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" event="view">
+                                        <s:param name="brandsToAudit" value="${auditBrand.id}"/>
+                                        Edit Audit Status
+                                    </s:link>
+                                    <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
+                                            event="directToCycleCountPage">
+                                        <s:param name="cycleCount.brandsToAudit" value="${auditBrand.id}"/>
+                                        <span style="color:brown;">Start Cycle Count</span>
+                                    </s:link>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
             </c:forEach>

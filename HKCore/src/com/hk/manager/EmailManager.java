@@ -1,15 +1,22 @@
 package com.hk.manager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.jsp.PageContext;
 
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductCount;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.review.Mail;
+import com.hk.util.HKImageUtils;
+import com.hk.util.ProductUtil;
+import com.hk.web.AppConstants;
+import com.hk.web.filter.WebContext;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.CategoryCache;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
@@ -33,6 +41,7 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.coupon.DiscountCouponMailingList;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
@@ -128,8 +137,7 @@ public class EmailManager {
     @Value("#{hkEnvProps['" + Keys.Env.hkContactEmail + "']}")
     private String              hkContactEmail;
     @Value("#{hkEnvProps['" + Keys.Env.logisticsOpsEmails + "']}")
-	private String              logisticsOpsEmails;
-
+	  private String              logisticsOpsEmails;
     /*
      * @Value("#{hkEnvProps['" + Keys.Env.hkContactName + "']}") private String hkContactName;
      */
@@ -407,6 +415,79 @@ public class EmailManager {
 
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.passwordResetEmail);
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
+    }
+
+    public boolean sendProductReviewEmail(User user, ProductVariant productVariant, Mail mail, String testEmailId, long userReviewMailId){
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("user", user);
+        String productVariantName = productVariant.getProduct().getName() + (productVariant.getVariantName() == null ? "" : productVariant.getVariantName()) ;
+        /*if(productVariant.getVariantName() != null){
+            valuesMap.put("product", productVariantName+" "+ productVariant.getVariantName());
+        }else
+            valuesMap.put("product", productVariantName);
+        */
+        String productImage = "";
+        if(productVariant.getMainImageId() != null) {
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getMainImageId(),false);
+        }
+        else if(productVariant.getProduct().getMainImageId() != null) {
+            productImage = HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize,productVariant.getProduct().getMainImageId(),false);
+        }
+        else{
+            String url = "/images/ProductImages/ProductImagesThumb/"+productVariant.getProduct().getId()+".jpg";
+            RedirectResolution redirectResolution = new RedirectResolution(url);
+            url = redirectResolution.getUrl(Locale.getDefault());
+            productImage = SslUtil.encodeUrlFullForced(WebContext.getRequest(), WebContext.getResponse(), url, null);
+        }
+
+        StringBuilder productDiv = new StringBuilder("<div>\n<div style=\"width: 48px; height: 64px; display: inline-block; text-align: center; vertical-align: top\">\n");
+        productDiv.append("<img style=\"max-height: 64px; max-width: 48px; font-size: 12px;\" src=\""+productImage+"\" alt=\""+productVariantName+"\"/>\n</div>\n");
+        productDiv.append("<div class=\"name\" style=\"font-size: 14px; line-height: 21px; display: inline-block; width: 310px;\">\n" +productVariantName+"<br/>\n");
+        if(productVariant.getProductOptions() != null){
+            productDiv.append("<table style=\"display: inline-block; font-size: 12px;\">\n");
+            for(ProductOption productOption : productVariant.getProductOptions()){
+                if(ProductUtil.getVariantValidOptions().contains(productOption.getName().toUpperCase())){
+                    productDiv.append("<tr>\n<td style=\"text-align: left;  padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fafafa;\">"+productOption.getName()+"</td>\n" +
+                            "<td style=\"text-align: left; padding: 0.3em 2em;border: 1px solid #f0f0f0; background: #fff;\">");
+//                  if(Functions.startsWith(productOption.getValue(),"-"))
+                    productDiv.append(productOption.getValue()+"</td>\n</tr>");
+                }
+            }
+            productDiv.append("</table>\n");
+        }
+        productDiv.append("</div>\n</div>");
+        valuesMap.put("productName", productVariantName);
+        valuesMap.put("productOptionDiv", productDiv);
+
+        HashMap params = new HashMap();
+        params.put("writeNewReviewByMail","");
+        params.put("productVariant",productVariant.getId());
+        params.put("uid",user.getLogin());
+        params.put("urm",userReviewMailId);
+        String review_link = getLinkManager().getReviewPageLink(params);
+        valuesMap.put("review_Link", review_link);
+
+        String unsubscribeLink = getLinkManager().getUnsubscribeLink(user);
+        valuesMap.put("unsubscribeLink", unsubscribeLink);
+        String source = "src";
+        valuesMap.put("source", source);
+        /*String contextPath = AppConstants.contextPath;
+        valuesMap.put("contextPath", contextPath);*/
+
+        //template contents from db
+        String mailTemplateContents = mail.getContent();
+        if (StringUtils.isNotEmpty(mailTemplateContents)) {
+            StringBuilder finalContents = new StringBuilder(mail.getSubject());
+            finalContents.append(BaseUtils.newline + mailTemplateContents);
+            Template freemarkerTemplate = freeMarkerService.getCampaignTemplateFromString(finalContents.toString());
+            if(StringUtils.isNotEmpty(testEmailId))
+                return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, testEmailId, user.getName());
+            else
+                return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName());
+        } else {
+            logger.info(mail.getName()+" Template Content is not present");
+            return false;
+        }
     }
 
     public boolean sendDiscountCouponEmail(String name, String email, String coupon) {
@@ -723,10 +804,36 @@ public class EmailManager {
         valuesMap.put("user", user);
         valuesMap.put("gatewayOrderId", gatewayOrderId);
 
+        Template adminFreemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentFailEmail);
+        emailService.sendHtmlEmail(adminFreemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
+
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.paymentFailEmail);
-        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "jatin.nayyar@healthkart.com", "Outbound Calling Team");
 
         emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, user.getEmail(), user.getName(), hkContactEmail);
+
+    }
+
+    public void sendCallbackRequestEmail(User user, DiscountCouponMailingList dcml) {
+      HashMap valuesMap = new HashMap();
+      valuesMap.put("dcml", dcml);
+      if (user != null)
+        valuesMap.put("userId", user.getId());
+      else
+        valuesMap.put("userId", "Guest User");
+
+      Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.callbackRequestEmail);
+      List<String> emailIds = new ArrayList<String>();
+      if (dcml.getCategory() != null && dcml.getCategory().equals("nutrition")) {
+        emailIds.add("umang.mehta@healthkart.com");
+        emailIds.add("jatin.nayyar@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("eye")) {
+        emailIds.add("category.eye@healthkart.com");
+      } else if (dcml.getCategory() != null && dcml.getCategory().equals("sports")) {
+        emailIds.add("category.sports@healthkart.com");
+      }
+      for (String emailId : emailIds) {
+        emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, "Callback Request - " + dcml.getCategory());
+      }
 
     }
 
@@ -797,6 +904,17 @@ public class EmailManager {
         return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, logisticsOpsEmails,
                 EmailTemplateConstants.operationsTeam);
     }
+
+  public boolean sendExtraInventoryMail(ExtraInventory extraInventory){
+        HashMap valuesMap = new HashMap();
+        valuesMap.put("extraInventory", extraInventory);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.extraInventoryCreatedEmailToCategory);
+        Category category = extraInventory.getPurchaseOrder().getPoLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+        for(String categoryAdminEmail : this.categoryAdmins(category)){
+            emailService.sendHtmlEmailNoReply(freemarkerTemplate,valuesMap,categoryAdminEmail,category.getDisplayName());
+        }
+    return true;
+  }
 
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();

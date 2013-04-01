@@ -1,13 +1,13 @@
 package com.hk.admin.pact.dao.inventory;
 
-import java.util.Date;
-import java.util.List;
-
 import com.akube.framework.dao.Page;
+import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
-import com.hk.domain.inventory.BrandsToAudit;
+
+import java.util.Date;
+import java.util.List;
 
 public interface BrandsToAuditDao extends BaseDao {
 
@@ -19,6 +19,7 @@ public interface BrandsToAuditDao extends BaseDao {
 
     public boolean isBrandAudited(String brand);
 
-    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus);
+    public List<BrandsToAudit> getBrandsToAudit(String brand, Long auditStatus,Warehouse warehouse);
 
+    public BrandsToAudit save(BrandsToAudit brandsToAudit);
 }

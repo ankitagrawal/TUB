@@ -78,7 +78,9 @@ public class EditPurchaseOrderAction extends BaseAction {
 
 	@DefaultHandler
 	public Resolution pre() {
-		logger.debug("purchaseOrder@Pre: " + purchaseOrder.getId());
+		if(purchaseOrder != null){
+			logger.info("purchaseOrder@Pre: " + purchaseOrder.getId());
+		}
 		purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
 		for(PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
 			if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {

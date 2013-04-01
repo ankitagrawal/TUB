@@ -28,7 +28,7 @@
                                     <li>
                                         <label>Courier</label><s:select name="courierName" class="courier">
                                                       <s:option value="">-Select Courier-</s:option>
-                                                      <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierListForDBUpdation"/>
+                                                      <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="courierListForAutoDeliveryMarking"/>
                                                     </s:select>
 
                                     </li>

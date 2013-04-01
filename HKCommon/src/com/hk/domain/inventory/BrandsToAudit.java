@@ -4,6 +4,8 @@ package com.hk.domain.inventory;
 
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.cycleCount.CycleCount;
+import com.akube.framework.gson.JsonSkip;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,24 +33,29 @@ public class BrandsToAudit implements java.io.Serializable {
     @Column(name = "brand", nullable = false, length = 45)
     private String brand;
 
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal (TemporalType.DATE)
     @Column(name = "audit_date", nullable = false, length = 10)
     private Date auditDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_date", nullable = false, length = 10)
+    @Column(name = "update_dt", length = 10)
     private Date updateDate;
 
     @Column(name = "audit_status", nullable = false)
     private Long auditStatus;
 
-    public Long getId() {
-        return this.id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
+
+	@JsonSkip
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "brandsToAudit")
+	private CycleCount cycleCount;
+	
+
+	public Long getId() {
+		return this.id;
+	}
 
     public User getAuditor() {
         return auditor;
@@ -97,10 +104,33 @@ public class BrandsToAudit implements java.io.Serializable {
         this.auditStatus = auditStatus;
     }
 
-    @Override
-    public String toString() {
-        return id != null ? id.toString() : "";
+	@Override
+	public String toString() {
+		return id != null ? id.toString() : "";
+	}
+
+	@Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof BrandsToAudit))
+            return false;
+
+        BrandsToAudit brandsToAudit = (BrandsToAudit) o;
+
+        if (this.id != null && brandsToAudit.getId() != null){
+            return this.id.equals(brandsToAudit.getId());
+        }
+        return false;
     }
+
+	public CycleCount getCycleCount() {
+		return cycleCount;
+	}
+
+	public void setCycleCount(CycleCount cycleCount) {
+		this.cycleCount = cycleCount;
+	}
 }
 
 

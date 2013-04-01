@@ -1,21 +1,21 @@
 package com.hk.web.action.admin.courier;
 
 
-import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.CourierGroupService;
+import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierGroup;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.courier.CourierGroupService;
-import com.hk.admin.pact.dao.courier.CourierDao;
-import com.hk.web.HealthkartResponse;
-import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
-import java.util.*;
+import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.web.HealthkartResponse;
+import com.hk.constants.courier.EnumCourierOperations;
 import net.sourceforge.stripes.action.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,16 +55,21 @@ public class AddCourierAction extends BasePaginatedAction {
 
 	private String q = "";
 
+	private Long operationBitset;
+
+	private List<Long> operationBitSetList = new ArrayList<Long>();
+
 
 
 	@DefaultHandler
 	public Resolution pre() {
 		String courierGroupName = null;
-		if(courierGroup != null){
-		courierGroupName = courierGroup.getName();
+		if (courierGroup != null) {
+			courierGroupName = courierGroup.getName();
 		}
-		courierPage = courierService.getCouriers(courierName, status,courierGroupName, getPageNo(), getPerPage());
+		courierPage = courierService.getCouriers(courierName, status, courierGroupName, getPageNo(), getPerPage(), operationBitset);
 		List<Courier> courierListDb = courierPage.getList();
+
 		courierList = courierListDb;
 		if (courierGroup != null) {
 			courierList = new ArrayList<Courier>();
@@ -95,6 +100,14 @@ public class AddCourierAction extends BasePaginatedAction {
 			}
 		}
 		courier.setName(courierName.trim());
+		long bitSetOperation = 2;
+		if (operationBitSetList != null && operationBitSetList.size() > 0) {
+			bitSetOperation = 1;
+			for (Long operationBitset : operationBitSetList) {
+				bitSetOperation = bitSetOperation * (operationBitset.longValue());
+			}
+		}
+		courier.setOperationsBitset(bitSetOperation);
 		if (courierGroup != null) {
 			courier.setCourierGroup(Arrays.asList(courierGroup));
 			courierService.saveOrUpdate(courier);
@@ -104,12 +117,19 @@ public class AddCourierAction extends BasePaginatedAction {
 			courierService.saveOrUpdate(courier);
 		}
 
+
 		addRedirectAlertMessage(new SimpleMessage("Courier Saved sucessfully"));
 		return new RedirectResolution(AddCourierAction.class);
 	}
 
 	public Resolution editCourier() {
 		courier = getCourier();
+		if(courier != null){
+		operationBitSetList = EnumCourierOperations.getFactorsOfOperationBit(courier.getOperationsBitset());
+		}
+		else{
+			operationBitSetList.add(EnumCourierOperations.HK_SHIPPING.getId());
+		}
 		return new ForwardResolution("/pages/courier.jsp");
 	}
 
@@ -120,20 +140,20 @@ public class AddCourierAction extends BasePaginatedAction {
 
 
 	public Resolution saveGroup() {
-			if ((courierGroupService.getByName(courierGroup.getName().trim())) != null) {
-				addRedirectAlertMessage(new SimpleMessage("Courier Group already exist"));
-				return new ForwardResolution("/pages/courierGroup.jsp");
-			} else {
-				courierGroupService.save(courierGroup);
-				addRedirectAlertMessage(new SimpleMessage("Courier Group Saved")); 				
-			}
+		if ((courierGroupService.getByName(courierGroup.getName().trim())) != null) {
+			addRedirectAlertMessage(new SimpleMessage("Courier Group already exist"));
+			return new ForwardResolution("/pages/courierGroup.jsp");
+		} else {
+			courierGroupService.save(courierGroup);
+			addRedirectAlertMessage(new SimpleMessage("Courier Group Saved"));
+		}
 
-	   return new RedirectResolution(AddCourierAction.class);
+		return new RedirectResolution(AddCourierAction.class);
 	}
 
 	public Resolution populateCourier() {
 		List<String> courierList = new ArrayList<String>();
-		List<Courier> couriers = courierService.getCouriers(null, null, null);
+		List<Courier> couriers = courierService.getCouriers(null, null, null, operationBitset);
 		for (Courier courier : couriers) {
 			if ((courier.getName().trim().toUpperCase()).startsWith(q.trim().toUpperCase()))
 				courierList.add(courier.getName());
@@ -141,6 +161,7 @@ public class AddCourierAction extends BasePaginatedAction {
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "done", courierList);
 		return new JsonResolution(healthkartResponse);
 	}
+
 	public CourierGroup getCourierGroup() {
 		return courierGroup;
 	}
@@ -198,6 +219,7 @@ public class AddCourierAction extends BasePaginatedAction {
 		HashSet<String> params = new HashSet<String>();
 		params.add("courierName");
 		params.add("courierGroup");
+		params.add("operationBitset");
 		return params;
 	}
 
@@ -216,4 +238,22 @@ public class AddCourierAction extends BasePaginatedAction {
 	public void setQ(String q) {
 		this.q = q;
 	}
+
+	public Long getOperationBitset() {
+		return operationBitset;
+	}
+
+	public void setOperationBitset(Long operationBitset) {
+		this.operationBitset = operationBitset;
+	}
+
+	public List<Long> getOperationBitSetList() {
+		return operationBitSetList;
+	}
+
+	public void setOperationBitSetList(List<Long> operationBitSetList) {
+		this.operationBitSetList = operationBitSetList;
+	}
+
+
 }

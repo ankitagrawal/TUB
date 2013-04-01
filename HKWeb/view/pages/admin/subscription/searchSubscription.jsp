@@ -337,8 +337,8 @@
                     ${subscription.address.line1}<br/>
                     ${subscription.address.line2}<br/>
                     ${subscription.address.city} -
-                <a href="http://www.dtdc.in/subpages/services/location_search.asp?pin=${subscription.address.pin}" target="_blank">
-                        ${subscription.address.pin}
+                <a href="http://www.dtdc.in/subpages/services/location_search.asp?pin=${subscription.address.pincode.pincode}" target="_blank">
+                        ${subscription.address.pincode.pincode}
                 </a><br/>
                     ${subscription.address.state}<br/>
                 Ph: ${subscription.address.phone}<br/>

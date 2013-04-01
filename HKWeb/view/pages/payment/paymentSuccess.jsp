@@ -21,6 +21,8 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -44,7 +46,15 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
-    <div style="margin-top: 50px;">
+   <%--<c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+        <div>
+            <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
+                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
+            </a>
+        </div>
+    </c:if>--%>
+    <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
         </h1>
@@ -151,8 +161,62 @@
             e.async = true;
             document.getElementById('sdt-js').appendChild(e);
         }());
-    </script> 
+    </script>
+    <!-- Start AdRoll (FB Retargetting Conversion Tracking Code -->
+	<script type="text/javascript">
+	  adroll_segments = "conversion"
+	</script>
+  <script type="text/javascript">
+  adroll_adv_id = "SKDGP6YYENHVJCJDIKHUF7";
+  adroll_pix_id = "JLZMDLGRYBFDFHEIKFE456";
+  (function () {
+  var oldonload = window.onload;
+  window.onload = function(){
+     __adroll_loaded=true;
+     var scr = document.createElement("script");
+     var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+     scr.setAttribute('async', 'true');
+     scr.type = "text/javascript";
+     scr.src = host + "/j/roundtrip.js";
+     ((document.getElementsByTagName('head') || [null])[0] ||
+      document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+     if(oldonload){oldonload()}};
+  }());
+  </script>
 
+	<!-- Start MicroAd Blade conversion Code  -->
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='convtrack14344';
+		
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+		
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+		
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<script type="text/javascript">
+		var blade_co_account_id='4184';
+		var blade_group_id='';
+		(function() {
+		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+		var path = '/js/bl_track_others.js';
+
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript'; bs.async = true;
+		bs.charset = 'utf-8'; bs.src = host + path;
+
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(bs, s);
+		})();
+	</script>
+	<!--End: Tracking code for MicroAd Blade-->
 	<!-- Start Visual Website Optimizer Asynchronous Code -->
 	<script type='text/javascript'>
 		var _vwo_code=(function(){
@@ -164,6 +228,7 @@
 		f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
 	</script>
 	<!-- End Visual Website Optimizer Asynchronous Code -->
+	
 
   <%
     }
@@ -173,9 +238,8 @@
 
 </c:if>
 
-
     <c:choose>
-        <c:when test="${actionBean.payment != null}">
+        <c:when test="${actionBean.payment != null}">         
             <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
@@ -189,9 +253,13 @@
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
             </div>--%>
+
             <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
+
+            <jsp:include page="/includes/checkoutNotice.jsp"/>
+
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                 <div class='promos'>
                     <div class='prom yellow help' style="width: 95%; padding:5px;">
@@ -251,7 +319,7 @@
 
             <h2 class="paymentH2">Customer Support</h2>
 
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4502930</p>
+            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4616444</p>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
@@ -297,15 +365,12 @@
                     <c:if test="${not empty address.line2}">
                         ${address.line2},
                     </c:if>
-                        ${address.city} - ${address.pin}<br/>
+                        ${address.city} - ${address.pincode.pincode}<br/>
                         ${address.state}, <span class="upc">INDIA</span><br/>
                     <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
                 </p>
             </div>
               <div class="floatfix"></div>
-
-
-
         </c:when>
         <c:otherwise>
             Invalid request!

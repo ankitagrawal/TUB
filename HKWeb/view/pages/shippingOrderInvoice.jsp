@@ -127,20 +127,21 @@ ORDER INVOICE <c:choose>
 </div>
 <div class="grid_4">
     <div style="float: right;">
-        <c:choose>
-            <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
-	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
-                <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
-	            </c:if>
-	            <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
-                <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
-	            </c:if>
-            </c:when>
-            <c:otherwise>
-                <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
-            </c:otherwise>
-        </c:choose>
-
+        <c:if test="${!hk:collectionContains(orderSummary.shippingOrder.baseOrder.user.roleStrings, b2bUser)}">
+            <c:choose>
+                <c:when test="${orderSummary.shippingOrder.baseOrder.store.id == 2 || orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                    <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 2}">
+                        <img src="${pageContext.request.contextPath}/images/mih-logo.jpg" alt="MadeInHealth Logo"/>
+                    </c:if>
+                    <c:if test="${orderSummary.shippingOrder.baseOrder.store.id == 3}">
+                        <img src="${pageContext.request.contextPath}/images/fitnesspro.png" alt="FitnessPro Logo"/>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/images/logo.png" alt="HealthKart Logo"/>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
     </div>
 </div>
 
@@ -193,7 +194,7 @@ ORDER INVOICE <c:choose>
             </p>
 
             <p>
-                ${address.city} - ${address.pin}
+                ${address.city} - ${address.pincode.pincode}
                 <c:if test="${orderSummary.routingCode != null && orderSummary.routingCode != ''}">
                     <s:label name="routingCode"
                              style="font-size:1.2em; font-weight:bold;">&nbsp; &nbsp;${orderSummary.routingCode}</s:label>
@@ -259,13 +260,6 @@ ORDER INVOICE <c:choose>
     </c:if>
 </div>
 
-<div class="grid_12">
-    <c:if test="${baseOrder.userComments != null}">
-        <hr/>
-        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
-        <hr/>
-    </c:if>
-</div>
 
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
@@ -299,6 +293,15 @@ ORDER INVOICE <c:choose>
     </c:choose>
 
 </div>
+<div class="clear"></div>
+<div class="grid_12">
+    <c:if test="${baseOrder.userComments != null}">
+        <hr/>
+        <p><strong>User Instructions:-</strong> ${baseOrder.userComments}</p>
+        <hr/>
+    </c:if>
+</div>
+
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 <div class="grid_12">
@@ -424,6 +427,10 @@ ORDER INVOICE <c:choose>
 
     </table>
 
+    <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
+    <h4> You have ordered an equipment that requires installation/configuration.
+        <br/>Please contact HealthKart Customer Care at 0124-4616444 - so that we can arrange for the Technician's visit.</h4>
+    </c:if>
 
     <h3>Order Summary</h3>
     <table cellspacing="0">
@@ -475,11 +482,6 @@ ORDER INVOICE <c:choose>
             </td>
         </tr>
     </table>
-
-  <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h6>  Note*  Your order has product which requires installation. Kindly contact our customer care at 0124-4502930</h6>
-   </c:if>
-
 
 </div>
 

@@ -127,6 +127,8 @@ public enum EnumRoleHasPermission {
             Arrays.asList(
                     EnumPermission.SUPER_LOGIN,
                     EnumPermission.VIEW_ACTION_QUEUE,
+                    EnumPermission.OPS_MANAGER_CUSA_UPDATE,
+                    EnumPermission.OPS_MANAGER_CUSA_VIEW,
                     EnumPermission.UPDATE_ACTION_QUEUE,
                     EnumPermission.VIEW_PACKING_QUEUE,
                     EnumPermission.UPDATE_PACKING_QUEUE,
@@ -463,6 +465,8 @@ public enum EnumRoleHasPermission {
     ),
 
 	PAYMENT_MANAGER(EnumRole.PAYMENT_MANAGER, Arrays.asList(EnumPermission.UPDATE_PAYMENT)),
+
+	STORE_MANAGER(EnumRole.STORE_MANAGER, Arrays.asList(EnumPermission.STORE_MANAGER)),
 
 	HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE));
 

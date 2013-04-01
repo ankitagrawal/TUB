@@ -6,7 +6,7 @@
 <html>
 <head>
   <title>RETAIL INVOICE/ CASH MEMO/ TAX INVOICE</title>
-  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
+  <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.7.2.min.js"></script>
   <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
 </head>
 <body>
@@ -100,7 +100,7 @@
 
       <p>
         ${address.city}, ${hk:escapeHtml(address.state)}
-        - ${address.pin},
+        - ${address.pincode.pincode},
       </p>
 
       <p>Ph: ${address.phone}</p>

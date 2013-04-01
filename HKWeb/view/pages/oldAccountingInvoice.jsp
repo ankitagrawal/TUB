@@ -108,7 +108,7 @@
         <c:if test="${not empty orderSummary.order.address.line2}">
           ${orderSummary.order.address.line2}<br/>
         </c:if>
-        ${orderSummary.order.address.city} - ${orderSummary.order.address.pin}<br/>
+        ${orderSummary.order.address.city} - ${orderSummary.order.address.pincode.pincode}<br/>
         ${orderSummary.order.address.state}<br/>
         Ph: ${orderSummary.order.address.phone}
       </div>

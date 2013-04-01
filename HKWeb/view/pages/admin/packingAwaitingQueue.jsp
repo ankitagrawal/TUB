@@ -92,6 +92,12 @@
         <label>End
           Date </label><s:text class="date_input endDate" style="width:150px"
                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+          <label>Payment Start
+              Date </label><s:text class="date_input startDate" style="width:150px"
+                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
+          <label>Payment End
+              Date </label><s:text class="date_input endDate" style="width:150px"
+                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
         <label>Status </label>
         <s:select name="shippingOrderStatus">
           <option value="">Any order status</option>
@@ -125,145 +131,11 @@
 
   <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
   <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
+  <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
   <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                   shippingOrders="${shipmentQueueBean.shippingOrderList}"/>
-
-  <%--<table class="align_top" width="100%">
-<thead>
-<tr>
-<th width="185px">Order</th>
-<th width="175px">User & Adddress</th>
-<th>Items and Qty[Checkedout Qty]</th>
-<th></th>
-</tr>
-</thead>
-<c:forEach items="${shipmentQueueBean.shippingOrderList}" var="order" varStatus="ctr">
-<c:if test="${!order.isExclusivelyServiceOrder}">
-<s:hidden name="shippingOrderList[${ctr.index}]"/>
-<tr class="${ctr.index % 2 == 0 ? '' : 'alt'} orderRow">
-<td>
-<strong class="orderId">${order.gatewayOrderId}</strong><br/>
-(<s:link beanclass="com.hk.web.action.InvoiceAction" event="partialInvoice" target="_blank">
-<s:param name="order" value="${order}"/>
-Invoice
-</s:link>)(<s:link beanclass="com.hk.web.action.InvoiceAction" event="partialInvoice"
-                           target="_blank" class="invoiceLink">
-<s:param name="order" value="${order}"/>
-<s:param name="printable" value="true"/>
-Partial PC Invoice
-</s:link>)<br/>
-Escalation <fmt:formatDate value="${(hk:getEscalationDate(order))}" type="both" timeStyle="short"/><br/>
-Order <fmt:formatDate value="${order.payment.paymentDate}" pattern="dd/MM/yyyy"/><br/>
-<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
-  Lifecycle
-  <s:param name="order" value="${order}"/>
-</s:link>
-<s:link beanclass="com.hk.web.action.admin.order.OrderLifecycleAction" event="pre" target="_blank">
-  <c:if test="${!empty hk:orderComments(order)}">
-    <text style="color:#f88; font-weight:bold">Comments!</text>
-  </c:if>
-  <c:if test="${empty hk:orderComments(order)}">Add comment</c:if>
-  <s:param name="order" value="${order}"/>
-</s:link>
-</td>
-<td>
-  ${order.user.email}<br/>
-  ${order.address.name}<br/>
-  ${order.address.city} - ${order.address.pin}<br/>
-  ${order.address.state}<br/>
-Ph. ${order.address.phone}<br/>
-</td>
-<td style="padding: 0" valign="top">
-  --%><%--<c:if test="${! hk:allItemsCheckedOut(order)}">--%><%--
-              <table width="100%">
-                <c:forEach items="${order.lineItems}" var="lineItem" varStatus="lineItemCtr">
-                  <c:if test="${lineItemTypeId_Product == lineItem.lineItemType.id}">
-                    <c:if
-                        test="${lineItem.productVariant.product.service == null || !lineItem.productVariant.product.service}">
-                      <c:if test="${lineItemStatusId_Processable == lineItem.lineItemStatus.id}">
-                        <c:set value="<%=lineItemGlobalCtr%>" var="lineItemGlobalCtr"/>
-                        <tr class="shippingRow ${lineItem.lineItemStatus.id == lineItemStatusId_Shipped ? 'row_shipped' : 'row_border'}">
-                          <td width="60%">
-                            <s:hidden name="lineItems[${lineItemGlobalCtr}]" value="${lineItem.id}"/>
-                            <c:if test="${lineItem.comboInstance != null}">
-                                <span style="color:crimson;text-decoration:underline">
-                                  (Part of Combo: ${lineItem.comboInstance.combo.name})
-                                </span><br/>
-                            </c:if>
-                              ${lineItem.productVariant.product.name}
-                              <span class="gry">
-                                  ${lineItem.productVariant.optionsCommaSeparated}
-                                <c:if test="${not empty lineItem.lineItemConfig.lineItemConfigValues}">
-
-                                  <c:set var="TH" value="TH"/>
-                                  <c:set var="THBF" value="THBF"/>
-                                  <c:set var="CO" value="CO"/>
-                                  <c:set var="COBF" value="COBF"/>
-
-
-                                  <c:forEach items="${lineItem.lineItemConfig.lineItemConfigValues}" var="configValue"
-                                             varStatus="configCtr">
-                                    <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-                                    <c:set var="addParam" value="${variantConfigOption.additionalParam}"/>
-                                    ${variantConfigOption.displayName} : ${configValue.value}
-                                    <c:if
-                                        test="${(addParam ne TH) or (addParam ne THBF) or (addParam ne CO) or (addParam ne COBF) }">
-                                      <c:if
-                                          test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                                        (R)
-                                      </c:if>
-                                      <c:if
-                                          test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                                        (L)
-                                      </c:if>
-                                    </c:if>
-                                    ${!configCtr.last?',':''}
-
-                                  </c:forEach>
-                                </c:if>
-                              </span>
-                          </td>
-                          <td width="40%">
-                              ${lineItem.qty}
-                            <span style="color:green; font-weight:bold;">[${hk:checkedoutItemsCount(lineItem)}]</span>
-                            <b>(${lineItem.productVariant.netInventory})</b>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                              ${lineItem.lineItemStatus.name}
-                          </td>
-                        </tr>
-                        <%
-                          lineItemGlobalCtr++;
-                        %>
-                      </c:if>
-                      <c:if test="${lineItemStatusId_Processable != lineItem.lineItemStatus.id}">
-                        <tr>
-                          <td width="60%">
-                              ${lineItem.productVariant.product.name}
-                                  <span class="gry">
-                                      ${lineItem.productVariant.optionsCommaSeparated}
-                                  </span>
-                          </td>
-                          <td width="40%">
-                              ${lineItem.qty}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                              ${lineItem.lineItemStatus.name}</td>
-                        </tr>
-                      </c:if>
-                    </c:if>
-                  </c:if>
-                </c:forEach>
-              </table>
-                --%><%--</c:if>--%><%--
-            </td>
-            <td class="checkBox">
-              <s:checkbox name="shippingOrderList[${ctr.index}].selected" class="lineItemCheckBox"/>
-            </td>
-          </tr>
-        </c:if>
-      </c:forEach>
-    </table>--%>
-  <div id="hiddenShippingIds"></div>
-  <div>
+                   shippingOrders="${shipmentQueueBean.shippingOrderList}" isProcessingQueue="true"/>
+    <div id="hiddenShippingIds"></div>
+    <div>
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
@@ -277,16 +149,22 @@ Ph. ${order.address.phone}<br/>
   <%--</c:if>--%>
 </s:form>
 <script type="text/javascript">
-  $('.shippingOrderActionBtn').click(function() {
-    $('.shippingOrderDetailCheckbox').each(function() {
-      var shippingOrderDetailCheckbox = $(this);
-      var isChecked = shippingOrderDetailCheckbox.attr('checked');
-      if (isChecked) {
-        $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
-      }
+
+    $('.shippingOrderActionBtn').click(function() {
+        var index = 0;
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            if (isChecked) {
+                var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
+                var reason = $(reasonId);
+                $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+']" value="' + $(this).attr('dataId') + '"/>');
+                $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
+                index++;
+            }
+        });
+        return true;
     });
-    return true;
-  });
 
   $("select[name='shippingOrderStatus']").change(function() {
     var selectedOrderStatus = $(this).val();
@@ -296,10 +174,30 @@ Ph. ${order.address.phone}<br/>
       $("#reAssignToPackingQueue").hide();
     }
   });
+  
+  var selectedSOStatus = $("select[name='shippingOrderStatus']").val()
+  
+  if(selectedSOStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>){
+  	$("#reAssignToPackingQueue").show();
+  	$("#markAll").show();
+  }else{
+  	$("#reAssignToPackingQueue").hide();
+  	$("#markAll").hide();
+  }
 
-  /*$('.lineItemCheckBox').click(function() {
-   $(this).parent().parent("tr").toggleClass('highlight');
-   });*/
+    $('#markAll').click(function() {
+        $('.shippingOrderDetailCheckbox').each(function() {
+            var shippingOrderDetailCheckbox = $(this);
+            var isChecked = shippingOrderDetailCheckbox.attr('checked');
+            shippingOrderDetailCheckbox.attr("checked", true);
+        });
+        return false;
+    });
+
+
+    /*$('.lineItemCheckBox').click(function() {
+     $(this).parent().parent("tr").toggleClass('highlight');
+     });*/
 </script>
 
 </s:layout-component>

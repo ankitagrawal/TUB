@@ -4,7 +4,6 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
     <title>Payment authorization pending for Order ID ${order.gatewayOrderId}</title>
 </head>
 <body>
-<#include "header.ftl">
 <p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
 <p style="margin-bottom:1em">
@@ -160,14 +159,15 @@ Payment authorization pending for Order ID ${order.gatewayOrderId}
     <#if order.address.line2??>
     ${order.address.line2}<br/>
     </#if>
-    ${order.address.city} - ${order.address.pin}<br/>
+    ${order.address.city} - ${order.address.pincode.pincode}<br/>
     ${order.address.state} (India)<br/>
     Ph: ${order.address.phone}<br/>
 </p>
 
 <p style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</p>
 
+<#include "orderNote.ftl">
+
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
 </body>
 </html>

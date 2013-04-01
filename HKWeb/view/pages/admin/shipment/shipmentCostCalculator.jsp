@@ -86,12 +86,12 @@
                         <li>
                             <label>Start
                                 date</label><s:text class="date_input startDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
                         </li>
                         <li>
                             <label>End
                                 date</label><s:text class="date_input endDate" style="width:150px"
-                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                                                    formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                         </li>
                         <div class="clear"></div>
                         <s:label name="courier" class="label">Courier</s:label>
@@ -125,12 +125,12 @@
                     <li>
                         <label>Start
                             date</label><s:text class="date_input startDate" style="width:150px"
-                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamStartDate"/>
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedStartDate"/>
                     </li>
                     <li>
                         <label>End
                             date</label><s:text class="date_input endDate" style="width:150px"
-                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="streamEndDate"/>
+                                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                     </li>
                     <div class="clear"></div>
 
@@ -153,6 +153,18 @@
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
+                <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+                    <fieldset class="top_label">
+                        <legend> Bulk SO Escalate</legend>
+
+                        <div class="clear"></div>
+
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="bulkEscalateShippingOrder" value="Bulk Escalate SO"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
                 <div class="clear"></div>
                 <s:form beanclass="com.hk.web.action.admin.util.MarkVariantsInStockAction">
                     <fieldset class="top_label">
@@ -161,6 +173,18 @@
                         <div style="margin-top:15px;"></div>
                         <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
                             <s:submit name="setVariantsInStockHavingInventory" value="Mark Variants In Stock"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
+                <s:form beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction">
+                    <fieldset class="top_label">
+                        <legend> Find Payment</legend>
+                        <div class="clear"></div>
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:text name="shippingOrderId" style="width:200px" class="text"/>
+                            <s:text name="merchantId" style="width:200px" class="text"/>
+                            <s:submit name="findIciciPayment" value="Find Icici Payment"/>
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>

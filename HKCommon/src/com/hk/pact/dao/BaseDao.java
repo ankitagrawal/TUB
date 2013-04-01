@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -250,6 +251,9 @@ public interface BaseDao {
      * @return
      */
     public long count(String sql, Object[] params);
+    
+    
+    public SQLQuery createSqlQuery(String queryString);
     
     
     public Page list(DetachedCriteria criteria,  boolean hasDistinctRootEntity, int pageNo, int perPage);

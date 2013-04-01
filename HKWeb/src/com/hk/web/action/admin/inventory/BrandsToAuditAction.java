@@ -5,10 +5,14 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.inventory.EnumAuditStatus;
+import com.hk.constants.inventory.EnumCycleCountStatus;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.inventory.BrandsToAudit;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.pact.service.catalog.ProductService;
 import net.sourceforge.stripes.action.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,6 +37,10 @@ public class BrandsToAuditAction extends BasePaginatedAction {
 
     @Autowired
     private BrandsToAuditDao brandsToAuditDao;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    UserService userService;
 
     private Integer defaultPerPage = 20;
 
@@ -42,11 +50,11 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         User loggedOnUser = getPrincipalUser();
         if (warehouse == null) warehouse = loggedOnUser.getSelectedWarehouse();
         User auditor = null;
-        if(auditStatus == null) auditStatus = EnumAuditStatus.Pending.getId();
+
         if (StringUtils.isNotBlank(auditorLogin)) {
             auditor = getUserService().findByLogin(auditorLogin);
         }
-        brandsAuditPage = getBrandsToAuditDao().searchAuditList(brand, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage(),auditStatus);
+        brandsAuditPage = getBrandsToAuditDao().searchAuditList(brand, warehouse, auditor, startDate, endDate, getPageNo(), getPerPage(), auditStatus);
         if (brandsAuditPage != null) {
             brandsToAuditList = brandsAuditPage.getList();
         }
@@ -63,42 +71,71 @@ public class BrandsToAuditAction extends BasePaginatedAction {
     }
 
     public Resolution save() {
-        Date auditDate = brandsToAudit.getAuditDate();
-        Date updateDate = brandsToAudit.getUpdateDate();
-        Date currentDate = new Date();
-        logger.debug("brand: " + brandsToAudit.getBrand());
+        if (getPrincipalUser() != null) {
+            Date auditDate = brandsToAudit.getAuditDate();
+            Date updateDate = brandsToAudit.getUpdateDate();
+            Date currentDate = new Date();
+            String brandName = brandsToAudit.getBrand();
+            Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+            logger.debug("brand: " + brandName);
 
-        if (auditDate == null){
-            brandsToAudit.setAuditDate(currentDate);
-            auditDate = currentDate;
-        }
-        if (updateDate == null){
-            brandsToAudit.setUpdateDate(auditDate);
-            updateDate = auditDate;
-        }
-        if( auditDate.compareTo(currentDate) > 0 || updateDate.compareTo(auditDate) < 0 || updateDate.compareTo(currentDate) > 0 ) {
-            addRedirectAlertMessage(new SimpleMessage("Invalid date"));
-            return new RedirectResolution(BrandsToAuditAction.class);
-        }
+            if (auditStatus == null){
+                auditStatus = EnumAuditStatus.Pending.getId();
+            }
 
-        if (brandsToAudit.getId() == null) {
-            List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandsToAudit.getBrand(), EnumAuditStatus.Pending.getId());
-            if (!brandsToAuditInDb.isEmpty()) {
-                addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
+            /* check if brand name id valid */
+            boolean doesBrandExist = productService.doesBrandExist(brandName);
+            if (!doesBrandExist) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid Brand Name"));
+                return new RedirectResolution(BrandsToAuditAction.class, "pre");
+            }
+
+            if (auditDate == null) {
+                brandsToAudit.setAuditDate(currentDate);
+                auditDate = currentDate;
+            }
+            if (updateDate == null) {
+                brandsToAudit.setUpdateDate(currentDate);
+            }
+            if (auditDate.compareTo(currentDate) > 0) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid date"));
                 return new RedirectResolution(BrandsToAuditAction.class);
             }
-            brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
-        }
 
-        if (getPrincipalUser() != null) {
+            if (brandsToAudit.getId() == null) {
+                List<BrandsToAudit> brandsToAuditInDb = getBrandsToAuditDao().getBrandsToAudit(brandName, EnumAuditStatus.Pending.getId(), warehouse);
+                if (!brandsToAuditInDb.isEmpty()) {
+                    addRedirectAlertMessage(new SimpleMessage("Brand Already Exists"));
+                    return new RedirectResolution(BrandsToAuditAction.class);
+                }
+                brandsToAudit.setAuditStatus(EnumAuditStatus.Pending.getId());
+            } else {
+                if (!(brandsToAudit.getAuditStatus().equals(EnumAuditStatus.Pending.getId()))) {
+                    CycleCount cycleCount = brandsToAudit.getCycleCount();
+                    if (cycleCount != null) {
+                        if (!(cycleCount.getCycleStatus().equals(EnumCycleCountStatus.Closed.getId()))) {
+                            addRedirectAlertMessage(new SimpleMessage("Brand's Cycle Count Already In progress , First Close Cycle Count  " + cycleCount.getId()));
+                            return new RedirectResolution(BrandsToAuditAction.class);
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
             User auditor = getPrincipalUser();
-            warehouse = auditor.getSelectedWarehouse();
             brandsToAudit.setAuditor(auditor);
             brandsToAudit.setWarehouse(warehouse);
-        }
 
-        getBrandsToAuditDao().save(brandsToAudit);
-        addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
+
+            getBrandsToAuditDao().save(brandsToAudit);
+            addRedirectAlertMessage(new SimpleMessage("Changes made have been saved successfully"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Please Login First"));
+        }
         return new RedirectResolution(BrandsToAuditAction.class);
     }
 
@@ -110,12 +147,14 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         this.brand = brand;
     }
 
-    public Long getAuditStatus(){
+    public Long getAuditStatus() {
         return auditStatus;
     }
-    public void setAuditStatus(Long auditStatus){
+
+    public void setAuditStatus(Long auditStatus) {
         this.auditStatus = auditStatus;
     }
+
     public Warehouse getWarehouse() {
         return warehouse;
     }
@@ -164,7 +203,7 @@ public class BrandsToAuditAction extends BasePaginatedAction {
         this.brandsToAudit = brandsToAudit;
     }
 
-    public BrandsToAuditDao getBrandsToAuditDao(){
+    public BrandsToAuditDao getBrandsToAuditDao() {
         return brandsToAuditDao;
     }
 

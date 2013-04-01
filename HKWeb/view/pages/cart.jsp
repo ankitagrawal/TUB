@@ -18,12 +18,23 @@
 <s:layout-component name="topHeading">Shopping Cart</s:layout-component>
 
 <s:layout-component name="htmlHead">
+<script src="${pageContext.request.contextPath}/js/handlebars.js"></script>
+<script src="${pageContext.request.contextPath}/js/ember.js"></script>
+<script src="${pageContext.request.contextPath}/js/loader.js"></script>
+
   <script type="text/javascript">
     var timeout; //Set globally as it needs to be reset when removeLink is clicked.
     var timespan = 3000;
+    HK = Ember.Application.create({});
+    HK.contextPath = "${pageContext.request.contextPath}";
+    function showCouponDetails(){
+        $("#couponPopUp").toggle();
+        $(".appliedOfferDetails").toggle();
+    }
 
     $(document).ready(function() {
-      $('.lineItemQty').blur(function() {
+
+        $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
         var lineItemId = lineItemRow.find('.lineItemId').val();
         var lineItemQty = $(this).val();
@@ -85,7 +96,7 @@
           simpleProductCount = Math.round($('#simpleProductsInCart').html())
           if (count == 1 || simpleProductCount==1) {
 	        $('#productsInCart').html(0);
-			//$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");	        
+			//$('.cartIcon').attr("src", "${pageContext.request.contextPath}/images/icons/cart_empty.png");
             location.reload();
           }
           else if (count > 1) {
@@ -162,6 +173,7 @@
     }
 
     function _updateTotals(responseData) {
+      HK.CartOfferController.getOffer();
       $('#summaryProductsMrpSubTotal').html('Rs. ' + responseData.data.totalMrpSubTotal);
       $('#summaryProductsHkpSubTotal').html('Rs. ' + responseData.data.totalHkSubTotal);
       $('#summaryHkDiscount').html('Rs. ' + responseData.data.totalHkDiscount);
@@ -209,7 +221,7 @@
 </s:layout-component>
 
 <s:layout-component name="modal">
-  <div class="jqmWindow" id="couponWindow" style="display:none">
+  <div class="jqmWindow" id="couponWindow">
     <s:layout-render name="/layouts/modal.jsp">
       <s:layout-component name="heading">Loading..</s:layout-component>
       <s:layout-component name="content">Please wait</s:layout-component>
@@ -248,18 +260,22 @@
       </c:otherwise>
     </c:choose>
   </h2>
+
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-    <a href="/" class="back"> &larr; go back to add more products</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add more products</a>
   </c:if>
   <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-    <a href="/" class="back"> &larr; go back to add products to your shopping cart</a>
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add products to your shopping cart</a>
   </c:if>
+ <div id="offerTextOnTop"></div>
 </s:layout-component>
+
+<s:layout-component name="cart_items">
 
 <c:if test="${cartAction.pricingDto.productLineCount >= 1}">
 
-<s:layout-component name="cart_items">
-<div class='products_container' style="min-height: 500px;">
+<div id="appliedOfferDiv"></div>
+<div class='products_container' style="min-height: 300px;">
 
 <div style="display: none;">
     <s:link beanclass="com.hk.web.action.core.order.CartLineItemUpdateAction" id="lineItemUpdateLink"></s:link>
@@ -383,9 +399,11 @@
     </div>
     <div class="quantity">
       <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+      <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
       <a class='remove removeLink' href='#'>
         (remove)
       </a>
+      </c:if>
     </div>
     <div class="price">
       <c:choose>
@@ -445,7 +463,7 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href'});
+        $('#addSubscriptionWindow').jqm({trigger: '.addSubscriptionLink', ajax: '@href',ajaxText:'<br/><div style="text-align: center;">loading... please wait..</div> <br/>'});
     });
 
 </script>
@@ -523,6 +541,8 @@
   </div>
 </c:forEach>
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
+<!--google remarketing-->
+<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
@@ -533,39 +553,43 @@
 </c:if>
 </c:if>
 </div>
-<shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div class='right_container coupon'>
-  <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
-    <h6>Got a discount coupon?</h6>
-    <br/>
-    Enter Coupon Code
 
-    <input placeholder='d-i-s-c-o-u-n-t' type='text' id="couponCode"/>
-    <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-            class="button_grey">Apply Coupon</s:link>
-    <s:link beanclass="com.hk.web.action.core.discount.AvailabeOfferListAction"
-            id="availableOffersLink">(see previously applied offers)</s:link>
-  </shiro:hasAnyRoles>
-  <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
-    Got a discount coupon?
-    <br/>
-    <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
-      <s:param name="redirectUrl" value="${pageContext.request.contextPath}/Cart.action"/>
-    </s:link>
-    to redeem it.
-    <br/>
-  </shiro:hasAnyRoles>
-  <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
-    Got a discount coupon?
-    <br/>
-    <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
-    </s:link>
-    to redeem it.
-    <br/>
-  </shiro:hasAnyRoles>
-</div>
+
+<div class="offerContainer">
+<shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
+    <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>
+        <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
+            <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
+
+            <input placeholder='discount code' type='text' id="couponCode"/>
+            <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
+                    class="button_grey">Apply</s:link>
+        </shiro:hasAnyRoles>
+
+        <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
+            Got a discount coupon?
+            <br/>
+            <s:link beanclass="com.hk.web.action.core.auth.LoginAction" class="lrg" event="pre"> login / signup
+                <s:param name="redirectUrl" value="${pageContext.request.contextPath}/core/cart/Cart.action"/>
+            </s:link>
+            to redeem it.
+            <br/>
+        </shiro:hasAnyRoles>
+        <shiro:hasAnyRoles name="<%=RoleConstants.HK_UNVERIFIED%>">
+            Got a discount coupon?
+            <br/>
+            <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" class="lrg" event="pre"> Verify your Account
+            </s:link>
+            to redeem it.
+            <br/>
+        </shiro:hasAnyRoles>
+
+    </div>
 </shiro:lacksRole>
-<div class='right_container total'>
+</div>
+
+
+<div class='right_container total' style="left: 30px;margin-bottom: 2px;width:235px;margin-left: initial;margin-right: initial;">
 <h5>Checkout</h5>
 <br/>
 
@@ -677,6 +701,7 @@
   });
 </script>
 </div>
+<div id="applicableOfferDiv"></div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 
@@ -696,7 +721,231 @@
   document.getElementById("vizuryTargeting").src = vizuryLink+"&uid="+user_hash;
 </script>
 			</c:if>
-</s:layout-component>
-</c:if>
 
+</c:if>
+     <c:set var="comboInstanceIds"  value="" />
+     <c:set var="comboInstanceIdsName" value="" />
+     <c:if test="${cartAction.trimCartLineItems!=null && fn:length(cartAction.trimCartLineItems) >0}">
+         <script type="text/javascript">
+             $(document).ready(function () {
+                 ShowDialog(true);
+//              e.preventDefault();
+                 $('.button_green').live('click',function(){
+                     $(this).hide();
+                     HideDialog();
+                 });
+
+                 function ShowDialog(modal)
+                 {
+                     $("#overlay2").show();
+                     $("#dialog2").fadeIn(300);
+
+                     if (modal)
+                     {
+                         $("#overlay2").unbind("click");
+                     }
+                 }
+
+                 function HideDialog()
+                 {
+
+                     $("#overlay2").hide();
+                     $("#dialog2").fadeOut(300);
+                 }
+             });
+         </script>
+     </c:if>
+
+</s:layout-component>
 </s:layout-render>
+
+<div id="overlay2" class="web_dialog_overlay"></div>
+   <div id="dialog2" class="web_dialog">
+
+       <table style="width:100%; border: 0px;" cellpadding="3" cellspacing="0">
+           <tr>
+               <td colspan="2" class="web_dialog_title" style="color:#444;">Oops! We are sorry.</td>
+               <td class="web_dialog_title align_right">
+                   <%--<a href="#" id="btnClose" class="classClose">Close</a>                   --%>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+               <td colspan="3" style="padding-left: 15px;">
+                   <b>The following items have been removed due to insufficient inventory</b>
+               </td>
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+               <c:forEach items="${cartAction.trimCartLineItems}" var="cartLineItem" varStatus="ctr1">
+                   <tr>
+                       <div class='product' style="border-bottom-style: solid;">
+                         <td style="padding-left: 15px;">
+                           <div class='img48' style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+                                 <c:choose>
+                                     <c:when test="${cartLineItem.comboInstance!=null}">
+                                         <c:if test="${!fn:contains(comboInstanceIds, cartLineItem.comboInstance.id)}">
+                                          <c:set var="comboInstanceIds"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIds}"/>
+                                             <c:choose>
+                                                 <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
+                                                     <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                                 </c:when>
+                                                 <c:otherwise>
+                                                     <img class="prod48"
+                                                          src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.comboInstance.combo.id}.jpg"
+                                                          alt="${cartLineItem.comboInstance.combo.name}"/>
+                                                 </c:otherwise>
+                                             </c:choose>
+                                         </c:if>
+                                     </c:when>
+                                     <c:otherwise>
+                                         <c:choose>
+                                             <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
+                                                 <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
+                                             </c:when>
+                                             <c:otherwise>
+                                                 <img class="prod48"
+                                                      src="${pageContext.request.contextPath}/images/ProductImages/ProductImagesThumb/${cartLineItem.productVariant.product.id}.jpg"
+                                                      alt="${cartLineItem.productVariant.product.name}"/>
+                                             </c:otherwise>
+                                         </c:choose>
+                                     </c:otherwise>
+                                 </c:choose>
+                           </div>
+                         </td>
+                         <td>
+                           <div class='name'>
+                               <table width="100%">
+                                   <tr>
+                                       <td>
+                                               <c:choose>
+                                                  <c:when test="${cartLineItem.comboInstance!=null}">
+                                                    <c:if test="${!fn:contains(comboInstanceIdsName, cartLineItem.comboInstance.id)}">
+                                                        <c:set var="comboInstanceIdsName"  value="${cartLineItem.comboInstance.id}+','+${comboInstanceIdsName}"/>
+                                                        ${cartLineItem.comboInstance.combo.name} <br/>
+                                                     </c:if>
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                       ${cartLineItem.productVariant.product.name}
+                                                  </c:otherwise>
+                                               </c:choose>
+                                       </td>
+                                   </tr>
+                               </table>
+                           </div>
+                         </td>
+
+                       </div>
+                   </tr>
+                 </c:forEach>
+
+
+           <tr>
+               <td>&nbsp;</td>
+               <td>&nbsp;</td>
+           </tr>
+           <tr>
+
+           </tr>
+           <tr>
+               <td colspan="2" style="text-align: center;">
+
+                 <c:if test="${cartAction.sizeOfCLI > 0}">
+                   <a class="button_green" style="width:120px; height: 18px;">Continue</a>
+                     </td><td>
+                   </c:if>
+                   <s:link beanclass="com.hk.web.action.core.cart.CartAction" class=" button_green"
+                           style="width: 160px; height: 18px;">Back to Shopping
+                   </s:link>
+               </td>
+           </tr>
+       </table>
+   </div>
+<script src="${pageContext.request.contextPath}/js/app.js"></script>
+<!-- BLADE pseudo conversion code -->
+<script type="text/javascript">
+<!--
+var blade_co_account_id='4184';
+var blade_group_id='convtrack14700';
+
+(function() {
+var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
+var path = '/js/bl_track_others.js';
+
+var bs = document.createElement('script');
+bs.type = 'text/javascript'; bs.async = true;
+bs.charset = 'utf-8'; bs.src = host + path;
+
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(bs, s);
+})();
+-->
+</script>
+
+<style type="text/css">
+
+     .web_dialog_overlay
+   {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      opacity: .15;
+      filter: alpha(opacity=15);
+      -moz-opacity: .15;
+      z-index: 101;
+      display: none;
+   }
+   .web_dialog
+   {
+      display: none;
+      position: fixed;
+      width: 450px;
+      /*height: 400px;*/
+      top: 50%;
+      left: 50%;
+      margin-left: -265px;
+      margin-top: -180px;
+      /*background-color: #ffffff;*/
+      background-color: white;
+      /*border: 2px solid #336699;*/
+      padding: 0px;
+      z-index: 102;
+      font-family: Verdana;
+      font-size: 10pt;
+      color: #333;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 0, 0, 0.3);
+   }
+   .web_dialog_title
+   {
+      /*border-bottom: solid 2px #336699;*/
+      /*background-color: #336699;*/
+     font-size: 16px;
+     font-weight: bold;
+     padding: 5px;
+      background-color: #f2f7fb;
+      color: White;
+      font-weight:bold;
+   }
+   .web_dialog_title a
+   {
+      color: White;
+      text-decoration: none;
+   }
+   .align_right
+   {
+      text-align: right;
+   }
+
+   </style>

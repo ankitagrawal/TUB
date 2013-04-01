@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.util.helper.XslPincodeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import com.hk.admin.pact.service.inventory.ReconciliationVoucherService;
 import com.hk.admin.pact.task.TaskService;
 import com.hk.admin.util.ReconciliationVoucherParser;
 import com.hk.admin.util.SkuXslParser;
-import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
@@ -61,7 +61,7 @@ public class DBMasterServiceImpl implements TaskService {
     String                              testDataDump;
 
     @Autowired
-    private XslParser                   xslParser;
+    private XslPincodeParser                   xslPincodeParser;
 
     @Autowired
     private SkuXslParser                skuXslParser;
@@ -147,7 +147,7 @@ public class DBMasterServiceImpl implements TaskService {
                         String pincodeFile = listOfPincodeExcels[i].getName();
                         if (pincodeFile.endsWith(".xls") || pincodeFile.endsWith(".XLS")) {
                             try {
-                                Set<Pincode> pincodeSet = xslParser.readPincodeList(listOfPincodeExcels[i]);
+                                Set<Pincode> pincodeSet = xslPincodeParser.readPincodeList(listOfPincodeExcels[i]);
                                 for (Pincode pincode : pincodeSet) {
                                     if (pincode != null)
                                         pincodeDao.save(pincode); // avoided changing the service class
@@ -177,8 +177,8 @@ public class DBMasterServiceImpl implements TaskService {
                                 reconciliationVoucher.setWarehouse(testWarehouse);
                                 // setWarehouse = userService.getWarehouseForLoggedInUser(); //can be null
                                 // rvParser.setReconciliationVoucher(reconciliationVoucher); // required for sku table
-                                List<RvLineItem> rvLineItems = rvParser.readAndCreateRVLineItems(listOfRVExcels[i].getAbsolutePath(), "Sheet1", reconciliationVoucher);
-                                reconciliationVoucherService.save(loggedOnUser, rvLineItems, reconciliationVoucher);
+                                List<RvLineItem> rvLineItems = rvParser.readAndCreateAddRVLineItems(listOfRVExcels[i].getAbsolutePath(), "Sheet1", reconciliationVoucher);
+                                reconciliationVoucherService.reconcileAddRV(loggedOnUser, rvLineItems, reconciliationVoucher);
 
                             } catch (Exception e) {
                                 logger.error("Exception while reading reconciliationVoucher excel sheet.", e);
@@ -207,8 +207,8 @@ public class DBMasterServiceImpl implements TaskService {
         return productCatalogServiceImpl;
     }
 
-    public XslParser getXslParser() {
-        return xslParser;
+    public XslPincodeParser getXslPincodeParser() {
+        return xslPincodeParser;
     }
 
     public UserService getUserService() {

@@ -1,11 +1,13 @@
 package com.hk.impl.service.shippingOrder;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -29,8 +31,18 @@ public class ShippingOrderLifecycleServiceImpl implements ShippingOrderLifecycle
     }
 
 	public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivity(Long shippingOrderId, Long shippingOrderLifeCycleActivityId) {
-		return shippingOrderLifecycleDao.getShippingOrderLifecycleBySOAndActivity(shippingOrderId, shippingOrderLifeCycleActivityId);
+		return shippingOrderLifecycleDao.getShippingOrderLifecycleBySOAndActivities(shippingOrderId, Arrays.asList(shippingOrderLifeCycleActivityId));
 	}
+
+    @Override
+    public List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivities(Long shippingOrderId, List<Long> shippingOrderLifeCycleActivityIds) {
+        return shippingOrderLifecycleDao.getShippingOrderLifecycleBySOAndActivities(shippingOrderId, shippingOrderLifeCycleActivityIds);
+    }
+
+    @Override
+    public List<Reason> getReasonByType(String type) {
+        return shippingOrderLifecycleDao.getReasonsByType(type);
+    }
 
 
 }

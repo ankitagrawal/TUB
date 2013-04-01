@@ -54,19 +54,23 @@
                               <c:when test="${variant.mainProductImageId != null}">
                                   <a href='javascript:void(0);'
                                      rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}' style="height:75px;width: 75px;"></a>
+                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}' style="max-height:75px;max-width: 75px;"></a>
                               </c:when>
                               <c:otherwise>
                                   <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
-                                       title="${product.name}"  style="height:75px;width:75px;">
+                                       title="${product.name}"  style="max-height:75px;max-width:75px;">
                               </c:otherwise>
                           </c:choose>
+                          <%-- for service product only--%>
 
-	                      <%--<c:if test="${hk:isNotBlank(variant.variantName) && hk:topLevelCategory(variant.product).name != 'eye'}">
-		                      <br/>
+						<c:if
+							test="${hk:isNotBlank(variant.variantName) && (product.service)}}">
+							<br />
 		                      ${variant.variantName}
-	                      </c:if>--%>
-                      </c:when>
+	                      </c:if>
+
+
+					</c:when>
                       <c:otherwise>
                           <c:choose>
                               <c:when

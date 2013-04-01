@@ -3,6 +3,8 @@ package com.hk.admin.pact.dao.inventory;
 import java.util.List;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
+import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
@@ -25,7 +27,7 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void removeInventory(SkuItem skuItem);
 
-    public Long getCheckedInPVIAgainstRTO(LineItem lineItem);                                                    
+    public Long getCheckedInPVIAgainstRTO(LineItem lineItem);
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem);
 
@@ -38,13 +40,20 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 */
 
     public List<CreateInventoryFileDto> getDetailsForUncheckedItems(String brand, Warehouse warehouse);
-    
-    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem) ;
-    
+
+    public Long getCheckedinItemCountForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
+
     public List<ProductVariantInventory> getPVIForStockTransfer(Sku sku, StockTransferLineItem stockTransferLineItem);
 
-    public void updateProductVariantsConfig (String id, Long variantconfigId);
+    public void updateProductVariantsConfig(String id, Long variantconfigId);
 
-     public List<VariantConfig> getAllVariantConfig();
+    public List<VariantConfig> getAllVariantConfig();
+
+    public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty);
+
+    public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+
+    public void deletePVIBySkuItem(List<SkuItem> skuItemList);
+
 
 }

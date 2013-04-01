@@ -3,10 +3,13 @@ package com.hk.pact.service.shippingOrder;
 import com.akube.framework.dao.Page;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
+import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
@@ -50,6 +53,8 @@ public interface ShippingOrderService {
 
 	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
 
+    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder);
+
 	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
 	/**
@@ -68,16 +73,14 @@ public interface ShippingOrderService {
 	public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder);
 
 
-	public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
+	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity);
 
-	public void logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, String comments);
+	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason, String comments);
 
-	public void logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, String comments);
+	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason, String comments);
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
-	public boolean printZoneOnSOInvoice(ShippingOrder shippingOrder);
-
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);   
+	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
 
 }

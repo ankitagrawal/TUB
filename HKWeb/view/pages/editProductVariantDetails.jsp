@@ -150,7 +150,7 @@
               <s:checkbox name="productVariants[${ctr.index}].clearanceSale" class="clearanceSale"/>
             </td>
             <td><s:link beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory" target="_blank">
-              <s:param name="upc" value="${productVariant.id}"/>${hk:netInventory(productVariant)}</s:link>
+              <s:param name="upc" value="${productVariant.id}"/>${hk:netInventoryAtServiceableWarehouses(productVariant)}</s:link>
             </td>
             <td>
               <s:text name="productVariants[${ctr.index}].weight" style="width:50px;"/>

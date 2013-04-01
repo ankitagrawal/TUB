@@ -1,5 +1,7 @@
 package com.hk.web.action.admin;
 
+import com.hk.constants.core.EnumRole;
+import com.hk.domain.user.User;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
@@ -29,6 +31,18 @@ import com.hk.constants.core.RoleConstants;
 public class AdminHomeAction extends BaseAction {
 
   public Resolution pre() {
+    User user = getPrincipalUser();
+      if(user != null){
+          if(user.getRoles().contains(EnumRole.ADMIN.toRole())){
+              return new ForwardResolution("/pages/admin/adminHome.jsp");
+          }else if(user.getRoles().contains(EnumRole.CATEGORY_MANAGER.toRole())){
+              return new ForwardResolution("/pages/admin/categoryAdminHome.jsp");
+          }else if(user.getRoles().contains(EnumRole.OPS_MANAGER.toRole())){
+              return new ForwardResolution("/pages/admin/courier/courierAdminHome.jsp");
+          }else if(user.getRoles().contains(EnumRole.CUSTOMER_SUPPORT.toRole())){
+              return new ForwardResolution("/pages/admin/crm/customerSupportAdminHome.jsp");
+          }
+      }
     return new ForwardResolution("/pages/admin/adminHome.jsp");
   }
 

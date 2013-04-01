@@ -21,7 +21,7 @@ public class SolrProduct {
 
     @Field
     private
-    String brand;
+    List<String> brand;
 
     @Field
     private
@@ -62,7 +62,15 @@ public class SolrProduct {
 
     @Field
     private
+    List<String> categoryDisplayName;
+
+    @Field
+    private
     List<String> variantNames = new ArrayList<String>();
+
+    @Field
+    private
+    List<String> variantCommaNames = new ArrayList<String>();
 
     @Field
     private
@@ -216,11 +224,11 @@ public class SolrProduct {
         this.id = id;
     }
 
-    public String getBrand() {
+    public List<String> getBrand() {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public void setBrand(List<String> brand) {
         this.brand = brand;
     }
 
@@ -272,7 +280,15 @@ public class SolrProduct {
         this.category = category;
     }
 
-    public String getH1() {
+    public List<String> getCategoryDisplayName() {
+      return categoryDisplayName;
+    }
+
+    public void setCategoryDisplayName(List<String> categoryDisplayName) {
+      this.categoryDisplayName = categoryDisplayName;
+    }
+
+  public String getH1() {
         return h1;
     }
 
@@ -470,6 +486,14 @@ public class SolrProduct {
 
     public void setProductUrl(String productUrl) {
         this.productUrl = productUrl;
+    }
+
+    public List<String> getVariantCommaNames() {
+        return variantCommaNames;
+    }
+
+    public void setVariantCommaNames(List<String> variantCommaNames) {
+        this.variantCommaNames = variantCommaNames;
     }
 
     public SolrProduct(){

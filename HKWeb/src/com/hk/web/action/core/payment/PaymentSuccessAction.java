@@ -1,6 +1,7 @@
 package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.core.Keys;
@@ -97,12 +98,15 @@ public class PaymentSuccessAction extends BaseAction {
             OfferInstance offerInstance = order.getOfferInstance();
             if (offerInstance != null) {
                 Coupon coupon = offerInstance.getCoupon();
-                couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                if (coupon != null) {
+                  couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                }
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
-
-            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-
+              //moved to orderManager, orderPaymentReceived
+//            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+            //todo disabling, cod conversion and repay prepaid order as for now, need to do qa if the functionality still works or not
+/*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;
             EnumRewardPointStatus rewardPointStatus;
@@ -134,6 +138,7 @@ public class PaymentSuccessAction extends BaseAction {
                                 Set<ShippingOrder> shippingOrders = order.getShippingOrders();
                                 if (shippingOrders != null) {
                                     for (ShippingOrder shippingOrder : shippingOrders) {
+                                        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.COD_Converter);
                                         shippingOrderService.nullifyCodCharges(shippingOrder);
                                         shipmentService.recreateShipment(shippingOrder);
                                         shippingOrderService.autoEscalateShippingOrder(shippingOrder);                          
@@ -157,6 +162,7 @@ public class PaymentSuccessAction extends BaseAction {
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
             httpResponse.addCookie(wantedCODCookie);
+*/
         }
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }

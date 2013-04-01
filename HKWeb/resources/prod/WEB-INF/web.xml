@@ -264,6 +264,8 @@
 		<url-pattern>/online-shopping-festival/beauty</url-pattern>
 	    <url-pattern>/online-shopping-festival</url-pattern>
 	    <url-pattern>/feedback</url-pattern>
+        <url-pattern>/clearance-sale</url-pattern>
+        <url-pattern>/valentines-day-2013</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -305,16 +307,18 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>ShiroFilter</filter-name>
-        <filter-class>
-            org.apache.shiro.spring.SpringShiroFilter
-        </filter-class>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
+
     <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
+        <filter-name>shiroFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
 
     <filter>
         <filter-name>adminFilter</filter-name>

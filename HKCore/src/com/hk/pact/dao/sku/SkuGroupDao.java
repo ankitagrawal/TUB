@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 
 public interface SkuGroupDao extends BaseDao {
@@ -28,8 +30,13 @@ public interface SkuGroupDao extends BaseDao {
 
 	public List<SkuGroup> getSkuGroupsByBatch(String batch, Sku sku);
 
-	public List<SkuGroup> getSkuGroupsByBarcode(String barcode, Long warehouseId);
+	public List<SkuGroup> getSkuGroup(String barcode,  Long warehouseId);
 
     public List<SkuGroup> getSkuGroupsByBarcodeForStockTransfer(String barcode, Long warehouseId);
+
+    public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
+
+    public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
+
 
 }

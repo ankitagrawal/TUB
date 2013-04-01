@@ -182,7 +182,29 @@ public class GrnLineItem implements java.io.Serializable {
 
 	public void setProcurementPrice(Double procurementPrice) {
 		this.procurementPrice = procurementPrice;
-	}
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GrnLineItem)) {
+            return false;
+        }
+        GrnLineItem grnLineItem = (GrnLineItem) o;
+
+        if (this.id != null && grnLineItem.getId() != null) {
+            return this.id.equals(grnLineItem.getId());
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return this.id != null ? this.id.toString() : "";
+    }
+
 }
 
 

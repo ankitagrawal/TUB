@@ -1926,9 +1926,10 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
         value = result.value;
         data = result.data;
       }
-      value = String(value);
+      value = String(value)
       // Condition below means we do NOT do empty results
       if (value) {
+       value = value.trim();
         if (typeof data !== 'object') {
           data = {};
         }
@@ -1940,9 +1941,10 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
           attributes = 'i';
         }
         regex = new RegExp(pattern, attributes);
-        if (regex.test(value)) {
+          //marut- modify..we just want to display whatever comes from backend. Logic has already been taken care of
+        //if (regex.test(value)) {
           filtered.push({ value: value, data: data });
-        }
+        //}
       }
     }
 
@@ -1989,7 +1991,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
     var numResults = results.length;
     for (i = 0; i < numResults; i++) {
       result = results[i];
-      $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
+      $li = $('<li>' + this.showResult((result.value).replace(filter, '<b>'+filter+'</b>'), result.data) + '</li>');
       $li.data('value', result.value);
       $li.data('data', result.data);
       $li.click(function() {
@@ -2220,7 +2222,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
    */
   $.fn.autocomplete.defaults = {
     paramName: 'q',
-    minChars: 3,
+    minChars: 2,
     loadingClass: 'acLoading',
     resultsClass: 'acResults',
     inputClass: 'acInput',
@@ -2232,7 +2234,7 @@ function AddOrSubtractTwoFloats(fltValue1, fltValue2, bAddSubtract) {
     useCache: false,
     maxCacheLength: 10,
     autoFill: false,
-    sortResults: true,
+    sortResults: false,
     sortFunction: false,
     onItemSelect: false,
     onNoMatch: false

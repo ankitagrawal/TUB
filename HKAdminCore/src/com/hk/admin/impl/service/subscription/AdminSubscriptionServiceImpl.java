@@ -51,7 +51,7 @@ public class AdminSubscriptionServiceImpl implements AdminSubscriptionService{
                 double hkPrice=subscriptionOrder.getHkPriceNow();
                 double benifit = 0.0;
                 if(hkPrice>subscriptionPrice){
-                    benifit=hkPrice-subscriptionPrice;
+                    benifit=(hkPrice-subscriptionPrice)*subscription.getQtyPerDelivery();
                     rewardPoints=rewardPoints-benifit;
                 }
             }
