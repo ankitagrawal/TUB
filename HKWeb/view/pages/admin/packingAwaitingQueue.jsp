@@ -102,7 +102,7 @@
               </s:select>
           </div>
 
-          <div style="width:1100px; margin:20px;">
+          <div style="width:1120px; margin:20px;">
               <label>Escalation Start
                   Date </label><s:text class="date_input startDate" style="width:150px"
                                        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
