@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.analytics.Reason;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -93,6 +94,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<OrderStatus> orderStatuses = new ArrayList<OrderStatus>();
     private List<ShippingOrderStatus> shippingOrderStatuses = new ArrayList<ShippingOrderStatus>();
     private List<ShippingOrderLifeCycleActivity> shippingOrderLifecycleActivities = new ArrayList<ShippingOrderLifeCycleActivity>();
+    private List<Reason> reasons = new ArrayList<Reason>();
     private List<PaymentMode> paymentModes = new ArrayList<PaymentMode>();
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
@@ -103,7 +105,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     private boolean sortByPaymentDate = true;
     private boolean sortByScore = true;
+    private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
+    private Boolean containsJit = null;
 
     @DontValidate
     @DefaultHandler
@@ -139,7 +143,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByScore(sortByScore);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -175,7 +179,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 		}
 		*/
         orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
-
+        Set<Reason> reasonList = new HashSet<Reason>();
+        for (Reason reason : reasons) {
+            if (reason != null) {
+                reasonList.add(reason);
+            }
+        }
+        orderSearchCriteria.setReasonList(reasonList);
 
         List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
         for (PaymentMode paymentMode : paymentModes) {
@@ -223,7 +233,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (dropShip != null){
            orderSearchCriteria.setDropShip(dropShip);
         }
-
+        if (containsJit != null){
+            orderSearchCriteria.setContainsJit(containsJit);
+        }
         logger.debug("basketCategories : " + basketCategories.size());
         Set<String> basketCategoryList = new HashSet<String>();
         for (String category : basketCategories) {
@@ -400,6 +412,14 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.shippingOrderLifecycleActivities = shippingOrderLifecycleActivities;
     }
 
+    public List<Reason> getReasons() {
+        return reasons;
+    }
+
+    public void setReasons(List<Reason> reasons) {
+        this.reasons = reasons;
+    }
+
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
         params.add("startDate");
@@ -408,6 +428,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("sortByPaymentDate");
         params.add("sortByScore");
         params.add("dropShip");
+        params.add("containsJit");
 
         // params.add("orderLifecycleActivity");
         // params.add("shippingOrderStatus");
@@ -465,6 +486,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
             ctr7++;
         }
+        int ctr8 = 0;
+        for (Reason reason : reasons) {
+            if (reason != null) {
+                params.add("reasons[" + ctr8 + "]");
+            }
+            ctr8++;
+        }
 
         return params;
     }
@@ -519,5 +547,24 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
+    }
+
+    public Boolean isContainsJit() {
+        return containsJit;
+    }
+    public Boolean getContainsJit() {
+        return containsJit;
+    }
+
+    public void setContainsJit(Boolean containsJit) {
+        this.containsJit = containsJit;
+    }
+
+    public boolean isSortByDispatchDate() {
+        return sortByDispatchDate;
+    }
+
+    public void setSortByDispatchDate(boolean sortByDispatchDate) {
+        this.sortByDispatchDate = sortByDispatchDate;
     }
 }

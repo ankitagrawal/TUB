@@ -65,7 +65,14 @@
       ${orderSummary.purchaseOrder.warehouse.city} &nbsp;
       -${orderSummary.purchaseOrder.warehouse.pincode} <br/>
       ${orderSummary.purchaseOrder.warehouse.state}<br/>
-      TIN: ${orderSummary.purchaseOrder.warehouse.tin}
+      <c:choose>
+        <c:when test="${orderSummary.purchaseOrder.warehouse.state == 'HARYANA'}">
+          <p> TIN# 06101832036</p>
+        </c:when>
+        <c:when test="${orderSummary.purchaseOrder.warehouse.state  == 'MAHARASHTRA'}">
+          <p> TIN# 27210893736</p>
+        </c:when>
+      </c:choose>
     </td>
     <td align="right">
       <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>

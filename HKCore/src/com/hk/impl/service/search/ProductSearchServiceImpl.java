@@ -160,8 +160,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
               }
             }
         } catch (SolrServerException ex) {
-            SearchException e = wrapException("Unable to get brand term results", ex);
-            throw e;
+             logger.error("Unable to get brand term results for brand term->"+term);
+            //SearchException e = wrapException("Unable to get brand term results", ex);
+            //throw e;
         }
         return false;
     }
@@ -453,7 +454,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     private SearchException wrapException(String msg, Exception ex) {
-        logger.error(msg, ex);
+        logger.error(msg);
         return new SearchException(SEARCH_SERVER, msg, ex);
     }
 

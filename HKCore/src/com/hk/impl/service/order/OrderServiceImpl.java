@@ -3,6 +3,7 @@ package com.hk.impl.service.order;
 import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.CourierConstants;
@@ -430,6 +431,7 @@ public class OrderServiceImpl implements OrderService {
 
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
 
+
         for (Set<CartLineItem> cartlineitems : listOfCartLineItemSet) {
             if (cartlineitems != null && cartlineitems.size() > 0) {
 
@@ -442,14 +444,17 @@ public class OrderServiceImpl implements OrderService {
                         if (dummyOrder.getCartLineItemList().size() > 0) {
                             Warehouse warehouse = dummyOrder.getWarehouse();
                             boolean isDropShipped = false;
+                            boolean containsJitProducts = false;
                             ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
                             for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
                                 isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
+                                containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
                                 Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
                                 LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                                 shippingOrder.getLineItems().add(shippingOrderLineItem);
                             }
                             shippingOrder.setDropShipping(isDropShipped);
+                            shippingOrder.setContainsJitProducts(containsJitProducts);
                             shippingOrder.setBasketCategory(getBasketCategory(shippingOrder).getName());
                             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
@@ -744,7 +749,7 @@ public class OrderServiceImpl implements OrderService {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
                     shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                            CourierConstants.DROP_SHIPPED_ORDER);
+                            EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
                 }
             }
             // auto escalate shipping orders if possible

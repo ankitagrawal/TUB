@@ -79,9 +79,13 @@ public interface AdminInventoryService {
 
 	public void inventoryCheckoutForStockTransfer(Sku sku, SkuItem skuItem, StockTransferLineItem stockTransferLineItem, Long qty, User txnBy );
 
-    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+//    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem , Long transferQty) ;
+
+    public  List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem ,LineItem lineItem, Long transferQty) ;
     
    public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+
+    public void deleteInventory(GrnLineItem grnLineItem);
 }

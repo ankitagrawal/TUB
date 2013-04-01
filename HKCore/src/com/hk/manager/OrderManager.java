@@ -1,12 +1,11 @@
 package com.hk.manager;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.domain.subscription.Subscription;
+import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.cache.UserCache;
 import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.Keys;
@@ -58,7 +58,6 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.clm.KarmaProfileService;
-import com.hk.pact.service.combo.ComboService;
 import com.hk.pact.service.core.AffilateService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
@@ -423,6 +422,7 @@ public class OrderManager {
             }
             getEmailManager().sendOrderConfirmEmailToAdmin(order);
         }
+
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
@@ -431,7 +431,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-	    //Set Order in Traffic Tracking
+        //this is the most important method, so it is very important as to from where it is called
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+        //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
@@ -559,68 +562,74 @@ public class OrderManager {
     }
 
 
-    public Set<CartLineItem> trimEmptyLineItems(Order order) {
-        Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-        Set<CartLineItem> trimmedCartLineItems = new HashSet<CartLineItem>();
-        Set<ComboInstance> toBeRemovedComboInstanceSet = new HashSet<ComboInstance>();
-        for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext();) {
-            CartLineItem lineItem = iterator.next();
-            ProductVariant productVariant = lineItem.getProductVariant();
-            Product product = productVariant.getProduct();
-            ComboInstance comboInstance = lineItem.getComboInstance();
-            List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
+  public Set<CartLineItem> trimEmptyLineItems(Order order) {
+      Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+      Set<CartLineItem> trimmedCartLineItems = new HashSet<CartLineItem>();
+      Set<ComboInstance> toBeRemovedComboInstanceSet = new HashSet<ComboInstance>();
+      for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext();) {
+          CartLineItem lineItem = iterator.next();
+          ProductVariant productVariant = lineItem.getProductVariant();
+          Product product = productVariant.getProduct();
+          ComboInstance comboInstance = lineItem.getComboInstance();
+          List<Sku> skuList = skuService.getSKUsForMarkingProductOOS(productVariant);
 
-            if(lineItem.getQty() <= 0){
-             iterator.remove();
-             order.getCartLineItems().remove(lineItem);
-             getBaseDao().delete(lineItem);
-            }
-            else{
+          if(lineItem.getQty() <= 0){
+           iterator.remove();
+           order.getCartLineItems().remove(lineItem);
+           getBaseDao().delete(lineItem);
+          }
+          else{
 
-            if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
-                if (comboInstance != null) {
-                    toBeRemovedComboInstanceSet.add(comboInstance);
-                }
-                lineItem.setQty(0L);
-                continue;
-            }
+          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
+              if (comboInstance != null) {
+                  toBeRemovedComboInstanceSet.add(comboInstance);
+              }
+              lineItem.setQty(0L);
+              continue;
+          }
 
-            if (!(product.isJit() || product.isService())) {
-                Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
-                if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
-                    // Check in case of negative unbooked inventory
-                    if (comboInstance != null) {
-                        toBeRemovedComboInstanceSet.add(comboInstance);
-                        continue;
-                    }
-                    if (unbookedInventory <= 0) {
-                        unbookedInventory = 0L;
-                    }
-                    lineItem.setQty(unbookedInventory);
-                }
-            }
+          if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
+              Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
+              if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
+                  // Check in case of negative unbooked inventory
+                  if (comboInstance != null) {
+                      toBeRemovedComboInstanceSet.add(comboInstance);
+                      continue;
+                  }
+                  if (unbookedInventory <= 0) {
+                      unbookedInventory = 0L;
+                  }
+                  lineItem.setQty(unbookedInventory);
+              }
           }
         }
-        for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext(); ) {
-            CartLineItem lineItem = iterator.next();
-            ProductVariant productVariant = lineItem.getProductVariant();
-            if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
-                trimmedCartLineItems.add(lineItem);
-                Long qty = lineItem.getQty();
-                iterator.remove();
-                order.getCartLineItems().remove(lineItem);
-                getBaseDao().delete(lineItem);
-                if(qty<=0){
-                productVariant.setOutOfStock(true);
-                getProductVariantService().save(productVariant);
-                getComboService().markProductOutOfStock(productVariant);
-                 }
-            }
-        }
-        order = getOrderService().save(order);
-        return trimmedCartLineItems;
-    }
-    public boolean isStepUpAllowed(CartLineItem cartLineItem) {
+      }
+      for (Iterator<CartLineItem> iterator = cartLineItems.iterator(); iterator.hasNext(); ) {
+          CartLineItem lineItem = iterator.next();
+          ProductVariant productVariant = lineItem.getProductVariant();
+          if (toBeRemovedComboInstanceSet.contains(lineItem.getComboInstance()) || lineItem.getQty() <= 0) {
+              trimmedCartLineItems.add(lineItem);
+              Long qty = lineItem.getQty();
+              iterator.remove();
+              //check for subscription
+              if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())){
+                  Subscription subscription= subscriptionService.getSubscriptionFromCartLineItem(lineItem);
+                  subscriptionService.abandonSubscription(subscription);
+              }
+              order.getCartLineItems().remove(lineItem);
+              getBaseDao().delete(lineItem);
+              if(qty<=0){
+              productVariant.setOutOfStock(true);
+              getProductVariantService().save(productVariant);
+              getComboService().markProductOutOfStock(productVariant);
+               }
+          }
+      }
+      order = getOrderService().save(order);
+      return trimmedCartLineItems;
+  }
+
+  public boolean isStepUpAllowed(CartLineItem cartLineItem) {
         ProductVariant productVariant = cartLineItem.getProductVariant();
         Product product = productVariant.getProduct();
         boolean isService = false;

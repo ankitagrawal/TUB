@@ -10,7 +10,6 @@ import com.hk.domain.catalog.category.Category;
 @SuppressWarnings("serial")
 public class CategoryVO implements Serializable {
 
-
     private String name;
 
     private String displayName;
@@ -18,8 +17,10 @@ public class CategoryVO implements Serializable {
     // private Set<String> brands = new HashSet<String>();
 
     public CategoryVO(Category category) {
-        this.name = category.getName();
-        this.displayName = category.getDisplayName();
+        if (category != null) {
+            this.name = category.getName();
+            this.displayName = category.getDisplayName();
+        }
         // this.brands = brandsInCategory;
     }
 

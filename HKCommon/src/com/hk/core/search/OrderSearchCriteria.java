@@ -1,5 +1,6 @@
 package com.hk.core.search;
 
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -41,6 +42,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date                      paymentEndDate;
 
     private Boolean                  dropShip;
+    private Boolean                  containsJit;
 
     /**
      * shipping order fields
@@ -48,6 +50,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<String>               shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
+    private Set<Reason> reasonList;
 
     public OrderSearchCriteria setLogin(String login) {
         this.login = login;
@@ -81,6 +84,11 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setSOLifecycleActivityList(List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList) {
         this.SOLifecycleActivityList = SOLifecycleActivityList;
+    }
+
+    public OrderSearchCriteria setReasonList(Set<Reason> reasonList) {
+        this.reasonList = reasonList;
+        return this;
     }
 
     public OrderSearchCriteria setEmail(String email) {
@@ -195,6 +203,15 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingLifeCycleCriteria =  shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
                 shippingLifeCycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", SOLifecycleActivityList));
 
+            DetachedCriteria lifecycleCriteria = null;
+            if (reasonList != null && !reasonList.isEmpty()) {
+                if (lifecycleCriteria == null) {
+                    lifecycleCriteria = shippingLifeCycleCriteria.createCriteria("lifecycleReasons");
+                }
+                lifecycleCriteria.add(Restrictions.in("reason", reasonList));
+            }
+
+
         }
 
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
@@ -223,14 +240,20 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         if (sortByPaymentDate) {
             paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
 
-        } if (sortByScore) {
+        }
+        if(sortByDispatchDate){
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
+        }
+        if (sortByScore) {
             criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         }
 
         if(dropShip != null  )  {
              shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
          }
-        return criteria;
+        if(containsJit != null  )  {
+            shippingOrderCriteria.add(Restrictions.eq("containsJitProducts",containsJit));
+        }        return criteria;
     }
 
     public Boolean isDropShip() {
@@ -239,5 +262,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
+    }
+
+    public Boolean containsJit() {
+        return containsJit;
+    }
+
+    public void setContainsJit(Boolean containsJit) {
+        this.containsJit = containsJit;
     }
 }

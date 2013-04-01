@@ -1,8 +1,12 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
+<%@ page import="com.hk.admin.util.BarcodeUtil" %>
+<%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
+<c:set var="StockTransferOut" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId()%>"/>
+<c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Create/Edit Stock Transfer">
@@ -175,8 +179,9 @@
 				<th>Mfg. Date<br/>(yyyy-MM-dd)</th>
 				<th>Exp. Date<br/>(yyyy-MM-dd)</th>
 				<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
-					<th>Reduce Qty By 1</th>
+					<%--<th>Reduce Qty By 1</th>--%>
 				</c:if>
+                <th> Item Details</th>
 			</tr>
 			</thead>
 			<tbody id="stTable">
@@ -185,7 +190,12 @@
 				<c:set var="checkedOutSkuGroup" value="${stockTransferLineItem.checkedOutSkuGroup}"/>
 				<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 					<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
-						<td>${stockTransferLineItem.checkedOutSkuGroup.barcode}</td>
+						<td><c:if test="${stockTransferLineItem.checkedOutSkuGroup.barcode != null}">
+					 ${stockTransferLineItem.checkedOutSkuGroup.barcode}
+                    </c:if>
+                       <c:if test="${stockTransferLineItem.checkedOutSkuGroup.barcode == null}">
+                           ${barcodePrefix}${stockTransferLineItem.checkedOutSkuGroup}
+                      </c:if></td>
 					</c:if>
 					<td>
 							${productVariant.id}
@@ -203,14 +213,20 @@
 						<fmt:formatDate value="${checkedOutSkuGroup.mfgDate}" type="both"/></td>
 					<td>
 						<fmt:formatDate value="${checkedOutSkuGroup.expiryDate}" type="both"/></td>
-					<c:if test="${stockTransferLineItem.checkedoutQty > 0}">
-						<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">
-							<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">
-								Reduce Qty By 1
-								<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>
-								<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>
-						</c:if>
-					</c:if>
+					<%--<c:if test="${stockTransferLineItem.checkedoutQty > 0}">--%>
+						<%--<c:if test="${sta.stockTransfer.stockTransferStatus.id == STGenerated || sta.stockTransfer.stockTransferStatus.id == STOutInProcess}">--%>
+							<%--<td><s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction" event="revertStockTransferOut">--%>
+								<%--Reduce Qty By 1--%>
+								<%--<s:param name="stliToBeReduced" value="${stockTransferLineItem}"/>--%>
+								<%--<s:param name="stockTransfer" value="${sta.stockTransfer}" /></s:link> </td>--%>
+						<%--</c:if>--%>
+					<%--</c:if>--%>
+
+                    <td><s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+                        View Item Details
+                        <s:param name="stockTransferLineItem" value="${stockTransferLineItem}"/>
+                        <s:param name="entityId" value="${StockTransferOut}"/>
+                    </s:link></td>
 				</tr>
 
 			</c:forEach>

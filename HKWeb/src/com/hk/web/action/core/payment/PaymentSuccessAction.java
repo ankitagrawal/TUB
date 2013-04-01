@@ -106,9 +106,10 @@ public class PaymentSuccessAction extends BaseAction {
                 }
                 couponAmount = pricingDto.getTotalPromoDiscount().intValue();
             }
-
-            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-
+              //moved to orderManager, orderPaymentReceived
+//            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+            //todo disabling, cod conversion and repay prepaid order as for now, need to do qa if the functionality still works or not
+/*
             RewardPointMode prepayOfferRewardPoint = rewardPointService.getRewardPointMode(EnumRewardPointMode.Prepay_Offer);
             RewardPoint prepayRewardPoints;
             EnumRewardPointStatus rewardPointStatus;
@@ -163,6 +164,7 @@ public class PaymentSuccessAction extends BaseAction {
             wantedCODCookie.setPath("/");
             wantedCODCookie.setMaxAge(0);
             httpResponse.addCookie(wantedCODCookie);
+*/
         }
 
 	    //Loyalty program

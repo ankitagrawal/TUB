@@ -183,6 +183,7 @@
     <p>Step3- Scan your prescription and mail it to us at <a href="mailto:order@healthkartplus.com">order@healthkartplus.com</a> or call us on: 0124-4551636.
         <br/>Minimum order should be at least Rs. 350/- or above.</p>
     <p>*Offer valid for 1 month medication.</p>
+    <p>*Offer available Exclusively for Abbott Employees</p>
 </div>
 
 <div class="cl"></div>

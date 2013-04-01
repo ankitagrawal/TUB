@@ -9,6 +9,8 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.constants.shipment.EnumShipmentServiceType" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.constants.courier.EnumAwbStatus" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" var="shipRes"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipment Resolution">
@@ -41,10 +43,22 @@
                     return false;
                 }
             });
+            $('#createAwb').click(function(){
+               $('#displayAwb').show();
+            });
+            $('#saveawb').click(function(){
+                var status = $('#status').val();
+                var reasoning = $('#reasoning1').val();
+                var awbBarvalue=  $('#awbNumber').val();
+                if(status == "" || reasoning == "" || awbBarvalue == ""){
+                   alert("Please Enter all Values");
+                    return false;
+                }
+                $('#awbBarCode').attr('value',awbBarvalue);
+            });
         });
       </script>
   </s:layout-component>
-
     <s:layout-component name="content">
      <s:form beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
          <input type="hidden" name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
@@ -104,7 +118,7 @@
                    <tr>
                        <td>
                            ${shipRes.shipment.id}
-                           <s:hidden name="shipment" value="${shipRes.shipment.id}"/>
+                           <input type="hidden" name="shipment" value="${shipRes.shipment.id}"/>
                        </td>
                        <td>
                            <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder">${shipRes.shippingOrder.id}
@@ -154,7 +168,46 @@
                <br>
               <s:submit name="changeCourier" value="Save" id="changeCourier"/>
                </fieldset>
+
+               <fieldset>
+               <c:set var="soShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"  />
+               <c:if test="${shipRes.shippingOrder.shippingOrderStatus.id eq soShipped}" >
                <div class="clear"></div>
+                   <h2>Change AWB</h2>
+                   <br>
+                   Old Awb Number <span style="color:blue;"> ${shipRes.shipment.awb.awbNumber}</span>
+                   Courier Name  <span style="color:blue;"> ${shipRes.shipment.awb.courier.name}</span>
+                                    <c:if test="${shipRes.shippingOrder!=null}">
+                                                    <br><br>
+                                                   <label>Enter Courier Id</label>
+                                                     <s:select name="awb.courier"  id="status">
+                                                         <s:option value="">--Select--</s:option>
+                                                          <c:forEach items="${shipRes.applicableCouriers}" var="courier">
+                                                              <s:option value="${courier.id}">${courier.name}</s:option>
+                                                          </c:forEach>
+                                                        </s:select>
+                                                      <br><br>
+                                                      Select Reason for Changing the Courier or Awb
+                                                             <s:select name="reasoning" id="reasoning1">
+                                                                 <s:option value="">-------Select-------</s:option>
+                                                             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbChangeReason" value="name" label="name"/>
+                                                             </s:select>
+                                                      <br><br>
+                                                      <label>Enter Tracking Number</label>
+                                                  <s:text name=   "awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
+                                                   <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
+                                                   <s:hidden name="awb.cod" value="${shipRes.shippingOrder.COD}"/>
+                                                   <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
+                                                   <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
+                                                   <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
+                                                      <br><br>
+                                                      Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
+                                                      <br>
+                                                  <s:submit name="createAssignAwbForShipment" value="Save" id="saveawb"/>
+                                                    </c:if>
+                                                </c:if>
+               </fieldset>
+
                <fieldset>
                <h2>Change Shipment Service Type</h2>
                    <br>
@@ -184,4 +237,4 @@
          </c:choose>
      </s:form>
     </s:layout-component>
- </s:layout-render>
+</s:layout-render>

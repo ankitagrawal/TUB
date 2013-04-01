@@ -6,8 +6,10 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.akube.framework.dao.Page;
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
+import com.hk.domain.inventory.rv.ReconciliationType;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
@@ -27,6 +29,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.constants.inventory.EnumAuditStatus;
 import com.hk.constants.core.Keys;
+import com.hk.constants.sku.EnumSkuItemStatus;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -46,6 +49,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jsoup.helper.StringUtil;
 
 
 /**
@@ -91,6 +95,8 @@ public class CycleCountAction extends BasePaginatedAction {
     private Map<String, String> hkBarcodeErrorsMap = new HashMap<String, String>();
     private Map<Long, Integer> cycleCountPviMap = new HashMap<Long, Integer>();
     private Map<Long, Integer> missedSkuGroupSystemInventoryMap = new HashMap<Long, Integer>();
+    private Map<Long, Integer> skuItemScannedQtyMap = new HashMap<Long, Integer>();
+    private Map<Long, Integer> skuItemSystemQtyMap = new HashMap<Long, Integer>();
     private String cycleCountPVImapString;
     private boolean error = false;
     private Page cycleCountPage;
@@ -104,6 +110,10 @@ public class CycleCountAction extends BasePaginatedAction {
     private Integer cycleCountType;
     private Long cycleCountStatus;
     private List<SkuGroup> missedSkuGroupList = new ArrayList<SkuGroup>();
+    private List<SkuGroup> scannedSkuItemGroupList = new ArrayList<SkuGroup>();
+    private SkuItem skuItem;
+    private String productVariantId;
+
 
     public Resolution directToCycleCountPage() {
 
@@ -291,15 +301,17 @@ public class CycleCountAction extends BasePaginatedAction {
         cycleCountItems = cycleCount.getCycleCountItems();
         int newEntryInMap = 0;
         for (CycleCountItem cycleCountItem : cycleCountItems) {
-            if (!(cycleCountPviMap.containsKey(cycleCountItem.getId()))) {
-                //new entry added by another auditor
-                newEntryInMap++;
-                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
-                int pvi = 0;
-                if (skuItemList != null) {
-                    pvi = skuItemList.size();
+            if (cycleCountItem.getSkuGroup() != null) {
+                if (!(cycleCountPviMap.containsKey(cycleCountItem.getId()))) {
+                    //new entry added by another auditor
+                    newEntryInMap++;
+                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+                    int pvi = 0;
+                    if (skuItemList != null) {
+                        pvi = skuItemList.size();
+                    }
+                    cycleCountPviMap.put(cycleCountItem.getId(), pvi);
                 }
-                cycleCountPviMap.put(cycleCountItem.getId(), pvi);
             }
         }
         if (cycleCountPviMap != null && cycleCountPviMap.size() > 0) {
@@ -315,61 +327,77 @@ public class CycleCountAction extends BasePaginatedAction {
         message = null;
         error = false;
         if ((hkBarcode != null) && (!(StringUtils.isEmpty(hkBarcode.trim())))) {
-            List<SkuGroup> validSkuGroupList = findSkuGroup(hkBarcode);
-            CycleCountItem validCycleCountItem = null;
-            SkuGroup validSkuGroup = null;
-            if (validSkuGroupList.size() > 0) {
-                if (cycleCountPVImapString != null) {
-                    cycleCountPviMap = getMapFromJsonString(cycleCountPVImapString);
+            SkuItem skuItem = findBySkuItem(hkBarcode);
+            if (skuItem != null) {
+                CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+                if (existingCycleCountItem != null) {
+                    message = hkBarcode + " --> already Scanned";
+                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", true);
+                } else {
+                    SkuItem validSkuItem = getValidSkuItem(skuItem);
+                    if (validSkuItem == null) {
+                        message = hkBarcode + " --> Invalid Barcode for this Audit";
+                        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", true);
+                    }
+                    CycleCountItem validCycleCountItem = cycleCountService.createCycleCountItem(null, skuItem, cycleCount, 1);
+                    cycleCountService.save(validCycleCountItem);
+                    message = "Sucessfully Scanned for:" + hkBarcode;
+                    return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("message", message).addParameter("error", false);
                 }
-                for (SkuGroup skuGroup : validSkuGroupList) {
-                    CycleCountItem cycleCountItemFromDb = cycleCountService.getCycleCountItem(cycleCount, skuGroup);
-                    if (cycleCountItemFromDb == null) {
-                        validSkuGroup = skuGroup;
-                        break;
-                    } else {
-                        int pvi = cycleCountPviMap.get(cycleCountItemFromDb.getId());
-                        if ((cycleCountItemFromDb.getScannedQty().intValue()) < pvi) {
-                            cycleCountItemFromDb.setScannedQty(cycleCountItemFromDb.getScannedQty().intValue() + 1);
-                            validCycleCountItem = cycleCountItemFromDb;
+            } else {
+
+                List<SkuGroup> validSkuGroupList = findSkuGroup(hkBarcode);
+                CycleCountItem validCycleCountItem = null;
+                SkuGroup validSkuGroup = null;
+                if (validSkuGroupList.size() > 0) {
+                    if (cycleCountPVImapString != null) {
+                        cycleCountPviMap = getMapFromJsonString(cycleCountPVImapString);
+                    }
+                    for (SkuGroup skuGroup : validSkuGroupList) {
+                        CycleCountItem cycleCountItemFromDb = cycleCountService.getCycleCountItem(cycleCount, skuGroup, null);
+                        if (cycleCountItemFromDb == null) {
+                            validSkuGroup = skuGroup;
                             break;
                         } else {
-                            if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                            int pvi = cycleCountPviMap.get(cycleCountItemFromDb.getId());
+                            if ((cycleCountItemFromDb.getScannedQty().intValue()) < pvi) {
                                 cycleCountItemFromDb.setScannedQty(cycleCountItemFromDb.getScannedQty().intValue() + 1);
                                 validCycleCountItem = cycleCountItemFromDb;
+                                break;
+                            } else {
+                                if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                    cycleCountItemFromDb.setScannedQty(cycleCountItemFromDb.getScannedQty().intValue() + 1);
+                                    validCycleCountItem = cycleCountItemFromDb;
+                                }
+
                             }
 
                         }
-
                     }
-                }
 
-                if (validCycleCountItem == null) {
-                    validCycleCountItem = new CycleCountItem();
-                    validCycleCountItem.setSkuGroup(validSkuGroup);
-                    validCycleCountItem.setCycleCount(cycleCount);
-                    validCycleCountItem.setScannedQty(1);
-                    validCycleCountItem = cycleCountService.save(validCycleCountItem);
-                    List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(validSkuGroup);
-                    int pvi = 0;
-                    if (skuItemList != null) {
-                        pvi = skuItemList.size();
+                    if (validCycleCountItem == null) {
+                        validCycleCountItem = cycleCountService.createCycleCountItem(validSkuGroup, null, cycleCount, 1);
+                        validCycleCountItem = cycleCountService.save(validCycleCountItem);
+                        List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(validSkuGroup);
+                        int pvi = 0;
+                        if (skuItemList != null) {
+                            pvi = skuItemList.size();
+                        }
+                        cycleCountPviMap.put(validCycleCountItem.getId(), pvi);
+                        cycleCountPVImapString = getStringFromMap(cycleCountPviMap);
+                    } else {
+                        cycleCountService.save(validCycleCountItem);
                     }
-                    cycleCountPviMap.put(validCycleCountItem.getId(), pvi);
-                    cycleCountPVImapString = getStringFromMap(cycleCountPviMap);
+
+
                 } else {
-                    cycleCountService.save(validCycleCountItem);
+                    hkBarcodeErrorsMap.put(hkBarcode, message);
                 }
-
-
-            } else {
-                hkBarcodeErrorsMap.put(hkBarcode, message);
-            }
-            if (message == null) {
-                message = "Sucessfully Scanned for " + hkBarcode;
+                if (message == null) {
+                    message = "Successfully Scanned for " + hkBarcode;
+                }
             }
         }
-
         return new RedirectResolution(CycleCountAction.class, "view").addParameter("message", message).addParameter("cycleCount", cycleCount.getId())
                 .addParameter("cycleCountPVImapString", cycleCountPVImapString).addParameter("error", error);
     }
@@ -437,15 +465,42 @@ public class CycleCountAction extends BasePaginatedAction {
 
         List<CycleCountItem> cycleCountItemList = cycleCount.getCycleCountItems();
         List<SkuGroup> scannedSkuGroupList = new ArrayList<SkuGroup>();
+
+        List<SkuGroup> originalScannedSkuItemGroupList = new ArrayList<SkuGroup>();
+
         if (cycleCountItemList != null) {
             for (CycleCountItem cycleCountItem : cycleCountItemList) {
-                scannedSkuGroupList.add(cycleCountItem.getSkuGroup());
+                if (cycleCountItem.getSkuGroup() != null) {
+                    scannedSkuGroupList.add(cycleCountItem.getSkuGroup());
+                }
+
+                if (cycleCountItem.getSkuItem() != null) {
+                    originalScannedSkuItemGroupList.add(cycleCountItem.getSkuItem().getSkuGroup());
+                }
             }
         }
 
+        for (SkuGroup skuGroup : originalScannedSkuItemGroupList) {
+            if (!skuItemScannedQtyMap.containsKey(skuGroup.getId())) {
+                skuItemScannedQtyMap.put(skuGroup.getId(), 1);
+            } else {
+                int value = skuItemScannedQtyMap.get(skuGroup.getId());
+                skuItemScannedQtyMap.put(skuGroup.getId(), value + 1);
+            }
+
+        }
+        //    Adding Item level scanned sku groups to get batches that were never scanned.
+        Set<SkuGroup> ScannedSkuItemGroupSet = new HashSet<SkuGroup>(originalScannedSkuItemGroupList);
+        scannedSkuItemGroupList = new ArrayList<SkuGroup>(ScannedSkuItemGroupSet);
+
+        scannedSkuGroupList.addAll(scannedSkuItemGroupList);
         for (CreateInventoryFileDto createInventoryFileDto : createInventoryFileDtoList) {
             SkuGroup skuGroup = createInventoryFileDto.getSkuGroup();
             int pvi = createInventoryFileDto.getSumQty().intValue();
+
+            if (scannedSkuItemGroupList.contains(skuGroup)) {
+                skuItemSystemQtyMap.put(skuGroup.getId(), pvi);
+            }
             if (scannedSkuGroupList.contains(skuGroup)) {
                 continue;
             }
@@ -480,24 +535,26 @@ public class CycleCountAction extends BasePaginatedAction {
         }
         cycleCount = getCycleCount();
         cycleCountItems = cycleCount.getCycleCountItems();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         /*get all skuGroup  missed in Scanning   */
         missedSkuGroupList = missedSkuGroupInScanning(cycleCount);
         return new ForwardResolution("/pages/admin/CycleCountVariance.jsp");
     }
 
-    private void populateScannedPviVarianceMap(List<CycleCountItem> cycleCountItems) {
+    private void populateScannedSkuGroupSystemQtyMap(List<CycleCountItem> cycleCountItems) {
         cycleCountPviMap = new HashMap<Long, Integer>();
         for (CycleCountItem cycleCountItem : cycleCountItems) {
-            List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
-            int pvi = 0;
-            if (skuItemList != null) {
-                pvi = skuItemList.size();
+            if (cycleCountItem.getSkuGroup() != null) {
+                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(cycleCountItem.getSkuGroup());
+                int pvi = 0;
+                if (skuItemList != null) {
+                    pvi = skuItemList.size();
+                }
+                cycleCountPviMap.put(cycleCountItem.getId(), pvi);
             }
-            cycleCountPviMap.put(cycleCountItem.getId(), pvi);
         }
-
     }
+
 
     public Resolution saveVariance() {
         for (CycleCountItem cycleCountItem : cycleCountItems) {
@@ -519,9 +576,10 @@ public class CycleCountAction extends BasePaginatedAction {
 
 
     public Resolution generateReconAddExcel() {
+
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
         List<CycleCountItem> cycleCountItemsForAddRecon = new ArrayList<CycleCountItem>();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         for (CycleCountItem cycleCountItem : cycleCountItems) {
             int pvi = cycleCountPviMap.get(cycleCountItem.getId());
             int scannedQty = cycleCountItem.getScannedQty();
@@ -535,19 +593,31 @@ public class CycleCountAction extends BasePaginatedAction {
         final File excelFile = new File(excelFilePath);
         cycleCountHelper.generateReconVoucherAddExcel(cycleCountItemsForAddRecon, excelFile, cycleCountPviMap);
         return cycleCountHelper.download();
+    }
 
+
+    public Resolution generateSubtractRVExcel() {
+        List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
+        List<SkuGroup> skuGroupNeverScanned = missedSkuGroupInScanning(cycleCount);
+        Date todayDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + "CycleCount_" + cycleCount.getId() + "_RvSubtract" + sdf.format(todayDate) + ".xls";
+        final File excelFile = new File(excelFilePath);
+        cycleCountHelper.generateCycleCountItemsCombiningSkuGroupAndSkuItemScanning(cycleCount, cycleCountPviMap, skuGroupNeverScanned,missedSkuGroupSystemInventoryMap, excelFile);
+        return cycleCountHelper.download();
     }
 
 
     public Resolution generateCompleteCycleExcel() {
         List<CycleCountItem> cycleCountItems = cycleCount.getCycleCountItems();
-        populateScannedPviVarianceMap(cycleCountItems);
+        populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         List<SkuGroup> skuGroupList = missedSkuGroupInScanning(cycleCount);
         Date todayDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String excelFilePath = adminDownloadsPath + "/cycleCountExcelFiles/" + "CompleteCycleCount_" + cycleCount.getId() + "_Variance" + sdf.format(todayDate) + ".xls";
         final File excelFile = new File(excelFilePath);
-        cycleCountHelper.generateCompleteCycleCountExcel(cycleCountItems, excelFile, cycleCountPviMap, skuGroupList, missedSkuGroupSystemInventoryMap);
+        cycleCountHelper.generateCompleteCycleCountExcel(cycleCountItems, excelFile, cycleCountPviMap, skuGroupList, missedSkuGroupSystemInventoryMap, scannedSkuItemGroupList);
         return cycleCountHelper.download();
     }
 
@@ -569,78 +639,101 @@ public class CycleCountAction extends BasePaginatedAction {
             Map<String, Integer> hkBarcodeQtyMap = cycleCountHelper.readCycleCountNotepad(excelFile);
             cycleCountPviMap = new HashMap<Long, Integer>();
             for (String hkbarcodeFromNotepad : hkBarcodeQtyMap.keySet()) {
-                List<SkuGroup> validSkuGroupList = findSkuGroup(hkbarcodeFromNotepad);
-                if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
-                    int notepadScannedQty = hkBarcodeQtyMap.get(hkbarcodeFromNotepad);
-                    for (SkuGroup skuGroup : validSkuGroupList) {
-                        if (notepadScannedQty > 0) {
-                            List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
-                            CycleCountItem cycleCountItemFromDb = cycleCountService.getCycleCountItem(cycleCount, skuGroup);
-                            int pviQty = 0;
-                            if (skuItemList != null && skuItemList.size() > 0) {
-                                pviQty = skuItemList.size();
-                            }
-                            if (cycleCountItemFromDb == null) {
-                                CycleCountItem cycleCountItemNew = new CycleCountItem();
-                                cycleCountItemNew.setSkuGroup(skuGroup);
-                                cycleCountItemNew.setCycleCount(cycleCount);
-                                if (pviQty > 0) {
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
-                                        cycleCountItemNew.setScannedQty(notepadScannedQty);
-                                    } else {
-                                        if (notepadScannedQty >= pviQty) {
-                                            cycleCountItemNew.setScannedQty(pviQty);
-                                            notepadScannedQty = notepadScannedQty - pviQty;
-                                        } else {
-                                            cycleCountItemNew.setScannedQty(notepadScannedQty);
-                                            notepadScannedQty = 0;
-                                        }
+                SkuItem skuItem = findBySkuItem(hkbarcodeFromNotepad);
+                if (skuItem != null) {
+                    CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+                    if (existingCycleCountItem != null) {
+                        message = hkbarcodeFromNotepad + "-> Already Scanned Item";
+                        hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
+                    } else {
+                        SkuItem validSkuItem = getValidSkuItem(skuItem);
+                        if (validSkuItem != null) {
+                            CycleCountItem cycleCountItemNew = new CycleCountItem();
+                            cycleCountItemNew.setSkuGroup(null);
+                            cycleCountItemNew.setCycleCount(cycleCount);
+                            cycleCountItemNew.setScannedQty(1);
+                            cycleCountItemNew.setSkuItem(skuItem);
+                            cycleCountService.save(cycleCountItemNew);
 
-                                    }
-                                } else {
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
-                                        cycleCountItemNew.setScannedQty(notepadScannedQty);
-                                    } else {
-                                        continue;
-                                    }
-                                }
-                                cycleCountItemNew = cycleCountService.save(cycleCountItemNew);
-                                cycleCountPviMap.put(cycleCountItemNew.getId(), pviQty);
-                            } else {
-                                int alreadySavedScannedQty = cycleCountItemFromDb.getScannedQty();
-                                int fillPviQty = pviQty - alreadySavedScannedQty;
-                                /* Handles case of multiple Skugroup for same barcode */
-                                if (fillPviQty > 0) {
-                                    /* check if this the last skuGroup */
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
-                                        cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
-                                    } else {
-                                        if (notepadScannedQty >= fillPviQty) {
-                                            cycleCountItemFromDb.setScannedQty(pviQty);
-                                            notepadScannedQty = notepadScannedQty - fillPviQty;
-                                        } else {
-                                            cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
-                                            notepadScannedQty = 0;
-                                        }
-
-                                    }
-
-                                } else {
-                                    if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
-                                        cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
-                                    }
-                                }
-
-                                cycleCountService.save(cycleCountItemFromDb);
-                            }
-
+                        } else {
+                            message = hkbarcodeFromNotepad + "-> Invalid Item barcode for this Audit";
+                            hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
                         }
                     }
-
                 } else {
-                    hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
-                }
+                    List<SkuGroup> validSkuGroupList = findSkuGroup(hkbarcodeFromNotepad);
+                    if (validSkuGroupList != null && validSkuGroupList.size() > 0) {
+                        int notepadScannedQty = hkBarcodeQtyMap.get(hkbarcodeFromNotepad);
+                        for (SkuGroup skuGroup : validSkuGroupList) {
+                            if (notepadScannedQty > 0) {
+                                List<SkuItem> skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
+                                CycleCountItem cycleCountItemFromDb = cycleCountService.getCycleCountItem(cycleCount, skuGroup, null);
+                                int pviQty = 0;
+                                if (skuItemList != null && skuItemList.size() > 0) {
+                                    pviQty = skuItemList.size();
+                                }
+                                if (cycleCountItemFromDb == null) {
+                                    CycleCountItem cycleCountItemNew = new CycleCountItem();
+                                    cycleCountItemNew.setSkuGroup(skuGroup);
+                                    cycleCountItemNew.setCycleCount(cycleCount);
+                                    if (pviQty > 0) {
+                                        if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                            cycleCountItemNew.setScannedQty(notepadScannedQty);
+                                        } else {
+                                            if (notepadScannedQty >= pviQty) {
+                                                cycleCountItemNew.setScannedQty(pviQty);
+                                                notepadScannedQty = notepadScannedQty - pviQty;
+                                            } else {
+                                                cycleCountItemNew.setScannedQty(notepadScannedQty);
+                                                notepadScannedQty = 0;
+                                            }
 
+                                        }
+                                    } else {
+                                        if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                            cycleCountItemNew.setScannedQty(notepadScannedQty);
+                                        } else {
+                                            continue;
+                                        }
+                                    }
+                                    cycleCountItemNew = cycleCountService.save(cycleCountItemNew);
+                                    cycleCountPviMap.put(cycleCountItemNew.getId(), pviQty);
+                                } else {
+                                    int alreadySavedScannedQty = cycleCountItemFromDb.getScannedQty();
+                                    int fillPviQty = pviQty - alreadySavedScannedQty;
+                                    /* Handles case of multiple Skugroup for same barcode */
+                                    if (fillPviQty > 0) {
+                                        /* check if this the last skuGroup */
+                                        if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                            cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
+                                        } else {
+                                            if (notepadScannedQty >= fillPviQty) {
+                                                cycleCountItemFromDb.setScannedQty(pviQty);
+                                                notepadScannedQty = notepadScannedQty - fillPviQty;
+                                            } else {
+                                                cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
+                                                notepadScannedQty = 0;
+                                            }
+
+                                        }
+
+                                    } else {
+                                        if ((validSkuGroupList.indexOf(skuGroup)) == (validSkuGroupList.size() - 1)) {
+                                            cycleCountItemFromDb.setScannedQty(notepadScannedQty + alreadySavedScannedQty);
+                                        }
+                                    }
+
+                                    cycleCountService.save(cycleCountItemFromDb);
+                                }
+
+                            }
+                        }
+
+                    } else {
+                        hkBarcodeErrorsMap.put(hkbarcodeFromNotepad, message);
+                    }
+
+                }
             }
             if (hkBarcodeErrorsMap.size() > 0) {
                 error = true;
@@ -669,6 +762,143 @@ public class CycleCountAction extends BasePaginatedAction {
         Gson gson = new Gson();
         Map<Long, Integer> mapFromString = gson.fromJson(jsonString, type);
         return mapFromString;
+
+    }
+
+    private SkuItem findBySkuItem(String hkBarcode) {
+        SkuItem skuItem = skuGroupService.getSkuItemByBarcode(hkBarcode.trim(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+        return skuItem;
+
+    }
+
+    private SkuItem getValidSkuItem(SkuItem skuItem) {
+        ProductVariant productVariant = skuItem.getSkuGroup().getSku().getProductVariant();
+        switch (cycleCountType) {
+            case 1:
+                String brandInAudit = cycleCount.getBrandsToAudit().getBrand();
+                return productVariant.getProduct().getBrand().equalsIgnoreCase(brandInAudit) ? skuItem : null;
+
+            case 2:
+                String productId = cycleCount.getProduct().getId();
+                return productVariant.getProduct().getId().equalsIgnoreCase(productId) ? skuItem : null;
+
+            case 3:
+                String productVariantId = cycleCount.getProductVariant().getId();
+                return productVariant.getId().equalsIgnoreCase(productVariantId) ? skuItem : null;
+
+            default:
+                return null;
+        }
+    }
+
+
+//    public Resolution deleteScannedSkuItem() {
+//
+//        if (cycleCount == null) {
+//            addRedirectAlertMessage(new SimpleMessage("Invalid Cycle Count"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//
+//        if (StringUtil.isBlank(hkBarcode)) {
+//            addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//
+//        User loggedOnUser = null;
+//        if (getPrincipal() != null) {
+//            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+//        }
+//        SkuItem skuItem = findBySkuItem(hkBarcode.trim());
+//        if (skuItem == null) {
+//            addRedirectAlertMessage(new SimpleMessage(" Invalid Barcode"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//        CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+//        if (existingCycleCountItem == null) {
+//            addRedirectAlertMessage(new SimpleMessage( skuItem.getBarcode() + ":Invalid  Item to delete"));
+//            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+//        }
+//        cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
+//        addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
+////        return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+//        return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId()).addParameter("messageColor", "green");
+//    }
+
+
+    public Resolution deleteScannedSkuItem() {
+
+        if (cycleCount == null) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid Cycle Count"));
+            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+        }
+
+        if (StringUtil.isBlank(hkBarcode)) {
+            addRedirectAlertMessage(new SimpleMessage("Barcode cannot be blank"));
+            return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+        }
+
+        User loggedOnUser = null;
+        if (getPrincipal() != null) {
+            loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        }
+        SkuItem skuItem = findBySkuItem(hkBarcode.trim());
+        if (skuItem != null) {
+
+            CycleCountItem existingCycleCountItem = cycleCountService.getCycleCountItem(cycleCount, null, skuItem);
+            if (existingCycleCountItem == null) {
+                addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + ":Invalid  Item to delete"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+            cycleCountService.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
+            addRedirectAlertMessage(new SimpleMessage(skuItem.getBarcode() + " : has been deleted."));
+
+        } else {
+            SkuGroup skuGroup = skuGroupService.getInStockSkuGroup(hkBarcode, userService.getWarehouseForLoggedInUser().getId());
+            if (skuGroup == null) {
+                addRedirectAlertMessage(new SimpleMessage("Invalid  Barcode"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+            CycleCountItem existingCycleCountItem = null;
+            for (CycleCountItem cycleCountItem : cycleCount.getCycleCountItems()) {
+                if (skuGroup == cycleCountItem.getSkuGroup()) {
+                    existingCycleCountItem = cycleCountItem;
+                    break;
+                }
+            }
+
+            if (existingCycleCountItem != null && existingCycleCountItem.getScannedQty() > 0) {
+                existingCycleCountItem.setScannedQty(existingCycleCountItem.getScannedQty() - 1);
+                cycleCountService.save(existingCycleCountItem);
+
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("No Scanned item found"));
+                return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId());
+            }
+
+
+        }
+//       return new RedirectResolution(ViewSkuItemAction.class, "pre").addParameter("cycleCount", cycleCount).addParameter("skuGroup", skuItem.getSkuGroup()).addParameter("entityId", EnumSkuItemTransferMode.CYCLE_COUNT.getId());
+        addRedirectAlertMessage(new SimpleMessage("Database updated"));
+        return new RedirectResolution(CycleCountAction.class, "save").addParameter("cycleCount", cycleCount.getId()).addParameter("messageColor", "green");
+    }
+
+
+    public Resolution moveToInProgressStatus() {
+        cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+        cycleCount = cycleCountService.save(cycleCount);
+        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).addParameter("cycleCountPVImapString", cycleCountPVImapString);
+
+    }
+
+    public Resolution deleteAllScannedBatchForPVId() {
+        ProductVariant productVariant = productVariantService.getVariantById(productVariantId.trim());
+        if (productVariant != null) {
+            cycleCountService.deleteAllCycleCountItemsOfProductVariant(cycleCount, productVariant);
+        } else {
+            message = "Invalid Variant ID";
+        }
+        return new RedirectResolution(CycleCountAction.class, "view").addParameter("cycleCount", cycleCount.getId()).
+                addParameter("message", message).addParameter("error", error);
 
     }
 
@@ -843,5 +1073,46 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public void setMissedSkuGroupSystemInventoryMap(Map<Long, Integer> missedSkuGroupSystemInventoryMap) {
         this.missedSkuGroupSystemInventoryMap = missedSkuGroupSystemInventoryMap;
+    }
+
+    public Map<Long, Integer> getSkuItemSystemQtyMap() {
+        return skuItemSystemQtyMap;
+    }
+
+    public void setSkuItemSystemQtyMap(Map<Long, Integer> skuItemSystemQtyMap) {
+        this.skuItemSystemQtyMap = skuItemSystemQtyMap;
+    }
+
+    public Map<Long, Integer> getSkuItemScannedQtyMap() {
+        return skuItemScannedQtyMap;
+    }
+
+    public void setSkuItemScannedQtyMap(Map<Long, Integer> skuItemScannedQtyMap) {
+        this.skuItemScannedQtyMap = skuItemScannedQtyMap;
+    }
+
+    public List<SkuGroup> getScannedSkuItemGroupList() {
+        return scannedSkuItemGroupList;
+    }
+
+    public void setScannedSkuItemGroupList(List<SkuGroup> scannedSkuItemGroupList) {
+        this.scannedSkuItemGroupList = scannedSkuItemGroupList;
+    }
+
+    public SkuItem getSkuItem() {
+        return skuItem;
+    }
+
+    public void setSkuItem(SkuItem skuItem) {
+        this.skuItem = skuItem;
+    }
+
+
+    public String getProductVariantId() {
+        return productVariantId;
+    }
+
+    public void setProductVariantId(String productVariantId) {
+        this.productVariantId = productVariantId;
     }
 }

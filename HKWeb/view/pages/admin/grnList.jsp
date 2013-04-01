@@ -182,6 +182,7 @@
 			        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
 				        Inv.Checkin
 				        <s:param name="grn" value="${grn.id}"/></s:link>
+
 			        <br/>
 		        </c:if>
 		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryCheckedIn}">

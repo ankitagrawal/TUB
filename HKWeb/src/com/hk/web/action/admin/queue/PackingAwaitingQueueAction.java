@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.analytics.Reason;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -57,6 +58,8 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     private String                     baseGatewayOrderId;
     private Date                       startDate;
     private Date                       endDate;
+    private Date                       paymentStartDate;
+    private Date                       paymentEndDate;
     private Category                   category;
     private ShippingOrderStatus        shippingOrderStatus;
     private Integer                    defaultPerPage    = 30;
@@ -93,8 +96,13 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
+        /**
+         * commenting this line for now, since due to some bug some orders do not have eclation activity logged, when that is fixed, uncomment this
+         */
+        //shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
+        //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
+        shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
 
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
@@ -106,7 +114,6 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution moveToActionAwaiting() {
-
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
@@ -246,5 +253,21 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
         this.shippingOrderStatusService = shippingOrderStatusService;
+    }
+
+    public Date getPaymentStartDate() {
+        return paymentStartDate;
+    }
+
+    public void setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+    }
+
+    public Date getPaymentEndDate() {
+        return paymentEndDate;
+    }
+
+    public void setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
     }
 }

@@ -62,7 +62,7 @@ public interface ConsignmentService {
 
     public List<Consignment>  getConsignmentsFromConsignmentDtos(List<ConsignmentDto> consignmentDtoList);
 
-    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList , User agent);
+    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList , User agent, User loggedOnUser);
 
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 

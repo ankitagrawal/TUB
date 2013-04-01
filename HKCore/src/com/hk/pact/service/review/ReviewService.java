@@ -5,6 +5,8 @@ import java.util.List;
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.review.ReviewStatus;
+import com.hk.domain.review.UserReview;
+import com.hk.domain.user.User;
 
 public interface ReviewService {
 
@@ -17,4 +19,6 @@ public interface ReviewService {
     public Double getProductStarRating(Product product);
     
     public ReviewStatus getReviewStatus(Long reviewStatusId);
+
+    public UserReview getReviewByUserAndProduct(User user, Product product);
 }

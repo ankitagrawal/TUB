@@ -101,7 +101,8 @@
           <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
-            <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
+            <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>              
+            <input type="hidden" name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
             <br/>
             <strong style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}
 			<br/>MRP=${icBean.productVariant.markedPrice}</strong>
@@ -117,6 +118,7 @@
                 <th>MRP</th>
                 <th>Inv.</th>
                 <th></th>
+ 
               </tr>
               </thead>
               <c:forEach items="${icBean.skuGroups}" var="skuGroup" varStatus="ctr">
@@ -145,12 +147,13 @@
                   <td>${skuGroup.batchNumber}</td>
                   <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="yyyy-MM-dd"/></td>
                   <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="yyyy-MM-dd"/></td>
-                  <td>${skuGroup.mrp}</td>
+                  <td>${skuGroup.mrp} ${skuGroup.id}</td>
                   <td>${fn:length(hk:getInStockSkuItems(skuGroup))}</td>
 	              <td>
 		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
 			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
 			              <s:param name="skuGroup" value="${skuGroup.id}"/>
+                          <s:param name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
 			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
 		              </s:link>
 	              </td>

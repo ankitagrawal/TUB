@@ -4,7 +4,7 @@
     <div class="offerCloseButton" {{action removeOffer value.id target="controller"}}>x</div>
       <div class="applicableOfferDesc" style="font-size: 11px;">{{value.description}}</div>
       {{#if value.endDate}}
-        <div class="endDate" style="margin-bottom: 10px;">Valid till: {{value.endDate}}</div>
+        <div class="offerEndDate" style="margin-bottom: 10px;">Valid till: {{value.endDate}}</div>
       {{/if}}
         <div class="removeButton" style="left: 10px;display: none;">
           <form {{bindAttr action="controller.applyURL"}} method="post">

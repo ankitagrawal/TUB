@@ -72,7 +72,7 @@ public class Role {
 
     Role role = (Role) o;
 
-    if (!name.equals(role.name)) return false;
+    if (!name.equalsIgnoreCase(role.name)) return false;
 
     return true;
   }
