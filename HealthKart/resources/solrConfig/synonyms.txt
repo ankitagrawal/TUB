@@ -37,4 +37,6 @@ optimumnutrition => optimum nutrition
 muscle blaze => muscleblaze
 muscle pharm => musclepharm
 muscle tech => muscletech
+one touch => onetouch
+select simple => selectsimple
 
