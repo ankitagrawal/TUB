@@ -51,7 +51,7 @@ public class BusyMigrateInvoiceNum {
 			orders ->
 			Long shippingOrderId = orders.id;
 			String invoiceNumber = orders.invoice_num;
-			String vch_prefix;
+			String vch_prefix="";
 
 			 if(orders.Order_type.equals("B2B")){
         vch_prefix = "T";
@@ -66,7 +66,7 @@ public class BusyMigrateInvoiceNum {
 			String final_invoice_num = vch_prefix+invoiceNumber;
 			try {
 				sql.executeUpdate("""
-                    UPDATE shipping_order so SET accounting_invoice_number = ${final_invoice_num} WHERE id = ${shippingOrderId};
+                    UPDATE shipping_order SET accounting_invoice_number = '${final_invoice_num}' WHERE id = ${shippingOrderId};
      """);
 			}
 			catch (Exception e) {
