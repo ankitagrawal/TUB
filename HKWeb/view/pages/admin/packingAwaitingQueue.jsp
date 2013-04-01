@@ -82,7 +82,7 @@
   <ul>
     <div class="grouped grid_12">
       <s:form beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" method="get" autocomplete="false">
-          <div style="width:900px; margin:10px;">
+          <div style="width:1100px; margin:10px;">
               <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
               <label>SO Order ID </label> <s:text name="shippingOrderId"/>
               <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
@@ -102,7 +102,7 @@
               </s:select>
           </div>
 
-          <div style="width:900px; margin:20px;">
+          <div style="width:1100px; margin:20px;">
               <label>Escalation Start
                   Date </label><s:text class="date_input startDate" style="width:150px"
                                        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
@@ -118,7 +118,7 @@
                                        formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
           </div>
 
-          <div style="width:900px; margin:20px;">
+          <div style="width:1100px; margin:20px;">
               <li><label style="float:left;width: 80px;">SO Category</label>
 
                   <div class="checkBoxList">
