@@ -107,10 +107,7 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             }
         }
         shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
-        /**
-         * commenting this line for now, since due to some bug some orders do not have eclation activity logged, when that is fixed, uncomment this
-         */
-        //shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
+        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
         //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
