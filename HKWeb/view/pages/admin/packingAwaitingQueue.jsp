@@ -116,7 +116,6 @@
                   <c:forEach items="${categoryList}" var="category" varStatus="ctr">
                       <label><s:checkbox name="basketCategories[${ctr.index}]"
                                          value="${category.name}"/> ${category.displayName}</label>
-                      <br/>
                   </c:forEach>
               </div>
           </li>

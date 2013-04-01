@@ -77,25 +77,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         if (shippingOrderStatus == null) {
             shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess);
         }
-
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setServiceOrder(false);
-
-        Set<String> basketCategoryList = new HashSet<String>();
-        for (String category : basketCategories) {
-            if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
-                if (basketCategory != null) {
-                    basketCategoryList.add(basketCategory.getName());
-                }
-            }
-        }
-        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-
-        // orderPage = orderDao.searchPackingAwaitingOrders(null, null, null, null, getPageNo(), getPerPage(),
-        // applicableLineItemStatus);
         if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
             logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
@@ -112,6 +97,16 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
+        Set<String> basketCategoryList = new HashSet<String>();
+        for (String category : basketCategories) {
+            if (category != null) {
+                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+                if (basketCategory != null) {
+                    basketCategoryList.add(basketCategory.getName());
+                }
+            }
+        }
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         /**
          * commenting this line for now, since due to some bug some orders do not have eclation activity logged, when that is fixed, uncomment this
          */
