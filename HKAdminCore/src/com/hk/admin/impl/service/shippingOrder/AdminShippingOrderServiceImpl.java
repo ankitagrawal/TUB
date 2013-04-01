@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.shippingOrder;
 import java.util.*;
 
 import com.hk.domain.order.*;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,7 +144,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 }
             }
 
-            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(shippingOrder).getName());
+            Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setCategories(categories);
+            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
             shippingOrder = getShippingOrderService().save(shippingOrder);

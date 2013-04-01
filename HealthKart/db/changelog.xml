@@ -11938,4 +11938,35 @@
             (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue');
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-1">
+        <createTable tableName="shipping_order_category">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_primary" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-321">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-322">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-323">
+        <modifyDataType columnName="other_remark" newDataType="VARCHAR(2000)" tableName="product_variant"/>
+    </changeSet>
 </databaseChangeLog>

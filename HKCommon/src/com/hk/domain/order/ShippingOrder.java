@@ -8,6 +8,7 @@ import com.hk.domain.core.CancellationType;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
 import org.hibernate.annotations.Where;
 
@@ -114,6 +115,10 @@ public class ShippingOrder implements java.io.Serializable {
 
     @Column(name = "contains_jit_products")
     private boolean containsJitProducts;
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shipping_order")
+    private Set<ShippingOrderCategory>        categories        = new HashSet<ShippingOrderCategory>();
 
     public boolean containsJitProducts() {
         return containsJitProducts;
@@ -335,5 +340,13 @@ public class ShippingOrder implements java.io.Serializable {
 
     public void setReason(Reason reason) {
         this.reason = reason;
+    }
+
+    public Set<ShippingOrderCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<ShippingOrderCategory> categories) {
+        this.categories = categories;
     }
 }

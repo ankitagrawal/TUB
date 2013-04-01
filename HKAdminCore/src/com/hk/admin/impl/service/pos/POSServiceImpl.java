@@ -13,6 +13,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.store.Store;
@@ -162,7 +163,9 @@ public class POSServiceImpl implements POSService {
 				throw new NoSkuException(productVariant, warehouse);
 			}
 		}
-		shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrder).getName());
+        Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+        shippingOrder.setCategories(categories);
+        shippingOrder.setBasketCategory(orderService.getBasketCategory(categories).getName());
 		shippingOrder.setAmount(order.getAmount());
 		shippingOrder = shippingOrderService.save(shippingOrder);
 
