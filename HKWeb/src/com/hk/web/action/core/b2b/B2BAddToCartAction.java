@@ -1,5 +1,7 @@
 package com.hk.web.action.core.b2b;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,19 +12,23 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.FileBean;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.SimpleError;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
+import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -114,6 +120,11 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 	B2BOrderService b2bOrderService;
 
 	private Order order;
+	
+	private FileBean fileBean;
+	
+	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String                              adminUploadsPath;
 
 	@DefaultHandler
 	@JsonHandler
@@ -214,6 +225,30 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 		noCache();
 		return new JsonResolution(healthkartResponse);
 
+	}
+	
+	
+	@ValidationMethod(on = "parse")
+    public void validateOnParse() {
+        if (fileBean == null) {
+            getContext().getValidationErrors().add("1", new SimpleError("Please select a file to upload."));
+        }
+    }
+	
+	public Resolution parse(){
+		String excelFilePath = adminUploadsPath + "/deliveryStatus/" + System.currentTimeMillis() + ".xls";
+        File excelFile = new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        try {
+			fileBean.save(excelFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        Map dataMap = new HashMap();
+        HealthkartResponse healthkartResponse = new HealthkartResponse("null_exception",
+				"Cart could not be updated | Invalid Product Ids", dataMap);
+		return new JsonResolution(healthkartResponse);
 	}
 
 	public boolean iscFormAvailable() {

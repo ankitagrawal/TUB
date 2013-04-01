@@ -357,9 +357,24 @@
 					class="addToCartButton cta button_green" />
 
 			</div>
+			
+			<div class="left">
+			
+			<label>Upload Orders by Excel</label>
+			<br>
+			<label>File to Upload: &nbsp;&nbsp;&nbsp;&nbsp;</label><s:file name="fileBean" size="30"/>
+            <br>
+            <br>
+			<div class="buttons">
+			<input type="submit" name="parse" value="Upload"
+					class="addToCartButton cta button_green" />
+            </div>
+            <br>
+			
+			
+			</div>
 
 		</s:form>
-
 
 	</s:layout-component>
 	<s:layout-component name="endScripts">
