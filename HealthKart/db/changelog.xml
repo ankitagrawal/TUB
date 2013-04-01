@@ -11969,4 +11969,7 @@
     <changeSet author="Pratham (generated)" id="1364841762619-323">
         <modifyDataType columnName="other_remark" newDataType="VARCHAR(2000)" tableName="product_variant"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1364846682281-2">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="basket_category" tableName="shipping_order"/>
+    </changeSet>
 </databaseChangeLog>
