@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +48,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date lastEscEndDate;
     private Date targetDispatchDate;
     private Zone zone;
-    private Set<String> shippingOrderCategories;
+    private Set<Category> shippingOrderCategories;
     private boolean dropShipping = false;
     private boolean containsJitProducts = false;
     private boolean installable = false;
@@ -160,7 +161,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<Category> shippingOrderCategories) {
         this.shippingOrderCategories = shippingOrderCategories;
         return this;
     }
