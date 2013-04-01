@@ -6,6 +6,7 @@ import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
+import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.inventory.BrandsToAudit;
@@ -17,7 +18,9 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.akube.framework.dao.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -60,8 +63,8 @@ public class CycleCountServiceImpl implements CycleCountService {
 		this.baseDao = baseDao;
 	}
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup) {
-		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup);
+	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup,SkuItem skuItem) {
+		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup,skuItem);
 	}
 
 	public Page searchCycleList(String auditBy, Long cycleCountStatus ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
@@ -84,4 +87,41 @@ public class CycleCountServiceImpl implements CycleCountService {
 	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
 		return cycleCountDao. cycleCountInProgress(brandsToAuditList ,product , productVariant,  warehouse);
 	}
+
+    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty) {
+        CycleCountItem cycleCountItem = new CycleCountItem();        
+        cycleCountItem.setSkuGroup(validSkuGroup);
+        cycleCountItem.setSkuItem(skuItem);
+        cycleCountItem.setCycleCount(cycleCount);
+        cycleCountItem.setScannedQty(qty);
+        return cycleCountItem;
+    }
+
+
+     public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId){
+           return cycleCountDao.getScannedSkuItems(skuGroupId,cycleCountId);
+     }
+
+    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem) {
+        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount,skuItem);
+    }
+
+    @Transactional
+    public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount, ProductVariant productVariant) {
+        List<CycleCountItem> deleteCycleCountItemList = new ArrayList<CycleCountItem>();
+        List<CycleCountItem> cycleCountItemList = cycleCount.getCycleCountItems();
+        for (CycleCountItem cycleCountItem : cycleCountItemList) {
+            if (cycleCountItem.getSkuGroup() != null && cycleCountItem.getSkuGroup().getSku().getProductVariant().getId().equals(productVariant.getId())) {
+                deleteCycleCountItemList.add(cycleCountItem);
+            } else if (cycleCountItem.getSkuItem() != null && (cycleCountItem.getSkuItem().getSkuGroup().getSku().getProductVariant().getId().equals(productVariant.getId()))) {
+                deleteCycleCountItemList.add(cycleCountItem);
+            }
+        }
+
+        for (CycleCountItem cycleCountItem : deleteCycleCountItemList) {
+            cycleCountDao.deleteCycleCountItem(cycleCountItem);
+        }
+
+    }
+
 }

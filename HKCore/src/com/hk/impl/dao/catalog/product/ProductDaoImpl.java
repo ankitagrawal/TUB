@@ -45,7 +45,8 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
       Product product = (Product) session.createQuery(
                 "select p from Product p where p.id=:productId").setString(
                 "productId", productId).uniqueResult();
-      product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
+      if(product != null)
+        product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
       return product;
     }
 

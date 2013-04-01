@@ -12,5 +12,6 @@
   <table-filter match-name="user"/>
   <table-filter match-name="brands_to_audit"/>
 
+
 </hibernate-reverse-engineering>
 

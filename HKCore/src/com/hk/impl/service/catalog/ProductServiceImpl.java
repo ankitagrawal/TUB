@@ -191,19 +191,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product save(Product product) {
-        Product oldProduct = getProductDAO().getOriginalProductById(product.getId());
+        //Product oldProduct = getProductDAO().getOriginalProductById(product.getId());
         Product savedProduct = getProductDAO().save(product);
         productIndexService.indexProduct(savedProduct);
 
         // Audit Trail of Product
         // TODO: Old and New JSON are same as of now. Need to do some fixes to avoid hibernate reattachment
         // That's why commneting md5 check as they are same
-        try {
+        /*try {
           EntityAuditTrail eat = new EntityAuditTrail();
           eat.setEntityId(product.getId());
           //Gson gson = JsonUtils.getGsonDefault();
           Gson gson = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-          String oldJson = gson.toJson(oldProduct);
+          String oldJson = "";
+          if(oldProduct != null)
+            oldJson = gson.toJson(oldProduct);
           eat.setOldJson(oldJson);
           savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories());
           String newJson = gson.toJson(savedProduct);
@@ -218,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             logger.error("Error while entering audit trail for product->" + product.getId());
         }
-
+*/
         return savedProduct;
     }
 
@@ -260,8 +262,6 @@ public class ProductServiceImpl implements ProductService {
 
     public boolean isComboInStock(Combo combo) {
         if (combo.isDeleted() != null && combo.isDeleted()) {
-            return false;
-        } else if (combo.isOutOfStock() != null && combo.isOutOfStock()) {
             return false;
         } else {
             for (ComboProduct comboProduct : combo.getComboProducts()) {

@@ -141,6 +141,14 @@ public class POSServiceImpl implements POSService {
 		return order;
 	}
 
+	public void applyOrderLevelDiscountOnCartLineItems(Order order, Double orderLevelDiscount) {
+		for(CartLineItem cartLineItem : order.getCartLineItems()) {
+			Double discountOnHKPrice = ((cartLineItem.getHkPrice() * cartLineItem.getQty())/order.getAmount()) * orderLevelDiscount;
+			cartLineItem.setDiscountOnHkPrice(discountOnHKPrice);
+			cartLineItemService.save(cartLineItem);
+		}
+	}
+
 	public ShippingOrder createSOForStore(Order order, Warehouse warehouse) {
 		ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
 

@@ -209,5 +209,9 @@
         <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryStatus" />
         <mapping class="com.hk.domain.courier.CourierPickupDetail" />
         <mapping class="com.hk.domain.courier.PickupStatus" />
+	    <mapping class="com.hk.domain.inventory.StockTransferStatus" />
+	    <mapping class="com.hk.domain.review.ProductReviewMail"/>
+	    <mapping class="com.hk.domain.review.Mail"/>
+	    <mapping class="com.hk.domain.review.UserReviewMail"/>
     </session-factory>
 </hibernate-configuration>

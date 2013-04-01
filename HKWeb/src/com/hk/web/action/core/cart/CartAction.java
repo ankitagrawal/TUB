@@ -161,7 +161,7 @@ public class CartAction extends BaseAction {
 
     /**
      * method used to update the latest pricing, for eg when an offer is applied/changed
-     * 
+     *
      * @return
      */
     @JsonHandler

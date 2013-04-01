@@ -1,7 +1,7 @@
 package com.hk.admin.impl.service.order;
 
 import java.util.*;
-
+import com.hk.pact.service.review.ReviewCollectionFrameworkService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.domain.payment.Payment;
 import org.slf4j.Logger;
@@ -99,6 +99,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private SMSManager                smsManager;
 	@Autowired
 	PaymentManager paymentManager;
+
+    @Autowired
+    ReviewCollectionFrameworkService reviewCollectionFrameworkService;
 
     @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}")
     private Double                    codMinAmount;
@@ -302,6 +305,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         getOrderService().save(order);
                     }
 	                smsManager.sendOrderDeliveredSMS(order);
+
+                    reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
                 }
             }
         }

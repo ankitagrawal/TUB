@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
+import com.hk.domain.subscription.Subscription;
 import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +145,7 @@ public class OrderManager {
 
     @Transactional
     public Order getOrCreateOrder(User user) {
-        Order order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+       Order order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
         if (order != null && !order.isSubscriptionOrder())
             return order;
 
@@ -421,6 +422,7 @@ public class OrderManager {
             }
             getEmailManager().sendOrderConfirmEmailToAdmin(order);
         }
+
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
@@ -429,7 +431,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-	    //Set Order in Traffic Tracking
+        //this is the most important method, so it is very important as to from where it is called
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+        //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
@@ -440,7 +445,7 @@ public class OrderManager {
 		    }
 		    getBaseDao().save(trafficTracking);
 	    }
-	    
+
         return order;
     }
 
@@ -575,7 +580,7 @@ public class OrderManager {
           }
           else{
 
-          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isHidden() || product.isDeleted() || product.isOutOfStock()) {
+          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
               }
@@ -583,7 +588,7 @@ public class OrderManager {
               continue;
           }
 
-          if (!(product.isJit() || product.isService())) {
+          if (!(product.isJit() || product.isService() || product.isDropShipping() ||lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId()))) {
               Long unbookedInventory = inventoryService.getAvailableUnbookedInventory(skuList);
               if (unbookedInventory != null && unbookedInventory < lineItem.getQty()) {
                   // Check in case of negative unbooked inventory
@@ -606,6 +611,11 @@ public class OrderManager {
               trimmedCartLineItems.add(lineItem);
               Long qty = lineItem.getQty();
               iterator.remove();
+              //check for subscription
+              if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Subscription.getId())){
+                  Subscription subscription= subscriptionService.getSubscriptionFromCartLineItem(lineItem);
+                  subscriptionService.abandonSubscription(subscription);
+              }
               order.getCartLineItems().remove(lineItem);
               getBaseDao().delete(lineItem);
               if(qty<=0){

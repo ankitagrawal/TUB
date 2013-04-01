@@ -21,7 +21,7 @@
     <s:layout-component name="analytics">
       <jsp:include page="/includes/_analytics.jsp"/>
     </s:layout-component>
-    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="<hk:vhostJs/>/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js"></script>
     <s:layout-component name="htmlHead"/>
   </head>
@@ -40,7 +40,7 @@
       </s:layout-component>
       <div class="current_step_content step2 shopping_cart">
         <s:layout-component name="checkout_notice">
-          <%--<jsp:include page="/includes/checkoutNotice.jsp"/>--%>
+          <jsp:include page="/includes/checkoutNotice.jsp"/>
         </s:layout-component>
         <s:layout-component name="cart_title"/>
         <s:layout-component name="cart_items"/>

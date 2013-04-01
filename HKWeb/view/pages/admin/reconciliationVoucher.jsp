@@ -4,6 +4,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" var="pa"/>
@@ -109,6 +110,7 @@
 </s:layout-component>
 
 <s:layout-component name="content">
+    <c:set var="itemCheckedin" value="false"/>
     <div style="display: none;">
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink"
                 event="getPVDetails"></s:link>
@@ -160,6 +162,18 @@
                 <s:hidden name="rvLineItems[${ctr.index}]" value="${rvLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                     <td>
+                         <c:if test="${rvLineItem.reconciledQty > 0}">
+                           <c:set var="itemCheckedin" value="true"/>
+                             <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+                                <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction"
+                                        event="downloadBarcode"> Barcode
+                                    <s:param name="rvLineItem" value="${rvLineItem.id}"/>
+                                    <%--<s:param name="rvLineItem.reconciliationVoucher" value="${rvLineItem.reconciliationVoucher.id}"/>--%>
+                                     <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+                                </s:link>
+                             </shiro:hasPermission>
+
+                        </c:if>
                             ${productVariant.id}
                     </td>
                     <td>${productVariant.product.name}<br/>${productVariant.productOptionsWithoutColor}
@@ -171,11 +185,6 @@
                                class="reconciliationTypeIdentifier"/>
 	                    <s:hidden name="rvLineItems[${ctr.index}].reconciliationType" value="${rvLineItem.reconciliationType.id}"/>
 	                     ${rvLineItem.reconciliationType.name}
-                        <%--<s:select name="rvLineItems[${ctr.index}].reconciliationType"--%>
-                                  <%--value="${rvLineItem.reconciliationType.id}" class="valueChange">--%>
-                            <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"--%>
-                                                       <%--label="name"/>--%>
-                        <%--</s:select>--%>
                     </td>
                     <td>${rvLineItem.costPrice}
                     </td>
@@ -197,7 +206,7 @@
         <br/>
         <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-        <s:submit name="save" value="Save" class="saveButton"/>
+        <s:submit name="reconcileAdd" value="Save" class="saveButton"/>
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <hr/>
         <fieldset>
@@ -207,10 +216,18 @@
             <br/><br/>
             <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
             <div class="buttons">
-                <s:submit name="parse" value="Create RV LineItems"/>
+                <s:submit name="parseAddRVExcel" value="Create RV LineItems"/>
             </div>
         </fieldset>
         </shiro:hasRole>
+
+        <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
+         <c:if test="${itemCheckedin}">
+          <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.ReconciliationVoucherAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="reconciliationVoucher" value="${pa.reconciliationVoucher.id}"/>
+         </s:link>
+            </c:if>
+        </shiro:hasPermission>
 
     </s:form>
 
@@ -225,7 +242,7 @@
 				    var batch = $(this).find('.batch').val();
 
 				    if ((variant != null && variant != '') && ( (batch == null || batch.trim() == '') || (qty == null || qty.trim() == ''))) {
-					    alert('Enter Batch Number && Qty for varinat :::::: ' + variant);
+					    alert('Enter Batch Number && Qty for variant :::::: ' + variant);
 					    result = false;
 					    return false;
 
