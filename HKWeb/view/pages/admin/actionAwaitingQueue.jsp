@@ -355,6 +355,7 @@
                     </div>
                 </li>
 
+<%--
                 <li><label style="float:left;width: 60px;">BO Category</label>
 
                     <div class="checkBoxList">
@@ -365,6 +366,7 @@
                         </c:forEach>
                     </div>
                 </li>
+--%>
 
                 <li><label style="float:left;width: 60px;">SO Category</label>
 

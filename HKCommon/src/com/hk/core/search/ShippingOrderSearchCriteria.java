@@ -280,11 +280,19 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
 
+        DetachedCriteria shippingOrderCategoryCriteria = null;
+        if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
+            if (shippingOrderCategoryCriteria == null) {
+                shippingOrderCategoryCriteria = criteria.createCriteria("categories");
+            }
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
+        }
 
+/*
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
             criteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
-
+*/
 
         DetachedCriteria lineItemsCriteria = null;
         DetachedCriteria skuCriteria = null;

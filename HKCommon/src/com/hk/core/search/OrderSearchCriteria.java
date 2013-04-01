@@ -210,8 +210,6 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 }
                 lifecycleCriteria.add(Restrictions.in("reason", reasonList));
             }
-
-
         }
 
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
@@ -219,7 +217,12 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders");
             }
 
-            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
+            DetachedCriteria shippingOrderCategoryCriteria = null;
+            if (shippingOrderCategoryCriteria == null) {
+                shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("categories");
+            }
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
+//            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
 
         /**
