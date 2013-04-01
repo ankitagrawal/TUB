@@ -80,7 +80,7 @@
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
       <div style="float:right"><input type="submit" value="Mark All" id="markAll"/></div>
       <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                       shippingOrders="${shipmentQueueBean.shippingOrderList}" showCourier="true"/>
+                       shippingOrders="${shipmentQueueBean.shippingOrderList}" showCourier="true" isShipmentQueue="true"/>
       <div>
         <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${shipmentQueueBean}"/>
         <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
@@ -95,11 +95,16 @@
     </s:form>
     <script type="text/javascript">
       $('#moveToActionAwaiting').click(function() {
+          var index = 0;
         $('.shippingOrderDetailCheckbox').each(function() {
           var shippingOrderDetailCheckbox = $(this);
           var isChecked = shippingOrderDetailCheckbox.attr('checked');
           if (isChecked) {
-            $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+              var reasonId = '.shippingOrderReason_'+$(this).attr('dataId');
+              var reason = $(reasonId);
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList[]" value="' + $(this).attr('dataId') + '"/>');
+              $('#hiddenShippingIds').append('<input type="hidden" name="shippingOrderList['+index+'].reason" value="'+reason.val()+'"/>');
+              index++;
           }
         });
         return true;

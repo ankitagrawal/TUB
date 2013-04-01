@@ -9,7 +9,7 @@ public interface ReviewCollectionFrameworkService {
 
     public boolean sendTestEmail(User user, Product product);
 
-    public void sendDueEmails();
+    public int sendDueEmails();
 
     public void doUserEntryForReviewMail(Order order);
 }
