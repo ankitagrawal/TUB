@@ -204,7 +204,7 @@
                                             </s:link>
                                         </shiro:hasPermission>
                                     </td>
-                                  <p><p>
+                                  <p></p><p></p>
 
                                 </tr>
                                 <%
@@ -277,7 +277,7 @@
                                              </s:link>
                                          </shiro:hasPermission>
                                     </td>
-                                    <p><p>
+                                    <p></p><p></p>
                                 </tr>
                                 <%
                                     lineItemGlobalCtr++;

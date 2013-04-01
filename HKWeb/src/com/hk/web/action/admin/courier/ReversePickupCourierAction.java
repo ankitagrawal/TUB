@@ -83,7 +83,7 @@ public class ReversePickupCourierAction extends BaseAction {
 	public Resolution submit() {
 		if (shippingOrderId != null && pickupDate != null && selectedCourier != null ) {
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
-			CourierPickupDetail courierPickupDetail = null;
+			CourierPickupDetail courierPickupDetail;
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
 				List<String> pickupReply = courierPickupService.getPickupDetailsForThirdParty(selectedCourier.getId(), shippingOrder, pickupDate);
@@ -102,7 +102,7 @@ public class ReversePickupCourierAction extends BaseAction {
 				}
 			} else{
 				courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, null);
-
+				addRedirectAlertMessage(new SimpleMessage("Pickup Request saved"));
 			}
 
 			courierPickupDetail = courierPickupService.save(courierPickupDetail);

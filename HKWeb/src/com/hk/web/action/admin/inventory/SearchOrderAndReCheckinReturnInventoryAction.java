@@ -144,7 +144,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 			if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
 				int recheckinCounter = 0;
 					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-						findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+						findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_OUT.getId());
 						if(findSkuItemByBarcode != null){
 							skuItemBarcode = findSkuItemByBarcode.getBarcode();
 						} else{
@@ -152,7 +152,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 							skuItemBarcode = skuGroupBarcode;
 						}
 
-						if (skuItemBarcode.equalsIgnoreCase(recheckinBarcode) && checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
+						if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckinBarcode) &&
+								checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
 							SkuItem skuItem = checkedOutInventory.getSkuItem();
 							if (conditionOfItem.equals(GOOD)){
