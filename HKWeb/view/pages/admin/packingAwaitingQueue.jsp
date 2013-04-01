@@ -82,35 +82,44 @@
   <ul>
     <div class="grouped grid_12">
       <s:form beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" method="get" autocomplete="false">
-        <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
-        <label>SO Order ID </label> <s:text name="shippingOrderId"/>
-        <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
-        <label>BO Order ID </label> <s:text name="baseOrderId"/>
-        <label>Escalation Start
-          Date </label><s:text class="date_input startDate" style="width:150px"
-                               formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-        <label>End
-          Date </label><s:text class="date_input endDate" style="width:150px"
-                               formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-          <label>Payment Start
-              Date </label><s:text class="date_input startDate" style="width:150px"
-                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
-          <label>Payment End
-              Date </label><s:text class="date_input endDate" style="width:150px"
-                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
-        <label>Status </label>
-        <s:select name="shippingOrderStatus">
-          <option value="">Any order status</option>
-          <c:forEach items="${applicableOrderStatusList}" var="orderStatus">
-            <s:option value="${orderStatus.id}">${orderStatus.name}</s:option>
-          </c:forEach>
-        </s:select>
-        <label>Per Page</label>
-        <s:select name="defaultPerPage">
-          <s:option value="30">30</s:option>
-          <s:option value="60">60</s:option>
-          <s:option value="120">120</s:option>
-        </s:select>
+          <div style="width:900px; margin:20px;">
+            <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
+            <label>SO Order ID </label> <s:text name="shippingOrderId"/>
+            <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
+            <label>BO Order ID </label> <s:text name="baseOrderId"/>
+        </div>
+
+          <div style="width:900px; margin:20px;">
+                <label>Escalation Start
+                  Date </label><s:text class="date_input startDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+                <label>End
+                  Date </label><s:text class="date_input endDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+                  <label>Payment Start
+                      Date </label><s:text class="date_input startDate" style="width:150px"
+                                           formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
+                      </div>
+                  <div style="width:900px; margin:20px;">
+                      <label>Payment End
+                          Date </label><s:text class="date_input endDate" style="width:150px"
+                                               formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
+                    <label>Status </label>
+                    <s:select name="shippingOrderStatus">
+                      <option value="">Any order status</option>
+                      <c:forEach items="${applicableOrderStatusList}" var="orderStatus">
+                        <s:option value="${orderStatus.id}">${orderStatus.name}</s:option>
+                      </c:forEach>
+                    </s:select>
+                    <label>Per Page</label>
+                    <s:select name="defaultPerPage">
+                      <s:option value="30">30</s:option>
+                      <s:option value="60">60</s:option>
+                      <s:option value="120">120</s:option>
+                    </s:select>
+         </div>
+
+          <div style="width:900px; margin:20px;">
           <li><label style="float:left;width: 60px;">SO Category</label>
               <div class="checkBoxList">
                   <c:forEach items="${categoryList}" var="category" varStatus="ctr">
@@ -119,7 +128,10 @@
                   </c:forEach>
               </div>
           </li>
+          </div>
+
           <s:submit name="searchOrders" value="Search"/>
+
         <%--<s:submit name="chooseItemsForPrintingPicking" value="Select Category and Send For Printing/Picking"/>--%>
       </s:form>
       <script language=javascript type=text/javascript>
