@@ -219,14 +219,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
 
         Set<Category> categoryList = new HashSet<Category>();
-//        for (String category : categories) {
-//            if (category != null) {
-//                categoryList.add((Category) categoryDao.getCategoryByName(category));
-//            }
-//        }
-//        if (categoryList.size() == 0) {
         categoryList.addAll(categoryDao.getPrimaryCategories());
-
         orderSearchCriteria.setCategories(categoryList);
 
         if (dropShip != null){
@@ -235,18 +228,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (containsJit != null){
             orderSearchCriteria.setContainsJit(containsJit);
         }
-        logger.debug("basketCategories : " + basketCategories.size());
-        Set<String> basketCategoryList = new HashSet<String>();
+        Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
             if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
-                if (basketCategory != null) {
-                    basketCategoryList.add(basketCategory.getName());
-                }
+                basketCategoryList.add((Category) categoryDao.getCategoryByName(category));
             }
         }
-        logger.debug("basketCategoryList : " + basketCategoryList.size());
-
+        if (basketCategoryList.size() == 0) {
+            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
+        }
         orderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         return orderSearchCriteria;
     }

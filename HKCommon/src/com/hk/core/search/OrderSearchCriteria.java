@@ -48,7 +48,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      * shipping order fields
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
-    private Set<String>               shippingOrderCategories;
+    private Set<Category>               shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
     private Set<Reason> reasonList;
 
@@ -96,7 +96,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public OrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+    public OrderSearchCriteria setShippingOrderCategories(Set<Category> shippingOrderCategories) {
         this.shippingOrderCategories = shippingOrderCategories;
         return this;
     }
