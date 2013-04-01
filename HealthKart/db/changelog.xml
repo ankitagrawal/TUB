@@ -11972,4 +11972,11 @@
     <changeSet author="Pratham (generated)" id="1364846682281-2">
         <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="basket_category" tableName="shipping_order"/>
     </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-01">
+        <sql>
+            INSERT INTO `shipping_order_category` (`shipping_order_id`,
+            `category_name`, `is_primary`, `create_dt`, `update_dt`)
+            Select id, basket_category, 1, NOW(), NOW() from shipping_order;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -219,14 +219,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
 
         Set<Category> categoryList = new HashSet<Category>();
-        for (String category : categories) {
-            if (category != null) {
-                categoryList.add((Category) categoryDao.getCategoryByName(category));
-            }
-        }
-        if (categoryList.size() == 0) {
-            categoryList.addAll(categoryDao.getPrimaryCategories());
-        }
+//        for (String category : categories) {
+//            if (category != null) {
+//                categoryList.add((Category) categoryDao.getCategoryByName(category));
+//            }
+//        }
+//        if (categoryList.size() == 0) {
+        categoryList.addAll(categoryDao.getPrimaryCategories());
 
         orderSearchCriteria.setCategories(categoryList);
 
@@ -451,6 +450,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
             ctr2++;
         }
+/*
         int ctr3 = 0;
         for (String category : categories) {
             if (category != null) {
@@ -458,6 +458,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
             ctr3++;
         }
+*/
         int ctr4 = 0;
         for (String category : basketCategories) {
             if (category != null) {
