@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -51,6 +52,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     private AdminShippingOrderService  adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    CategoryDao categoryDao;
+
+    private List<String> basketCategories = new ArrayList<String>();
 
     private Long                       shippingOrderId;
     private Long                       baseOrderId;
@@ -76,6 +81,17 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setServiceOrder(false);
+
+        Set<String> basketCategoryList = new HashSet<String>();
+        for (String category : basketCategories) {
+            if (category != null) {
+                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+                if (basketCategory != null) {
+                    basketCategoryList.add(basketCategory.getName());
+                }
+            }
+        }
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
 
         // orderPage = orderDao.searchPackingAwaitingOrders(null, null, null, null, getPageNo(), getPerPage(),
@@ -139,6 +155,14 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         }
 
         return new RedirectResolution(PackingAwaitingQueueAction.class);
+    }
+
+    public List<String> getBasketCategories() {
+        return basketCategories;
+    }
+
+    public void setBasketCategories(List<String> basketCategories) {
+        this.basketCategories = basketCategories;
     }
 
     public int getPerPageDefault() {
