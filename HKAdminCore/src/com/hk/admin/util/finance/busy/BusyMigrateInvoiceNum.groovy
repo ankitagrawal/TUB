@@ -30,8 +30,6 @@ public class BusyMigrateInvoiceNum {
 		sql = Sql.newInstance("jdbc:mysql://" + hostName + ":3306/" + dbName, serverUser,
 				serverPassword, "com.mysql.jdbc.Driver");
 
-		busySql = Sql.newInstance("jdbc:mysql://" + hostName + ":3306/healthkart_busy", serverUser,
-				serverPassword, "com.mysql.jdbc.Driver");
 	}
 
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(BusyMigrateInvoiceNum.class);
@@ -40,16 +38,21 @@ public class BusyMigrateInvoiceNum {
 	/*	sql.execute("""
 								ALTER TABLE  `shipping_order` ADD  `accounting_invoice_number` VARCHAR( 20 ) NULL;
 		""")*/
-		
-		busySql.eachRow("""
-                    SELECT hk_ref_no AS so_id, vch_no AS invoice_num 
-                    FROM transaction_header
-                    WHERE vch_type=9
-                      """) {
-			busyOrders ->
-			Long shippingOrderId = busyOrders.so_id;
-			String invoiceNumber = busyOrders.invoice_num;
 
+
+
+		sql.eachRow("""
+                    Select so.id, if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+                    so.accounting_invoice_number_id as invoice_num
+										From shipping_order so
+										inner join base_order bo on so.base_order_id = bo.id
+										where so.accounting_invoice_number_id is not null;
+								""") {
+			orders ->
+			Long shippingOrderId = orders.id;
+			String invoiceNumber = orders.invoice_num;
+			String order_type = orders.Order_type
+			 
 			try {
 				sql.executeUpdate("""
                     UPDATE shipping_order so SET accounting_invoice_number = ${invoiceNumber} WHERE id = ${shippingOrderId};
