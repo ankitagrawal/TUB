@@ -155,7 +155,8 @@ public enum EnumShippingOrderStatus {
     public static List<EnumShippingOrderStatus> getStatusForShipmentResolution() {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
                 EnumShippingOrderStatus.SO_OnHold,
-                EnumShippingOrderStatus.SO_ReadyForDropShipping
+                EnumShippingOrderStatus.SO_ReadyForDropShipping,
+                EnumShippingOrderStatus.SO_Shipped
 //                EnumShippingOrderStatus.SO_Picking,
 //                EnumShippingOrderStatus.SO_Installed,
 //                EnumShippingOrderStatus.SO_ReadyForProcess,

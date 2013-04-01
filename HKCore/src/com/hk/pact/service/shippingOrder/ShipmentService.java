@@ -19,6 +19,8 @@ public interface ShipmentService {
 
     public Shipment changeCourier(Shipment shipment, Courier newCourier, boolean preserveAwb);
 
+    public Shipment changeAwb(Shipment shipment,Awb newAwb,boolean preserveAwb);
+
     public Shipment recreateShipment(ShippingOrder shippingOrder);
 
     public boolean isValidShipment(Shipment shipment);

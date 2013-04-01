@@ -15,7 +15,6 @@ public class B2BUserFilterDto {
   private String userHash;
   private String tin;
   private String dlNumber;
-  private String category;
   private String phone;
 
   public String getLogin() {
@@ -105,15 +104,7 @@ public String getDlNumber() {
 public void setDlNumber(String dlNumber) {
 	this.dlNumber = dlNumber;
 }
-
-public String getCategory() {
-	return category;
-}
-
-public void setCategory(String category) {
-	this.category = category;
-}
-
+  
 public String getPhone() {
 	return phone;
 }

@@ -196,9 +196,9 @@ public class EditProductAttributesAction extends BaseAction {
         List<ProductVariant> productVariants = product.getProductVariants();
 
         if (productVariants != null && productVariants.size() > 0) {
-            for (ProductVariant productVariant : productVariants) {
+            /*for (ProductVariant productVariant : productVariants) {
                 getInventoryService().checkInventoryHealth(productVariant);
-            }
+            }*/
 
             getComboService().markProductOutOfStock(productVariants.get(0));
         }
@@ -259,6 +259,7 @@ public class EditProductAttributesAction extends BaseAction {
             }
 
             productVariant = getProductVariantService().save(productVariant);
+            if(!(productVariant.getProduct().isJit() || productVariant.getProduct().isService()))
             getInventoryService().checkInventoryHealth(productVariant);
             i++;
         }

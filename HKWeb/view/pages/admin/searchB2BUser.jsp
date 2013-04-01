@@ -44,7 +44,6 @@
           <div class="grouped">
             <li><label>Tin Number </label> <s:text name="userFilterDto.tin"/></li>
             <li><label>DL Number </label> <s:text name="userFilterDto.dlNumber"/></li>
-            <li><label>Category Name </label> <s:text name="userFilterDto.category"/></li>
             <li><label>Phone Number </label> <s:text name="userFilterDto.phone"/></li>
           </div>
         </ul>

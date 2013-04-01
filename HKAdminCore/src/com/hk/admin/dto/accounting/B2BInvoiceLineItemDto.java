@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.hk.constants.core.TaxConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.category.Category;
@@ -14,10 +12,7 @@ import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.domain.order.CartLineItemConfig;
 import com.hk.domain.order.CartLineItemConfigValues;
 import com.hk.domain.order.CartLineItemExtraOption;
-import com.hk.domain.order.Order;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.impl.service.order.B2bServiceImpl;
-import com.hk.pact.service.order.B2BOrderService;
 
 public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 

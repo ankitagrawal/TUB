@@ -94,10 +94,6 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
         	b2b_criteria.add(Restrictions.eq("dlNumber", userFilterDto.getDlNumber()));
         	is_b2b_details=true;
         }
-        if (StringUtils.isNotBlank(userFilterDto.getCategory())) {
-        	b2b_criteria.add(Restrictions.eq("category", userFilterDto.getCategory()));
-        	is_b2b_details=true;
-        }
         if (StringUtils.isNotBlank(userFilterDto.getPhone())) {
         	ud_criteria.add(Restrictions.eq("phone", Long.parseLong(userFilterDto.getPhone())));
         	dis_criteria.add(Subqueries.propertyIn("u.id", ud_criteria));

@@ -34,7 +34,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.matcher.CartLineItemMatcher;
-import com.hk.domain.order.B2BOrderCheckList;
+import com.hk.domain.order.B2bOrderChecklist;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
@@ -182,9 +182,9 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 				}
 			}
 
-			B2BOrderCheckList b2bOrderCheckList = new B2BOrderCheckList();
-			b2bOrderCheckList.setBase_order_id(order.getId());
-			b2bOrderCheckList.setcForm(iscFormAvailable());
+			B2bOrderChecklist b2bOrderCheckList = new B2bOrderChecklist();
+			b2bOrderCheckList.setBaseOrder(order);
+			b2bOrderCheckList.setCForm(iscFormAvailable());
 			getB2bOrderService().saveB2BOrder(b2bOrderCheckList);
 			
 			

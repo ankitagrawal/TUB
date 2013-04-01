@@ -2,6 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.courier.EnumAwbChangeReason;
 import com.hk.constants.courier.EnumCourierChangeReason;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumBoxSize;
@@ -28,6 +29,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.offer.rewardPoint.RewardPointStatus;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.review.Mail;
 import com.hk.domain.review.ReviewStatus;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.SubscriptionStatus;
@@ -118,6 +120,8 @@ public interface MasterDataDao
 
     public List<Hub> getHubList();
 
+    public List<Mail> getAllMailType();
+
     public List<User>  getHKDeliveryAgentList();
 
     public List<RunsheetStatus> getRunsheetStatusList();
@@ -170,6 +174,8 @@ public interface MasterDataDao
 
   public List<EnumCourierChangeReason> getAllCourierChangeReason();
 
+    public List<EnumAwbChangeReason> getAllAwbChangeReason();
+
     public List<Courier> getCouriersForDispatchLot();
 
 	public List<PaymentMode> getPaymentModeForStore();
@@ -181,4 +187,6 @@ public interface MasterDataDao
      public List<Courier> getAllActiveCourier();
 
 	public List<Long> getDiscountsForPOS();
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType();
 }

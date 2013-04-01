@@ -71,8 +71,11 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
         return new ForwardResolution("/pages/modal/requestCallback.jsp");
     }
 
-    @ValidationMethod(on = "getDiscountCoupon")
+    @ValidationMethod(on = "getContact")
     public void getContactValidation() {
+        if(StringUtils.isBlank(name) || StringUtils.equals(name, "Guest")){
+            getContext().getValidationErrors().add("e1", new SimpleError("Please enter a proper name."));  
+        }
         if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
             getContext().getValidationErrors().add("e1", new SimpleError("Please enter either mobile number or email id."));
         } else if (StringUtils.isNotBlank(mobile)) {
@@ -95,8 +98,6 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
 
         String couponCode = "n.a.";
 
-        // first check if the discount coupon code has already been sent. if yes, then do not send again.
-
         DiscountCouponMailingList dcml = new DiscountCouponMailingList();
         dcml.setName(name);
         dcml.setMobile(mobile);
@@ -109,6 +110,7 @@ public class RequestCallbackAction extends BaseAction implements ValidationError
         dcml.setRequestDate(new Date());
         dcml = (DiscountCouponMailingList)discountCouponMailingListDao.save(dcml);
         User loggedOnUser = getUserService().getLoggedInUser();
+      
         emailManager.sendCallbackRequestEmail(loggedOnUser, dcml);
 
         return new JsonResolution(new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your information has been received, we will get in touch with you shortly."));
