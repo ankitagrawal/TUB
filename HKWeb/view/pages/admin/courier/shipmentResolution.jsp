@@ -236,5 +236,11 @@
              </c:otherwise>
          </c:choose>
      </s:form>
+         <fieldset>
+            <h2> Change Shipping Order Status</h2>
+             <br>
+             Current Shipping Order Status : <span style="color:blue;"> ${shipRes.shippingOrder.shippingOrderStatus.name}</span>
+         </fieldset>
+
     </s:layout-component>
 </s:layout-render>
