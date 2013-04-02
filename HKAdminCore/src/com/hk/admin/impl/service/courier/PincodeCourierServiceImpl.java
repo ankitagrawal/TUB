@@ -7,7 +7,6 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shipment.EnumShipmentServiceType;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.*;
@@ -111,12 +110,6 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
         Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(getShipmentServiceType(shippingOrder)), true);
     }
-//    @Override
-//    public List<ShippingOrder> getApplicableStatus(ShippingOrder shippingOrder){
-//     Long shippingOrderStatusId = shippingOrder.getShippingOrderStatus().getId();
-//       return EnumShippingOrderStatus.getStatusForShippingOrderChange(shippingOrderStatusId);
-//
-//    }
 
     @Override
     public ShipmentServiceType getShipmentServiceType(ShippingOrder shippingOrder) {

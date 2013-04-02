@@ -1,13 +1,13 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
-import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.ShippingOrderStatusMapping;
-import com.hk.pact.dao.shippingOrder.ShippingOrderStatusDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.slf4j.Logger;
@@ -47,9 +47,7 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
           return new ForwardResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
       }
 
-
-
-    @SuppressWarnings("unchecked")
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution search(){
                 shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
                 if(shippingOrder==null){
@@ -64,7 +62,7 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
            SOMapping = shippingOrderStatusMapping.getShippingOrderStatusMap().get(shippingOrder.getShippingOrderStatus().getName());
            return new ForwardResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
     }
-
+    @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveStatus(){
         if(shippingOrder!=null){
           shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());

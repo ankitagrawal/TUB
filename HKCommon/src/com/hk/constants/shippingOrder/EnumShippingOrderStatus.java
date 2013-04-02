@@ -3,7 +3,6 @@ package com.hk.constants.shippingOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.hk.domain.order.ShippingOrderStatus;
 
@@ -27,8 +26,8 @@ public enum EnumShippingOrderStatus {
     SO_Lost(210L, "SO Lost"),
     SO_Customer_Return_Replaced(250L, "SO Customer Return and Replaced"),
     SO_Customer_Return_Refunded(260L, "SO Customer Return and Refunded"),
-    SO_Cancelled(999L, "SO Cancelled"),
-    ;
+    SO_Cancelled(999L, "SO Cancelled");
+
 
 
     private java.lang.String name;
@@ -186,7 +185,7 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
                 EnumShippingOrderStatus.SO_Delivered.getId(),
                 EnumShippingOrderStatus.RTO_Initiated.getId(),
-                EnumShippingOrderStatus.SO_Lost.getId());
+                EnumShippingOrderStatus.SO_RTO.getId());
     }
 
 }
