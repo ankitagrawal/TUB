@@ -282,14 +282,16 @@
                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
                 </li>
 
-                <li><label style="float:left;width: 60px;">SO Category</label>
+                <li>
+                    <div style="width:1100px; margin:20px;">
+                        <label style="float:left;width: 80px;">SO Category</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="basketCategories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
+                        <div class="checkBoxList">
+                            <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                                <label><s:checkbox name="basketCategories[${ctr.index}]"
+                                                   value="${category.name}"/> ${category.displayName}</label>
+                            </c:forEach>
+                        </div>
                     </div>
                 </li>
 
