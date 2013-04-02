@@ -49,10 +49,11 @@
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE trousseau box with purchase of loreal skin  and make up worth Rs 4500/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE maybelline watershine liquid diamonds lip gloss worth Rs 210/- with purchase of maybelline make up worth Rs 1200/-</a></p>
          <p><a href="http://www.healthkart.com/product/maybelline-color-senstational-lip-color/MYBLN5">FREE lipstick holder with purchase of maybelline color sensational lip color</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">Buy Manufaktura Products Worth Rs. 4500 and get one manufaktura beer Shampoo worth Rs 960 absolutely free</a></p>
 
 
           <!---
-         <p><a href="http://www.healthkart.com/product/auravedic-ritual-skin-lightening-mask/ARVDC33">FREE auravedic skin lighting mask with purchase of  Beauty products worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/beauty">FREE auravedic skin lighting mask with purchase of  Beauty products worth Rs 1000/-</a></p>
           --->
 
 
