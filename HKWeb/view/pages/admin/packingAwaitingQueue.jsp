@@ -82,41 +82,56 @@
   <ul>
     <div class="grouped grid_12">
       <s:form beanclass="com.hk.web.action.admin.queue.PackingAwaitingQueueAction" method="get" autocomplete="false">
-        <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
-        <label>SO Order ID </label> <s:text name="shippingOrderId"/>
-        <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
-        <label>BO Order ID </label> <s:text name="baseOrderId"/>
-        <label>Escalation Start
-          Date </label><s:text class="date_input startDate" style="width:150px"
-                               formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-        <label>End
-          Date </label><s:text class="date_input endDate" style="width:150px"
-                               formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-          <label>Payment Start
-              Date </label><s:text class="date_input startDate" style="width:150px"
-                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
-          <label>Payment End
-              Date </label><s:text class="date_input endDate" style="width:150px"
-                                   formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
-        <label>Status </label>
-        <s:select name="shippingOrderStatus">
-          <option value="">Any order status</option>
-          <c:forEach items="${applicableOrderStatusList}" var="orderStatus">
-            <s:option value="${orderStatus.id}">${orderStatus.name}</s:option>
-          </c:forEach>
-        </s:select>
-        <label>Per Page</label>
-        <s:select name="defaultPerPage">
-          <s:option value="30">30</s:option>
-          <s:option value="60">60</s:option>
-          <s:option value="120">120</s:option>
-        </s:select>
-        <%--<s:select name="category">--%>
-        <%--<c:forEach items="${categoryList}" var="category">--%>
-        <%--<s:option value="${category.name}">${category.displayName}</s:option>--%>
-        <%--</c:forEach>--%>
-        <%--</s:select>--%>
-        <s:submit name="searchOrders" value="Search"/>
+          <div style="width:1100px; margin:10px;">
+              <label>SO Gateway ID </label><s:text name="gatewayOrderId" id="gatewayOrderId"/>
+              <label>SO Order ID </label> <s:text name="shippingOrderId"/>
+              <label>BO Gateway ID </label><s:text name="baseGatewayOrderId" id="baseGatewayOrderId"/>
+              <label>BO Order ID </label> <s:text name="baseOrderId"/>
+              <label>Status </label>
+              <s:select name="shippingOrderStatus">
+                  <option value="">Any order status</option>
+                  <c:forEach items="${applicableOrderStatusList}" var="orderStatus">
+                      <s:option value="${orderStatus.id}">${orderStatus.name}</s:option>
+                  </c:forEach>
+              </s:select>
+              <label>Per Page</label>
+              <s:select name="defaultPerPage">
+                  <s:option value="30">30</s:option>
+                  <s:option value="60">60</s:option>
+                  <s:option value="120">120</s:option>
+              </s:select>
+          </div>
+
+          <div style="width:1120px; margin:20px;">
+              <label>Escalation Start
+                  Date </label><s:text class="date_input startDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+              <label>End
+                  Date </label><s:text class="date_input endDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+              <label>Payment Start
+                  Date </label><s:text class="date_input startDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                       name="paymentStartDate"/>
+              <label>Payment End
+                  Date </label><s:text class="date_input endDate" style="width:150px"
+                                       formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
+          </div>
+
+          <div style="width:1100px; margin:20px;">
+              <li><label style="float:left;width: 80px;">SO Category</label>
+
+                  <div class="checkBoxList">
+                      <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                          <label><s:checkbox name="basketCategories[${ctr.index}]"
+                                             value="${category.name}"/> ${category.displayName}</label>
+                      </c:forEach>
+                  </div>
+              </li>
+          </div>
+
+          <s:submit style="margin:0 0 10px 25px;" name="searchOrders" value="Search"/>
+
         <%--<s:submit name="chooseItemsForPrintingPicking" value="Select Category and Send For Printing/Picking"/>--%>
       </s:form>
       <script language=javascript type=text/javascript>
@@ -170,8 +185,10 @@
     var selectedOrderStatus = $(this).val();
     if (selectedOrderStatus == <%=EnumShippingOrderStatus.SO_Picking.getId()%>) {
       $("#reAssignToPackingQueue").show();
+        $("#markAll").show();
     } else {
       $("#reAssignToPackingQueue").hide();
+        $("#markAll").hide();
     }
   });
   
