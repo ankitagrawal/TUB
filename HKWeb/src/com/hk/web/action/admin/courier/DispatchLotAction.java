@@ -75,6 +75,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private String shipmentStatusFilter;
 	private FileBean uploadDocumentFileBean;
 	private File documentFile;
+	private String awbNumber;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -82,9 +83,14 @@ public class DispatchLotAction extends BasePaginatedAction {
 	}
 
 	public Resolution showDispatchLotList() {
-		dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
-				destination, dispatchStartDate, dispatchEndDate, dispatchLotStatus, getPageNo(), getPerPage());
-		dispatchLotList = dispatchLotPage.getList();
+		if(awbNumber != null){
+			dispatchLotList = dispatchLotPage.getList();
+		}
+		else{
+			dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
+					destination, dispatchStartDate, dispatchEndDate, dispatchLotStatus, getPageNo(), getPerPage());
+			dispatchLotList = dispatchLotPage.getList();
+		}
 		return new ForwardResolution("/pages/admin/courier/dispatchLotList.jsp");
 	}
 
@@ -511,5 +517,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setUploadDocumentFileBean(FileBean uploadDocumentFileBean) {
 		this.uploadDocumentFileBean = uploadDocumentFileBean;
+	}
+
+	public String getAwbNumber() {
+		return awbNumber;
+	}
+
+	public void setAwbNumber(String awbNumber) {
+		this.awbNumber = awbNumber;
 	}
 }
