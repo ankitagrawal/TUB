@@ -9,11 +9,9 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
@@ -32,10 +30,8 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     ShippingOrder shippingOrder;
     private static Logger logger = LoggerFactory.getLogger(ShippingOrderStatusChangeAction.class);
 
-    List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>(0);
     List<EnumShippingOrderStatus> SOMapping = new ArrayList<EnumShippingOrderStatus>();
     ShippingOrderStatusMapping shippingOrderStatusMapping= new ShippingOrderStatusMapping();
-
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
@@ -49,16 +45,16 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution search(){
-                shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
-                if(shippingOrder==null){
+            shippingOrder = shippingOrderService.findByGatewayOrderId(gatewayOrderId);
+            if(shippingOrder==null){
                  addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id"));
                  return new RedirectResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
                 }
 
             if(!EnumShippingOrderStatus.getApplicableShippingOrderStatus().contains(shippingOrder.getShippingOrderStatus().getId())){
-               addRedirectAlertMessage(new SimpleMessage("SO is not in applicable status!!!!"));
-               return new RedirectResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
-            }
+                 addRedirectAlertMessage(new SimpleMessage("SO is not in applicable status!!!!"));
+                 return new RedirectResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
+                }
            SOMapping = shippingOrderStatusMapping.getShippingOrderStatusMap().get(shippingOrder.getShippingOrderStatus().getName());
            return new ForwardResolution("/pages/admin/courier/changeShippingOrderStatus.jsp");
     }
@@ -88,15 +84,6 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
      public void setShippingOrder(ShippingOrder shippingOrder) {
          this.shippingOrder = shippingOrder;
      }
-
-
-    public List<ShippingOrder> getShippingOrderList() {
-        return shippingOrderList;
-    }
-
-    public void setShippingOrderList(List<ShippingOrder> shippingOrderList) {
-        this.shippingOrderList = shippingOrderList;
-    }
     public List<EnumShippingOrderStatus> getSOMapping() {
            return SOMapping;
        }
