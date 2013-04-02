@@ -75,7 +75,9 @@ public class BusyPopulateSalesData {
 
 							where ((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
-							and (ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
+							and (ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >${lastUpdateDate} 
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) < '2013-02-01'
+							and ship.ship_date > '2011-11-08 19:59:36')
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
@@ -230,7 +232,7 @@ public class BusyPopulateSalesData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty + invoiceItems.reward_point_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;

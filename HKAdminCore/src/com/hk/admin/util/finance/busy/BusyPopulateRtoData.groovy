@@ -48,7 +48,7 @@ public class BusyPopulateRtoData {
     if(lastUpdateDate == null){
       lastUpdateDate = "2009-01-01";
     }
-	  lastUpdateDate = "2012-03-31";
+	  lastUpdateDate = "2013-01-01";
     sql.eachRow("""
 
 									select so.id as shipping_order_id,
@@ -72,7 +72,7 @@ public class BusyPopulateRtoData {
 									inner join warehouse w on w.id = so.warehouse_id
 
 									where (so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70))
-									and (ship.return_date >${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
+									and (ship.return_date >=${lastUpdateDate} and ship.return_date < '2013-02-01' and ship.ship_date > '2011-11-08 19:59:36')
 									and ship.return_date is not null
 									GROUP BY so.id
 									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
@@ -225,7 +225,7 @@ public class BusyPopulateRtoData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty + invoiceItems.reward_point_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
