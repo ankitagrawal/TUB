@@ -32,7 +32,7 @@
 
 <c:set var="thirdPartyCodCallFailed" value="<%=EnumUserCodCalling.THIRD_PARTY_FAILED.getId()%>"/>
 <c:set var="paymentFailed" value="<%=EnumUserCodCalling.PAYMENT_FAILED.getId()%>"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="JIT Management Queue">
 <s:layout-component name="htmlHead">
 <%
     PaymentService paymentService =  ServiceLocatorFactory.getService(PaymentService.class);
