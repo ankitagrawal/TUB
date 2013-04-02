@@ -11974,9 +11974,19 @@
     </changeSet>
     <changeSet author="Pratham" id="2013-04-01-01">
         <sql>
-            INSERT INTO `shipping_order_category` (`shipping_order_id`,
-            `category_name`, `is_primary`, `create_dt`, `update_dt`)
-            Select id, basket_category, 1, NOW(), NOW() from shipping_order;
+            insert into shipping_order_category(shipping_order_id,category_name,is_primary,create_dt,update_dt)
+            select li.shipping_order_id,p.primary_category,0,NOW(),NOW() from line_item li
+            join sku sk on li.sku_id=sk.id
+            join product_variant pv on pv.id=sk.product_variant_id
+            join product p on pv.product_id=p.id;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-02">
+        <sql>
+            update shipping_order_category soc
+            join shipping_order so on soc.shipping_order_id=so.id
+            set soc.is_primary=1
+            where so.basket_category is not null;
         </sql>
     </changeSet>
 </databaseChangeLog>
