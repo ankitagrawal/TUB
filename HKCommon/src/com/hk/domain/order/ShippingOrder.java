@@ -118,7 +118,7 @@ public class ShippingOrder implements java.io.Serializable {
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-    private Set<ShippingOrderCategory>        categories        = new HashSet<ShippingOrderCategory>();
+    private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
 
     public boolean containsJitProducts() {
         return containsJitProducts;
@@ -342,11 +342,11 @@ public class ShippingOrder implements java.io.Serializable {
         this.reason = reason;
     }
 
-    public Set<ShippingOrderCategory> getCategories() {
-        return categories;
+    public Set<ShippingOrderCategory> getShippingOrderCategories() {
+        return shippingOrderCategories;
     }
 
-    public void setCategories(Set<ShippingOrderCategory> categories) {
-        this.categories = categories;
+    public void setShippingOrderCategories(Set<ShippingOrderCategory> categories) {
+        this.shippingOrderCategories = categories;
     }
 }

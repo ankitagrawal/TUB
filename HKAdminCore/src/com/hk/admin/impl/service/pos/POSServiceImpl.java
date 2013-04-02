@@ -169,7 +169,7 @@ public class POSServiceImpl implements POSService {
 		shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
 		shippingOrder = shippingOrderService.save(shippingOrder);
         Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
-        shippingOrder.setCategories(categories);
+        shippingOrder.setShippingOrderCategories(categories);
         shippingOrder.setBasketCategory(orderService.getBasketCategory(categories).getName());
         shippingOrder = shippingOrderService.save(shippingOrder);
 		return shippingOrder;

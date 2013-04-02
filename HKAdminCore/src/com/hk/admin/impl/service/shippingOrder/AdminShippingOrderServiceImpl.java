@@ -154,7 +154,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
             Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
-            shippingOrder.setCategories(categories);
+            shippingOrder.setShippingOrderCategories(categories);
             shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
             shippingOrder = getShippingOrderService().save(shippingOrder);
 

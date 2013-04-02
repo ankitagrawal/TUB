@@ -6,7 +6,6 @@ import com.hk.comparator.BasketCategory;
 import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.EnumUserCodCalling;
-import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -491,7 +490,7 @@ public class OrderServiceImpl implements OrderService {
                             shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                             shippingOrder = shippingOrderService.save(shippingOrder);
                             Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
-                            shippingOrder.setCategories(categories);
+                            shippingOrder.setShippingOrderCategories(categories);
                             shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
                             shippingOrder = shippingOrderService.save(shippingOrder);
                             shippingOrders.add(shippingOrder);
@@ -683,7 +682,7 @@ public class OrderServiceImpl implements OrderService {
         ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
         shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
         shippingOrder = getShippingOrderService().save(shippingOrder);
-        shippingOrder.setCategories(getCategoriesForShippingOrder(shippingOrder));
+        shippingOrder.setShippingOrderCategories(getCategoriesForShippingOrder(shippingOrder));
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */

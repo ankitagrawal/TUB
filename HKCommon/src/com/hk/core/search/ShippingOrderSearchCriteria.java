@@ -289,7 +289,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         DetachedCriteria shippingOrderCategoryCriteria = null;
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
             if (shippingOrderCategoryCriteria == null) {
-                shippingOrderCategoryCriteria = criteria.createCriteria("categories");
+                shippingOrderCategoryCriteria = criteria.createCriteria("shippingOrderCategories");
             }
             shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
         }

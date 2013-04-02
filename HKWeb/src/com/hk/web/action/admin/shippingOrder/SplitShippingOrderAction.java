@@ -99,7 +99,7 @@ public class SplitShippingOrderAction extends BaseAction {
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
             newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
             newShippingOrder = shippingOrderService.save(newShippingOrder);
-            newShippingOrder.setCategories(shippingOrder.getCategories());
+            newShippingOrder.setShippingOrderCategories(shippingOrder.getShippingOrderCategories());
             newShippingOrder = shippingOrderService.save(newShippingOrder);
 
             for (LineItem selectedLineItem : selectedLineItems) {

@@ -219,7 +219,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
             DetachedCriteria shippingOrderCategoryCriteria = null;
             if (shippingOrderCategoryCriteria == null) {
-                shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("categories");
+                shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("shippingOrderCategories");
             }
             shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
 //            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
