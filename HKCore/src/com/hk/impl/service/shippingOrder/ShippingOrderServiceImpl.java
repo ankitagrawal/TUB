@@ -86,6 +86,10 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return (ShippingOrder) getShippingOrderDao().save(shippingOrder);
     }
 
+//    public ShippingOrder saveStaus(ShippingOrder shippingOrder,Integer newStatus){
+//      return getShippingOrderDao().saveStatus(shippingOrder,newStatus);
+//    }
+
     public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria) {
         return searchShippingOrders(shippingOrderSearchCriteria, true);
     }

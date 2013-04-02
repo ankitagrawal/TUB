@@ -3,6 +3,7 @@ package com.hk.constants.shippingOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.hk.domain.order.ShippingOrderStatus;
 
@@ -26,7 +27,8 @@ public enum EnumShippingOrderStatus {
     SO_Lost(210L, "SO Lost"),
     SO_Customer_Return_Replaced(250L, "SO Customer Return and Replaced"),
     SO_Customer_Return_Refunded(260L, "SO Customer Return and Refunded"),
-    SO_Cancelled(999L, "SO Cancelled");
+    SO_Cancelled(999L, "SO Cancelled"),
+    ;
 
 
     private java.lang.String name;
@@ -166,24 +168,6 @@ public enum EnumShippingOrderStatus {
         );
     }
 
-    public static List<EnumShippingOrderStatus> getStatusForShippingOrderChange() {
-        Long shippingOrderStatusId;
-         int shippingOrderStatusIdIntValue = shippingOrderStatusId.intValue();
-         switch(shippingOrderStatusIdIntValue){
-             case EnumShippingOrderStatus.SO_Delivered.getId() :
-
-             break;
-             default:
-             return null;
-             break;
-         }
-            return Arrays.asList(
-                    EnumShippingOrderStatus.SO_Shipped,
-                    EnumShippingOrderStatus.SO_Delivered
-            );
-        }
-
-
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
            return Arrays.asList(
 //                   EnumShippingOrderStatus.SO_Packed,
@@ -196,6 +180,13 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Lost,
                 EnumShippingOrderStatus.SO_RTO,
                 EnumShippingOrderStatus.SO_Delivered);
+    }
+
+    public static List<Long> getApplicableShippingOrderStatus(){
+        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
+                EnumShippingOrderStatus.SO_Delivered.getId(),
+                EnumShippingOrderStatus.RTO_Initiated.getId(),
+                EnumShippingOrderStatus.SO_Lost.getId());
     }
 
 }

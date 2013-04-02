@@ -111,11 +111,12 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
         Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(getShipmentServiceType(shippingOrder)), true);
     }
-    @Override
-    public List<ShippingOrder> getApplicableStatus(ShippingOrder shippingOrder){
-     Long shippingOrderStatusId = shippingOrder.getShippingOrderStatus().getId();
-        EnumShippingOrderStatus.getStatusForShippingOrderChange(shippingOrderStatusId);
-    }
+//    @Override
+//    public List<ShippingOrder> getApplicableStatus(ShippingOrder shippingOrder){
+//     Long shippingOrderStatusId = shippingOrder.getShippingOrderStatus().getId();
+//       return EnumShippingOrderStatus.getStatusForShippingOrderChange(shippingOrderStatusId);
+//
+//    }
 
     @Override
     public ShipmentServiceType getShipmentServiceType(ShippingOrder shippingOrder) {

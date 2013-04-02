@@ -18,6 +18,13 @@
                           return false;
                       }
                   });
+                $('#saveStatus').click(function(){
+                   var updateStatus=$('#updateStatus').val();
+                    if(updateStatus=="" || updateStatus==null){
+                        alert("Please select required status..!!!");
+                        return false;
+                    }
+                });
             });
     </script>
 
@@ -27,32 +34,28 @@
   <s:form beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction" method="get" autocomplete="false">
 
       <fieldset class="top_label">
-               <ul>
                 <h3></h3><label>Gateway Order ID</label></h3>
                     <s:text name="gatewayOrderId" id="gatewayOrderId"/>
                     <br>
                     <s:submit name="search" value="Search" id="search"/>
                     <div class="clear"></div>
-               </ul>
           </fieldset>
-      <div class="clear"></div>
-      <fieldset>
-          <c:if test="${changeSOStatus.shippingOrderList!=null and fn:length(changeSOStatus.shippingOrderList)>0}">
+          <c:if test="${changeSOStatus.shippingOrder!=null}">
+              <fieldset>
               <h2>Change Shipping Order Status</h2>
               <br>
               Current Shipping Order Status : <span style="color:blue;"> ${changeSOStatus.shippingOrder.shippingOrderStatus.name}</span>
-              <br> Shipping Order Status Name<s:select name="updateStatus" id="updateStatus">
+              <br> Shipping Order Status Name<s:select name="enumSoUpdatedStatusId" id="updateStatus">
               <s:option value="">--Select--</s:option>
-                                <c:forEach items="${changeSOStatus.applicableStatus}" var="courier">
-                                  <s:option value="${shippingOrder.shippingOrderStatus.id}">${shippingOrder.shippingOrderStatus.name}</s:option>
+                                <c:forEach items="${changeSOStatus.SOMapping}" var="soStatus">
+                                  <s:option value="${soStatus}">${soStatus.name}</s:option>
                                 </c:forEach>
                             </s:select>
-
-              </c:if>
-      </fieldset>
-        </s:form>
-
-
-
+              <br>
+              <input type="hidden" name="shippingOrder" value="${changeSOStatus.shippingOrder.id}" />
+              <s:submit name="saveStatus" value="Save" id="saveStatus"/>
+          </fieldset>
+           </c:if>
+          </s:form>
 </s:layout-component>
 </s:layout-render>
