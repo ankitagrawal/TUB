@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
@@ -50,6 +51,9 @@ public class DispatchLotAction extends BasePaginatedAction {
 	@Autowired
 	ShippingOrderService shippingOrderService;
 
+	@Autowired
+	private AwbService awbService;
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
@@ -84,7 +88,11 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public Resolution showDispatchLotList() {
 		if(awbNumber != null){
-			dispatchLotList = dispatchLotPage.getList();
+		  List<Courier> courierList = new ArrayList<Courier>();
+			Shipment  shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(courierList,awbNumber));
+			if(shipmentObj != null){
+				dispatchLotList = getDispatchLotService().getDispatchLotsForShipment(shipmentObj);
+			}
 		}
 		else{
 			dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
