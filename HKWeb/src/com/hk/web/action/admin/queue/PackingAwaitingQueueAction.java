@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.pact.dao.catalog.category.CategoryDao;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -51,6 +52,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     private AdminShippingOrderService  adminShippingOrderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    CategoryDao categoryDao;
+
+    private List<String> basketCategories = new ArrayList<String>();
 
     private Long                       shippingOrderId;
     private Long                       baseOrderId;
@@ -72,14 +77,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         if (shippingOrderStatus == null) {
             shippingOrderStatus = shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ReadyForProcess);
         }
-
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         shippingOrderSearchCriteria.setServiceOrder(false);
         shippingOrderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, getPageNo(), getPerPage());
-
-        // orderPage = orderDao.searchPackingAwaitingOrders(null, null, null, null, getPageNo(), getPerPage(),
-        // applicableLineItemStatus);
         if (shippingOrderPage != null) {
             shippingOrderList = shippingOrderPage.getList();
             logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
@@ -96,10 +97,17 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        /**
-         * commenting this line for now, since due to some bug some orders do not have eclation activity logged, when that is fixed, uncomment this
-         */
-        //shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
+        Set<String> basketCategoryList = new HashSet<String>();
+        for (String category : basketCategories) {
+            if (category != null) {
+                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
+                if (basketCategory != null) {
+                    basketCategoryList.add(basketCategory.getName());
+                }
+            }
+        }
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
+        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
         //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);
@@ -139,6 +147,14 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         }
 
         return new RedirectResolution(PackingAwaitingQueueAction.class);
+    }
+
+    public List<String> getBasketCategories() {
+        return basketCategories;
+    }
+
+    public void setBasketCategories(List<String> basketCategories) {
+        this.basketCategories = basketCategories;
     }
 
     public int getPerPageDefault() {
