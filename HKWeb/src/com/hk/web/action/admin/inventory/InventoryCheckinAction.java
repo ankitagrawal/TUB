@@ -8,6 +8,7 @@ import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
@@ -20,6 +21,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.inventory.*;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -88,6 +90,8 @@ public class InventoryCheckinAction extends BaseAction {
     BaseDao baseDao;
     @Autowired
     BrandsToAuditDao brandsToAuditDao;
+    @Autowired
+    CycleCountService cycleCountService;
 
     private List<SkuGroup> skuGroupList;
 
@@ -211,6 +215,18 @@ public class InventoryCheckinAction extends BaseAction {
                         return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                     }
                 }
+
+                //check if cycle count in progress
+                List<CycleCount> cycleCountList = cycleCountService.isCycleCountInProgress(productVariant, grn.getWarehouse());
+                if (cycleCountList != null && cycleCountList.size() > 0) {
+                    CycleCount cycleCount = cycleCountList.get(0);
+                    if (cycleCount.getProductVariant().getId().equalsIgnoreCase(productVariant.getId())) {
+                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count No : " + cycleCount.getId() + "  Is In Progress  For :  " + productVariant.getId()));
+                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+                    }
+
+                }
+
 
                 Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
                 Long askedQty = 0L;

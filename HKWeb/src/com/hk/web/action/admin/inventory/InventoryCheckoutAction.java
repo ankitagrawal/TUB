@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -101,6 +103,8 @@ public class InventoryCheckoutAction extends BaseAction {
     BinManager binManager;
     @Autowired
     BrandsToAuditDao brandsToAuditDao;
+    @Autowired
+    CycleCountService cycleCountService;
 
     private ShippingOrder shippingOrder;
 
@@ -141,6 +145,18 @@ public class InventoryCheckoutAction extends BaseAction {
                     }
                 }
             }
+
+            //check if cycle count in progress
+            List<CycleCount> cycleCountList = cycleCountService.isCycleCountInProgress(productVariant, warehouse);
+            if (cycleCountList != null && cycleCountList.size() > 0) {
+                CycleCount cycleCount = cycleCountList.get(0);
+                if (cycleCount.getProductVariant().getId().equalsIgnoreCase(productVariant.getId())) {
+                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count No : " + cycleCount.getId() + "  Is In Progress  For :  " + productVariant.getId()));
+                    return new RedirectResolution(InventoryCheckoutAction.class);
+                }
+
+            }
+
 
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();

@@ -112,13 +112,13 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN);
                         break;
                     case 30:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_DAMAGED);
                         break;
                     case 40:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_EXPIRED);
                         break;
                     case 60:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_BATCH_MISMATCH);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_BATCH_MISMATCH);
                         break;
                     case 100:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
@@ -127,7 +127,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
                         break;
                     case 90:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FREE_VARIANT_RECONCILE);
                         break;
                 }
 

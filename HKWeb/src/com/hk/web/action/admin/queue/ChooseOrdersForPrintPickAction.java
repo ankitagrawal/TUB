@@ -3,6 +3,7 @@ package com.hk.web.action.admin.queue;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -49,6 +50,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private BrandsToAuditDao           brandsToAuditDao;
+    @Autowired
+    CycleCountService cycleCountService;
 
     @Autowired
     CategoryDao                        categoryDao;
@@ -219,9 +222,12 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
         List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
         List<String> brandsToExclude = new ArrayList<String>();
+        List<String> cycleCountInProgressForVariant = null;
         if (getPrincipalUser() != null) {
             Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
             brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
+            cycleCountInProgressForVariant = cycleCountService.inProgressCycleCountForVariant(warehouse);
+
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
             if (shippingOrdersList.size() == 10) {
@@ -230,11 +236,16 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             boolean shouldAdd = true;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                String variantId = lineItem.getSku().getProductVariant().getId();
                 /*
                  * if (StringUtils.isNotBlank(brandName) && brandName.equalsIgnoreCase(brand)) { shouldAdd = false;
                  * break; }
                  */
                 if (StringUtils.isNotBlank(brandName) && brandsToExclude.contains(brandName.toLowerCase())) {
+                    shouldAdd = false;
+                    break;
+                }
+                if (cycleCountInProgressForVariant.contains(variantId)) {
                     shouldAdd = false;
                     break;
                 }

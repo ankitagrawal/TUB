@@ -25,26 +25,30 @@ import java.util.Date;
  */
 public interface CycleCountService {
 
-	//CycleCount methods
+    //CycleCount methods
 
-	public CycleCount save(CycleCount cycleCount);
+    public CycleCount save(CycleCount cycleCount);
 
     //CycleCountItem methods
 
-	public CycleCountItem save(CycleCountItem cycleCountItem);
+    public CycleCountItem save(CycleCountItem cycleCountItem);
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem);
+    public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem);
 
-	public Page searchCycleList(String auditBy,Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
+    public Page searchCycleList(String auditBy, Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
 
-	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList , Product product , ProductVariant productVariant, Warehouse warehouse);
+    public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse);
 
-    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty);
+    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem, CycleCount cycleCount, Integer qty);
 
-    public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId);
+    public List<SkuItem> getScannedSkuItems(Long skuGroupId, Long cycleCountId);
 
-    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem);
+    public void removeScannedSkuItemFromCycleCountItem(CycleCount cycleCount, SkuItem skuItem);
 
-    public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount , ProductVariant productVariant);
+    public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount, ProductVariant productVariant);
+
+    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse);
+
+    public List<String> inProgressCycleCountForVariant(Warehouse warehouse);
 
 }

@@ -156,6 +156,19 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
         delete(cycleCountItem);
     }
 
+    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse) {
+        List<Long> cycleCountStatusInProgress = Arrays.asList(EnumCycleCountStatus.InProgress.getId(), EnumCycleCountStatus.Approved.getId(),
+                EnumCycleCountStatus.RequestForApproval.getId());
+        DetachedCriteria isCycleCountInProgressCriteria = getCycleCountCriteria(null, null, null, productVariant, warehouse, null, null, null, cycleCountStatusInProgress);
+        return (List<CycleCount>) findByCriteria(isCycleCountInProgressCriteria);
+
+    }
+
+    public List<CycleCount> inProgressCycleCountForVariant(Warehouse warehouse) {
+        String query = "from CycleCount cc where cc.warehouse.id =:warehouseId and cc.productVariant is not null";
+        return (List<CycleCount>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).list();
+    }
+
 
     public BaseDao getBaseDao() {
         return baseDao;

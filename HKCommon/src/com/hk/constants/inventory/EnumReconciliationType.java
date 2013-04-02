@@ -21,7 +21,13 @@ public enum EnumReconciliationType {
     FreeVariant(90L, "Free Variant"),
     CustomerReturn(100L, "Customer Return"),
     PharmaReturn(110L, "Pharma Return"),
-    ProductVariantAudited(120L,"Product Variant Audited");
+    ProductVariantAudited(120L,"Product Variant Audited"),
+    AddDamage(130L,"Damage"),
+    AddExpired(140L, "Expired"),
+    AddBatchMismatch(150L, " Batch Mismatch"),
+    AddFreeVariant(160L, "Free Variant"),
+    IncorrectCounting(170L,"Incorrect Counting"),
+    AddIncorrectCounting(180L,"Incorrect Counting");
 
 
     private java.lang.String name;

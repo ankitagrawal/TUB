@@ -36,5 +36,9 @@ public interface CycleCountDao {
 
     public void deleteCycleCountItem(CycleCountItem cycleCountItem);
 
+    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse);
+
+    public List<CycleCount> inProgressCycleCountForVariant(Warehouse warehouse);
+
 
 }

@@ -35,61 +35,61 @@ import java.util.Date;
 @Service
 public class CycleCountServiceImpl implements CycleCountService {
 
-	@Autowired
-	private BaseDao baseDao;
-	@Autowired
-	private CycleCountDao cycleCountDao;
-	@Autowired
-	ProductService productService;
-	@Autowired
-	BrandsToAuditDao brandsToAuditDao;
-	@Autowired
-	ProductVariantService productVariantService;
+    @Autowired
+    private BaseDao baseDao;
+    @Autowired
+    private CycleCountDao cycleCountDao;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    BrandsToAuditDao brandsToAuditDao;
+    @Autowired
+    ProductVariantService productVariantService;
 
 
-	public CycleCount save(CycleCount cycleCount) {
-		return (CycleCount) getBaseDao().save(cycleCount);
-	}
+    public CycleCount save(CycleCount cycleCount) {
+        return (CycleCount) getBaseDao().save(cycleCount);
+    }
 
-	public CycleCountItem save(CycleCountItem cycleCountItem) {
-		return (CycleCountItem) getBaseDao().save(cycleCountItem);
-	}
+    public CycleCountItem save(CycleCountItem cycleCountItem) {
+        return (CycleCountItem) getBaseDao().save(cycleCountItem);
+    }
 
-	public BaseDao getBaseDao() {
-		return baseDao;
-	}
+    public BaseDao getBaseDao() {
+        return baseDao;
+    }
 
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
-	}
+    public void setBaseDao(BaseDao baseDao) {
+        this.baseDao = baseDao;
+    }
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup,SkuItem skuItem) {
-		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup,skuItem);
-	}
+    public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem) {
+        return cycleCountDao.getCycleCountItem(cycleCount, skuGroup, skuItem);
+    }
 
-	public Page searchCycleList(String auditBy, Long cycleCountStatus ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
-		List<BrandsToAudit> brandsToAuditList = null;
-		Product product = null;
-		ProductVariant productVariant = null;
-		if (auditBy != null) {
-			brandsToAuditList = brandsToAuditDao.getBrandsToAudit(auditBy, null,null);
-			if (brandsToAuditList.isEmpty()) {
-				product = productService.getProductById(auditBy);
-				if (product == null) {
-					productVariant = productVariantService.getVariantById(auditBy);
-				}
-			}
-		}
+    public Page searchCycleList(String auditBy, Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
+        List<BrandsToAudit> brandsToAuditList = null;
+        Product product = null;
+        ProductVariant productVariant = null;
+        if (auditBy != null) {
+            brandsToAuditList = brandsToAuditDao.getBrandsToAudit(auditBy, null, null);
+            if (brandsToAuditList.isEmpty()) {
+                product = productService.getProductById(auditBy);
+                if (product == null) {
+                    productVariant = productVariantService.getVariantById(auditBy);
+                }
+            }
+        }
 
-		return cycleCountDao.searchCycleList(auditBy,cycleCountStatus, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
-	}
+        return cycleCountDao.searchCycleList(auditBy, cycleCountStatus, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
+    }
 
-	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
-		return cycleCountDao. cycleCountInProgress(brandsToAuditList ,product , productVariant,  warehouse);
-	}
+    public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse) {
+        return cycleCountDao.cycleCountInProgress(brandsToAuditList, product, productVariant, warehouse);
+    }
 
-    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty) {
-        CycleCountItem cycleCountItem = new CycleCountItem();        
+    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem, CycleCount cycleCount, Integer qty) {
+        CycleCountItem cycleCountItem = new CycleCountItem();
         cycleCountItem.setSkuGroup(validSkuGroup);
         cycleCountItem.setSkuItem(skuItem);
         cycleCountItem.setCycleCount(cycleCount);
@@ -98,12 +98,12 @@ public class CycleCountServiceImpl implements CycleCountService {
     }
 
 
-     public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId){
-           return cycleCountDao.getScannedSkuItems(skuGroupId,cycleCountId);
-     }
+    public List<SkuItem> getScannedSkuItems(Long skuGroupId, Long cycleCountId) {
+        return cycleCountDao.getScannedSkuItems(skuGroupId, cycleCountId);
+    }
 
-    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem) {
-        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount,skuItem);
+    public void removeScannedSkuItemFromCycleCountItem(CycleCount cycleCount, SkuItem skuItem) {
+        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
     }
 
     @Transactional
@@ -122,6 +122,24 @@ public class CycleCountServiceImpl implements CycleCountService {
             cycleCountDao.deleteCycleCountItem(cycleCountItem);
         }
 
+    }
+
+
+    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse) {
+        return cycleCountDao.isCycleCountInProgress(productVariant, warehouse);
+    }
+
+
+    public List<String> inProgressCycleCountForVariant(Warehouse warehouse) {
+        List<String> variantIdList = new ArrayList<String>();
+        List<CycleCount> cycleCountList = cycleCountDao.inProgressCycleCountForVariant(warehouse);
+        if (cycleCountList != null && cycleCountList.size() > 0) {
+            for (CycleCount cycleCount : cycleCountList) {
+                variantIdList.add(cycleCount.getProductVariant().getId());
+            }
+
+        }
+        return variantIdList;
     }
 
 }
