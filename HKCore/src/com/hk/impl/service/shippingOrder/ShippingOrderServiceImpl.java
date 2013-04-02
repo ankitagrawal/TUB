@@ -338,7 +338,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
 
         if (isAutoEsc) {
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue);
+            User adminUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
+                    null, null);
         } else {
 			if(shippingOrder.isDropShipping()){
 				logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
