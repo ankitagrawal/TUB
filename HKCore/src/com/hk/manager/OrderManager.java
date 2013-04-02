@@ -422,6 +422,7 @@ public class OrderManager {
             }
             getEmailManager().sendOrderConfirmEmailToAdmin(order);
         }
+
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
@@ -430,7 +431,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-	    //Set Order in Traffic Tracking
+        //this is the most important method, so it is very important as to from where it is called
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+        //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
@@ -441,7 +445,7 @@ public class OrderManager {
 		    }
 		    getBaseDao().save(trafficTracking);
 	    }
-	    
+
         return order;
     }
 

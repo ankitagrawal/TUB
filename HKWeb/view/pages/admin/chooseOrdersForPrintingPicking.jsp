@@ -125,6 +125,19 @@
 			          style="font-size:0.9em"/>
 
 		</div>
+            <div align="center">
+                <label>Payment Start
+                    Date </label><s:text class="date_input startDate" style="width:150px"
+                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentStartDate"/>
+
+                <label>Payment
+                    Date </label><s:text class="date_input endDate" style="width:150px"
+                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
+
+                <s:submit name="searchOrdersForPrinting" value="Search By Payment Date"
+                          style="font-size:0.9em"/>
+
+            </div>
 		</s:form>
 
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" autocomplete="off">
