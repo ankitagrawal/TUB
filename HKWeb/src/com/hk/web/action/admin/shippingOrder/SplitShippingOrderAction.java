@@ -2,6 +2,7 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -39,6 +40,8 @@ public class SplitShippingOrderAction extends BaseAction {
     private List<LineItem> lineItems;
     @Autowired
     private ShippingOrderService shippingOrderService;
+    @Autowired
+    private OrderService orderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
@@ -99,7 +102,7 @@ public class SplitShippingOrderAction extends BaseAction {
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
             newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
             newShippingOrder = shippingOrderService.save(newShippingOrder);
-            newShippingOrder.setShippingOrderCategories(shippingOrder.getShippingOrderCategories());
+            newShippingOrder.setShippingOrderCategories(orderService.getCategoriesForShippingOrder(shippingOrder));
             newShippingOrder = shippingOrderService.save(newShippingOrder);
 
             for (LineItem selectedLineItem : selectedLineItems) {
