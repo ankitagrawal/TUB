@@ -1,5 +1,6 @@
 package com.hk.admin.pact.service.inventory;
 
+import com.hk.constants.inventory.EnumReconciliationType;
 import com.hk.domain.inventory.rv.ReconciliationVoucher;
 import com.hk.domain.inventory.rv.RvLineItem;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -19,19 +20,25 @@ import java.util.List;
  */
 public interface ReconciliationVoucherService {
 
-    public void save(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+    public void reconcileAddRV(User loggedOnUser, List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
 
     public ReconciliationVoucher save(ReconciliationVoucher reconciliationVoucher);
 
-    public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
+    //public void save(List<RvLineItem> rvLineItems, ReconciliationVoucher reconciliationVoucher);
 
-    public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList);
+   // public RvLineItem reconcile(RvLineItem rvLineItem, ReconciliationVoucher reconciliationVoucher, List<SkuItem> skuItemList);
 
     public void delete(ReconciliationVoucher reconciliationVoucher);
 
     public RvLineItem createRVLineItemWithBasicDetails(SkuGroup skuGroup, Sku sku);
 
     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks);
+
+    public void reconcileSubtractRV(ReconciliationVoucher reconciliationVoucher, List<RvLineItem> rvLineItemList);
+
+    public ReconciliationVoucher createReconciliationVoucher(ReconciliationType reconciliationType ,String remark );
+
+    public RvLineItem reconcileInventoryForPV(RvLineItem rvLineItem , List<SkuItem> inStockSkuItems,Sku sku);
 
 
 }

@@ -236,7 +236,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
 	    if(rtoReason != null){
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, rtoReason.getName());
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, null, rtoReason.getName());
 	    }
 	    else{
 		    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
@@ -292,11 +292,11 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
         getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;

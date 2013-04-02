@@ -46,14 +46,14 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
-   <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+   <%--<c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
     <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
                 <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
             </a>
         </div>
-    </c:if>
+    </c:if>--%>
     <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
@@ -253,9 +253,13 @@
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
             </div>--%>
+
             <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
+
+            <jsp:include page="/includes/checkoutNotice.jsp"/>
+
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
                 <div class='promos'>
                     <div class='prom yellow help' style="width: 95%; padding:5px;">

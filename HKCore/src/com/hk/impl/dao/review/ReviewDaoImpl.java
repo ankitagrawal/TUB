@@ -2,6 +2,7 @@ package com.hk.impl.dao.review;
 
 import java.util.List;
 
+import com.hk.domain.user.User;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -50,6 +51,14 @@ public class ReviewDaoImpl extends BaseDaoImpl implements ReviewDao {
         criteria.add(Restrictions.in("reviewStatus.id", reviewStatusList));
         criteria.addOrder(org.hibernate.criterion.Order.desc("reviewDate"));
         return list(criteria, page, perPage);
+    }
+
+    public UserReview getReviewByUserAndProduct(User user, Product product){
+        List<UserReview> result =  findByNamedParams("from UserReview u where u.postedBy = :user AND u.product = :product ORDER BY u.reviewDate DESC", new String[]{"user","product"}, new Object[]{user, product});
+        if(result !=  null && result.size()>0){
+            return result.get(0);
+        }else
+            return null;
     }
 
     @SuppressWarnings("unchecked")

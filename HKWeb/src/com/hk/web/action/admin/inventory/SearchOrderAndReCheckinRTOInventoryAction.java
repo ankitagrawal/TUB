@@ -121,10 +121,10 @@ public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
                     }
                 }
                 String comments = "Re Checked-in RTO Items: " + recheckinQty + " x " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn,null, comments);
                 String damageComments = "Checked-in Damage RTO Items: " + (lineItem.getQty() - recheckinQty) + " x " + productVariant.getProduct().getName() + "<br/>"
                         + productVariant.getOptionsCommaSeparated();
-                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, damageComments);
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, null, damageComments);
                 addRedirectAlertMessage(new SimpleMessage("RTO Units checked in accordingly"));
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Oops!!! Eitehr RTO Units are already checked in OR No batch information was there while checking out items."));

@@ -102,6 +102,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                         0124-4616444 . We will send another email once your order ships.<br/>
                         <br/>
 
+                        <#include "orderNote.ftl">
 
                         Healthy Shopping!<br/>
 

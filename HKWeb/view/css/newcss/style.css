@@ -1,0 +1,133 @@
+/*Author : Sachit*/
+
+html,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}
+del{text-decoration:line-through}
+table{border-collapse:collapse;border-spacing:0}
+
+@font-face {
+font-family: whitneyBook;
+src: url("../Fonts/WhitneyHTF-Book.otf") format("opentype");
+}
+
+@font-face {
+font-family: whitneybookSC;
+src: url("../Fonts/WhitneyHTF-BookSC.otf") format("opentype");
+}
+
+body{font-family: "whitneyBook";font-size: 13px;line-height: 20px;color: #707070; background:#fff;}
+a{outline:0; text-decoration: underline;color:#707070;}hr{border:0#ccc solid;border-top-width:1px;clear:both;height:0}
+h1{font-size:25px}h2{font-size:23px}h3{font-size:21px}h4{font-size:19px}h5{font-size:17px}h6{font-size:15px}ol{list-style:decimal}ul{list-style:square}li{margin-left:30px}
+p{padding-right: 10px;}
+#wrapper {
+font-family: "whitneyBook";
+color: #707070;
+}
+
+#header{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.marginBlock{
+	margin-top:10px;
+	margin-bottom:10px;
+
+}
+
+.button{
+	background:#e6e6e6;padding:5px;width:150px;border:1px solid #d2d2d2;
+}
+.button:hover{
+	background:#d2d2d2;border:1px solid #e6e6e6;	
+}
+
+.containerBox{border:1px solid #c8c8c8;}
+.containerBox2{
+	padding:20px 0 10px 0;
+	border-width:1px 0 1px 0;
+	border-color: #c8c8c8;
+	border-style: solid;
+	margin:60px 4% 10px 4%;
+	
+
+}
+.innerBox{
+	background: #e6e6e6;
+	padding: 5px;
+
+}
+.gridBox{
+	border-right :1px solid #c8c8c8;
+	height: 350px;
+	
+}
+
+.headers{
+	padding:20px 0;
+}
+.successBoldText{font-weight: bold;color:#085c08;}
+.cancelledText{font-weight: bold;color:#FD0015;}
+.disabledstate{
+	color:#BEBEBE;
+}
+.disabledstate a{color:#ccc !important; }
+.boldText{font-weight: bold;font-size: 14px;}
+.dotBorder{
+	border: 0 #ccc dotted;
+	border-top-width: 1px;
+	clear: both;
+	height: 2px;
+	right: 9%;
+	position: relative;
+	width: 100%;
+	margin: 10px 0;
+}
+
+.dropDown{
+
+	border:1px solid #c8c8c8;
+	width:200px;
+	height: 50px;
+	margin:10px 0;
+	color: #707070;
+	font-family: "whitneyBook";
+	font-size: 16px;
+
+}
+.textarea{
+	border:1px solid #c8c8c8;
+	width:200px;
+	height: 100px;
+	margin:10px 0;
+	color: #707070;
+	font-family: "whitneyBook";
+	font-size: 16px;
+}
+
+.productable{
+		width: 100%;
+		border: 0;
+		margin: 0px 0 20px 0;
+}
+.billsummary{
+	width: 30%;
+		border: 0;
+		margin: 0px 0 20px 0;
+}
+table td{
+	padding: 10px;
+}
+
+table tbody{
+
+	 border:1px solid #ccc; margin-top:20px;
+}
+
+.innerCont2{
+	background-color:#ffffff;
+}
+
+.innerCont1{background-color:#e6e6e6;}

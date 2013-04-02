@@ -185,11 +185,6 @@
                                class="reconciliationTypeIdentifier"/>
 	                    <s:hidden name="rvLineItems[${ctr.index}].reconciliationType" value="${rvLineItem.reconciliationType.id}"/>
 	                     ${rvLineItem.reconciliationType.name}
-                        <%--<s:select name="rvLineItems[${ctr.index}].reconciliationType"--%>
-                                  <%--value="${rvLineItem.reconciliationType.id}" class="valueChange">--%>
-                            <%--<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="addReconciliationTypeList" value="id"--%>
-                                                       <%--label="name"/>--%>
-                        <%--</s:select>--%>
                     </td>
                     <td>${rvLineItem.costPrice}
                     </td>
@@ -211,7 +206,7 @@
         <br/>
         <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-        <s:submit name="save" value="Save" class="saveButton"/>
+        <s:submit name="reconcileAdd" value="Save" class="saveButton"/>
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <hr/>
         <fieldset>
@@ -221,7 +216,7 @@
             <br/><br/>
             <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
             <div class="buttons">
-                <s:submit name="parse" value="Create RV LineItems"/>
+                <s:submit name="parseAddRVExcel" value="Create RV LineItems"/>
             </div>
         </fieldset>
         </shiro:hasRole>
@@ -247,7 +242,7 @@
 				    var batch = $(this).find('.batch').val();
 
 				    if ((variant != null && variant != '') && ( (batch == null || batch.trim() == '') || (qty == null || qty.trim() == ''))) {
-					    alert('Enter Batch Number && Qty for varinat :::::: ' + variant);
+					    alert('Enter Batch Number && Qty for variant :::::: ' + variant);
 					    result = false;
 					    return false;
 
