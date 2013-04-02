@@ -268,11 +268,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         if (!searchForPrinting) {
-            if (sortByPaymentDate) {
-                paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-            }
             if (sortByDispatchDate) {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDelDate"));
+            }
+            if (sortByLastEscDate) {
+                criteria.addOrder(org.hibernate.criterion.Order.desc("lastEscDate"));
+            }
+            if (sortByPaymentDate) {
+                paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
             }
             if (sortByScore) {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));

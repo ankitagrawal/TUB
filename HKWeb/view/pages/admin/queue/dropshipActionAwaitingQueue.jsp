@@ -18,7 +18,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
-<s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" var="actionQueueBean" event="pre"/>
+<s:useActionBean beanclass="com.hk.web.action.admin.queue.action.DropShipManagementQueueAction" var="actionQueueBean" event="pre"/>
 
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
@@ -32,7 +32,7 @@
 
 <c:set var="thirdPartyCodCallFailed" value="<%=EnumUserCodCalling.THIRD_PARTY_FAILED.getId()%>"/>
 <c:set var="paymentFailed" value="<%=EnumUserCodCalling.PAYMENT_FAILED.getId()%>"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Awaiting Queue">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Drop Ship Queue">
 <s:layout-component name="htmlHead">
 <%
     PaymentService paymentService =  ServiceLocatorFactory.getService(PaymentService.class);
@@ -259,7 +259,7 @@
 
 </script>
 </s:layout-component>
-<s:layout-component name="heading">Action Awaiting Queue
+<s:layout-component name="heading">Drop Ship Queue
     <%--<span style="float:right;">
       <label style="font-size:.7em; color:black; font-weight:normal;">Avg. time for COD Confirmation(hh:mm:ss):</label>
         ${actionBean.codConfirmationTime}
@@ -270,7 +270,7 @@
 <fieldset class="top_label">
     <ul>
         <div class="grouped grid_12">
-            <s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" method="get" autocomplete="false">
+            <s:form beanclass="com.hk.web.action.admin.queue.action.DropShipManagementQueueAction" method="get" autocomplete="false">
                 <li><label>Order ID</label> <s:text name="orderId"/> &nbsp; <label>Gateway Order ID</label> <s:text
                         name="gatewayOrderId" id="gatewayOrderId"/>
                     <label>Start
@@ -280,73 +280,84 @@
                     <label>End
                         date</label><s:text class="date_input endDate" style="width:150px"
                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-
-                    <label>Sort by date : ${sortByPaymentDate}</label>
-                    <s:checkbox name="sortByPaymentDate"/>
                 </li>
 
-                <li><label style="float:left;width: 60px;">Payment Status</label>
+                <li>
+                    <div style="width:1100px; margin:20px;">
+                        <label style="float:left;width: 80px;">SO Category</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
-                            <label><s:checkbox name="paymentStatuses[${ctr.index}]"
-                                               value="${paymentStatus.id}" checked="checked" readOnly = "true"/> ${paymentStatus.name}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
-
-                <li><label style="float:left;width: 60px;">BO Category</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="categories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
-
-                <li><label style="float:left;width: 60px;">SO Category</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="basketCategories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
+                        <div class="checkBoxList">
+                            <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                                <label><s:checkbox name="basketCategories[${ctr.index}]"
+                                                   value="${category.name}"/> ${category.displayName}</label>
+                            </c:forEach>
+                        </div>
                     </div>
                 </li>
 
                 <li>
                     <label style="float:left;width: 60px;">Drop Ship </label>
+
                     <div class="checkBoxList">
                         <s:select name="dropShip" value="1">
-                            <s:option value="1">Y</s:option>
+                            <s:option value="0">N</s:option>
                         </s:select>
                     </div>
                 </li>
                 <li>
                     <label style="float:left;width: 60px;">Has JIT</label>
+
                     <div class="checkBoxList">
                         <s:select name="containsJit" value="1">
                             <s:option value="1">Y</s:option>
                         </s:select>
                     </div>
+                    <div style="float:left;">Sort by
+                        <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>
+                        <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
+                        <div><s:checkbox name="sortByScore"/>Order Score</div>
+                    </div>
+
+
                 </li>
 
+                <li>
+
+                    <div class="checkBoxList" style="width: 100%;">
+                        <c:forEach items="${shippingOrderLifecycleList}" var="shippingOrderLifecycleActivity"
+                                   varStatus="ctr">
+                            <div class="newBoxLabel">
+                                <s:checkbox id="raj${ctr.index}" style="position: relative;float: left;" name="shippingOrderLifecycleActivities[${ctr.index}]"
+                                            value="${shippingOrderLifecycleActivity.id}"/>
+                                <div id="div${ctr.index}" style="position: relative;float: left;top: 3px;">${shippingOrderLifecycleActivity.name}</div>
+                            <span style="margin-left:30px;">
+                                <c:if test="${not empty hk:getReasonsByType(shippingOrderLifecycleActivity.name)}">
+                                    <div id="newBoxAdminraj${ctr.index}"  class="newBox">
+                                        <c:forEach items="${hk:getReasonsByType(shippingOrderLifecycleActivity.name)}" var="reason"
+                                                   varStatus="rctr1">
+                                            <div class="newBoxItem">
+                                                <label><s:checkbox name="reasons[${rctr1.index}]"
+                                                                   value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:if>
+                            </span>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </li>
 
                 <div class="buttons">
                     <s:submit name="pre" value="Search"/>
-                    <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
-                    <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>
                 </div>
             </s:form>
         </div>
     </ul>
 </fieldset>
 
-<s:form beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction" autocomplete="off">
+<s:form beanclass="com.hk.web.action.admin.queue.action.DropShipManagementQueueAction" autocomplete="off">
 <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
 <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
@@ -435,7 +446,7 @@
                     style="margin-left:30px;">Status: ${order.payment.paymentStatus.name}</span>
         </div>
         <div class="floatright">
-            <%--<c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">--%>
+                <%--<c:if test="${order.payment.paymentStatus.id == paymentStatusPending}">--%>
             <c:choose>
                 <c:when test="${order.payment.paymentMode.id == paymentModeCod}">
                     <c:choose>
@@ -471,7 +482,7 @@
                     </c:if>
                 </c:otherwise>
             </c:choose>
-            <%--</c:if>--%>
+                <%--</c:if>--%>
         </div>
         <div class="clear"></div>
         <div class="floatleft">
@@ -494,55 +505,55 @@
     </div>
     <div class="clear"></div>
     <c:choose>
-        <c:when test="${order.priorityOrder}">
-            <div id="userDetails-${order.id}" class="detailDiv" style="background:#F6CECE;">
+    <c:when test="${order.priorityOrder}">
+    <div id="userDetails-${order.id}" class="detailDiv" style="background:#F6CECE;">
         </c:when>
         <c:otherwise>
-            <div id="userDetails-${order.id}" class="detailDiv">
-        </c:otherwise>
-    </c:choose>
+        <div id="userDetails-${order.id}" class="detailDiv">
+            </c:otherwise>
+            </c:choose>
 
-    <div class="headingLabel">User Details:</div>
-    <div id="userContactDetails">
-        <div class="floatleft">
-            Name : <span class="or">${order.user.name}</span>
-        </div>
-        <div class="floatright">
-            Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
-            <s:param name="userFilterDto.login" value="${order.user.login}"/>
-            ${order.user.login}
-        </s:link>)
+            <div class="headingLabel">User Details:</div>
+            <div id="userContactDetails">
+                <div class="floatleft">
+                    Name : <span class="or">${order.user.name}</span>
+                </div>
+                <div class="floatright">
+                    Email: (<s:link beanclass="com.hk.web.action.admin.user.SearchUserAction" event="search">
+                    <s:param name="userFilterDto.login" value="${order.user.login}"/>
+                    ${order.user.login}
+                </s:link>)
+                </div>
+                <div class="clear"></div>
+                <div class="floatleft" style="margin-top:3px;">
+                    Processed Orders# ${hk:getProcessedOrdersCount(order.user)}
+                </div>
+                <div class="floatright">
+                    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+                             target="_blank"><s:param
+                        name="email" value="${order.user.login}"/>See previous orders</s:link>)
+                </div>
+                <div class="clear"></div>
+                <div class="floatleft" style="margin-top:3px;">
+                        ${order.address.name}<br/>
+                        ${order.address.line1}<br/>
+                    <c:if test="${hk:isNotBlank(order.address.line2)}">${order.address.line2}<br/></c:if>
+                </div>
+                <div class="floatright">
+                    <span class="or">${order.address.city} - ${order.address.pincode.pincode}</span> ( ${order.address.state} )<br/>
+                    <span class="or"> Ph. ${order.address.phone}</span>
+                </div>
+            </div>
         </div>
         <div class="clear"></div>
-        <div class="floatleft" style="margin-top:3px;">
-            Processed Orders# ${hk:getProcessedOrdersCount(order.user)}
-        </div>
-        <div class="floatright">
-            (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
-                     target="_blank"><s:param
-                name="email" value="${order.user.login}"/>See previous orders</s:link>)
-        </div>
-        <div class="clear"></div>
-        <div class="floatleft" style="margin-top:3px;">
-            ${order.address.name}<br/>
-            ${order.address.line1}<br/>
-            <c:if test="${hk:isNotBlank(order.address.line2)}">${order.address.line2}<br/></c:if>
-        </div>
-        <div class="floatright">
-            <span class="or">${order.address.city} - ${order.address.pincode.pincode}</span> ( ${order.address.state} )<br/>
-            <span class="or"> Ph. ${order.address.phone}</span>
-        </div>
-    </div>
-    </div>
-    <div class="clear"></div>
-    <c:if test="${order.commentType == commentTypeOthers}">
+        <c:if test="${order.commentType == commentTypeOthers}">
         <div id="userComments-${order.id}" class="detailDiv" style="margin-top:3px;">
             <div class="headingLabel">User Instructions:</div>
             <span style="word-wrap:break-word">
-                ${order.userComments}
+                    ${order.userComments}
             </span>
         </div>
-    </c:if>
+        </c:if>
 </td>
 
 <c:choose>

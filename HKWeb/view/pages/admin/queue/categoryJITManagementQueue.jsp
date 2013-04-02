@@ -259,11 +259,7 @@
 
 </script>
 </s:layout-component>
-<s:layout-component name="heading">Action Awaiting Queue
-    <%--<span style="float:right;">
-      <label style="font-size:.7em; color:black; font-weight:normal;">Avg. time for COD Confirmation(hh:mm:ss):</label>
-        ${actionBean.codConfirmationTime}
-    </span>--%>
+<s:layout-component name="heading">JIT Mgmt Queue
 </s:layout-component>
 <s:layout-component name="content">
 
@@ -299,7 +295,7 @@
                     <label style="float:left;width: 60px;">Drop Ship </label>
 
                     <div class="checkBoxList">
-                        <s:select name="dropShip" value="1">
+                        <s:select name="dropShip" value="0">
                             <s:option value="0">N</s:option>
                         </s:select>
                     </div>
@@ -314,6 +310,7 @@
                     </div>
                     <div style="float:left;">Sort by
                         <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>
                         <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
                         <div><s:checkbox name="sortByScore"/>Order Score</div>
                     </div>

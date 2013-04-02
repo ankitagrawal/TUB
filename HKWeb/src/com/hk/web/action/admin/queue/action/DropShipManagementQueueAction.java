@@ -1,26 +1,5 @@
 package com.hk.web.action.admin.queue.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.domain.analytics.Reason;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.EnumRole;
@@ -28,6 +7,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -50,11 +30,20 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Component
-public class JITManagementQueueAction extends BasePaginatedAction {
+public class DropShipManagementQueueAction extends BasePaginatedAction {
 
-    private static Logger logger = LoggerFactory.getLogger(JITManagementQueueAction.class);
+    private static Logger logger = LoggerFactory.getLogger(DropShipManagementQueueAction.class);
 
     Page orderPage;
     List<Order> orderList = new ArrayList<Order>();
@@ -104,9 +93,9 @@ public class JITManagementQueueAction extends BasePaginatedAction {
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
-    private boolean sortByLastEscDate = true;
     private boolean sortByScore = true;
     private boolean sortByDispatchDate = true;
+    private boolean sortByLastEscDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
 
@@ -122,7 +111,7 @@ public class JITManagementQueueAction extends BasePaginatedAction {
             orderList = orderPage.getList();
         }
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/queue/categoryJITManagementQueue.jsp");
+        return new ForwardResolution("/pages/admin/queue/dropshipActionAwaitingQueue.jsp");
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
@@ -183,8 +172,8 @@ public class JITManagementQueueAction extends BasePaginatedAction {
         orderSearchCriteria.setCategories(categoryList);
 
         //fundamentally over here
-        orderSearchCriteria.setDropShip(false);
-        orderSearchCriteria.setContainsJit(true);
+        orderSearchCriteria.setDropShip(true);
+//        orderSearchCriteria.setContainsJit(true);
 
         Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
@@ -229,7 +218,7 @@ public class JITManagementQueueAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
 
-        return new RedirectResolution(JITManagementQueueAction.class);
+        return new RedirectResolution(DropShipManagementQueueAction.class);
     }
 
     public int getPerPageDefault() {

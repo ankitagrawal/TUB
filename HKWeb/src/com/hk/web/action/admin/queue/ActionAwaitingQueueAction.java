@@ -104,6 +104,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
+    private boolean sortByLastEscDate = true;
     private boolean sortByScore = true;
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
@@ -143,7 +144,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore).setSortByLastEscDate(sortByLastEscDate);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -557,5 +558,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setSortByDispatchDate(boolean sortByDispatchDate) {
         this.sortByDispatchDate = sortByDispatchDate;
+    }
+
+    public boolean isSortByLastEscDate() {
+        return sortByLastEscDate;
+    }
+
+    public void setSortByLastEscDate(boolean sortByLastEscDate) {
+        this.sortByLastEscDate = sortByLastEscDate;
     }
 }

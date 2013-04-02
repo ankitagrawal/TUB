@@ -402,6 +402,7 @@
                     </div>
                     <div style="float:left;">Sort by
                         <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>
                         <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
                         <div><s:checkbox name="sortByScore"/>Order Score</div>
                     </div>
