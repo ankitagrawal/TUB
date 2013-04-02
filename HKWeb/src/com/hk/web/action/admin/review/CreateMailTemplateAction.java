@@ -13,6 +13,7 @@ import net.sourceforge.stripes.tag.BeanFirstPopulationStrategy;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidateNestedProperties;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class CreateMailTemplateAction extends BaseAction {
 
     private boolean editTemplate = false, contentUploaded = false;
     String htmlPath,ftlContents;
+
+    private String starImageBinary = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAInSURBVDiNnZI/TBNhGMZ/vV7va3vXu4otYCSNxYIJhBhDAiZUEjdlcXJhAMKkCXFycyNOmJgYZiMDAWTBxdGlaU10hiJaSgKKloZE24Y7Kr3PgT8BQ5vos715/rxvvueDBsikU5cz6VRPI43aiASmgBhwq55AabA9GQqZw5FINJlJp4b/KSCTTnmB6eaWFqLRKMBUJp0yztN6/jL2Aq3AndbWSxPhC2GkdCmVynzf3p4DngOVgeTg2klAJp1KAO+AmK4b+DQflhVGDwbZrzpIKdE0DcepUtzZwXVr2LYN8AO4pwwkB3P5/MZ0KBSi81onbW1tBAICZ98GQEqJbduoqpf2q+10dfdgmibZ1ezrgeTgRy/A0tKb9zf7+2JCiBuqquI4NlJyElCrHeA4NgcHv9n+9pXl5ZW3o2PjI3CqxpXV1QemZcWFJm77g36qVQePRwEktVoNVfVRKe+Rz298yOXW75/7iDOvXsbj8Sv5REeCSqWConhwXYmULoYRIvdlnc3NrdjI6NjWuTU2NTUlgvphW16vghCCQCCAqh4equs6VtjqOO05EyCE6DF0AyECBIMG5fIev36WEELH7w9iWiZC0/pOe858ZVX1deuGQaFQYKdQyDmO80xKKsVi8Ulzc0vXxUgEn0/rrxsgpXv989qn/O7u7ovJyaczK9ls6YiaW5iffRiJRB8ritJLPczPzY7XJY+wuLjwaGjobvh49sjjwv8TfwCXtcZoRHu4ugAAAABJRU5ErkJggg==";
+    private String reviewLink = "<a href=\"${review_Link}&amp;starRating=1\"><img title=\"Bad\" alt=\"1\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=2\"><img title=\"Poor\" alt=\"2\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=3\"><img title=\"Regular\" alt=\"3\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=4\"><img title=\"Good\" alt=\"4\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=5\"><img title=\"Excellent\" alt=\"5\" src=\""+starImageBinary+"\" /></a>";
 
 
     @DefaultHandler
@@ -112,13 +116,19 @@ public class CreateMailTemplateAction extends BaseAction {
 
                     String ftlPath = adminUploadsPath + "/emailContentFiles/" + mail.getName() + ".ftl";
                     File ftlFile = FtlUtils.generateFtlFromHtml(htmlFiles[0], ftlPath,contentFolder.getName());
+
+                    String htmlContent = HKFileUtils.fileToString(ftlFile);
+                    htmlContent = StringUtils.replace(htmlContent, "${reviewLink}",reviewLink);
+                    FileUtils.writeStringToFile(ftlFile,htmlContent);
+
+
                     //making changes in the .html file also
                     FileUtils.copyFile(ftlFile, htmlFiles[0]);
                     ftlContents = HKFileUtils.fileToString(ftlFile);
                     logger.info("ftl generated");
 
                     contentUploaded = adminEmailCampaignService.uploadEmailContent(contentFolder);
-                    //contentUploaded = true;
+//                  contentUploaded = true;
 
                     FileUtils.deleteQuietly(ftlFile);
                     if(contentUploaded){
@@ -165,7 +175,10 @@ public class CreateMailTemplateAction extends BaseAction {
         File htmlFile = new File(adminUploadsPath + "/emailContentFiles/emailer.html");
         editTemplate = false;
         try {
-            FileUtils.writeStringToFile(htmlFile, mail.getContent());
+            String htmlcontent = mail.getContent();
+            htmlcontent = StringUtils.replace(htmlcontent, "${reviewLink}",reviewLink);
+            FileUtils.writeStringToFile(htmlFile, htmlcontent);
+            mail.setContent(htmlcontent);
             adminEmailCampaignService.uploadHtml(htmlFile, htmlKey);
             logger.info("uploaded changed html to s3 for mail Template: " + mail.getName());
 

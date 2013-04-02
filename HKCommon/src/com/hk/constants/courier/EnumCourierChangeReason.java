@@ -17,8 +17,8 @@ public enum EnumCourierChangeReason {
     CHANGE_FROM_GROUND_TO_AIR_SHIPPING(20L, "Change_from_Ground_to_Air_shipping"),
     CC_REQUEST(30L,"CC_Request"),
     BRIGHT_MOVEMENT(40L,"Bright_Movement"),
-    RTO_DUE_TO_ODA(50L,"RTO_due_to_ODA"),
-    OTHERS(90L,"Others");
+    RTO_DUE_TO_ODA(50L,"RTO_due_to_ODA");
+
 
     public String getName() {
         return name;
@@ -46,7 +46,7 @@ public enum EnumCourierChangeReason {
 
 
     public static List<EnumCourierChangeReason> getAllCourierChangeReasons() {
-        return Arrays.asList(COURIER_SERVICE_CHANGE,CHANGE_FROM_GROUND_TO_AIR_SHIPPING,CC_REQUEST,BRIGHT_MOVEMENT,RTO_DUE_TO_ODA,OTHERS);
+        return Arrays.asList(COURIER_SERVICE_CHANGE,CHANGE_FROM_GROUND_TO_AIR_SHIPPING,CC_REQUEST,BRIGHT_MOVEMENT,RTO_DUE_TO_ODA);
     }
 
 }

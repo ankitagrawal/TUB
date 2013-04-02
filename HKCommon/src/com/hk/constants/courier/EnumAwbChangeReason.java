@@ -11,37 +11,40 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumAwbChangeReason {
-        DUMMY_AWB(10L, "Dummy_Awb"),
-        B2B_ORDER(20L, "B2b_Order"),
-        CHANGED_BY_COURIER(30L,"Changed_By_Courier"),
-        DUPLICATE_AWB(40L,"Duplicate_Awb"),
-        OTHERS(90L,"Others");
+    DUMMY_AWB(10L, "Dummy_Awb"),
+    B2B_ORDER(20L, "B2b_Order"),
+    CHANGED_BY_COURIER(30L, "Changed_By_Courier"),
+    DUPLICATE_AWB(40L, "Duplicate_Awb"),
+    TECH_BUG(50L, "Tech Issue");
 
-        private String name;
-        private Long id;
 
-        public String getName() {
-            return name;
-        }
+    private String name;
+    private Long id;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public Long getId() {
-            return id;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private EnumAwbChangeReason(Long id, String name) {
-            this.name = name;
-            this.id = id;
-        }
+        this.name = name;
+        this.id = id;
+    }
+
     public static List<EnumAwbChangeReason> getAllAwbChangeReason() {
-            return Arrays.asList(DUMMY_AWB, B2B_ORDER,CHANGED_BY_COURIER,DUPLICATE_AWB, OTHERS);
-        }
+        return Arrays.asList(DUMMY_AWB, B2B_ORDER, CHANGED_BY_COURIER, DUPLICATE_AWB, TECH_BUG);
+    }
 }
 
 

@@ -37,8 +37,11 @@ public class CycleCountItem implements java.io.Serializable {
 	@JoinColumn(name = "sku_item_id")
 	private SkuItem skuItem;
 
-	@Column(name = "scanned_qty", unique = true, nullable = false)
-	private Integer scannedQty;
+    @Column(name = "scanned_qty", unique = true, nullable = false)
+    private Integer scannedQty;
+
+    @Transient
+    private int systemQty;
 
 
 	public Long getId() {
@@ -114,5 +117,13 @@ public class CycleCountItem implements java.io.Serializable {
 
     public void setSkuItem(SkuItem skuItem) {
         this.skuItem = skuItem;
+    }
+
+    public int getSystemQty() {
+        return systemQty;
+    }
+
+    public void setSystemQty(int systemQty) {
+        this.systemQty = systemQty;
     }
 }

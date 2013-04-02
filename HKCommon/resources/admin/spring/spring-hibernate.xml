@@ -180,16 +180,16 @@
 			<value>DB_PASSWD</value>
 		</property>
 		<property name="maxActive">
-			<value>40</value>
+			<value>50</value>
 		</property>
 		<property name="maxWait">
-			<value>15000</value>
+			<value>20000</value>
 		</property>
 		<property name="removeAbandoned">
 			<value>true</value>
 		</property>
 		<property name="removeAbandonedTimeout">
-			<value>300</value>
+			<value>250</value>
 		</property>
 		<property name="validationQuery">
 			<value>SELECT 1</value>
@@ -201,7 +201,7 @@
 			<value>20</value>
 		</property>
 		<property name="initialSize">
-			<value>50</value>
+			<value>60</value>
 		</property>
 		<property name="poolPreparedStatements" value="true" />
 		<property name="maxOpenPreparedStatements" value="30" />

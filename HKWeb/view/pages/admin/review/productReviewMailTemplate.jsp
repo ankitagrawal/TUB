@@ -19,6 +19,7 @@
                 <c:if test="${cmta.editTemplate}">
                     <s:hidden name="mail.id"/>
                 </c:if>
+                <p>Available variables are productName,productOptionDiv, user.name, reviewLink.</p>
                 <ul class="mail">
                     <li>
                         <label>Mail Template Name*</label>
@@ -27,10 +28,10 @@
                     </li>
                     <li>
                         <label>Subject*</label>
-                        <s:text name="mail.subject" id="subject" maxlength="200"/>
+                        <s:text name="mail.subject" id="subject" maxlength="200" size="100"/>
                     </li>
                     <li>
-                        <label>Modify Content</label> <s:file name="contentBean"/><br/>
+                        <label>Upload/Modify (Must be a zip folder containing only one .html file)</label> <s:file name="contentBean"/><br/> (Mandatory while creating the template)
                     </li>
                     <li>
                         <label>Template Content</label>

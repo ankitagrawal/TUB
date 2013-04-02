@@ -342,6 +342,11 @@
                <td >
           </c:otherwise>
         </c:choose>
+              <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
+                      style="float:right;background:#EEE;padding:3px;color:black;border:2px solid #AAA" target="_blank">
+                  <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+                  View Details
+              </s:link>
   <span class="upc lgry sml">ID
   <strong><span class="or"> ${order.id}</span></strong>
   <c:if test="${order.orderStatus.id != orderStatusCart}">

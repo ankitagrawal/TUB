@@ -2990,7 +2990,8 @@ h2.prod_title {
     width: 630px;
     font-size: 12px;
     color: #888;
-    min-height: 600px;
+    height: auto;
+    min-height: 300px;
 }
 
 /* line 1117, ../sass/main.scss */
@@ -3186,8 +3187,6 @@ h2.prod_title {
 .step2 .right_container {
     display: inline;
     float: left;
-    margin-left: 5px;
-    margin-right: 5px;
     width: 190px;
     position: relative;
     left: 40px;
@@ -3201,6 +3200,8 @@ h2.prod_title {
     color: #888;
     padding: 10px 10px;
     margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /* line 1220, ../sass/main.scss */
@@ -5054,7 +5055,7 @@ td.top {
 }
 
 .brandBox {
-    margin: 2em 0;
+    margin: 0.5em 0;
     border-bottom: 1px dotted #eee;
     padding: 0 5px;
     padding-bottom: 1em;
@@ -5904,6 +5905,50 @@ color: #e62580;
     float: left;
 }
 
+.loginLinkCSS{
+    position: relative;
+    float: left;
+    left: 16px;
+    margin-bottom: 7px;
+    margin-top: 5px;
+}
+
+.newBox{
+    position: relative;
+    border: 1px solid rgb(160, 160, 160);
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 5px;
+    display: none;
+}
+
+.newBoxLabel{
+    position: relative;
+    float: left;
+    width: 250px !important;
+    margin: 10px;
+}
+
+
+.newBoxItem{
+    position: relative;
+}
+
+.newBoxItem label{
+    font-size: 10px;
+}
+
+.actionQueue{
+    position: relative;
+    margin: 0px;
+    left: 20px;
+}
+
+.trimPadding{
+    padding: 5px 5px !important;
+}
 /*
 slider pager end
 */

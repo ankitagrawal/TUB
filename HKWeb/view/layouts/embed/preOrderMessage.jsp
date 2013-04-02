@@ -6,7 +6,7 @@
 			<span style="font-size: 11px;"> Product is Out of Stock<br>
                 Expected back in stock date is
              <c:if test="${product.id == 'NUT1600'}">
-               12th March, 2013
+               5th April, 2013
              </c:if>
              <c:if test="${product.id == 'NUT1599'}">
                4th March, 2013

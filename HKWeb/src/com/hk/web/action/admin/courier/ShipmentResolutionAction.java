@@ -126,8 +126,8 @@ public class ShipmentResolutionAction extends BaseAction {
         Awb updatedAwb = shipment.getAwb();
         if (!currentAwb.equals(updatedAwb)) {
             String comments = "Courier/Awb changed to " + updatedAwb.getCourier().getName() + "-->" + updatedAwb.getAwbNumber();
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, comments);
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, reasoning);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, comments);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, reasoning);
         }
         addRedirectAlertMessage(new SimpleMessage("Your Courier has been changed"));
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
@@ -139,10 +139,11 @@ public class ShipmentResolutionAction extends BaseAction {
                 boolean bool = false;
                Awb awbDb = awbService.findByCourierAwbNumber(courier,awb.getAwbNumber());
                 if(awbDb==null){
+                    awb = awbService.save(awb,EnumAwbStatus.Unused.getId().intValue());
                     awb = awbService.save(awb,EnumAwbStatus.Used.getId().intValue());
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "New AwbNumber "+awb.getAwbNumber() +"  is Created");
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,  "New AwbNumber "+awb.getAwbNumber() +"  is Created");
                     shipment = shipmentService.changeAwb(shipment,awb,preserveAwb);
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+awb.getAwbNumber());
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,  "AwbNumber changed to --> "+awb.getAwbNumber());
                     bool = true;
                 }
                 else if(!awbDb.getAwbStatus().getId().equals(EnumAwbStatus.Unused.getId())){
@@ -151,12 +152,12 @@ public class ShipmentResolutionAction extends BaseAction {
                 else {
                     awb = awbService.save(awbDb,EnumAwbStatus.Used.getId().intValue());
                     shipment = shipmentService.changeAwb(shipment,awbDb,preserveAwb);
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "AwbNumber changed to --> "+awbDb.getAwbNumber());
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,  "AwbNumber changed to --> "+awbDb.getAwbNumber());
                     bool = true;
                 }
                   if(bool) {
                       addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
-                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Reason to change Awb--> "+reasoning);
+                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, "Reason to change Awb--> "+reasoning);
                   }
                      return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
      }
@@ -166,7 +167,7 @@ public class ShipmentResolutionAction extends BaseAction {
         //todo courier refactor, as of now manual awb change when shipment service type is altered
         shipment.setShipmentServiceType(EnumShipmentServiceType.getShipmentTypeFromId(shipmentServiceTypeId).asShipmentServiceType());
         shipment = shipmentService.save(shipment);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment Service Type changed to " + shipment.getShipmentServiceType().getName());
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,  "Shipment Service Type changed to " + shipment.getShipmentServiceType().getName());
         addRedirectAlertMessage(new SimpleMessage("Your Shipment Service Type has been changed, Please remember you may have to change awb/courier as per use case"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
@@ -204,7 +205,7 @@ public class ShipmentResolutionAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Shipment not Created for this AWB, please check shipping Order Life Cycle and resolve the issue"));
             return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
         }
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Manually Awb Created and Assigned to Shipping Order to create Shipment");
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, "Manually Awb Created and Assigned to Shipping Order to create Shipment");
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
