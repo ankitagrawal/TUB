@@ -121,16 +121,6 @@
 
                 <h3><s:link
                         beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
-
-            <li class='lvl1 menuItem' title="">
-                <a href="${pageContext.request.contextPath}/pages/admin/queue/paymentConfirmationQueue.jsp">Payment Action Queue</a>
-                <a href="${pageContext.request.contextPath}/pages/admin/queue/adhocActionQueue.jsp">Adhoc Action Queue</a>
-                <a href="${pageContext.request.contextPath}/pages/admin/queue/catgoryJITManagementQueue.jsp">JIT Action Queue</a>
-                <a href="${pageContext.request.contextPath}/pages/admin/queue/dropshipActionAwaitingQueue.jsp">Drop Ship Action Queue</a>
-            </li>
-            <li class='lvl1 menuItem' title="">
-                <a href="${pageContext.request.contextPath}/pages/admin/adminHome.jsp">Admin Home</a>
-            </li>
         </div>
 
         <div class="cl"></div>

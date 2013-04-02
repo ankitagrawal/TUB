@@ -280,42 +280,6 @@
                     <label>End
                         date</label><s:text class="date_input endDate" style="width:150px"
                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-
-                    <label>Sort by date : ${sortByPaymentDate}</label>
-                    <s:checkbox name="sortByPaymentDate"/>
-                </li>
-
-                <li><label style="float:left;width: 60px;">Payment Status</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
-                            <label><s:checkbox name="paymentStatuses[${ctr.index}]"
-                                               value="${paymentStatus.id}" checked="checked" readOnly = "true"/> ${paymentStatus.name}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
-
-                <li><label style="float:left;width: 60px;">BO Category</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="categories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
-
-                <li><label style="float:left;width: 60px;">SO Category</label>
-
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="basketCategories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
                 </li>
 
                 <li><label style="float:left;width: 60px;">SO Category</label>

@@ -167,29 +167,8 @@ public class JITManagementQueueAction extends BasePaginatedAction {
         }
         orderSearchCriteria.setReasonList(reasonList);
 
-        List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
-        for (PaymentMode paymentMode : paymentModes) {
-            if (paymentMode != null) {
-                paymentModeList.add(paymentMode);
-            }
-        }
-        if (paymentModeList.size() == 0) {
-            paymentModeList = paymentService.listWorkingPaymentModes();
-        }
-
-        orderSearchCriteria.setPaymentModes(paymentModeList);
-
-        List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-        for (PaymentStatus paymentStatus : paymentStatuses) {
-            if (paymentStatus != null) {
-                paymentStatusList.add(paymentStatus);
-            }
-        }
-        if (paymentStatusList.size() == 0) {
-            paymentStatusList = paymentService.listSuccessfulPaymentStatuses();
-        }
-
-        orderSearchCriteria.setPaymentStatuses(paymentStatusList);
+        orderSearchCriteria.setPaymentModes(paymentService.listWorkingPaymentModes());
+        orderSearchCriteria.setPaymentStatuses(paymentService.listSuccessfulPaymentStatuses());
 
         if (startDate != null) {
             orderSearchCriteria.setPaymentStartDate(startDate);
@@ -403,7 +382,7 @@ public class JITManagementQueueAction extends BasePaginatedAction {
                    * params.add("paymentModes"); params.add("paymentStatuses"); params.add("categories");
                    */
 
-        int ctr = 0;
+       /* int ctr = 0;
         for (PaymentMode paymentMode : paymentModes) {
             if (paymentMode != null) {
                 params.add("paymentModes[" + ctr + "]");
@@ -416,7 +395,7 @@ public class JITManagementQueueAction extends BasePaginatedAction {
                 params.add("paymentStatuses[" + ctr2 + "]");
             }
             ctr2++;
-        }
+        }*/
 /*
         int ctr3 = 0;
         for (String category : categories) {
