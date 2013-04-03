@@ -219,11 +219,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             if (shippingOrderCategoryCriteria == null) {
                 shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("shippingOrderCategories");
             }
-//            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
-//                    .setProjection(Projections.id());
-            shippingOrderCategoryCriteria.setProjection(Projections.projectionList().add(Projections.property("category")));
-            shippingOrderCriteria.add(Subqueries.in(shippingOrderCategories, shippingOrderCategoryCriteria));
-//            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
         }
 
         if(sortByLastEscDate){
