@@ -102,10 +102,6 @@ public class SplitShippingOrderAction extends BaseAction {
             newShippingOrder.setServiceOrder(false);
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
             newShippingOrder = shippingOrderService.save(newShippingOrder);
-            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
-            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
-            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
-            newShippingOrder = shippingOrderService.save(newShippingOrder);
 
             for (LineItem selectedLineItem : selectedLineItems) {
                 selectedLineItem.setShippingOrder(newShippingOrder);
@@ -122,6 +118,11 @@ public class SplitShippingOrderAction extends BaseAction {
                 }
                 lineItemDao.save(selectedLineItem);
             }
+            shippingOrderDao.refresh(newShippingOrder);
+            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
+            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
+            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
             shippingOrderDao.refresh(newShippingOrder);
 
             if (dropShipItemPresentInSelectedItems) {

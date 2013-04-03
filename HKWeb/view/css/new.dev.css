@@ -3060,6 +3060,14 @@ a.close:hover {
 font-weight:bold;
 color: #e62580;
 }
+
+.raj_modal{
+    overflow: scroll;
+    height: 500px;
+    top: 60px;
+    padding: 15px 0 30px 30px;
+}
+
 /*
 slider pager end
 */
