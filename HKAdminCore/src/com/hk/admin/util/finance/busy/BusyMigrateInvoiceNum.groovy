@@ -63,7 +63,7 @@ public class BusyMigrateInvoiceNum {
         vch_prefix = "R";
       }
 
-			String final_invoice_num = vch_prefix+invoiceNumber;
+			String final_invoice_num = vch_prefix+"-"+invoiceNumber;
 			try {
 				sql.executeUpdate("""
                     UPDATE shipping_order SET accounting_invoice_number = '${final_invoice_num}' WHERE id = ${shippingOrderId};
