@@ -155,7 +155,13 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 						if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckinBarcode) &&
 								checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
-							SkuItem skuItem = checkedOutInventory.getSkuItem();
+							SkuItem skuItem;
+							  if (findSkuItemByBarcode != null){
+								  skuItem = findSkuItemByBarcode;
+							  }  else{
+								 skuItem = checkedOutInventory.getSkuItem();
+							  }
+
 							if (conditionOfItem.equals(GOOD)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
@@ -205,10 +211,14 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 		List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
 		List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
 
-		if (reverseLineItem != null && (reverseLineItem.getReturnQty() == checkedInSkuItems.size())) {
-			addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
-			return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", shippingOrder.getId());
-		} else {
+//		if(shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_RTO)){
+//			if(lineItem.getQty() == checkedInSkuItems.size()){
+//				addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
+//			}
+//		} else if (reverseLineItem != null && (reverseLineItem.getReturnQty() == checkedInSkuItems.size())) {
+//			addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
+//			return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", shippingOrder.getId());
+//		} else {
 			checkedOutSkuItems.removeAll(checkedInSkuItems);
 
 			ProductVariant productVariant = lineItem.getSku().getProductVariant();
@@ -236,7 +246,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 			}
 			addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
 			return new HTTPResponseResolution();
-		}
+		//}
 	}
 
 

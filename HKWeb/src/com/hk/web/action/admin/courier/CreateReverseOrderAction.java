@@ -84,11 +84,21 @@ public class CreateReverseOrderAction extends BaseAction {
 		}
 	}
 
-	public Resolution submit(){		
-		ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason);
-		reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
-		shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
-		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
+	public Resolution submit(){
+		if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
+			if (returnOrderReason != null) {
+				ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason);
+				reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
+				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
+				return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
+			} else {
+				addRedirectAlertMessage(new SimpleMessage("Please enter a reason for return"));
+				return new RedirectResolution(CreateReverseOrderAction.class).addParameter("shippingOrder", shippingOrder);
+			}
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Reverse Order has been created for this Shipping order"));
+			return new RedirectResolution(CreateReverseOrderAction.class).addParameter("shippingOrder", shippingOrder);
+		}
 	}
 
 	public ShippingOrder getShippingOrder() {

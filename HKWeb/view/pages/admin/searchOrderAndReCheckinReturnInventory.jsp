@@ -47,6 +47,15 @@
                 $('#conditionOfItem').attr('value', "expired");
                 obj = $(this);
             });
+
+            $('.downloadCheck').click(function() {
+                var checkedinQty = $('.shippingRow').children('.checkedin').children('.checkedinQty').html();
+                var qty = $('.shippingRow').children('.qty').html();
+                if(qty == checkedinQty){
+                    alert("All sku items for this particular line item have been checked in");
+                    return false;
+                }
+            });
         });
     </script>
 </s:layout-component>
@@ -198,7 +207,7 @@
                                     <td>
                                         <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
                                             <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
-                                                    event="downloadBarcode"> Download
+                                                    event="downloadBarcode" class="downloadCheck"> Download
                                                 <s:param name="lineItem" value="${lineItem.id}"/>
                                                 <s:param name="shippingOrder" value="${orderAdmin.shippingOrder}"/>
                                             </s:link>
@@ -269,7 +278,7 @@
                                      <td>
                                          <shiro:hasPermission name="<%=PermissionConstants.GRN_CREATION%>">
                                              <s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction"
-                                                     event="downloadBarcode"> Download
+                                                     event="downloadBarcode" class="downloadCheck"> Download
                                                  <s:param name="reverseLineItem" value="${reverseLineItem.id}"/>
                                                  <s:param name="lineItem"
                                                           value="${reverseLineItem.referredLineItem.id}"/>

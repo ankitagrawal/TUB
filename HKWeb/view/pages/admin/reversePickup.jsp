@@ -62,7 +62,8 @@
                     </s:select>
                 </li>
                 <li>
-                   <label>SO Gateway Id :</label><s:text name="shippingOrderId" value="${shippingOrderId}" style="width:120px" />
+                   <label>SO Gateway Id :</label>${pickupAction.shippingOrderId}
+                    <s:hidden name="shippingOrderId" value="${shippingOrderId}" style="width:120px" />
 
                 </li>
 
