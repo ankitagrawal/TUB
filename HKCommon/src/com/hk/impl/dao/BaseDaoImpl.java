@@ -447,6 +447,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         criteria.setProjection(null);
         if (hasDistinctRootEntity) {
 //            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         } else {
             criteria.setResultTransformer(Criteria.ROOT_ENTITY);
         }
