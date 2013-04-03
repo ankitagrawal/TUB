@@ -220,7 +220,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("shippingOrderCategories");
             }
             shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories)).setProjection(Projections.id());
-            criteria.add(Subqueries.exists(shippingOrderCategoryCriteria));
+            shippingOrderCriteria.add(Subqueries.exists(shippingOrderCategoryCriteria));
 //            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
 
