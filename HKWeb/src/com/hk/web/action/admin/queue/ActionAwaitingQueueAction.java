@@ -123,7 +123,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             Set<Order> orderSet = new HashSet<Order>();
             orderSet.addAll(orderPage.getList());
 
-            orderList = new ArrayList<Order>(orderSet);
+            orderList.addAll(orderSet);
 
         }
         setUnplitOrderCount();
