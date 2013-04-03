@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.admin.pact.service.inventory.CycleCountService;
-import com.hk.domain.cycleCount.CycleCount;
-import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -132,32 +130,6 @@ public class InventoryCheckoutAction extends BaseAction {
         } else if (!EnumShippingOrderStatus.SO_Picking.getId().equals(shippingOrder.getOrderStatus().getId())) {
             addRedirectAlertMessage(new SimpleMessage("Order is not in picking cannot proceed to checkout"));
         } else {
-            // Stop checkout if  Brand's Audit is in progress
-            List<String> brandsToExclude = null;
-            Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
-            brandsToExclude = brandsToAuditDao.brandsToBeAudited(warehouse);
-            if (brandsToExclude != null) {
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
-                    if (StringUtils.isNotBlank(brandName) && brandsToExclude.contains(brandName.toLowerCase())) {
-                        addRedirectAlertMessage(new SimpleMessage("Cannot Checkout , Audit is going on for brand  :: " + brandName));
-                        return new RedirectResolution(InventoryCheckoutAction.class);
-                    }
-                }
-            }
-
-            //check if cycle count in progress
-            List<CycleCount> cycleCountList = cycleCountService.isCycleCountInProgress(productVariant, warehouse);
-            if (cycleCountList != null && cycleCountList.size() > 0) {
-                CycleCount cycleCount = cycleCountList.get(0);
-                if (cycleCount.getProductVariant().getId().equalsIgnoreCase(productVariant.getId())) {
-                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count No : " + cycleCount.getId() + "  Is In Progress  For :  " + productVariant.getId()));
-                    return new RedirectResolution(InventoryCheckoutAction.class);
-                }
-
-            }
-
-
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();
             if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
@@ -165,10 +137,26 @@ public class InventoryCheckoutAction extends BaseAction {
                 if (checkedOut) {
                     shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_CheckedOut));
                     getShippingOrderService().save(shippingOrder);
+                } else {
+                     // If eligible for checkout , check for In progress Cycle Count
+                    List<String> cycleCountInProgressListByBrandVariant = cycleCountService.inProgressCycleCounts(shippingOrder.getWarehouse());
+                    for (LineItem lineItem : pickingLIs) {
+                        ProductVariant variant = lineItem.getSku().getProductVariant();
+                        String brand = variant.getProduct().getBrand();
+                        if (cycleCountInProgressListByBrandVariant.contains(brand.toLowerCase())) {
+                            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
+                            return new RedirectResolution(InventoryCheckoutAction.class);
+                        }
+
+                        if (cycleCountInProgressListByBrandVariant.contains(variant.getId())) {
+                            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count In Progress  For :  " + variant.getId()));
+                            return new RedirectResolution(InventoryCheckoutAction.class);
+                        }
+                    }
+
                 }
                 return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
             }
-
         }
         addRedirectAlertMessage(new SimpleMessage("No Such Order OR Invalid line item status OR All items are checkedout"));
         return new RedirectResolution(InventoryCheckoutAction.class);

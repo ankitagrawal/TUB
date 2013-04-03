@@ -125,21 +125,51 @@ public class CycleCountServiceImpl implements CycleCountService {
     }
 
 
-    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse) {
-        return cycleCountDao.isCycleCountInProgress(productVariant, warehouse);
-    }
+    public List<String> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse) {
+        List<String> variantIdBrandList = new ArrayList<String>();
+        List<CycleCount> cycleCountList = cycleCountDao.inProgressCycleCountForVariant(productVariant, warehouse);
 
-
-    public List<String> inProgressCycleCountForVariant(Warehouse warehouse) {
-        List<String> variantIdList = new ArrayList<String>();
-        List<CycleCount> cycleCountList = cycleCountDao.inProgressCycleCountForVariant(warehouse);
         if (cycleCountList != null && cycleCountList.size() > 0) {
             for (CycleCount cycleCount : cycleCountList) {
-                variantIdList.add(cycleCount.getProductVariant().getId());
+                if (cycleCount.getProductVariant() != null) {
+                    variantIdBrandList.add(cycleCount.getProductVariant().getId());
+                }
+                if (cycleCount.getBrandsToAudit() != null) {
+                    variantIdBrandList.add(cycleCount.getBrandsToAudit().getBrand());
+                }
             }
 
         }
-        return variantIdList;
+        return variantIdBrandList;
+    }
+
+    private class AuditDto {
+        String brand;
+        String productId;
+        String productVariantId;
+
+    }
+
+    public List<AuditDto> inProgressCycleCounts(Warehouse warehouse) {
+        List<String> cycleCountInProgress = new ArrayList<String>();
+        List<AuditDto> auditDtoList = new ArrayList<AuditDto>();
+        List<CycleCount> inProgressCycleCountList = cycleCountDao.inProgressCycleCounts(warehouse);
+//        if (inProgressCycleCountList != null) {
+//            for (CycleCount cycleCount : inProgressCycleCountList) {
+//                if (cycleCount.getBrandsToAudit() != null) {
+//                    cycleCountInProgress.add(cycleCount.getBrandsToAudit().getBrand());
+//                }
+//                if (cycleCount.getProductVariant() != null) {
+//                    cycleCountInProgress.add(cycleCount.getProductVariant().getId());
+//                }
+//                if (cycleCount.getProduct() != null) {
+//                    cycleCountInProgress.add(cycleCount.getProduct().getId());
+//                }
+//
+//            }
+//
+//        }
+        return cycleCountInProgress;
     }
 
 }

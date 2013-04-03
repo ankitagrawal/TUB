@@ -111,13 +111,13 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     case 10:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN);
                         break;
-                    case 30:
+                    case 130:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_DAMAGED);
                         break;
-                    case 40:
+                    case 140:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_EXPIRED);
                         break;
-                    case 60:
+                    case 150:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_BATCH_MISMATCH);
                         break;
                     case 100:
@@ -126,24 +126,36 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     case 110:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
                         break;
-                    case 90:
+                    case 160:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FREE_VARIANT_RECONCILE);
+                        break;
+                    case 180:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.INCORRECT_COUNTING);
                         break;
                 }
 
                 rvLineItem.setSku(sku);
                 rvLineItem.setReconciliationVoucher(reconciliationVoucher);
                 rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
+                SkuGroup skuGroup = null;
                 if (productVariantInventoryDao.getPVIForRV(sku, rvLineItem).isEmpty()) {
                     // Create batch and checkin inv
 //                        SkuGroup skuGroup = adminInventoryService.createSkuGroup(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
-                    SkuGroup skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
+                    skuGroup = adminInventoryService.createSkuGroupWithoutBarcode(rvLineItem.getBatchNumber(), rvLineItem.getMfgDate(), rvLineItem.getExpiryDate(), rvLineItem.getCostPrice(), rvLineItem.getMrp(), null, reconciliationVoucher, null, sku);
                     adminInventoryService.createSkuItemsAndCheckinInventory(skuGroup, rvLineItem.getQty(), null, null, rvLineItem, null, invTxnType, loggedOnUser);
                     rvLineItem.setSkuGroup(skuGroup);
                 }
                 rvLineItem.setReconciledQty(rvLineItem.getQty());
                 rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
-
+                // Add PVI Entry with -1  and  set sku item status to expired
+                if (additionType == (EnumReconciliationType.AddExpired.getId().intValue())) {
+                    for (SkuItem skuItem : skuGroup.getSkuItems()) {
+                        adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
+                                EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
+                        skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
+                        skuGroupService.saveSkuItem(skuItem);
+                    }
+                }
 
                 // Check inventory health now.
                 inventoryService.checkInventoryHealth(rvLineItem.getSku().getProductVariant());
@@ -334,7 +346,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     }
 
 
-    public ReconciliationVoucher createReconciliationVoucher(ReconciliationType reconciliationType , String remark) {
+    public ReconciliationVoucher createReconciliationVoucher(ReconciliationType reconciliationType, String remark) {
         User loggedOnUser = userService.getLoggedInUser();
         ReconciliationVoucher reconciliationVoucher = new ReconciliationVoucher();
         reconciliationVoucher.setReconciliationType(reconciliationType);
@@ -358,11 +370,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
 
         switch (subtractionType) {
             case 30:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_DAMAGED);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_DAMAGED);
                 skuItemStatus = EnumSkuItemStatus.Damaged.getSkuItemStatus();
                 break;
             case 40:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_EXPIRED);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_EXPIRED);
                 skuItemStatus = EnumSkuItemStatus.Expired.getSkuItemStatus();
                 break;
             case 50:
@@ -370,7 +382,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 skuItemStatus = EnumSkuItemStatus.Lost.getSkuItemStatus();
                 break;
             case 60:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_BATCH_MISMATCH);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_BATCH_MISMATCH);
                 skuItemStatus = EnumSkuItemStatus.BatchMismatch.getSkuItemStatus();
                 break;
             case 70:
@@ -382,8 +394,12 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 skuItemStatus = EnumSkuItemStatus.NonMoving.getSkuItemStatus();
                 break;
             case 90:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_FREE_VARIANT_RECONCILE);
                 skuItemStatus = EnumSkuItemStatus.FreeVariant.getSkuItemStatus();
+                break;
+            case 170:
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.INCORRECT_COUNTING);
+                skuItemStatus = EnumSkuItemStatus.Checked_OUT.getSkuItemStatus();
                 break;
         }
 

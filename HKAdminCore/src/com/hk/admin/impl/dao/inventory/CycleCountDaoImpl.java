@@ -156,17 +156,21 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
         delete(cycleCountItem);
     }
 
-    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse) {
-        List<Long> cycleCountStatusInProgress = Arrays.asList(EnumCycleCountStatus.InProgress.getId(), EnumCycleCountStatus.Approved.getId(),
-                EnumCycleCountStatus.RequestForApproval.getId());
-        DetachedCriteria isCycleCountInProgressCriteria = getCycleCountCriteria(null, null, null, productVariant, warehouse, null, null, null, cycleCountStatusInProgress);
-        return (List<CycleCount>) findByCriteria(isCycleCountInProgressCriteria);
+    public List<CycleCount> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse) {
+        List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
+        String brand = productVariant.getProduct().getBrand();
+        String query = "select cc from CycleCount cc left outer join cc.brandsToAudit bd where  cc.warehouse.id =:warehouseId and cc.cycleStatus in (:cycleStatusList) and (cc.productVariant.id =:productVariantId or " +
+                " bd.brand =:brand )";
+        return (List<CycleCount>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).
+                setParameterList("cycleStatusList", cycleCountOpenStatus).setParameter("productVariantId", productVariant.getId()).setParameter("brand", brand).list();
 
     }
 
-    public List<CycleCount> inProgressCycleCountForVariant(Warehouse warehouse) {
-        String query = "from CycleCount cc where cc.warehouse.id =:warehouseId and cc.productVariant is not null";
-        return (List<CycleCount>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).list();
+    public List<CycleCount> inProgressCycleCounts(Warehouse warehouse) {
+        List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
+        String query = "from CycleCount cc where cc.warehouse.id =:warehouseId and cc.cycleStatus in (:cycleStatusList) ";
+        return (List<CycleCount>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).
+                setParameterList("cycleStatusList", cycleCountOpenStatus).list();
     }
 
 

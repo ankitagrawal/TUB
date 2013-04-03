@@ -206,25 +206,16 @@ public class InventoryCheckinAction extends BaseAction {
                 productVariant = getProductVariantService().getVariantById(upc);
             }
             if (productVariant != null) {
-                List<String> brandsToExclude = null;
-                brandsToExclude = brandsToAuditDao.brandsToBeAudited(userWarehouse);
                 String brand = productVariant.getProduct().getBrand();
-                if (brandsToExclude != null) {
-                    if (brandsToExclude.contains(brand.toLowerCase())) {
-                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
-                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                    }
+                List<String> cycleCountInProgressListByBrandAndVariant = cycleCountService.inProgressCycleCountForVariant(productVariant, userWarehouse);
+                if (cycleCountInProgressListByBrandAndVariant.contains(brand)) {
+                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
+                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
 
-                //check if cycle count in progress
-                List<CycleCount> cycleCountList = cycleCountService.isCycleCountInProgress(productVariant, grn.getWarehouse());
-                if (cycleCountList != null && cycleCountList.size() > 0) {
-                    CycleCount cycleCount = cycleCountList.get(0);
-                    if (cycleCount.getProductVariant().getId().equalsIgnoreCase(productVariant.getId())) {
-                        addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count No : " + cycleCount.getId() + "  Is In Progress  For :  " + productVariant.getId()));
-                        return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                    }
-
+                if (cycleCountInProgressListByBrandAndVariant.contains(productVariant.getId())) {
+                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count In Progress  For :  " + productVariant.getId()));
+                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }
 
 

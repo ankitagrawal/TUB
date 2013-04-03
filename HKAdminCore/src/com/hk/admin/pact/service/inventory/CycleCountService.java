@@ -47,8 +47,8 @@ public interface CycleCountService {
 
     public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount, ProductVariant productVariant);
 
-    public List<CycleCount> isCycleCountInProgress(ProductVariant productVariant, Warehouse warehouse);
+    public List<String> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse);
 
-    public List<String> inProgressCycleCountForVariant(Warehouse warehouse);
+    public List<AuditDto>  inProgressCycleCounts(Warehouse warehouse);
 
 }

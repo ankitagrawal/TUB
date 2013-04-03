@@ -33,45 +33,45 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@Secure(hasAnyPermissions = { PermissionConstants.VIEW_SHIPMENT_QUEUE }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.VIEW_SHIPMENT_QUEUE}, authActionBean = AdminPermissionAction.class)
 @Component
 public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     @SuppressWarnings("unused")
-    private static Logger              logger             = LoggerFactory.getLogger(ChooseOrdersForPrintPickAction.class);
+    private static Logger logger = LoggerFactory.getLogger(ChooseOrdersForPrintPickAction.class);
 
     @Autowired
-    private ShippingOrderService       shippingOrderService;
+    private ShippingOrderService shippingOrderService;
 
     @Autowired
-    private AdminShippingOrderService  adminShippingOrderService;
+    private AdminShippingOrderService adminShippingOrderService;
 
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    private BrandsToAuditDao           brandsToAuditDao;
+    private BrandsToAuditDao brandsToAuditDao;
     @Autowired
     CycleCountService cycleCountService;
 
     @Autowired
-    CategoryDao                        categoryDao;
+    CategoryDao categoryDao;
 
-    Page                               shippingOrdersPage;
-    List<ShippingOrder>                shippingOrdersList = new ArrayList<ShippingOrder>();
-    Category                           category;
-    String                             gatewayOrderId;
-    String                             baseGatewayOrderId;
-    ShippingOrderStatus                shippingOrderStatus;
-    private Courier                    courier;
+    Page shippingOrdersPage;
+    List<ShippingOrder> shippingOrdersList = new ArrayList<ShippingOrder>();
+    Category category;
+    String gatewayOrderId;
+    String baseGatewayOrderId;
+    ShippingOrderStatus shippingOrderStatus;
+    private Courier courier;
 
-    private static final int           PRINTING           = 1;
-    private static final int           PICKING            = 2;
-    private Date                       startDate;
-    private Date                       endDate;
-    private Date                       paymentStartDate;
-    private Date                       paymentEndDate;
+    private static final int PRINTING = 1;
+    private static final int PICKING = 2;
+    private Date startDate;
+    private Date endDate;
+    private Date paymentStartDate;
+    private Date paymentEndDate;
 
-    private String                     brand;
+    private String brand;
 
     private String getActionMessage(int action) {
         switch (action) {
@@ -97,7 +97,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_PACKING_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
     }
@@ -134,12 +134,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         } else if (paymentStartDate != null && paymentEndDate != null) {
             shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
             shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
-        } else if(courier !=null){
+        } else if (courier != null) {
             List<Courier> couriers = new ArrayList<Courier>();
             couriers.add(courier);
             shippingOrderSearchCriteria.setCourierList(couriers);
-        }
-        else {
+        } else {
             shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
         }
 
@@ -164,7 +163,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
         shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 60);
         // shippingOrdersList = shippingOrdersPage.getList();
-        shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
+        shippingOrdersList = filterShippingOrdersByBrandAndVariant(shippingOrdersPage);
         return shippingOrdersList;
     }
 
@@ -219,33 +218,60 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         return searchOrdersForPrinting();
     }
 
-    private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
+    private List<ShippingOrder> filterShippingOrdersByBrandAndVariant(Page shippingOrdersPage) {
         List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
         List<String> brandsToExclude = new ArrayList<String>();
-        List<String> cycleCountInProgressForVariant = null;
+        List<String> cycleCountInProgressForVariantAndBrand = new ArrayList<String>();
         if (getPrincipalUser() != null) {
+            //brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
             Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
-            brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
-            cycleCountInProgressForVariant = cycleCountService.inProgressCycleCountForVariant(warehouse);
+            cycleCountInProgressForVariantAndBrand = cycleCountService.inProgressCycleCounts(warehouse);
 
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
             if (shippingOrdersList.size() == 10) {
                 break;
             }
-            boolean shouldAdd = true;
+            List<AuditDto> auditDtoList;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
                 String variantId = lineItem.getSku().getProductVariant().getId();
-                /*
-                 * if (StringUtils.isNotBlank(brandName) && brandName.equalsIgnoreCase(brand)) { shouldAdd = false;
-                 * break; }
-                 */
-                if (StringUtils.isNotBlank(brandName) && brandsToExclude.contains(brandName.toLowerCase())) {
+                String productId = lineItem.getSku().getProductVariant().getProduct().getId();
+
+
+                for(AuditDto auditDto : auditDtoList ){
+
+                    if(auditDto.getBrand() is
+                    auditDto.getProductId();
+                    auditDto.getProductVariantId();
+
+
+
+                }
+
+                if (cycleCountInProgressForVariantAndBrand.contains(variantId)) {
                     shouldAdd = false;
                     break;
                 }
-                if (cycleCountInProgressForVariant.contains(variantId)) {
+            }
+            if (shouldAdd) {
+                shippingOrdersList.add(shippingOrder);
+            }
+        }
+
+
+
+
+        boolean shouldAdd = true;
+            for (LineItem lineItem : shippingOrder.getLineItems()) {
+                String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                String variantId = lineItem.getSku().getProductVariant().getId();
+
+                if (StringUtils.isNotBlank(brandName) && cycleCountInProgressForVariantAndBrand.contains(brandName.toLowerCase())) {
+                    shouldAdd = false;
+                    break;
+                }
+                if (cycleCountInProgressForVariantAndBrand.contains(variantId)) {
                     shouldAdd = false;
                     break;
                 }
