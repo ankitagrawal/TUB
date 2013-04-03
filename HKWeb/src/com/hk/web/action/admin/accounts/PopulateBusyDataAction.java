@@ -50,7 +50,7 @@ public class PopulateBusyDataAction extends BaseAction {
 			logger.info("Populating Suppliers ");
 			busyPopulateSupplierData.busySupplierUpdate();
 			logger.info("Populating Sales ");
-			busyPopulateSalesData.transactionHeaderForSalesGenerator();
+			//busyPopulateSalesData.transactionHeaderForSalesGenerator();
 			logger.info("Populating Purchases ");
 			busyTableTransactionGenerator.populatePurchaseData();
 			logger.info("Populating RTO data ");

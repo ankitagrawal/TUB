@@ -1,25 +1,4 @@
-package com.hk.web.action.admin.queue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.hk.domain.analytics.Reason;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
+package com.hk.web.action.admin.queue.action;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -28,6 +7,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.core.PaymentMode;
@@ -50,11 +30,20 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Component
-public class ActionAwaitingQueueAction extends BasePaginatedAction {
+public class DropShipManagementQueueAction extends BasePaginatedAction {
 
-    private static Logger logger = LoggerFactory.getLogger(ActionAwaitingQueueAction.class);
+    private static Logger logger = LoggerFactory.getLogger(DropShipManagementQueueAction.class);
 
     Page orderPage;
     List<Order> orderList = new ArrayList<Order>();
@@ -84,7 +73,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;       
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
     private Long orderId;
     private Long storeId;
@@ -104,9 +93,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
-    private boolean sortByLastEscDate = true;
     private boolean sortByScore = true;
     private boolean sortByDispatchDate = true;
+    private boolean sortByLastEscDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
 
@@ -121,24 +110,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
-        setUnplitOrderCount();
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
-    }
-
-    private void setUnplitOrderCount() {
-        if (unsplitOrderCount == null) {
-            unsplitOrderCount = orderService.getCountOfOrdersWithStatus();
-        }
-    }
-
-    public Resolution searchUnsplitOrders() {
-        orderStatuses.clear();
-        orderStatuses.add(orderStatusService.find(EnumOrderStatus.Placed));
-        pre();
-        orderStatuses.clear();
-
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
+        return new ForwardResolution("/pages/admin/queue/dropshipActionAwaitingQueue.jsp");
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
@@ -174,11 +147,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 shippingOrderActivityList.add(shippingOrderActivity);
             }
         }
-        /*
-		if (shippingOrderActivityList.size() == 0) {
-			shippingOrderActivityList = shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue());
-		}
-		*/
+
         orderSearchCriteria.setSOLifecycleActivityList(shippingOrderActivityList);
         Set<Reason> reasonList = new HashSet<Reason>();
         for (Reason reason : reasons) {
@@ -188,29 +157,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
         orderSearchCriteria.setReasonList(reasonList);
 
-        List<PaymentMode> paymentModeList = new ArrayList<PaymentMode>();
-        for (PaymentMode paymentMode : paymentModes) {
-            if (paymentMode != null) {
-                paymentModeList.add(paymentMode);
-            }
-        }
-        if (paymentModeList.size() == 0) {
-            paymentModeList = paymentService.listWorkingPaymentModes();
-        }
-
-        orderSearchCriteria.setPaymentModes(paymentModeList);
-
-        List<PaymentStatus> paymentStatusList = new ArrayList<PaymentStatus>();
-        for (PaymentStatus paymentStatus : paymentStatuses) {
-            if (paymentStatus != null) {
-                paymentStatusList.add(paymentStatus);
-            }
-        }
-        if (paymentStatusList.size() == 0) {
-            paymentStatusList = paymentService.listWorkingPaymentStatuses();
-        }
-
-        orderSearchCriteria.setPaymentStatuses(paymentStatusList);
+        orderSearchCriteria.setPaymentModes(paymentService.listWorkingPaymentModes());
+        orderSearchCriteria.setPaymentStatuses(paymentService.listSuccessfulPaymentStatuses());
 
         if (startDate != null) {
             orderSearchCriteria.setPaymentStartDate(startDate);
@@ -223,12 +171,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         categoryList.addAll(categoryDao.getPrimaryCategories());
         orderSearchCriteria.setCategories(categoryList);
 
-        if (dropShip != null){
-           orderSearchCriteria.setDropShip(dropShip);
-        }
-        if (containsJit != null){
-            orderSearchCriteria.setContainsJit(containsJit);
-        }
+        //fundamentally over here
+        orderSearchCriteria.setDropShip(true);
+//        orderSearchCriteria.setContainsJit(true);
+
         Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
             if (category != null) {
@@ -254,7 +200,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 if (isManualEscalable) {
                     trueMessage.append(shippingOrder.getBaseOrder().getId());
                     trueMessage.append(" ");
-                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
+                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
                         trueMessage.append(shippingOrder.getBaseOrder().getId());
@@ -272,8 +218,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
 
-        setUnplitOrderCount();
-        return new RedirectResolution(ActionAwaitingQueueAction.class);
+        return new RedirectResolution(DropShipManagementQueueAction.class);
     }
 
     public int getPerPageDefault() {
@@ -427,7 +372,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                    * params.add("paymentModes"); params.add("paymentStatuses"); params.add("categories");
                    */
 
-        int ctr = 0;
+       /* int ctr = 0;
         for (PaymentMode paymentMode : paymentModes) {
             if (paymentMode != null) {
                 params.add("paymentModes[" + ctr + "]");
@@ -440,7 +385,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 params.add("paymentStatuses[" + ctr2 + "]");
             }
             ctr2++;
-        }
+        }*/
 /*
         int ctr3 = 0;
         for (String category : categories) {
@@ -533,9 +478,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         return dropShip;
     }
 
-      public Boolean getDropShip() {
-         return dropShip;
-     }
+    public Boolean getDropShip() {
+        return dropShip;
+    }
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;

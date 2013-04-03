@@ -9,6 +9,7 @@ import com.hk.constants.analytics.EnumReason;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import org.slf4j.Logger;
@@ -24,11 +25,6 @@ import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.ReplacementOrder;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.order.ShippingOrderLifeCycleActivity;
-import com.hk.domain.order.ShippingOrderLifecycle;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -288,7 +284,13 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                     }
                 }
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    if (lineItem.getCartLineItem().getCartLineItemConfig() != null) {
+                    CartLineItem cartLineItem = lineItem.getCartLineItem();
+                    if (cartLineItem.getCartLineItemConfig() != null) {
+                        logShippingOrderActivity(shippingOrder, adminUser,
+                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
+                        return false;
+                    }
+                    if(cartLineItem.getProductVariant().getProductExtraOptions() != null){
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
                         return false;
@@ -332,7 +334,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
 
         if (isAutoEsc) {
-            logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue);
+            User adminUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
+                    null, null);
         } else {
 			if(shippingOrder.isDropShipping()){
 				logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
