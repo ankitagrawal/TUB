@@ -212,5 +212,8 @@
         <mapping class="com.hk.domain.reverseOrder.ReverseOrder" />
         <mapping class="com.hk.domain.reverseOrder.ReverseLineItem" />
 	    <mapping class="com.hk.domain.inventory.StockTransferStatus" />
+	    <mapping class="com.hk.domain.review.ProductReviewMail"/>
+	    <mapping class="com.hk.domain.review.Mail"/>
+	    <mapping class="com.hk.domain.review.UserReviewMail"/>
     </session-factory>
 </hibernate-configuration>

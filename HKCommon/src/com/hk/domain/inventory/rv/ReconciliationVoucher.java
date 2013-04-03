@@ -125,7 +125,13 @@ public class ReconciliationVoucher implements java.io.Serializable {
 		return reconciliationType;
 	}
 
-	public void setReconciliationType(ReconciliationType reconciliationType) {
-		this.reconciliationType = reconciliationType;
-	}
+    public void setReconciliationType(ReconciliationType reconciliationType) {
+        this.reconciliationType = reconciliationType;
+    }
+
+    @Override
+    public String toString() {
+        return this.id != null ? this.id.toString() : "";
+    }
+
 }

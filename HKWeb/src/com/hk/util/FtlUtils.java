@@ -118,7 +118,7 @@ public class FtlUtils {
         "<td align=\"center\" valign=\"middle\" style=\"border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px\">" +
         " If you prefer not to receive HealthKart.com email, <a href=\"${unsubscribeLink}\">click here to Unsubscribe</a>" +
         "<br />  Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />\n" +
-        "    @ 2011 HealthKart.com. All Rights Reserved. " +
+        "    &copy; 2013 HealthKart.com. All Rights Reserved. " +
         "</td>" +
         "</tr>" +
         "</table>";

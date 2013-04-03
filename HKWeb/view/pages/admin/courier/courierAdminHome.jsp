@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Admin Home">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Operations Home">
 
 <s:layout-component name="heading">Operations</s:layout-component>
 <s:layout-component name="content">
@@ -37,9 +37,15 @@
     <h2>Shipment Associated Tasks</h2>
 
     <h3>
-        <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
-            Shipment Resolution Screen
-        </s:link>
+           <s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction">
+               Shipment Resolution Screen
+           </s:link>
+       </h3>
+
+    <h3>
+            <s:link beanclass="com.hk.web.action.admin.courier.ShippingOrderStatusChangeAction">
+                Change Shipping Order Status
+            </s:link>
     </h3>
 
     <c:if test="${whAction.setWarehouse != null}">
@@ -59,7 +65,7 @@
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.shipment.ChangeShipmentDetailsAction">
-            Pincode Default Courier
+            Change SO Status
         </s:link>
     </h3>
 
@@ -150,14 +156,10 @@
 <div class="left roundBox">
     <h2>Courier Shipment Reporting</h2>
 
-    <shiro:hasRole name="<%=RoleConstants.HK_DELIVERY_ADMIN%>">
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-                    event="generateCourierReport">Add/Edit Hub
-                <s:param name="courierDownloadFunctionality" value="false"/>
-            </s:link>
-        </h3>
-    </shiro:hasRole>
+    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
+                event="generateCourierReport">Download Courier Excel
+        <s:param name="courierDownloadFunctionality" value="false"/>
+    </s:link></h3>
 
 </div>
 

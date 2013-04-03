@@ -2,6 +2,8 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -40,6 +42,8 @@ public class SplitShippingOrderAction extends BaseAction {
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
+    private OrderService orderService;
+    @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     private LineItemDao lineItemDao;
@@ -50,6 +54,8 @@ public class SplitShippingOrderAction extends BaseAction {
 
     private boolean dropShipItemPresentInSelectedItems;
     private boolean dropShipItemPresentInRemainingItems;
+    private boolean jitItemPresentInSelectedItems;
+    private boolean jitItemPresentInRemainingItems;
 
     @DontValidate
     @DefaultHandler
@@ -84,12 +90,17 @@ public class SplitShippingOrderAction extends BaseAction {
                     break;
                 }
             }
+            for (LineItem remainingLineItem : originalShippingItems) {
+                if ((remainingLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInRemainingItems = true;
+                    break;
+                }
+            }
 
             ShippingOrder newShippingOrder = shippingOrderService.createSOWithBasicDetails(shippingOrder.getBaseOrder(), shippingOrder.getWarehouse());
             newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
             newShippingOrder.setServiceOrder(false);
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
-            newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
             newShippingOrder = shippingOrderService.save(newShippingOrder);
 
             for (LineItem selectedLineItem : selectedLineItems) {
@@ -97,15 +108,32 @@ public class SplitShippingOrderAction extends BaseAction {
                 if ((selectedLineItem.getSku().getProductVariant().getProduct().isDropShipping())) {
                     dropShipItemPresentInSelectedItems = true;
                 }
-
                 lineItemDao.save(selectedLineItem);
             }
+            for (LineItem selectedLineItem : selectedLineItems) {
+                selectedLineItem.setShippingOrder(newShippingOrder);
+                if ((selectedLineItem.getSku().getProductVariant().getProduct().isJit())) {
+                    jitItemPresentInSelectedItems = true;
+                    break;
+                }
+                lineItemDao.save(selectedLineItem);
+            }
+            shippingOrderDao.refresh(newShippingOrder);
+            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
+            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
+            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
             shippingOrderDao.refresh(newShippingOrder);
 
             if (dropShipItemPresentInSelectedItems) {
                 newShippingOrder.setDropShipping(true);
             } else {
                 newShippingOrder.setDropShipping(false);
+            }
+            if (jitItemPresentInSelectedItems) {
+                newShippingOrder.setContainsJitProducts(true);
+            } else {
+                newShippingOrder.setContainsJitProducts(false);
             }
             ShippingOrderHelper.updateAccountingOnSOLineItems(newShippingOrder, newShippingOrder.getBaseOrder());
             newShippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(newShippingOrder));
@@ -127,6 +155,14 @@ public class SplitShippingOrderAction extends BaseAction {
             } else {
                 shippingOrder.setDropShipping(false);
             }
+            if (jitItemPresentInRemainingItems) {
+                shippingOrder.setContainsJitProducts(true);
+            } else {
+                shippingOrder.setContainsJitProducts(false);
+            }
+            Set<ShippingOrderCategory> shippingOrderCategories = orderService.getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setShippingOrderCategories(shippingOrderCategories);
+            shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrderCategories).getName());
             shippingOrder = shippingOrderService.save(shippingOrder);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);

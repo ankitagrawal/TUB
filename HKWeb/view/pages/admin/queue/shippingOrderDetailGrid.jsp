@@ -9,6 +9,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -16,14 +17,26 @@
     Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
     pageContext.setAttribute("shippingOrders", shippingOrders);
     Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
+    Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
     Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
     Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
+    Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
 
 
     if (isActionQueue != null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
+    }
+    if (isShipmentQueue != null) {
+        pageContext.setAttribute("isShipmentQueue", isShipmentQueue);
+    } else {
+        pageContext.setAttribute("isShipmentQueue", false);
+    }
+    if (isProcessingQueue != null) {
+        pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
+    } else {
+        pageContext.setAttribute("isProcessingQueue", false);
     }
     if (isDropShipQueue != null) {
         pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
@@ -61,6 +74,7 @@
 <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
 <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusCancelled" value="<%=EnumShippingOrderStatus.SO_Cancelled.getId()%>"/>
 <c:set var="shippingOrderStatusDelivered" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 <c:set var="shippingOrderStatusRTOInitiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
@@ -93,58 +107,56 @@
 <tr id="shippingOrder-${shippingOrder.id}"
     style="margin-bottom: 5px;border: 1px dotted;overflow: hidden;padding: 3px;">
 <%--<div id="shippingOrder-${shippingOrder.id}" class="detailDiv">--%>
-<td id="shippingOrderDetail-${shippingOrder.id}">
-    <div class="floatleft">
-        Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score}
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
+<td id="shippingOrderDetail-${shippingOrder.id}" style="width: 300px;">
+<div class="floatleft">
+    Store ID: <strong>${shippingOrder.baseOrder.store.prefix}</strong>, Score: ${shippingOrder.baseOrder.score},  <span
+        style="margin-left:10px;">
+                    Basket: <strong>${shippingOrder.basketCategory}</strong></span>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
                 <span
-                        style="margin-left:10px;"> Basket: <strong>${shippingOrder.basketCategory}</strong></span>
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
-                <span
-                        style="margin-left:10px;"> </span>
-    </div>
-    <div class="clear" style=""></div>
-    <div class="floatleft">
-        Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
-                                             pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
-    </div>
-    <div class="clear"></div>
-    <c:if test="${isActionQueue == true || isSearchShippingOrder}">
+                        style="margin-left:10px;">Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
+ </span>
+</div>
+<div class="clear" style=""></div>
+<div class="floatleft">
+    Amount: <strong>Rs.<fmt:formatNumber value="${shippingOrder.amount}"
+                                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></strong>
+    <span
+            style="margin-left:10px;">
+    Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/></span>
+</div>
+<div class="clear"></div>
+<c:if test="${isActionQueue == false}">
+    <c:if test="${shippingOrder.lastEscDate != null}">
         <div class="floatleft">
-            Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
-        </div>
-        <div class="clear"></div>
-    </c:if>
-    <c:if test="${isActionQueue == false}">
-        <div class="floatleft">
-            <span> Mode: <strong>${payment.paymentMode.name}</strong></span>
-            <c:if test="${payment.gateway != null}">
-                <span style="margin-left:30px;">Gateway: ${payment.gateway.name}</span>
-            </c:if>
-            <span style="margin-left:10px;"> Status: <strong>${payment.paymentStatus.name}</strong></span>
-        </div>
-        <div class="clear"></div>
-        <div class="floatleft">
-            <!-- Escalted On: <fmt:formatDate value="${(hk:getEscalationDate(shippingOrder))}" type="both" timeStyle="short"/> -->
             Escalted On: <fmt:formatDate value="${shippingOrder.lastEscDate}" type="both" timeStyle="short"/>
         </div>
         <div class="clear"></div>
-        <div class="floatleft">
-            Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
-            Score : ${shippingOrder.baseOrder.score}
-        </div>
-        <div class="clear"></div>
-         <div class="floatleft">
-            Placed On : <fmt:formatDate value="${shippingOrder.baseOrder.payment.paymentDate}" type="date"/>
-        </div>
-        <div class="clear"></div>
+        <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
+            <div class="floatleft">
+                <strong>(${hk:periodFromNow(shippingOrder.lastEscDate)})</strong>
+            </div>
+            <div class="clear"></div>
+        </c:if>
     </c:if>
+</c:if>
+<c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
+    <div class="floatleft">
+        Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDelDate}" type="date"/>
+    </div>
+    <div class="clear"></div>
+    <div class="floatleft">
+        <strong>(${hk:periodFromNow(shippingOrder.targetDelDate)})</strong>
+    </div>
+</c:if>
+<div class="clear"></div>
     <div class="floatleft">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
         <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
@@ -565,32 +577,34 @@
             </c:choose>
         </c:otherwise>
     </c:choose>
-</td>
-<c:if test="${hasAction == true}">
-    <td>
+    <c:if test="${hasAction == true || isDropShipQueue == true}">
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id != paymentStatusAuthPending}">
+            <c:if test="${isProcessingQueue == true || isShipmentQueue == true || isDropShipQueue == true}">
+                <select name="shippingOrderReason_${shippingOrder.id}"
+                          class="shippingOrderReason_${shippingOrder.id}">
+                    <option value="">Choose Reason</option>
+                    <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
+                    <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
+                        <option value="${reason.id}">${reason.primaryClassification}
+                            - ${reason.secondaryClassification}</option>
+                    </c:forEach>
+                </select>
+            </c:if>
             <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
         </c:if>
-    </td>
-</c:if>
-<c:if test="${isDropShipQueue == true}">
-    <td>
-        <c:if test="${shippingOrder.shipment != null}">
-            <input type="checkbox" dataId="${shippingOrder.id}" class="shippingOrderDetailCheckbox"/>
-        </c:if>
-    </td>
-</c:if>
+    </c:if>
+</td>
 <c:if test="${isServiceQueue== true}">
     <td>
         <c:if test="${shippingOrder.baseOrder.payment.paymentStatus.id == paymentStatusAuthPending}">
-         <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting" dataId="${shippingOrder.id}" class="movetoactionqueue">
-            (move back to action queue)
-         </s:link>
+            <s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction" event="moveToActionAwaiting"
+                    dataId="${shippingOrder.id}" class="movetoactionqueue">
+                (move back to action queue)
+            </s:link>
         </c:if>
-</td>
+    </td>
 </c:if>
 </c:forEach>
 </tr>
-<%--</c:forEach>--%>
 </table>
 </s:layout-definition>

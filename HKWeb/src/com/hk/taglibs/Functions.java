@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoServi
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.Pincode;
@@ -19,6 +20,7 @@ import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.util.ProductUtil;
 import net.sourceforge.stripes.util.CryptoUtil;
 
@@ -590,7 +592,7 @@ public class Functions {
             Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
             long minDays = dispatchDays[0], maxDays = dispatchDays[1];
 
-            if (minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS) {
+            if (minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MAX_DEL_DAYS) {
                 return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);
@@ -740,6 +742,11 @@ public class Functions {
     HeadingProductService  headingProductService = ServiceLocatorFactory.getService(HeadingProductService.class);
     return headingProductService.getHeadingProductsSortedByRank(headingId);
   }
+
+    public static List<Reason> getReasonsByType(String type){
+        ShippingOrderLifecycleService shippingOrderLifecycleService = ServiceLocatorFactory.getService(ShippingOrderLifecycleService.class);
+        return shippingOrderLifecycleService.getReasonByType(type);
+    }
 
     public static Country getCountry(Long countryId) {
         AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);

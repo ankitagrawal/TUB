@@ -1,0 +1,306 @@
+package com.hk.web.action.admin.inventory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.io.*;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
+import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
+import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.util.BarcodeUtil;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.Keys;
+import com.hk.constants.inventory.EnumInvTxnType;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.courier.StateList;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.inventory.ProductVariantInventory;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.user.User;
+import com.hk.domain.sku.SkuItem;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
+import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
+import com.hk.web.action.error.AdminPermissionAction;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Secure(hasAnyPermissions = {PermissionConstants.INVENTORY_CHECKIN}, authActionBean = AdminPermissionAction.class)
+@Component
+public class SearchOrderAndReCheckinRTOInventoryAction extends BaseAction {
+
+    private static Logger logger = Logger.getLogger(SearchOrderAndReCheckinRTOInventoryAction.class);
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AdminInventoryService adminInventoryService;
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
+    private ShippingOrderService shippingOrderService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+    @Autowired
+    private ProductVariantDamageInventoryDao productVariantDamageInventoryDao;
+
+    Map<LineItem, Long> lineItemRecheckinQtyMap = new HashMap<LineItem, Long>();
+
+    private Long orderId;
+    private String gatewayOrderId;
+    File printBarcode;
+    private ShippingOrder shippingOrder;
+    private List<LineItem> lineItems = new ArrayList<LineItem>();
+    private LineItem lineItem;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeGurgaon + "']}")
+    String barcodeGurgaon;
+
+    @Value("#{hkEnvProps['" + Keys.Env.barcodeMumbai + "']}")
+    String barcodeMumbai;
+
+    @DefaultHandler
+    public Resolution pre() {
+        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinRTOInventory.jsp");
+    }
+
+    public Resolution searchOrder() {
+        if (orderId != null) {
+            shippingOrder = getShippingOrderService().find(orderId);
+        } else if (StringUtils.isNotBlank(gatewayOrderId)) {
+            shippingOrder = getShippingOrderService().findByGatewayOrderId(gatewayOrderId);
+        }
+        return new ForwardResolution("/pages/admin/searchOrderAndReCheckinRTOInventory.jsp");
+    }
+
+    public Resolution checkinRTOUnits() {
+        User loggedOnUser = userService.getLoggedInUser();
+
+        for (Map.Entry<LineItem, Long> lineItemRecheckinQtyMapEntry : lineItemRecheckinQtyMap.entrySet()) {
+            LineItem lineItem = lineItemRecheckinQtyMapEntry.getKey();
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            ShippingOrder shippingOrder = lineItem.getShippingOrder();
+            Long recheckinQty = lineItemRecheckinQtyMapEntry.getValue();
+            Long checkedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstRTO(lineItem) + getProductVariantDamageInventoryDao().getCheckedInPVDIAgainstRTO(lineItem);
+            List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
+            if (checkedInUnits == 0 && checkedOutInventories != null && !checkedOutInventories.isEmpty()) {
+                int recheckinCounter = 0;
+                for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
+                    if (recheckinQty > 0 && recheckinCounter < recheckinQty) {
+                        recheckinCounter++;
+
+                        getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), checkedOutInventory.getSkuItem(), lineItem, shippingOrder, null, null,
+                                null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RTO_CHECKIN), 1L, loggedOnUser);
+                        // Bug Fix deleting checked out pvi to maintain sanity instead of re-checkin.
+                        // productVariantInventoryDao.remove(checkedOutInventory.getId());
+                        inventoryService.checkInventoryHealth(productVariant);
+                    } else {
+                        getAdminInventoryService().damageInventoryCheckin(checkedOutInventory.getSkuItem(), lineItem);
+                    }
+                }
+                String comments = "Re Checked-in RTO Items: " + recheckinQty + " x " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn,null, comments);
+                String damageComments = "Checked-in Damage RTO Items: " + (lineItem.getQty() - recheckinQty) + " x " + productVariant.getProduct().getName() + "<br/>"
+                        + productVariant.getOptionsCommaSeparated();
+                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedInDamageItem, null, damageComments);
+                addRedirectAlertMessage(new SimpleMessage("RTO Units checked in accordingly"));
+            } else {
+                addRedirectAlertMessage(new SimpleMessage("Oops!!! Eitehr RTO Units are already checked in OR No batch information was there while checking out items."));
+            }
+        }
+
+        return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+    }
+
+
+    public Resolution downloadBarcode() {
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
+        if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
+            addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
+            return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+        }
+        ProductVariant productVariant = lineItem.getSku().getProductVariant();
+        Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
+
+        String barcodeFilePath = null;
+        Warehouse userWarehouse = null;
+        if (getUserService().getWarehouseForLoggedInUser() != null) {
+            userWarehouse = userService.getWarehouseForLoggedInUser();
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+            return new RedirectResolution(SearchOrderAndReCheckinRTOInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+        }
+        if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+            barcodeFilePath = barcodeGurgaon;
+        } else {
+            barcodeFilePath = barcodeMumbai;
+        }
+        barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "reCheckin_" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+
+        try {
+            printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+        } catch (IOException e) {
+            logger.error("Exception while appending on barcode file", e);
+        }
+        addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+        return new HTTPResponseResolution();
+
+    }
+
+
+    public class HTTPResponseResolution implements Resolution {
+        public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+            InputStream in = new BufferedInputStream(new FileInputStream(printBarcode));
+            res.setContentType("text/plain");
+            res.setCharacterEncoding("UTF-8");
+            res.setContentLength((int) printBarcode.length());
+            res.setHeader("Content-Disposition", "attachment; filename=\"" + printBarcode.getName() + "\";");
+            OutputStream out = res.getOutputStream();
+
+            // Copy the contents of the file to the output stream
+            byte[] buf = new byte[4096];
+            int count = 0;
+            while ((count = in.read(buf)) >= 0) {
+                out.write(buf, 0, count);
+            }
+            in.close();
+            out.flush();
+            out.close();
+        }
+
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getGatewayOrderId() {
+        return gatewayOrderId;
+    }
+
+    public void setGatewayOrderId(String gatewayOrderId) {
+        this.gatewayOrderId = gatewayOrderId;
+    }
+
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
+
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
+
+    public List<LineItem> getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(List<LineItem> lineItems) {
+        this.lineItems = lineItems;
+    }
+
+    public Map<LineItem, Long> getLineItemRecheckinQtyMap() {
+        return lineItemRecheckinQtyMap;
+    }
+
+    public void setLineItemRecheckinQtyMap(Map<LineItem, Long> lineItemRecheckinQtyMap) {
+        this.lineItemRecheckinQtyMap = lineItemRecheckinQtyMap;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public AdminInventoryService getAdminInventoryService() {
+        return adminInventoryService;
+    }
+
+    public void setAdminInventoryService(AdminInventoryService adminInventoryService) {
+        this.adminInventoryService = adminInventoryService;
+    }
+
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
+
+    public void setInventoryService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
+
+    public ShippingOrderService getShippingOrderService() {
+        return shippingOrderService;
+    }
+
+    public void setShippingOrderService(ShippingOrderService shippingOrderService) {
+        this.shippingOrderService = shippingOrderService;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public AdminProductVariantInventoryDao getAdminProductVariantInventoryDao() {
+        return adminProductVariantInventoryDao;
+    }
+
+    public void setAdminProductVariantInventoryDao(AdminProductVariantInventoryDao adminProductVariantInventoryDao) {
+        this.adminProductVariantInventoryDao = adminProductVariantInventoryDao;
+    }
+
+    public ProductVariantDamageInventoryDao getProductVariantDamageInventoryDao() {
+        return productVariantDamageInventoryDao;
+    }
+
+    public void setProductVariantDamageInventoryDao(ProductVariantDamageInventoryDao productVariantDamageInventoryDao) {
+        this.productVariantDamageInventoryDao = productVariantDamageInventoryDao;
+    }
+
+    public LineItem getLineItem() {
+        return lineItem;
+    }
+
+    public void setLineItem(LineItem lineItem) {
+        this.lineItem = lineItem;
+    }
+
+    public File getPrintBarcode() {
+        return printBarcode;
+    }
+
+    public void setPrintBarcode(File printBarcode) {
+        this.printBarcode = printBarcode;
+    }
+}

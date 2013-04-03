@@ -101,7 +101,7 @@
           <s:form beanclass="com.hk.web.action.admin.inventory.InventoryCheckoutAction">
             <s:hidden name="shippingOrder" value="${icBean.shippingOrder.id}"/>
             <s:hidden name="upc" value="${icBean.upc}"/>
-            <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>
+            <s:hidden name="lineItem" value="${icBean.lineItem.id}"/>              
             <input type="hidden" name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
             <br/>
             <strong style="color:blue">${icBean.productVariant.product.name} - ${icBean.productVariant.id}

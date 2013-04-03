@@ -156,9 +156,11 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td><s:hidden name="review.postedBy" value="${pa.review.postedBy.id}"/>
-							<s:hidden name="review.starRating" id="starRating" value="3"/>
+						<td><s:hidden name="uid" value="${pa.review.postedBy.login}"/>
+							<s:hidden name="review.starRating" id="starRating" value="${pa.review.starRating}"/>
 							<s:hidden name="review.product" value="${product.id}"/>
+							<s:hidden name="review.productVariant" value="${pa.productVariant.id}"/>
+                            <s:hidden name="urm" value ="${pa.urm}"/>
 							<label style="color:#ff0000;">* All fields are mandatory.</label><br/>
 							<s:submit name="postReview" value="Submit"
 							          class="requiredFieldValidator"/></td>
@@ -176,10 +178,12 @@
 	String.prototype.trim = function () {
 		return this.replace(/^\s*/, "").replace(/\s*$/, "");
 	}
+
 	$(document).ready(function() {
 		var rating;
 		$('#star').raty({
 			contextPath: '${pageContext.request.contextPath}',
+            start:$("#starRating").val(),
 			click: function(score, evt) {
 				rating = score;
 				$("#starRating").val(rating);

@@ -8,7 +8,7 @@
 <products>
   <c:forEach items="${vizuryBean.products}" var="product">
   <c:if test="${fn:length(product.productVariants) > 0 && product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
-    <product id="${product.id}" stock="${!variant.outOfStock}">
+    <product id="${product.id}" stock="${!product.outOfStock}">
       <name><![CDATA[${hk:escapeXML(product.name)}]]></name>
       <url>http://www.healthkart.com/product/${product.slug}/${product.id}</url>
       <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>

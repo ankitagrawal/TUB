@@ -25,7 +25,7 @@
     </div>
 
     <div class="grid_12">
-      <h1><s:layout-component name="heading"/></h1>
+      <h1 style="font-size: 20px;margin: 10px;"><s:layout-component name="heading"/></h1>
       <s:errors/>
       <div class="alert messages"><s:messages key="generalMessages"/></div>
       <s:layout-component name="content"/>

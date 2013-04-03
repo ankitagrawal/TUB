@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.cache.UserCache;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +36,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     ShippingOrderService               shippingOrderService;
+    @Autowired
+    OrderService orderService;
     @Autowired
     LineItemDao                        lineItemDao;
     @Autowired
@@ -89,6 +91,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
+        replacementOrder.setShippingOrderCategories(orderService.getCategoriesForShippingOrder(replacementOrder));
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 		
@@ -98,12 +101,12 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
-				        "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName() +
-						        ". Special comment: "+roComment);
+                null, "Replacement order created for shipping order: "+shippingOrder.getGatewayOrderId()+" .Status of old shipping order: "+shippingOrder.getOrderStatus().getName() +
+                        ". Special comment: "+roComment);
 
 	    shippingOrderService.logShippingOrderActivity(shippingOrder, loggedOnUser,
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
-			    "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
+                null, "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
 
 	    shipmentService.createShipment(replacementOrder, true);
 	    shippingOrderService.autoEscalateShippingOrder(shippingOrder);

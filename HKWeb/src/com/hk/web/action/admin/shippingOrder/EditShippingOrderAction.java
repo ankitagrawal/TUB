@@ -73,7 +73,7 @@ public class EditShippingOrderAction extends BaseAction {
                             + srcPV.getProduct().getName());
                 }
             }
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Edited, commentBuilder.toString());
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Edited, null,commentBuilder.toString());
 
             addRedirectAlertMessage(new SimpleMessage("Order edited successfully."));
         }

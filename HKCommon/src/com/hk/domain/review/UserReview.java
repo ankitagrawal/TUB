@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
 
 /**
@@ -44,6 +45,10 @@ public class UserReview implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product         product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id")
+    private ProductVariant productVariant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_status_id", nullable = false)
@@ -104,9 +109,18 @@ public class UserReview implements java.io.Serializable {
         this.product = product;
     }
 
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
+
     public ReviewStatus getReviewStatus() {
         return this.reviewStatus;
     }
+
 
     public void setReviewStatus(ReviewStatus reviewStatus) {
         this.reviewStatus = reviewStatus;

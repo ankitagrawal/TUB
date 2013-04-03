@@ -70,6 +70,15 @@ public class PaymentServiceImpl implements PaymentService {
         return getPaymentStatusDao().listWorkingPaymentStatuses();
     }
 
+    public List<PaymentStatus> listActionablePaymentStatuses() {
+        return getPaymentStatusDao().listActionablePaymentStatuses();
+    }
+
+    @Override
+    public List<PaymentStatus> listSuccessfulPaymentStatuses() {
+        return getPaymentStatusDao().listSuccessfulPaymentStatuses();
+    }
+
     public List<PaymentMode> listWorkingPaymentModes() {
         return getPaymentModeDao().listWorkingPaymentModes();
     }

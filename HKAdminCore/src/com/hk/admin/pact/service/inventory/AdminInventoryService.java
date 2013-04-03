@@ -86,4 +86,6 @@ public interface AdminInventoryService {
    public Map<Long, String> skuItemBarcodeMap(List<SkuItem> checkedInSkuItems);
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);
+
+    public void deleteInventory(GrnLineItem grnLineItem);
 }

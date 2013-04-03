@@ -4,7 +4,7 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
     <title>Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending.</title>
 </head>
 <body>
-<#include "header.ftl">
+<#--<#include "header.ftl">-->
 <p style="margin-bottom:1em">Hi ${order.user.name}!,</p>
 
 <p style="margin-bottom:1em">
@@ -145,7 +145,8 @@ Order Id ${order.gatewayOrderId} received. Cash on Delivery confirmation pending
 
 <p style="margin-bottom:1em">We will send you an email as soon as your order is shipped.</p>
 
+<#include "orderNote.ftl">
+
 <p style="margin-bottom:1em"><strong>HealthKart.com</strong></p>
-<#include "footer.ftl">
 </body>
 </html>
