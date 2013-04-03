@@ -119,7 +119,12 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
         orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
         if (orderPage != null) {
-            orderList = orderPage.getList();
+
+            Set<Order> orderSet = new HashSet<Order>();
+            orderSet.addAll(orderPage.getList());
+
+            orderList = new ArrayList<Order>(orderSet);
+
         }
         setUnplitOrderCount();
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));

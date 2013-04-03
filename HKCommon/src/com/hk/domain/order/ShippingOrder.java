@@ -10,8 +10,6 @@ import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -119,8 +117,7 @@ public class ShippingOrder implements java.io.Serializable {
     private boolean containsJitProducts;
 
     @JsonSkip
-    @Fetch(value = FetchMode.SUBSELECT)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "shippingOrder")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
 
     public boolean containsJitProducts() {
