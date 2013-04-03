@@ -24,7 +24,7 @@ public class SeekInvoiceNumServiceImpl implements SeekInvoiceNumService {
      *         invoices.
      */
     public String getInvoiceNum(String invoiceType, Warehouse warehouse) {
-        return invoiceType + getSeekInvoiceNumDao().getInvoiceNum(invoiceType, warehouse);
+        return invoiceType +"-"+ getSeekInvoiceNumDao().getInvoiceNum(invoiceType, warehouse);
     }
 
     public SeekInvoiceNumDao getSeekInvoiceNumDao() {
