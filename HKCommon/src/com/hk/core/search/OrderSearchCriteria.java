@@ -9,9 +9,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderStatus;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import java.util.Date;
 import java.util.List;
@@ -222,7 +220,6 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("shippingOrderCategories");
             }
             shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
-//            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
 
         if(sortByLastEscDate){
