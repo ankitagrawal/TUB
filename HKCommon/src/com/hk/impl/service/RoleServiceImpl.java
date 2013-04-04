@@ -41,16 +41,4 @@ public class RoleServiceImpl implements RoleService {
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
     }
-
-    /*public Permission save(Permission permission){
-       return (Permission)(getRoleDao().save(permission));
-    }
-*/
-    public List<Role> listAllRoles(){
-        return getRoleDao().getAll(Role.class);
-    }
-
-    public List<Permission> listAllPermissions(){
-        return getRoleDao().getAll(Permission.class);
-    }
 }
