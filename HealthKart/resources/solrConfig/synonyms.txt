@@ -37,4 +37,10 @@ optimumnutrition => optimum nutrition
 muscle blaze => muscleblaze
 muscle pharm => musclepharm
 muscle tech => muscletech
+one touch => onetouch
+select simple => selectsimple
+accu check => accu-check
+free style => freestyle
+dr gene => dr.gene
+
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
@@ -16,4 +17,6 @@ public interface ShippingOrderLifecycleDao extends BaseDao {
     public List<ShippingOrderLifeCycleActivity> getOrderActivities(List<EnumShippingOrderLifecycleActivity> enumShippingOrderActivities);
 
     List<ShippingOrderLifecycle> getShippingOrderLifecycleBySOAndActivities(Long shippingOrderId, List<Long> shippingOrderLifeCycleActivityIds);
+
+    List<Reason> getReasonsByType(String type);
 }

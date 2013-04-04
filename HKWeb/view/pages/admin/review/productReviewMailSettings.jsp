@@ -28,7 +28,7 @@
                         </c:if>
                     </li>
                     <li>
-                        <label>Days To Mail After*</label>
+                        <label>Days To Mail After Delivery*</label>
                         <s:text name="productReviewMail.timeWindowDays"  />
                     </li>
                     <li>

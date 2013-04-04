@@ -101,6 +101,10 @@
     <td><b>Contact Number</b></td>
     <td>${debitNoteSummary.debitNote.supplier.contactNumber}</td>
   </tr>
+    <tr>
+        <td><b>Tin</b></td>
+        <td>${debitNoteSummary.debitNote.supplier.tinNumber}</td>
+    </tr>
 </table>
 
 <br/>

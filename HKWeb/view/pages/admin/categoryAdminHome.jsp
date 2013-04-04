@@ -119,10 +119,8 @@
         <div class="float roundBox">
             <h2>Action Queue</h2>
 
-            <c:if test="${whAction.setWarehouse == null}">
                 <h3><s:link
                         beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
-            </c:if>
         </div>
 
         <div class="cl"></div>

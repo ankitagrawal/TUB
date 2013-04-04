@@ -63,8 +63,9 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
     }
 
 
-    public void sendDueEmails(){
+    public int sendDueEmails(){
         List<UserReviewMail> userList = userReviewMailService.getAllUserReviewMailByDueDate(new Date());
+        int noOfEmailsSent = 0;
         UserReview userReview;
         boolean mailSent;
         if(userList != null){
@@ -80,9 +81,11 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                             //if(latestUserReviewMail == null || (userReviewMail.getDueDate().getTime()-latestUserReviewMail.getSentDate().getTime() >= 24*3600*1000*productReviewMail.getDaysToSendReviewMailAgain())){
                                 mailSent = getEmailManager().sendProductReviewEmail(userReviewMail.getUser(), userReviewMail.getProductVariant(), mail, null,userReviewMail.getId());
                                 if(mailSent){
+                                    noOfEmailsSent++;
                                     userReviewMail.setSentDate(BaseUtils.getCurrentTimestamp());
                                     userReviewMail.setIsMailSent(true);
                                     userReviewMailService.save(userReviewMail);
+                                    logger.info("Email sent to " + userReviewMail.getUser() + " for product variant "+ userReviewMail.getProductVariant());
                                 }
 //                            }else{
 //                                userReviewMail.setDueDate(BaseUtils.getFutureTimestamp(userReviewMail.getDueDate().getTime()-latestUserReviewMail.getSentDate().getTime()));
@@ -94,7 +97,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
                         }
                     }
                 }else{
-                    logger.info(userReviewMail.getUser() + "is not subscribed");
+                    logger.info(userReviewMail.getUser() + "is not subscribed or user has already reviewed this product");
                 }
                 if(!userReviewMail.getIsMailSent()){
                     userReviewMail.setIsExpired(true);
@@ -104,6 +107,7 @@ public class ReviewCollectionFrameworkServiceImpl implements ReviewCollectionFra
         }else{
             logger.info("No user to email today");
         }
+        return noOfEmailsSent;
     }
 
     public void doUserEntryForReviewMail(Order order){
