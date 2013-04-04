@@ -266,6 +266,10 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     }
 
+    public void updateProductVariantsTryOn(String id, Long variantTryOnId){
+
+    }
+
 
     public List<VariantConfig> getAllVariantConfig() {
         return getAll(VariantConfig.class);
