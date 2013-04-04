@@ -592,7 +592,7 @@ public class Functions {
             Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order);
             long minDays = dispatchDays[0], maxDays = dispatchDays[1];
 
-            if (minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MIN_DEL_DAYS) {
+            if (minDays == OrderUtil.DEFAULT_MIN_DEL_DAYS && maxDays == OrderUtil.DEFAULT_MAX_DEL_DAYS) {
                 return DEFAULT_DELIEVERY_DAYS.concat(BUSINESS_DAYS);
             }
             return String.valueOf(minDays).concat("-").concat(String.valueOf(maxDays)).concat(BUSINESS_DAYS);

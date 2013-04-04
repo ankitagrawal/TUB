@@ -34,4 +34,32 @@ public class PaymentStatusDaoImpl extends BaseDaoImpl implements PaymentStatusDa
 
         return findByCriteria(criteria);
     }
+
+    @Override
+    public List<PaymentStatus> listActionablePaymentStatuses() {
+        List<Long> paymentStatusIds = new ArrayList<Long>();
+
+        paymentStatusIds.add(EnumPaymentStatus.AUTHORIZATION_PENDING.getId());
+        paymentStatusIds.add(EnumPaymentStatus.REQUEST.getId());
+        paymentStatusIds.add(EnumPaymentStatus.ERROR.getId());
+
+        DetachedCriteria criteria = DetachedCriteria.forClass(PaymentStatus.class);
+        criteria.add(Restrictions.in("id", paymentStatusIds));
+
+        return findByCriteria(criteria);
+    }
+
+    @Override
+    public List<PaymentStatus> listSuccessfulPaymentStatuses() {
+        List<Long> paymentStatusIds = new ArrayList<Long>();
+
+        paymentStatusIds.add(EnumPaymentStatus.SUCCESS.getId());
+        paymentStatusIds.add(EnumPaymentStatus.ON_DELIVERY.getId());
+
+        DetachedCriteria criteria = DetachedCriteria.forClass(PaymentStatus.class);
+        criteria.add(Restrictions.in("id", paymentStatusIds));
+
+        return findByCriteria(criteria);
+
+    }
 }
