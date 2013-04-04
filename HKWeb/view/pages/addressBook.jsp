@@ -54,7 +54,7 @@
 </s:layout-component>
 
 <s:layout-component name="steps">
-    <div class='logoBox' style="z-index: 5000;float:left;top: 50px; left: 12px;position: relative;">
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
         <s:link href="/" title='go to healthkart home'>
             <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
         </s:link>
