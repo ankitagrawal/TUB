@@ -265,41 +265,40 @@
 --/sports/fab-corner/league-of-innovations
 --/sports/fab-corner/new-arrivals
 
-
+/diabetes
+-/diabetes/devices : Monitoring Devices
+--/diabetes/devices/meters : Glucose Meters
+--/diabetes/devices/bp-monitor : BP Monitors
+--/diabetes/devices/body-fat-monitor: Body Fat Monitors
+--/diabetes/devices/step-counter: Step Counters
+-/diabetes/testing-supplies
+--/diabetes/testing-supplies/strips
+--/diabetes/testing-supplies/lancets
+--/diabetes/testing-supplies/lancing-devices
+--/diabetes/testing-supplies/insulin-supplies
+-/diabetes/diabetic-food
+--/diabetes/diabetic-food/sweetener
+--/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
+--/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
+--/diabetes/diabetic-food/diabetic-supplements
+-/diabetes/weight-management
+--/diabetes/weight-management/weighing-scales : Weighing Scales
+--/diabetes/weight-management/body-fat-monitor
+--/diabetes/weight-management/treadmills
+--/diabetes/weight-management/step-counter
+--/diabetes/weight-management/low-calorie-diet
+-/diabetes/foot-care
+--/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
+--/diabetes/foot-care/sock-and-slippers : Shoes & Slippers
+--/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
+--/diabetes/foot-care/guards-and-supports : Guards & Supports
+-/diabetes/what-s-new : What's New
+--/diabetes/what-s-new/just-in  :Just In
+--/diabetes/what-s-new/combos
+--/diabetes/what-s-new/diabetes-checkups : Diabetes Checkups
+--/diabetes/what-s-new/diabetes-management : Diabetes Management
 
 /health-devices : Health Devices
--/health-devices/diabetes
---/health-devices/diabetes/devices : Monitoring Devices
----/health-devices/diabetes/devices/meters : Glucose Meters
----/health-devices/diabetes/devices/bp-monitor : BP Monitors
----/health-devices/diabetes/devices/body-fat-monitor: Body Fat Monitors
----/health-devices/diabetes/devices/step-counter: Step Counters
---/health-devices/diabetes/testing-supplies
----/health-devices/diabetes/testing-supplies/strips
----/health-devices/diabetes/testing-supplies/lancets
----/health-devices/diabetes/testing-supplies/lancing-devices
----/health-devices/diabetes/testing-supplies/insulin-supplies
---/health-devices/diabetes/diabetic-food
----/health-devices/diabetes/diabetic-food/sweetener
----/health-devices/diabetes/diabetic-food/sugar-free-drinks : Sugar Free Drinks
----/health-devices/diabetes/diabetic-food/sugar-free-food-candy : Sugar Free Food
----/health-devices/diabetes/diabetic-food/diabetic-supplements
---/health-devices/diabetes/weight-management
----/health-devices/diabetes/weight-management/weighing-scales : Weighing Scales
----/health-devices/diabetes/weight-management/body-fat-monitor
----/health-devices/diabetes/weight-management/treadmills
----/health-devices/diabetes/weight-management/step-counter
----/health-devices/diabetes/weight-management/low-calorie-diet
---/health-devices/diabetes/foot-care
----/health-devices/diabetes/foot-care/insoles-and-heelcups : Insoles & Heel Cups
----/health-devices/diabetes/foot-care/sock-and-slippers : Socks & Slippers
----/health-devices/diabetes/foot-care/neat-and-fresh-feet : Neat & Fresh Feet
----/health-devices/diabetes/foot-care/guards-and-supports : Guards & Supports
---/health-devices/diabetes/what-s-new : What's New
----/health-devices/diabetes/what-s-new/just-in  :Just In
----/health-devices/diabetes/what-s-new/combos
----/health-devices/diabetes/what-s-new-/health-devices/diabetes-checkups : Diabetes Checkups
----/health-devices/diabetes/what-s-new-/health-devices/diabetes-management : Diabetes Management
 -/health-devices/blood-pressure
 --/health-devices/blood-pressure/arm-bp-monitor : Arm BP Monitor
 --/health-devices/blood-pressure/wrist-bp-monitor : Wrist BP Monitor
@@ -310,27 +309,35 @@
 ---/health-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
 ---/health-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
 --/health-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
---/health-devices/blood-pressure/ecg : ECG Machines
 --/health-devices/blood-pressure/accessories : BP Accessories
 --/health-devices/blood-pressure/combo : BP Combos
 -/health-devices/respiratory-care
+--/health-devices/respiratory-care/vaporiser : Vaporiser
+--/health-devices/respiratory-care/sleep-apnea
+---/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
+---/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
 --/health-devices/respiratory-care/nebulizer: Nebulizers
 ---/health-devices/respiratory-care/nebulizer/compressor-nebulizer: Compressor
 ---/health-devices/respiratory-care/nebulizer/ultrasonic-nebulizer: Ultrasonic
 ---/health-devices/respiratory-care/nebulizer/nebulizer-for-kids: Kids Nebulizer
 --/health-devices/respiratory-care/oxygen-concentrator : Oxygen Concentrators
+--/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
 --/health-devices/respiratory-care/pulse-oximeters : Pulse Oximeters
 ---/health-devices/respiratory-care/pulse-oximeters/fingertip-oximeter: Finger Tip
 ---/health-devices/respiratory-care/pulse-oximeters/Wrist-oximeter: Wrist
 ---/health-devices/respiratory-care/pulse-oximeters/handheld-oximeter: Handheld
---/health-devices/respiratory-care/sleep-apnea
----/health-devices/respiratory-care/sleep-apnea/cpap-machines : CPAP Machines
----/health-devices/respiratory-care/sleep-apnea/bipap-machines : BiPAP Machines
----/health-devices/respiratory-care/sleep-apnea/nasal-face-masks : Nasal Face Masks
---/health-devices/respiratory-care/lung-exerciser: Lung Exercisers
---/health-devices/respiratory-care/vaporiser : Vaporiser
 -/health-devices/pain-management : Pain Management
---/health-devices/pain-management/crepe-bandages
+--/health-devices/pain-management/massager : Massagers
+---/health-devices/pain-management/massager/handheld
+---/health-devices/pain-management/massager/abdominal-massager : Abdominal
+---/health-devices/pain-management/massager/back-massager : Back
+---/health-devices/pain-management/massager/foot-massager : Foot
+--/health-devices/pain-management/pain-relief : Pain Relief
+---/health-devices/pain-management/pain-relief/pain-therapy
+---/health-devices/pain-management/pain-relief/hot-cold-pack
+---/health-devices/pain-management/pain-relief/heat-therapy
+---/health-devices/pain-management/pain-relief/infrared-massager
 --/health-devices/pain-management/supports : Body Supports
 ---/health-devices/pain-management/supports/cervical-support : Cervical
 ---/health-devices/pain-management/supports/shoulder-support : Shoulder
@@ -347,21 +354,34 @@
 ---/health-devices/pain-management/leg-supports/ankle-support : Ankle
 ---/health-devices/pain-management/leg-supports/foot-support : Foot
 --/health-devices/pain-management/fracture-products : Fracture
---/health-devices/pain-management/massager : Massagers
----/health-devices/pain-management/massager/handheld
----/health-devices/pain-management/massager/abdominal-massager : Abdominal
----/health-devices/pain-management/massager/back-massager : Back
----/health-devices/pain-management/massager/foot-massager : Foot
---/health-devices/pain-management/pain-relief : Pain Relief
----/health-devices/pain-management/pain-relief/pain-therapy
----/health-devices/pain-management/pain-relief/hot-cold-pack
----/health-devices/pain-management/pain-relief/heat-therapy
----/health-devices/pain-management/pain-relief/infrared-massager
+--/health-devices/pain-management/crepe-bandages
 --/health-devices/pain-management/physiotherapy-aids
 ---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
 -/health-devices/medical-care : Medical Care
+--/health-devices/medical-care/weighing-scales
+---/health-devices/medical-care/weighing-scales/digital
+---/health-devices/medical-care/weighing-scales/analog
+--/health-devices/medical-care/wheel-chair
+---/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
+---/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
+---/health-devices/medical-care/wheel-chair/commode : Commode
+--/health-devices/medical-care/walking-aids
+---/health-devices/medical-care/walking-aids/walking-sticks
+---/health-devices/medical-care/walking-aids/crutches
+---/health-devices/medical-care/walking-aids/walkers
+--/health-devices/medical-care/winter-care
+---/health-devices/medical-care/winter-care/blankets
+---/health-devices/medical-care/winter-care/vaporiser : Steamer
+---/health-devices/medical-care/winter-care/hot-water-bottles
+--/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
+---/health-devices/medical-care/heat-treatment/hot-water-bottles
+---/health-devices/medical-care/heat-treatment/heating-pads
+---/health-devices/medical-care/heat-treatment/hot-cold-pack
+--/health-devices/medical-care/bed : Mattress
+---/health-devices/medical-care/bed/air-bed : Air Bed
+---/health-devices/medical-care/bed/water-bed : Water Bed
 --/health-devices/medical-care/family-care
 ---/health-devices/medical-care/family-care/first-aid
 ---/health-devices/medical-care/family-care/medicine : Medicine Management
@@ -387,28 +407,6 @@
 ---/health-devices/medical-care/baby-care/strollers
 ---/health-devices/medical-care/baby-care/walkers
 ---/health-devices/medical-care/baby-care/stature-meter
---/health-devices/medical-care/winter-care
----/health-devices/medical-care/winter-care/blankets
----/health-devices/medical-care/winter-care/vaporiser : Steamer
----/health-devices/medical-care/winter-care/hot-water-bottles
---/health-devices/medical-care/heat-treatment : Heat/Cold Treatment
----/health-devices/medical-care/heat-treatment/hot-water-bottles
----/health-devices/medical-care/heat-treatment/heating-pads
----/health-devices/medical-care/heat-treatment/hot-cold-pack
---/health-devices/medical-care/weighing-scales
----/health-devices/medical-care/weighing-scales/digital
----/health-devices/medical-care/weighing-scales/analog
---/health-devices/medical-care/walking-aids
----/health-devices/medical-care/walking-aids/walking-sticks
----/health-devices/medical-care/walking-aids/crutches
----/health-devices/medical-care/walking-aids/walkers
---/health-devices/medical-care/wheel-chair
----/health-devices/medical-care/wheel-chair/power-wheel-chairs: Power
----/health-devices/medical-care/wheel-chair/manual-wheel-chairs: Manual
----/health-devices/medical-care/wheel-chair/commode : Commode
---/health-devices/medical-care/bed : Mattress
----/health-devices/medical-care/bed/air-bed : Air Bed
----/health-devices/medical-care/bed/water-bed : Water Bed
 -/health-devices/clinical-products
 --/health-devices/clinical-products/stethoscope
 ---/health-devices/clinical-products/stethoscope/general
@@ -437,41 +435,6 @@
 ---/health-devices/clinical-products/devices/fetal-doppler
 ---/health-devices/clinical-products/devices/suction-devices
 ---/health-devices/clinical-products/devices/knee-hammer
-
-/home-living:Home & Living
--/home-living/breakfast-maker:Breakfast Maker
---/home-living/breakfast-maker/sandwich-toaster:Sandwich Toaster
---/home-living/breakfast-maker/toaster:Pop-up Toaster
---/home-living/breakfast-maker/coffee-maker:Coffee Maker
---/home-living/breakfast-maker/kettles:Kettles
--/home-living/mix-grind-chop:Mix,Grind & Chop
---/home-living/mix-grind-chop/juicer-mixer-grinder:Juicer Mixer Grinder
----/home-living/mix-grind-chop/juicer-mixer-grinder/juicer:Juicer
----/home-living/mix-grind-chop/juicer-mixer-grinder/mixer-grinder:Mixer Grinder 
----/home-living/mix-grind-chop/juicer-mixer-grinder/jmg:Juicer Mixer Grinder
---/home-living/mix-grind-chop/hand-blender:Hand Blender
---/home-living/mix-grind-chop/food-processor:Food Processor
---/home-living/mix-grind-chop/chopper:Chopper
--/home-living/clean-Purify:Clean & Purify
---/home-living/clean-Purify/vaccum-cleaner:Vaccum Cleaner
---/home-living/clean-Purify/water-purifier:Water Purifier
---/home-living/clean-Purify/veg-purifier:Vegetable Purifier
--/home-living/cook-fry:Cook & Fry
---/home-living/cook-fry/induction-cooktop:Induction Cooktop
---/home-living/cook-fry/cooker:Cooker
----/home-living/cook-fry/cooker/rice-cooker:Rice Cooker
----/home-living/cook-fry/cooker/Pressure-cooker:Pressure Cooker
---/home-living/cook-fry/steamer-fryer:Steamer & Fryer
---/home-living/cook-fry/microwave:Microwave & OTG
----/home-living/cook-fry/microwave/solo:Solo
----/home-living/cook-fry/microwave/grill:Grill
----/home-living/cook-fry/microwave/convection:Convection
----/home-living/cook-fry/microwave/OTG:OTG
--/home-living/iron-lights:Home Appliances
---/home-living/iron-lights/iron:Iron
----/home-living/iron-lights/iron/dry:Dry Iron
----/home-living/iron-lights/iron/steam:Steam Iron
---/home-living/iron-lights/lights:Emergency Light
 
 /eye
 -/eye/lenses
@@ -644,7 +607,6 @@
 --/personal-care/misc/pain-relief : Pain Relief
 --/personal-care/misc/air-freshener : Air Freshener
 --/personal-care/misc/buds
---/personal-care/misc/cotton-balls     :     Cotton Balls
 
 /beauty
 -/beauty/what-s-new: What's New
@@ -947,7 +909,7 @@
 
 /services
 -/services/health-checkups
---/services/health-checkups-/health-devices/diabetes
+--/services/health-checkups/diabetes
 --/services/health-checkups/thyroid
 ---/services/health-checkups/thyroid/combos
 --/services/health-checkups/complete-health-checkups :Complete Health Checkups
@@ -970,7 +932,7 @@
 --/services/health-programs/physiotherapy
 --/services/health-programs/eye
 --/services/health-programs/dental
---/services/health-programs-/health-devices/diabetes-management  :Diabetes Management
+--/services/health-programs/diabetes-management  :Diabetes Management
 --/services/health-programs/elderly-care :Elderly Care
 --/services/health-programs/health-management :Health Management
 ---/services/health-programs/health-management/men
