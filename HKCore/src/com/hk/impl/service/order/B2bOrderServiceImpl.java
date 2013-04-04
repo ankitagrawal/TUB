@@ -1,6 +1,6 @@
 package com.hk.impl.service.order;
 
-import com.hk.domain.order.B2bOrderChecklist;
+import com.hk.domain.order.B2BOrderChecklist;
 import com.hk.domain.order.Order;
 import com.hk.pact.dao.user.B2bOrderDao;
 import com.hk.pact.service.order.B2BOrderService;
@@ -16,15 +16,14 @@ public class B2bOrderServiceImpl implements B2BOrderService {
   @Override
   public boolean checkCForm(Order order) {
     if (order != null && order.isB2bOrder() == true) {
-      if (getB2bOrderDao().getB2bOrderChecklist(order) != null)
-        return true;
+        return getB2bOrderDao().getB2bOrderChecklist(order).isCForm();
     }
     return false;
   }
 
   @Override
-  public void saveB2BOrder(B2bOrderChecklist checkList) {
-    getB2bOrderDao().save(checkList);
+  public void saveB2BOrder(B2BOrderChecklist checkList) {
+    getB2bOrderDao().saveB2BOrderChecklist(checkList);
   }
 
 

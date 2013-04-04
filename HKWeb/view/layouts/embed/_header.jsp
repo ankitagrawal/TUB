@@ -140,6 +140,12 @@
                 <%
                   }
                 %>
+                <shiro:hasAnyRoles name="<%=RoleConstants.B2B_USER%>">
+                 <s:link beanclass = "com.hk.web.action.core.b2b.B2BBulkOrderAction" class="sml" rel="noFollow">B2B Home</s:link> |
+                
+                </shiro:hasAnyRoles>
+               
+                
                 <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
                         rel="noFollow">Logout</s:link>
               </shiro:lacksRole>

@@ -9,10 +9,15 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "b2b_order_checklist")
-public class B2bOrderChecklist implements java.io.Serializable {
+public class B2BOrderChecklist implements java.io.Serializable {
 
 
-  @Id
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+@Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", unique = true, nullable = false)
   private Long id;

@@ -1,4 +1,4 @@
-package com.hk.web.action.core.b2b;
+package com.hk.domain.order;
 
 public class B2BProduct {
 	

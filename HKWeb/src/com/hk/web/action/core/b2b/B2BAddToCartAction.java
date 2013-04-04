@@ -13,9 +13,12 @@ import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.FileBean;
+import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
 import net.sourceforge.stripes.validation.ValidationMethod;
@@ -34,12 +37,14 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.matcher.CartLineItemMatcher;
-import com.hk.domain.order.B2bOrderChecklist;
+import com.hk.domain.order.B2BOrderChecklist;
+import com.hk.domain.order.B2BProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.exception.OutOfStockException;
+import com.hk.manager.B2BOrderManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.combo.ComboInstanceDao;
@@ -68,7 +73,7 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 
 	private static Logger logger = LoggerFactory.getLogger(AddToCartAction.class);
 
-	List<ProductVariant> productVariantList;
+	private List<ProductVariant> productVariantList;
 	Combo combo;
 
 	@Autowired
@@ -96,6 +101,7 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 	SignupAction signupAction;
 	@Autowired
 	private ProductVariantService productVariantService;
+	
 
 	private boolean variantConfigProvided;
 
@@ -115,16 +121,13 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 	private boolean cFormAvailable;
 	@Autowired
 	ProductVariantInventoryDao productVariantInventoryDao;
-	
+
 	@Autowired
 	B2BOrderService b2bOrderService;
 
 	private Order order;
+
 	
-	private FileBean fileBean;
-	
-	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
-    String                              adminUploadsPath;
 
 	@DefaultHandler
 	@JsonHandler
@@ -141,10 +144,9 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 		}
 
 		order = orderManager.getOrCreateOrder(user);
-		//cFormAvailable = getB2bOrderService().checkCForm(order);
+		// cFormAvailable = getB2bOrderService().checkCForm(order);
 		Map dataMap = new HashMap();
 		HealthkartResponse healthkartResponse;
-		List<String> notAvailableList = new ArrayList<String>();
 		try {
 
 			b2bProductList.removeAll(Collections.singleton(null));
@@ -182,12 +184,11 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 				}
 			}
 
-			B2bOrderChecklist b2bOrderCheckList = new B2bOrderChecklist();
+			B2BOrderChecklist b2bOrderCheckList = new B2BOrderChecklist();
 			b2bOrderCheckList.setBaseOrder(order);
 			b2bOrderCheckList.setCForm(iscFormAvailable());
 			getB2bOrderService().saveB2BOrder(b2bOrderCheckList);
-			
-			
+
 			List<ProductVariant> variants = new ArrayList<ProductVariant>();
 			for (B2BProduct b2bProduct : b2bProductList) {
 				CartLineItem cartLineItem = cartMap.get(b2bProduct.getProductId());
@@ -206,7 +207,6 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 			}
 
 			orderManager.createLineItems(variants, order, null, null, null);
-			
 
 		} catch (OutOfStockException e) {
 			getContext().getValidationErrors().add("e2", new SimpleError(e.getMessage()));
@@ -226,29 +226,10 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
 		return new JsonResolution(healthkartResponse);
 
 	}
+
 	
-	
-	@ValidationMethod(on = "parse")
-    public void validateOnParse() {
-        if (fileBean == null) {
-            getContext().getValidationErrors().add("1", new SimpleError("Please select a file to upload."));
-        }
-    }
-	
-	public Resolution parse(){
-		String excelFilePath = adminUploadsPath + "/deliveryStatus/" + System.currentTimeMillis() + ".xls";
-        File excelFile = new File(excelFilePath);
-        excelFile.getParentFile().mkdirs();
-        try {
-			fileBean.save(excelFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        Map dataMap = new HashMap();
-        HealthkartResponse healthkartResponse = new HealthkartResponse("null_exception",
-				"Cart could not be updated | Invalid Product Ids", dataMap);
-		return new JsonResolution(healthkartResponse);
+	public Resolution cancel() {
+		return new RedirectResolution(B2BBulkOrderAction.class);
 	}
 
 	public boolean iscFormAvailable() {

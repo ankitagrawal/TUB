@@ -64,7 +64,6 @@ public class AssumedLoginAction extends BaseAction {
         if(user.getRoles().contains(getRoleService().getRoleByName(EnumRole.B2B_USER.getRoleName())))
         {
         	 return new RedirectResolution(B2BBulkOrderAction.class);
-        	
         }
         return new RedirectResolution(HomeAction.class);
     }
