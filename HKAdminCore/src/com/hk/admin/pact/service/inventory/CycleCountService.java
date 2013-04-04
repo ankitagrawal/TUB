@@ -1,5 +1,6 @@
 package com.hk.admin.pact.service.inventory;
 
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
@@ -8,8 +9,6 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.inventory.BrandsToAudit;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.akube.framework.dao.Page;
 
 import java.util.List;
@@ -29,6 +28,10 @@ public interface CycleCountService {
 
     public CycleCount save(CycleCount cycleCount);
 
+    public  CycleCount createAndSaveNewCycleCount(CycleCount cycleCount);
+
+    public List<CycleCount> getCycleCountInProgress(String brand , Product product, ProductVariant productVariant, Warehouse warehouse);
+
     //CycleCountItem methods
 
     public CycleCountItem save(CycleCountItem cycleCountItem);
@@ -36,8 +39,6 @@ public interface CycleCountService {
     public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem);
 
     public Page searchCycleList(String auditBy, Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage);
-
-    public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList, Product product, ProductVariant productVariant, Warehouse warehouse);
 
     public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem, CycleCount cycleCount, Integer qty);
 
@@ -47,8 +48,8 @@ public interface CycleCountService {
 
     public void deleteAllCycleCountItemsOfProductVariant(CycleCount cycleCount, ProductVariant productVariant);
 
-    public List<String> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse);
+    public List<CycleCountDto> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse);
 
-    public List<AuditDto>  inProgressCycleCounts(Warehouse warehouse);
+    public List<CycleCountDto>  inProgressCycleCounts(Warehouse warehouse);
 
 }

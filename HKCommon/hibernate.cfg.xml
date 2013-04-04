@@ -154,7 +154,7 @@
         <mapping class="com.hk.domain.courier.CourierGroup"/>
         <mapping class="com.hk.domain.order.PrimaryReferrerForOrder"/>
         <mapping class="com.hk.domain.order.SecondaryReferrerForOrder"/>
-        <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
+        <!--<mapping class="com.hk.domain.inventory.BrandsToAudit"/>-->
         <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
         <mapping class="com.hk.domain.hkDelivery.Consignment"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>

@@ -1,10 +1,12 @@
 package com.hk.impl.dao.catalog.product;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
-import com.hk.domain.inventory.BrandsToAudit;
+import com.hk.domain.cycleCount.CycleCount;
+
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.constants.inventory.EnumAuditStatus;
@@ -42,10 +44,12 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
 		return null;
 	}
 
+    //Seema
 	public boolean isBrandAudited(String brand) {
-		String queryString = "from BrandsToAudit ba where ba.brand = :brand and ba.auditStatus = :auditStatus";
-		List<BrandsToAudit> brandsToAuditList = findByNamedParams(queryString, new String[]{"brand", "auditStatus"}, new Object[]{brand, EnumAuditStatus.Done.getId()});
-		if (!brandsToAuditList.isEmpty()) {
+        List<Long> cycleCountOpenStatusList = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
+		String queryString = "from CycleCount cc where cc.brand = :brand and cc.cycleStatus in (:cycleCountOpenStatus) ";
+		List<CycleCount> cycleCountList = findByNamedParams(queryString, new String[]{"brand", "cycleCountOpenStatus"}, new Object[]{brand.trim(), cycleCountOpenStatusList});
+		if (cycleCountList != null && (!cycleCountList.isEmpty())) {
 			return true;
 		}
 		return false;

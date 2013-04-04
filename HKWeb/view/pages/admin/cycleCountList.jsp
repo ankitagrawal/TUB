@@ -48,8 +48,8 @@
 			</thead>
 			<c:forEach items="${cc.cycleCountList}" var="cycleCountV" varStatus="ctr">
 				<c:set value="" var="auditOn"/>
-				<c:if test="${cycleCountV.brandsToAudit != null}">
-				 <c:set value="${cycleCountV.brandsToAudit.brand}" var="auditOn"/>
+				<c:if test="${cycleCountV.brand != null}">
+				 <c:set value="${cycleCountV.brand}" var="auditOn"/>
 				</c:if>
 				<c:if test="${cycleCountV.product != null}">
 				 <c:set value="${cycleCountV.product.id}" var="auditOn"/>
@@ -77,8 +77,9 @@
 						<c:set value="<%=EnumCycleCountStatus.InProgress.getId()%>" var="inProgress"/>
 						<c:choose>
 							<c:when test="${cycleCountV.cycleStatus == inProgress}">
+                                <!-- seema - change event= directToCycleCountPage to event= view --!>
 								<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction"
-								        event="directToCycleCountPage"> 									
+								        event="view">
 									<s:param name="cycleCount" value="${cycleCountV.id}"/>
 									<span style="color:brown;">Edit Cycle Count</span>
 								</s:link>

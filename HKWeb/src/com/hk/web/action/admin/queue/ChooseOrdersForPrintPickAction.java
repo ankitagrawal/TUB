@@ -2,7 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
@@ -48,10 +48,10 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
-    @Autowired
-    private BrandsToAuditDao brandsToAuditDao;
+
     @Autowired
     CycleCountService cycleCountService;
+
 
     @Autowired
     CategoryDao categoryDao;
@@ -163,7 +163,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
         shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 60);
         // shippingOrdersList = shippingOrdersPage.getList();
-        shippingOrdersList = filterShippingOrdersByBrandAndVariant(shippingOrdersPage);
+        shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
         return shippingOrdersList;
     }
 
@@ -218,60 +218,40 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         return searchOrdersForPrinting();
     }
 
-    private List<ShippingOrder> filterShippingOrdersByBrandAndVariant(Page shippingOrdersPage) {
+    private List<ShippingOrder> filterShippingOrdersByBrand(Page shippingOrdersPage) {
         List<ShippingOrder> shippingOrdersTempList = shippingOrdersPage.getList();
-        List<String> brandsToExclude = new ArrayList<String>();
-        List<String> cycleCountInProgressForVariantAndBrand = new ArrayList<String>();
+        List<String> brandsToExcludeList = new ArrayList<String>();
+        List<String> productsToExcludeList = new ArrayList<String>();
+        List<String> variantsToExcludeList = new ArrayList<String>();
         if (getPrincipalUser() != null) {
-            //brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
             Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
-            cycleCountInProgressForVariantAndBrand = cycleCountService.inProgressCycleCounts(warehouse);
-
+            List<CycleCountDto> cycleCountDtoList = cycleCountService.inProgressCycleCounts(warehouse);
+            brandsToExcludeList = CycleCountDto.getCycleCountInProgressForBrand(cycleCountDtoList);
+            productsToExcludeList = CycleCountDto.getCycleCountInProgressForProduct(cycleCountDtoList);
+            variantsToExcludeList = CycleCountDto.getCycleCountInProgressForVariant(cycleCountDtoList);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
             if (shippingOrdersList.size() == 10) {
                 break;
             }
-            List<AuditDto> auditDtoList;
+            boolean shouldAdd = true;
             for (LineItem lineItem : shippingOrder.getLineItems()) {
                 String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
-                String variantId = lineItem.getSku().getProductVariant().getId();
                 String productId = lineItem.getSku().getProductVariant().getProduct().getId();
-
-
-                for(AuditDto auditDto : auditDtoList ){
-
-                    if(auditDto.getBrand() is
-                    auditDto.getProductId();
-                    auditDto.getProductVariantId();
-
-
-
-                }
-
-                if (cycleCountInProgressForVariantAndBrand.contains(variantId)) {
-                    shouldAdd = false;
-                    break;
-                }
-            }
-            if (shouldAdd) {
-                shippingOrdersList.add(shippingOrder);
-            }
-        }
-
-
-
-
-        boolean shouldAdd = true;
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                String brandName = lineItem.getSku().getProductVariant().getProduct().getBrand();
                 String variantId = lineItem.getSku().getProductVariant().getId();
 
-                if (StringUtils.isNotBlank(brandName) && cycleCountInProgressForVariantAndBrand.contains(brandName.toLowerCase())) {
+
+                if (StringUtils.isNotBlank(brandName) && brandsToExcludeList.contains(brandName.toLowerCase())) {
                     shouldAdd = false;
                     break;
                 }
-                if (cycleCountInProgressForVariantAndBrand.contains(variantId)) {
+
+                if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {
+                    shouldAdd = false;
+                    break;
+                }
+
+                if (StringUtils.isNotBlank(variantId) && variantsToExcludeList.contains(variantId)) {
                     shouldAdd = false;
                     break;
                 }
@@ -383,14 +363,6 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
 
     public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public BrandsToAuditDao getBrandsToAuditDao() {
-        return brandsToAuditDao;
-    }
-
-    public void setBrandsToAuditDao(BrandsToAuditDao brandsToAuditDao) {
-        this.brandsToAuditDao = brandsToAuditDao;
     }
 
     public Date getStartDate() {

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -24,7 +26,6 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.PermissionConstants;
@@ -100,9 +101,8 @@ public class InventoryCheckoutAction extends BaseAction {
     @Autowired
     BinManager binManager;
     @Autowired
-    BrandsToAuditDao brandsToAuditDao;
-    @Autowired
     CycleCountService cycleCountService;
+
 
     private ShippingOrder shippingOrder;
 
@@ -132,29 +132,46 @@ public class InventoryCheckoutAction extends BaseAction {
         } else {
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();
+
             if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
                 Boolean checkedOut = getAdminInventoryService().areAllUnitsOfOrderCheckedOut(shippingOrder);
                 if (checkedOut) {
                     shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_CheckedOut));
                     getShippingOrderService().save(shippingOrder);
                 } else {
-                     // If eligible for checkout , check for In progress Cycle Count
-                    List<String> cycleCountInProgressListByBrandVariant = cycleCountService.inProgressCycleCounts(shippingOrder.getWarehouse());
-                    for (LineItem lineItem : pickingLIs) {
-                        ProductVariant variant = lineItem.getSku().getProductVariant();
-                        String brand = variant.getProduct().getBrand();
-                        if (cycleCountInProgressListByBrandVariant.contains(brand.toLowerCase())) {
-                            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
-                            return new RedirectResolution(InventoryCheckoutAction.class);
-                        }
 
-                        if (cycleCountInProgressListByBrandVariant.contains(variant.getId())) {
-                            addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count In Progress  For :  " + variant.getId()));
-                            return new RedirectResolution(InventoryCheckoutAction.class);
+                    //Audit of Any Variant,product and brand in shipping order should not be in progress
+                    Warehouse warehouse = shippingOrder.getWarehouse();
+                    List<CycleCountDto> cycleCountDtoList = cycleCountService.inProgressCycleCounts(warehouse);
+                    if (cycleCountDtoList.size() > 0) {
+                        List<String> brandsToExcludeList = CycleCountDto.getCycleCountInProgressForBrand(cycleCountDtoList);
+                        List<String> productsToExcludeList = CycleCountDto.getCycleCountInProgressForProduct(cycleCountDtoList);
+                        List<String> variantsToExcludeList = CycleCountDto.getCycleCountInProgressForVariant(cycleCountDtoList);
+                        StringBuilder cycleCountNeedTobeClose = new StringBuilder(" Cycle Count In Progress For  :").append("<br/>");
+                        for (LineItem lineItem : pickingLIs) {
+                            String brand = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                            String productId = lineItem.getSku().getProductVariant().getProduct().getId();
+                            String variantId = lineItem.getSku().getProductVariant().getId();
+
+                            if (StringUtils.isNotBlank(brand) && brandsToExcludeList.contains(brand.toLowerCase())) {
+                                cycleCountNeedTobeClose.append(brand).append("<br/>");
+                            }
+
+                            if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {
+                                cycleCountNeedTobeClose.append(productId).append("<br/>");
+                            }
+
+                            if (StringUtils.isNotBlank(variantId) && variantsToExcludeList.contains(variantId)) {
+                                cycleCountNeedTobeClose.append(variantId).append("<br/>");
+                            }
+
                         }
+                        addRedirectAlertMessage(new SimpleMessage(cycleCountNeedTobeClose.toString()));
+                        return new RedirectResolution(InventoryCheckoutAction.class);
                     }
-
                 }
+
+
                 return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
             }
         }
@@ -205,7 +222,14 @@ public class InventoryCheckoutAction extends BaseAction {
                     productVariant = productVariantDao.getVariantById(upc);// UPC not available must have entered
                     // Variant Id
                 }
+
                 logger.debug("productVariant: " + productVariant);
+                if (productVariant == null) {
+                    addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
+                    upc = null;
+                }
+                /*
+                Code commented by seema : no use of it
                 if (productVariant != null) {
                     boolean isBrandAudited = brandsToAuditDao.isBrandAudited(productVariant.getProduct().getBrand(), userService.getWarehouseForLoggedInUser());
                     if (isBrandAudited) {
@@ -221,6 +245,7 @@ public class InventoryCheckoutAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
                     upc = null;
                 }
+                */
             }
 
         } else {

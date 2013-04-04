@@ -16,7 +16,7 @@
     %>
     <div style="text-align: center;">
         CYCLE COUNT # ${cycle.cycleCount.id}
-        BRAND : ${cycle.cycleCount.brandsToAudit.brand}
+        BRAND : ${cycle.cycleCount.brand}
     </div>
 
     <script type="text/javascript">
@@ -324,7 +324,7 @@
     <div style="text-align: center;margin-top: 70px;">
         <s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction">
             <s:hidden name="cycleCount" value="${cycle.cycleCount.id}"/>
-            <c:if test="${cycle.cycleCount.brandsToAudit != null}">
+            <c:if test="${cycle.cycleCount.brand != null}">
                 <s:hidden name="cycleCountType" value="1"/>
             </c:if>
             <shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">

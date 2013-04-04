@@ -2,7 +2,7 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
@@ -21,7 +21,6 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.inventory.*;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
@@ -88,8 +87,6 @@ public class InventoryCheckinAction extends BaseAction {
     private SkuGroupService skuGroupService;
     @Autowired
     BaseDao baseDao;
-    @Autowired
-    BrandsToAuditDao brandsToAuditDao;
     @Autowired
     CycleCountService cycleCountService;
 
@@ -197,8 +194,6 @@ public class InventoryCheckinAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
             return new RedirectResolution(InventoryCheckinAction.class);
         }
-
-
         logger.debug("upc: " + upc);
         try {
             ProductVariant productVariant = getProductVariantService().findVariantFromUPC(upc);
@@ -206,20 +201,18 @@ public class InventoryCheckinAction extends BaseAction {
                 productVariant = getProductVariantService().getVariantById(upc);
             }
             if (productVariant != null) {
-                String brand = productVariant.getProduct().getBrand();
-                List<String> cycleCountInProgressListByBrandAndVariant = cycleCountService.inProgressCycleCountForVariant(productVariant, userWarehouse);
-                if (cycleCountInProgressListByBrandAndVariant.contains(brand)) {
-                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Audit is going on for brand : " + brand));
-                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                }
-
-                if (cycleCountInProgressListByBrandAndVariant.contains(productVariant.getId())) {
-                    addRedirectAlertMessage(new SimpleMessage("Operation Failed :: Cycle Count In Progress  For :  " + productVariant.getId()));
-                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
-                }
-
-
                 Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
+
+                // Check for In Progress Audit  for Variant.
+                List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
+                if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
+                    String closeAuditMsg = CycleCountDto.getCycleCountNeedToClose(cycleCountInProgressForVariantList);
+                    closeAuditMsg = closeAuditMsg + "  Warehouse" + grn.getWarehouse().getCity();
+                    addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
+                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+                }
+
+
                 Long askedQty = 0L;
                 GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
                 if (grnLineItem != null && sku != null) {
