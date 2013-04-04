@@ -60,7 +60,7 @@
           </s:select>
         </div>
         <s:hidden name="userRoles" id="userRoles"  />
-        <s:submit name="saveRolesToUser" value="Save Roles to User" style="font-size:0.9em;float: center;width: 351px;margin-left: 390px;margin-top: 40px;" id="saveRoles"/>
+        <s:submit name="saveRolesToUser" value="Save Roles to User" style="font-size:0.9em;float: center;width: 351px;margin-left: 390px;margin-top: 20px;" id="saveRoles"/>
       </fieldset>
     </s:form>
   </s:layout-component>
