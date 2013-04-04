@@ -92,7 +92,7 @@ public class DispatchLotDaoImpl extends BaseDaoImpl implements DispatchLotDao {
 	public List<Shipment> getShipmentListExistingInOtherActiveDispatchLot(DispatchLot dispatchLot, List<Shipment> shipmentList) {
 		String query = "select ds.shipment from DispatchLotHasShipment ds join ds.dispatchLot d where ds.shipment in (:shipmentList) " +
 				" and ds.dispatchLot != :dispatchLot and d.dispatchLotStatus.id != " + EnumDispatchLotStatus.Cancelled.getId() +
-				" and ds.shipmentStatus != '" + DispatchLotConstants.SHIPMENT_LOST + "'";
+				" and ds.shipmentStatus != '" + DispatchLotConstants.SHIPMENT_LOST + "' and ds.shipmentStatus != '" + DispatchLotConstants.SHIPMENT_RECEIVED + "'";
 		return (List<Shipment>) findByNamedParams(query, new String[]{"shipmentList", "dispatchLot"}, new Object[]{shipmentList, dispatchLot});
 	}
 
