@@ -8,7 +8,9 @@ import com.akube.framework.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,12 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     @SuppressWarnings("unchecked")
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
+
+      /*  searchCriteria.setProjection(Projections.distinct(Projections.id()));
+
+        DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
+        uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));*/
+
         // TODO: fix later in rewrite
         // searchCriteria.setMaxResults(10000);
         searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
