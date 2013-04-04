@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.akube.framework.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderLifecycle;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
+import com.hk.domain.user.UserCodCall;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.order.OrderLifecycleDao;
@@ -76,6 +80,12 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     @SuppressWarnings("unchecked")
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
+
+        searchCriteria.setProjection(Projections.distinct(Projections.id()));
+
+        DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
+        uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));
+
         // TODO: fix later in rewrite
         // searchCriteria.setMaxResults(10000);
         searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
@@ -171,4 +181,11 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         this.orderLifecycleDao = orderLifecycleDao;
     }
 
+	public List<UserCodCall> getAllUserCodCallOfToday(){
+        Date today = new Date();
+		Date createDate = DateUtils.getStartOfDay(today);
+        Date nextDate = DateUtils.getEndOfDay(today);
+		String query = "from UserCodCall  where createDate >= :createDate and createDate <= :nextDate";
+		return getSession().createQuery(query).setDate("createDate",createDate).setDate("nextDate",nextDate).list();
+	}
 }

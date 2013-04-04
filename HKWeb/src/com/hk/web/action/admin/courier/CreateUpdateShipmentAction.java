@@ -3,7 +3,6 @@ package com.hk.web.action.admin.courier;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -14,7 +13,6 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
-import com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
@@ -71,7 +69,7 @@ import java.util.List;
         shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria);
 
         if (shippingOrderList.isEmpty()) {
-            addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status"));
+            addRedirectAlertMessage(new SimpleMessage("Invalid Gateway Order id or Shipping Order is not in applicable SO Status i.e it is either already packed/shipped, or not yet checked out"));
             return new RedirectResolution("/pages/admin/courier/createUpdateShipmentAction.jsp");
         }
 
@@ -80,7 +78,7 @@ import java.util.List;
 
         //todo courier such condition should not occur
         if (shipment == null) {
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, "Shipment was created at dispatch stage");
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, "Shipment was created at dispatch stage");
             shipment = shipmentService.createShipment(shippingOrder, true);
         }
         if (shipment == null) {
@@ -110,14 +108,17 @@ import java.util.List;
 
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_CUSA_UPDATE}, authActionBean = AdminPermissionAction.class)
     public Resolution updateShipment() {
-        shipmentService.save(shipment);
-        if(!shippingOrder.isDropShipping()){
-            shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+        if (shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForCreateUpdateShipment()).contains(shippingOrder.getOrderStatus())) {
+            shipmentService.save(shipment);
+            if (!shippingOrder.isDropShipping()) {
+                shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+            }
+            shippingOrderService.save(shippingOrder);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());
+            addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order is not in an applicable status to be packed"));
         }
-        shippingOrderService.save(shippingOrder);
-        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed);
-
-        addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!!"));
         return new RedirectResolution(CreateUpdateShipmentAction.class);
     }
 

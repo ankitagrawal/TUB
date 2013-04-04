@@ -82,6 +82,7 @@ public class OfferInstanceDaoImpl extends BaseDaoImpl implements OfferInstanceDa
         Criteria criteria = getSession().createCriteria(OfferInstance.class);
         criteria.add(Restrictions.eq("user", user));
         criteria.add(Restrictions.eq("coupon", coupon));
+        criteria.add(Restrictions.eq("active", Boolean.TRUE));
         return criteria.list();
     }
 

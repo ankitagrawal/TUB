@@ -15,6 +15,7 @@ import com.hk.domain.shippingOrder.LineItem;
 public class OrderUtil {
 
     public static final long DEFAULT_MIN_DEL_DAYS = 1;
+    public static final long DEFAULT_MAX_DEL_DAYS = 3;
 
     public static void roundOffPricesOnCartLineItem(CartLineItem cartLineItem) {
         Double roundedOffHkPrice = NumberUtil.roundOff(cartLineItem.getHkPrice());
@@ -39,7 +40,7 @@ public class OrderUtil {
             }
             return getDispatchDaysForVariants(productVariants);
         } else {
-            return new Long[] { DEFAULT_MIN_DEL_DAYS, DEFAULT_MIN_DEL_DAYS };
+            return new Long[] { DEFAULT_MIN_DEL_DAYS, DEFAULT_MAX_DEL_DAYS };
         }
     }
     
@@ -56,7 +57,7 @@ public class OrderUtil {
 
             return getDispatchDaysForVariants(productVariants);
         } else {
-            return new Long[] { DEFAULT_MIN_DEL_DAYS, DEFAULT_MIN_DEL_DAYS };
+            return new Long[] { DEFAULT_MIN_DEL_DAYS, DEFAULT_MAX_DEL_DAYS };
         }
     }
 
@@ -68,7 +69,7 @@ public class OrderUtil {
      */
     public static Long[] getDispatchDaysForVariants(Set<ProductVariant> productVariants) {
 
-        long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MIN_DEL_DAYS;
+        long minDays = DEFAULT_MIN_DEL_DAYS, maxDays = DEFAULT_MAX_DEL_DAYS;
 
         for (ProductVariant productVariant : productVariants) {
             if (productVariant != null) {

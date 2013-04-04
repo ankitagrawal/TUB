@@ -60,7 +60,6 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
         String merchantTxnId = data.getGatewayOrderId();
         String currency = properties.getProperty(CitrusPaymentGatewayWrapper.CurrCode);
-
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.email, user.getEmail());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressStreet1, address.getLine1());
         citrusPaymentGatewayWrapper.addParameter(CitrusPaymentGatewayWrapper.addressCity, address.getCity());
@@ -89,6 +88,9 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
     @DefaultHandler
     public Resolution callback() {
+        String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + "/citrus.live.properties";
+        Properties properties = BaseUtils.getPropertyFile(propertyLocatorFileLocation);
+        String key = properties.getProperty(CitrusPaymentGatewayWrapper.key);
 //        logger.info("in citrus callback -> " + getContext().getRequest().getParameterMap());
         String gatewayOrderId = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxId);
         String TxStatus = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxStatus);
@@ -99,6 +101,22 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
         String rrn = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxRefNo);
         String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.authIdCode);
         String responseMsg = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.TxMsg);
+        String reqSignature = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.signature);
+        String data = CitrusPaymentGatewayWrapper.getRequestSignatureText(getContext());
+        com.citruspay.pg.net.RequestSignature sigGenerator = new com.citruspay.pg.net.RequestSignature();
+
+        try {
+            String signature = sigGenerator.generateHMAC(data, key);
+            if (reqSignature != null && !reqSignature.equalsIgnoreCase("") && !signature.equalsIgnoreCase(reqSignature)) {
+                paymentManager.fail(gatewayOrderId, ePGTxnID, responseMsg);
+                return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+
+            }
+        } catch (Exception e) {
+            logger.info("exception at verifying request signature", e);
+            paymentManager.fail(gatewayOrderId, ePGTxnID, responseMsg);
+            return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+        }
 
 
         logger.info("in citrus callback -> " + responseMsg + "for gateway order id " + gatewayOrderId + "TxStatus " + TxStatus + pgRespCode);
@@ -113,7 +131,7 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
                 paymentManager.success(gatewayOrderId, ePGTxnID, rrn, responseMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusSESSION_EXPIRED.getId().equals(TxStatus) || EnumCitrusResponseCodes.TxStatusCANCELED.getId().equals(TxStatus)) {
-                paymentManager.fail(gatewayOrderId,ePGTxnID);
+                paymentManager.fail(gatewayOrderId, ePGTxnID, responseMsg);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (EnumCitrusResponseCodes.TxStatusFAIL.getId().equals(TxStatus)) {
                 if (EnumCitrusResponseCodes.Rejected_By_Gateway.getId().equals(pgRespCode)) {

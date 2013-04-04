@@ -55,6 +55,8 @@ public class AwbStatus {
 		return false;
 	}
 
-	
-
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

@@ -11,6 +11,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
+<c:set var="GrnCloseId" value="<%=EnumGrnStatus.Closed.getId()%>"/>
 <%
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -395,9 +396,23 @@
 			</div>
 		</td>
 		<td>
+            <c:if test="${grnLineItemDto.grnLineItem.checkedInQty > 0 && pa.grn.grnStatus.id != GrnCloseId}">
+                <c:set var="itemCheckedin" value="true" />
+                <ul>
+                      <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
+                     <s:link beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadBarcode"> Barcode
+                <%--<s:param name="grnLineItemId" value="${grnLineItemDto.grnLineItem.id}"/>--%>
+                <s:param name="grnLineItem" value="${grnLineItemDto.grnLineItem.id}"/>
+                <s:param name="grn" value="${pa.grn.id}"/>
+                 </s:link>
+                    </shiro:hasPermission>
+                </ul>
+            </c:if>
+            <ul>
 				${productVariant.id}
 			<s:hidden class="variant" name="grnLineItems[${ctr.index}].productVariant"
 			          value="${grnLineItemDto.grnLineItem.productVariant.id}"/>
+              </ul>
 				<%--<s:hidden class="sku" name="grnLineItems[${ctr.index}].sku"
 									 value="${sku}"></s:hidden>--%>
 		</td>
@@ -465,7 +480,12 @@
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
 		<td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
-		</tr>
+        <%--<td>--%>
+            <%--<s:link  beanclass="com.hk.web.action.admin.inventory.GRNAction" event="deleteGrnLineItem"><span style="color:#ff0000;">delete</span>--%>
+            <%--<s:param name="grnLineItem" value="${grnLineItemDto.grnLineItem.id}"/>--%>
+        <%--</s:link>--%>
+        <%--</td>--%>
+        </tr>
 	</c:forEach>
 	</tbody>
 	<tfoot>
@@ -493,7 +513,14 @@
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
-</shiro:hasPermission>
+
+    <c:if test='${itemCheckedin && pa.grn.grnStatus.id != GrnCloseId}' >
+     <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
+             <s:param name="grn" value="${pa.grn.id}"/>
+    </s:link>
+
+</c:if>
+ </shiro:hasPermission>
 <%--<c:choose>
 	<c:when test="${pa.grn.grnStatus.id < inCheckedIn}">
 		<s:submit name="save" value="Save" class="requiredFieldValidator"/>

@@ -25,12 +25,22 @@ Television, Televisions, TV, TVs
 #after us won't split it into two words.
 
 # Synonym mappings can be used for spelling correction too
-pixima => pixma
 
-#protien mappings
+pixima => pixma
 bcca  => bcaa
 bca => bcaa
 superpump => super pump
 running => jogging
 moisturiser => moisturizer
 loreal =>l'oreal
+optimumnutrition => optimum nutrition
+muscle blaze => muscleblaze
+muscle pharm => musclepharm
+muscle tech => muscletech
+one touch => onetouch
+select simple => selectsimple
+accu check => accu-check
+free style => freestyle
+dr gene => dr.gene
+
+

@@ -1,0 +1,20 @@
+{{#each value in controller.currentlyAppliedOffer}}
+  <div class="applicableOffer appliedOfferNew">
+    <div class="appliedOfferText">Currently applied offer</div>
+    <div class="offerCloseButton" {{action removeOffer value.id target="controller"}}>x</div>
+      <div class="applicableOfferDesc" style="font-size: 11px;">{{value.description}}</div>
+      {{#if value.endDate}}
+        <div class="offerEndDate" style="margin-bottom: 10px;">Valid till: {{value.endDate}}</div>
+      {{/if}}
+        <div class="removeButton" style="left: 10px;display: none;">
+          <form {{bindAttr action="controller.applyURL"}} method="post">
+            <input name="offer" {{bindAttr value="value.id"}} type="hidden">        
+            <input {{bindAttr id="value.id"}}name="removeOffer" value="REMOVE" style="border: 1px solid !important;" class="button_raj" type="submit">
+            <div style="display: none;">
+              <input type="hidden" name="_sourcePage" value="nO5Kai0iUtU9VJRiFjXm-vAFsFkyxchJ">
+              <input type="hidden" name="__fp" value="CATsOzMhS2E=">
+            </div>
+          </form>
+        </div>
+    </div>
+{{/each}}

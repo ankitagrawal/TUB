@@ -12,8 +12,13 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
@@ -24,6 +29,7 @@ import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.ProductDao;
+import com.hk.service.ServiceLocatorFactory;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -31,6 +37,17 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 
     public Product getProductById(String productId) {
         return get(Product.class, productId);
+    }
+
+    public Product getOriginalProductById(String productId) {
+      SessionFactory sessionFactory = (SessionFactory)ServiceLocatorFactory.getService("newSessionFactory") ;
+      Session session = sessionFactory.openSession();
+      Product product = (Product) session.createQuery(
+                "select p from Product p where p.id=:productId").setString(
+                "productId", productId).uniqueResult();
+      if(product != null)
+        product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories());
+      return product;
     }
 
     @Transactional
@@ -228,11 +245,10 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
 					criteria.add(Restrictions.eq("deleted", false));
 					criteria.add(Restrictions.eq("isGoogleAdDisallowed", false));
 					criteria.add(Restrictions.eq("hidden", false));
-                    if (onlyCOD){
-                        criteria.add(Restrictions.eq("codAllowed", true));
-                    }
-
-                    criteria.addOrder(Order.asc("outOfStock"));
+          if (onlyCOD){
+              criteria.add(Restrictions.eq("codAllowed", true));
+          }
+          criteria.addOrder(Order.asc("outOfStock"));
 					criteria.addOrder(Order.asc("orderRanking"));
 					return list(criteria, page, perPage);
 				}

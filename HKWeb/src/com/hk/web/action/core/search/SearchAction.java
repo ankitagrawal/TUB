@@ -56,27 +56,28 @@ public class SearchAction extends BasePaginatedAction {
 	public Resolution search() throws SolrServerException, MalformedURLException {
         boolean includeCombo = true;
         boolean onlyCOD = false;
-		if (StringUtils.isNotBlank(query)) {
-			try {
-                List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
-                if (getContext().getRequest().getParameterMap().containsKey("includeCombo")){
-                    String[] params = (String[])getContext().getRequest().getParameterMap().get("includeCombo");
-                    includeCombo = Boolean.parseBoolean( params[0].toString());
-                    if (!includeCombo){
-                        SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo,includeCombo);
-                        searchFilters.add(comboFilter);
-                    }
-                }
-                if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")){
-                    String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
-                    onlyCOD = Boolean.parseBoolean( params[0].toString());
-                    if (onlyCOD){
-                        SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, onlyCOD);
-                        searchFilters.add(codFilter);
-                    }
-                }
+      if (StringUtils.isNotBlank(query)) {
+        try {
+          query = query.replace("-", " "); // Handling names with -
+          List<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+          if (getContext().getRequest().getParameterMap().containsKey("includeCombo")) {
+            String[] params = (String[]) getContext().getRequest().getParameterMap().get("includeCombo");
+            includeCombo = Boolean.parseBoolean(params[0].toString());
+            if (!includeCombo) {
+              SearchFilter comboFilter = new SearchFilter(SolrSchemaConstants.isCombo, includeCombo);
+              searchFilters.add(comboFilter);
+            }
+          }
+          if (getContext().getRequest().getParameterMap().containsKey("onlyCOD")) {
+            String[] params = (String[]) getContext().getRequest().getParameterMap().get("onlyCOD");
+            onlyCOD = Boolean.parseBoolean(params[0].toString());
+            if (onlyCOD) {
+              SearchFilter codFilter = new SearchFilter(SolrSchemaConstants.isCODAllowed, onlyCOD);
+              searchFilters.add(codFilter);
+            }
+          }
 
-				SearchResult sr = productSearchService.getSearchResults(query,searchFilters, getPageNo(), getPerPage(), false);
+        SearchResult sr = productSearchService.getSearchResults(query,searchFilters, getPageNo(), getPerPage(), false);
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {
@@ -84,7 +85,7 @@ public class SearchAction extends BasePaginatedAction {
 				}
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
-				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA", e);
+				logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA.." + e.getMessage());
 				productPage = productDao.getProductByName(query,onlyCOD, includeCombo, getPageNo(), getPerPage());
 				productList = productPage.getList();
 				for (Product product : productList) {

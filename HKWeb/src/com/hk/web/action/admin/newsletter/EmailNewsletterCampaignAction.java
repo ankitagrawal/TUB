@@ -6,6 +6,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.hk.domain.review.Mail;
+import com.hk.pact.service.review.MailService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.FileBean;
@@ -44,6 +46,7 @@ public class EmailNewsletterCampaignAction extends BaseAction {
 
   @Autowired
   EmailCampaignDao emailCampaignDao;
+
   @Autowired
   AdminEmailCampaignService adminEmailCampaignService;
 
@@ -171,7 +174,8 @@ public class EmailNewsletterCampaignAction extends BaseAction {
     return new ForwardResolution(EmailNewsletterCampaignAction.class, "editEmailCampaign");
   }
 
-  public EmailCampaign getEmailCampaign() {
+
+    public EmailCampaign getEmailCampaign() {
     return emailCampaign;
   }
 

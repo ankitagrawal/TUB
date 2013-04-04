@@ -8,11 +8,12 @@ import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
-import com.hk.constants.courier.CourierConstants;
+import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.*;
@@ -64,7 +65,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
             Zone zone = pincode.getZone();
 
-            List<String> reasons = new ArrayList<String>();
+            List<Reason> reasons = new ArrayList<Reason>();
 
             ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);
 
@@ -72,24 +73,24 @@ public class ShipmentServiceImpl implements ShipmentService {
             Awb suggestedAwb = null;
             Double weight = 0D;
             if (suggestedCourier == null) {
-                reasons.add(CourierConstants.SUGGESTED_COURIER_NOT_FOUND);
+                reasons.add(EnumReason.SUGGESTED_COURIER_NOT_FOUND.asReason());
             } else {
                 //todo courier need to handle replacement order ka rto courier
                 if (!pincodeCourierService.isCourierAvailable(pincode, null, Arrays.asList(shipmentServiceType), true)) {
-                    reasons.add(CourierConstants.COURIER_SERVICE_INFO_NOT_FOUND);
+                    reasons.add(EnumReason.COURIER_SERVICE_INFO_NOT_FOUND.asReason());
                 } else {
                     weight = getEstimatedWeightOfShipment(shippingOrder);
                     suggestedAwb = attachAwbForShipment(suggestedCourier, shippingOrder, weight);
                     if (suggestedAwb == null) {
-                        reasons.add(CourierConstants.AWB_NOT_ASSIGNED);
+                        reasons.add(EnumReason.AWB_NOT_ASSIGNED.asReason());
                     }
                 }
             }
 
-            for (String reason : reasons) {
-                shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                        reason);
-                adminEmailManager.sendNoShipmentEmail(reason, shippingOrder, shippingOrder.getBaseOrder());
+            for (Reason reason : reasons) {
+                shippingOrderService.logShippingOrderActivity
+                        (shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), null, "");
+                adminEmailManager.sendNoShipmentEmail(reason.getPrimaryClassification(), shippingOrder, shippingOrder.getBaseOrder());
             }
             if (reasons.isEmpty()) {
                 validShipment = new Shipment();
@@ -122,7 +123,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             shippingOrder = shippingOrderService.save(shippingOrder);
             String comment = shipment.getShipmentServiceType().getName() + shipment.getAwb().toString();
             shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_Shipment_Auto_Created.asShippingOrderLifecycleActivity(),
-                    comment);
+                    null, comment);
         }
         return shippingOrder.getShipment();
     }
@@ -180,6 +181,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
         return null;
     }
+    @Override
+    public Shipment changeAwb(Shipment shipment,Awb newAwb,boolean preserveAwb){
+        Awb currentAwb=shipment.getAwb();
+        shipment.setAwb(newAwb);
+        shipment = save(shipment);
+        changeAwbStatus(currentAwb,preserveAwb);
+      return shipment;
+    }
 
     public void changeAwbStatus(Awb awb, boolean preserveAwb) {
         if (preserveAwb) {
@@ -203,7 +212,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             shippingOrder = shippingOrderService.save(shippingOrder);
             String newShipmentAwbDetails = newShipment.getAwb().toString();
             shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getLoggedInUser(), EnumShippingOrderLifecycleActivity.SO_Shipment_Re_Created.asShippingOrderLifecycleActivity(),
-                    oldShipmentAwbDetails + " to --> " + newShipmentAwbDetails);
+                    null, oldShipmentAwbDetails + " to --> " + newShipmentAwbDetails);
         }
         return shippingOrder.getShipment();
     }

@@ -1,9 +1,10 @@
 package com.hk.pact.dao;
 
-import java.util.List;
-
 import com.hk.constants.core.EnumRole;
+import com.hk.domain.user.Permission;
 import com.hk.domain.user.Role;
+
+import java.util.List;
 
 public interface RoleDao extends BaseDao {
 
@@ -21,4 +22,5 @@ public interface RoleDao extends BaseDao {
 
     public List<Role> listAllHRRoles();
 
+    public Permission getPermissionByName(String permissionName);
 }

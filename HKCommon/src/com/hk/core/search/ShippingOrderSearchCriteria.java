@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -24,7 +27,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<Awb> awbList;
     private List<Courier> courierList;
     private Long warehouseId;
-    private boolean isServiceOrder = false;
+    private Boolean isServiceOrder = null;
     private Date activityStartDate;
     private Date activityEndDate;
     private String basketCategory;
@@ -32,16 +35,22 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private String baseGatewayOrderId;
     private Date shipmentStartDate;
     private Date shipmentEndDate;
+    private Date paymentStartDate;
+    private Date paymentEndDate ;
 
     private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
+    private List<PaymentStatus>       paymentStatuses;
+    private List<Reason> reasonList;
 
     private boolean searchForPrinting = false;
     private Date lastEscStartDate;
     private Date lastEscEndDate;
+    private Date targetDispatchDate;
     private Zone zone;
-    private Set<String> shippingOrderCategories;
+    private Set<Category> shippingOrderCategories;
     private boolean dropShipping = false;
+    private boolean containsJitProducts = false;
     private boolean installable = false;
 
     public ShippingOrderSearchCriteria setSearchForPrinting(boolean searchForPrinting) {
@@ -54,12 +63,17 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+    public ShippingOrderSearchCriteria setReasonList(List<Reason> reasonList) {
+        this.reasonList = reasonList;
+        return this;
+    }
+
     public ShippingOrderSearchCriteria setShippingOrderStatusList(List<ShippingOrderStatus> shippingOrderStatusList) {
         this.shippingOrderStatusList = shippingOrderStatusList;
         return this;
     }
 
-    public ShippingOrderSearchCriteria setServiceOrder(boolean serviceOrder) {
+    public ShippingOrderSearchCriteria setServiceOrder(Boolean serviceOrder) {
         isServiceOrder = serviceOrder;
         return this;
     }
@@ -79,6 +93,16 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
+    public ShippingOrderSearchCriteria setPaymentStartDate(Date paymentStartDate) {
+        this.paymentStartDate = paymentStartDate;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setPaymentEndDate(Date paymentEndDate) {
+        this.paymentEndDate = paymentEndDate;
+        return this;
+    }
+
     public ShippingOrderSearchCriteria setAwbList(List<Awb> awbList) {
         this.awbList = awbList;
         return this;
@@ -86,6 +110,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public ShippingOrderSearchCriteria setCourierList(List<Courier> courierList) {
         this.courierList = courierList;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setPaymentStatuses(List<PaymentStatus> paymentStatuses) {
+        this.paymentStatuses = paymentStatuses;
         return this;
     }
 
@@ -132,7 +161,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<Category> shippingOrderCategories) {
         this.shippingOrderCategories = shippingOrderCategories;
         return this;
     }
@@ -198,8 +227,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             warehouseCriteria = criteria.createCriteria("warehouse");
             warehouseCriteria.add(Restrictions.eq("id", warehouseId));
         }
-
-        criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        if (isServiceOrder != null) {
+            criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
+        }
 
         DetachedCriteria shippingOrderLifecycleCriteria = null;
         if (shippingOrderLifeCycleActivities != null && shippingOrderLifeCycleActivities.size() > 0) {
@@ -208,6 +238,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderLifecycleCriteria = criteria.createCriteria("shippingOrderLifecycles");
             }
             shippingOrderLifecycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity.id", shippingOrderLifeCycleIds));
+            DetachedCriteria lifecycleCriteria = null;
+            if (reasonList != null && !reasonList.isEmpty()) {
+                if (lifecycleCriteria == null) {
+                    lifecycleCriteria = shippingOrderLifecycleCriteria.createCriteria("lifecycleReasons");
+                }
+                lifecycleCriteria.add(Restrictions.in("reason", reasonList));
+            }
         }
 
         if (activityStartDate != null || activityEndDate != null) {
@@ -222,10 +259,23 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         DetachedCriteria paymentCriteria = baseOrderCriteria.createCriteria("payment", CriteriaSpecification.LEFT_JOIN);
 
+        if (paymentStatuses != null && paymentStatuses.size() > 0) {
+            paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
+        }
+
+        if (paymentStartDate != null || paymentEndDate != null) {
+            paymentCriteria.add(Restrictions.between("paymentDate", paymentStartDate, paymentEndDate));
+        }
+
         if (!searchForPrinting) {
+            if (sortByDispatchDate) {
+                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDelDate"));
+            }
+            if (sortByLastEscDate) {
+                criteria.addOrder(org.hibernate.criterion.Order.desc("lastEscDate"));
+            }
             if (sortByPaymentDate) {
                 paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-
             }
             if (sortByScore) {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
@@ -236,11 +286,19 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
 
+        DetachedCriteria shippingOrderCategoryCriteria = null;
+        if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
+            if (shippingOrderCategoryCriteria == null) {
+                shippingOrderCategoryCriteria = criteria.createCriteria("shippingOrderCategories");
+            }
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
+        }
 
+/*
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
             criteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
-
+*/
 
         DetachedCriteria lineItemsCriteria = null;
         DetachedCriteria skuCriteria = null;
@@ -249,6 +307,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (isDropShipping()) {
             criteria.add(Restrictions.eq("isDropShipping", dropShipping));
+        }
+        if (containsJitProducts()) {
+            criteria.add(Restrictions.eq("containsJitProducts", containsJitProducts));
         }
 
          if (isInstallable()){
@@ -265,6 +326,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         */
 
         return criteria;
+    }
+
+    public boolean containsJitProducts() {
+        return containsJitProducts;
+    }
+
+    public void setContainsJitProducts(boolean containsJitProducts) {
+        this.containsJitProducts = containsJitProducts;
     }
 
     public Date getLastEscStartDate() {
@@ -300,4 +369,5 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     public void setInstallable(boolean installable) {
         this.installable = installable;
     }
+
 }

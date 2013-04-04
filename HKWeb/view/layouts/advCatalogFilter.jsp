@@ -68,7 +68,7 @@
 	}
 	pageContext.setAttribute("filteredPriceRange", filteredPriceRange);
 
-	Map<String, List<ProductOptionDto>> filterMap = catalogFilter.getFilterOptions(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
+	Map<String, List<ProductOptionDto>> filterMap =  catalogFilter.getFilterOptions(ca.getRootCategorySlug(), categoryNames, ca.getFilterOptions(), filteredPriceRange.getMinPrice(), filteredPriceRange.getMaxPrice());
 	pageContext.setAttribute("filterMap", filterMap);
 
 %>

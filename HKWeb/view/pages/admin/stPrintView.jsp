@@ -86,12 +86,20 @@
 	<tr>
 		<td><b>From Warehouse:</b></td>
 		<td>
+			Bright Lifecare Pvt. Ltd.<br/>
 			${stockTransferBean.stockTransfer.fromWarehouse.name} <br/>
 			${stockTransferBean.stockTransfer.fromWarehouse.line1},
 			${stockTransferBean.stockTransfer.fromWarehouse.line2}<br>
 			${stockTransferBean.stockTransfer.fromWarehouse.city},
 			${stockTransferBean.stockTransfer.fromWarehouse.state}<br>
-			Tin: ${stockTransferBean.stockTransfer.fromWarehouse.tin}
+				<c:choose>
+					<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'HARYANA'}">
+						<p> TIN# 06101832036</p>
+					</c:when>
+					<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'MAHARASHTRA'}">
+						<p> TIN# 27210893736</p>
+					</c:when>
+				</c:choose>
 		</td>
 		<td><b>To Warehouse</b></td>
 		<td>
@@ -101,7 +109,14 @@
 			${stockTransferBean.stockTransfer.toWarehouse.line2}<br>
 			${stockTransferBean.stockTransfer.toWarehouse.city},
 			${stockTransferBean.stockTransfer.toWarehouse.state}<br>
-			Tin: ${stockTransferBean.stockTransfer.toWarehouse.tin}
+			<c:choose>
+				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'HARYANA'}">
+					<p> TIN# 06101832036</p>
+				</c:when>
+				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'MAHARASHTRA'}">
+					<p> TIN# 27210893736</p>
+				</c:when>
+			</c:choose>
 		</td>
 	</tr>
 	<tr valign="top">

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,9 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Autowired
     UserService             userService;
+
+		@Autowired
+		HubService hubService;
 
     @Override
     public Consignment createConsignment(String awbNumber, String cnnNumber, double amount, String paymentMode, String address, Hub hub) {
@@ -262,10 +267,13 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList, User agent) {
+    public List<Consignment> updateTransferredConsignments(List<ConsignmentDto> consignmentDtoList, User agent, User loggedOnUser) {
         Runsheet runsheet = null;
         Consignment consignment = null;
+	      Hub deliveryHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
+	      ConsignmentLifecycleStatus consignmentLifecycleStatus = consignmentDao.get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.Dispatched.getId());
         List<Consignment> consignmentList = new ArrayList<Consignment>();
+	      List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         for (ConsignmentDto consignmentDto : consignmentDtoList) {
             if (!consignmentDto.getTransferredToAgent().getId().equals(agent.getId())) {
                 runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
@@ -273,10 +281,12 @@ public class ConsignmentServiceImpl implements ConsignmentService {
                 consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
                 runsheet = runsheetService.updateRunsheetParams(runsheet, consignmentDto);
                 consignment.setRunsheet(runsheet);
+	              consignmentTrackingList.add(createConsignmentTracking(runsheet.getHub(),deliveryHub,  loggedOnUser, consignment, consignmentLifecycleStatus, "",  runsheet));
                 consignmentList.add(consignment);
             }
         }
         saveConsignments(consignmentList);
+	      saveConsignmentTracking(consignmentTrackingList);
         return consignmentList;
     }
 
