@@ -20,7 +20,10 @@ public enum EnumReconciliationType {
     NonMoving(80L, "Non Moving"),
     FreeVariant(90L, "Free Variant"),
     CustomerReturn(100L, "Customer Return"),
-    PharmaReturn(110L, "Pharma Return");
+    PharmaReturn(110L, "Pharma Return"),
+    ProductVariantAudited(120L,"Product Variant Audited"),
+    SubtractIncorrectCounting(130L," Incorrect Counting"),
+    AddIncorrectCounting(140L,"Incorrect Counting");
 
 
     private java.lang.String name;
@@ -49,19 +52,19 @@ public enum EnumReconciliationType {
 
 
     public static List<ReconciliationType> getSubtractReconciliationType() {
-        return Arrays.asList(Subtract.asReconciliationType(), Damage.asReconciliationType(), Expired.asReconciliationType(), Lost.asReconciliationType(),
-                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType());
+        return Arrays.asList( Damage.asReconciliationType(), Expired.asReconciliationType(), Lost.asReconciliationType(),
+                BatchMismatch.asReconciliationType(), MrpMismatch.asReconciliationType(), NonMoving.asReconciliationType(), FreeVariant.asReconciliationType(),SubtractIncorrectCounting.asReconciliationType());
     }
 
 
     public static List<ReconciliationType> getAddReconciliationType() {
         return Arrays.asList(Damage.asReconciliationType(), Expired.asReconciliationType(), BatchMismatch.asReconciliationType(), CustomerReturn.asReconciliationType(),
-                PharmaReturn.asReconciliationType(), FreeVariant.asReconciliationType());
+                PharmaReturn.asReconciliationType(), FreeVariant.asReconciliationType(),AddIncorrectCounting.asReconciliationType());
     }
 
     public static ReconciliationType getSubtractReconciliationTypeByName(String reconReason) {
         List<EnumReconciliationType> reconciliationTypeList = Arrays.asList(Subtract, Damage, Expired, Lost,
-                BatchMismatch, MrpMismatch, NonMoving, FreeVariant);
+                BatchMismatch, MrpMismatch, NonMoving, FreeVariant,SubtractIncorrectCounting);
         for (EnumReconciliationType enumReconciliationType : reconciliationTypeList) {
             if (enumReconciliationType.getName().equalsIgnoreCase(reconReason.trim())) {
                 return enumReconciliationType.asReconciliationType();
@@ -71,7 +74,7 @@ public enum EnumReconciliationType {
     }
 
     public static ReconciliationType getAddReconciliationTypeByName(String reconReason) {
-        List<EnumReconciliationType> reconciliationTypeList = Arrays.asList(Damage, Expired, BatchMismatch, CustomerReturn, PharmaReturn, FreeVariant);
+        List<EnumReconciliationType> reconciliationTypeList = Arrays.asList(Damage, Expired, BatchMismatch, CustomerReturn, PharmaReturn, FreeVariant,AddIncorrectCounting);
         for (EnumReconciliationType enumReconciliationType : reconciliationTypeList) {
             if (enumReconciliationType.getName().equalsIgnoreCase(reconReason.trim())) {
                 return enumReconciliationType.asReconciliationType();

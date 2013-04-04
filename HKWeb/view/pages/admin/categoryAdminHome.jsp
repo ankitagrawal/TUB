@@ -119,10 +119,8 @@
         <div class="float roundBox">
             <h2>Action Queue</h2>
 
-            <c:if test="${whAction.setWarehouse == null}">
                 <h3><s:link
                         beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
-            </c:if>
         </div>
 
         <div class="cl"></div>
@@ -160,6 +158,18 @@
                         event="listOutOfStock">Out of Stock List</s:link></h3>
             <h3>
                 <s:link beanclass="com.hk.web.action.admin.inventory.InventoryHealthStatusAction">Low Inventory List</s:link></h3>
+        </div>
+
+        <div class="cl"></div>
+
+        <div class="left roundBox">
+            <h2>Services</h2>
+
+            <h3><s:link beanclass="com.hk.web.action.admin.queue.ServiceQueueAction">Service Queue</s:link></h3>
+
+            <h3>
+                <s:link beanclass="com.hk.web.action.admin.catalog.ManufacturerAction">View/Edit Merchant Details</s:link></h3>
+
         </div>
 
 

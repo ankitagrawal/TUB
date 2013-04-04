@@ -5055,7 +5055,7 @@ td.top {
 }
 
 .brandBox {
-    margin: 2em 0;
+    margin: 0.5em 0;
     border-bottom: 1px dotted #eee;
     padding: 0 5px;
     padding-bottom: 1em;
@@ -5913,6 +5913,42 @@ color: #e62580;
     margin-top: 5px;
 }
 
+.newBox{
+    position: relative;
+    border: 1px solid rgb(160, 160, 160);
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 5px;
+    display: none;
+}
+
+.newBoxLabel{
+    position: relative;
+    float: left;
+    width: 250px !important;
+    margin: 10px;
+}
+
+
+.newBoxItem{
+    position: relative;
+}
+
+.newBoxItem label{
+    font-size: 10px;
+}
+
+.actionQueue{
+    position: relative;
+    margin: 0px;
+    left: 20px;
+}
+
+.trimPadding{
+    padding: 5px 5px !important;
+}
 /*
 slider pager end
 */

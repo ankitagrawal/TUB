@@ -11848,4 +11848,145 @@
     <changeSet author="Ankur (generated)" id="1363612581975-3">
         <addForeignKeyConstraint baseColumnNames="product_variant_id" baseTableName="user_review" constraintName="fk_user_review_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-03-25-01">
+        <addColumn tableName="shipping_order">
+            <column defaultValue="0" name="contains_jit_products" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-03-25-02">
+        <sql>
+            update shipping_order so
+            join line_item li on li.shipping_order_id=so.id
+            join sku sk on li.sku_id=sk.id
+            join product_variant pv on sk.product_variant_id=pv.id
+            join product p on pv.product_id=p.id
+            set so.contains_jit_products=1
+            where p.is_jit=1;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-1">
+        <createTable tableName="lifecycle_reason">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="primary_attribution" type="VARCHAR(45)"/>
+            <column name="secondary_attribution" type="VARCHAR(45)"/>
+            <column name="shipping_order_lifecycle_id" type="INT"/>
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_lifecycle_id" type="INT"/>
+            <column name="create_dt" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-2">
+        <createTable tableName="reason">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="primary_classification" type="VARCHAR(100)"/>
+            <column name="secondary_classification" type="VARCHAR(100)"/>
+            <column name="type" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-4">
+        <addForeignKeyConstraint baseColumnNames="order_lifecycle_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_order_lifecycle1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="order_lifecycle"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-5">
+        <addForeignKeyConstraint baseColumnNames="reason_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_reason1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="reason"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364284236844-6">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_lifecycle_id" baseTableName="lifecycle_reason"
+                                 constraintName="fk_lifecycle_reason_shipping_order_lifecycle1" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="shipping_order_lifecycle"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-03-28-01">
+        <sql>
+            INSERT INTO `reason` (`id`, `primary_classification`, `secondary_classification`, `type`) VALUES
+            (10, 'Invalid Pincode', NULL, 'SO Shipment Not Created'),
+            (20, 'Suggested Courier not found', NULL, 'SO Shipment Not Created'),
+            (30, 'Courier service not available here', NULL, 'SO Shipment Not Created'),
+            (40, 'No shipment for drop shipped orders', NULL, 'SO Shipment Not Created'),
+            (50, 'Could not assign Awb', NULL, 'SO Shipment Not Created'),
+            (110, 'BO is a referred Order', NULL, 'SO Could not be Auto-escalated'),
+            (120, 'Drop Shipped Order', NULL, 'SO Could not be Auto-escalated'),
+            (130, 'Order contains JIT Products', NULL, 'SO Could not be Auto-escalated'),
+            (140, 'Contains prescription glasses', NULL, 'SO Could not be Auto-escalated'),
+            (150, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Auto-escalated'),
+            (160, 'Payment Status is AuthPending-Error', NULL, 'SO Could not be Auto-escalated'),
+            (170, 'Shipment Not Created', NULL, 'SO Could not be Auto-escalated'),
+            (210, 'Shipment Not Created', NULL, 'SO Could not be Manually-escalated'),
+            (220, 'Payment Status is AuthPending/Error', NULL, 'SO Could not be Manually-escalated'),
+            (230, 'Insufficient Unbooked Inventory', NULL, 'SO Could not be Manually-escalated'),
+            (310, 'Customer Request', 'Product Change', 'SO Escalated Back To Action Queue'),
+            (320, 'Customer Request', 'Cancellation ', 'SO Escalated Back To Action Queue'),
+            (330, 'Customer Request', 'Put on Hold', 'SO Escalated Back To Action Queue'),
+            (340, 'Product Not Available', 'Damaged', 'SO Escalated Back To Action Queue'),
+            (350, 'Product Not Available', 'Expired', 'SO Escalated Back To Action Queue'),
+            (360, 'Product Not Available', 'Inventory Mismatch', 'SO Escalated Back To Action Queue'),
+            (370, 'Mrp Mismatch', 'Greater than', 'SO Escalated Back To Action Queue'),
+            (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue');
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-1">
+        <createTable tableName="shipping_order_category">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_primary" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-321">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-322">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-323">
+        <modifyDataType columnName="other_remark" newDataType="VARCHAR(2000)" tableName="product_variant"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364846682281-2">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="basket_category" tableName="shipping_order"/>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-01">
+        <sql>
+            insert into shipping_order_category(shipping_order_id,category_name,is_primary,create_dt,update_dt)
+            select li.shipping_order_id,p.primary_category,0,NOW(),NOW() from line_item li
+            join sku sk on li.sku_id=sk.id
+            join product_variant pv on pv.id=sk.product_variant_id
+            join product p on pv.product_id=p.id;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-02">
+        <sql>
+            update shipping_order_category soc
+            join shipping_order so on soc.shipping_order_id=so.id
+            set soc.is_primary=1
+            where so.basket_category is not null;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

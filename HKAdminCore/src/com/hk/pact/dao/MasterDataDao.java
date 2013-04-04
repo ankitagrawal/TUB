@@ -187,4 +187,6 @@ public interface MasterDataDao
      public List<Courier> getAllActiveCourier();
 
 	public List<Long> getDiscountsForPOS();
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType();
 }

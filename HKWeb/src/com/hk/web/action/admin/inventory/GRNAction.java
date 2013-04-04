@@ -428,26 +428,26 @@ public class GRNAction extends BasePaginatedAction {
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
-
-    public Resolution deleteGrnLineItem() {
-        if (grnLineItem != null) {
-            grn = grnLineItem.getGoodsReceivedNote();
-            if (grnLineItem.getCheckedInQty() != null) {
-                boolean status = grnLineItemService.isAllSkuItemInCheckedInStatus(grnLineItem);
-                if (status) {
-                    //Delete Inventory
-                    ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
-                    adminInventoryService.deleteInventory(grnLineItem);
-                    //Check inventory health
-                    inventoryService.checkInventoryHealth(productVariant);
-
-
-                }
-            }
-        }
-        return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
-
-    }
+   //commenting Delete Link on Grn Line item
+//    public Resolution deleteGrnLineItem() {
+//        if (grnLineItem != null) {
+//            grn = grnLineItem.getGoodsReceivedNote();
+//            if (grnLineItem.getCheckedInQty() != null) {
+//                boolean status = grnLineItemService.isAllSkuItemInCheckedInStatus(grnLineItem);
+//                if (status) {
+//                    //Delete Inventory
+//                    ProductVariant productVariant = grnLineItem.getSku().getProductVariant();
+//                    adminInventoryService.deleteInventory(grnLineItem);
+//                    //Check inventory health
+//                    inventoryService.checkInventoryHealth(productVariant);
+//
+//
+//                }
+//            }
+//        }
+//        return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
+//
+//    }
 
 	public List<GoodsReceivedNote> getGrnList() {
 		return grnList;
