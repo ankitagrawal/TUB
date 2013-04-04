@@ -23,7 +23,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
   <c:if
       test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
-    <div class='product' style="border-bottom-style: solid;">
+    <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
       <div class='img48' style="vertical-align:top;">
         <c:choose>
           <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
@@ -101,6 +101,7 @@ Pass an attribute called pricingDto to render a table with pricing details
               pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
         </div>
       </div>
+        <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
       <div class='floatix'></div>
     </div>
   </c:if>
@@ -111,7 +112,7 @@ Pass an attribute called pricingDto to render a table with pricing details
     <c:if test="${!fn:contains(firstComboLineItem,invoiceLineItem.comboInstance.id)}">
       <%--<c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>--%>
         <c:set var="firstComboLineItem" value="${firstComboLineItem} + ',' + ${invoiceLineItem.comboInstance.id} + ','" />
-        <div class='product' style="border-bottom-style: solid;">
+        <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
         <div class='img48' style="vertical-align:top;">
           <c:choose>
             <c:when test="${invoiceLineItem.comboInstance.combo.mainImageId != null}">
@@ -154,8 +155,10 @@ Pass an attribute called pricingDto to render a table with pricing details
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
           </div>
         </div>
+            <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
+            <div class='floatix'></div>
       </div>
-      <div class='floatix'></div>
+
     </c:if>
   </c:if>
 </c:forEach>
@@ -277,7 +280,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 <c:if test="${pricingDto.postpaidServicesTotal > 0.00}">
   <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
     <c:if test="${invoiceLineItem.productVariant.paymentType.name == 'Postpaid'}">
-      <div class='product' style="border-bottom-style: solid;">
+      <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
         <div class='img48' style="vertical-align:top;">
           <c:choose>
             <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
@@ -311,6 +314,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
           </div>
         </div>
+          <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
         <div class='floatix'></div>
       </div>
     </c:if>

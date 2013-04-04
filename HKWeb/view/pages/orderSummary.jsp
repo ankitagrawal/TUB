@@ -49,6 +49,11 @@
 </s:layout-component>
 
   <s:layout-component name="steps">
+      <div class='logoBox' style="z-index: 5000;float:left;top: 50px; left: 12px;position: relative;">
+          <s:link href="/" title='go to healthkart home'>
+              <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+          </s:link>
+      </div>
     <div class='steps'>
         <hr noshade class="stepLine">
       <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
@@ -103,37 +108,7 @@
       $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>${orderSummary.pricingDto.productLineCount}</span> item in<br/>your shopping cart");
 
     </script>
-    <div class='right_container address_box'>
-      <div class='title'>
-        <h5>
-          To be shipped to
-        </h5>
-      </div>
-      <div class='detail'>
-        <div class='name'>
-            ${orderSummary.order.address.name}
-        </div>
-        <div class='address'>
-            ${orderSummary.order.address.line1}
-          <c:if test="${hk:isNotBlank(orderSummary.order.address.line2)}">
-            <br/>
-            ${orderSummary.order.address.line2}
-          </c:if>
-          <br/>
-            ${orderSummary.order.address.city}
-          <br/>
-            ${orderSummary.order.address.state}
-          <br/>
-            ${orderSummary.order.address.pincode.pincode}
-          <br/>
-            ${orderSummary.order.address.phone}
-        </div>
-      </div>
-        <span class="small">
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
-            (change) </s:link>
-        </span>
-    </div>
+
     <c:if test="${orderSummary.redeemableRewardPoints > 0}">
       <div class="right_container" style="left: 40px;">
         <div class="title">
@@ -196,6 +171,37 @@
       </s:form>
 
     </div>
+      <div class='right_container address_box' style="left:75%;">
+          <div class='title'>
+              <h5>
+                  To be shipped to
+              </h5>
+          </div>
+          <div class='detail'>
+              <div class='name'>
+                      ${orderSummary.order.address.name}
+              </div>
+              <div class='address'>
+                      ${orderSummary.order.address.line1}
+                  <c:if test="${hk:isNotBlank(orderSummary.order.address.line2)}">
+                      <br/>
+                      ${orderSummary.order.address.line2}
+                  </c:if>
+                  <br/>
+                      ${orderSummary.order.address.city}
+                  <br/>
+                      ${orderSummary.order.address.state}
+                  <br/>
+                      ${orderSummary.order.address.pincode.pincode}
+                  <br/>
+                      ${orderSummary.order.address.phone}
+              </div>
+          </div>
+        <span class="small">
+          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
+              (change) </s:link>
+        </span>
+      </div>
     <c:choose>
     <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">

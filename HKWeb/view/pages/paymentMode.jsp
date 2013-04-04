@@ -37,6 +37,11 @@
             src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
 </s:layout-component>
 <s:layout-component name="steps">
+    <div class='logoBox' style="z-index: 5000;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
     <div class='steps'>
         <hr noshade class="stepLine">
         <s:link

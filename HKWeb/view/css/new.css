@@ -5950,8 +5950,9 @@ color: #e62580;
 .stepLine{
     position: absolute;
     float: left;
-    width: 80%;
+    width: 70%;
     top: 5px;
+    left: 60px;
 }
 
 .widthInitial{
@@ -5963,6 +5964,15 @@ color: #e62580;
     color: #3379bb;
     position: relative;
     float: left;
+}
+
+.dispatchedDate{
+    position: relative;
+    float: left;
+    left: 77px;
+    width: 50%;
+    font-size: 11px;
+    font-style: italic;
 }
 
 

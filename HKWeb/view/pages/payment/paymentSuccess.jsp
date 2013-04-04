@@ -45,15 +45,55 @@
 </s:layout-component>--%>
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
+<s:layout-component name="steps">
+    <div class='logoBox' style="z-index: 5000;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
+    <div class='steps' style="margin-bottom: 20px;">
+        <hr noshade class="stepLine">
+        <div class='newStep'>
+            <div class="newStepCount">1</div>
+
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
+        </div>
+
+        <div class='newStep '>
+            <div class="newStepCount">2</div>
+
+            <div class='newStepText'>
+                Confirm your order
+            </div>
+        </div>
+        <div class='newStep'>
+            <div class="newStepCount">3</div>
+
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount current_step">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
+        </div>
+    </div>
+</s:layout-component>
 <s:layout-component name="heading">
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+    <%--<c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
                 <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
             </a>
         </div>
-    </c:if>
+    </c:if>--%>
+
     <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful
