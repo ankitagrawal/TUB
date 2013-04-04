@@ -1,10 +1,11 @@
 package com.hk.web.action.admin.payment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -61,6 +62,8 @@ public class CheckPaymentAction extends BaseAction {
     private PricingEngine        pricingEngine;
     @Autowired
     private PaymentManager       paymentManager;
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
@@ -169,6 +172,11 @@ public class CheckPaymentAction extends BaseAction {
         Payment payment = order.getPayment();
         payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
         getPaymentService().save(payment);
+
+        Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+        if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+            subscriptionService.placeSubscriptions(order);
+        }
 
         User loggedOnUser = null;
         if (getPrincipal() != null) {
