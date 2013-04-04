@@ -8,6 +8,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 public class ReplacementOrderServiceImpl implements ReplacementOrderService {
     @Autowired
     ShippingOrderService               shippingOrderService;
+    @Autowired
+    OrderService orderService;
     @Autowired
     LineItemDao                        lineItemDao;
     @Autowired
@@ -81,6 +84,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
         replacementOrder.setRefShippingOrder(shippingOrder);
         replacementOrder = (ReplacementOrder) getReplacementOrderDao().save(replacementOrder);
+        replacementOrder.setShippingOrderCategories(orderService.getCategoriesForShippingOrder(replacementOrder));
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
 

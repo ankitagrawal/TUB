@@ -11938,4 +11938,67 @@
             (380, 'Mrp Mismatch', 'Lesser Than', 'SO Escalated Back To Action Queue');
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-1">
+        <createTable tableName="shipping_order_category">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_primary" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="update_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-321">
+        <addForeignKeyConstraint baseColumnNames="category_name" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_category1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="name" referencedTableName="category" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-322">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="shipping_order_category" constraintName="fk_shipping_order_category_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364841762619-323">
+        <modifyDataType columnName="other_remark" newDataType="VARCHAR(2000)" tableName="product_variant"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1364846682281-2">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="basket_category" tableName="shipping_order"/>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-01">
+        <sql>
+            insert into shipping_order_category(shipping_order_id,category_name,is_primary,create_dt,update_dt)
+            select li.shipping_order_id,p.primary_category,0,NOW(),NOW() from line_item li
+            join sku sk on li.sku_id=sk.id
+            join product_variant pv on pv.id=sk.product_variant_id
+            join product p on pv.product_id=p.id;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham" id="2013-04-01-02">
+        <sql>
+            update shipping_order_category soc
+            join shipping_order so on soc.shipping_order_id=so.id
+            set soc.is_primary=1
+            where so.basket_category is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-1">
+        <addColumn tableName="cycle_count">
+            <column name="brand" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-2">
+       <sql>
+           update cycle_count cc inner join brands_to_audit bd on cc.brands_to_audit_id = bd.id
+           set cc.brand = bd.brand where cc.brands_to_audit_id is not null;
+       </sql>
+    </changeSet>
+
 </databaseChangeLog>

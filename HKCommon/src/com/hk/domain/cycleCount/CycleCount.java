@@ -27,8 +27,8 @@ public class CycleCount implements java.io.Serializable {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "brand")
+
+    @Column(name = "brand")
 	private String brand;
 
 	@ManyToOne

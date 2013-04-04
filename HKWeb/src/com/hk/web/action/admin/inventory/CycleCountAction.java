@@ -95,7 +95,6 @@ public class CycleCountAction extends BasePaginatedAction {
     private String cycleCountPVImapString;
     private boolean error = false;
     private Page cycleCountPage;
-    private String brand;
     private String auditorLogin;
     private Date startDate;
     private Date endDate;
@@ -167,7 +166,7 @@ public class CycleCountAction extends BasePaginatedAction {
             for (ProductVariant productVariant : productVariantsList) {
                 List<CycleCount> cycleCountsList = cycleCountService.getCycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
                 if (cycleCountsList != null && cycleCountsList.size() > 0) {
-                    message = "OOooopss !!! ERROR :  Cycle count of PV Id : " + productVariant.getId() + " of same brand : " + brandEntered + " already in Progress. Close it first";
+                    message = "OOooopss !!! ERROR :  Cycle count of PV Id : " + productVariant.getId() + " of same brand already in Progress. Close it first";
                     return true;
                 }
             }
@@ -184,14 +183,13 @@ public class CycleCountAction extends BasePaginatedAction {
             message = "Invalid Brand";
         } else {
             /* Cycle Count of brand , CC of product and CC of product variant related to brand should not in pending status */
-            List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(brand, null, null, userService.getWarehouseForLoggedInUser());
+            List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(auditBy, null, null, userService.getWarehouseForLoggedInUser());
             if (cycleCounts != null && cycleCounts.size() > 0) {
-                message = "Brand Cycle Count Already In progress in " + warehouse.getCity();
+                message = "Brand's Cycle Count Already In progress in " + warehouse.getCity();
                 return false;
             }
             boolean brandsProductCCInProgress = ifBrandProductCycleCountInProgress(auditBy);
             if (brandsProductCCInProgress) {
-                message = "Product Cycle Count of Same Brand  Already In progress , Close It First and Try Again ";
                 return false;
             }
         }
@@ -958,14 +956,6 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public int getPerPageDefault() {
         return defaultPerPage;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
 

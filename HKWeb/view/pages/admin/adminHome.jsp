@@ -80,6 +80,8 @@
     <c:if test="${whAction.setWarehouse == null}">
         <h3><s:link
                 beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
+        <h3><s:link
+                beanclass="com.hk.web.action.admin.queue.action.JITManagementQueueAction">JIT Mgmt Queue</s:link></h3>
     </c:if>
     <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
     <shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
