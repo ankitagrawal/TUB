@@ -1104,6 +1104,7 @@
 
     <!--google remarketing-->
     <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"/>
-
+    <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}"
+    secondaryLevelCategory ="${product.secondaryCategory.name}"/>
 </s:layout-component>
 </s:layout-render>

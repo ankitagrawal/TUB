@@ -46,6 +46,8 @@
 <s:layout-component name="htmlHead">
   <!--google remarketing page type-->
   <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
+    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"
+    secondaryLevelCategory="${ca.childCategorySlug}" />
   <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {

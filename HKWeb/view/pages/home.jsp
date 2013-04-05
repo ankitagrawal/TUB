@@ -233,6 +233,7 @@
 
 <!--google remarketing code-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="home"/>
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="home"/>
 
 <script type="text/javascript">
   $(document).ready(function() {
