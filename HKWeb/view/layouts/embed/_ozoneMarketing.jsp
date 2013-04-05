@@ -51,8 +51,7 @@
 
     <c:if test = "${pageType == 'category'}">
         <c:if test = "${topLevelCategory == 'diabetes' || topLevelCategory == 'health-devices'}">
-            <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=3
-                    &cat_id=${topLevelCategory}&sub_cat1_id=${secondaryLevelCategory}"
+            <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=3"
                     scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0" />
 
         </c:if>
