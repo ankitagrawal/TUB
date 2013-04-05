@@ -43,6 +43,7 @@
     %>
     <input type="hidden" value="${pageType}" id="pageType">
     <input type="hidden" value="${topLevelCategory}" id="topLevelCategory">
+    <input type="hidden" value="${secondaryLevelCategory}" id="secondaryLevelCategory">
     <input type="hidden" value="${googleProduct.id}" id="googleProductId">
 
     <c:set var="excludeCategories" value=""/>
@@ -51,7 +52,7 @@
     <c:if test = "${pageType == 'category'}">
         <c:if test = "${topLevelCategory == 'diabetes' || topLevelCategory == 'health-devices'}">
             <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=2
-                    &cat_id=${topLevelCategory}"
+                    &cat_id=${topLevelCategory}&sub_cat1_id=${secondaryLevelCategory}"
                     scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0" />
 
         </c:if>
@@ -107,7 +108,5 @@
 
     </c:when>
     </c:choose>
-
-    <input type="hidden" value="${googleProductsSelected}" id="cartProductId">
     <%--</c:otherwise>--%>
 </s:layout-definition>
