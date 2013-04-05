@@ -136,10 +136,10 @@ public class POSAction extends BaseAction {
             } else {
                 inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, userService.getWarehouseForLoggedInUser());
                 //exclude those sku items which have already been selected for this order
-                if (inStockSkuItemList != null) {
+                if (inStockSkuItemList != null && inStockSkuItemList.size() > 0) {
                     inStockSkuItemList.removeAll(skuItemListToBeCheckedOut);
-                }
-                 skuItem = inStockSkuItemList.get(0);
+                    skuItem = inStockSkuItemList.get(0);
+                }                   
             }
             if (inStockSkuItemList == null || inStockSkuItemList.size() == 0) {
                 HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "No item found for this Barcode", dataMap);
