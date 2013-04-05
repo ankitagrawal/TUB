@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoServi
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.util.BarcodeUtil;
+import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -206,7 +207,7 @@ public class InventoryCheckinAction extends BaseAction {
                 // Check for In Progress Audit  for Variant.
                 List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
                 if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
-                    String closeAuditMsg = CycleCountDto.getCycleCountNeedToClose(cycleCountInProgressForVariantList);
+                    String closeAuditMsg = CycleCountDtoUtil.getCycleCountInProgress(cycleCountInProgressForVariantList);
                     closeAuditMsg = closeAuditMsg + "  Warehouse" + grn.getWarehouse().getCity();
                     addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
                     return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());

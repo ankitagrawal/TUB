@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.domain.warehouse.Warehouse;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -144,9 +145,9 @@ public class InventoryCheckoutAction extends BaseAction {
                     Warehouse warehouse = shippingOrder.getWarehouse();
                     List<CycleCountDto> cycleCountDtoList = cycleCountService.inProgressCycleCounts(warehouse);
                     if (cycleCountDtoList.size() > 0) {
-                        List<String> brandsToExcludeList = CycleCountDto.getCycleCountInProgressForBrand(cycleCountDtoList);
-                        List<String> productsToExcludeList = CycleCountDto.getCycleCountInProgressForProduct(cycleCountDtoList);
-                        List<String> variantsToExcludeList = CycleCountDto.getCycleCountInProgressForVariant(cycleCountDtoList);
+                        List<String> brandsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForBrand(cycleCountDtoList);
+                        List<String> productsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForProduct(cycleCountDtoList);
+                        List<String> variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
                         StringBuilder cycleCountNeedTobeClose = new StringBuilder(" Cycle Count In Progress For  :").append("<br/>");
                         for (LineItem lineItem : pickingLIs) {
                             String brand = lineItem.getSku().getProductVariant().getProduct().getBrand();

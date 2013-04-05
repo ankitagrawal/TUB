@@ -213,5 +213,7 @@
 	    <mapping class="com.hk.domain.review.ProductReviewMail"/>
 	    <mapping class="com.hk.domain.review.Mail"/>
 	    <mapping class="com.hk.domain.review.UserReviewMail"/>
+        <mapping class="com.hk.domain.cycleCount.CycleCount"/>
+        <mapping class="com.hk.domain.cycleCount.CycleCountItem"/>
     </session-factory>
 </hibernate-configuration>

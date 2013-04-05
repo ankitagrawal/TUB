@@ -156,7 +156,7 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
     public List<CycleCountDto> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse) {
         List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
         String brand = productVariant.getProduct().getBrand();
-        String query = " select cc.brand as brand , cc.productVariant.id as productVariantId from CycleCount cc where cc.warehouse.id =:warehouseId and cc.cycleStatus  " +
+        String query = " select cc.brand as brand , cc.productVariant as productVariant ,cc.product as product from CycleCount cc where cc.warehouse.id =:warehouseId and cc.cycleStatus  " +
                 " in (:cycleStatusList) and (cc.productVariant.id =:productVariantId or cc.brand =:brand or cc.product.id =:productId) ";
         return (List<CycleCountDto>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus)
                 .setParameter("productVariantId", productVariant.getId()).setParameter("productId", productVariant.getProduct().getId())
@@ -166,7 +166,7 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
 
     public List<CycleCountDto> inProgressCycleCounts(Warehouse warehouse) {
         List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
-        String query = "select cc.brand as brand , cc.product.id as productId , cc.productVariant.id as productVariantId  from CycleCount cc where cc.warehouse.id =:warehouseId  " +
+        String query = "select cc.brand as brand , cc.product as product , cc.productVariant as productVariant from CycleCount cc where cc.warehouse.id =:warehouseId  " +
                 "and cc.cycleStatus in (:cycleStatusList) ";
         return (List<CycleCountDto>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).
                 setParameterList("cycleStatusList", cycleCountOpenStatus).setResultTransformer(Transformers.aliasToBean(CycleCountDto.class)).list();

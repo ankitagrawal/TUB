@@ -5,6 +5,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
+import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -226,9 +227,9 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         if (getPrincipalUser() != null) {
             Warehouse warehouse = getPrincipalUser().getSelectedWarehouse();
             List<CycleCountDto> cycleCountDtoList = cycleCountService.inProgressCycleCounts(warehouse);
-            brandsToExcludeList = CycleCountDto.getCycleCountInProgressForBrand(cycleCountDtoList);
-            productsToExcludeList = CycleCountDto.getCycleCountInProgressForProduct(cycleCountDtoList);
-            variantsToExcludeList = CycleCountDto.getCycleCountInProgressForVariant(cycleCountDtoList);
+            brandsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForBrand(cycleCountDtoList);
+            productsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForProduct(cycleCountDtoList);
+            variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
             if (shippingOrdersList.size() == 10) {

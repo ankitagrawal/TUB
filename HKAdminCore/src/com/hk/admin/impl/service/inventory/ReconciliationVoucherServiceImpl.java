@@ -105,32 +105,30 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 getBaseDao().delete(rvLineItem);
             } else if (rvLineItem.getId() == null) {
 
-                int additionType = rvLineItem.getReconciliationType().getId().intValue();
+                Long additionType = rvLineItem.getReconciliationType().getId();
+                EnumReconciliationType enumReconciliationType = EnumReconciliationType.getEnumReconciliationTypeById(additionType);
                 InvTxnType invTxnType = null;
 
-                switch (additionType) {
-                    case 10:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CHECKIN);
-                        break;
-                    case 150:
+                switch (enumReconciliationType) {
+                    case AddDamage:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_DAMAGED);
                         break;
-                    case 160:
+                    case AddExpired:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_EXPIRED);
                         break;
-                    case 170:
+                    case AddBatchMismatch:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_BATCH_MISMATCH);
                         break;
-                    case 100:
+                    case CustomerReturn:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
                         break;
-                    case 110:
+                    case PharmaReturn:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
                         break;
-                    case 180:
+                    case AddFreeVariant:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FREE_VARIANT_RECONCILE);
                         break;
-                    case 140:
+                    case AddIncorrectCounting:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_INCORRECT_COUNTING);
                         break;
                 }
@@ -150,7 +148,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 rvLineItem = (RvLineItem) getBaseDao().save(rvLineItem);
 
                 // Add PVI Entry with -1  and  set sku item status to expired
-                if (additionType == (EnumReconciliationType.AddExpired.getId().intValue())) {
+                if ((additionType.intValue()) == (EnumReconciliationType.AddExpired.getId().intValue())) {
                     for (SkuItem skuItem : skuGroup.getSkuItems()) {
                         adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, rvLineItem, null,
                                 EnumInvTxnType.RV_ADD_EXPIRED_AUTOMATIC_DELETION.asInvTxnType(), -1L, userService.getLoggedInUser());
@@ -242,40 +240,42 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
     public RvLineItem reconcileSKUItems(ReconciliationVoucher reconciliationVoucher, ReconciliationType reconciliationType, SkuItem skuItem, String remarks) {
         SkuGroup skuGroup = skuItem.getSkuGroup();
         Sku sku = skuGroup.getSku();
-        int subtractionType = reconciliationType.getId().intValue();
+        Long subtractionType = reconciliationType.getId();
+        EnumReconciliationType subtractTypeEnum =   EnumReconciliationType.getEnumReconciliationTypeById(subtractionType);
         InvTxnType invTxnType = null;
         SkuItemStatus skuItemStatus = null;
 
-        switch (subtractionType) {
-            case 30:
+
+        switch (subtractTypeEnum) {
+            case SubtractDamage:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_DAMAGED);
                 skuItemStatus = EnumSkuItemStatus.Damaged.getSkuItemStatus();
                 break;
-            case 40:
+            case SubtractExpired:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_EXPIRED);
                 skuItemStatus = EnumSkuItemStatus.Expired.getSkuItemStatus();
                 break;
-            case 50:
+            case Lost:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_LOST_PILFERAGE);
                 skuItemStatus = EnumSkuItemStatus.Lost.getSkuItemStatus();
                 break;
-            case 60:
+            case SubtractBatchMismatch:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_BATCH_MISMATCH);
                 skuItemStatus = EnumSkuItemStatus.BatchMismatch.getSkuItemStatus();
                 break;
-            case 70:
+            case MrpMismatch:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MRP_MISMATCH);
                 skuItemStatus = EnumSkuItemStatus.MrpMismatch.getSkuItemStatus();
                 break;
-            case 80:
+            case NonMoving:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
                 skuItemStatus = EnumSkuItemStatus.NonMoving.getSkuItemStatus();
                 break;
-            case 90:
+            case SubtractFreeVariant:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_FREE_VARIANT_RECONCILE);
                 skuItemStatus = EnumSkuItemStatus.FreeVariant.getSkuItemStatus();
                 break;
-            case 130:
+            case SubtractIncorrectCounting:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_INCORRECT_COUNTING);
                 skuItemStatus = EnumSkuItemStatus.IncorrectCounting.getSkuItemStatus();
                 break;

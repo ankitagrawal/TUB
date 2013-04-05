@@ -48,6 +48,16 @@ public enum EnumReconciliationType {
     }
 
 
+    public static EnumReconciliationType getEnumReconciliationTypeById(Long id) {
+        for (EnumReconciliationType enumReconciliationType : EnumReconciliationType.values()) {
+            if (enumReconciliationType.getId().equals(id)) {
+                return enumReconciliationType;
+            }
+
+        }
+       return null;
+    }
+
     public ReconciliationType asReconciliationType() {
         ReconciliationType reconciliationType = new ReconciliationType();
         reconciliationType.setId(id);
