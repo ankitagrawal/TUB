@@ -3,33 +3,44 @@ package com.hk.loyaltypg.service;
 import java.util.Collection;
 import java.util.List;
 
+import com.akube.framework.dao.Page;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.user.User;
 
 public interface LoyaltyProgramService {
 	
-	List<LoyaltyProduct> listProucts(int startRow, int maxRows);
+	public List<LoyaltyProduct> listProucts(int startRow, int maxRows);
 	
-	int countProucts();
+	public int countProucts();
 	
-	LoyaltyProduct getProductByVariantId(String variantId);
+	public LoyaltyProduct getProductByVariantId(String variantId);
 	
-	void creditKarmaPoints(Long orderId);
+	public void creditKarmaPoints(Long orderId);
 	
-	void debitKarmaPoints(Long orderId);
+	public void debitKarmaPoints(Long orderId);
 
-	void approveKarmaPoints(Long orderId);
+	public void approveKarmaPoints(Long orderId);
 	
-	void cancelKarmaPoints(Long orderId);
+	public void cancelKarmaPoints(Long orderId);
 
-	double aggregatePoints(Collection<CartLineItem> cartLineItems);
+	public double aggregatePoints(Collection<CartLineItem> cartLineItems);
 	
-	double calculateKarmaPoints(Long userId);
+	public double calculateKarmaPoints(Long userId);
 	
-	double aggregatePoints(Long orderId);
+	public double aggregatePoints(Long orderId);
 	
-	UserBadgeInfo getUserBadgeInfo(Long userId);
+	public UserBadgeInfo getUserBadgeInfo(Long userId);
 
-	List<Badge> getAllBadges();
+	public List<Badge> getAllBadges();
+	
+	/**
+	 * This method returns an user's karma profile history.
+	 * @param user
+	 * @param page
+	 * @param perPage
+	 * @return
+	 */
+	public Page getProfileHistory (User user, int page, int perPage);
 }

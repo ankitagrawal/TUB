@@ -1,0 +1,552 @@
+html,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;font-weight: normal;}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}
+del{text-decoration:line-through}
+table{border-collapse:collapse;border-spacing:0}
+@font-face {
+font-family: whitneyBook;
+src: url("../Fonts/WhitneyHTF-Book.otf") format("opentype");
+}
+
+@font-face {
+font-family: whitneybookSC;
+src: url("../Fonts/WhitneyHTF-BookSC.otf") format("opentype");	
+}
+
+body{font-family: "whitneyBook";font-size: 16px;line-height: 20px;color: #424242; background:#fff;}
+a{text-decoration: none;outline: 0;color: #424242}
+a:focus{outline:1px dotted invert}hr{border:0#ccc solid;border-top-width:1px;clear:both;height:0}
+h1{font-size:25px}h2{font-size:23px}h3{font-size:21px}h4{font-size:19px}h5{font-size:17px;}h6{font-size:15px}ol{list-style:decimal}
+ul{list-style:square;}li{ color:#ccc;list-style:square;   margin-left:30px}
+/*Author : Sachit*/
+#wrapper {
+font-family: "whitneyBook";
+color: #424242;
+}
+
+.font-caps{
+font-family: "whitneybookSC" !important;
+text-transform: uppercase;
+}
+#header{
+margin-top: 20px;
+}
+
+/*product-page*/
+.productBorder{
+	border-bottom: 1px solid #646464;
+	position: relative;
+	top: 10px;
+}
+ul li span{
+	color: #424242;
+}
+.strikethrough{
+	text-decoration: line-through;
+}
+.successText{
+	color: #005000;
+	font-size: 18px;
+}
+select{
+
+	border: 1px solid #c8c8c8;
+	width: 280px;
+	height: 30px;
+	margin: 10px 0;
+	color: #707070;
+	font-family: whitneyBook;
+	font-size: 16px;
+	padding:5px;
+}
+.buttonControl{
+	border: 1px solid #597fba;
+	background: #008ED3;
+	width: 150px;
+	height: 40px;
+	padding: 5px;
+	color: #fff;
+	display: block;
+	font-family: whitneyBookSC;
+	font-size: 	20px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin:10px 0;
+	text-transform: uppercase;
+}
+.buttonControl:hover{
+	border: 1px solid #008ED3;
+	background: #597fba;
+}
+
+.secondaryButton{
+	background: #dcdcdc;
+padding: 0;
+height: 30px;
+margin: 0;
+border: none;
+width:196px;
+text-transform: uppercase;
+font-family: whitneyBookSC;
+border-right:1px solid #c8c8c8;
+
+}
+.secondaryButton:hover{
+
+	background: #c8c8c8;
+	border-right:1px solid #dcdcdc;
+}
+/*product page ends*/
+
+
+
+/*dropdown menu css begins*/
+.dropDownbox{
+display: none;
+position: absolute;
+z-index: 1;
+float: left;
+clear: both;
+border: 1px solid rgb(211, 211, 211);
+box-shadow: 0px 8px 10px -3px #888;
+top: 35px;
+width: 350px;
+height: auto;
+background: white;
+}
+
+.dropDownitem{
+position: relative;
+left: 22px;
+top: 10px;
+font-size: 11px;
+float: left;
+margin-bottom: 20px;
+clear: both;
+}
+
+.dropDownitem:hover{
+color: rgb(49, 118, 241);
+cursor: pointer;
+}
+
+.dropDownButton{
+z-index: 1000;
+position: relative;
+background: #5c9dff;
+float: left;
+height: 35px;
+width: 175px;
+border: 1px solid #c3c3cf;
+left: 6px;
+color:#fff;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+}
+
+.dropDownButton-hover{
+background: white;
+color: rgb(49, 118, 241);
+border: 1px solid rgb(211, 211, 211);
+border-bottom: none;
+cursor: pointer;
+border-bottom-right-radius: 0px;
+border-bottom-left-radius: 0px;
+}
+
+.arrowDown{
+position: relative;
+float: left;
+width: 8px;
+top: 9px;
+left: 45px;
+}
+
+.dropDownButtonText{
+position: relative;
+float: left;
+font-size: 11px;
+top: 6px;
+left: 18px;
+}
+
+.topToDown{
+position: relative;
+float: left;
+right: 2%;
+text-transform: uppercase;
+}
+
+.seperator{
+position: relative;
+float: left;
+    width:100%;
+    border-bottom: 1px dotted rgb(179, 177, 177);
+margin-bottom: 10px;
+margin-top: 10px;
+ }
+
+ .downToTop{
+ 	position: absolute;
+ 	float: left;
+ 	top: 10%;
+ 	left: 30%;
+ }
+
+ #topToDown{
+ 	position: absolute;
+ 	top: 201px;
+ 	left: 62px;
+ }
+
+ .topToDown-hover{
+background: white;
+color: rgb(49, 118, 241);
+border: 1px solid rgb(211, 211, 211);
+border-top: none;
+cursor: pointer;
+}
+
+.arrow-down {
+width: 0; 
+height: 0; 
+border-left: 5px solid transparent;
+border-right: 5px solid transparent;
+border-top: 5px solid #fff;
+float: right;
+margin-right: 10px;
+margin-top: 13px;
+}
+.arrow-down-hover{
+border-top: 5px solid #5c9dff;
+}
+
+/*dropdown menu css ends*/
+
+/*search menu css begins*/
+
+.searchText{
+position: relative;
+z-index: 1000;
+float: left;
+width: 280px;
+height: 12px;
+border: none;
+padding:10px;
+background: rgb(235, 230, 230);
+}
+
+.searchButton{
+z-index: 1000;
+position: relative;
+float: left;
+height: 30px;
+width: 170px;
+background: rgb(235, 230, 230);
+border: 1px solid transparent;
+padding-left: 5px;
+}
+
+.searchButton-hover{
+background: white;
+color: rgb(49, 118, 241);
+border: 1px solid rgb(235, 230, 230);
+border-bottom: none;
+cursor: pointer;
+}
+
+.searchButtonText{
+position: relative;
+float: left;
+font-size: 11px;
+top: 6px;
+left: 18px;
+}
+
+.searchLense{
+position: relative;
+float: left;
+top: 10px;
+left: 26px;
+}
+
+.searchbox{
+display: none;
+position: absolute;
+z-index: 1;
+float: left;
+clear: both;
+left: 63%;
+border: 1px solid rgb(235, 230, 230);
+width: 124px;
+box-shadow: 0px 8px 10px -3px #888;
+top: 30px;
+padding: 35px;
+background: white;
+}
+
+.searchitem{
+position: relative;
+font-size: 14px;
+float: left;
+margin-bottom: 10px;
+clear: both;
+}
+
+.searchitem:hover{
+color: rgb(49, 118, 241);
+cursor: pointer;
+}
+
+.search{
+position: relative;
+float: right;
+left: 0%;
+margin-top: 20px;
+}
+
+.searchMore{
+width: 0; 
+height: 0; 
+border-left: 5px solid transparent;
+border-right: 5px solid transparent;
+border-top: 5px solid #464646;
+float: left;
+margin-top: 13px;
+
+}
+
+.searchMore-hover{
+border-top: 5px solid #5c9dff;
+}
+
+/*Search menu css ends*/
+
+.nav-menu{
+float:right;min-width:360px;margin-top:20px;height:36px;
+}
+.nav-menu div{
+float:left;width:80px;margin-left: 10px;
+}
+
+.nav-menu p{
+margin:0;
+}
+.logo-block{float:left;width:auto;margin-bottom:20px;}
+.logoSubblock{width: 70px;float: left;}
+.hkpolicy{font-size:12px;float:right;margin-top:34px;margin-left: 40px;}
+.section1{font-size:10px;}
+.section2{font-size:14px;line-height:14px;}
+
+
+.leftBlock{
+position: relative;
+float: left;
+height: auto;
+}
+
+.mainContent{
+position: relative;
+float: left;
+height: auto;
+}
+
+.product{
+width: 210px;
+height: auto;
+display: inline;
+float: left;
+margin-left: 10px;
+margin-right: 10px;
+}
+
+.productCategoryText{
+position: relative;
+float: left;
+width: 210px;
+text-align: center;
+}
+
+.dottedLine{
+position: relative;
+float: left;
+border-bottom: 1px dotted;
+top: 8px;
+width: 245px;
+}
+
+.embedMargin{
+margin-bottom: 10px;
+margin-top: 10px;
+}
+
+.embedMargin5{
+margin-bottom: 5px;
+margin-top: 5px;
+}
+
+.autoHeight{
+height: auto;
+}
+
+.productDescription{
+position: relative;
+float: left;
+}
+
+.priceAndVariant{
+position: relative;
+float: left;
+border-top: 1px solid #c8c8c8;
+border-bottom: 1px solid #c8c8c8;
+}
+
+.variant{
+position: relative;
+float: left;
+}
+
+.price{
+position: relative;
+float: left;
+}
+
+.addToCompare{
+position: relative;
+float: left;
+border: 1px dotted;
+padding: 9px;
+padding-left: 29px;
+padding-right: 29px;
+font-size: 12px;
+cursor: pointer;
+}
+
+.removeBorder{
+border: none;
+}
+
+.rating{
+cursor: pointer;
+}
+
+.browseBy{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.priceFilter{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: 275px;
+	padding-bottom: 20px;
+}
+
+.brandsContainer{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: 220px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.brands{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.form{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+
+.condition{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.filterBy{
+	position: relative;
+	float: left;
+	font-weight: bold;
+	width: 220px;
+}
+
+.priceFilterHeading{
+	font-size: 14px;
+	position: relative;
+	float: left;
+	height: auto;
+	width: 220px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.priceFilterContainer{
+	position: relative;
+	float: left;
+	height: auto;
+	width: 220px;
+}
+
+.priceRange{
+	position: relative;
+	float: left;
+	width: 218px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.priceRange span{
+	position: relative;
+	float: left;
+	left: 20px;
+	font-size: 14px;
+}
+
+.priceRange input[type="checkbox"]{
+	position: relative;
+	float: left;
+	left: 10px;
+}
+
+.priceFilter p{
+	position: relative;
+	left: 15px;
+	margin-top: 10px;
+	font-size: 14px;
+	width: 80%;
+}
+
+.embedSpace{
+	position: relative;
+	float: left;
+	margin-top: 25px;
+	margin-bottom: 25px;
+	width: 220px;
+}
+
+.paginationContainer{
+	position: relative;
+	float: right;
+}

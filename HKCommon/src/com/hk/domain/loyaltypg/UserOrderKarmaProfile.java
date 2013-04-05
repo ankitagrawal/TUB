@@ -33,7 +33,7 @@ public class UserOrderKarmaProfile {
 	private KarmaPointStatus status;
 
 	@Column(name = "points")
-	private Double karmaPints;
+	private Double karmaPoints;
 	
 	public UserOrderKey getUserOrderKey() {
 		return userOrderKey;
@@ -59,12 +59,12 @@ public class UserOrderKarmaProfile {
 		this.status = status;
 	}
 
-	public Double getKarmaPints() {
-		return karmaPints;
+	public Double getKarmaPoints() {
+		return karmaPoints;
 	}
 
-	public void setKarmaPints(Double karmaPints) {
-		this.karmaPints = karmaPints;
+	public void setKarmaPoints(Double karmaPoints) {
+		this.karmaPoints = karmaPoints;
 	}
 
 	public Date getCreationTime() {
