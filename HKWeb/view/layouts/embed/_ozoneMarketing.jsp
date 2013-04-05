@@ -72,20 +72,29 @@
     <c:choose>
     <c:when test = "${pageType == 'cart' || pageType == 'purchase'}">
         <c:forEach items="${order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-            <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
-                <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'diabetes' || cartLineItem.productVariant.product.primaryCategory == 'health-devices'}">
+            <c:choose>
+                <c:when test="${not empty googleProductsSelected}">
                     <c:set var="googleProductsSelected" value="${googleProductsSelected}/${cartLineItem.productVariant.product.id}"/>
-                    <c:set var="canGoogleRemarket" value="true"/>
-                </c:if>
-            </c:if>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="googleProductsSelected" value="${cartLineItem.productVariant.product.id}"/>
+                </c:otherwise>
+            </c:choose>
         </c:forEach>
         <c:forEach items="${order.exclusivelyComboCartLineItems}" var="cartLineItem" varStatus="ctr">
-            <c:if test="${!cartLineItem.productVariant.product.googleAdDisallowed}">
-                <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'diabetes' || cartLineItem.productVariant.product.primaryCategory == 'health-devices'}">
-                    <c:set var="googleProductsSelected" value="${googleProductsSelected}/${cartLineItem.productVariant.product.id}"/>
-                    <c:set var="canGoogleRemarket" value="true"/>
-                </c:if>
+
+            <c:if test = "${cartLineItem.productVariant.product.primaryCategory == 'diabetes' || cartLineItem.productVariant.product.primaryCategory == 'health-devices'}">
+                <c:choose>
+                    <c:when test="${not empty googleProductsSelected}">
+                            <c:set var="googleProductsSelected" value="${googleProductsSelected}/${cartLineItem.productVariant.product.id}"/>
+                    </c:when>
+                    <c:otherwise>
+                            <c:set var="googleProductsSelected" value="${cartLineItem.productVariant.product.id}"/>
+                    </c:otherwise>
+                </c:choose>
+                <c:set var="canGoogleRemarket" value="true"/>
             </c:if>
+
         </c:forEach>
 
         <c:if test = "${pageType == 'cart'}">
