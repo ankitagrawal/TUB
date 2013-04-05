@@ -62,7 +62,9 @@
 
     <c:if test = "${pageType == 'product'}">
         <c:if test = "${topLevelCategory == 'diabetes' || topLevelCategory == 'health-devices'}">
-    <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=3&cat_id=${topLevelCategory}&sub_cat1_id=${secondaryLevelCategory}&pid=${googleProductId}"
+    <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=3
+                                &cat_id=${topLevelCategory}&sub_cat1_id=${secondaryLevelCategory}
+                                &pid=${googleProductId}"
         scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0" />
         </c:if>
     </c:if>
@@ -86,14 +88,14 @@
             </c:if>
         </c:forEach>
 
-        <c:when test = "${pageType == 'cart'}">
+        <c:if test = "${pageType == 'cart'}">
             <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2
                     &adv_id=ADV000029&section=5&pid=${googleProductsSelected}" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0" />
-        </c:when>
-        <c:when test = "${pageType == 'purchase'}">
+        </c:if>
+        <c:if test = "${pageType == 'purchase'}">
             <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2
                     &adv_id=ADV000029&section=6&orderID=500&saleValue=1000&paymentMode=credit_card&currency=INR&pid=${googleProductsSelected}"/>
-        </c:when>
+        </c:if>
 
     </c:when>
     </c:choose>
