@@ -205,7 +205,7 @@ public class UserOrderResource {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                String cancellationRemark = "Cancelled through COD call by " + source;
+
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), cancellationRemark, loggedInUser);
             } else if (action.equalsIgnoreCase("CONFIRMED")) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
