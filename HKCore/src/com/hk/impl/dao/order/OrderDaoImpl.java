@@ -81,10 +81,10 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
 
-        searchCriteria.setProjection(Projections.distinct(Projections.id()));
+      /*  searchCriteria.setProjection(Projections.distinct(Projections.id()));
 
         DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
-        uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));
+        uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));*/
 
         // TODO: fix later in rewrite
         // searchCriteria.setMaxResults(10000);

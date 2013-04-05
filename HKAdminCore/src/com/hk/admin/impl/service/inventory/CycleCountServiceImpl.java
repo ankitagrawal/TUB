@@ -38,8 +38,7 @@ import java.util.Date;
 @Service
 public class CycleCountServiceImpl implements CycleCountService {
 
-    @Autowired
-    private BaseDao baseDao;
+
     @Autowired
     private CycleCountDao cycleCountDao;
     @Autowired
@@ -51,19 +50,11 @@ public class CycleCountServiceImpl implements CycleCountService {
 
 
     public CycleCount save(CycleCount cycleCount) {
-        return (CycleCount) getBaseDao().save(cycleCount);
+        return (CycleCount) cycleCountDao.save(cycleCount);
     }
 
     public CycleCountItem save(CycleCountItem cycleCountItem) {
-        return (CycleCountItem) getBaseDao().save(cycleCountItem);
-    }
-
-    public BaseDao getBaseDao() {
-        return baseDao;
-    }
-
-    public void setBaseDao(BaseDao baseDao) {
-        this.baseDao = baseDao;
+        return (CycleCountItem) cycleCountDao.save(cycleCountItem);
     }
 
     public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem) {

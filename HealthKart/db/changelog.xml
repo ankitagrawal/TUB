@@ -11989,16 +11989,21 @@
             where so.basket_category is not null;
         </sql>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1361952544855-1">
+        <addColumn tableName="shipping_order">
+            <column name="accounting_invoice_number" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-1">
         <addColumn tableName="cycle_count">
             <column name="brand" type="VARCHAR(45)"/>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-2">
-       <sql>
-           update cycle_count cc inner join brands_to_audit bd on cc.brands_to_audit_id = bd.id
-           set cc.brand = bd.brand where cc.brands_to_audit_id is not null;
-       </sql>
+        <sql>
+            update cycle_count cc inner join brands_to_audit bd on cc.brands_to_audit_id = bd.id
+            set cc.brand = bd.brand where cc.brands_to_audit_id is not null;
+        </sql>
     </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-3">
         <sql>
@@ -12043,6 +12048,4 @@
             set pvi.inv_txn_type_id = 240 where rv.reconciliation_type_id = 180;
         </sql>
     </changeSet>
-
-
 </databaseChangeLog>

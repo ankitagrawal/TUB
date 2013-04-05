@@ -994,7 +994,7 @@ public class CycleCountAction extends BasePaginatedAction {
 
     public Set<String> getParamSet() {
         HashSet<String> params = new HashSet<String>();
-        params.add("brand");
+        params.add("auditBy");
         params.add("auditorLogin");
         params.add("startDate");
         params.add("endDate");

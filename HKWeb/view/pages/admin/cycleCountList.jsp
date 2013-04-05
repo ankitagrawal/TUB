@@ -22,7 +22,7 @@
 				<label>Brand/Product/ProductVariant:</label><s:text name="auditBy"/>
 				<label>Auditor Login Email:</label><s:text name="auditorLogin"/>
 				<label>Status:</label>
-				<s:select name="cycleCountStatus" id="boxSize">
+				<s:select name="cycleCountStatus">
                                 <s:option value="">--Select--</s:option>
                                 <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCycleCountStatus"
                                                            value="id" label="name"/>

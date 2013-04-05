@@ -57,8 +57,8 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "cancellation_remark", length = 65535)
     private String                      cancellationRemark;
 
-    @Column(name = "accounting_invoice_number_id")
-    private Long                        accountingInvoiceNumber;
+    /*@Column(name = "accounting_invoice_number_id")
+    private Long                        accountingInvoiceNumber;*/
 
     @Column(name = "basket_category", length = 45)
     private String                      basketCategory;
@@ -112,6 +112,9 @@ public class ShippingOrder implements java.io.Serializable {
 
     @Column(name = "drop_shipping")
     private boolean isDropShipping;
+
+	  @Column(name = "accounting_invoice_number")
+	  private String accountingInvoiceNumber;
 
     @Column(name = "contains_jit_products")
     private boolean containsJitProducts;
@@ -203,11 +206,11 @@ public class ShippingOrder implements java.io.Serializable {
         this.cancellationRemark = cancellationRemark;
     }
 
-    public Long getAccountingInvoiceNumber() {
+    public String getAccountingInvoiceNumber() {
         return accountingInvoiceNumber;
     }
 
-    public void setAccountingInvoiceNumber(Long accountingInvoiceNumber) {
+    public void setAccountingInvoiceNumber(String accountingInvoiceNumber) {
         this.accountingInvoiceNumber = accountingInvoiceNumber;
     }
 
