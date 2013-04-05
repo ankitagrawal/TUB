@@ -24,7 +24,6 @@ public enum EnumReconciliationType {
     ProductVariantAudited(120L, "Product Variant Audited"),
     SubtractIncorrectCounting(130L, " Incorrect Counting"),
     AddIncorrectCounting(140L, "Incorrect Counting"),
-
     AddDamage(150L, "Damage"),
     AddExpired(160L, "Expired"),
     AddBatchMismatch(170L, " Batch Mismatch"),

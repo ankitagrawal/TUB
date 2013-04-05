@@ -241,7 +241,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
         SkuGroup skuGroup = skuItem.getSkuGroup();
         Sku sku = skuGroup.getSku();
         Long subtractionType = reconciliationType.getId();
-        EnumReconciliationType subtractTypeEnum =   EnumReconciliationType.getEnumReconciliationTypeById(subtractionType);
+        EnumReconciliationType subtractTypeEnum = EnumReconciliationType.getEnumReconciliationTypeById(subtractionType);
         InvTxnType invTxnType = null;
         SkuItemStatus skuItemStatus = null;
 

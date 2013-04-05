@@ -15,6 +15,7 @@ import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.akube.framework.dao.Page;
 import com.hk.pact.dao.BaseDao;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Criterion;
@@ -154,22 +155,40 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
     }
 
     public List<CycleCountDto> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse) {
-        List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
-        String brand = productVariant.getProduct().getBrand();
-        String query = " select cc.brand as brand , cc.productVariant as productVariant ,cc.product as product from CycleCount cc where cc.warehouse.id =:warehouseId and cc.cycleStatus  " +
-                " in (:cycleStatusList) and (cc.productVariant.id =:productVariantId or cc.brand =:brand or cc.product.id =:productId) ";
-        return (List<CycleCountDto>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus)
-                .setParameter("productVariantId", productVariant.getId()).setParameter("productId", productVariant.getProduct().getId())
-                .setParameter("brand", brand).setResultTransformer(Transformers.aliasToBean(CycleCountDto.class)).list();
+        return inProgressCycleCounts(productVariant, warehouse);
 
     }
 
     public List<CycleCountDto> inProgressCycleCounts(Warehouse warehouse) {
+        return inProgressCycleCounts(null, warehouse);
+    }
+
+    public List<CycleCountDto> inProgressCycleCounts(ProductVariant productVariant, Warehouse warehouse) {
         List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
-        String query = "select cc.brand as brand , cc.product as product , cc.productVariant as productVariant from CycleCount cc where cc.warehouse.id =:warehouseId  " +
+        String brand = null;
+        String variantId = null;
+        String productId = null;
+        if (productVariant != null) {
+            brand = productVariant.getProduct().getBrand();
+            variantId = productVariant.getId();
+            productId = productVariant.getProduct().getId();
+        }
+        String sql = "select cc.brand as brand , cc.product as product , cc.productVariant as productVariant from CycleCount cc where cc.warehouse.id =:warehouseId  " +
                 "and cc.cycleStatus in (:cycleStatusList) ";
-        return (List<CycleCountDto>) getSession().createQuery(query).setParameter("warehouseId", warehouse.getId()).
-                setParameterList("cycleStatusList", cycleCountOpenStatus).setResultTransformer(Transformers.aliasToBean(CycleCountDto.class)).list();
+
+        if (productVariant != null) {
+            sql = sql + " and (cc.productVariant.id =:productVariantId or cc.brand =:brand or cc.product.id =:productId) ";
+        }
+
+        Query query = getSession().createQuery(sql).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus);
+
+        if (productVariant != null) {
+            query.setParameter("productVariantId", variantId).setParameter("productId", productId)
+                    .setParameter("brand", brand);
+        }
+        return (List<CycleCountDto>) query.setResultTransformer(Transformers.aliasToBean(CycleCountDto.class)).list();
+
+
     }
 
 
