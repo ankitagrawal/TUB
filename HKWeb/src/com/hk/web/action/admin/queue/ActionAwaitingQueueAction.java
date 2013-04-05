@@ -219,9 +219,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             orderSearchCriteria.setPaymentEndDate(endDate);
         }
 
-        Set<Category> categoryList = new HashSet<Category>();
-        categoryList.addAll(categoryDao.getPrimaryCategories());
-        orderSearchCriteria.setCategories(categoryList);
+//        Set<Category> categoryList = new HashSet<Category>();
+//        categoryList.addAll(categoryDao.getPrimaryCategories());
+//        orderSearchCriteria.setCategories(categoryList);
 
         if (dropShip != null){
            orderSearchCriteria.setDropShip(dropShip);
@@ -235,9 +235,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 basketCategoryList.add((Category) categoryDao.getCategoryByName(category));
             }
         }
-        if (basketCategoryList.size() == 0) {
-            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
-        }
+//        if (basketCategoryList.size() == 0) {
+//            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
+//        }
         orderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         return orderSearchCriteria;
     }
