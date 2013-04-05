@@ -54,19 +54,19 @@ import com.hk.pact.service.user.UserDetailService;
 @Component
 public class UserOrderResource {
 
-    private static Logger logger = LoggerFactory.getLogger(UserOrderResource.class);
+    private static Logger     logger = LoggerFactory.getLogger(UserOrderResource.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
-    private String API_KEY;
+    private String            API_KEY;
 
     @Autowired
-    UserService userService;
+    UserService               userService;
 
     @Autowired
-    KarmaProfileService karmaProfileService;
+    KarmaProfileService       karmaProfileService;
 
     @Autowired
-    private UserOrderService userOrderService;
+    private UserOrderService  userOrderService;
 
     @Autowired
     private UserDetailService userDetailService;
@@ -81,7 +81,7 @@ public class UserOrderResource {
     @Path("/email/{email}/phone/{phone}")
     @Produces("application/json")
     public Response updateUser(@PathParam("email")
-                               String email, @PathParam("phone")
+    String email, @PathParam("phone")
     long phone) {
         email = email.toLowerCase().trim();
         User user = userService.findByLogin(email);
@@ -108,7 +108,7 @@ public class UserOrderResource {
     @Path("/priority/{priority}")
     @Produces("application/json")
     public Response getUserListByPriority(@PathParam("priority")
-                                          long priority) {
+    long priority) {
 
         Response response = null;
         try {
@@ -128,7 +128,7 @@ public class UserOrderResource {
     @Produces("application/json")
     @Encoded
     public Response getUserDetails(@PathParam("phone")
-                                   String phone, @QueryParam("key")
+    String phone, @QueryParam("key")
     String key) {
 
         long phoneNo = 0L;
@@ -160,10 +160,11 @@ public class UserOrderResource {
             } else {
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }
-        } catch (NumberFormatException ex) {
+        }catch (NumberFormatException ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Wrong input passed from Drishti ");
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
         }
@@ -205,7 +206,6 @@ public class UserOrderResource {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
             } else if (action.equalsIgnoreCase("CONFIRMED")) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
@@ -240,7 +240,7 @@ public class UserOrderResource {
      * internal class just for helping with JSON Marshalling
      */
     class APIOrderDetail {
-        public Long id;
+        public Long   id;
         public String status;
         public String gatewayOrderId;
         public String createDate;
@@ -250,7 +250,7 @@ public class UserOrderResource {
     @Path("/orders/phone/{phone}")
     @Produces("application/json")
     public Response getUserOrders(@PathParam("phone")
-                                  long phone) {
+    long phone) {
 
         Response response = null;
         try {
@@ -274,7 +274,7 @@ public class UserOrderResource {
     @Path("/orders/email/{email}")
     @Produces("application/json")
     public Response getUserOrders(@PathParam("email")
-                                  String email) {
+    String email) {
 
         Response response = null;
         try {
