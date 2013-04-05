@@ -15,9 +15,4 @@ public interface RoleService {
    /* public List<Role> listAllExceptAdmins();
 
     public List<Role> listAllBasicRoles();*/
-
-    public List<Role> listAllRoles();
-
-    public List<Permission> listAllPermissions();
-
 }
