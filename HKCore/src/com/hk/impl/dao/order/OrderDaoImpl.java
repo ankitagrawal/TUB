@@ -7,10 +7,7 @@ import java.util.List;
 import com.akube.framework.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +73,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         searchCriteria.setProjection(Projections.distinct(Projections.id()));
         DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
         uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));
+        uniqueCriteria.createAlias("shippingOrders", "sp", CriteriaSpecification.LEFT_JOIN);
 
         // searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return list(uniqueCriteria, true, pageNo, perPage);
