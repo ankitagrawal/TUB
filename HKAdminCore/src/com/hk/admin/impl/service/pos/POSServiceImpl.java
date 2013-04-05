@@ -182,12 +182,12 @@ public class POSServiceImpl implements POSService {
     public POSLineItemDto getPosLineItemWithNonAvailableInventory(List<POSLineItemDto> posLineItemDtoList) {
         List<SkuItem> bookedSkuItems = new ArrayList<SkuItem>(0);
         SkuItem skuItem = null;
-        List<SkuItem> inStockSkuItemList = null;
+        List<SkuItem> inStockSkuItemList =new ArrayList<SkuItem>(0);
         for (POSLineItemDto posLineItemDto : posLineItemDtoList) {
             SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
             if (skuItemBarcode != null) {
                 skuItem = skuItemBarcode;
-                inStockSkuItemList.add(skuItem);
+                inStockSkuItemList.removeAll(bookedSkuItems);
             } else {
                 inStockSkuItemList = adminInventoryService.getInStockSkuItems(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser());
                 if (inStockSkuItemList != null) {
