@@ -182,7 +182,7 @@ public class POSServiceImpl implements POSService {
     public POSLineItemDto getPosLineItemWithNonAvailableInventory(List<POSLineItemDto> posLineItemDtoList) {
         List<SkuItem> bookedSkuItems = new ArrayList<SkuItem>(0);
         SkuItem skuItem = null;
-        List<SkuItem> inStockSkuItemList =new ArrayList<SkuItem>(0);
+        List<SkuItem> inStockSkuItemList = new ArrayList<SkuItem>(0);
         for (POSLineItemDto posLineItemDto : posLineItemDtoList) {
             SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
             if (skuItemBarcode != null) {
@@ -207,14 +207,19 @@ public class POSServiceImpl implements POSService {
     }
 
     public void checkoutAndUpdateInventory(List<POSLineItemDto> posLineItems, ShippingOrder shippingOrder) {
-
+        SkuItem skuItem = null;
         for (POSLineItemDto posLineItemDto : posLineItems) {
             Sku posLineItemSku = posLineItemDto.getSkuItem().getSkuGroup().getSku();
             int counter = 0;
             while (counter < posLineItemDto.getQty()) {
-                List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser());
-                // deliberately not handling null pointer exception, to rollback everything if exception is thrown(i.e. no in stock sku item found)
-                SkuItem skuItem = inStockSkuItemList.get(0);
+                SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+                if (skuItemBarcode != null) {
+                    skuItem = skuItemBarcode;
+                } else {
+                    List<SkuItem> inStockSkuItemList = adminInventoryService.getInStockSkuItems(posLineItemDto.getProductVariantBarcode(), userService.getWarehouseForLoggedInUser());
+                    // deliberately not handling null pointer exception, to rollback everything if exception is thrown(i.e. no in stock sku item found)
+                    skuItem = inStockSkuItemList.get(0);
+                }
                 skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus());
                 baseDao.save(skuItem);
                 LineItem lineItemToBeInsertedInPVI = null;
