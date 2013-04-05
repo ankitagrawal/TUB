@@ -206,7 +206,7 @@ public class UserOrderResource {
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
 
-                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), cancellationRemark, loggedInUser);
+                adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
             } else if (action.equalsIgnoreCase("CONFIRMED")) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
                 if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
