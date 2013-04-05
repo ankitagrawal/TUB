@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.core.InvTxnType;
@@ -70,6 +71,8 @@ public interface AdminInventoryService {
     public Long countOfCheckedInUnitsForStockTransferLineItem(StockTransferLineItem stockTransferLineItem);
 
     public List<VariantConfig> getAllVariantConfig();
+
+    public List<ProductOption> getAllVariantOption();
 
 	public List<SkuItem> getInStockSkuItems(List<SkuGroup> skuGroupList);
 

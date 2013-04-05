@@ -6,8 +6,10 @@ import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
+import com.hk.domain.catalog.product.combo.ProductVariantHasProductOption;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.inventory.StockTransferLineItem;
@@ -266,8 +268,18 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
 
     }
 
-    public void updateProductVariantsTryOn(String id, Long variantTryOnId){
+    public void updateProductVariantsTryOn(String id, Long optionId){
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ProductVariantHasProductOption.class);
+        detachedCriteria.add(Restrictions.eq("id", id));
+        ProductVariantHasProductOption productVariantHasProductOption = (ProductVariantHasProductOption) findByCriteria(detachedCriteria).get(0);
 
+        DetachedCriteria detachedCriteriaProductOption = DetachedCriteria.forClass(ProductOption.class);
+        detachedCriteriaProductOption.add(Restrictions.eq("id", optionId));
+        ProductOption productOption = (ProductOption) findByCriteria(detachedCriteriaProductOption).get(0);
+
+
+        productVariantHasProductOption.setProduct_option(productOption);
+        save(productVariantHasProductOption);
     }
 
 
@@ -275,6 +287,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         return getAll(VariantConfig.class);
     }
 
+    public List<ProductOption> getAllVariantOption(){
+        return getAll(ProductOption.class);
+    }
 
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty) {
         DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);

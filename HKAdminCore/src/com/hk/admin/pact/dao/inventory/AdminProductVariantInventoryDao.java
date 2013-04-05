@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.ProductVariantInventory;
@@ -47,9 +48,11 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public void updateProductVariantsConfig(String id, Long variantconfigId);
 
-    public void updateProductVariantsTryOn(String id, Long variantTryOnId);
+    public void updateProductVariantsTryOn(String id, Long optionId);
 
     public List<VariantConfig> getAllVariantConfig();
+
+    public List<ProductOption> getAllVariantOption();
 
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty);
 
