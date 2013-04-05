@@ -18,10 +18,12 @@ public class ShippingOrderStatusMapping {
     Map<String, List> shippingOrderStatusMap = new HashMap<String, List>();
 
     public Map<String, List> getShippingOrderStatusMap(){
-        shippingOrderStatusMap.put("SO Shipped", Arrays.asList(EnumShippingOrderStatus.SO_Delivered,EnumShippingOrderStatus.RTO_Initiated));
-        shippingOrderStatusMap.put("SO Delivered",Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.RTO_Initiated));
-        shippingOrderStatusMap.put("RTO Initiated",Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
-        shippingOrderStatusMap.put("SO RTO",Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Shipped.getName(), Arrays.asList(EnumShippingOrderStatus.SO_Delivered,EnumShippingOrderStatus.RTO_Initiated));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Delivered.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped,EnumShippingOrderStatus.RTO_Initiated));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.RTO_Initiated.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_RTO.getName(),Arrays.asList(EnumShippingOrderStatus.SO_Shipped));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
+        shippingOrderStatusMap.put(EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName(),Arrays.asList(EnumShippingOrderStatus.RTO_Initiated));
         return shippingOrderStatusMap;
     }
 }
