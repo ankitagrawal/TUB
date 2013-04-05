@@ -16,9 +16,8 @@ public class AddVirtualTryOnAction extends BaseAction {
     @Autowired
     AdminProductVariantInventoryDao adminProductVariantInventoryDao;
 
-    private Long optionId;
-
     private String productVariantList;
+    private final Long optionId = 14166L;
 
     @DefaultHandler
     public Resolution pre() {
@@ -32,14 +31,6 @@ public class AddVirtualTryOnAction extends BaseAction {
         }
         getContext().getMessages().add(new SimpleMessage("Database updated"));
         return new RedirectResolution("/pages/admin/addVirtualTryOn.jsp");
-    }
-
-    public Long getOptionId() {
-        return optionId;
-    }
-
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
     }
 
     public String getProductVariantList() {

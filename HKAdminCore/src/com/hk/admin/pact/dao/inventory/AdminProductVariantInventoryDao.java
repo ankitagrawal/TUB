@@ -52,8 +52,6 @@ public interface AdminProductVariantInventoryDao extends BaseDao {
 
     public List<VariantConfig> getAllVariantConfig();
 
-    public List<ProductOption> getAllVariantOption();
-
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty);
 
     public List<CreateInventoryFileDto> getCheckedInSkuGroup(String brand, Warehouse warehouse, Product product, ProductVariant productVariant);

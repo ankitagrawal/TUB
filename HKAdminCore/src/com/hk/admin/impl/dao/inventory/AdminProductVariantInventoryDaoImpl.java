@@ -285,10 +285,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         return getAll(VariantConfig.class);
     }
 
-    public List<ProductOption> getAllVariantOption(){
-        return getAll(ProductOption.class);
-    }
-
     public List<SkuItem> getCheckedInOrOutSkuItems(RvLineItem rvLineItem, StockTransferLineItem stockTransferLineItem, GrnLineItem grnLineItem, LineItem lineItem, Long transferQty) {
         DetachedCriteria criteria = DetachedCriteria.forClass(ProductVariantInventory.class);
         if (rvLineItem != null) {
