@@ -132,6 +132,7 @@ public class POSAction extends BaseAction {
             SkuItem skuItemBarcode = skuGroupService.getSkuItemByBarcode(productVariantBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
             if (skuItemBarcode != null) {
                 skuItem = skuItemBarcode;
+                inStockSkuItemList.add(skuItem);
             } else {
                 inStockSkuItemList = adminInventoryService.getInStockSkuItems(productVariantBarcode, userService.getWarehouseForLoggedInUser());
                 //exclude those sku items which have already been selected for this order
