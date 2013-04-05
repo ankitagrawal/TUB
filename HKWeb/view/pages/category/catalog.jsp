@@ -175,8 +175,8 @@
 <s:layout-component name="catalog">
 <!--google remarketing page type-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" categories="${ca.allCategories}" topLevelCategory="${ca.topCategoryUrlSlug}"/>
-    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"
-    secondaryLevelCategory="${ca.childCategorySlug}" />
+    <%--<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"--%>
+    <%--secondaryLevelCategory="${ca.childCategorySlug}" />--%>
 
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
