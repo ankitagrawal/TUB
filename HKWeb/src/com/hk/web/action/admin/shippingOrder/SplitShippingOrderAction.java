@@ -2,6 +2,8 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -39,6 +41,8 @@ public class SplitShippingOrderAction extends BaseAction {
     private List<LineItem> lineItems;
     @Autowired
     private ShippingOrderService shippingOrderService;
+    @Autowired
+    private OrderService orderService;
     @Autowired
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
@@ -97,7 +101,6 @@ public class SplitShippingOrderAction extends BaseAction {
             newShippingOrder.setBaseOrder(shippingOrder.getBaseOrder());
             newShippingOrder.setServiceOrder(false);
             newShippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting));
-            newShippingOrder.setBasketCategory(shippingOrder.getBasketCategory());
             newShippingOrder = shippingOrderService.save(newShippingOrder);
 
             for (LineItem selectedLineItem : selectedLineItems) {
@@ -115,6 +118,11 @@ public class SplitShippingOrderAction extends BaseAction {
                 }
                 lineItemDao.save(selectedLineItem);
             }
+            shippingOrderDao.refresh(newShippingOrder);
+            Set<ShippingOrderCategory> newShippingOrderCategories = orderService.getCategoriesForShippingOrder(newShippingOrder);
+            newShippingOrder.setShippingOrderCategories(newShippingOrderCategories);
+            newShippingOrder.setBasketCategory(orderService.getBasketCategory(newShippingOrderCategories).getName());
+            newShippingOrder = shippingOrderService.save(newShippingOrder);
             shippingOrderDao.refresh(newShippingOrder);
 
             if (dropShipItemPresentInSelectedItems) {
@@ -152,6 +160,9 @@ public class SplitShippingOrderAction extends BaseAction {
             } else {
                 shippingOrder.setContainsJitProducts(false);
             }
+            Set<ShippingOrderCategory> shippingOrderCategories = orderService.getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setShippingOrderCategories(shippingOrderCategories);
+            shippingOrder.setBasketCategory(orderService.getBasketCategory(shippingOrderCategories).getName());
             shippingOrder = shippingOrderService.save(shippingOrder);
 
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Split);

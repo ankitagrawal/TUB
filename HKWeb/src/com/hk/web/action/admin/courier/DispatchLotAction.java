@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
@@ -50,6 +51,9 @@ public class DispatchLotAction extends BasePaginatedAction {
 	@Autowired
 	ShippingOrderService shippingOrderService;
 
+	@Autowired
+	private AwbService awbService;
+
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
 	String adminUploadsPath;
 
@@ -75,6 +79,7 @@ public class DispatchLotAction extends BasePaginatedAction {
 	private String shipmentStatusFilter;
 	private FileBean uploadDocumentFileBean;
 	private File documentFile;
+	private String awbNumber;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -82,9 +87,18 @@ public class DispatchLotAction extends BasePaginatedAction {
 	}
 
 	public Resolution showDispatchLotList() {
-		dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
-				destination, dispatchStartDate, dispatchEndDate, dispatchLotStatus, getPageNo(), getPerPage());
-		dispatchLotList = dispatchLotPage.getList();
+		if(awbNumber != null){
+		  List<Courier> courierList = new ArrayList<Courier>();
+			Shipment  shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(courierList,awbNumber));
+			if(shipmentObj != null){
+				dispatchLotList = getDispatchLotService().getDispatchLotsForShipment(shipmentObj);
+			}
+		}
+		else{
+			dispatchLotPage = getDispatchLotService().searchDispatchLot(dispatchLot, docketNumber, courier, zone, source,
+					destination, dispatchStartDate, dispatchEndDate, dispatchLotStatus, getPageNo(), getPerPage());
+			dispatchLotList = dispatchLotPage.getList();
+		}
 		return new ForwardResolution("/pages/admin/courier/dispatchLotList.jsp");
 	}
 
@@ -511,5 +525,13 @@ public class DispatchLotAction extends BasePaginatedAction {
 
 	public void setUploadDocumentFileBean(FileBean uploadDocumentFileBean) {
 		this.uploadDocumentFileBean = uploadDocumentFileBean;
+	}
+
+	public String getAwbNumber() {
+		return awbNumber;
+	}
+
+	public void setAwbNumber(String awbNumber) {
+		this.awbNumber = awbNumber;
 	}
 }

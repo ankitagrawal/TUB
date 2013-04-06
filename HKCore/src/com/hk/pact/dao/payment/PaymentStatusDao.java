@@ -10,4 +10,8 @@ public interface PaymentStatusDao extends BaseDao {
     public PaymentStatus getPaymentStatusById(Long paymentStatusId);
 
     public List<PaymentStatus> listWorkingPaymentStatuses();
+
+    public List<PaymentStatus> listActionablePaymentStatuses();
+
+    List<PaymentStatus> listSuccessfulPaymentStatuses();
 }
