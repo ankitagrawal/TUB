@@ -33,23 +33,23 @@
 
 <!---- paste all content from here--->
  <div id="wrapper">
-     <a class="banners" href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris"><img src="${pageContext.request.contextPath}/images/bty-offers/bty01.jpg"/></a>
+     <a class="banners" href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris"><img src="${pageContext.request.contextPath}/images/bty-offers/banner01.jpg"/></a>
      <a class="banners" href="http://www.healthkart.com/brand/beauty/maybelline"><img src="${pageContext.request.contextPath}/images/bty-offers/bty2.jpg"/></a>
-     <a class="banners04" href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa"><img src="${pageContext.request.contextPath}/images/bty-offers/bty3.jpg"/></a>
+     <a class="banners04" href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa"><img src="${pageContext.request.contextPath}/images/bty-offers/banner03.jpg"/></a>
 
      <div class="cl"></div>
      <div class="offers">
 
-     <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE  Loreal color riche vernis nail paint worth Rs 225/- with purchase of loreal skin and make up worth  Rs 1200/-</a></p>
+     <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Color Riche Vernis Nail Paint Worth Rs 225/- With Purchase of L'oreal Skin and Make Up Worth  Rs 1200/-</a></p>
 
-     <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE  Loreal superliner worth Rs 625/- with purchase of loreal skin and make up worth Rs 1500/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE loreal infallible lipstick worth Rs 990/- with purchase of loreal skin and make up worth Rs 1800/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE manicure kit with purchase of loreal skin and make up worth Rs 2200/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE loreal glamshine 6h lipgloss worth Rs 875/- with purchase of loreal skin and make up worth Rs 3000/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE trousseau box with purchase of loreal skin  and make up worth Rs 4500/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE maybelline watershine liquid diamonds lip gloss worth Rs 210/- with purchase of maybelline make up worth Rs 1200/-</a></p>
-         <p><a href="http://www.healthkart.com/product/maybelline-color-senstational-lip-color/MYBLN5">FREE lipstick holder with purchase of maybelline color sensational lip color</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">Buy Manufaktura Products Worth Rs. 4500 and get one manufaktura beer Shampoo worth Rs 960 absolutely free</a></p>
+     <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Superliner Worth Rs 625/- With Purchase of L’oreal Skin and Make Up Worth Rs 1500/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Infallible Lipstick Worth Rs 990/- With Purchase of Loreal Skin and Make Up Worth Rs 1800/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Manicure Kit With Purchase Of L'oreal Paris Skin Care and Make Up Worth Rs 2200/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth Rs 3000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE Maybelline New York Watershine Liquid Diamonds Lip Gloss Worth Rs 210/- with Purchase of Maybelline Make Up Worth Rs 1200/-</a></p>
+         <p><a href="http://www.healthkart.com/product/maybelline-color-senstational-lip-color/MYBLN5">FREE Lipstick Holder with Purchase of Maybelline Color Sensational Lip Color</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">Buy Manufaktura Products Worth Rs 4500/- and Get One Manufaktura Beer Shampoo Worth Rs 960/- Absolutely FREE</a></p>
 
 
           <!---
