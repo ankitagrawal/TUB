@@ -192,7 +192,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 				if (recheckinCounter != 0){
 					String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
 							productVariant.getOptionsCommaSeparated();
-					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, comments);
+					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
 					addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
 				} else{
 					addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesnt match any of the items OR item not in correct status"));

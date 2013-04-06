@@ -691,6 +691,7 @@ public class ReportAction extends BaseAction {
         }
     }
 
+	//TODO: The report generated here is incorrect, as it should be generated from skuItem status instead of summing the quantity from PVI table.
     public Resolution generateStockReport() {
         StockReportDto stockReportDto = null;
         xlsFile = new File(adminDownloads + "/reports/StockReport.xls");

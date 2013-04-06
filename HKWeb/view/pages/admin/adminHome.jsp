@@ -194,7 +194,6 @@
     </h3>
     <c:if test="${whAction.setWarehouse != null}">
 
-
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
@@ -204,32 +203,26 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
-
-<<<<<<< HEAD
 	<h3><s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>
-=======
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>--%>
+
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
         </h3>
->>>>>>> master
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
 
-<<<<<<< HEAD
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"--%>
+	            <%--event="generateCourierReport">Download Courier Excel--%>
+		<%--<s:param name="courierDownloadFunctionality" value="false"/>--%>
+	<%--</s:link></h3>--%>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"
-	            event="generateCourierReport">Download Courier Excel
-		<s:param name="courierDownloadFunctionality" value="false"/>
-	</s:link></h3>
-=======
     </c:if>
     <h3>
         <s:link beanclass="com.hk.web.action.report.GenerateReconcilationReportAction">Generate Reconcilation Report</s:link>
     </h3>
->>>>>>> master
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.sku.SearchSkuBatchesAction">Search Available Batches </s:link></h3>

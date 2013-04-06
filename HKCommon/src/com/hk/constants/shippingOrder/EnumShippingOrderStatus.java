@@ -26,6 +26,7 @@ public enum EnumShippingOrderStatus {
     SO_Lost(210L, "SO Lost"),
     SO_Customer_Return_Replaced(250L, "SO Customer Return and Replace"),
     SO_Customer_Return_Refunded(260L, "SO Customer Return and Refund"),
+	SO_Customer_Appeasement(270L, "SO Customer Satisfaction"),
     SO_Cancelled(999L, "SO Cancelled");
 
 

@@ -259,11 +259,14 @@
                         <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
                         <b>Customer Return:</b>
                         <s:select name="shippingOrder.orderStatus">
-                            <s:option
-                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
                             </s:option>
-                            <s:option
-                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                            </s:option>
+                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
+                                <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
                             </s:option>
                         </s:select>
                         <br/><b>Customer Return Reason:</b>

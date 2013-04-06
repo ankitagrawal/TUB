@@ -44,7 +44,15 @@
                             return false;
                         }
                     });
+
+                    var reason = $('#returnReason').val();
+                    if(reason == null || reason == ""){
+                        alert("Please enter a reason for return");
+                        return false;
+                    }
+
                     if (!bool) return false;
+
                 });
             });
     </script>
@@ -88,8 +96,8 @@
               </table>
             <p>
             <label>Reason to Return :</label>
-            <s:select name="returnOrderReason">
-                <s:option value="null">-Select Reason-</s:option>
+            <s:select name="returnOrderReason" id="returnReason" >
+                <s:option value="">-Select Reason-</s:option>
                 <s:option value="Damaged Product">Damaged Product</s:option>
                 <s:option value="Expired Product">Expired Product</s:option>
                 <s:option value="Wrong Product">Wrong Product</s:option>
