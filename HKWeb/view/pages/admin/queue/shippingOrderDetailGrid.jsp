@@ -247,7 +247,7 @@
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Split Shipping Order
+                Split SO
             </s:link>)
                 <c:if test="${isSearchShippingOrder == true}">
                     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
