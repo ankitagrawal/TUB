@@ -117,6 +117,11 @@
 <div class="floatleft">
     Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
 </div>
+<c:if test="${isSearchShippingOrder == true}">
+    <div class="floatleft">
+        BO Id: <strong>${shippingOrder.baseOrder.gatewayOrderId}</strong>
+    </div>
+</c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
     Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
@@ -157,16 +162,17 @@
     </div>
 </c:if>
 <div class="clear"></div>
+<c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
 <c:set var="shippingOrderLifecycles" value="${shippingOrder.shippingOrderLifecycles}"/>
-<c:set var="shippingOrderLifecyclesSize" value="${fn:length(shippingOrderLifecycles)}"/>
 <c:if test="${! empty shippingOrderLifecycles}">
     <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
         <label style="font-weight:bold;">Last Activity:</label><br>
-        ${shippingOrderLifecycles[shippingOrderLifecyclesSize-1].shippingOrderLifeCycleActivity.name} on <br>
+        ${shippingOrderLifecycles[fn:length(shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on <br>
         <fmt:formatDate value="${shippingOrderLifecycles[fn:length(shippingOrderLifecycles)-1].activityDate}" type="both"/> by
-        "${shippingOrderLifecycles[shippingOrderLifecyclesSize-1].user.name}"
+        "${shippingOrderLifecycles[fn:length(shippingOrderLifecycles)-1].user.name}"
         <s:param name="shippingOrder" value="${shippingOrder}"/>
     </s:link>
+</c:if>
 </c:if>
 <div class="clear"></div>
     <div class="floatleft">
