@@ -171,7 +171,6 @@
                 value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"
                 type="both"/> by
         "${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].user.name}"
-        <s:param name="shippingOrder" value="${shippingOrder}"/>
     </c:if>
 </c:if>
 <div class="clear"></div>
