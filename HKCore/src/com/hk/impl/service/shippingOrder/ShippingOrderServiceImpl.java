@@ -294,7 +294,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
                         return false;
                     }
-                    if(cartLineItem.getProductVariant().getProductExtraOptions() != null){
+                    if(cartLineItem.getProductVariant().getProductExtraOptions() != null && !cartLineItem.getProductVariant().getProductExtraOptions().isEmpty()){
                         logShippingOrderActivity(shippingOrder, adminUser,
                                 getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
                         return false;
