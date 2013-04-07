@@ -99,7 +99,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
     private List<String> categories = new ArrayList<String>();
-    private Integer defaultPerPage = 25;
+    private Integer defaultPerPage = 20;
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
@@ -145,7 +145,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore).setSortByLastEscDate(sortByLastEscDate);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+//                .setSortByLastEscDate(sortByLastEscDate);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -417,7 +418,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("endDate");
         params.add("storeId");
         params.add("sortByPaymentDate");
-        params.add("sortByLastEscDate");
+//        params.add("sortByLastEscDate");
+        params.add("accurateBeta");
         params.add("sortByScore");
         params.add("sortByDispatchDate");
         params.add("dropShip");
