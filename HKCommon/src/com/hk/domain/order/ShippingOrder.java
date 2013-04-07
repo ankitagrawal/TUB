@@ -88,7 +88,7 @@ public class ShippingOrder implements java.io.Serializable {
     private Set<AccountingInvoice>      accountingInvoices      = new HashSet<AccountingInvoice>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-    private ArrayList<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
+    private List<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
 
     @Transient
     private Reason reason;
