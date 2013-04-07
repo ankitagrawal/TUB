@@ -163,15 +163,16 @@
 </c:if>
 <div class="clear"></div>
 <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
-<c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
-    <s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
+    <c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
         <label style="font-weight:bold;">Last Activity:</label><br>
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on <br>
-        <fmt:formatDate value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}" type="both"/> by
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on
+        <br>
+        <fmt:formatDate
+                value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"
+                type="both"/> by
         "${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].user.name}"
         <s:param name="shippingOrder" value="${shippingOrder}"/>
-    </s:link>
-</c:if>
+    </c:if>
 </c:if>
 <div class="clear"></div>
     <div class="floatleft">
