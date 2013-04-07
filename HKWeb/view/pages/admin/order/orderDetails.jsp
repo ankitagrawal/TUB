@@ -491,7 +491,6 @@
     for (ShippingOrder shippingOrder : ojpa.getOrder().getShippingOrders()) {
       List<ShippingOrderLifecycle> shippingOrderLifecycleList = shippingOrder.getShippingOrderLifecycles();
       Collections.reverse(shippingOrderLifecycleList);
-    }
   %>
 
   <table class="productable">
