@@ -13,9 +13,7 @@ import com.hk.domain.warehouse.Warehouse;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -90,7 +88,7 @@ public class ShippingOrder implements java.io.Serializable {
     private Set<AccountingInvoice>      accountingInvoices      = new HashSet<AccountingInvoice>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-    private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
+    private ArrayList<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
 
     @Transient
     private Reason reason;
@@ -254,11 +252,11 @@ public class ShippingOrder implements java.io.Serializable {
         this.accountingInvoices = accountingInvoices;
     }
 
-    public Set<ShippingOrderLifecycle> getShippingOrderLifecycles() {
+    public List<ShippingOrderLifecycle> getShippingOrderLifecycles() {
         return shippingOrderLifecycles;
     }
 
-    public void setShippingOrderLifecycles(Set<ShippingOrderLifecycle> shippingOrderLifecycles) {
+    public void setShippingOrderLifecycles(ArrayList<ShippingOrderLifecycle> shippingOrderLifecycles) {
         this.shippingOrderLifecycles = shippingOrderLifecycles;
     }
 
