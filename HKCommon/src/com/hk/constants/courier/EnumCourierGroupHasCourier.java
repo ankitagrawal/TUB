@@ -10,8 +10,8 @@ public enum EnumCourierGroupHasCourier {
             Arrays.asList(
                     EnumCourier.DTDC_COD,
                     EnumCourier.DTDC_Lite,
-                    EnumCourier.DTDC_Plus,
-                    EnumCourier.DTDC_Surface,
+                    EnumCourier.DotZot_Economy,
+                    EnumCourier.DotZot_Express,
                     EnumCourier.Speedpost,
                     EnumCourier.AFLWiz
             )
