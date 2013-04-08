@@ -1,30 +1,5 @@
 package com.hk.web.action.admin.catalog.product;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.pact.service.catalog.ProductService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
@@ -41,9 +16,22 @@ import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -117,12 +105,11 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
   @SuppressWarnings("unchecked")
   public Resolution bulkEdit() {
-    //     if (products.isEmpty()) {
     productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
-    products.clear();
-    if (productPage != null)
+    products = new ArrayList<Product>();
+    if (productPage != null) {
       products.addAll(productPage.getList());
-    //   }
+    }
     // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed
     // cannot be rendered.
     // Therefore, the object again needs to be converted to a map.
@@ -148,13 +135,13 @@ public class BulkEditProductAction extends BasePaginatedAction {
           if (productVariant.getClearanceSale() == null || productVariant.getClearanceSale().equals(Boolean.FALSE)) {
             if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
               addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-              return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+              return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
             }
           }
 
           if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
             addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-            return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
           }
           productVariant = getProductVariantService().save(productVariant);
         }
@@ -182,7 +169,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
           Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory.get(ctr)));
           if (secondaryCat == null) {
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category for product: " + product.getId()));
-            return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
           }
           product.setSecondaryCategory(secondaryCat);
         }
@@ -191,7 +178,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
           Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
           if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
-            return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
+            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
           }
           product.setSupplier(supplier);
         }
@@ -201,7 +188,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
       }
     }
     addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-    return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+    return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
 
   }
 
