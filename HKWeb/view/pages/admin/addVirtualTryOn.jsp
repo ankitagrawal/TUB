@@ -28,17 +28,10 @@
     function validateForm()
     {
         var variantlist = document.forms["AddTryOnForm"]["productVariantList"].value;
-        var variantoption = document.forms["AddTryOnForm"]["optionId"].value;
         if (variantlist == null || variantlist == "")
         {
             alert("Product Variant list must be filled out");
             return false;
         }
-        if (variantoption == "")
-        {
-            alert("Variant Option must be selected");
-            return false;
-        }
-
     }
 </script>

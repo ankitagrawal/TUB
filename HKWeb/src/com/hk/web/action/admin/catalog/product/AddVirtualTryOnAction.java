@@ -1,9 +1,15 @@
 package com.hk.web.action.admin.catalog.product;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.domain.catalog.product.ProductOption;
+import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.pact.service.catalog.ProductVariantService;
 import net.sourceforge.stripes.action.*;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class AddVirtualTryOnAction extends BaseAction {
     @Autowired
-    AdminProductVariantInventoryDao adminProductVariantInventoryDao;
+    ProductVariantService productVariantService;
 
     private String productVariantList;
     private final Long optionId = 14166L;
@@ -26,12 +32,20 @@ public class AddVirtualTryOnAction extends BaseAction {
     }
     public Resolution save(){
         String[] productVariantArray = productVariantList.split(",");
-        for(String ProductVariantId:productVariantArray){
-            adminProductVariantInventoryDao.updateProductVariantsTryOn(ProductVariantId,optionId);
+        ProductOption productOption = getProductVariantService().getProductOptionById(optionId);
+        List<ProductOption> productOptionList = new ArrayList<ProductOption>();
+        productOptionList.add(productOption);
+        for(String productVariantId : productVariantArray){
+            ProductVariant  productVariant = getProductVariantService().getVariantById(productVariantId);
+            if(productVariant!=null){
+              productVariant.setProductOptions(productOptionList);
+              getProductVariantService().save(productVariant);
+            }
         }
-        getContext().getMessages().add(new SimpleMessage("Database updated"));
+        addRedirectAlertMessage(new SimpleMessage("Database updated"));
         return new RedirectResolution("/pages/admin/addVirtualTryOn.jsp");
     }
+
 
     public String getProductVariantList() {
         return productVariantList;
@@ -39,5 +53,9 @@ public class AddVirtualTryOnAction extends BaseAction {
 
     public void setProductVariantList(String productVariantList) {
         this.productVariantList = productVariantList;
+    }
+
+    public ProductVariantService getProductVariantService() {
+        return productVariantService;
     }
 }

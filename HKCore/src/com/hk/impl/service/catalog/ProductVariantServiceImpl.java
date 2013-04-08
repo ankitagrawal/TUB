@@ -3,6 +3,7 @@ package com.hk.impl.service.catalog;
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -77,6 +78,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		}
 		return false;
 	}
+
+    public ProductOption getProductOptionById(Long productOptionId){
+        return (ProductOption) productVariantDao.get(ProductOption.class, productOptionId);
+    }
 
 	public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType) {
 		return getProductVariantDao().get(ProductVariantServiceType.class, enumProductVariantServiceType.getId());

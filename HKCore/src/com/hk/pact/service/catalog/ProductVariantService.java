@@ -2,6 +2,7 @@ package com.hk.pact.service.catalog;
 
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,5 +60,7 @@ public interface ProductVariantService {
     public List<ProductVariant> getAllProductVariant();
 
 	public boolean isAnySiblingVariantInStock(ProductVariant productVariant);
+
+    public ProductOption getProductOptionById(Long productOptionId);
 
 }

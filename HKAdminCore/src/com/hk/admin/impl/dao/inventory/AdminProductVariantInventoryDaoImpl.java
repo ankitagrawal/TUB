@@ -5,7 +5,6 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.VariantConfig;
 import com.hk.domain.inventory.GrnLineItem;
@@ -265,21 +264,6 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
         save(productVariant);
 
     }
-
-    public void updateProductVariantsTryOn(String id, Long optionId){
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ProductVariant.class);
-        detachedCriteria.add(Restrictions.eq("id", id));
-        ProductVariant productVariant = (ProductVariant) findByCriteria(detachedCriteria).get(0);
-
-        DetachedCriteria detachedCriteriaProductOption = DetachedCriteria.forClass(ProductOption.class);
-        detachedCriteriaProductOption.add(Restrictions.eq("id", optionId));
-        List<ProductOption> productOption = (List<ProductOption>) findByCriteria(detachedCriteriaProductOption).get(0);
-
-
-        productVariant.setProductOptions(productOption);
-        save(productVariant);
-    }
-
 
     public List<VariantConfig> getAllVariantConfig() {
         return getAll(VariantConfig.class);
