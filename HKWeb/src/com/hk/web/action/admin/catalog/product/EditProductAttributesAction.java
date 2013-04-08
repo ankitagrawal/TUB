@@ -193,6 +193,9 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().save(product);
         // Checking inventory of all product variants
 
+        if(product.getDeleted()){
+        	getProductVariantService().markProductVariantsAsDeleted(product);
+        }
         List<ProductVariant> productVariants = product.getProductVariants();
 
         if (productVariants != null && productVariants.size() > 0) {
