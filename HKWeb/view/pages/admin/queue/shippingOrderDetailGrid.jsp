@@ -436,7 +436,7 @@
 			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
-                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
+                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
                     <c:choose>
                         <c:when test="${hk:bookedQty(sku) <= skuNetInventory}">
                             <tr style="border-left:5px solid green;">
@@ -459,25 +459,18 @@
                 </c:otherwise>
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
-                ${productVariant.product.name}
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" event="pre">
+                    <s:param name="productId" value="${productVariant.product.id}"/>
+                    ${productVariant.id} ${productVariant.product.name}
+                </s:link>
                 <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
                 </span>
                 </c:if>
-                <c:if test="${productVariant.paymentType.id == lineItem_Service_Postpaid}">
-                <span style="color:blue;text-decoration:underline">
-                <br/>(Postpaid Service: ${productVariant.product.name})
-                </span>
-                </c:if>
-
-                <%--<div class="floatleft">--%>
-                <%--<br/>Dispatch Within: ${productVariant.product.minDays} - ${productVariant.product.maxDays} Days--%>
-                <%--</div>--%>
-
                 <c:if test="${not empty productVariant.productOptions}">
                     <%--<br/>--%>
-                    <%-- <span style="word-wrap:break-word">--%>
+                     <span style="word-wrap:break-word">
                     <c:forEach items="${productVariant.productOptions}" var="productOption"
                                varStatus="optionCtr">
                         ${productOption.name} ${productOption.value}${!optionCtr.last?',':'|'}
@@ -488,7 +481,7 @@
                             </c:forEach>
                         </c:if>
                     </c:forEach>
-                    <%-- </span>--%>
+                     </span>
 
                 </c:if>
                     <c:choose>
