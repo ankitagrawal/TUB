@@ -129,6 +129,9 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                     case 90:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
                         break;
+                    case 140:
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_INCORRECT_COUNTING);
+                        break;
                 }
 
                 rvLineItem.setSku(sku);
@@ -384,6 +387,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             case 90:
                 invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_FREE_VARIANT_RECONCILE);
                 skuItemStatus = EnumSkuItemStatus.FreeVariant.getSkuItemStatus();
+                break;
+            case 130:
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_INCORRECT_COUNTING);
+                skuItemStatus = EnumSkuItemStatus.IncorrectCounting.getSkuItemStatus();
                 break;
         }
 

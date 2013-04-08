@@ -53,7 +53,7 @@ public class BusyPopulateRtoData {
 
 									select so.id as shipping_order_id,
 									ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
-									so.accounting_invoice_number_id as vch_no,
+									so.accounting_invoice_number as vch_no,
 									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
 									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 									w.name as warehouse, w.id as warehouse_id, sum(li.reward_point_discount)+so.amount AS net_amount,
@@ -83,7 +83,7 @@ public class BusyPopulateRtoData {
       String series;
       Date date;
       String vch_no;
-      String vch_prefix;
+  //    String vch_prefix;
       int vch_type;
       String sale_type;
       String account_name;
@@ -112,7 +112,7 @@ public class BusyPopulateRtoData {
 
       date = accountingInvoice.return_date;	    
 
-      if(accountingInvoice.Order_type.equals("B2B")){
+/*      if(accountingInvoice.Order_type.equals("B2B")){
         vch_prefix = "T";
       }
       else if(accountingInvoice.Order_type.equals("Services")){
@@ -122,7 +122,8 @@ public class BusyPopulateRtoData {
         vch_prefix = "R";
       }
       vch_no = vch_prefix+accountingInvoice.vch_no;
-
+      */
+	    vch_no = accountingInvoice.vch_no;
       vch_type = 3;
 
       //Following is for RTO. to be used when busy's RTO model goes live

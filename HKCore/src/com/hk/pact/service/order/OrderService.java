@@ -15,6 +15,7 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
@@ -31,7 +32,7 @@ public interface OrderService {
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta);
 
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 
@@ -43,7 +44,11 @@ public interface OrderService {
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
 
+    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);
+
     public Category getBasketCategory(ShippingOrder shippingOrder);
+
+    public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
 
     public Order getLatestOrderForUser(User user);
 

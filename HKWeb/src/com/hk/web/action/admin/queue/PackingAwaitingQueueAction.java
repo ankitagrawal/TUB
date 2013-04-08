@@ -97,13 +97,11 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        Set<String> basketCategoryList = new HashSet<String>();
+        Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
             if (category != null) {
                 Category basketCategory = (Category) categoryDao.getCategoryByName(category);
-                if (basketCategory != null) {
-                    basketCategoryList.add(basketCategory.getName());
-                }
+                    basketCategoryList.add(basketCategory);
             }
         }
         shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
