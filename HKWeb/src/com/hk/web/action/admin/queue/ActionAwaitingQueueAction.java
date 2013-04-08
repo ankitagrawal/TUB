@@ -99,7 +99,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
     private List<String> categories = new ArrayList<String>();
-    private Integer defaultPerPage = 20;
+    private Integer defaultPerPage = 40;
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
