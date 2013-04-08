@@ -489,7 +489,7 @@
 
                     <p>
                             ${productVariant.extraOptionsPipeSeparated}
-                        <!--${cartLineItem.configOptionsPipeSeparated}-->
+                        <%--<!--${cartLineItem.configOptionsPipeSeparated}-->--%>
                     </p>
                 </em>
 
