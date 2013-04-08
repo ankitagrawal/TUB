@@ -76,7 +76,7 @@ public class SearchOrderAction extends BasePaginatedAction {
         orderSearchCriteria.setEmail(email).setLogin(login).setName(name).setPhone(phone);
         orderSearchCriteria.setOrderAsc(false);
 
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage(), false);
         orderList = orderPage.getList();
         return new ForwardResolution("/pages/admin/searchOrder.jsp");
     }

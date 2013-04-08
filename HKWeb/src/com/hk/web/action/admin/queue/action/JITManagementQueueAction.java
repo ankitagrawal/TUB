@@ -117,7 +117,7 @@ public class JITManagementQueueAction extends BasePaginatedAction {
         Long startTime = (new Date()).getTime();
 
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage(), false);
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
