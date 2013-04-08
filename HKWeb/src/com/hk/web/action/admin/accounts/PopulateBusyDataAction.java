@@ -42,7 +42,7 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyPopulateRtoData busyPopulateRtoData = new BusyPopulateRtoData(dbHostName, dbName, dbUser, dbPassword);
 
 			BusyMigrateInvoiceNum busyMigrateInvoiceNum = new BusyMigrateInvoiceNum(dbHostName, dbName, dbUser, dbPassword);
-			busyMigrateInvoiceNum.updateSalesInvoiceNumber();
+			//busyMigrateInvoiceNum.updateSalesInvoiceNumber();
 
 			/*
 			logger.info("Populating Items ");

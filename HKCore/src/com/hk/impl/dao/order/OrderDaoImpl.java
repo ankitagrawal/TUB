@@ -7,10 +7,7 @@ import java.util.List;
 import com.akube.framework.util.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,20 +68,22 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         return list(criteria, page, perPage);
     }
 
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
-        // searchCriteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+        if(accurateBeta){
+            searchCriteria.setProjection(Projections.distinct(Projections.id()));
+            DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
+            uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));
+            return list(uniqueCriteria, false, pageNo, perPage);
+        }
+
         return list(searchCriteria, true, pageNo, perPage);
     }
 
     @SuppressWarnings("unchecked")
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
-
-      /*  searchCriteria.setProjection(Projections.distinct(Projections.id()));
-
-        DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
-        uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));*/
 
         // TODO: fix later in rewrite
         // searchCriteria.setMaxResults(10000);
