@@ -73,10 +73,15 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         //another query to get unique BO ID's
         searchCriteria.setProjection(Projections.distinct(Projections.id()));
         List<Long> baseOrderIds = findByCriteria(searchCriteria);
-        //passing the same to get the whole BO Object
-        DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
-        uniqueCriteria.add(Restrictions.in("id", baseOrderIds));
-        return list(uniqueCriteria, baseOrderIds.size(), pageNo, perPage);
+
+        if(baseOrderIds.isEmpty()){
+            return list(searchCriteria, pageNo, perPage);
+        } else{
+            //passing the same to get the whole BO Object
+            DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
+            uniqueCriteria.add(Restrictions.in("id", baseOrderIds));
+            return list(uniqueCriteria, baseOrderIds.size(), pageNo, perPage);
+        }
     }
 
     @SuppressWarnings("unchecked")
