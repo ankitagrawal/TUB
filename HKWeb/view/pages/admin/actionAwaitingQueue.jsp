@@ -439,9 +439,6 @@
                 </li>
 
                 <div class="buttons">
-                    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                        <div><s:checkbox name="accurateBeta"/>Accurate Results (Beta)</div>
-                    </shiro:hasAnyRoles>
                     <s:submit name="pre" value="Search"/>
                     <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
                     <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>

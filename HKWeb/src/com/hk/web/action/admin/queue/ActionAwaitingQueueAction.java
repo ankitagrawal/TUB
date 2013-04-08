@@ -109,7 +109,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
-    private boolean accurateBeta = false;
 
     @DontValidate
     @DefaultHandler
@@ -118,7 +117,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         Long startTime = (new Date()).getTime();
 
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage(), accurateBeta);
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
@@ -573,11 +572,4 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByLastEscDate = sortByLastEscDate;
     }
 
-    public boolean isAccurateBeta() {
-        return accurateBeta;
-    }
-
-    public void setAccurateBeta(boolean accurateBeta) {
-        this.accurateBeta = accurateBeta;
-    }
 }
