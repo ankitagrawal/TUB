@@ -99,7 +99,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
     private List<String> categories = new ArrayList<String>();
-    private Integer defaultPerPage = 20;
+    private Integer defaultPerPage = 40;
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
@@ -109,7 +109,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
-    private boolean accurateBeta = false;
 
     @DontValidate
     @DefaultHandler
@@ -118,7 +117,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         Long startTime = (new Date()).getTime();
 
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage(), accurateBeta);
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
@@ -419,7 +418,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("storeId");
         params.add("sortByPaymentDate");
 //        params.add("sortByLastEscDate");
-        params.add("accurateBeta");
         params.add("sortByScore");
         params.add("sortByDispatchDate");
         params.add("dropShip");
@@ -573,11 +571,4 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByLastEscDate = sortByLastEscDate;
     }
 
-    public boolean isAccurateBeta() {
-        return accurateBeta;
-    }
-
-    public void setAccurateBeta(boolean accurateBeta) {
-        this.accurateBeta = accurateBeta;
-    }
 }
