@@ -70,15 +70,24 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta) {
         DetachedCriteria searchCriteria = orderSearchCriteria.getSearchCriteria();
+        searchCriteria.setProjection(Projections.distinct(Projections.id()));
 
-        if(accurateBeta){
+        List<Long> boIdList = findByCriteria(searchCriteria);
+
+        DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
+        uniqueCriteria.add(Restrictions.in("id", boIdList));
+        return list(uniqueCriteria, false, pageNo, perPage);
+
+
+
+       /* if(accurateBeta){
             searchCriteria.setProjection(Projections.distinct(Projections.id()));
             DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
             uniqueCriteria.add(Subqueries.propertyIn("id", searchCriteria));
             return list(uniqueCriteria, false, pageNo, perPage);
-        }
+        }*/
 
-        return list(searchCriteria, true, pageNo, perPage);
+//        return list(searchCriteria, true, pageNo, perPage);
     }
 
     @SuppressWarnings("unchecked")
