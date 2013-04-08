@@ -2,6 +2,7 @@ package com.hk.web.action.admin.order.split;
 
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.order.Order;
@@ -9,6 +10,7 @@ import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.OrderSplitterService;
 import com.hk.web.HealthkartResponse;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -16,6 +18,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,6 +49,7 @@ public class BulkOrderSplitterAction extends BaseAction {
 
 
     @DefaultHandler
+    @Secure(hasAnyPermissions = {PermissionConstants.BULK_SPLIT_BO}, authActionBean = AdminPermissionAction.class)
 	public Resolution bulkSplitOrders() {
 		OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
 		orderSearchCriteria.setOrderStatusList(orderStatusService.getOrderStatuses(Arrays.asList(EnumOrderStatus.Placed)));
@@ -61,6 +65,7 @@ public class BulkOrderSplitterAction extends BaseAction {
 		return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
 	}
 
+    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_BO}, authActionBean = AdminPermissionAction.class)
 	public Resolution splitSingleOrder() {
 		boolean shippingOrderExists = orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 		String message = "";
