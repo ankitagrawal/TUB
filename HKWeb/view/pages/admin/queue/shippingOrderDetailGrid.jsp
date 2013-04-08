@@ -117,6 +117,11 @@
 <div class="floatleft">
     Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
 </div>
+<c:if test="${isSearchShippingOrder == true}">
+    <div class="floatleft">
+        BO Id: <strong>${shippingOrder.baseOrder.gatewayOrderId}</strong>
+    </div>
+</c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
     Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
@@ -157,35 +162,55 @@
     </div>
 </c:if>
 <div class="clear"></div>
+<c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+    <c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
+        <label style="font-weight:bold;">Last Activity:</label><br>
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on
+        <br>
+        <fmt:formatDate
+                value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"
+                type="both"/> by
+        "${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].user.name}"
+    </c:if>
+</c:if>
+<div class="clear"></div>
     <div class="floatleft">
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+    <c:if test="${isActionQueue == false}">
+        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+                 target="_blank">
         <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
-                 target="_blank">
+    </c:if>
+    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
+             target="_blank">
         <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
         SO Lifecycle
         <s:param name="shippingOrder" value="${shippingOrder}"/>
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre"
+             target="_blank">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Invoice
     </s:link>)
+    <c:if test="${isProcessingQueue == true || isSearchShippingOrder == true}">
         &nbsp;&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre"
                                    target="_blank" class="personalCareInvoiceLink">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         <s:param name="printable" value="true"/>
         PC Invoice
     </s:link>)
-        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
-            (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" target="_blank">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Accounting Invoice
-        </s:link>)
-        </shiro:hasAnyRoles>
-
+    </c:if>
+    <c:if test="${isSearchShippingOrder == true}">
+            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
+                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
+                         target="_blank">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                Accounting Invoice
+            </s:link>)
+            </shiro:hasAnyRoles>
+        </c:if>
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
@@ -222,13 +247,15 @@
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Split Shipping Order
+                Split SO
             </s:link>)
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
-                                     class="pseudoSplitBaseOrder" event="splitOrderPractically">
-                <s:param name="gatewayOrderId" value="${shippingOrder.baseOrder.gatewayOrderId}"/>
-                BO Split Analytics
-            </s:link>)
+                <c:if test="${isSearchShippingOrder == true}">
+                    &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
+                                         class="pseudoSplitBaseOrder" event="splitOrderPractically">
+                    <s:param name="gatewayOrderId" value="${shippingOrder.baseOrder.gatewayOrderId}"/>
+                    BO Split Analytics
+                </s:link>)
+                </c:if>
             </shiro:hasAnyRoles>
             &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
                                  class="cancelSO">

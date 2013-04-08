@@ -140,25 +140,26 @@ public class TrackCourierAction extends BaseAction {
                 break;
             case DTDC_COD:
             case DTDC_Lite:
-            case DTDC_Plus:
-            case DTDC_Surface:
+            case DotZot_Economy:
+            case DotZot_Express:
                 courierName = CourierConstants.DTDC;
-                Map<String, String> responseMap = null;
-                try {
-                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
-                } catch (HealthkartCheckedException hce) {
-                    logger.debug("Exception occurred in TrackCourierAction");
-                }
-                if (responseMap != null) {
-                    for (Map.Entry entryObj : responseMap.entrySet()) {
-                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
-                            status = entryObj.getValue().toString();
-                        }
-                    }
-                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
-                } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
-                }
+				resolution = new RedirectResolution("http://182.18.182.80/DMS_DOTZOT/GUI/Tracking_New/WebSite/TrackConsignment_new.Aspx?", false).addParameter("track_flag", "A").addParameter("CONSIGNMENT", trackingId);
+//                Map<String, String> responseMap = null;
+//                try {
+//                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
+//                } catch (HealthkartCheckedException hce) {
+//                    logger.debug("Exception occurred in TrackCourierAction");
+//                }
+//                if (responseMap != null) {
+//                    for (Map.Entry entryObj : responseMap.entrySet()) {
+//                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+//                            status = entryObj.getValue().toString();
+//                        }
+//                    }
+//                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+//                } else {
+//                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+//                }
                 break;
 			case FedEx:
 			case FedEx_Surface:	
