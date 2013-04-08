@@ -55,6 +55,7 @@ public class BusyPopulateRtoData {
 									ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
 									so.accounting_invoice_number as vch_no,
 									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+									pay_gate.name as payment_gateway_name,
 									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 									w.name as warehouse, w.id as warehouse_id, sum(li.reward_point_discount)+so.amount AS net_amount,
 									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
@@ -69,10 +70,11 @@ public class BusyPopulateRtoData {
 									left join shipment ship on ship.id = so.shipment_id
 									left join awb aw on ship.awb_id=aw.id
 									left join courier c on aw.courier_id = c.id
+									left join gateway pay_gate on p.gateway_id = pay_gate.id
 									inner join warehouse w on w.id = so.warehouse_id
 
 									where (so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70))
-									and (ship.return_date >=${lastUpdateDate} and ship.return_date < '2013-02-01' and ship.ship_date > '2011-11-08 19:59:36')
+									and (ship.return_date >=${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
 									and ship.return_date is not null
 									GROUP BY so.id
 									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
@@ -135,15 +137,23 @@ public class BusyPopulateRtoData {
         vch_type = 9;
       }*/
 
-      sale_type = "VAT TAX INC";
+	    if(accountingInvoice.Order_type.equals("Services")){
+		    sale_type = "SERVICE TAX";
+	    }
+	    else{
+        sale_type = "VAT TAX INC";
+	    }
       account_name = accountingInvoice.account_name;
 
       if(accountingInvoice.payment_mode_id == 40){
-        debtors  = "COD_"+accountingInvoice.courier_name;
-      }
-      else{
-        debtors = accountingInvoice.debtors;
-      }
+			debtors  = "COD_"+accountingInvoice.courier_name;
+			}
+			else if (accountingInvoice.payment_mode_id == 1000){
+				debtors = accountingInvoice.payment_gateway_name;
+			}
+			else {
+				debtors = accountingInvoice.debtors;
+			}
 
       address_1 = accountingInvoice.address_1;
       address_2 = accountingInvoice.address_2;
