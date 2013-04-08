@@ -14,7 +14,7 @@
 <s:useActionBean
 	beanclass="com.hk.web.action.core.b2b.B2BAddToCartAction" var="atc" />
 <s:useActionBean
-	beanclass="com.hk.web.action.core.b2b.B2BBulkOrderAction" var="boa" />
+	beanclass="com.hk.web.action.core.b2b.B2BCartAction" var="boa" />
 
 <style>
 .excelDataTable {

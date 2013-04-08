@@ -13,11 +13,11 @@ public class B2BOrderChecklist implements java.io.Serializable {
 
 
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-@Id
+  @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", unique = true, nullable = false)
   private Long id;
@@ -28,7 +28,7 @@ public class B2BOrderChecklist implements java.io.Serializable {
 
 
   @Column(name = "c_form", nullable = false)
-  private boolean CForm;
+  private boolean cForm;
 
   public Long getId() {
     return this.id;
@@ -47,11 +47,11 @@ public class B2BOrderChecklist implements java.io.Serializable {
   }
 
   public boolean isCForm() {
-    return this.CForm;
+    return cForm;
   }
 
-  public void setCForm(boolean CForm) {
-    this.CForm = CForm;
+  public void setCForm(boolean cForm) {
+    this.cForm = cForm;
   }
 
 

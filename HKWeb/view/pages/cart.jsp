@@ -565,10 +565,10 @@
 </shiro:lacksRole>
 <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
-  <s:link beanclass="com.hk.web.action.core.b2b.B2BBulkOrderAction" class="back"> &larr; go back to add more products</s:link>
+  <s:link beanclass="com.hk.web.action.core.b2b.B2BCartAction" class="back"> &larr; go back to add more products</s:link>
 </c:if>
 <c:if test="${cartAction.pricingDto.productLineCount == 0}">
-  <s:link beanclass="com.hk.web.action.core.b2b.B2BBulkOrderAction"
+  <s:link beanclass="com.hk.web.action.core.b2b.B2BCartAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
 </shiro:hasRole>

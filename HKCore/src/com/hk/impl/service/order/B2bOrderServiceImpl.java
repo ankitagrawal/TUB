@@ -16,7 +16,8 @@ public class B2bOrderServiceImpl implements B2BOrderService {
   @Override
   public boolean checkCForm(Order order) {
     if (order != null && order.isB2bOrder() == true) {
-        return getB2bOrderDao().getB2bOrderChecklist(order).isCForm();
+      B2BOrderChecklist b2BOrderChecklist = getB2bOrderDao().getB2bOrderChecklist(order);
+      return b2BOrderChecklist != null ? b2BOrderChecklist.isCForm() : false;
     }
     return false;
   }
