@@ -208,7 +208,7 @@ public class InventoryCheckinAction extends BaseAction {
                 List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
                 if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
                     String closeAuditMsg = CycleCountDtoUtil.getCycleCountInProgress(cycleCountInProgressForVariantList);
-                    closeAuditMsg = closeAuditMsg + "  Warehouse" + grn.getWarehouse().getCity();
+                    closeAuditMsg = closeAuditMsg + "  For  :  " + grn.getWarehouse().getCity();
                     addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
                     return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
                 }

@@ -149,6 +149,7 @@ public class InventoryCheckoutAction extends BaseAction {
                         List<String> productsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForProduct(cycleCountDtoList);
                         List<String> variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
                         StringBuilder cycleCountNeedTobeClose = new StringBuilder(" Cycle Count In Progress For  :").append("<br/>");
+                        boolean cycleCountInProgress = false;
                         for (LineItem lineItem : pickingLIs) {
                             String brand = lineItem.getSku().getProductVariant().getProduct().getBrand();
                             String productId = lineItem.getSku().getProductVariant().getProduct().getId();
@@ -156,19 +157,24 @@ public class InventoryCheckoutAction extends BaseAction {
 
                             if (StringUtils.isNotBlank(brand) && brandsToExcludeList.contains(brand.toLowerCase())) {
                                 cycleCountNeedTobeClose.append(brand).append("<br/>");
+                                cycleCountInProgress = true;
                             }
 
                             if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {
                                 cycleCountNeedTobeClose.append(productId).append("<br/>");
+                                cycleCountInProgress = true;
                             }
 
                             if (StringUtils.isNotBlank(variantId) && variantsToExcludeList.contains(variantId)) {
                                 cycleCountNeedTobeClose.append(variantId).append("<br/>");
+                                cycleCountInProgress = true;
                             }
 
                         }
-                        addRedirectAlertMessage(new SimpleMessage(cycleCountNeedTobeClose.toString()));
-                        return new RedirectResolution(InventoryCheckoutAction.class);
+                        if (cycleCountInProgress) {
+                            addRedirectAlertMessage(new SimpleMessage(cycleCountNeedTobeClose.toString()));
+                            return new RedirectResolution(InventoryCheckoutAction.class);
+                        }
                     }
                 }
 
@@ -220,33 +226,17 @@ public class InventoryCheckoutAction extends BaseAction {
                 if (pvList != null && !pvList.isEmpty()) {
                     productVariant = pvList.get(0);
                 } else {
-                    productVariant = productVariantDao.getVariantById(upc);// UPC not available must have entered
-                    // Variant Id
+                    productVariant = productVariantDao.getVariantById(upc);// UPC not available must have entered Variant Id
                 }
 
                 logger.debug("productVariant: " + productVariant);
-                if (productVariant == null) {
-                    addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
-                    upc = null;
-                }
-                /*
-                Code commented by seema : no use of it
                 if (productVariant != null) {
-                    boolean isBrandAudited = brandsToAuditDao.isBrandAudited(productVariant.getProduct().getBrand(), userService.getWarehouseForLoggedInUser());
-                    if (isBrandAudited) {
-                        addRedirectAlertMessage(new SimpleMessage("HKBarcoded Variant. Please scan HK Barcode to Checkout."));
-                        upc = null;
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("Please do checkout with HK Barcode "));
-                        upc = null;
-//                        skuGroups = adminInventoryService.getInStockSkuGroups(upc);
-//                        logger.debug("skuGroups: " + skuGroups.size());
-                    }
+                    addRedirectAlertMessage(new SimpleMessage("Please do checkout with HK Barcode "));
+                    upc = null;
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
                     upc = null;
                 }
-                */
             }
 
         } else {

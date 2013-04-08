@@ -173,14 +173,16 @@ public class CycleCountDaoImpl extends BaseDaoImpl implements CycleCountDao {
             variantId = productVariant.getId();
             productId = productVariant.getProduct().getId();
         }
-        String sql = "select cc.brand as brand , cc.product as product , cc.productVariant as productVariant from CycleCount cc where cc.warehouse.id =:warehouseId  " +
+        String sql = "select cc.brand as brand , pr as product , pv  as productVariant from CycleCount cc left join cc.product pr " +
+                "  left join cc.productVariant pv  where cc.warehouse.id = :warehouseId  " +
                 "and cc.cycleStatus in (:cycleStatusList) ";
 
         if (productVariant != null) {
-            sql = sql + " and (cc.productVariant.id =:productVariantId or cc.brand =:brand or cc.product.id =:productId) ";
+            sql = sql + " and (cc.productVariant.id = :productVariantId or cc.brand = :brand or cc.product.id = :productId) ";
         }
 
-        Query query = getSession().createQuery(sql).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus);
+        Query query = getSession().createQuery(sql);
+        query.setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus);
 
         if (productVariant != null) {
             query.setParameter("productVariantId", variantId).setParameter("productId", productId)
