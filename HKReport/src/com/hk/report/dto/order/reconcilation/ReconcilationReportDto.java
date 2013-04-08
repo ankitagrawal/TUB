@@ -27,8 +27,9 @@ public class ReconcilationReportDto {
     String boxSize;
     Warehouse warehouse;
     Courier courier;
-	ShippingOrder shippingOrder;
-	Address address;
+    ShippingOrder shippingOrder;
+    Address address;
+    String orderCategory;
 
     public String getInvoiceId() {
         return invoiceId;
@@ -127,15 +128,15 @@ public class ReconcilationReportDto {
     }
 */
 
-	public boolean isReconciled() {
-		return reconciled;
-	}
+    public boolean isReconciled() {
+        return reconciled;
+    }
 
-	public void setReconciled(boolean reconciled) {
-		this.reconciled = reconciled;
-	}
+    public void setReconciled(boolean reconciled) {
+        this.reconciled = reconciled;
+    }
 
-	public String getOrderStatus() {
+    public String getOrderStatus() {
         return orderStatus;
     }
 
@@ -167,19 +168,27 @@ public class ReconcilationReportDto {
         this.warehouse = warehouse;
     }
 
-	public ShippingOrder getShippingOrder() {
-		return shippingOrder;
-	}
+    public ShippingOrder getShippingOrder() {
+        return shippingOrder;
+    }
 
-	public void setShippingOrder(ShippingOrder shippingOrder) {
-		this.shippingOrder = shippingOrder;
-	}
+    public void setShippingOrder(ShippingOrder shippingOrder) {
+        this.shippingOrder = shippingOrder;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getOrderCategory() {
+        return orderCategory;
+    }
+
+    public void setOrderCategory(String orderCategory) {
+        this.orderCategory = orderCategory;
+    }
 }

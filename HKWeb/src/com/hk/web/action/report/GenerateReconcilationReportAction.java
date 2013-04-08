@@ -147,6 +147,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 		xlsWriter.addHeader("CATEGORY", "CATEGORY");
 		xlsWriter.addHeader("ADDRESS", "ADDRESS");
 		xlsWriter.addHeader("CUSTOMER PHONE", "CUSTOMER PHONE");
+        xlsWriter.addHeader("ORDER CATEGORY", "ORDER CATEGORY");
 
 		int row = 1;
 		for (ReconcilationReportDto reconcilationReportDto : reconcilationReportDtoList) {
@@ -202,6 +203,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
 			xlsWriter.addCell(row, shippingOrder.getBasketCategory());
 			xlsWriter.addCell(row, custAddress);
 			xlsWriter.addCell(row, custPhone);
+            xlsWriter.addCell(row, reconcilationReportDto.getOrderCategory());
 			row++;
 		}
 		xlsWriter.writeData(excelFile, "Reconciliation_report");
