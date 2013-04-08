@@ -30,6 +30,7 @@ public class ReconcilationReportDto {
     ShippingOrder shippingOrder;
     Address address;
     String orderCategory;
+    boolean isB2B;
 
     public String getInvoiceId() {
         return invoiceId;
@@ -190,5 +191,13 @@ public class ReconcilationReportDto {
 
     public void setOrderCategory(String orderCategory) {
         this.orderCategory = orderCategory;
+    }
+
+    public boolean isB2B() {
+        return isB2B;
+    }
+
+    public void setB2B(boolean b2B) {
+        isB2B = b2B;
     }
 }
