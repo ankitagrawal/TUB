@@ -20,7 +20,7 @@
 
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-    <img src="${pageContext.request.contextPath}/images/banners/top/Home-Gym-Banner.gif" alt="Build Your Dream Gym at Home, Starting From Rs. 10,000.00">
+    <img src="${pageContext.request.contextPath}/images/banners/top/portable-home-gyms-banner.jpg" alt="Build Your Dream Gym at Home, Starting From Rs. 10,000.00">
   </s:link>  
   <script type="text/javascript">
     var params = {};

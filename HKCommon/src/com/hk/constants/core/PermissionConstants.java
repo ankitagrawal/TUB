@@ -146,4 +146,9 @@ public class PermissionConstants {
 	public static final String EDIT_BOOKING_NO						= "EDIT_BOOKING_NO";
 	public static final String GENERATE_EXCEL_FOR_REVERSE_PICKUP	= "GENERATE_EXCEL_FOR_REVERSE_PICKUP";
 
+    public static final String SPLIT_SO = "SPLIT_SO";
+    public static final String BULK_SPLIT_BO = "BULK_SPLIT_BO";
+    public static final String SPLIT_BO = "SPLIT_BO";
+    public static final String SAVE_SHIPPING_COST = "SAVE_SHIPPING_COST";
+
 }

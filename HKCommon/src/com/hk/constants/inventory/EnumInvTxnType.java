@@ -30,7 +30,9 @@ public enum EnumInvTxnType {
     RV_FREE_VARIANT_RECONCILE(160L, "Inventory Checkout for Free Variant Reconcile"),
     RV_CUSTOMER_RETURN(170L, "Inventory Checkout for Customer Return"),
     RV_PHARMA_RETURN(180L, "Inventory Checkout for Pharama Return"),
-    PRODUCT_VARIANT_AUDITED(190L, "Product Variant Audited");
+    PRODUCT_VARIANT_AUDITED(190L, "Product Variant Audited"),
+    RV_ADD_INCORRECT_COUNTING(200L,"rv add incorrect counting "),
+    RV_SUBTRACT_INCORRECT_COUNTING(210L,"rv subtract incorrect counting");
 
   private String name;
   private Long id;
