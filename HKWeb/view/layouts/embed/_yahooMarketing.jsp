@@ -27,7 +27,7 @@
     <%
         if (AnalyticsConstants.analytics) {
     %>
-        <c:if test = "${pageType == 'category'}">
+        <c:if test = "${pageType == 'category' ||  pageType == 'product'}">
             <c:if test = "${(topLevelCategory == 'nutrition') || (topLevelCategory == 'diabetes') ||  (topLevelCategory == 'eye')}">
                 <!-- Advertiser 'BRIGHT LIFECARE PVT LTD',  Include user in segment 'BRIGHT LIFECARE PVT LTD_SRT_PIXEL_040213' - DO NOT MODIFY THIS PIXEL IN ANY WAY -->
                 <img src="https://ad.yieldmanager.com/pixel?id=2354094&t=2" width="1" height="1" />
