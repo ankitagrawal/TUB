@@ -507,7 +507,7 @@
                     </c:forEach>
                     <table>
                         <tr>
-                            <td style="width:10%;padding: 0;" ><b>Right</b></td>
+                            <td style="width:10%;" ><b>Right</b></td>
                             <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
                                        var="configValue" varStatus="configValueCtr">
                                 <c:set var="additinalParam"
@@ -518,14 +518,14 @@
                                         test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
 								|| additinalParam == BRANDTHBF) }">
-                                    <td>
+                                    <td style="width:25%;">
                                         <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
                                     </td>
                                 </c:if>
                             </c:forEach>
                         </tr>
                         <tr>
-                            <td style="width:10%;padding: 0;"><b>Left</b></td>
+                            <td style="width:10%;"><b>Left</b></td>
                             <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
                                        var="configValue" varStatus="configValueCtr">
                                 <c:set var="additinalParam"
@@ -535,7 +535,7 @@
                                         test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
 								|| additinalParam == BRANDTHBF)}">
-                                    <td>
+                                    <td style="width:25%;">
                                         <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
                                     </td>
                                 </c:if>
