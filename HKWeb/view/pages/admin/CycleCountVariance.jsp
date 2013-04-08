@@ -7,6 +7,7 @@
 <c:set var="cycleCount" value="<%=EnumSkuItemTransferMode.CYCLE_COUNT.getId()%>"/>
 <c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
 <c:set var="cycleCountStatusId" value="<%=EnumCycleCountStatus.RequestForApproval.getId()%>"/>
+<c:set var="totalSkuItem" value="<%=EnumSkuItemTransferMode.CYCLE_COUNT_SKU_ITEM_MISSED.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CycleCountAction" var="cycle"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Cycle Variance Report">
 <s:layout-component name="heading">
@@ -25,7 +26,7 @@
             $('.alert').hide();
 
             $('#productVariantBarcode').focus();
-            $('#productVariantBarcode').keydown(function() {
+            $('#productVariantBarcode').keydown(function () {
                 $('.alertST').hide();
             });
 
@@ -36,23 +37,23 @@
             }
 
 
-            $('#stForm2').submit(function() {
+            $('#stForm2').submit(function () {
                 var pvb = $('#productVariantBarcode').val();
                 if (pvb == null || pvb == "") {
                     alert("Value can't be Empty");
                     return false;
                 }
             });
-            $('#productVariantBarcode').change(function() {
+            $('#productVariantBarcode').change(function () {
 
                 var formName = $('#stForm2');
                 var formURL = formName.attr('action');
-                formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} + "&deleteScannedSkuItem=");
+                formName.attr('action', formURL + "?cycleCount=" + ${cycle.cycleCount} +"&deleteScannedSkuItem=");
                 formName.submit();
             });
 
 
-            $('#ccform').submit(function() {
+            $('#ccform').submit(function () {
                 var scannedqty = $('.scannedQty').val()
                 if (scannedqty < 0) {
                     alert("Scanned Qty cannot be less than 0")
@@ -101,16 +102,16 @@
         <div class="alertST messages"><s:messages key="generalMessages"/></div>
         <!-- commenting code For Time Being !-->
         <%--<s:form beanclass="com.hk.web.action.admin.inventory.CycleCountAction" id="stForm2">--%>
-            <%--<fieldset class="right_label">--%>
-                <%--<legend>Scan Barcode to delete:</legend>--%>
-                <%--<ul>--%>
-                    <%--<li>--%>
-                        <%--<s:label name="barcode">Product Variant Barcode</s:label>--%>
-                        <%--<s:text name="hkBarcode" id="productVariantBarcode"/>--%>
-                    <%--</li>--%>
-                    <%--<li></li>--%>
-                <%--</ul>--%>
-            <%--</fieldset>--%>
+        <%--<fieldset class="right_label">--%>
+        <%--<legend>Scan Barcode to delete:</legend>--%>
+        <%--<ul>--%>
+        <%--<li>--%>
+        <%--<s:label name="barcode">Product Variant Barcode</s:label>--%>
+        <%--<s:text name="hkBarcode" id="productVariantBarcode"/>--%>
+        <%--</li>--%>
+        <%--<li></li>--%>
+        <%--</ul>--%>
+        <%--</fieldset>--%>
         <%--</s:form>--%>
     </c:if>
     <table style="margin: 55px auto 81px;">
@@ -153,20 +154,20 @@
                         <label class="scannedQty"> ${cCItem.scannedQty} </label>
 
 
-                        <%--<c:choose>--%>
+                            <%--<c:choose>--%>
                             <%--<c:when test="${cycle.cycleCount.cycleStatus >= approved}">--%>
-                                <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
+                            <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
                             <%--</c:when>--%>
                             <%--<c:otherwise>--%>
-                                <%--<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
-                                    <%--<input type="text" name="cycleCountItems[${ctr.index}].scannedQty"--%>
-                                           <%--class="scannedQty" value="${cCItem.scannedQty}"/>--%>
-                                <%--</shiro:hasPermission>--%>
-                                <%--<shiro:lacksPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
-                                    <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
-                                <%--</shiro:lacksPermission>--%>
+                            <%--<shiro:hasPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
+                            <%--<input type="text" name="cycleCountItems[${ctr.index}].scannedQty"--%>
+                            <%--class="scannedQty" value="${cCItem.scannedQty}"/>--%>
+                            <%--</shiro:hasPermission>--%>
+                            <%--<shiro:lacksPermission name="<%=PermissionConstants.RECON_VOUCHER_MANAGEMENT%>">--%>
+                            <%--<label class="scannedQty"> ${cCItem.scannedQty} </label>--%>
+                            <%--</shiro:lacksPermission>--%>
                             <%--</c:otherwise>--%>
-                        <%--</c:choose>--%>
+                            <%--</c:choose>--%>
                     </td>
                     <c:set value="${cycle.cycleCountPviMap}" var="item"/>
                     <td><label class="systemQty">${item[cCItem.id]}</label></td>
@@ -226,7 +227,7 @@
                 <td>${missedGroup.sku.productVariant.optionsPipeSeparated}</td>
                 <td>${missedGroup.batchNumber}</td>
                 <td><c:if test="${missedGroup.barcode == null}">
-                    ${barcodePrefix}${missedGroup.id}
+                    ${barcodePrefix}${missedGroup.id}-..?
                 </c:if>
                     <c:if test="${missedGroup.barcode != null}">
                         ${missedGroup.barcode}
@@ -242,7 +243,16 @@
                 <c:set value="${cycle.missedSkuGroupSystemInventoryMap}" var="item"/>
                 <td><label class="systemQty">${item[missedGroup.id]}</label></td>
                 <td><label class="varianceQty">${item[missedGroup.id]}</label></td>
-                <td></td>
+                <td>
+                    <c:if test="${missedGroup.barcode == null}">
+                        <s:link beanclass="com.hk.web.action.admin.sku.ViewSkuItemAction" event="pre">
+                            View Item Details
+                            <s:param name="skuGroup" value="${missedGroup.id}"/>
+                            <s:param name="entityId" value="${totalSkuItem}"/>
+                        </s:link>
+                    </c:if>
+
+                </td>
             </tr>
         </c:forEach>
 
