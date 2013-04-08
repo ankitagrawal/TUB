@@ -84,7 +84,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;       
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
 
     private Long orderId;
     private Long storeId;
@@ -99,13 +99,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
     private List<String> categories = new ArrayList<String>();
-    private Integer defaultPerPage = 25;
+    private Integer defaultPerPage = 40;
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
-    private boolean sortByLastEscDate = true;
-    private boolean sortByScore = true;
+    private boolean sortByLastEscDate = false;
+    private boolean sortByScore = false;
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
@@ -144,7 +144,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore).setSortByLastEscDate(sortByLastEscDate);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+//                .setSortByLastEscDate(sortByLastEscDate);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -224,7 +225,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 //        orderSearchCriteria.setCategories(categoryList);
 
         if (dropShip != null){
-           orderSearchCriteria.setDropShip(dropShip);
+            orderSearchCriteria.setDropShip(dropShip);
         }
         if (containsJit != null){
             orderSearchCriteria.setContainsJit(containsJit);
@@ -254,7 +255,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 if (isManualEscalable) {
                     trueMessage.append(shippingOrder.getBaseOrder().getId());
                     trueMessage.append(" ");
-                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
+                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
                         trueMessage.append(shippingOrder.getBaseOrder().getId());
@@ -416,7 +417,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("endDate");
         params.add("storeId");
         params.add("sortByPaymentDate");
+//        params.add("sortByLastEscDate");
         params.add("sortByScore");
+        params.add("sortByDispatchDate");
         params.add("dropShip");
         params.add("containsJit");
 
@@ -533,9 +536,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         return dropShip;
     }
 
-      public Boolean getDropShip() {
-         return dropShip;
-     }
+    public Boolean getDropShip() {
+        return dropShip;
+    }
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
@@ -567,4 +570,5 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     public void setSortByLastEscDate(boolean sortByLastEscDate) {
         this.sortByLastEscDate = sortByLastEscDate;
     }
+
 }

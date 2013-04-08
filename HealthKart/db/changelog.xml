@@ -11994,6 +11994,14 @@
             <column name="accounting_invoice_number" type="VARCHAR(20)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Pratham" id="2013-04-08-01">
+        <sql>
+            insert into permission values ('BULK_SPLIT_BO');
+            insert into permission values ('SPLIT_BO');
+            insert into permission values ('SAVE_SHIPPING_COST');
+            insert into role_has_permission values ('CATEGORY_MANAGER','SPLIT_BO');
+        </sql>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-1">
         <addColumn tableName="cycle_count">
             <column name="brand" type="VARCHAR(45)"/>

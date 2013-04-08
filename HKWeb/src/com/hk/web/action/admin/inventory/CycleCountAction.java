@@ -115,24 +115,6 @@ public class CycleCountAction extends BasePaginatedAction {
     }
 
 
-
-//
-//    public Resolution directToCycleCountPage() {
-//
-//        if (cycleCount.getId() == null) {
-//            BrandsToAudit brandsToAudit = cycleCount.getBrandsToAudit();
-//            boolean auditInProgress = ifBrandProductCycleCountInProgress(brandsToAudit.getBrand());
-//            if (!auditInProgress) {
-//                cycleCount = createAndSaveNewCycleCount(cycleCount);
-//            }
-//        }
-//
-//        return view();
-//
-//    }
-//
-
-
     public Resolution createCycleCount() {
         return new RedirectResolution("/pages/admin/createCycleCount.jsp");
     }
@@ -146,7 +128,7 @@ public class CycleCountAction extends BasePaginatedAction {
             for (Product product : productList) {
                 List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(null, product, null, warehouse);
                 if (cycleCounts != null && cycleCounts.size() > 0) {
-                    message = "OOoops !!! ERROR :  Cycle Count of Product : " + product.getId() + " of same brand : " + brandEntered + " Already in Progress. Close if first";
+                    message = "OOops !!! ERROR :  Cycle Count of Product : " + product.getId() + " of same brand : " + brandEntered + " Already in Progress. Close if first";
                     return true;
                 }
                 boolean productVariantCcInProgress = ifProductVariantsCycleCountInProgress(product, brandEntered);
@@ -166,7 +148,7 @@ public class CycleCountAction extends BasePaginatedAction {
             for (ProductVariant productVariant : productVariantsList) {
                 List<CycleCount> cycleCountsList = cycleCountService.getCycleCountInProgress(null, null, productVariant, userService.getWarehouseForLoggedInUser());
                 if (cycleCountsList != null && cycleCountsList.size() > 0) {
-                    message = "OOooopss !!! ERROR :  Cycle count of PV Id : " + productVariant.getId() + " of same brand already in Progress. Close it first";
+                    message = "OOops !!! ERROR :  Cycle count of PV Id : " + productVariant.getId() + " of same brand already in Progress. Close it first";
                     return true;
                 }
             }
