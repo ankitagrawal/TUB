@@ -32,7 +32,7 @@ public interface OrderService {
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta);
 
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 

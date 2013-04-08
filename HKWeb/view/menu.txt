@@ -309,6 +309,7 @@
 ---/health-devices/blood-pressure/bp/mercury-free-sphygmomanometer: Mercury Free
 ---/health-devices/blood-pressure/bp/electrical-sphygmomanometer: Electrical
 --/health-devices/blood-pressure/heart-rate-monitor : Heart Rate Monitors
+
 --/health-devices/blood-pressure/accessories : BP Accessories
 --/health-devices/blood-pressure/combo : BP Combos
 -/health-devices/respiratory-care
@@ -359,6 +360,10 @@
 ---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
+--/health-devices/pain-management/ergonomic-supports
+---/health-devices/pain-management/ergonomic-supports/chairs
+---/health-devices/pain-management/ergonomic-supports/recliners
+---/health-devices/pain-management/ergonomic-supports/stands
 -/health-devices/medical-care : Medical Care
 --/health-devices/medical-care/weighing-scales
 ---/health-devices/medical-care/weighing-scales/digital
@@ -407,6 +412,8 @@
 ---/health-devices/medical-care/baby-care/strollers
 ---/health-devices/medical-care/baby-care/walkers
 ---/health-devices/medical-care/baby-care/stature-meter
+---/health-devices/medical-care/weighing-scales/baby
+---/health-devices/medical-care/weighing-scales/kitchen
 -/health-devices/clinical-products
 --/health-devices/clinical-products/stethoscope
 ---/health-devices/clinical-products/stethoscope/general
@@ -607,6 +614,7 @@
 --/personal-care/misc/pain-relief : Pain Relief
 --/personal-care/misc/air-freshener : Air Freshener
 --/personal-care/misc/buds
+
 
 /beauty
 -/beauty/what-s-new: What's New
@@ -828,6 +836,7 @@
 --/parenting/diapering/changing-mats
 --/parenting/diapering/diaper-bags
 --/parenting/diapering/potty-training
+--/parenting/diapering/diaper-liners
 -/parenting/feeding-nursing : Feeding & Nursing
 --/parenting/feeding-nursing/breastfeeding-aids
 ---/parenting/feeding-nursing/breastfeeding-aids/breast-pumps
@@ -854,6 +863,7 @@
 ---/parenting/feeding-nursing/baby-kids-utensils/food-storage
 ---/parenting/feeding-nursing/baby-kids-utensils/lunch-boxes
 ---/parenting/feeding-nursing/baby-kids-utensils/water-bottles
+---/parenting/feeding-nursing/baby-kids-utensils/milk-powder-containers
 -/parenting/bath-skin-care : Bath & Skin Care
 --/parenting/bath-skin-care/soaps-gels : Soaps & Gels
 --/parenting/bath-skin-care/shampoo
@@ -874,6 +884,7 @@
 ---/parenting/bath-skin-care/grooming/nail-clippers-scissors: Nail Clippers & Scissors
 ---/parenting/bath-skin-care/grooming/ear-buds-cotton-balls:Ear Buds & Cotton Balls
 ---/parenting/bath-skin-care/grooming/sunglasses
+---/parenting/bath-skin-care/grooming/powder-puff
 --/parenting/bath-skin-care/sunscreen
 --/parenting/bath-skin-care/combo-packs
 -/parenting/health-safety : Health & Safety
@@ -883,9 +894,13 @@
 ---/parenting/health-safety/eye-care/eyeglasses
 ---/parenting/health-safety/eye-care/sunglasses
 --/parenting/health-safety/child-proofing
+--/parenting/health-safety/baby-monitors
 --/parenting/health-safety/disinfectants
 --/parenting/health-safety/repellents
 --/parenting/health-safety/misc
+--/parenting/health-safety/baby-kids-health-accessories : Baby & Kids Health Accessories
+---/parenting/health-safety/baby-kids-health-accessories/humidifiers
+---/parenting/health-safety/baby-kids-health-accessories/nasal-aspirators
 -/parenting/toys-more : Toys & More
 --/parenting/toys-more/toys
 ---/parenting/toys-more/toys/rattles
@@ -893,7 +908,8 @@
 ---/parenting/toys-more/toys/teethers
 ---/parenting/toys-more/toys/other-toys
 --/parenting/toys-more/strollers
---/parenting/toys-more/walkers-cycles : Walkers & Cycles
+--/parenting/toys-more/car-seats
+--/parenting/toys-more/walkers-cycles-cars : Walkers, Cycles & Cars
 --/parenting/toys-more/books-cds : Books & Cds
 --/parenting/toys-more/apparels
 ---/parenting/toys-more/apparels/caps
@@ -905,6 +921,12 @@
 ---/parenting/toys-more/school-supplies/lunch-boxes
 ---/parenting/toys-more/school-supplies/water-bottles
 --/parenting/toys-more/furniture
+---/parenting/toys-more/furniture/play-mats
+---/parenting/toys-more/furniture/baby-bed
+---/parenting/toys-more/furniture/table-chair
+---/parenting/toys-more/furniture/swings
+---/parenting/toys-more/furniture/bassinets-bouncers
+--/parenting/toys-more/baby-carriers
 --/parenting/toys-more/misc
 
 /services
