@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Fetch;
@@ -272,6 +273,32 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public String getConfigOptionsPipeSeparated() {
+        StringBuilder stringBuffer = new StringBuilder();
+        if (cartLineItemConfig.getCartLineItemConfigValues() != null) {
+            for (CartLineItemConfigValues cartLineItemConfigValue : cartLineItemConfig.getCartLineItemConfigValues()) {
+                stringBuffer.append(cartLineItemConfigValue.getVariantConfigOption().getDisplayName()).append(":").append(cartLineItemConfigValue.getValue());
+                String additionalParam = cartLineItemConfigValue.getVariantConfigOption().getAdditionalParam();
+                if (!(additionalParam.equals(VariantConfigOptionParam.THICKNESS.param()) || additionalParam.equals(VariantConfigOptionParam.BFTHICKNESS.param())
+                        || additionalParam.equals(VariantConfigOptionParam.COATING.param()) || additionalParam.equals(VariantConfigOptionParam.BFCOATING.param()))) {
+                    String configName = cartLineItemConfigValue.getVariantConfigOption().getName();
+                    if (configName.startsWith("R"))
+                        stringBuffer.append("(R) ");
+                    if (configName.startsWith("L"))
+                        stringBuffer.append("(L) ");
+                }
+                if(additionalParam.equals(VariantConfigOptionParam.ENGRAVING.param()))  {
+                    stringBuffer.append(" <b>+Rs. ").append(cartLineItemConfigValue.getAdditionalPrice()).append("</b>");
+                }
+                stringBuffer.append(" |");
+            }
+            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length()-1);
+            }
+        }
+        return stringBuffer.toString();
     }
 
     @Override
