@@ -389,7 +389,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         User loggedOnUser = getUserService().getLoggedInUser();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
-            loggedOnUser = shippingOrder.getBaseOrder().getUser();
+            loggedOnUser = userService.getAdminUser();
         }
 
         ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
