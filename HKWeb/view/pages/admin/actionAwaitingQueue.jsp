@@ -658,7 +658,7 @@
                     <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${order.shippingOrders}" isActionQueue="true"/>
+                                             shippingOrders="${shippingOrders}" isActionQueue="true"/>
                         </td>
                     </c:when>
                     <c:otherwise>
