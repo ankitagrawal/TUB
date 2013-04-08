@@ -37,12 +37,15 @@ public class AddVirtualTryOnAction extends BaseAction {
         productOptionList.add(productOption);
         for(String productVariantId : productVariantArray){
             ProductVariant  productVariant = getProductVariantService().getVariantById(productVariantId);
-            if(productVariant!=null){
-              productVariant.setProductOptions(productOptionList);
-              getProductVariantService().save(productVariant);
+            if(productVariant==null){
+            addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is not available"));
+            }
+            else{
+            productVariant.setProductOptions(productOptionList);
+            getProductVariantService().save(productVariant);
+            addRedirectAlertMessage(new SimpleMessage("Database updated"));
             }
         }
-        addRedirectAlertMessage(new SimpleMessage("Database updated"));
         return new RedirectResolution("/pages/admin/addVirtualTryOn.jsp");
     }
 
