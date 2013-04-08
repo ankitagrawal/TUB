@@ -653,8 +653,8 @@
                     </c:if>
                 </td>
 
+                <c:set var="shippingOrders" value="${hk:getActionAwaitingSO(order)}"/>
                 <c:choose>
-                    <c:set var="shippingOrders" value="${hk:getActionAwaitingSO(order)}"/>
                     <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
