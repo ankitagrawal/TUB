@@ -275,6 +275,21 @@ public class CartLineItem implements java.io.Serializable, Comparable<CartLineIt
         this.version = version;
     }
 
+    public String getExtraOptionsPipeSeparated() {
+        StringBuilder stringBuffer = new StringBuilder();
+        if (cartLineItemExtraOptions != null) {
+            for (CartLineItemExtraOption cartLineItemExtraOption : cartLineItemExtraOptions) {
+                stringBuffer.append(cartLineItemExtraOption.getName()).append(":").append(cartLineItemExtraOption.getValue());
+                stringBuffer.append(" |");
+            }
+            if(stringBuffer.length() > 0 && stringBuffer.charAt(stringBuffer.length()-1) == '|') {
+                return stringBuffer.substring(0, stringBuffer.length()-1);
+            }
+        }
+
+        return stringBuffer.toString();
+    }
+
     public String getConfigOptionsPipeSeparated() {
         StringBuilder stringBuffer = new StringBuilder();
         if (cartLineItemConfig.getCartLineItemConfigValues() != null) {
