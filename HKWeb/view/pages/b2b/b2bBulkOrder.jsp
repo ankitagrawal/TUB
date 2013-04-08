@@ -18,7 +18,8 @@
 
   .b2bTable tr th {
     border-right: 1px solid #ccc;
-    text-align: center;
+    text-align: left;
+    padding-left:2px;
   }
 
 </style>
@@ -63,11 +64,11 @@
           '<tr class="bodyTr">' +
           '<td>' + counter +
           '</td>' +
-          '<td><input name="b2bProductList[' + index + '].productId" class="variant b2bTableInput" /></td>' +
+          '<td><input name="productVariantList[' + index + ']" class="variant b2bTableInput" /></td>' +
           '<td align="center"><span id="pvDetails" class="pvDetails"></span></td>' +
           '<td><div class="img48" style="vertical-align:top;"></div></td>' +
           '<td align="center"><span id="mrp" class="mrp"/></td>' +
-          '<td><input name="b2bProductList[' + index + '].quantity" class="qty b2bTableInput" value="0"/></td>' +
+          '<td><input name="productVariantList[' + index + '].quantity" class="qty b2bTableInput" value="0"/></td>' +
           '<td align="center"><label id="totalPrice" class="totalPrice b2bTableInput">0</label></td>' +
           '</tr><tr height="10"></tr>';
       $('#poTable').append(newRowHtml);
@@ -264,7 +265,7 @@
           <c:set value="${productVariant.product}" var="product"/>
           <tr class="bodyTr" style="background-color: #F2F7FB">
             <s:hidden
-                name="b2bProductList[${item.count-1}].productId"
+                name="productVariantList[${item.count-1}]"
                 value="${lineItem.productVariant.id}"/>
             <td>${item.count}.</td>
             <td>${productVariant.id}</td>
@@ -294,7 +295,7 @@
                     <c:otherwise>${productVariant.hkPrice}</c:otherwise>
                   </c:choose>
 									</span></td>
-            <td align="center"><s:text name="b2bProductList[${item.count-1}].quantity"
+            <td align="center"><s:text name="productVariantList[${item.count-1}].qty"
                        class="qty" value="${lineItem.qty}" style="width:50px;"/></td>
             <td align="center"><label id="totalPrice"
                                       class="totalPrice b2bTableInput">
@@ -398,7 +399,7 @@
 
             }
           }
-        location.href(${pageContext.request.contextPath} + "/core/b2b/B2BCart.action");
+        window.location.href = "${pageContext.request.contextPath}/core/b2b/B2BCart.action";
       });
 
     });
