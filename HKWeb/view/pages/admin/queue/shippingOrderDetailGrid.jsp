@@ -468,7 +468,7 @@
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
                     ${productVariant.id}
-                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" event="pre">
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" event="pre" style="font-size:12px !important; font-weight:bold !important;" >
                     <s:param name="productId" value="${productVariant.product.id}"/>
                      ${productVariant.product.name}
                 </s:link>
@@ -478,19 +478,17 @@
                 </span>
                 </c:if>
                 <em>
-                    <p>
+                    <span>
                         <c:forEach items="${productVariant.productOptions}"
                                    var="productOption">
                             <c:if test="${hk:showOptionOnUI(productOption.name)}">
                                 ${productOption.name}:${productOption.value};
                             </c:if>
                         </c:forEach>
-                    </p>
-
-                    <p>
+                    </span>
+                    <span>
                             ${cartLineItem.extraOptionsPipeSeparated}
-                        <%--<!--${cartLineItem.configOptionsPipeSeparated}-->--%>
-                    </p>
+                    </span>
                 </em>
 
                 <c:if test="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues !=null}">
@@ -509,7 +507,7 @@
                     </c:forEach>
                     <table>
                         <tr>
-                            <td><b>Right</b></td>
+                            <td style="width:10%;padding: 0;" ><b>Right</b></td>
                             <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
                                        var="configValue" varStatus="configValueCtr">
                                 <c:set var="additinalParam"
@@ -527,7 +525,7 @@
                             </c:forEach>
                         </tr>
                         <tr>
-                            <td><b>Left</b></td>
+                            <td style="width:10%;padding: 0;"><b>Left</b></td>
                             <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
                                        var="configValue" varStatus="configValueCtr">
                                 <c:set var="additinalParam"
@@ -547,20 +545,18 @@
                 </c:if>
                     <c:choose>
                         <c:when test="${productVariant.product.groundShipping}">
-                             <span style="margin-left:10px;color: #ff0000;">(G)</span>
+                             <span style="color: #ff0000;">(G)</span>
                         </c:when>
                         <c:otherwise>
-                            <span style="margin-left:10px;color: #ff0000;">(A)</span>
+                            <span style="color: #ff0000;">(A)</span>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${shippingOrder.dropShipping}">
-                        <span style="margin-left:10px;color: #ff0000;">(D)</span>
+                        <span style="color: #ff0000;">(D)</span>
                     </c:if>
-                               <c:if test="${isActionQueue == true}">
-                    <%--<c:if test="${productVariant.product.jit}">--%>
-                        ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
-                    <%--</c:if>--%>
-                </c:if>
+                        <c:if test="${isActionQueue == true}">
+                            Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days
+                        </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
