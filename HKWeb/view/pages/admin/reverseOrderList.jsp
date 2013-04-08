@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.courier.EnumPickupStatus" %>
 <%@ page import="com.hk.constants.courier.AdviceProposedConstants" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
@@ -22,32 +23,60 @@
                 if(!confirm("Are you sure you want to mark it picked ?")){
                     return false;
                 }
+
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
+
+                return false;
             });
 
             $('.markReconciled').click(function() {
                 if(!confirm("Are you sure you want to mark it reconciled ?")){
                    return false;
                 }
+                 var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
+
+                return false;
             });
 
              $('.markReceived').click(function() {
                 if(!confirm("Are you sure you want to mark it received ?")){
                    return false;
                 }
+                  var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
+
+                return false;
             });
 
              $('.track').click(function(){
                var x = prompt("Enter Tracking no");
                if(!x) return false;
 
-               $('#trackingNo').attr('value',x);
+               $('.trackingNo').attr('value',x);
              });
 
               $('.confNo').click(function(){
                var x = prompt("Enter Pickup Confirmation no");
                if(!x) return false;
 
-               $('#confirmationNo').attr('value',x);
+               $('.confirmationNo').attr('value',x);
              });
          });
 
@@ -138,7 +167,7 @@
                     <td>
                            <c:choose>
                             <c:when test="${reverseOrderRequest.courierPickupDetail != null && reverseOrderRequest.courierPickupDetail.pickupConfirmationNo == null}">
-                                <s:hidden name="confirmationNo" id="confirmationNo" />
+                                <s:hidden name="confirmationNo" id="confirmationNo" class="confirmationNo" />
                                 <s:submit value="Add" name="editConfirmationNo" class="confNo design" />
                             </c:when>
                             <c:otherwise>
@@ -149,7 +178,7 @@
                     <td>
                            <c:choose>
                             <c:when test="${reverseOrderRequest.courierPickupDetail != null && reverseOrderRequest.courierPickupDetail.trackingNo == null}">
-                                <s:hidden name="trackingNo" id="trackingNo" />
+                                <s:hidden name="trackingNo" id="trackingNo" class="trackingNo" />
                                 <s:submit value="Add" name="editTrack" class="track design" />
                             </c:when>
                             <c:otherwise>

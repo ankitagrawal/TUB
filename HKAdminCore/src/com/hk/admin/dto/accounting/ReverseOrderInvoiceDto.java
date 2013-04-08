@@ -75,9 +75,8 @@ public class ReverseOrderInvoiceDto {
       summaryQtyMap.put(enumTax.getName(), 0L);
     }
 
-    //invoiceType = InvoiceNumHelper.getInvoiceType(reverseOrder.getShippingOrder().isServiceOrder(), reverseOrder.getShippingOrder().getBaseOrder().isB2bOrder());
-      invoiceType = InvoiceNumHelper.PREFIX_FOR_REVERSE_ORDER;
-	  setB2bUserDetails(b2bUserDetailsLocal);
+    invoiceType = InvoiceNumHelper.getInvoiceType(reverseOrder.getShippingOrder().isServiceOrder(), reverseOrder.getShippingOrder().getBaseOrder().isB2bOrder());      
+	setB2bUserDetails(b2bUserDetailsLocal);
 
 	Set<LineItem> shippingOrderLineItems = new HashSet<LineItem>();
 	for(ReverseLineItem reverseLineItem : reverseOrder.getReverseLineItems()){

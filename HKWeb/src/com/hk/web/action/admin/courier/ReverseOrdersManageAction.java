@@ -3,6 +3,8 @@ package com.hk.web.action.admin.courier;
 import net.sourceforge.stripes.action.*;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.stripes.controller.JsonHandler;
+import com.akube.framework.gson.JsonUtils;
 
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.courier.EnumPickupStatus;
@@ -14,16 +16,14 @@ import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.HealthkartResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 import java.io.*;
 
 /**
@@ -72,6 +72,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
 
+	@JsonHandler
 	@Secure(hasAnyPermissions = {PermissionConstants.MARK_PICKED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markPicked(){
 		if(orderRequestId != null){
@@ -79,9 +80,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrder.getCourierPickupDetail().setPickupStatus(EnumPickupStatus.CLOSE.asPickupStatus());
 			reverseOrderService.save(reverseOrder);
 		}
-		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order marked picked");//, data);
+		return new JsonResolution(healthkartResponse);
+		
+		//return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@JsonHandler
 	@Secure(hasAnyPermissions = {PermissionConstants.MARK_RECEIVED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markReceived(){
 		if(orderRequestId != null){
@@ -89,9 +94,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrder.setReceivedDate(new Date());
 			reverseOrderService.save(reverseOrder);
 		}
-		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order marked received");//, data);
+		return new JsonResolution(healthkartResponse);
+
+		//return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+	@JsonHandler
 	@Secure(hasAnyPermissions = {PermissionConstants.MARK_RECONCILED}, authActionBean = AdminPermissionAction.class)
 	public Resolution markReconciled(){
 		if(orderRequestId != null){
@@ -99,7 +108,10 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
 			reverseOrderService.save(reverseOrder);
 		}
-		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order marked reconciled");//, data);
+		return new JsonResolution(healthkartResponse);
+
+		//return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
 	public Resolution reschedulePickup(){
@@ -117,6 +129,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 			reverseOrder.setActionProposed(advice);
 			reverseOrderService.save(reverseOrder);
 		}
+
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
