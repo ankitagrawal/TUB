@@ -398,8 +398,7 @@
 
             }
           }
-        var path = "${pageContext.request.contextPath}";
-        location.replace(path + "/core/b2b/B2BBulkOrder.action");
+        location.href(${pageContext.request.contextPath} + "/core/b2b/B2BCart.action");
       });
 
     });

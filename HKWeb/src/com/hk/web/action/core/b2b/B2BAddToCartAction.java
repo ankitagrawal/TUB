@@ -129,20 +129,9 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
     Map dataMap = new HashMap();
     HealthkartResponse healthkartResponse;
     try {
-
-      b2bProductList.removeAll(Collections.singleton(null));
-
-      Iterator<B2BProduct> b2bProductListIterator = b2bProductList.iterator();
-      while (b2bProductListIterator.hasNext()) {
-        B2BProduct b2bProduct = b2bProductListIterator.next();
-        if (b2bProduct.getProductId() == null) {
-          b2bProductListIterator.remove();
-        }
-      }
-
       for (B2BProduct b2bProduct : b2bProductList) {
         if (productVariantService.getVariantById(b2bProduct.getProductId()) == null) {
-          throw new NullPointerException("Invalid Product Id Submitted");
+          throw new NullPointerException("Invalid Variant Id Submitted");
         }
       }
 
