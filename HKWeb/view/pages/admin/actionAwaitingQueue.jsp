@@ -16,6 +16,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
+<%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -402,7 +403,7 @@
                     </div>
                     <div style="float:left;">Sort by
                         <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
-                        <div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>
+                        <%--<div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>--%>
                         <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
                         <div><s:checkbox name="sortByScore"/>Order Score</div>
                     </div>
@@ -438,6 +439,9 @@
                 </li>
 
                 <div class="buttons">
+                    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
+                        <div><s:checkbox name="accurateBeta"/>Accurate Results (Beta)</div>
+                    </shiro:hasAnyRoles>
                     <s:submit name="pre" value="Search"/>
                     <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
                     <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>

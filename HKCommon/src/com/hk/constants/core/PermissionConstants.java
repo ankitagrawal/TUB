@@ -136,4 +136,5 @@ public class PermissionConstants {
 
 	public static final String STORE_MANAGER = "STORE_MANAGER";
 
+    public static final String SPLIT_SO = "SPLIT_SO";
 }

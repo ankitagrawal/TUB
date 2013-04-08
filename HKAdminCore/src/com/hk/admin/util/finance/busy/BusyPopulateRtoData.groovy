@@ -50,7 +50,7 @@ public class BusyPopulateRtoData {
     }
 
     sql.eachRow("""
-                    select so.id as shipping_order_id, ship.ship_date as order_date, so.accounting_invoice_number_id as vch_no,
+                    select so.id as shipping_order_id, ship.ship_date as order_date, so.accounting_invoice_number as vch_no,
                            u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
                            a.line1 as address_1, a.line2 as address_2, a.city, a.state,
                            w.name as warehouse, w.id as warehouse_id, so.amount as net_amount, c.name as courier_name,
@@ -77,7 +77,7 @@ public class BusyPopulateRtoData {
       String series;
       Date date;
       String vch_no;
-      String vch_prefix;
+ //     String vch_prefix;
       int vch_type;
       String sale_type;
       String account_name;
@@ -106,7 +106,7 @@ public class BusyPopulateRtoData {
 
       date = accountingInvoice.return_date;	    
 
-      if(accountingInvoice.is_b2b_order != 0 && accountingInvoice.is_b2b_order == 1){
+/*      if(accountingInvoice.is_b2b_order != 0 && accountingInvoice.is_b2b_order == 1){
         vch_prefix = "B";
       }
       else if(accountingInvoice.is_service_order != null && accountingInvoice.is_service_order == 1){
@@ -114,8 +114,9 @@ public class BusyPopulateRtoData {
       }
       else{
         vch_prefix = "R";
-      }
-      vch_no = vch_prefix+accountingInvoice.vch_no;
+      }*/
+
+      vch_no = accountingInvoice.vch_no;
 
       vch_type = 3;
 
