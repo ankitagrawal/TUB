@@ -233,7 +233,7 @@
       <s:layout-component name="content">Please wait</s:layout-component>
     </s:layout-render>
   </div>
-  <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+
 </s:layout-component>
 
 <s:layout-component name="cart_title">
@@ -706,6 +706,7 @@
 <div id="applicableOfferDiv"></div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
 			<c:if test="${not isSecure }">
 				<iframe src="" id="vizuryTargeting" scrolling="no" width="1"
