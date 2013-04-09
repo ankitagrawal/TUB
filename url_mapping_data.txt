@@ -1,36 +1,3 @@
-/nutrition/sports-nutrition	/sports-nutrition
-/nutrition/sports-nutrition#brand=MuscleTech	/sports-nutrition#brand=MuscleTech
-/nutrition/sports-nutrition#brand=QNT	/sports-nutrition#brand=QNT
-/nutrition/sports-nutrition#brand=Venky's Nutrition	/sports-nutrition#brand=Venky's Nutrition
-/nutrition/sports-nutrition/amino-acids	/sports-nutrition/workout-essentials/amino-acids-bcaa 
-/nutrition/sports-nutrition/aminos	/sports-nutrition/workout-essentials/amino-acids-bcaa 
-/nutrition/sports-nutrition/athletes	/sports-nutrition/athletes
-/nutrition/sports-nutrition/clearance-sale	/sports-nutrition/clearance-sale
-/nutrition/sports-nutrition/combo-offer	/sports-nutrition/combo-offer
-/nutrition/sports-nutrition/combos	/sports-nutrition/combos
-/nutrition/sports-nutrition/contest-preparation	/sports-nutrition/contest-preparation
-/nutrition/sports-nutrition/creatine	/sports-nutrition/ pre-post-workout/creatine 
-/nutrition/sports-nutrition/fat-burner	/sports-nutrition/weight-management/fat-burner 
-/nutrition/sports-nutrition/glutamine	/sports-nutrition/ pre/post-workout/glutamine 
-/nutrition/sports-nutrition/intra-workout	/sports-nutrition/intra-workout
-/nutrition/sports-nutrition/mass-gainer	/sports-nutrition/protein/mass-gainer 
-/nutrition/sports-nutrition/muscle-building-combos	/sports-nutrition/muscle-building-combos
-/nutrition/sports-nutrition/post-workout	/sports-nutrition/pre-post-workout
-/nutrition/sports-nutrition/pre-workout	/sports-nutrition/pre-post-workout/pre-workout
-/nutrition/sports-nutrition/protein-bars	/sports-nutrition/protein/protein-bars 
-/nutrition/sports-nutrition/proteins	/sports-nutrition/protein
-/nutrition/sports-nutrition/proteins#brand=Venky's Nutrition	/sports-nutrition/protein#brand=Venky's Nutrition
-/nutrition/sports-nutrition/proteins/blended	/sports-nutrition/protein/protein-blends 
-/nutrition/sports-nutrition/proteins/isolated	/sports-nutrition/protein/protein-blends 
-/nutrition/sports-nutrition/proteins/soy-casein	/sports-nutrition/protein/casein-protein 
-/nutrition/sports-nutrition/shakers-accessories	/sports-nutrition/accessories/shakers
-/nutrition/sports-nutrition/weight-gain	sports-nutrition/weight-management/weight-gainer 
-/nutrition/sports-nutrition/weight-gainer	sports-nutrition/weight-management/weight-gainer 
-/nutrition/weight-management	/sports-nutrition/weight-management
-/nutrition/weight-management/fat-burner	/sports-nutrition/weight-management/fat-burner
-/nutrition/weight-management/low-calorie-food	/sports-nutrition/weight-management/low-calorie-food
-/nutrition/weight-management/meal-replacement	/sports-nutrition/weight-management/meal-replacement
-/nutrition/weight-management/sweetener	/sports-nutrition/weight-management/sweeteners
 /nutrition	/health-nutrition
 /nutrition/specialty-nutrition/ayurveda	/health-nutrition/alternative-remedies
 /nutrition/specialty-nutrition/ayurveda/vitality	/health-nutrition/alternative-remedies/formulations
@@ -63,14 +30,14 @@
 /nutrition/herbs/saw-palmetto	/health-nutrition/dietary-supplements/herbs
 /nutrition/herbs/milk-thistle	/health-nutrition/dietary-supplements/herbs
 /nutrition/herbs/herbs-a-z	/health-nutrition/dietary-supplements/herbs
-/nutrition/herbs/herbal-teas	/health-nutrition/dietary-supplements/herbs
-/nutrition/herbs/herbal-tea	/health-nutrition/dietary-supplements/herbs
+/nutrition/herbs/herbal-teas	/health-nutrition/healthy-food/beverages
+/nutrition/herbs/herbal-tea	/health-nutrition/healthy-food/beverages
 /nutrition/herbs/herbal-cream-oil	/health-nutrition/dietary-supplements/herbs
 /nutrition/herbs/bilberry	/health-nutrition/dietary-supplements/herbs
 /nutrition/herbs/acai-berry-cleanser	/health-nutrition/dietary-supplements/herbs
 /nutrition/herbs	/health-nutrition/dietary-supplements/herbs
-/nutrition/herbal-supplements/other-herbal	/health-nutrition/dietary-supplements/herbs
-/nutrition/herbal-supplements	/health-nutrition/dietary-supplements/herbs
+/nutrition/herbal-supplements/other-herbal	/health-nutrition/alternative-remedies
+/nutrition/herbal-supplements	/health-nutrition/alternative-remedies
 /nutrition/dietary-supplements/herbs-a-z	/health-nutrition/dietary-supplements/herbs
 /nutrition/dietary-supplements/herbal-cream-oil	/health-nutrition/dietary-supplements/herbs
 /nutrition/vitamins-minerals/calcium	/health-nutrition/dietary-supplements/minerals
@@ -81,11 +48,11 @@
 /nutrition/dietary-supplements/digestive-health	/health-nutrition/dietary-supplements/other-supplements
 /nutrition/condition-specific-supplements/energy-endurance	/health-nutrition/dietary-supplements/other-supplements
 /nutrition/condition-specific-supplements/digestion	/health-nutrition/dietary-supplements/other-supplements
-/nutrition/vitamins-minerals/multivitamins	/health-nutrition/dietary-supplements/supplements
-/nutrition/dietary-supplements/women-s-multivitamins	/health-nutrition/dietary-supplements/supplements
-/nutrition/dietary-supplements/unisex-multivitamins	/health-nutrition/dietary-supplements/supplements
-/nutrition/dietary-supplements/teen-multivitamins	/health-nutrition/dietary-supplements/supplements
-/nutrition/dietary-supplements/multivitamins	/health-nutrition/dietary-supplements/supplements
+/nutrition/vitamins-minerals/multivitamins	/health-nutrition/dietary-supplements/vitamins
+/nutrition/dietary-supplements/women-s-multivitamins	/health-nutrition/dietary-supplements/vitamins
+/nutrition/dietary-supplements/unisex-multivitamins	/health-nutrition/dietary-supplements/vitamins
+/nutrition/dietary-supplements/teen-multivitamins	/health-nutrition/dietary-supplements/vitamins
+/nutrition/dietary-supplements/multivitamins	/health-nutrition/dietary-supplements/vitamins
 /nutrition/dietary-supplements/men-s-multivitamins	/health-nutrition/dietary-supplements/supplements
 /nutrition/vitamins-minerals/vitamin-e	/health-nutrition/dietary-supplements/vitamins
 /nutrition/vitamins-minerals/vitamin-c	/health-nutrition/dietary-supplements/vitamins
@@ -112,14 +79,14 @@
 /nutrition/health-wellness/combo-offer	/health-nutrition/shop-by-concern
 /nutrition/health-wellness	/health-nutrition/shop-by-concern
 /nutrition/dietary-supplements/vitality	/health-nutrition/shop-by-concern
-/nutrition/dietary-supplements/heart-health	/health-nutrition/shop-by-concern/blood-pressure-heart
-/nutrition/condition-specific-supplements/cardiovascular	/health-nutrition/shop-by-concern/blood-pressure-heart
+/nutrition/dietary-supplements/heart-health	/health-nutrition/shop-by-concern/other-concerns
+/nutrition/condition-specific-supplements/cardiovascular	/health-nutrition/shop-by-concern/other-concerns
 /nutrition/condition-specific-supplements/blood-sugar	/health-nutrition/shop-by-concern/diabetes-support
 /nutrition/dietary-supplements/eye	/health-nutrition/shop-by-concern/eye-health
 /nutrition/condition-specific-supplements/vitality	/health-nutrition/shop-by-concern/fertility-support
 /nutrition/dietary-supplements/immunity	/health-nutrition/shop-by-concern/immunity
 /nutrition/condition-specific-supplements/immunity	/health-nutrition/shop-by-concern/immunity
-/nutrition/condition-specific-supplements/stress-anxiety	/health-nutrition/shop-by-concern/stress-anxiety-mood
+/nutrition/condition-specific-supplements/stress-anxiety	/health-nutrition/shop-by-concern/other-concerns
 /nutrition/health-wellness/joint-care	/health-nutrition/shop-by-need/bone-muscle
 /nutrition/dietary-supplements/joints-health	/health-nutrition/shop-by-need/bone-muscle
 /nutrition/dietary-supplements/bones	/health-nutrition/shop-by-need/bone-muscle
@@ -141,6 +108,30 @@ Mother's Nutrition Products Online India	/health-nutrition/shop-by-need/post-pre
 /nutrition/weight-management/low-calorie-food	/health-nutrition/weight-management/low-calorie-food
 /nutrition/weight-management/meal-replacement	/health-nutrition/weight-management/meal-replacement
 /nutrition/weight-management/sweetener	/health-nutrition/weight-management/sweeteners
-/nutrition/sports-nutrition/weight-gainer	/health-nutrition/weight-management/weight-gain
-/nutrition/sports-nutrition/weight-gain	/health-nutrition/weight-management/weight-gain
-
+/nutrition/sports-nutrition/weight-gainer	/sports-nutrition/protein/mass-gainer
+/nutrition/sports-nutrition/weight-gain	/sports-nutrition/protein/mass-gainer
+/nutrition/sports-nutrition/shakers-accessories	/sports-nutrition/accessories/shakers
+/nutrition/sports-nutrition/proteins/soy-casein	/sports-nutrition/protein/casein-protein
+/nutrition/sports-nutrition/proteins/isolated	/sports-nutrition/protein/whey-protein
+/nutrition/sports-nutrition/proteins/blended	/sports-nutrition/protein/whey-protein
+/nutrition/sports-nutrition/proteins#brand=Venky's Nutrition	/sports-nutrition/protein#brand=Venky's Nutrition
+/nutrition/sports-nutrition/proteins	/sports-nutrition/protein/whey-protein
+/nutrition/sports-nutrition/protein-bars	/sports-nutrition/protein/protein-bars
+/nutrition/sports-nutrition/pre-workout	/sports-nutrition/pre-post-workout
+/nutrition/sports-nutrition/post-workout	/sports-nutrition/pre-post-workout
+/nutrition/sports-nutrition/muscle-building-combos	/sports-nutrition/protein/super-savers
+/nutrition/sports-nutrition/mass-gainer	/sports-nutrition/protein/mass-gainer
+/nutrition/sports-nutrition/intra-workout	/sports-nutrition/pre-post-workout
+/nutrition/sports-nutrition/glutamine	/sports-nutrition/pre-post-workout/glutamine
+/nutrition/sports-nutrition/fat-burner	/sports-nutrition/weight-management/fat-burner
+/nutrition/sports-nutrition/creatine	/sports-nutrition/pre-post-workout/creatine
+/nutrition/sports-nutrition/contest-preparation	/sports-nutrition/pre-post-workout/electrolytes
+/nutrition/sports-nutrition/combos	/sports-nutrition/protein/super-savers
+/nutrition/sports-nutrition/combo-offer	/sports-nutrition/protein/super-savers
+/nutrition/sports-nutrition/clearance-sale	/sports-nutrition/protein/super-savers
+/nutrition/sports-nutrition/athletes	/sports-nutrition/protein
+/nutrition/sports-nutrition/aminos	/sports-nutrition/workout-essentials/amino-acids-bcaa
+/nutrition/sports-nutrition/amino-acids	/sports-nutrition/workout-essentials/amino-acids-bcaa
+/nutrition/sports-nutrition#brand=Venky's Nutrition	/sports-nutrition#brand=Venky's Nutrition
+/nutrition/sports-nutrition#brand=MuscleTech	/sports-nutrition#brand=MuscleTech
+/nutrition/sports-nutrition	/sports-nutrition
