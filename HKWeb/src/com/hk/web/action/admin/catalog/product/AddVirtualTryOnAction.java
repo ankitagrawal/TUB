@@ -37,6 +37,7 @@ public class AddVirtualTryOnAction extends BaseAction {
         productOptionList.add(productOption);
         for(String productVariantId : productVariantArray){
             ProductVariant  productVariant = getProductVariantService().getVariantById(productVariantId);
+
             if(productVariant==null){
             addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is not available"));
             }
