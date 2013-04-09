@@ -436,9 +436,8 @@
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>
-		
-
 		<div style="height:75px"></div>
-</s:layout-component>
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
+</s:layout-component>
+
 </s:layout-render>

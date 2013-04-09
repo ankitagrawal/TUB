@@ -288,6 +288,7 @@
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>--%>
-	</s:layout-component>
     <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
+	</s:layout-component>
+
 </s:layout-render>
