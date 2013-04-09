@@ -102,8 +102,7 @@ public enum EnumRoleHasPermission {
           EnumPermission.ADD_HUB,
           EnumPermission.POPULATE_BUSY_DATA,
           EnumPermission.DISPATCH_LOT_OPERATIONS,
-          EnumPermission.EDIT_GRN,
-          EnumPermission.PLACE_B2B_ORDER
+          EnumPermission.EDIT_GRN
       )
   ),
 

@@ -65,8 +65,6 @@ public class PermissionConstants {
   public static final String UPDATE_SEO_METADATA = "UPDATE_SEO_METADATA";
   public static final String UPDATE_PRODUCT_DESCRIPTIONS = "UPDATE_PRODUCT_DESCRIPTIONS";
   
-  public static final String PLACE_B2B_ORDER = "PLACE_B2B_ORDER";
-
   public static final String COD_NOT_ALLOWED = "COD_NOT_ALLOWED";
 
   public static final String GET_PRODUCT_LINK = "GET_PRODUCT_LINK";

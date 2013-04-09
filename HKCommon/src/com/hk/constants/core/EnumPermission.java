@@ -78,8 +78,6 @@ public enum EnumPermission {
   UPDATE_SEO_METADATA(PermissionConstants.UPDATE_SEO_METADATA),
   UPDATE_PRODUCT_DESCRIPTIONS(PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS),
 
-  PLACE_B2B_ORDER(PermissionConstants.PLACE_B2B_ORDER),
-
   COD_NOT_ALLOWED(PermissionConstants.COD_NOT_ALLOWED),
   GET_PRODUCT_LINK(PermissionConstants.GET_PRODUCT_LINK),
   ADD_LINEITEM(PermissionConstants.ADD_LINEITEM),

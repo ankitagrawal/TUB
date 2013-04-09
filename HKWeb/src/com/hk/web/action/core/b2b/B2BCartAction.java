@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -31,7 +32,7 @@ import java.util.*;
 /**
  * @author Nihal
  */
-@Secure(hasAnyPermissions = {PermissionConstants.PLACE_B2B_ORDER}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyRoles = {RoleConstants.B2B_USER}, authActionBean = AdminPermissionAction.class)
 public class B2BCartAction extends BaseAction {
 
   @Autowired

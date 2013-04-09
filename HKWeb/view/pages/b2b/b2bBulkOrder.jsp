@@ -68,7 +68,7 @@
           '<td align="center"><span id="pvDetails" class="pvDetails"></span></td>' +
           '<td><div class="img48" style="vertical-align:top;"></div></td>' +
           '<td align="center"><span id="mrp" class="mrp"/></td>' +
-          '<td><input name="productVariantList[' + index + '].quantity" class="qty b2bTableInput" value="0"/></td>' +
+          '<td><input name="productVariantList[' + index + '].qty" class="qty b2bTableInput" value="0"/></td>' +
           '<td align="center"><label id="totalPrice" class="totalPrice b2bTableInput">0</label></td>' +
           '</tr><tr height="10"></tr>';
       $('#poTable').append(newRowHtml);

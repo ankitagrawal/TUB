@@ -3,6 +3,7 @@ package com.hk.web.action.core.b2b;
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.B2BOrderChecklist;
 import com.hk.domain.order.Order;
@@ -40,11 +41,11 @@ import java.util.ArrayList;
  * @author Nihal
  */
 
-@Secure(hasAnyPermissions = {PermissionConstants.PLACE_B2B_ORDER}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyRoles = {RoleConstants.B2B_USER}, authActionBean = AdminPermissionAction.class)
 @Component
 public class B2BAddToCartAction extends BaseAction implements ValidationErrorHandler {
 
-  private static Logger logger = LoggerFactory.getLogger(AddToCartAction.class);
+  private static Logger logger = LoggerFactory.getLogger(B2BAddToCartAction.class);
 
   private List<ProductVariant> productVariantList;
 

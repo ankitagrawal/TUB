@@ -101,10 +101,10 @@
 										<tr class="bodyTr" style="background-color: #F2F7FB">
 											<td>${item.count}.</td>
 											<td><input
-												name="b2bProductList[${item.count-1}].productId"
+												name="productVariantList[${item.count-1}]"
 												type="hidden" value="${b2bOrderList.productId}" />${b2bOrderList.productId}</td>
 											<td><input
-												name="b2bProductList[${item.count-1}].quantity"
+												name="productVariantList[${item.count-1}].qty"
 												type="hidden" value="${b2bOrderList.quantity}" />${b2bOrderList.quantity}</td>
 											<c:set var="newIndex" value="${item.count}" scope="page" />
 									</c:forEach>
@@ -112,16 +112,15 @@
 							</tbody>
 						</table>
 						<c:if test="${fn:length(boa.b2bInvalidProductList) gt 0}">
-							<div class="b2bExcelDiv">
+							<p>
 								These products variants are invalid. Please check them and then
-								upload again. <br>
-								<c:forEach items="${boa.b2bInvalidProductList}"
-									var="invalidVariants" varStatus="item">
-	 ${invalidVariants.productId} , 
-	 <c:if test="${item.count}>10">
-									</c:if>
+								upload again.  </p>
+                <p style="color:red;">
+								<c:forEach items="${boa.b2bInvalidProductList}"	var="invalidVariants" varStatus="item">
+	                ${invalidVariants.productId} ,
 								</c:forEach>
-							</div>
+              </p>
+
 						</c:if>
 						<div class="buttons" style="margin-top: 70px;">
 
@@ -162,7 +161,7 @@
 						}
 					}
 					var path = "${pageContext.request.contextPath}";
-					location.replace(path + "/core/b2b/B2BBulkOrder.action");
+					location.replace(path + "/core/b2b/B2BCart.action");
 				});
 
 			});
