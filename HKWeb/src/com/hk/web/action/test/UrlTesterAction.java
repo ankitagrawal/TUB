@@ -4,7 +4,9 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.web.AppConstants;
+import com.hk.web.action.error.AdminPermissionAction;
 import com.hk.web.filter.WebContext;
+import com.hk.constants.core.RoleConstants;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -12,6 +14,7 @@ import net.sourceforge.stripes.util.ssl.SslUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.apache.commons.lang.StringUtils;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -24,6 +27,7 @@ import java.util.Map;
  * User: Ajeet
  * Date: 09 Apr, 2013
  */
+@Secure(hasAllRoles = {RoleConstants.ADMIN}, authActionBean = AdminPermissionAction.class)
 @Component
 public class UrlTesterAction extends BaseAction {
 
