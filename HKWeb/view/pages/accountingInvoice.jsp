@@ -131,21 +131,14 @@
       <th>Qty</th>
       <th>Rate (per unit)</th>
       <th>
-     <c:choose>
-      <c:when test="${orderSummary.invoiceDto.sameState}">
-           Tax Rate            
-      </c:when>
-      <c:otherwise>
       <c:choose>
-      <c:when test="${cFormAvailable}">
-        Tax Rate(CST)
+      <c:when test="${isB2BOrder&&cFormAvailable}">
+        Tax Rate (CST)
         </c:when>
         <c:otherwise>
         Tax Rate
         </c:otherwise>
-        </c:choose>
-      </c:otherwise>
-    </c:choose>
+      </c:choose>
     </th>
       <th>Taxable</th>
       <th>Tax</th>
@@ -236,17 +229,14 @@
       </td>
     </tr>
     <tr>
-      <th width="17%"><c:choose><c:when test="${orderSummary.invoiceDto.sameState}">
-           VAT Percent            
-      </c:when>
+      <th width="17%">
       <c:choose>
-      <c:when test="${cFormAvailable==true}">
+      <c:when test="${isB2BOrder&&cFormAvailable}">
         CST
         </c:when>
         <c:otherwise>
         VAT
         </c:otherwise>
-        </c:choose>
       </c:choose>
     </th>
       <th width="5%">Qty</th>

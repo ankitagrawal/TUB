@@ -61,14 +61,22 @@ public class AccountingInvoiceAction extends BaseAction {
                 b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
             }
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
-            cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+           
             if(replacementOrder != null){
-              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails, cFormaAvailable);
-              //invoiceDto.setcFormaAvailable(cFormaAvailable);
+            	if(shippingOrder.getBaseOrder().isB2bOrder()!=null&&shippingOrder.getBaseOrder().isB2bOrder()==true){
+            		 cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormaAvailable);
+            	}
+            	else
+              invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails, false);
             }
             else{
-              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails,cFormaAvailable);
-              //invoiceDto.setcFormaAvailable(cFormaAvailable);
+            	if(shippingOrder.getBaseOrder().isB2bOrder()!=null&&shippingOrder.getBaseOrder().isB2bOrder()==true){
+            		 cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormaAvailable);
+            	}
+            	else
+              invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails,false);
             }
             return new ForwardResolution("/pages/accountingInvoice.jsp");
         } else {

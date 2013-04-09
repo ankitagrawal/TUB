@@ -71,9 +71,6 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 		taxRate = Double.parseDouble(new DecimalFormat("#.##").format(taxValue * 100)) + "%";
 
 		if (productLineItem.getSku().getWarehouse().getState().equalsIgnoreCase(StateList.HARYANA)) {
-			// taxable = (lineItemTotal - totalDiscountOnLineItem) / (1 +
-			// taxValue + (taxValue * TaxConstants.SURCHARGE));
-			// surcharge = taxable * (taxValue * TaxConstants.SURCHARGE);
 			if (state.equalsIgnoreCase("Haryana")) {
 				taxable = (lineItemTotal - totalDiscountOnLineItem);
 				tax = lineItemTotal * taxValue;
@@ -94,13 +91,7 @@ public class B2BInvoiceLineItemDto extends InvoiceLineItemDto {
 			}
 
 		} else
-
 		{
-			// taxable = (lineItemTotal - totalDiscountOnLineItem) / (1 +
-			// taxValue);
-			// surcharge is zero in case of maharashtra
-			// surcharge = 0.0;
-
 			if (state.equalsIgnoreCase("Maharastra")) {
 				taxable = (lineItemTotal - totalDiscountOnLineItem);
 				tax = lineItemTotal * taxValue;
