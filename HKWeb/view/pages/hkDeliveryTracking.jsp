@@ -98,12 +98,11 @@
         padding-bottom: 40px;
     }
 	.column{
-		padding-bottom: 10px;
-		padding-top:10px;
 		text-align:center;
 		padding-left:6px;
 		padding-right:6px;
 	}
+    table.zebra_vert td{ padding-bottom: 10px; padding-top: 10px; }
 
 </style>
 
