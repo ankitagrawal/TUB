@@ -233,6 +233,7 @@
       <s:layout-component name="content">Please wait</s:layout-component>
     </s:layout-render>
   </div>
+  <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 </s:layout-component>
 
 <s:layout-component name="cart_title">
@@ -756,7 +757,7 @@
              });
          </script>
      </c:if>
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
+
 </s:layout-component>
 </s:layout-render>
 
