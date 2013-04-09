@@ -73,7 +73,7 @@
   <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
-    <span class="crumb last" style="font-size: 12px;">${categoryBean.category}</span>
+    <span class="crumb last" style="font-size: 12px;">${categoryBean.category.displayName}</span>
 
     <h1 class="title"> ${categoryBean.seoData.h1} </h1>
 
