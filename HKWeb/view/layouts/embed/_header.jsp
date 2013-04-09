@@ -138,12 +138,13 @@
                 <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release
                   assumed
                   identity)</s:link> |
+                 <shiro:hasAnyRoles name="<%=RoleConstants.B2B_USER%>">
+                  <s:link beanclass = "com.hk.web.action.core.b2b.B2BCartAction" class="sml" rel="noFollow">B2B Cart</s:link> |
+                </shiro:hasAnyRoles>
                 <%
                   }
                 %>
-                <shiro:hasPermission name="<%=PermissionConstants.PLACE_B2B_ORDER%>">
-                 <s:link beanclass = "com.hk.web.action.core.b2b.B2BCartAction" class="sml" rel="noFollow">B2B Cart</s:link> |                 
-                </shiro:hasPermission>
+
                
                 
                 <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
