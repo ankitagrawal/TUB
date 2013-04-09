@@ -134,8 +134,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage, accurateBeta);
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
+        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
