@@ -60,11 +60,12 @@ public class SplitShippingOrderAction extends BaseAction {
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_SO})
+    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_SO}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/order/splitShippingOrder.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_SO}, authActionBean = AdminPermissionAction.class)
     public Resolution splitShippingOrder() {
 
         if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {
