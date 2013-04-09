@@ -286,8 +286,7 @@ public enum EnumRoleHasPermission {
           EnumPermission.HK_EMPLOYEE,
           EnumPermission.CREATE_EDIT_SKU,
           EnumPermission.EDIT_LINEITEM,
-          EnumPermission.MANAGE_PAYMENT_HISTORY,
-          EnumPermission.PLACE_B2B_ORDER
+          EnumPermission.MANAGE_PAYMENT_HISTORY
       )
   ),
 
