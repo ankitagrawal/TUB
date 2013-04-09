@@ -1,18 +1,5 @@
 package com.hk.web.action.core.accounting;
 
-import java.util.Arrays;
-import java.util.List;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.Validate;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.constants.core.EnumTax;
@@ -23,6 +10,13 @@ import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.order.B2BOrderService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class AccountingInvoiceAction extends BaseAction {
@@ -37,7 +31,7 @@ public class AccountingInvoiceAction extends BaseAction {
     @Autowired
     B2bUserDetailsDao      b2bUserDetailsDao;
     
-    private boolean cFormaAvailable;
+    private boolean cFormAvailable;
 
     /*
      * @Validate(required = true, encrypted = true) private AccountingInvoice accountingInvoice;
@@ -49,11 +43,11 @@ public class AccountingInvoiceAction extends BaseAction {
     // private Order order;
     private B2bUserDetails b2bUserDetails;
     @Autowired
-	B2BOrderService b2bOrderService;
+	  B2BOrderService b2bOrderService;
     
     private List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
 
-    @DefaultHandler
+  @DefaultHandler
     public Resolution pre() {
         if (shippingOrder != null) {
             String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
@@ -63,19 +57,17 @@ public class AccountingInvoiceAction extends BaseAction {
             ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
            
             if(replacementOrder != null){
-            	if(shippingOrder.getBaseOrder().isB2bOrder()!=null&&shippingOrder.getBaseOrder().isB2bOrder()==true){
-            		 cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
-            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormaAvailable);
-            	}
-            	else
+            	if(shippingOrder.getBaseOrder().isB2bOrder() !=null && shippingOrder.getBaseOrder().isB2bOrder()){
+            		 cFormAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormAvailable);
+            	}	else
               invoiceDto = new InvoiceDto(replacementOrder, b2bUserDetails, false);
             }
             else{
-            	if(shippingOrder.getBaseOrder().isB2bOrder()!=null&&shippingOrder.getBaseOrder().isB2bOrder()==true){
-            		 cFormaAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
-            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormaAvailable);
-            	}
-            	else
+            	if(shippingOrder.getBaseOrder().isB2bOrder()!=null && shippingOrder.getBaseOrder().isB2bOrder()){
+            		 cFormAvailable = getB2bOrderService().checkCForm(shippingOrder.getBaseOrder());
+            		 invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails, cFormAvailable);
+            	}	else
               invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails,false);
             }
             return new ForwardResolution("/pages/accountingInvoice.jsp");
@@ -200,12 +192,16 @@ public class AccountingInvoiceAction extends BaseAction {
         return enumTaxes;
     }
 
-	public boolean iscFormaAvailable() {
-		return cFormaAvailable;
+	public boolean isCFormAvailable() {
+		return cFormAvailable;
 	}
 
-	public void setcFormaAvailable(boolean cFormaAvailable) {
-		this.cFormaAvailable = cFormaAvailable;
+  public boolean getCFormAvailable() {
+		return cFormAvailable;
+	}
+
+	public void setCFormAvailable(boolean cFormAvailable) {
+		this.cFormAvailable = cFormAvailable;
 	}
 
 	public B2BOrderService getB2bOrderService() {
@@ -215,5 +211,5 @@ public class AccountingInvoiceAction extends BaseAction {
 	public void setB2bOrderService(B2BOrderService b2bOrderService) {
 		this.b2bOrderService = b2bOrderService;
 	}
-    
+
 }

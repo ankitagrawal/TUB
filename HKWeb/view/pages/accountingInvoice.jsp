@@ -12,7 +12,7 @@
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
-<c:set var="cFormAvailable" value="${cFormAvailable}"/>
+<c:set var="cFormAvailable" value="${orderSummary.CFormAvailable}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="warehouse" value="${shippingOrder.warehouse}"/>

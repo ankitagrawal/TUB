@@ -64,7 +64,7 @@ public class InvoiceDto {
 	boolean sameState;
 	private boolean cFormaAvailable;
 	private ShippingOrder ShippingOrder;
-	
+
 
 	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal, boolean cFormaAvailable) {
 		if (shippingOrder instanceof ReplacementOrder) {
@@ -82,13 +82,13 @@ public class InvoiceDto {
 			summaryQtyMap.put(enumTax.getName(), 0L);
 
 		}
-		
+
 	/*	summaryAmountMap.put("CST", 0.0);
 		summaryTaxMap.put("CST", 0.0);
 		summarySurchargeMap.put("CST", 0.0);
 		summaryPayableMap.put("CST", 0.0);
 		summaryQtyMap.put("CST", 0L);*/
-		
+
 		/*
 		 * summaryAmountMap.put("Zero", 0.0); summaryAmountMap.put("Five", 0.0);
 		 * summaryAmountMap.put("TwelveDotFive", 0.0); summaryTaxMap.put("Zero",
@@ -145,17 +145,16 @@ public class InvoiceDto {
 				cod += productLineItem.getCodCharges();
 			}
 
-			//changes by Nihal
+			//changes done for B2B Tax Invoice
 			InvoiceLineItemDto invoiceLineItemdto = null;
-			if (invoiceType.equalsIgnoreCase("T")) {
-				
+			if (invoiceType.equalsIgnoreCase("T")) {				
 				invoiceLineItemdto = new B2BInvoiceLineItemDto(productLineItem,state, cFormaAvailable);
 			} else {
 				invoiceLineItemdto = new InvoiceLineItemDto(productLineItem);
 			}
 			invoiceLineItemDtos.add(invoiceLineItemdto);
 
-			
+
 			// for accounting invoice
 			totalTax += invoiceLineItemdto.getTax();
 			totalTaxable += invoiceLineItemdto.getTaxable();
@@ -241,7 +240,7 @@ public class InvoiceDto {
 			accountingInvoiceHeading = TaxConstants.RETAIL_INVOICE;
 			invoiceTinNumber = TaxConstants.NON_B2B_TIN;
 		}
-		
+
 
 	}
 
@@ -257,8 +256,8 @@ public class InvoiceDto {
 		summaryPayableMap.put(taxName,
 				summaryAmountMap.get(taxName) + summaryTaxMap.get(taxName) + summarySurchargeMap.get(taxName));
 	}
-	
-	
+
+
 
 	public ShippingOrder getShippingOrder() {
 		return ShippingOrder;

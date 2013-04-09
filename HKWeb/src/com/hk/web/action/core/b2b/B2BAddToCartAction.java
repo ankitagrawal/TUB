@@ -2,14 +2,13 @@ package com.hk.web.action.core.b2b;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
-import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.order.B2BOrderChecklist;
-import com.hk.domain.order.Order;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.user.User;
 import com.hk.domain.matcher.CartLineItemMatcher;
+import com.hk.domain.order.B2BOrderChecklist;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
 import com.hk.exception.OutOfStockException;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.UserDao;
@@ -17,7 +16,6 @@ import com.hk.pact.service.order.B2BOrderService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.core.cart.AddToCartAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -32,10 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 /**
  * @author Nihal
@@ -69,19 +67,21 @@ public class B2BAddToCartAction extends BaseAction implements ValidationErrorHan
   @DefaultHandler
   @JsonHandler
   public Resolution b2bAddToCart() {
-
+     Map dataMap = new HashMap();
+    HealthkartResponse healthkartResponse;
     User user = null;
     if (getPrincipal() != null) {
       user = userDao.getUserById(getPrincipal().getId());
       if (user == null) {
-        //TODO
+        healthkartResponse = new HealthkartResponse("null_exception",
+            "No user", dataMap);
+        return new JsonResolution(healthkartResponse);
       }
-    }
+    }    
 
     order = orderManager.getOrCreateOrder(user);
     // cFormAvailable = getB2bOrderService().checkCForm(order);
-    Map dataMap = new HashMap();
-    HealthkartResponse healthkartResponse;
+
     try {
 
       B2BOrderChecklist b2bOrderCheckList = new B2BOrderChecklist();
