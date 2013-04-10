@@ -30,7 +30,7 @@ public class Bucket  implements java.io.Serializable {
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "bucket_constituents", uniqueConstraints = @UniqueConstraint(columnNames = {"bucket_id", "param_id"}), joinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "param_id", nullable = false, updatable = false)})
+    @JoinTable(name = "bucket_constituents", uniqueConstraints = @UniqueConstraint(columnNames = {"bucket_id", "params_id"}), joinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "params_id", nullable = false, updatable = false)})
     private Set<Param> params = new HashSet<Param>(0);
 
 
