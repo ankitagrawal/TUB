@@ -69,7 +69,7 @@
 --/health-nutrition/shop-by-need/men-health
 --/health-nutrition/shop-by-need/women-health
 --/health-nutrition/shop-by-need/prenatal-care
---/health-nutrition/shop-by-need/post-pregnency
+--/health-nutrition/shop-by-need/post-pregnancy
 --/health-nutrition/shop-by-need/children
 --/health-nutrition/shop-by-need/elderly-care
 --/health-nutrition/shop-by-need/other-needs
