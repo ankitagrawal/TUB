@@ -129,7 +129,11 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if(user != null){
             buckets = user.getBuckets();
             if(buckets != null && !buckets.isEmpty()){
+                logger.debug(buckets.size() + " bucket name " + buckets.get(0));
                 bucketParameters = bucketService.getParamMap(user.getBuckets());
+                for (Map.Entry<String, Object> stringObjectEntry : bucketParameters.entrySet()) {
+                    logger.debug(stringObjectEntry.getKey() + stringObjectEntry.getValue());
+                }
             }
         }
 
