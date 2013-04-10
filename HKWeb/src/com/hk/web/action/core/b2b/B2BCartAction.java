@@ -73,6 +73,7 @@ public class B2BCartAction extends BaseAction {
       user = userDao.getUserById(getPrincipal().getId());
       if (user != null) {
         order = orderManager.getOrCreateOrder(user);
+        order.setB2bOrder(Boolean.TRUE);
         cartLineItems = order.getCartLineItems();
         cFormAvailable = getB2bOrderService().checkCForm(order);
       }

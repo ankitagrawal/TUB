@@ -333,12 +333,10 @@
             <span class="special"> C-Form
             <c:choose>
               <c:when test="${pa.CFormAvailable}">
-                <s:checkbox name="CFormAvailable"
-                            value="${(pa.CFormAvailable)}" checked="checked"/>
+                <input type="checkbox" checked="checked" name="CFormAvailable"  />
               </c:when>
               <c:otherwise>
-                <s:checkbox name="CFormAvailable"
-                            value="${(pa.CFormAvailable)}"/>
+                <input type="checkbox" name="CFormAvailable"/>
               </c:otherwise>
             </c:choose>
 
