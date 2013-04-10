@@ -440,8 +440,8 @@
 
                 <div class="buttons">
                     <s:submit name="pre" value="Search"/>
-                    <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
-                    <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>
+                    <%--<label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>--%>
+                    <%--<s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>--%>
                 </div>
             </s:form>
         </div>

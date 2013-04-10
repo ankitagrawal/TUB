@@ -1,12 +1,11 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.admin.pact.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.user.User;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -85,6 +84,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     ShippingOrderLifecycleService shippingOrderLifecycleService;
+    @Autowired
+    BucketService bucketService;
 
     private Long orderId;
     private Long storeId;
@@ -110,6 +111,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private Boolean dropShip = null;
     private Boolean containsJit = null;
 
+    Map<String, Object> bucketParameters = new HashMap<String, Object>();
+    List<Bucket> buckets = new ArrayList<Bucket>();
+
     @DontValidate
     @DefaultHandler
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
@@ -121,23 +125,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
-        setUnplitOrderCount();
-        logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
-    }
-
-    private void setUnplitOrderCount() {
-        if (unsplitOrderCount == null) {
-            unsplitOrderCount = orderService.getCountOfOrdersWithStatus();
+        User user = getPrincipalUser();
+        if(user != null){
+            buckets = user.getBuckets();
+            if(buckets != null && !buckets.isEmpty()){
+                bucketParameters = bucketService.getParamMap(user.getBuckets());
+            }
         }
-    }
 
-    public Resolution searchUnsplitOrders() {
-        orderStatuses.clear();
-        orderStatuses.add(orderStatusService.find(EnumOrderStatus.Placed));
-        pre();
-        orderStatuses.clear();
-
+        logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
 
@@ -273,7 +269,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
 
-        setUnplitOrderCount();
         return new RedirectResolution(ActionAwaitingQueueAction.class);
     }
 
@@ -423,12 +418,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("dropShip");
         params.add("containsJit");
 
-        // params.add("orderLifecycleActivity");
-        // params.add("shippingOrderStatus");
-
-        /*
-                   * params.add("paymentModes"); params.add("paymentStatuses"); params.add("categories");
-                   */
+        params.add("bucketParameters");
 
         int ctr = 0;
         for (PaymentMode paymentMode : paymentModes) {
