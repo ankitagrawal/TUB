@@ -2,6 +2,7 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
@@ -85,7 +86,8 @@ public class InventoryCheckinAction extends BaseAction {
     private SkuGroupService skuGroupService;
     @Autowired
     BaseDao baseDao;
-
+    @Autowired
+    private AdminEmailManager                 adminEmailManager;
     private List<SkuGroup> skuGroupList;
 
     // SkuGroupDao skuGroupDao;
@@ -223,8 +225,10 @@ public class InventoryCheckinAction extends BaseAction {
                     getInventoryService().checkInventoryHealth(productVariant);
 
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
+                    	
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
+                        getAdminEmailManager().sendGRNEmail(grn);
                         editPVFillRate(grn);
                     } else {
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
@@ -753,5 +757,14 @@ public class InventoryCheckinAction extends BaseAction {
     public void setGrnLineItem(GrnLineItem grnLineItem) {
         this.grnLineItem = grnLineItem;
     }
+
+	public AdminEmailManager getAdminEmailManager() {
+		return adminEmailManager;
+	}
+
+	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+		this.adminEmailManager = adminEmailManager;
+	}
+    
 
 }

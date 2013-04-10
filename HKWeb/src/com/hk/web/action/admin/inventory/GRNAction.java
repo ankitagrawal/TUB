@@ -3,6 +3,7 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.GRNDto;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
@@ -16,6 +17,7 @@ import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
@@ -91,6 +93,8 @@ public class GRNAction extends BasePaginatedAction {
 
 	@Autowired
 	XslGenerator xslGenerator;
+	@Autowired
+	private AdminEmailManager                 adminEmailManager;
 
 	private File xlsFile;
 	Page grnPage;
@@ -250,6 +254,9 @@ public class GRNAction extends BasePaginatedAction {
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
+				getAdminEmailManager().sendGRNEmail(grn);
+			}
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -715,4 +722,13 @@ public class GRNAction extends BasePaginatedAction {
     public void setGrnLineItem(GrnLineItem grnLineItem) {
         this.grnLineItem = grnLineItem;
     }
+
+	public AdminEmailManager getAdminEmailManager() {
+		return adminEmailManager;
+	}
+
+	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+		this.adminEmailManager = adminEmailManager;
+	}
+    
 }
