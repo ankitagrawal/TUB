@@ -11744,20 +11744,20 @@
             <column name="stock_transfer_status_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362465491508-3">
-        <createIndex indexName="name" tableName="manufacturer" unique="true">
-            <column name="name"/>
-        </createIndex>
-    </changeSet>
+    <!--<changeSet author="Rohit (generated)" id="1362465491508-3">-->
+        <!--<createIndex indexName="name" tableName="manufacturer" unique="true">-->
+            <!--<column name="name"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
     <changeSet author="Rohit (generated)" id="1362465491508-4">
         <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362465491508-5">
-        <dropColumn columnName="cost_price" tableName="sku"/>
-    </changeSet>
-    <changeSet author="Rohit (generated)" id="1362465491508-6">
-        <dropColumn columnName="lead_time" tableName="sku"/>
-    </changeSet>    
+    <!--<changeSet author="Rohit (generated)" id="1362465491508-5">-->
+        <!--<dropColumn columnName="cost_price" tableName="sku"/>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Rohit (generated)" id="1362465491508-6">-->
+        <!--<dropColumn columnName="lead_time" tableName="sku"/>-->
+    <!--</changeSet>--><!--    -->
     <changeSet author="Ankit" id="05-03-2013-01">
         <sql>
             update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
@@ -11796,6 +11796,11 @@
         <createIndex indexName="SO_UNIQUE" tableName="reverse_order" unique="true">
             <column name="shipping_order_id"/>
         </createIndex>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1363262394293-3">
+        <addColumn tableName="reverse_order">
+            <column name="reverse_order_type" type="VARCHAR(45)"/>
+        </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1360415137386-2">
         <sql>

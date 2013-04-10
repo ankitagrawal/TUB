@@ -81,6 +81,7 @@
 <c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
+<c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -280,38 +281,50 @@
             </s:link>)
 
             </shiro:hasAnyRoles>
-            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+
+            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered ||
+                    shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
                 <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
                         <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
-                        <b>Customer Return:</b>
-                        <s:select name="shippingOrder.orderStatus">
-                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
-                                <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
-                            </s:option>
-                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
-                                <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
-                            </s:option>
-                            <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
-                                <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
-                            </s:option>
-                        </s:select>
+                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                            <b>Customer Satisfaction:</b>
+                            <s:select name="shippingOrder.orderStatus">
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
+                                </s:option>
+                            </s:select>
+                        </c:if>
+                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
+                            <b>Customer Return:</b>
+                            <s:select name="shippingOrder.orderStatus">
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
+                                </s:option>
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                                </s:option>
+                            </s:select>
+                        </c:if>
                         <br/><b>Customer Return Reason:</b>
                         <s:select name="customerReturnReason" id="return-reason">
-		                    <s:option value="null">-Select Reason-</s:option>
-		                    <s:option value="Damaged Product">Damaged Product</s:option>
-		                    <s:option value="Expired Product">Expired Product</s:option>
-		                    <s:option value="Wrong Product">Wrong Product</s:option>
-		                    <s:option value="Not Interested">Not Interested</s:option>
-	                    </s:select>
-                        <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save" style="padding:1px;"/>
+                            <s:option value="null">-Select Reason-</s:option>
+                            <s:option value="Damaged Product">Damaged Product</s:option>
+                            <s:option value="Expired Product">Expired Product</s:option>
+                            <s:option value="Wrong Product">Wrong Product</s:option>
+                            <s:option value="Not Interested">Not Interested</s:option>
+                        </s:select>
+
+                        <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save"
+                                  style="padding:1px;"/>
                     </s:form>
                     <script type="text/javascript">
                         $('.markOrderCustomerReturnButton').click(function() {
-	                        if($('#return-reason').val()=="null"){
-		                        alert("Please select a reason for Customer Return !");
-		                        return false;
-	                        }
+                            if ($('#return-reason').val() == "null") {
+                                alert("Please select a reason for Customer Return !");
+                                return false;
+                            }
+
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });

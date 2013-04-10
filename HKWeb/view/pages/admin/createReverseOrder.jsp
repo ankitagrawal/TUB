@@ -2,11 +2,13 @@
 <%@ page import="com.hk.constants.courier.EnumCourier" %>
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.courier.ReverseOrderTypeConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction" event="pre" var="reverseOrderAction"/>
 <c:set var="pickupNotValid" value="${reverseOrderAction.exceededPolicyLimit}"/>
+<c:set var="orderTypeList" value="<%=ReverseOrderTypeConstants.getReverseOrderTypes()%>"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Reverse Order">
 
     <s:layout-component name="htmlHead">
@@ -105,6 +107,14 @@
                 <s:option value="Wrong Product">Wrong Product</s:option>
                 <s:option value="Not Interested">Not Interested</s:option>
             </s:select>
+            <p>
+            <label>Select Reverse Order Type :</label>
+               <s:select name="reverseOrderType" value="<%=ReverseOrderTypeConstants.Healthkart_Managed%>" >
+                    <c:forEach items="${orderTypeList}" var="orderType">
+                        <s:option value="${orderType}">${orderType}</s:option>
+                     </c:forEach>
+                </s:select>
+            </p>
             <p></p>
         <s:param name="shippingOrder" value="${reverseOrderAction.shippingOrder.id}"/>
         <s:submit name="submit" value="Submit" id="validateOnSubmit"/>

@@ -39,6 +39,9 @@ public class ReverseOrder implements java.io.Serializable {
 	@Column (name = "return_reason")
 	private String returnReason;
 
+	@Column (name = "reverse_order_type")
+	private String reverseOrderType;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -147,6 +150,14 @@ public class ReverseOrder implements java.io.Serializable {
 
 	public void setReceivedDate(Date receivedDate) {
 		this.receivedDate = receivedDate;
+	}
+
+	public String getReverseOrderType() {
+		return reverseOrderType;
+	}
+
+	public void setReverseOrderType(String reverseOrderType) {
+		this.reverseOrderType = reverseOrderType;
 	}
 
 	@Override

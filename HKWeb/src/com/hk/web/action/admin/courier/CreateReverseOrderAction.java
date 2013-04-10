@@ -41,6 +41,8 @@ public class CreateReverseOrderAction extends BaseAction {
 
 	private String returnOrderReason;
 
+	private String reverseOrderType;
+
 	@Autowired
 	ShippingOrderService shippingOrderService;
 	@Autowired
@@ -86,15 +88,12 @@ public class CreateReverseOrderAction extends BaseAction {
 
 	public Resolution submit(){
 		if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
-			//if (returnOrderReason != null) {
-				ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason);
-				reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
-				shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
-				return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
-//			} else {
-//				addRedirectAlertMessage(new SimpleMessage("Please enter a reason for return"));
-//				return new RedirectResolution(CreateReverseOrderAction.class).addParameter("shippingOrder", shippingOrder);
-//			}
+			ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason, reverseOrderType);
+			reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
+			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
+			shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus());
+			shippingOrderService.save(shippingOrder);
+			return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Reverse Order has been created for this Shipping order"));
 			return new RedirectResolution(CreateReverseOrderAction.class).addParameter("shippingOrder", shippingOrder);
@@ -132,5 +131,14 @@ public class CreateReverseOrderAction extends BaseAction {
 	public void setReturnOrderReason(String returnOrderReason) {
 		this.returnOrderReason = returnOrderReason;
 	}
+
+	public String getReverseOrderType() {
+		return reverseOrderType;
+	}
+
+	public void setReverseOrderType(String reverseOrderType) {
+		this.reverseOrderType = reverseOrderType;
+	}
 }
+
 

@@ -37,7 +37,7 @@
 
             $('.markReconciled').click(function() {
 
-                if($('.markPicked').is(':visible')  || $('.markReceived').is(':visible')){
+                if($(this).parent().find('.markPicked').is(':visible')  || $(this).parent().find('.markReceived').is(':visible')){
                     alert("Please mark the order picked/ received first");
                     return false;
                 }
@@ -58,7 +58,7 @@
 
              $('.markReceived').click(function() {
 
-                 if($('.markPicked').is(':visible')){
+                 if($(this).parent().find('.markPicked').is(':visible')){
                     alert("Please mark the order picked first");
                     return false;
                  }
@@ -92,7 +92,9 @@
              });
 
               $('.adviceButton').click(function(){
-                 if($('.markPicked').is(':visible')  || $('.markReceived').is(':visible')){
+                  //var item = $(this).closest('td').find('.markPicked').is(':visible');
+                  var ob1 = $(this).parent().parent().children('td.actions');
+                 if(ob1.children('.markPicked').is(':visible')  || ob1.children('.markReceived').is(':visible')){
                     alert("Please mark the order picked/ received first");
                     return false;
                  }
@@ -149,6 +151,7 @@
                 <th>Reverse Order Id</th>
                 <th>SO Gateway Id</th>
                 <th>Reason for return</th>
+                <th>Order Type</th>
                 <th>Courier</th>
                 <th>Pickup Conf No.</th>
                 <th>Tracking No.</th>
@@ -179,6 +182,7 @@
                         </s:link>
                     </td>
                     <td>${reverseOrderRequest.returnReason}</td>
+                    <td>${reverseOrderRequest.reverseOrderType}</td>
                     <td>${reverseOrderRequest.courierPickupDetail.courier.name}</td>
                     <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
                            <s:hidden name="orderRequestId" value="${reverseOrderRequest.id}"/>
@@ -211,7 +215,7 @@
                     <td>${reverseOrderRequest.reconciliationStatus.name}</td>
                     <td>${reverseOrderRequest.user.name}</td>
 
-                    <td>
+                    <td class="actions">
                         <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen}">
                             <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markPicked" class="markPicked">Mark Picked
                                 <s:param name="orderRequestId" value="${reverseOrderRequest.id}" />

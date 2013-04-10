@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface ReverseOrderService {
 
-	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder, String returnOrderReason);
+	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder, String returnOrderReason, String reverseOrderType);
 
 	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap); 	
 
