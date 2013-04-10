@@ -3,6 +3,7 @@ package com.hk.admin.impl.service.queue;
 import com.hk.admin.pact.service.queue.BucketService;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
  * User: Pratham
  * Date: 10/04/13  Time: 16:04
 */
+@Service
 public class BucketServiceImpl implements BucketService {
 
     @Override
