@@ -2,28 +2,16 @@ package com.hk.taglibs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.admin.pact.service.inventory.GrnLineItemService;
-import com.hk.admin.util.CourierStatusUpdateHelper;
-import com.hk.domain.analytics.Reason;
-import com.hk.domain.catalog.ProductVariantSupplierInfo;
-import com.hk.domain.catalog.Supplier;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.loyaltypg.Badge;
-import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.content.HeadingProduct;
-import com.hk.loyaltypg.service.LoyaltyProgramService;
-import com.hk.pact.service.core.PincodeService;
-import com.hk.pact.service.homeheading.HeadingProductService;
-import com.hk.pact.service.image.ProductImageService;
-import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.payment.GatewayIssuerMappingService;
-import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
-import com.hk.util.ProductUtil;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -43,15 +31,23 @@ import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
+import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.GrnLineItemService;
+import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductImage;
@@ -61,10 +57,15 @@ import com.hk.domain.catalog.product.VariantConfigOption;
 import com.hk.domain.catalog.product.VariantConfigOptionParam;
 import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
+import com.hk.domain.content.HeadingProduct;
+import com.hk.domain.core.Country;
+import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.hkDelivery.Hub;
+import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.offer.rewardPoint.RewardPointMode;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -75,9 +76,10 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
-import com.hk.domain.core.Country;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
@@ -90,14 +92,21 @@ import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.homeheading.HeadingProductService;
+import com.hk.pact.service.image.ProductImageService;
+import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
-import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
+import com.hk.util.ProductUtil;
 
 public class Functions {
 
@@ -191,34 +200,39 @@ public class Functions {
     }
 
     public static String decimal2(Double n) {
-        if (n == null)
-            return "0.00";
+        if (n == null) {
+			return "0.00";
+		}
         return FormatUtils.getDecimalFormat(n);
     }
 
     public static String convertToLettersNumbersUnderscore(String s) {
-        if (s == null)
-            return "";
+        if (s == null) {
+			return "";
+		}
         return s.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContains(Collection c, Object o) {
-        if (c == null)
-            return false;
+        if (c == null) {
+			return false;
+		}
         return c.contains(o);
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsBoth(Collection c, Object o1, Object o2) {
-        if (c == null)
-            return false;
+        if (c == null) {
+			return false;
+		}
         return c.contains(o1) && c.contains(o2);
     }
 
     public static boolean firstStringContainsSecond(String s1, String s2) {
-        if (s1 == null)
-            return false;
+        if (s1 == null) {
+			return false;
+		}
         return s1.contains(s2);
     }
 
@@ -231,8 +245,9 @@ public class Functions {
      */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
-        if (c1 == null || c2 == null)
-            return false;
+        if (c1 == null || c2 == null) {
+			return false;
+		}
         boolean collectionContainsCollection = true;
 
         for (Object o : c2) {
@@ -827,4 +842,15 @@ public class Functions {
 		}
 		return loyaltyProgramService.getUserBadgeInfo(userId).getBadge();
 	}
+
+    public static List<ShippingOrder> getActionAwaitingSO(Order order){
+       List<ShippingOrder> actionAwaitingSO = new ArrayList<ShippingOrder>();
+        for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+            if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                actionAwaitingSO.add(shippingOrder);
+            }
+        }
+        return actionAwaitingSO;
+    }
+
 }

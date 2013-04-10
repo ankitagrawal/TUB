@@ -794,6 +794,9 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
 
         }
+
+        setTargetDispatchDelDatesOnBO(order);
+
         // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());

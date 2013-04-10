@@ -440,7 +440,12 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
         }
     }*/
 
-    // @Override
+    public Page list(DetachedCriteria criteria, int totalResults, int pageNo, int perPage) {
+        int firstResult = (pageNo - 1) * perPage;
+        List resultList = findByCriteria(criteria, firstResult, perPage);
+        return new Page(resultList, perPage, pageNo, totalResults);
+    }
+
     public Page list(DetachedCriteria criteria, boolean hasDistinctRootEntity, int pageNo, int perPage) {
 
         int totalResults = count(criteria, hasDistinctRootEntity);

@@ -244,16 +244,15 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
-        if (sortByPaymentDate) {
-            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
-        }
         if(sortByDispatchDate){
             criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+        }
+        if (sortByPaymentDate) {
+            paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
         }
         if (sortByScore) {
             criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         }
-
         if(dropShip != null  )  {
              shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
          }
