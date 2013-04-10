@@ -561,4 +561,19 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         this.sortByLastEscDate = sortByLastEscDate;
     }
 
+    public Map<String, Object> getBucketParameters() {
+        return bucketParameters;
+    }
+
+    public void setBucketParameters(Map<String, Object> bucketParameters) {
+        this.bucketParameters = bucketParameters;
+    }
+
+    public List<Bucket> getBuckets() {
+        return buckets;
+    }
+
+    public void setBuckets(List<Bucket> buckets) {
+        this.buckets = buckets;
+    }
 }
