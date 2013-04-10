@@ -2,6 +2,7 @@ package com.hk.web.action.admin.shippingOrder;
 
 import java.util.*;
 
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
@@ -59,11 +60,12 @@ public class SplitShippingOrderAction extends BaseAction {
 
     @DontValidate
     @DefaultHandler
-    @Secure(hasAnyRoles = {RoleConstants.ADMIN, RoleConstants.GOD, RoleConstants.CATEGORY_MANAGER}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_SO}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         return new ForwardResolution("/pages/admin/order/splitShippingOrder.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.SPLIT_SO}, authActionBean = AdminPermissionAction.class)
     public Resolution splitShippingOrder() {
 
         if (shippingOrder != null && EnumShippingOrderStatus.SO_ActionAwaiting.getId().equals(shippingOrder.getOrderStatus().getId())) {

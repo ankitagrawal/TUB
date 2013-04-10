@@ -489,9 +489,7 @@
 
   <%
     for (ShippingOrder shippingOrder : ojpa.getOrder().getShippingOrders()) {
-      Set<ShippingOrderLifecycle> shippingOrderLifecycles = shippingOrder.getShippingOrderLifecycles();
-      List<ShippingOrderLifecycle> shippingOrderLifecycleList = new ArrayList<ShippingOrderLifecycle>();
-      shippingOrderLifecycleList.addAll(shippingOrderLifecycles);
+      List<ShippingOrderLifecycle> shippingOrderLifecycleList = shippingOrder.getShippingOrderLifecycles();
       Collections.reverse(shippingOrderLifecycleList);
   %>
 
