@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<%@include file="/loyalty/LoyaltyJunk/css/style2.css" %>
+<%-- <%@include file="/loyalty/LoyaltyJunk/css/style2.css" %>
 <%@include file="/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" %>
 <%@include file="/loyalty/LoyaltyJunk/css/grid.css" %>
 <%@include file="/loyalty/LoyaltyJunk/css/accordian_navs.css" %>
-
+ --%>
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" var="userKarmaHA"/>
-<s:layout-render name="/layouts/default.jsp">
+<s:layout-render name="/pages/loyalty/layout.jsp">
   <s:layout-component name="heading">History</s:layout-component>
   
-  <s:layout-component name="rhsContent">
+  <s:layout-component name="contents">
 
     <div class="main-inn-right">
 
@@ -79,12 +79,16 @@
     width: 100%;
     margin-bottom: 10px;
     margin-top: 5px;
-    border: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #F0F0F0;
     border-collapse: separate;
   }
 
   table th {
-    background: #f0f0f0;
+    border-bottom: 1px solid;
+    border-color: #F0F0F0;
+    margin-bottom: 10px;
     padding: 5px;
     text-align: left;
   }

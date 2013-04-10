@@ -104,6 +104,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
+    private boolean sortByLastEscDate = true;
     private boolean sortByScore = true;
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
@@ -143,7 +144,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore).setSortByLastEscDate(sortByLastEscDate);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -218,17 +219,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             orderSearchCriteria.setPaymentEndDate(endDate);
         }
 
-        Set<Category> categoryList = new HashSet<Category>();
-        for (String category : categories) {
-            if (category != null) {
-                categoryList.add((Category) categoryDao.getCategoryByName(category));
-            }
-        }
-        if (categoryList.size() == 0) {
-            categoryList.addAll(categoryDao.getPrimaryCategories());
-        }
-
-        orderSearchCriteria.setCategories(categoryList);
+//        Set<Category> categoryList = new HashSet<Category>();
+//        categoryList.addAll(categoryDao.getPrimaryCategories());
+//        orderSearchCriteria.setCategories(categoryList);
 
         if (dropShip != null){
            orderSearchCriteria.setDropShip(dropShip);
@@ -236,18 +229,15 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (containsJit != null){
             orderSearchCriteria.setContainsJit(containsJit);
         }
-        logger.debug("basketCategories : " + basketCategories.size());
-        Set<String> basketCategoryList = new HashSet<String>();
+        Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
             if (category != null) {
-                Category basketCategory = (Category) categoryDao.getCategoryByName(category);
-                if (basketCategory != null) {
-                    basketCategoryList.add(basketCategory.getName());
-                }
+                basketCategoryList.add((Category) categoryDao.getCategoryByName(category));
             }
         }
-        logger.debug("basketCategoryList : " + basketCategoryList.size());
-
+//        if (basketCategoryList.size() == 0) {
+//            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
+//        }
         orderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         return orderSearchCriteria;
     }
@@ -451,6 +441,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
             ctr2++;
         }
+/*
         int ctr3 = 0;
         for (String category : categories) {
             if (category != null) {
@@ -458,6 +449,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
             ctr3++;
         }
+*/
         int ctr4 = 0;
         for (String category : basketCategories) {
             if (category != null) {
@@ -566,5 +558,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setSortByDispatchDate(boolean sortByDispatchDate) {
         this.sortByDispatchDate = sortByDispatchDate;
+    }
+
+    public boolean isSortByLastEscDate() {
+        return sortByLastEscDate;
+    }
+
+    public void setSortByLastEscDate(boolean sortByLastEscDate) {
+        this.sortByLastEscDate = sortByLastEscDate;
     }
 }

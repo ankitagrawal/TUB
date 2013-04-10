@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
@@ -43,4 +44,10 @@ public interface LoyaltyProgramService {
 	 * @return
 	 */
 	public Page getProfileHistory (User user, int page, int perPage);
+	
+	/**
+	 * This method returns the categories for loyalty products.
+	 * @return
+	 */
+	public List<Category> getLoyaltyCatalog();
 }

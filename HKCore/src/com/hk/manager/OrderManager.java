@@ -1,3 +1,4 @@
+
 package com.hk.manager;
 
 import java.util.*;
@@ -180,7 +181,7 @@ public class OrderManager {
         }
 
         order = getOrderService().save(order);
-
+	    
         return order;
     }
 
@@ -497,7 +498,8 @@ public class OrderManager {
     public CartLineItem createFreeLineItem(CartLineItem cartLineItem, ProductVariant freeVariant) throws OutOfStockException {
         Order order = cartLineItem.getOrder();
         freeVariant.setQty(cartLineItem.getQty());
-        if (!freeVariant.isOutOfStock()) {
+        //as on 04-02-13, free variants which are out of stock, will be added to an order, but they wont be processed
+//        if (!freeVariant.isOutOfStock()) {
             CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
             if (existingCartLineItem == null) { // The variant is not added in user account already
                 CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
@@ -508,8 +510,8 @@ public class OrderManager {
                 existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
                 return cartLineItemService.save(existingCartLineItem);
             }
-        }
-        return null;
+//        }
+//        return null;
     }
 
     @Transactional

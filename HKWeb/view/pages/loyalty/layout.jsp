@@ -76,9 +76,22 @@
 
 
       <hr>
+      <div class="lhsContent">
+        <s:layout-component name="lhsContent"/>
+
+        <div class="floatfix"></div>
+      </div>
+      <s:layout-component name="left_col"/>
+      
 			<stripes:layout-component name="contents"/>
+			
 	  <hr>
-      <div class="footer">
+	  
+	  <div class="rhsContent">
+        <s:layout-component name="rhsContent"/>
+
+        <div class="floatfix"></div>
+	  <div class="footer">
         <p>© Footer goes here!!</p>
       </div>
     </div>

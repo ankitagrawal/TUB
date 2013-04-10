@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
@@ -295,5 +296,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	public void setBaseDao(BaseDao baseDao) {
 		this.baseDao = baseDao;
+	}
+
+	@Override
+	public List<Category> getLoyaltyCatalog() {
+		
+		return this.loyaltyProductDao.getCategoryForLoyaltyProducts();
 	}
 }

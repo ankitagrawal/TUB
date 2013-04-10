@@ -15,6 +15,6 @@ public interface SeekInvoiceNumService {
      * @return InvoiceNum that can be used - This method will increment the InvoiceNum which can be used for other
      *         invoices.
      */
-    public Long getInvoiceNum(String invoiceType, Warehouse warehouse);
+    public String getInvoiceNum(String invoiceType, Warehouse warehouse);
 
 }

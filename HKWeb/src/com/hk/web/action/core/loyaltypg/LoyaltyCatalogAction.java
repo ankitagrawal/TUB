@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.hk.domain.loyaltypg.Badge;
-import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -18,8 +16,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
 
@@ -41,41 +40,42 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	public Resolution pre() {
 		SearchCriteria criteria = new SearchCriteria();
 
-		int startRow = (getPageNo()-1)*getPerPage();
-		int maxRow = getPageNo()*getPerPage() - startRow;
+		this.loyaltyProgramService.getLoyaltyCatalog();
+		int startRow = (this.getPageNo()-1)*this.getPerPage();
+		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
 
-		int count = getProcessor().countProducts(getPrincipal().getId(), criteria);
-		List<ProductAdapter> list = getProcessor().searchProducts(getPrincipal().getId(), criteria);
-		productList = new ArrayList<LoyaltyProduct>();
+		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
+		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
+		this.productList = new ArrayList<LoyaltyProduct>();
     for (ProductAdapter productAdapter : list) {
-        productList.add(productAdapter.getLoyaltyProduct());
+        this.productList.add(productAdapter.getLoyaltyProduct());
     }
 
-    productPage = new Page(productList, getPerPage(), getPerPageDefault(), count);
+    this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 
 	public Resolution aboutLoyaltyProgram(){
-		badgeList = loyaltyProgramService.getAllBadges();
+		this.badgeList = this.loyaltyProgramService.getAllBadges();
 		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}
 	
 	@Override
 	public int getPerPageDefault() {
-		return defaultPerPage;
+		return this.defaultPerPage;
 	}
 
 	@Override
 	public int getPageCount() {
-		return productPage == null ? 0 : productPage.getTotalPages();
+		return this.productPage == null ? 0 : this.productPage.getTotalPages();
 	}
 
 	@Override
 	public int getResultCount() {
-		return productPage == null ? 0 : productPage.getTotalResults();
+		return this.productPage == null ? 0 : this.productPage.getTotalResults();
 	}
 
 	@Override
@@ -84,11 +84,11 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	}
 	
 	public List<LoyaltyProduct> getProductList() {
-		return productList;
+		return this.productList;
 	}
 
 	public List<Badge> getBadgeList() {
-		return badgeList;
+		return this.badgeList;
 	}
 
 	public void setBadgeList(List<Badge> badgeList) {
