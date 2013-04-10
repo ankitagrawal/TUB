@@ -36,6 +36,12 @@
             });
 
             $('.markReconciled').click(function() {
+
+                if($('.markPicked').is(':visible')  || $('.markReceived').is(':visible')){
+                    alert("Please mark the order picked/ received first");
+                    return false;
+                }
+                
                 if(!confirm("Are you sure you want to mark it reconciled ?")){
                    return false;
                 }
@@ -51,6 +57,12 @@
             });
 
              $('.markReceived').click(function() {
+
+                 if($('.markPicked').is(':visible')){
+                    alert("Please mark the order picked first");
+                    return false;
+                 }
+
                 if(!confirm("Are you sure you want to mark it received ?")){
                    return false;
                 }
@@ -78,6 +90,13 @@
 
                $('.confirmationNo').attr('value',x);
              });
+
+              $('.adviceButton').click(function(){
+                 if($('.markPicked').is(':visible')  || $('.markReceived').is(':visible')){
+                    alert("Please mark the order picked/ received first");
+                    return false;
+                 }
+              });
          });
 
         </script>
@@ -230,7 +249,7 @@
                                     <s:option value="${advice}">${advice}</s:option>
                                 </c:forEach>
                             </s:select>                                
-                            <s:submit name="adviceProposed" value="save" class="format-button"/>
+                            <s:submit name="adviceProposed" value="save" class="format-button adviceButton"/>
                         </s:form>
                     </td>
                 </tr>

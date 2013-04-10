@@ -32,12 +32,14 @@
                             bool = false;
                             return false;
                         }
-                        var lineItemQty = $(this).parent().parent().children('td.lineItem').children('.lineItemQty').html();
+                        var lineItemQty = Number($(this).parent().parent().children('td.lineItem').children('.lineItemQty').html());
                         if(qty == null || qty == ""){
                             alert("Enter quantity for all items. Enter 0 for items not returning");
                             bool = false;
                             return false;
                         }
+//                        alert(qty);
+//                        alert(lineItemQty);
                         if (qty > lineItemQty) {
                             alert("Return quantity is greater that Qty Sent for some item(s)");
                             bool = false;

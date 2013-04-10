@@ -21,6 +21,7 @@
         $(document).ready(function() {
             var obj;
             $('#submit').click( function() {
+                $(this).hide();
                 var checkedinQty = obj.parents('.shippingRow').children('.checkedin').children('.checkedinQty').html();
                 var qty = obj.parents('.shippingRow').children('.qty').html();
                 if(qty == checkedinQty){
