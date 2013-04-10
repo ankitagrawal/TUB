@@ -142,6 +142,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		return getProductVariantDao().getAllProductVariant();
 	}
 
+	@Override
+	public void markProductVariantsAsDeleted(Product product) {
+		getProductVariantDao().markProductVariantsAsDeleted(product);
+	}
+	
 	public ProductService getProductService() {
 		return productService;
 	}

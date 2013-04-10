@@ -134,8 +134,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta) {
+        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage, accurateBeta);
     }
 
     @Override
@@ -790,6 +790,9 @@ public class OrderServiceImpl implements OrderService {
             shippingOrderAlreadyExists = true;
 
         }
+
+        setTargetDispatchDelDatesOnBO(order);
+
         // Check Inventory health of order lineitems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
