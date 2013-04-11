@@ -4,10 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -34,7 +31,8 @@ public class AssignUserBasketAction extends BaseAction {
     public Resolution save() {
         user.setBuckets(buckets);
         userService.save(user);
-        return new RedirectResolution(AssignUserBasketAction.class);
+        addRedirectAlertMessage(new SimpleMessage("Buckets Updated Successfully"));
+        return new RedirectResolution("/pages/admin/queue/userBasket.jsp");
     }
 
     public List<Bucket> getBuckets() {

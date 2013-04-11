@@ -24,7 +24,9 @@ pageContext.setAttribute("bucketList", baseDao.getAll(Bucket.class));
             <div class="checkBoxList">
                 <c:forEach items="${bucketList}" var="bucket" varStatus="ctr">
                     <label><s:checkbox name="buckets[${ctr.index}]"
-                                       value="${bucket.id}"/> ${bucket.name} ${bucket.description}</label>
+                                       value="${bucket.id}"/> ${bucket.name}
+                                        <%--${bucket.description}--%>
+                    </label>
                     <br/>
                 </c:forEach>
             </div>
