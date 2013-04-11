@@ -29,7 +29,7 @@ public class AssignUserBasketAction extends BaseAction {
     }
 
     public Resolution save() {
-        user.setBuckets(buckets);
+//        user.setBuckets(buckets);
         userService.save(user);
         addRedirectAlertMessage(new SimpleMessage("Buckets Updated Successfully"));
         return new RedirectResolution(AssignUserBasketAction.class).addParameter("user", user.getId());
