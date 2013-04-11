@@ -439,9 +439,6 @@
                 </li>
 
                 <div class="buttons">
-                    <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                        <div><s:checkbox name="accurateBeta"/>Accurate Results (Beta)</div>
-                    </shiro:hasAnyRoles>
                     <s:submit name="pre" value="Search"/>
                     <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
                     <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>
@@ -656,12 +653,12 @@
                     </c:if>
                 </td>
 
+                <c:set var="shippingOrders" value="${hk:getActionAwaitingSO(order)}"/>
                 <c:choose>
-                    <c:when test="${not empty order.shippingOrders}">
-                        <c:set var="shippingOrders" value="${order.shippingOrders}"/>
+                    <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${order.shippingOrders}" isActionQueue="true"/>
+                                             shippingOrders="${shippingOrders}" isActionQueue="true"/>
                         </td>
                     </c:when>
                     <c:otherwise>

@@ -42,17 +42,9 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM004' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM006' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DNM007' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW01' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW02' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW03' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW04' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW05' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW11' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW12' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW13' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW14' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EDW15' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR01' />
+
+       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR01' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR02' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ENBLZR03' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='FABIN59' />

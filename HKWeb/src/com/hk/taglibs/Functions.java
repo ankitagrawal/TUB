@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoServi
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
@@ -809,5 +810,15 @@ public class Functions {
 			return null;
 		}
 	}
+
+    public static List<ShippingOrder> getActionAwaitingSO(Order order){
+       List<ShippingOrder> actionAwaitingSO = new ArrayList<ShippingOrder>();
+        for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+            if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                actionAwaitingSO.add(shippingOrder);
+            }
+        }
+        return actionAwaitingSO;
+    }
 
 }
