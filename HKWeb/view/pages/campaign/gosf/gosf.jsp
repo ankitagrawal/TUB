@@ -39,7 +39,7 @@
 
 <div class="cl"></div>
 
-<jsp:include page="../includes/_menuGosf.jsp"/>
+    <%@include file="/includes/_menuGosf.jsp" %>
 
 <div class="cl"></div>
 

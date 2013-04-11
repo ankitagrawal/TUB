@@ -257,7 +257,9 @@ public interface BaseDao {
     
     
     public Page list(DetachedCriteria criteria,  boolean hasDistinctRootEntity, int pageNo, int perPage);
-    
+
+    public Page list(DetachedCriteria criteria, int totalResults, int pageNo, int perPage);
+
     public Page list(DetachedCriteria criteria,  int pageNo, int perPage);
 
     public void refresh(Object entity);
