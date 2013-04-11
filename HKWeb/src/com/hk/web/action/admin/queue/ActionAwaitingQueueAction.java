@@ -118,6 +118,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @DefaultHandler
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
+        User user = getPrincipalUser();
         Long startTime = (new Date()).getTime();
 
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
@@ -125,20 +126,14 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
-        User user = getPrincipalUser();
         if(user != null){
             buckets = user.getBuckets();
             if(buckets != null && !buckets.isEmpty()){
-                logger.debug(buckets.size() + " bucket name " + buckets.get(0));
                 bucketParameters = bucketService.getParamMap(user.getBuckets());
-                for (Map.Entry<String, Object> stringObjectEntry : bucketParameters.entrySet()) {
-                    logger.debug(stringObjectEntry.getKey() + stringObjectEntry.getValue());
-                }
             }
         }
-
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
+        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp").addParameters(bucketParameters);
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
