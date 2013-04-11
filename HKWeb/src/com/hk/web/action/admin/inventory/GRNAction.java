@@ -20,6 +20,7 @@ import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -255,6 +256,13 @@ public class GRNAction extends BasePaginatedAction {
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
+				for(GrnLineItem grnLineItem : grn.getGrnLineItems()){
+					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
+						if(grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())){
+							grnLineItem.setFillRate(poLineItem.getFillRate());
+						}
+					}
+				}
 				getAdminEmailManager().sendGRNEmail(grn);
 			}
 

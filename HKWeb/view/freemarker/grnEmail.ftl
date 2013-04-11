@@ -37,11 +37,7 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} is created
 	<tr>
 		<td>${grnLineItem.sku.productVariant.id}</td>
 		<td>${grnLineItem.sku.productVariant.product.name}</td>
-		<#list grnLineItem.goodsReceivedNote.purchaseOrder.poLineItems as poLineItem>
-		<#if grnLineItem.sku.id==poLineItem.sku.id>
-		<td>${poLineItem.fillRate}</td>
-		</#if>
-		</#list>
+		<td>${grnLineItem.fillRate}</td>
 		<td>${grnLineItem.qty}</td>
 		<td>${grnLineItem.checkedInQty}</td>
 		<td>${grnLineItem.costPrice}</td>
