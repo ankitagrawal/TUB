@@ -119,21 +119,25 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         User user = getPrincipalUser();
-        Long startTime = (new Date()).getTime();
-
-        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
-        if (orderPage != null) {
-            orderList = orderPage.getList();
-        }
         if(user != null){
             buckets = user.getBuckets();
             if(buckets != null && !buckets.isEmpty()){
                 bucketParameters = bucketService.getParamMap(user.getBuckets());
             }
         }
+        return new ForwardResolution(ActionAwaitingQueueAction.class, "search").addParameters(bucketParameters);
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution search() {
+        Long startTime = (new Date()).getTime();
+        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+        if (orderPage != null) {
+            orderList = orderPage.getList();
+        }
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp").addParameters(bucketParameters);
+        return new RedirectResolution(ActionAwaitingQueueAction.class, "search").addParameters(bucketParameters);
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
