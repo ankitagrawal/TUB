@@ -16,7 +16,8 @@
             <h2>Buckets:</h2>
             <c:forEach items="${userBean.buckets}" var="bucket" varStatus="ctr">
                 <label><s:checkbox name="buckets[${ctr.index}]"
-                                   value="${bucket.id}"/> ${bucket.name} ${bucket.description}</label>
+                                   value="${bucket.id}"/>
+                <s:checkbox name="buckets[${ctr.index}].selected"/> ${bucket.name} ${bucket.description} </label><br/>
             </c:forEach>
             <s:hidden name="user" value="${userBean.user.id}"/>
             <s:submit name="save" value="Save"/>

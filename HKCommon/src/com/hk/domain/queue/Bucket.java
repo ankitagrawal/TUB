@@ -28,6 +28,9 @@ public class Bucket  implements java.io.Serializable {
     @Column(name="description")
     private String description;
 
+    @Transient
+    private boolean selected;
+
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "bucket_constituents", uniqueConstraints = @UniqueConstraint(columnNames = {"bucket_id", "params_id"}), joinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "params_id", nullable = false, updatable = false)})
@@ -62,6 +65,14 @@ public class Bucket  implements java.io.Serializable {
 
     public void setParams(Set<Param> params) {
         this.params = params;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
 

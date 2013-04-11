@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
+import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -24,6 +25,7 @@ public class AssignUserBasketAction extends BaseAction {
     @Autowired
     UserService userService;
 
+    @DefaultHandler
     public Resolution pre() {
         buckets = getBaseDao().getAll(Bucket.class);
         return new ForwardResolution("/pages/admin/queue/userBasket.jsp");
