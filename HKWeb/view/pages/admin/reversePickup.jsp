@@ -46,7 +46,7 @@
     </s:layout-component>
 
 
-    <s:layout-component name="heading">Reverse Pickup Service</s:layout-component>
+    <s:layout-component name="heading">Schedule Reverse Pickup Service</s:layout-component>
     <s:layout-component name="content">
         <s:form beanclass="com.hk.web.action.admin.courier.ReversePickupCourierAction">
           <s:errors/>

@@ -109,7 +109,7 @@
             </s:select>
             <p>
             <label>Select Reverse Order Type :</label>
-               <s:select name="reverseOrderType" value="<%=ReverseOrderTypeConstants.Healthkart_Managed%>" >
+               <s:select name="reverseOrderType" value="<%=ReverseOrderTypeConstants.Healthkart_Managed_Courier%>" >
                     <c:forEach items="${orderTypeList}" var="orderType">
                         <s:option value="${orderType}">${orderType}</s:option>
                      </c:forEach>

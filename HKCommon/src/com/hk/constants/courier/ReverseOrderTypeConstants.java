@@ -12,10 +12,10 @@ import java.util.Arrays;
  */
 public class ReverseOrderTypeConstants {
 
-	public static final String Healthkart_Managed = "Healthkart Managed";
-	public static final String Customer_Sent= "Customer Sent";
+	public static final String Healthkart_Managed_Courier = "Healthkart Managed Courier";
+	public static final String Customer_Managed_Courier = "Customer Managed Courier";
 
 	public static List<String> getReverseOrderTypes(){
-		return Arrays.asList(Healthkart_Managed, Customer_Sent);
+		return Arrays.asList(Healthkart_Managed_Courier, Customer_Managed_Courier);
 	}
 }

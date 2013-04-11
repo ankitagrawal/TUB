@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
@@ -35,10 +34,6 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.PincodeDefaultCourier;
-import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
@@ -741,7 +736,7 @@ public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
 
 		if (reverseOrderList != null) {
 			for (ReverseOrder order : reverseOrderList) {
-				if (order != null) {
+				if (order != null && order.getReverseOrderType().equals(ReverseOrderTypeConstants.Healthkart_Managed_Courier)) {
 					Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
 					xlsWriter.addCell(xlsRow, customerDetails.getName());
 					xlsWriter.addCell(xlsRow, customerDetails.getPhone());

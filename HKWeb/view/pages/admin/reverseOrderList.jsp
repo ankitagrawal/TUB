@@ -108,7 +108,7 @@
         <s:form beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">
 
             <fieldset>
-                <legend>Search Reverse Pickup List</legend>
+                <legend>Search Reverse Order List</legend>
                 </br>
                 <label>SO Gateway Order Id:</label><s:text name="shippingOrderId" value="${pickupManage.shippingOrderId}" style="width:150px"/>
                 &nbsp;

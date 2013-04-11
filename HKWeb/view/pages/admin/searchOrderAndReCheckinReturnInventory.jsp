@@ -113,7 +113,7 @@
         <th>Base Order and payment</th>
         <th>User</th>
         <th>Address</th>
-        <th>Items and Qty | Re-checkin (Scan Barcode in the boxes below)</th>
+        <th>Items and Qty | Re-checkin (Scan Barcode in the boxes, one at a time)</th>
             <%--<th></th>--%>
     </tr>
     </thead>
