@@ -4,9 +4,9 @@
 <s:useActionBean beanclass="com.hk.web.action.test.UrlTesterAction" var="testBean"/>
 
 <html>
-<head><title>Url Tester</title></head>
+<head><title>URL Redirection Tester</title></head>
 <body>
-<h1>URL Tester</h1>
+<h1>URL Redirection Tester</h1>
 
 <p>
   <s:form beanclass="com.hk.web.action.test.UrlTesterAction">
@@ -20,14 +20,18 @@
   <thead>
   <tr>
     <th>URL</th>
-    <th>Code</th>
+    <th>Redirection Code</th>
+    <th>Redirect URL</th>
+    <th>Final Code</th>
   </tr>
   </thead>
   <tbody>
-  <c:forEach items="${testBean.urlResult}" var="urlResult">
+  <c:forEach items="${testBean.urlRedirectList}" var="urlRedirect">
     <tr>
-      <td>${urlResult.key}</td>
-      <td>${urlResult.value}</td>
+      <td>${urlRedirect.originalUrl}</td>
+      <td>${urlRedirect.redirectionCode}</td>
+      <td>${urlRedirect.redirectUrl}</td>
+      <td>${urlRedirect.finalCode}</td>
     </tr>
   </c:forEach>
   </tbody>
