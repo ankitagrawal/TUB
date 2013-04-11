@@ -32,7 +32,7 @@ public class AssignUserBasketAction extends BaseAction {
         user.setBuckets(buckets);
         userService.save(user);
         addRedirectAlertMessage(new SimpleMessage("Buckets Updated Successfully"));
-        return new RedirectResolution("/pages/admin/queue/userBasket.jsp");
+        return new RedirectResolution(AssignUserBasketAction.class).addParameter("user", user.getId());
     }
 
     public List<Bucket> getBuckets() {
