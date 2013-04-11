@@ -137,7 +137,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             orderList = orderPage.getList();
         }
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new RedirectResolution(ActionAwaitingQueueAction.class, "search").addParameters(bucketParameters);
+        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
