@@ -57,9 +57,7 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1530' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARKRAY001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARKRAY002' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARKRAY003' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ARKRAY004' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU027' />
+       <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU027' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU028' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU029' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BEU030' />
@@ -76,7 +74,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-HHD-003' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='CMB-HHD-004' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EASY009' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EQNX016' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HB001' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HB004' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HB005' />

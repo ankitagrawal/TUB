@@ -19,7 +19,7 @@ public interface OrderDao extends BaseDao {
 
     public Page listOrdersForUser(List<OrderStatus> orderStatusList, User user, int page, int perPage);
 
-    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage, boolean accurateBeta);
+    public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
 
     @SuppressWarnings("unchecked")
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
