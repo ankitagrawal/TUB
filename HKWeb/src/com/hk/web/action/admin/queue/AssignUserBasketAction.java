@@ -27,7 +27,7 @@ public class AssignUserBasketAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        buckets = getBaseDao().getAll(Bucket.class);
+        buckets = user.getBuckets();
         return new ForwardResolution("/pages/admin/queue/userBasket.jsp");
     }
 
