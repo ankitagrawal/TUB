@@ -1,33 +1,9 @@
 package com.hk.manager;
 
-import java.util.*;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.jsp.PageContext;
-
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductCount;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.review.Mail;
-import com.hk.util.HKImageUtils;
-import com.hk.util.ProductUtil;
-import com.hk.web.AppConstants;
-import com.hk.web.filter.WebContext;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.util.ssl.SslUtil;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.CategoryCache;
-import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.constants.catalog.category.CategoryConstants;
+import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
 import com.hk.constants.core.Keys;
 import com.hk.constants.email.EmailTemplateConstants;
@@ -38,6 +14,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.Ticket;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
@@ -46,12 +23,14 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.offer.rewardPoint.RewardPointTxn;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.review.Mail;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
@@ -65,9 +44,23 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.service.impl.FreeMarkerService;
+import com.hk.util.HKImageUtils;
 import com.hk.util.HtmlUtil;
-
+import com.hk.util.ProductUtil;
+import com.hk.web.filter.WebContext;
 import freemarker.template.Template;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.util.ssl.SslUtil;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -268,7 +261,7 @@ public class EmailManager {
             categoryAdmins = eyeAdminEmails;
         } else if (category.getName().equals(CategoryConstants.HEALTH_DEVICES)) {
             categoryAdmins = homeDevicesAdminEmails;
-        } else if (category.getName().equals(CategoryConstants.NUTRITION)) {
+        } else if (category.getName().equals(CategoryConstants.NUTRITION) || category.getName().equals(CategoryConstants.SPORTS_NUTRITION) || category.getName().equals(CategoryConstants.HEALTH_NUTRITION)) {
             categoryAdmins = nutritionAdminEmails;
         } else if (category.getName().equals(CategoryConstants.PERSONAL_CARE)) {
             categoryAdmins = personalCareAdminEmails;
