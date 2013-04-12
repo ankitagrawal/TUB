@@ -11681,11 +11681,11 @@
             <column name="stock_transfer_status_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Rohit (generated)" id="1362465491508-3">
+    <!--<changeSet author="Rohit (generated)" id="1362465491508-3">
         <createIndex indexName="name" tableName="manufacturer" unique="true">
             <column name="name"/>
         </createIndex>
-    </changeSet>
+    </changeSet>-->
     <changeSet author="Rohit (generated)" id="1362465491508-4">
         <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
     </changeSet>
