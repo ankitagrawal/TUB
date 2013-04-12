@@ -30,7 +30,7 @@
                             <g:brand><![CDATA[${hk:stripHtml(product.brand)}]]</g:brand>
                         </c:if>
                         <g:product_type>
-                            ${product.primaryCategory}/${product.secondaryCategory}
+                            ${product.primaryCategory} &gt;${product.secondaryCategory}
                         </g:product_type>
                         <g:availability>
                             <c:choose>
