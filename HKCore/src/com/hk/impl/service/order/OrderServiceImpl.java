@@ -52,6 +52,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
@@ -107,6 +108,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     ShipmentService shipmentService;
+    @Autowired
+    SubscriptionService subscriptionService;
 
 
     /*
@@ -346,6 +349,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
+        subscriptionService.placeSubscriptions(order);
         splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
     }
 
@@ -745,18 +749,6 @@ public class OrderServiceImpl implements OrderService {
 
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
-
-        //the following if is added to handle orders which have just subscriptions in them.
-        if(productCartLineItems.size()==0){
-            Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-            if(subscriptionCartLineItems.size()>0){
-                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                    order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-                    order = save(order);
-                }
-                return true;
-            }
-        }
 
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
