@@ -2,6 +2,7 @@ package com.hk.web.action.core.cart;
 
 import java.util.*;
 
+import com.hk.constants.order.EnumOrderStatus;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
@@ -140,17 +141,20 @@ public class CartAction extends BaseAction {
 
     @DontValidate
     public Resolution getCartItems() {
-        User user = getPrincipalUser();
-        if (user == null) {
-            user = userManager.createAndLoginAsGuestUser(null, null);
+        User user = null;
+        if (getPrincipal() != null) {
+            user = getUserService().getUserById(getPrincipal().getId());
+            // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         }
-        order = orderManager.getOrCreateOrder(user);
-        if (order != null) {
-            Set<CartLineItem> cartLineItems = order.getCartLineItems();
-            if (cartLineItems != null && !cartLineItems.isEmpty()) {
-                Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
-                if (order != null && productCartLineItems != null) {
-                    itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+        if (user != null) {
+            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            if (order != null) {
+                Set<CartLineItem> cartLineItems = order.getCartLineItems();
+                if (cartLineItems != null && !cartLineItems.isEmpty()) {
+                    Set<CartLineItem> productCartLineItems = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Product).filter();
+                    if (order != null && productCartLineItems != null) {
+                        itemsInCart = Long.valueOf(order.getExclusivelyProductCartLineItems().size() + order.getExclusivelyComboCartLineItems().size());
+                    }
                 }
                 int inCartSubscriptions = new CartLineItemFilter(cartLineItems).addCartLineItemType(EnumCartLineItemType.Subscription).filter().size();
                 itemsInCart += inCartSubscriptions;
