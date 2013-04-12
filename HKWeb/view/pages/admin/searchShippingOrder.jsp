@@ -18,45 +18,6 @@
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
   <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
   <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
-</s:layout-component>
-
-
-<s:layout-component name="modal">
-  <div class="jqmWindow" id="orderDumpLogWindow"></div>
-</s:layout-component>
-
-<s:layout-component name="content">
-
-<span id="ajaxLoader" style="display:none;"><img src="<hk:vhostImage/>/common/images/ajax-loader.gif"/></span>
-
-<c:set var="lineItemType_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
-<c:set var="linItemStatusShipped" value="<%=EnumOrderStatus.Shipped.getId()%>"/>
-<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
-<c:set var="linItemStatusDelivrd" value="<%=EnumOrderStatus.Delivered.getId()%>"/>
-<c:set var="shippingOrderStatusDelivrd" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
-<c:set var="linItemStatusRTO" value="<%=EnumOrderStatus.RTO.getId()%>"/>
-<c:set var="orderStatusCart" value="<%=EnumOrderStatus.InCart.getId()%>"/>
-<c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
-<c:set var="orderStatusPending" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
-<c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
-<c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
-
-<s:errors/>
-<s:form beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" method="get" var="searchShippingOrderBean" autocomplete="false">
-  <fieldset class="top_label">
-    <ul>
-      <div class="grouped">
-        <li><label>SO Gateway Order ID</label> <s:text name="shippingOrderGatewayId"/></li>
-        <li><label>SO Order ID</label> <s:text name="shippingOrderId"/></li>
-        <li><label>Tracking ID</label> <s:text name="trackingId"/></li>
-      </div>
-    </ul>
-    <div class="buttons"><s:submit name="searchShippingOrder" value="Search Orders"/></div>
-  </fieldset>
-</s:form>
-
-<c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
-
     <script type="text/javascript">
 
         $('.cancelSO').click(function() {
@@ -97,6 +58,45 @@
         });
 
     </script>
+</s:layout-component>
+
+
+<s:layout-component name="modal">
+  <div class="jqmWindow" id="orderDumpLogWindow"></div>
+</s:layout-component>
+
+<s:layout-component name="content">
+
+<span id="ajaxLoader" style="display:none;"><img src="<hk:vhostImage/>/common/images/ajax-loader.gif"/></span>
+
+<c:set var="lineItemType_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
+<c:set var="linItemStatusShipped" value="<%=EnumOrderStatus.Shipped.getId()%>"/>
+<c:set var="shippingOrderStatusShipped" value="<%=EnumShippingOrderStatus.SO_Shipped.getId()%>"/>
+<c:set var="linItemStatusDelivrd" value="<%=EnumOrderStatus.Delivered.getId()%>"/>
+<c:set var="shippingOrderStatusDelivrd" value="<%=EnumShippingOrderStatus.SO_Delivered.getId()%>"/>
+<c:set var="linItemStatusRTO" value="<%=EnumOrderStatus.RTO.getId()%>"/>
+<c:set var="orderStatusCart" value="<%=EnumOrderStatus.InCart.getId()%>"/>
+<c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
+<c:set var="orderStatusPending" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
+<c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
+<c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
+
+<s:errors/>
+<s:form beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" method="get" var="searchShippingOrderBean" autocomplete="false">
+  <fieldset class="top_label">
+    <ul>
+      <div class="grouped">
+        <li><label>SO Gateway Order ID</label> <s:text name="shippingOrderGatewayId"/></li>
+        <li><label>SO Order ID</label> <s:text name="shippingOrderId"/></li>
+        <li><label>Tracking ID</label> <s:text name="trackingId"/></li>
+      </div>
+    </ul>
+    <div class="buttons"><s:submit name="searchShippingOrder" value="Search Orders"/></div>
+  </fieldset>
+</s:form>
+
+<c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
+
 
      <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                shippingOrders="${searchShippingOrderBean.shippingOrderList}" hasAction="false" showCourier="true" isSearchShippingOrder = "true"/>
