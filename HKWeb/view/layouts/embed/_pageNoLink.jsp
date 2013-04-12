@@ -7,6 +7,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp"%>
 <s:layout-definition>
@@ -32,7 +34,14 @@
                 <s:param name="<%=param%>" value="<%=value.toString()%>"/>
                 <%
               }
-            } else if(paramValueObj instanceof Date){
+            } else  if (paramValueObj instanceof Map){
+                  Map<String, Object> paramValueMap = (HashMap<String, Object>) paramValueObj;
+                  for (Map.Entry<String, Object> paramValueEntry : paramValueMap.entrySet()) {
+                %>
+                  <s:param name="<%=paramValueEntry.getKey()%>" value="<%=paramValueEntry.getValue()%>"/>
+                    <%
+                  }
+              } else if(paramValueObj instanceof Date){
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 paramValue = sdf.format(paramValueObj);
                  %>

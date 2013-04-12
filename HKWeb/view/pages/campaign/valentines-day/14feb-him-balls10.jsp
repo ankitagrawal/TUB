@@ -70,7 +70,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT1718' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT191' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT194' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT195' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT196' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT197' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2289' />

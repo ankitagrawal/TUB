@@ -12002,6 +12002,61 @@
             insert into role_has_permission values ('CATEGORY_MANAGER','SPLIT_BO');
         </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-1">
+        <createTable tableName="bucket">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="description" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-2">
+        <createTable tableName="bucket_constituents">
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="params_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-3">
+        <createTable tableName="bucket_owner"> <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-4">
+        <createTable tableName="params">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="param_name" type="VARCHAR(45)"/>
+            <column name="param_values" type="VARCHAR(90)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-6">
+        <addPrimaryKey columnNames="bucket_id, params_id" tableName="bucket_constituents"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-7">
+        <addPrimaryKey columnNames="user_id, bucket_id" tableName="bucket_owner"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-48">
+        <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="bucket_constituents" constraintName="fk_bucket_has_params_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-49">
+        <addForeignKeyConstraint baseColumnNames="params_id" baseTableName="bucket_constituents" constraintName="fk_bucket_has_params_params1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="params" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-50">
+        <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="bucket_owner" constraintName="fk_user_has_bucket_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365581845195-51">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="bucket_owner" constraintName="fk_user_has_bucket_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-1">
         <addColumn tableName="cycle_count">
             <column name="brand" type="VARCHAR(45)"/>
