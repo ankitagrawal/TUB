@@ -171,7 +171,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
-        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_OnHold.getId())) {
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
             shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             shippingOrder = getShippingOrderService().save(shippingOrder);
