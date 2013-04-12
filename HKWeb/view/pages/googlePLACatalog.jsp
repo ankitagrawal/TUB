@@ -26,9 +26,10 @@
                         <g:id>${product.id}</g:id>
                         <g:condition>New</g:condition>
                         <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
-                        <c:if test="${product.brand != null}">
-                            <g:brand><![CDATA[${hk:stripHtml(product.brand)}]]</g:brand>
-                        </c:if>
+                        <%--<c:if test="${product.brand != null}">--%>
+                            <%----%>
+                            <%--<g:brand><![CDATA[${hk:stripHtml(product.brand)}]]</g:brand>--%>
+                        <%--</c:if>--%>
                         <g:product_type>
                             ${product.primaryCategory} &gt;${product.secondaryCategory}
                         </g:product_type>
