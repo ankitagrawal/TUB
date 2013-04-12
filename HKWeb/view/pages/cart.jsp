@@ -233,7 +233,6 @@
       <s:layout-component name="content">Please wait</s:layout-component>
     </s:layout-render>
   </div>
-
 </s:layout-component>
 
 <s:layout-component name="cart_title">
@@ -544,7 +543,6 @@
 <%--<s:layout-render name="/layouts/embed/_cartFreebies.jsp" freebieBanner="${cartAction.freebieBanner}"/>--%>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
-
 
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
