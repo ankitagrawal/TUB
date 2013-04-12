@@ -36,7 +36,7 @@
 --/sports-nutrition/accessories/shakers
 --/sports-nutrition/accessories/storage
 --/sports/fitness-accessories/support-gear: Gloves/Straps/Belts
---/sport/apparel:Apparel
+--/sports/apparel:Apparel
 --/sports-nutrition/accessories/tanning-creams-lotions : Tanning Creams/Lotions
 -/sports-nutrition/popular-brands: Popular Brands
 --/brand/sports-nutrition/ON: ON
