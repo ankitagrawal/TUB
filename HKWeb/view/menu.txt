@@ -14,8 +14,8 @@
 --/sports-nutrition/pre-post-workout/creatine : Creatine
 --/sports-nutrition/pre-post-workout/glutamine : Glutamine
 --/sports-nutrition/pre-post-workout/nitric-oxide : Nitric Oxide
----/sports-nutrition/pre-post-workout/carb-blends : Carb Blends
---/sports-nutrition/pre-post-workout/electrolytes : Electrolytes
+---/sports-nutrition/pre-post-workout /carb-blends : Carb Blends
+--/sports-nutrition/pre-post-workout /electrolytes : Electrolytes
 --/sports-nutrition/pre-post-workout/hardcore : Hardcore
 -/sports-nutrition/weight-management: Weight Management
 --/sports-nutrition/weight-management/fat-burner : Fat Burner
@@ -35,32 +35,33 @@
 -/sports-nutrition/accessories: Accessories
 --/sports-nutrition/accessories/shakers
 --/sports-nutrition/accessories/storage
---/sports-nutrition/accessories/gloves-straps-belts : Gloves/Straps/Belts
---/sports-nutrition/accessories/apparel
+--/sports/fitness-accessories/support-gear: Gloves/Straps/Belts
+--/sport/apparel:Apparel
 --/sports-nutrition/accessories/tanning-creams-lotions : Tanning Creams/Lotions
--/sports-nutrition/: Popular Brands
+-/sports-nutrition/popular-brands: Popular Brands
 --/brand/sports-nutrition/ON: ON
 --/brand/sports-nutrition/Dymatize: Dymatize
---/brand/sports-nutrition/Muscletech: Muscle Tech
---/brand/sports-nutrition/MuscleBlaze: Muscle Blaze
---/brand/sports-nutrition/TWINLAB: Twinlab
---/brand/sports-nutrition/Gaspari+Nutrition: Gaspari Nutrition
---/brand/sports-nutrition/Universal+Nutrition: Universal Nutrition
---/brand/sports-nutrition/Ultimate+Nutrition: Ultimate Nutrition
---/brand/sports-nutrition/MusclePharm: MusclePharm
---/brand/sports-nutrition/Nature%27s+Best: Nature's Best
---/brand/sports-nutrition/Weider: Weider
---/brand/sports-nutrition/BSN : BSN
+--/brand/sports-nutrition/Muscletech: MuscleTech
+--/ brand/sports-nutrition/MuscleBlaze: MuscleBlaze
+--/ brand/sports-nutrition/ TWINLAB: Twinlab
+--/ brand/sports-nutrition/ Gaspari+Nutrition: Gaspari Nutrition
+--/ brand/sports-nutrition/ Universal+Nutrition: Universal Nutrition
+--/ brand/sports-nutrition/ Ultimate+Nutrition: Ultimate Nutrition
+--/ brand/sports-nutrition/ MusclePharm: MusclePharm
+--/ brand/sports-nutrition/Nature%27s+Best: Nature's Best
+--/ brand/sports-nutrition/ Weider: Weider
+--/ brand/sports-nutrition/BSN : BSN
 
 
 /health-nutrition
 -/health-nutrition/shop-by-concern: Shop by Condition
---/health-nutrition/shop-by-concern/arthiritis-support
---/health-nutrition/shop-by-concern/diabetes-support
+--/health-nutrition/shop-by-concern/arthritis-support
+--/health-nutrition/shop-by-concern/heart-support : Heart/ Blood Pressure
 --/health-nutrition/shop-by-need/hair-skin-nails:Hair/ Skin/ Nails
 --/health-nutrition/shop-by-concern/fertility-support
 --/health-nutrition/shop-by-need/sexual-wellness
 --/health-nutrition/shop-by-need/bone-muscle:Bone/ Muscle
+--/health-nutrition/shop-by-concern/diabetes-support
 --/health-nutrition/shop-by-concern/eye-health
 --/health-nutrition/shop-by-concern/immunity
 --/health-nutrition/shop-by-concern/other-concerns
@@ -68,11 +69,10 @@
 -/health-nutrition/shop-by-need
 --/health-nutrition/shop-by-need/men-health
 --/health-nutrition/shop-by-need/women-health
+--/health-nutrition/shop-by-need/children
 --/health-nutrition/shop-by-need/prenatal-care
 --/health-nutrition/shop-by-need/post-pregnancy
---/health-nutrition/shop-by-need/children
 --/health-nutrition/shop-by-need/elderly-care
---/health-nutrition/shop-by-need/other-needs
 
 
 -/health-nutrition/dietary-supplements: Shop by Product
@@ -81,7 +81,7 @@
 --/health-nutrition/dietary-supplements/herbs
 --/health-nutrition/dietary-supplements/omegas-fish-oil-flax:Omegas/ Fish Oil/ Flax
 --/health-nutrition/dietary-supplements/anti-oxidants:Anti-Oxidants
---/health-nutrition/dietary-supplements/combination 
+--/health-nutrition/dietary-supplements/combination
 --/health-nutrition/dietary-supplements/condition-specific
 --/health-nutrition/dietary-supplements/other-supplements
 
@@ -93,6 +93,12 @@
 --/health-nutrition/weight-management/sweeteners
 --/health-nutrition/weight-management/diets
 
+-/health-nutrition/alternative-remedies: Ayurveda
+--/health-nutrition/alternative-remedies/formulations
+--/health-nutrition/alternative-remedies/juices
+--/health-nutrition/alternative-remedies/single-herb
+--/health-nutrition/alternative-remedies/green-supplement
+
 -/health-nutrition/healthy-food
 --/health-nutrition/healthy-food/beverages
 --/health-nutrition/healthy-food/organic
@@ -101,14 +107,6 @@
 --/health-nutrition/healthy-food/breakfasts-and-snacks
 --/health-nutrition/healthy-food/food-preparation
 --/health-nutrition/healthy-food/disorder-specific
---/health-nutrition/healthy-food/other-foods
-
--/health-nutrition/alternative-remedies: Ayurveda
---/health-nutrition/alternative-remedies/formulations
---/health-nutrition/alternative-remedies/juices
---/health-nutrition/alternative-remedies/single-herb
---/health-nutrition/alternative-remedies/green-supplement
---/health-nutrition/alternative-remedies/other-remedies
 
 /sports : Sports & Fitness
 -/sports/fitness-accessories
