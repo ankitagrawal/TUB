@@ -13,7 +13,7 @@
 <s:layout-render name="/layouts/default.jsp">
 
 <s:layout-component name="htmlHead">
-  <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+  <link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
 </s:layout-component>
 
 <s:layout-component name="heading">My Account</s:layout-component>
