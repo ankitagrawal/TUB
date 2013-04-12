@@ -177,7 +177,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
 
-            this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), null);
+            this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), cancellationRemark);
         } else {
             String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
             logger.info(comment);

@@ -140,8 +140,8 @@
 		style="font-weight: bold; font-size: 14px;">Do you have a
 	Bi-focal power?</div>
 	<div class="floatleft hkField" style="margin-left: 90px;"><input
-		type="radio" id="biFocalYes" name="biFocalPowers" /> Yes <input
-		type="radio" id="biFocalNo" name="biFocalPowers" checked="checked" />
+		type="radio" id="biFocalYes" name="biFocalPowers" class="biFocalRadio" /> Yes <input
+		type="radio" id="biFocalNo" name="biFocalPowers" checked="checked" class="biFocalRadio" />
 	No</div>
 	</div>
 	<div class="clear"></div>
@@ -158,14 +158,14 @@
 					<div class="floatleft hkLabel" style="width: 99px;">${configOption.displayName}</div>
 					<div class="floatleft hkField"><select
 						id="${configOption.id}" name="${configOption.name}"
-						class="eyeparamselect">
+						class="eyeparamselect biFocalParam">
 				</c:when>
 				<c:otherwise>
 					<div class="floatleft hkLabel"
 						style="width: 99px; margin-left: 70px;">${configOption.displayName}</div>
 					<div class="floatleft hkField"><select
 						id="${configOption.id}" name="${configOption.name}"
-						class="eyeparamselect right">
+						class="eyeparamselect right biFocalParam">
 				</c:otherwise>
 			</c:choose>
 			<option value="999" price="999">Please Select</option>
@@ -815,6 +815,14 @@ $("#addPowers").click(function() {
       }
     });
   });
+
+	$('.biFocalRadio').change(function(){
+		if ($('input[name=biFocalPowers]:checked').attr('id') == 'biFocalNo') {
+			$.each($(".biFocalParam"), function(index, value) {
+				$(value).val(999);
+			});
+		}
+	});
 
   $("#buyNow").click(function() {
     var params = {},data = [],idx = 0;

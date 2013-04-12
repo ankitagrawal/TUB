@@ -132,6 +132,19 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
                 "select pv from ProductVariant pv left join pv.product.categories c where c.name = :category and pv.deleted != 1 order by pv.orderRanking asc").setString(
                 "category", category).list();
     }
+    
+    
+    @Transactional
+    public void markProductVariantsAsDeleted(Product product) {
+    	String productId = product.getId();
+    	List<ProductVariant> variants = getProductVariantsByProductId(productId);
+		if (variants != null) {
+			for (ProductVariant productVariant : variants) {
+				productVariant.setDeleted(true);
+				super.save(productVariant);
+			}
+		}
+    }
 
     public List<ProductVariant> getAllProductVariant() {
         return getAll(ProductVariant.class);

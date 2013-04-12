@@ -2,6 +2,7 @@ package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.ShippingOrderStatusMapping;
@@ -27,7 +28,9 @@ import java.util.*;
 public class ShippingOrderStatusChangeAction extends BaseAction{
     private String gatewayOrderId;
     private EnumShippingOrderStatus enumSoUpdatedStatusId;
+    private String currentStatus;
     ShippingOrder shippingOrder;
+
     private static Logger logger = LoggerFactory.getLogger(ShippingOrderStatusChangeAction.class);
 
     List<EnumShippingOrderStatus> SOMapping = new ArrayList<EnumShippingOrderStatus>();
@@ -61,9 +64,10 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     @Secure(hasAnyPermissions = {PermissionConstants.OPS_MANAGER_SRS_CHANGE_SOSTATUS}, authActionBean = AdminPermissionAction.class)
     public Resolution saveStatus(){
         if(shippingOrder!=null){
+           currentStatus=shippingOrder.getShippingOrderStatus().getName();
           shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());
           getBaseDao().save(shippingOrder);
-
+          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null,"Current Status-->"+currentStatus +" New Status-->"+enumSoUpdatedStatusId.getName());
         }
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully!!!"));
         return new RedirectResolution(ShippingOrderStatusChangeAction.class);
@@ -99,4 +103,13 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     public void setEnumSoUpdatedStatusId(EnumShippingOrderStatus enumSoUpdatedStatusId) {
         this.enumSoUpdatedStatusId = enumSoUpdatedStatusId;
     }
+
+    public String getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
 }

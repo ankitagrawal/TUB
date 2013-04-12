@@ -16,7 +16,7 @@
         <div class="hkDeliveryWorksheetBox">
                 <fieldset class="right_label">
                    <h2 class='prod_title' itemprop="name">Order Details:</h2>
-                    <ul>
+                    <ul class="orderdetailBlock">
 	                    <li>
 		                    <label class="nameLabel">Order Id : </label>
 		                    <label class="valueLabel">${hkdBean.consignment.cnnNumber}</label>
@@ -88,22 +88,27 @@
 	    font-weight: bold;
 	    font-size:15px;
     }
+    .orderdetailBlock{
+        width:450px;
+        float:left;
+    }
 
     .valueLabel {
         margin-left: 10px;
-        width: 150px;
+        width: 300px;
+        float:right;
+        word-wrap:break-word ;
     }
 
     .row {
         padding-bottom: 40px;
     }
 	.column{
-		padding-bottom: 10px;
-		padding-top:10px;
 		text-align:center;
 		padding-left:6px;
 		padding-right:6px;
 	}
+    table.zebra_vert td{ padding-bottom: 10px; padding-top: 10px; }
 
 </style>
 

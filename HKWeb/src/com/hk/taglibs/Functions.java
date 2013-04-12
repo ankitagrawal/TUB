@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoServi
 import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
@@ -674,14 +675,14 @@ public class Functions {
     }
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
-        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "proteins", "creatine", "weight-gainer", "dietary-supplements");
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
     }
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
-		List<String> thirdChildList = Arrays.asList("proteins", "sunglasses", "weight-gainer");
+		List<String> thirdChildList = Arrays.asList("protein", "sunglasses", "weight-gainer");
 		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
 		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
@@ -809,5 +810,15 @@ public class Functions {
 			return null;
 		}
 	}
+
+    public static List<ShippingOrder> getActionAwaitingSO(Order order){
+       List<ShippingOrder> actionAwaitingSO = new ArrayList<ShippingOrder>();
+        for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+            if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                actionAwaitingSO.add(shippingOrder);
+            }
+        }
+        return actionAwaitingSO;
+    }
 
 }

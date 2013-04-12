@@ -8,10 +8,10 @@ import com.hk.domain.courier.Courier;
 
 public enum EnumCourier {
 
-    DTDC_Plus(10L, "DTDC Plus"),
+    DotZot_Express(10L, "DotZot Express"),
     DTDC_Lite(11L, "DTDC Lite"),
     DTDC_COD(12L, "DTDC COD"),
-    DTDC_Surface(13L, "DTDC Surface"),
+    DotZot_Economy(13L, "DotZot Economy"),
     Aramex(20L, "Aramex"),
     Speedpost(30L, "Speed Post"),
     Delhivery(40L, "Delhivery"),
@@ -88,8 +88,8 @@ public enum EnumCourier {
         List<Long> dtdcCourierIds = new ArrayList<Long>();
         dtdcCourierIds.add(EnumCourier.DTDC_COD.getId());
         dtdcCourierIds.add(EnumCourier.DTDC_Lite.getId());
-        dtdcCourierIds.add(EnumCourier.DTDC_Plus.getId());
-        dtdcCourierIds.add(EnumCourier.DTDC_Surface.getId());
+        dtdcCourierIds.add(EnumCourier.DotZot_Economy.getId());
+        dtdcCourierIds.add(EnumCourier.DotZot_Express.getId());
         return dtdcCourierIds;
     }
 
