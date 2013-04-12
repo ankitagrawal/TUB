@@ -125,7 +125,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
         // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed
         // cannot be rendered.
         // Therefore, the object again needs to be converted to a map.
-        toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
+//        toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
         return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
     }
 
