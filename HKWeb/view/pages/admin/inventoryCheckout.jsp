@@ -153,7 +153,7 @@
 		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
 			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
 			              <s:param name="skuGroup" value="${skuGroup.id}"/>
-                          <s:param name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
+                          <%--<s:param name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>--%>
 			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
 		              </s:link>
 	              </td>
