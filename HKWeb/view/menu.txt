@@ -55,7 +55,7 @@
 
 /health-nutrition
 -/health-nutrition/shop-by-concern: Shop by Condition
---/health-nutrition/shop-by-concern/arthiritis-support
+--/health-nutrition/shop-by-concern/arthritis-support
 --/health-nutrition/shop-by-concern/diabetes-support
 --/health-nutrition/shop-by-need/hair-skin-nails:Hair/ Skin/ Nails
 --/health-nutrition/shop-by-concern/fertility-support
