@@ -43,7 +43,6 @@
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PARKAV6' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PARKAV7' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PARKAV8' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PARX1' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PG014' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PG015' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PG016' />
