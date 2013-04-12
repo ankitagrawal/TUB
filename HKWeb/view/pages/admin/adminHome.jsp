@@ -284,7 +284,7 @@
 
     <h3><s:link beanclass="com.hk.web.action.report.BinAllocationReport">Generate Bin Allocation Report</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.codbridge.UserCallResponseSummaryAction"
+    <h3><s:link beanclass="com.hk.web.action.admin.hkbridge.UserCallResponseSummaryAction"
                 event="pre">Knowlarity/EffortBpo Order Summary</s:link></h3>
 
 </div>

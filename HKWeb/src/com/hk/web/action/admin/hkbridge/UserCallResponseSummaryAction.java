@@ -1,4 +1,4 @@
-package com.hk.web.action.admin.codbridge;
+package com.hk.web.action.admin.hkbridge;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
@@ -18,7 +18,6 @@ import com.hk.hkjunction.observers.OrderLifecycleSummary;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,7 +46,7 @@ public class UserCallResponseSummaryAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-        return new ForwardResolution("/pages/admin/codbridge/userCallResponseDashboard.jsp");
+        return new ForwardResolution("/pages/admin/hkbridge/userCallResponseDashboard.jsp");
     }
 
     public Resolution getUserCallResponseSummary() {
@@ -84,7 +83,7 @@ public class UserCallResponseSummaryAction extends BaseAction {
             logger.error("Exveption " + ex.getStackTrace());
         }
 
-        return new ForwardResolution("/pages/admin/codbridge/userCallResponseDashboard.jsp");
+        return new ForwardResolution("/pages/admin/hkbridge/userCallResponseDashboard.jsp");
 
     }
 
