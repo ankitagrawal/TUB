@@ -1,4 +1,4 @@
-GRN for Purchase Order # ${grn.purchaseOrder.id} is created
+GRN for Purchase Order # ${grn.purchaseOrder.id}
 <html>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -10,16 +10,20 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} is created
 
 <p style="margin-bottom:1em">
   Goods are received for Purchase Order # ${grn.purchaseOrder.id}.<br/>
-  Supplier = ${grn.purchaseOrder.supplier.name} <br/>
   <#if grn.purchaseOrder.supplier.name??>
-   PO Fill Rate = ${grn.purchaseOrder.fillRate};
+   Supplier = ${grn.purchaseOrder.supplier.name} <br/>
   </#if>
+  PO Fill Rate = ${grn.purchaseOrder.fillRate};
   Approx. payable amount = ${grn.purchaseOrder.payable} <br/>
   <#if grn.purchaseOrder.extraInventory??>
    Extra Inventory = ${grn.purchaseOrder.extraInventory.id};
+   <#else>
+   Extra Inventory = N/A;
   </#if>
   <#if grn.purchaseOrder.estDelDate??>
   Est. Delivery Date = ${grn.purchaseOrder.estDelDate} <br/>
+  <#else>
+  Est. Delivery Date = N/A <br/>
   </#if>
 </p>
 

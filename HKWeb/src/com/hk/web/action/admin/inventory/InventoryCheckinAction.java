@@ -17,6 +17,7 @@ import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
@@ -225,7 +226,13 @@ public class InventoryCheckinAction extends BaseAction {
                     getInventoryService().checkInventoryHealth(productVariant);
 
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
-                    	
+                    	for(GrnLineItem grnLItem : grn.getGrnLineItems()){
+        					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
+        						if(grnLItem.getSku().getId().equals(poLineItem.getSku().getId())){
+        							grnLItem.setFillRate(poLineItem.getFillRate());
+        						}
+        					}
+        				}
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
                         getAdminEmailManager().sendGRNEmail(grn);
