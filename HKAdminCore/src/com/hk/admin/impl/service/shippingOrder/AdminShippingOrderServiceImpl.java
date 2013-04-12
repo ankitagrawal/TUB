@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,18 +168,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return null;
     }
-    
-    
-    
-    
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
-        getAdminInventoryService().reCheckInInventory(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_OnHold.getId())) {
+            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+            getAdminInventoryService().reCheckInInventory(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        }
         return shippingOrder;
     }
 
