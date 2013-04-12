@@ -32,11 +32,11 @@
     pageContext.setAttribute("topCategoryNameList", topCategoryNameList);
   %>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'sports-nutrition') || hk:collectionContains(categoryNameList, 'creatine') || hk:collectionContains(categoryNameList, 'proteins')}">--%>
-    <%--<jsp:include page="/categoryBanners/sportsNutrition.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/sportsNutrition.jsp"/>--%>
   <%--</c:if>--%>
 
-<%--  <c:if test="${hk:collectionContains(topCategoryNameList, 'beauty')}">
-    --%><%--<jsp:include page="/categoryBanners/beautyIntroDiscount.jsp"/>--%><%--
+  <%--  <c:if test="${hk:collectionContains(topCategoryNameList, 'beauty')}">
+      --%><%--<jsp:include page="/categoryBanners/beautyIntroDiscount.jsp"/>--%><%--
     <jsp:include page="/categoryBanners/beautyHatTrickDisocunt.jsp"/>
   </c:if>--%>
 
@@ -56,84 +56,87 @@
   </c:if>
 
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'fitness-equipment')}">--%>
-    <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'treadmills')}">--%>
-   <%--<jsp:include page="/categoryBanners/treadmillsCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/treadmillsCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'crosstrainers')}">--%>
-   <%--<jsp:include page="/categoryBanners/crosstrainersCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/crosstrainersCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'exercise-bike')}">--%>
-   <%--<jsp:include page="/categoryBanners/exerciseBikeCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/exerciseBikeCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'rowers')}">--%>
-   <%--<jsp:include page="/categoryBanners/rowersCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/rowersCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'home-gym')}">--%>
-   <%--<jsp:include page="/categoryBanners/homeGymCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/homeGymCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'bench-equipments')}">--%>
-   <%--<jsp:include page="/categoryBanners/benchEquipmentsCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/benchEquipmentsCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'heart-rate-monitors')}">--%>
-   <%--<jsp:include page="/categoryBanners/heartRateMonitorsCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/heartRateMonitorsCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'miscellaneous-equipments')}">--%>
-   <%--<jsp:include page="/categoryBanners/miscellaneousEquipmentsCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/miscellaneousEquipmentsCallback.jsp"/>--%>
   <%--</c:if>--%>
   <%--<c:if test="${hk:collectionContains(categoryNameList, 'tt-tables')}">--%>
-   <%--<jsp:include page="/categoryBanners/ttTablesCallback.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/ttTablesCallback.jsp"/>--%>
   <%--</c:if>--%>
 
-   <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'nutrition')}">
     <%--<jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>--%>
-     <jsp:include page="/categoryBanners/nutriCallback.jsp"/> 
+    <jsp:include page="/categoryBanners/nutriCallback.jsp"/>
     <%--<jsp:include page="/categoryBanners/fitnessAccessoriesCashback.jsp"/>--%>
-  </c:if> 
+  </c:if>
 
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'services')}">
-      <%--<jsp:include page="/categoryBanners/servicesDiscount.jsp"/>--%>
-    </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'services')}">
+    <%--<jsp:include page="/categoryBanners/servicesDiscount.jsp"/>--%>
+  </c:if>
 
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">
-      <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
-      <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
-    </c:if>
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'home-devices')}">
-      <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
-      <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>                       
-    </c:if>
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
-      <%--<jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>--%>
-    </c:if>
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
-      <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
-      <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
-    </c:if>
-    <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
-      <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
-      <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
-      <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>
-    </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'sports')}">
+    <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
+    <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'home-devices')}">
+    <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
+    <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
+    <%--<jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>--%>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
+    <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
+    <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+  </c:if>
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
+    <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
+    <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
+    <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>
+  </c:if>
 
-   <c:if test="${hk:collectionContains(categoryNameList, 'Soulflower')}">
+  <c:if test="${hk:collectionContains(categoryNameList, 'Soulflower')}">
     <jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>
-   </c:if>
+  </c:if>
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'beauty')}">
-   <jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>
+    <jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>
   </c:if>
 
   <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
-   <jsp:include page="/categoryBanners/personalCareTopBanner.jsp"/>
+    <jsp:include page="/categoryBanners/personalCareTopBanner.jsp"/>
   </c:if>
 
   <%--<c:if test="${hk:collectionContains(brandList, 'Soulflower')}">--%>
-   <%--<jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>--%>
+  <%--<jsp:include page="/categoryBanners/beautyBrandDiscount.jsp"/>--%>
   <%--</c:if>--%>
 
   <c:if test="${hk:collectionContains(categoryNameList, 'fitness-accessories')}">
   </c:if>
 
+  <c:if test="${hk:collectionContains(categoryNameList, 'pain-management')}">
+    <jsp:include page="/categoryBanners/healthDevices.jsp"/>
+  </c:if>
 </s:layout-definition>
