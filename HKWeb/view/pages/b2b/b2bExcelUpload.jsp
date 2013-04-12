@@ -13,8 +13,8 @@
 
 <s:useActionBean
 	beanclass="com.hk.web.action.core.b2b.B2BAddToCartAction" var="atc" />
-<s:useActionBean
-	beanclass="com.hk.web.action.core.b2b.B2BCartAction" var="boa" />
+<s:useActionBean beanclass="com.hk.web.action.core.b2b.B2BCartAction"
+	var="boa" />
 
 <style>
 .excelDataTable {
@@ -53,11 +53,27 @@
 	width: 960px;
 }
 
+.ExcelSheetInvalidDataDiv {
+	margin: 20px 0;
+	text-align: center;
+	width: 960px;
+	font-size: 13px;
+}
+
 .buttonPosition {
 	position: relative;
 	float: left;
 	left: 40%;
 }
+
+.productVariantId {
+	color: red;
+}
+
+.variantDetailLabel{
+	text-align: center;
+}
+
 </style>
 
 
@@ -70,19 +86,14 @@
 					<c:when test="${fn:length(boa.b2bProductListFromExcel) lt 1}">
 						<div class="b2bExcelDiv">Seems like there was an issue in
 							parsing the file</div>
-							<div class="b2bExcelDiv">Recheck the format of the file.</div>
-							
-							<div class="buttons" style="margin-top: 70px;">
+						<div class="b2bExcelDiv">Recheck the format of the file and upload again.</div>
+
+						<div class="buttons" style="margin-top: 70px;">
 							<input type="submit" name="cancel" value="cancel"
 								class="addToCartButton cta button_green buttonPosition" />
-
-
 						</div>
-							
 					</c:when>
-
 					<c:otherwise>
-
 						<div class="b2bExcelDiv">Following are the details of the
 							order</div>
 						<table class="excelDataTable">
@@ -93,45 +104,73 @@
 									<th>Quantity</th>
 								</tr>
 							</thead>
-
 							<tbody>
 								<c:if test="${(boa.b2bProductListFromExcel)!=null}">
 									<c:forEach items="${boa.b2bProductListFromExcel}"
 										var="b2bOrderList" varStatus="item">
 										<tr class="bodyTr" style="background-color: #F2F7FB">
 											<td>${item.count}.</td>
-											<td><input
-												name="productVariantList[${item.count-1}]"
+											<td><input name="productVariantList[${item.count-1}]"
 												type="hidden" value="${b2bOrderList.productId}" />${b2bOrderList.productId}</td>
 											<td><input
-												name="productVariantList[${item.count-1}].qty"
-												type="hidden" value="${b2bOrderList.quantity}" />${b2bOrderList.quantity}</td>
+												name="productVariantList[${item.count-1}].qty" type="hidden"
+												value="${b2bOrderList.quantity}" />${b2bOrderList.quantity}</td>
 											<c:set var="newIndex" value="${item.count}" scope="page" />
 									</c:forEach>
 								</c:if>
 							</tbody>
 						</table>
 						<c:if test="${fn:length(boa.b2bInvalidProductList) gt 0}">
-							<p>
-								These products variants are invalid. Please check them and then
-								upload again.  </p>
-                <p style="color:red;">
-								<c:forEach items="${boa.b2bInvalidProductList}"	var="invalidVariants" varStatus="item">
-	                ${invalidVariants.productId} ,
+							<div class="ExcelSheetInvalidDataDiv">
+								<label class="variantDetailLabel">These products variants are invalid. Check their Quantities/Ids
+									and then upload again.</label>
+									<br>
+									<br>
+								<label class="productVariantId">
+									<c:forEach items="${boa.b2bInvalidProductList}"
+										var="invalidVariants" varStatus="item">
+	                					${invalidVariants.productId},
 								</c:forEach>
-              </p>
-
+								</label>
+							</div>
 						</c:if>
+						<c:if test="${fn:length(boa.b2bOutOfStockProductList) gt 0}">
+							<div class="ExcelSheetInvalidDataDiv">
+								<label class="variantDetailLabel">These products variants are Out Of Stock. Please remove  
+									and then upload again.</label>
+									<br>
+									<br>
+								<label class="productVariantId">
+									<c:forEach items="${boa.b2bOutOfStockProductList}"
+										var="invalidVariants" varStatus="item">
+	                					${invalidVariants.productId},
+								</c:forEach>
+								</label>
+							</div>
+						</c:if>
+						<c:if test="${fn:length(boa.b2bInventoryNotFoundProductList) gt 0}">
+							<div class="ExcelSheetInvalidDataDiv">
+								<label class="variantDetailLabel">Inventory not found for these product variants. Please remove these 
+									and then upload again.</label>
+									<br>
+									<br>
+								<label class="productVariantId">
+									<c:forEach items="${boa.b2bInventoryNotFoundProductList}"
+										var="invalidVariants" varStatus="item">
+	                					${invalidVariants.productId},
+								</c:forEach>
+								</label>
+							</div>
+						</c:if>
+						
 						<div class="buttons" style="margin-top: 70px;">
 
-							<c:if test="${fn:length(boa.b2bInvalidProductList) lt 1}">
+							<c:if test="${boa.excelFileValidated}">
 								<input type="submit" name=b2bAddToCart value="Submit"
 									class="addToCartButton cta button_green buttonPosition" />
 							</c:if>
 							<input type="submit" name="cancel" value="cancel"
 								class="addToCartButton cta button_green buttonPosition" />
-
-
 						</div>
 					</c:otherwise>
 				</c:choose>

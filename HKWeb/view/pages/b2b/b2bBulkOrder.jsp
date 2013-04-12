@@ -78,23 +78,62 @@
     $('.qty').live("blur", function () {
       var row = $(this).parent().parent();
       var quantity = parseFloat(row.find('.qty').val());
+      var productVariantId = row.find('.variant').val();
+      if(quantity>=0 && typeof quantity === 'number' && quantity % 1 == 0){
       var price = parseFloat(row.find(".mrp").html());
       if (quantity != null && quantity >= 0 && !isNaN(price)) {
         var totalPrice = parseFloat(quantity * price);
-        row.find(".totalPrice").html(totalPrice);
+        row.find(".totalPrice").html(totalPrice.toFixed(2));
       } else {
         row.find(".totalPrice").html(0);
       }
-
-      var productVariantId = row.find('.variant').val();
       updateTotal('.totalPrice', "#totalPayableAmount", productVariantId, quantity);
+      }
+      else{
+    	  alert('Please provide an integral quantity');
+    	  quantity = 0;
+    	  row.find('.qty').val(0);
+    	  row.find(".totalPrice").html(0);
+    	  updateTotal('.totalPrice', "#totalPayableAmount", productVariantId, quantity);
+      }
     });
-
+    
     $('.variant').live("blur", function () {
-
+    	var row = $(this).parent().parent();
+    	var productVariantId = row.find('.variant').val();
+    	var rIndex=row.get(0).children[0].innerHTML-1;
+    	var value = true;
+    	$('#poTable  > .bodyTr').each(
+				function(currIndex,ob) {
+					if(productVariantId!=null&&productVariantId!=""){
+					if(rIndex!=currIndex)
+						{
+						if(!$(this).find(".variant").is("input")){
+							if ($(this).find(".variant").get(0).innerHTML == productVariantId){
+								alert('Cannot add mutiple rows for same Variant');
+								value= false;
+								return value;
+								}
+							}
+							else{
+								if($(this).get(0).children[0].innerHTML!=row.get(0).children[0].innerHTML){
+								if ($(this).find(".variant").val() == productVariantId){
+									alert('Cannot add mutiple rows for same Variant');
+									value= false;
+									return value;
+								}
+						}
+							}
+					}
+				}
+										
+		}); 
+		
+		if(!value){
+			row.find(".variant").val("");
+			productVariantId = "";
+		}
       $("#variantDetailsInavlid").html('');
-      var row = $(this).parent().parent();
-      var productVariantId = row.find('.variant').val();
       var self1 = row.find(".pvDetails");
       var self2 = row.find(".mrp");
       var self3 = row.find(".totalPrice");
@@ -171,6 +210,7 @@
             }
 
           });
+      
     });
 
     $('#excelUpload').live("click", function() {
@@ -180,7 +220,7 @@
         return false;
       }
     });
-
+    
   });
 
   function lookup(lookupId) {
@@ -268,7 +308,7 @@
                 name="productVariantList[${item.count-1}]"
                 value="${lineItem.productVariant.id}"/>
             <td>${item.count}.</td>
-            <td>${productVariant.id}</td>
+            <td class="variant">${productVariant.id}</td>
             <td align="center"><span id="pvDetails" class="pvDetails">${product.name}
 											<br> <em>
                   ${productVariant.optionsCommaSeparated} </em>
