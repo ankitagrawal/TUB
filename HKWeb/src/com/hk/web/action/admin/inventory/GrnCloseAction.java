@@ -51,7 +51,6 @@ public class GrnCloseAction extends BaseAction {
     				}
     			}
     			getAdminEmailManager().sendGRNEmail(grn);
-                
             }
             getBaseDao().saveOrUpdate(checkedInGrns);
             
