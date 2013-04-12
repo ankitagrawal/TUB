@@ -50,4 +50,11 @@ public interface LoyaltyProgramService {
 	 * @return
 	 */
 	public List<Category> getLoyaltyCatalog();
+
+	/**
+	 * This method returns the list of Loyalty products based on a given category.
+	 * @param categoryName
+	 * @return
+	 */
+	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
 }

@@ -46,4 +46,26 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		return list;
 	}
 
+	@Override
+	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName) {
+
+		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.INNER_JOIN);
+		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.INNER_JOIN);
+		criteria.createAlias("prod.categories", "category", CriteriaSpecification.INNER_JOIN);
+		criteria.add(Restrictions.eq("category.name", categoryName));
+
+/*		ProjectionList projectionsList = Projections.projectionList();
+		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
+		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
+
+		criteria.setProjection(Projections.distinct(projectionsList));
+		criteria.setResultTransformer(Transformers.aliasToBean(Category.class));
+*/
+		
+		@SuppressWarnings("unchecked")
+		List<LoyaltyProduct> productList = this.findByCriteria(criteria);
+		return productList;
+	}
+
 }

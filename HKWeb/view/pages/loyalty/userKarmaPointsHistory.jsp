@@ -7,10 +7,16 @@
  --%>
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" var="userKarmaHA"/>
 <s:layout-render name="/pages/loyalty/layout.jsp">
-  <s:layout-component name="heading">History</s:layout-component>
-  
+ 
   <s:layout-component name="contents">
-
+  <div id="memberInfo" style="float: left;">
+  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.user.createDate}" /> | Spent: | Points earned: | Redeemed: | <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
+  </div>
+  <hr>
+  <div id="levelInfo" style="float: left;"> 
+  To move up a level you need (to be mentioned) points. | Points that will expire in next 30 days: (to be mentioned points.)	    	
+  </div>
+	<div style="float: center;"><h3>History</h3></div>
     <div class="main-inn-right">
 
       <div class="round-cont">
@@ -40,7 +46,10 @@
                                 <fmt:formatDate value="${karmaProfile.creationTime}" />
                             </td>
                             <td>
-                                    To be added!!
+                                    <c:forEach items="${karmaProfile.userOrderKey.order.cartLineItems}" var="items">
+   										${items.productVariant.product.name} , 		
+                                    </c:forEach>
+                                    
                             </td>
                             <td>
                                     ${karmaProfile.transactionType}

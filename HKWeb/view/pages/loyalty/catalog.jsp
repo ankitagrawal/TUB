@@ -13,7 +13,6 @@
 <link href="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/css/accordian_navs.css" rel="stylesheet">
 <link href="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/css/grid.css" rel="stylesheet">
 <link href="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" rel="stylesheet">
-<%@include file="pages/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" %>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 
  <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
@@ -28,37 +27,73 @@ pageContext.setAttribute("isSecure", isSecure);
 %>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
+
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca"/>
+
   <stripes:layout-component name="lhsContent">
   <div class="embedMargin priceFilterContainer">
-              <div class="priceFilterHeading">BRANDS</div>
+              <div class="priceFilterHeading">Sort By Points</div>
               <div class="brandsContainer jspScrollable" style="overflow: hidden; padding: 0px; width: 218px;" tabindex="0">
                 
-                
-                
-                
-                
-                
-              <div class="jspContainer" style="width: 218px; height: 220px;"><div class="jspPane" style="padding: 20px 0px; width: 210px; top: 0px;"><div class="priceRange">
+              <div class="jspContainer" style="width: 218px; height: 220px;">
+              <div class="jspPane" style="padding: 20px 0px; width: 210px; top: 0px;">
+			<%-- <c:forEach items="${lca.categories}" var="loyaltyCategory">
+				<div class="priceRange">
                   <input type="checkbox">
-                  <span>Biocare (52)</span>
-                </div><div class="priceRange">
+                  <span  id= "categoryName">${loyaltyCategory.displayName}</span>
+			     </div>
+			 </c:forEach>
+			 --%>
+				<div class="priceRange">
                   <input type="checkbox">
-                  <span>Ester (17)</span>
-                </div><div class="priceRange">
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="pre" title="Show History">less than 100</s:link>
+                  </span>
+			     </div>
+				<div class="priceRange">
                   <input type="checkbox">
-                  <span>Health aid (52)</span>
-                </div><div class="priceRange">
+                  <span  id= "pointRange">101-200</span>
+			     </div>
+				<div class="priceRange">
                   <input type="checkbox">
-                  <span>Ivy's (42)</span>
-                </div><div class="priceRange">
+                  <span  id= "pointRange">201-300</span>
+			     </div>
+				<div class="priceRange">
                   <input type="checkbox">
-                  <span>Nature's bounty (03)</span>
-                </div><div class="priceRange">
-                  <input type="checkbox">
-                  <span>Nature's science (29)</span>
-                </div></div><div class="jspVerticalBar"><div class="jspCap jspCapTop"></div><div class="jspTrack" style="height: 220px; left: -10px;"><div class="jspDrag" style="height: 30px; width: 7px;"><div class="jspDragTop"></div><div class="jspDragBottom"></div></div></div><div class="jspCap jspCapBottom"></div></div></div></div>
+                  <span  id= "pointRange">301 and above</span>
+			     </div>
+			 
+			<div class="jspVerticalBar"><div class="jspCap jspCapTop"></div>
+			<div class="jspTrack" style="height: 220px; left: -10px;">
+			<div class="jspDrag" style="height: 30px; width: 7px;">
+			<div class="jspDragTop"></div><div class="jspDragBottom"></div></div>
+			</div>
+			<div class="jspCap jspCapBottom"></div></div></div></div>
             </div>
+  </div>
   
+  <div class="embedMargin priceFilterContainer">
+              <div class="priceFilterHeading">Sort By Category</div>
+              <div class="brandsContainer jspScrollable" style="overflow: hidden; padding: 0px; width: 218px;" tabindex="0">
+                
+              <div class="jspContainer" style="width: 218px; height: 220px;">
+              <div class="jspPane" style="padding: 20px 0px; width: 210px; top: 0px;"><div class="priceRange">
+
+			<c:forEach items="${lca.categories}" var="loyaltyCategory">
+				<div class="priceRange">
+                  <input type="checkbox">
+                  <span  id= "categoryName">${loyaltyCategory.displayName}</span>
+			     </div>
+			 </c:forEach>
+			</div>
+			<div class="jspVerticalBar"><div class="jspCap jspCapTop"></div>
+			<div class="jspTrack" style="height: 220px; left: -10px;">
+			<div class="jspDrag" style="height: 30px; width: 7px;">
+			<div class="jspDragTop"></div><div class="jspDragBottom"></div></div>
+			</div>
+			<div class="jspCap jspCapBottom"></div></div></div></div>
+            </div>
+  </div>
   </stripes:layout-component>
   
   <stripes:layout-component name="rhsContent">
@@ -98,7 +133,6 @@ pageContext.setAttribute("isSecure", isSecure);
         });
       });
     </script>
-    <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca"/>
     <div id="successToolTip" class="row" style="display: none;">
       <div class="span12">
         <div class="alert alert-success">

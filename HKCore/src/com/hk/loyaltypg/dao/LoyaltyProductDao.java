@@ -16,5 +16,10 @@ public interface LoyaltyProductDao extends BaseDao {
 	 */
 	public List<Category> getCategoryForLoyaltyProducts();
 	
-	
+
+	/**
+	 * @param categoryName
+	 * @return
+	 */
+	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
 }
