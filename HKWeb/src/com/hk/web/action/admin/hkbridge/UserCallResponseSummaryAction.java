@@ -30,8 +30,8 @@ import java.util.Date;
 public class UserCallResponseSummaryAction extends BaseAction {
     private static Logger logger = LoggerFactory.getLogger(UserCallResponseSummaryAction.class);
 
-    @Value("#{hkEnvProps['" + Keys.Env.knowlarityEffortBpoRestUrl + "']}")
-    String userCallRestUrl;
+    @Value("#{hkEnvProps['" + Keys.Env.hkBridgeRestUrl + "']}")
+    String hkBridgeRestUrl;
 
     private int totalCODCount;
     private int totalEfforBpoCODCount;
@@ -52,7 +52,7 @@ public class UserCallResponseSummaryAction extends BaseAction {
     public Resolution getUserCallResponseSummary() {
 
         try {
-            String urlStr = userCallRestUrl + "summary";
+            String urlStr = hkBridgeRestUrl + "summary";
             ClientRequest request = new ClientRequest(urlStr);
             String startDateString = simpleDateFormat.format(startDate);
             String endDateString = simpleDateFormat.format(endDate);
