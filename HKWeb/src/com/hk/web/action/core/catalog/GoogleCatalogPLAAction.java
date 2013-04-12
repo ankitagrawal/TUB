@@ -35,6 +35,7 @@ public class GoogleCatalogPLAAction extends BaseAction {
     public Resolution pre() {
 
         List<String> categories = new ArrayList<String>();
+        //todo: For now these are hard-coded
         categories.add("workout-essentials");
         categories.add("accessories");
         categories.add("healthy-food");

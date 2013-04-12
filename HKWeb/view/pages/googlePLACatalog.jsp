@@ -29,7 +29,19 @@
                         <c:if test="${product.brand != null}">
                             <g:brand><![CDATA[${hk:stripHtml(product.brand)}]]</g:brand>
                         </c:if>
-
+                        <g:product_type>
+                            ${product.primaryCategory}/${product.secondaryCategory}
+                        </g:product_type>
+                        <g:availability>
+                            <c:choose>
+                                <c:when test="${product.outOfStock}">
+                                    out of stock
+                                </c:when>
+                                <c:otherwise>
+                                     in stock
+                                </c:otherwise>
+                            </c:choose>
+                        </g:availability>
                         <g:image_link>
                             <c:set var="imageId" value="${product.mainImageId}"/>
                             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
