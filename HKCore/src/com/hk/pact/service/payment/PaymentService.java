@@ -29,6 +29,10 @@ public interface PaymentService {
 
     public List<PaymentStatus> listWorkingPaymentStatuses();
 
+    public List<PaymentStatus> listActionablePaymentStatuses();
+
+    public List<PaymentStatus> listSuccessfulPaymentStatuses();
+
     public List<PaymentMode> listWorkingPaymentModes();
 
     /**

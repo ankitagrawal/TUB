@@ -40,21 +40,8 @@
 <div class="cl"></div>
 
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS1' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS17' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS18' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS19' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS2' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS20' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS21' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS22' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS23' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS24' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS25' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS26' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS27' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS28' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS29' />
-    <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS3' />
+        <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS2' />
+        <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS3' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ADIDAS4' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BLISS20' />
     <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BLISS21' />

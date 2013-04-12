@@ -114,9 +114,9 @@
 	            <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
 	              <li id="tab5">Cheque / Bank Deposit</li>
 	            </shiro:hasRole>
-	            <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
+	            <c:if test="${orderSummary.pricingDto.grandTotalPayable > 20000}">
                 <li id="tab5">NEFT Deposit</li>
-	            </shiro:lacksRole>
+	            </c:if>
             </c:if>
         </shiro:lacksRole>
         <shiro:hasRole name="<%=RoleConstants.GOD%>">

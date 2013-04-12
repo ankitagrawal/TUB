@@ -132,7 +132,12 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CHANGE_COURIER = "OPS_MANAGER_SRS_CHANGE_COURIER";
     public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
     public static final String OPS_MANAGER_SRS_CHANGE_AWB = "OPS_MANAGER_SRS_CHANGE_AWB";
+    public static final String OPS_MANAGER_SRS_CHANGE_SOSTATUS = "OPS_MANAGER_SRS_CHANGE_SOSTATUS";
 
 	public static final String STORE_MANAGER = "STORE_MANAGER";
 
+    public static final String SPLIT_SO = "SPLIT_SO";
+    public static final String BULK_SPLIT_BO = "BULK_SPLIT_BO";
+    public static final String SPLIT_BO = "SPLIT_BO";
+    public static final String SAVE_SHIPPING_COST = "SAVE_SHIPPING_COST";
 }

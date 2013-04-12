@@ -29,6 +29,7 @@ public enum EnumShippingOrderStatus {
     SO_Cancelled(999L, "SO Cancelled");
 
 
+
     private java.lang.String name;
 
     private java.lang.Long id;
@@ -104,6 +105,10 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
     }
 
+    public static List<Long> getStatusIdsForActionQueue() {
+        return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId());
+    }
+
     public static List<EnumShippingOrderStatus> getStatusForPicking() {
         return Arrays.asList(EnumShippingOrderStatus.SO_MarkedForPrinting);
     }
@@ -166,7 +171,6 @@ public enum EnumShippingOrderStatus {
         );
     }
 
-
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
            return Arrays.asList(
 //                   EnumShippingOrderStatus.SO_Packed,
@@ -179,6 +183,13 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Lost,
                 EnumShippingOrderStatus.SO_RTO,
                 EnumShippingOrderStatus.SO_Delivered);
+    }
+
+    public static List<Long> getApplicableShippingOrderStatus(){
+        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
+                EnumShippingOrderStatus.SO_Delivered.getId(),
+                EnumShippingOrderStatus.RTO_Initiated.getId(),
+                EnumShippingOrderStatus.SO_RTO.getId());
     }
 
 }

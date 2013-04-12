@@ -8,13 +8,12 @@ import com.hk.domain.core.CancellationType;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -56,8 +55,8 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "cancellation_remark", length = 65535)
     private String                      cancellationRemark;
 
-    @Column(name = "accounting_invoice_number_id")
-    private Long                        accountingInvoiceNumber;
+    /*@Column(name = "accounting_invoice_number_id")
+    private Long                        accountingInvoiceNumber;*/
 
     @Column(name = "basket_category", length = 45)
     private String                      basketCategory;
@@ -89,7 +88,7 @@ public class ShippingOrder implements java.io.Serializable {
     private Set<AccountingInvoice>      accountingInvoices      = new HashSet<AccountingInvoice>(0);
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
-    private Set<ShippingOrderLifecycle> shippingOrderLifecycles = new HashSet<ShippingOrderLifecycle>(0);
+    private List<ShippingOrderLifecycle> shippingOrderLifecycles = new ArrayList<ShippingOrderLifecycle>(0);
 
     @Transient
     private Reason reason;
@@ -112,8 +111,15 @@ public class ShippingOrder implements java.io.Serializable {
     @Column(name = "drop_shipping")
     private boolean isDropShipping;
 
+	  @Column(name = "accounting_invoice_number")
+	  private String accountingInvoiceNumber;
+
     @Column(name = "contains_jit_products")
     private boolean containsJitProducts;
+
+    @JsonSkip
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    private Set<ShippingOrderCategory> shippingOrderCategories = new HashSet<ShippingOrderCategory>();
 
     public boolean containsJitProducts() {
         return containsJitProducts;
@@ -198,11 +204,11 @@ public class ShippingOrder implements java.io.Serializable {
         this.cancellationRemark = cancellationRemark;
     }
 
-    public Long getAccountingInvoiceNumber() {
+    public String getAccountingInvoiceNumber() {
         return accountingInvoiceNumber;
     }
 
-    public void setAccountingInvoiceNumber(Long accountingInvoiceNumber) {
+    public void setAccountingInvoiceNumber(String accountingInvoiceNumber) {
         this.accountingInvoiceNumber = accountingInvoiceNumber;
     }
 
@@ -246,11 +252,11 @@ public class ShippingOrder implements java.io.Serializable {
         this.accountingInvoices = accountingInvoices;
     }
 
-    public Set<ShippingOrderLifecycle> getShippingOrderLifecycles() {
+    public List<ShippingOrderLifecycle> getShippingOrderLifecycles() {
         return shippingOrderLifecycles;
     }
 
-    public void setShippingOrderLifecycles(Set<ShippingOrderLifecycle> shippingOrderLifecycles) {
+    public void setShippingOrderLifecycles(ArrayList<ShippingOrderLifecycle> shippingOrderLifecycles) {
         this.shippingOrderLifecycles = shippingOrderLifecycles;
     }
 
@@ -335,5 +341,13 @@ public class ShippingOrder implements java.io.Serializable {
 
     public void setReason(Reason reason) {
         this.reason = reason;
+    }
+
+    public Set<ShippingOrderCategory> getShippingOrderCategories() {
+        return shippingOrderCategories;
+    }
+
+    public void setShippingOrderCategories(Set<ShippingOrderCategory> categories) {
+        this.shippingOrderCategories = categories;
     }
 }

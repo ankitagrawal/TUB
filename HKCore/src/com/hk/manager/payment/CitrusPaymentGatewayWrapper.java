@@ -161,7 +161,7 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
         String firstName = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.firstName);
         String lastName = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.lastName);
         String TxStatus = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.TxStatus);
-//        String zipCode = context.getRequest().getParameter("addressZip");
+        String zipCode = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.addressZip);
         String pgRespCode = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.pgRespCode);
         String amount = context.getRequest().getParameter(CitrusPaymentGatewayWrapper.amount);
 
@@ -193,7 +193,9 @@ public class CitrusPaymentGatewayWrapper extends BasePaymentGatewayWrapper<Citru
         if (pgRespCode != null) {
             data += pgRespCode;
         }
-
+        if (zipCode != null) {
+            data += zipCode;
+        }
         return data;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Zone;
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +48,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date lastEscEndDate;
     private Date targetDispatchDate;
     private Zone zone;
-    private Set<String> shippingOrderCategories;
+    private Set<Category> shippingOrderCategories;
     private boolean dropShipping = false;
     private boolean containsJitProducts = false;
     private boolean installable = false;
@@ -160,7 +161,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+    public ShippingOrderSearchCriteria setShippingOrderCategories(Set<Category> shippingOrderCategories) {
         this.shippingOrderCategories = shippingOrderCategories;
         return this;
     }
@@ -267,9 +268,14 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         if (!searchForPrinting) {
+            if (sortByDispatchDate) {
+                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDelDate"));
+            }
+            if (sortByLastEscDate) {
+                criteria.addOrder(org.hibernate.criterion.Order.desc("lastEscDate"));
+            }
             if (sortByPaymentDate) {
                 paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("date(payment_date) asc"));
-
             }
             if (sortByScore) {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
@@ -280,11 +286,19 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
 
+        DetachedCriteria shippingOrderCategoryCriteria = null;
+        if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
+            if (shippingOrderCategoryCriteria == null) {
+                shippingOrderCategoryCriteria = criteria.createCriteria("shippingOrderCategories");
+            }
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
+        }
 
+/*
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
             criteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
         }
-
+*/
 
         DetachedCriteria lineItemsCriteria = null;
         DetachedCriteria skuCriteria = null;
