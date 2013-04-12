@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <c:set var="barcodePrefix" value="<%=BarcodeUtil.BARCODE_SKU_ITEM_PREFIX%>"/>
-<link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+<link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
 <script>
     <s:useActionBean beanclass="com.hk.web.action.admin.queue.JobCartAction" var="ica"/>
 

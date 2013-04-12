@@ -46,9 +46,11 @@
 <s:layout-component name="htmlHead">
   <!--google remarketing page type-->
   <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
+  <!-- YAHOO marketing -->
+  <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
-    <%--secondaryLevelCategory="${ca.childCategorySlug}" />--%>
-  <c:if test="${categoryBean.category.name == 'services'}">
+
+    <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
 
@@ -75,7 +77,7 @@
   <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
-    <span class="crumb last" style="font-size: 12px;">${categoryBean.category}</span>
+    <span class="crumb last" style="font-size: 12px;">${categoryBean.category.displayName}</span>
 
     <h1 class="title"> ${categoryBean.seoData.h1} </h1>
 
@@ -288,7 +290,5 @@
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>--%>
-
 	</s:layout-component>
-
 </s:layout-render>

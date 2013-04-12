@@ -1,12 +1,11 @@
 package com.hk.web.action.admin.queue;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.admin.pact.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.user.User;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -84,7 +83,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
-    ShippingOrderLifecycleService shippingOrderLifecycleService;       
+    ShippingOrderLifecycleService shippingOrderLifecycleService;
+    @Autowired
+    BucketService bucketService;
 
     private Long orderId;
     private Long storeId;
@@ -99,52 +100,51 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private List<PaymentStatus> paymentStatuses = new ArrayList<PaymentStatus>();
     private List<String> basketCategories = new ArrayList<String>();
     private List<String> categories = new ArrayList<String>();
-    private Integer defaultPerPage = 25;
+    private Integer defaultPerPage = 40;
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
     private boolean sortByPaymentDate = true;
-    private boolean sortByLastEscDate = true;
-    private boolean sortByScore = true;
+    private boolean sortByLastEscDate = false;
+    private boolean sortByScore = false;
     private boolean sortByDispatchDate = true;
     private Boolean dropShip = null;
     private Boolean containsJit = null;
+
+    Map<String, Object> bucketParameters = new HashMap<String, Object>();
+    List<Bucket> buckets = new ArrayList<Bucket>();
 
     @DontValidate
     @DefaultHandler
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
-        Long startTime = (new Date()).getTime();
+        User user = getPrincipalUser();
+        if(user != null){
+            buckets = user.getBuckets();
+            if(buckets != null && !buckets.isEmpty()){
+                bucketParameters = bucketService.getParamMap(user.getBuckets());
+            }
+        }
+        return new ForwardResolution(ActionAwaitingQueueAction.class, "search").addParameters(bucketParameters);
+    }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution search() {
+        Long startTime = (new Date()).getTime();
         OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
         orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
-        setUnplitOrderCount();
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
-        return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
-    }
-
-    private void setUnplitOrderCount() {
-        if (unsplitOrderCount == null) {
-            unsplitOrderCount = orderService.getCountOfOrdersWithStatus();
-        }
-    }
-
-    public Resolution searchUnsplitOrders() {
-        orderStatuses.clear();
-        orderStatuses.add(orderStatusService.find(EnumOrderStatus.Placed));
-        pre();
-        orderStatuses.clear();
-
         return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
 
     private OrderSearchCriteria getOrderSearchCriteria() {
         OrderSearchCriteria orderSearchCriteria = new OrderSearchCriteria();
         orderSearchCriteria.setOrderId(orderId).setGatewayOrderId(gatewayOrderId).setStoreId(storeId).setSortByUpdateDate(false);
-        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore).setSortByLastEscDate(sortByLastEscDate);
+        orderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+//                .setSortByLastEscDate(sortByLastEscDate);
 
         List<OrderStatus> orderStatusList = new ArrayList<OrderStatus>();
         for (OrderStatus orderStatus : orderStatuses) {
@@ -224,7 +224,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 //        orderSearchCriteria.setCategories(categoryList);
 
         if (dropShip != null){
-           orderSearchCriteria.setDropShip(dropShip);
+            orderSearchCriteria.setDropShip(dropShip);
         }
         if (containsJit != null){
             orderSearchCriteria.setContainsJit(containsJit);
@@ -254,7 +254,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 if (isManualEscalable) {
                     trueMessage.append(shippingOrder.getBaseOrder().getId());
                     trueMessage.append(" ");
-                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);                    
+                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
                 } else {
                     if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
                         trueMessage.append(shippingOrder.getBaseOrder().getId());
@@ -272,7 +272,6 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
 
-        setUnplitOrderCount();
         return new RedirectResolution(ActionAwaitingQueueAction.class);
     }
 
@@ -416,16 +415,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("endDate");
         params.add("storeId");
         params.add("sortByPaymentDate");
+//        params.add("sortByLastEscDate");
         params.add("sortByScore");
+        params.add("sortByDispatchDate");
         params.add("dropShip");
         params.add("containsJit");
 
-        // params.add("orderLifecycleActivity");
-        // params.add("shippingOrderStatus");
-
-        /*
-                   * params.add("paymentModes"); params.add("paymentStatuses"); params.add("categories");
-                   */
+        params.add("bucketParameters");
 
         int ctr = 0;
         for (PaymentMode paymentMode : paymentModes) {
@@ -533,9 +529,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         return dropShip;
     }
 
-      public Boolean getDropShip() {
-         return dropShip;
-     }
+    public Boolean getDropShip() {
+        return dropShip;
+    }
 
     public void setDropShip(Boolean dropShip) {
         this.dropShip = dropShip;
@@ -566,5 +562,21 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setSortByLastEscDate(boolean sortByLastEscDate) {
         this.sortByLastEscDate = sortByLastEscDate;
+    }
+
+    public Map<String, Object> getBucketParameters() {
+        return bucketParameters;
+    }
+
+    public void setBucketParameters(Map<String, Object> bucketParameters) {
+        this.bucketParameters = bucketParameters;
+    }
+
+    public List<Bucket> getBuckets() {
+        return buckets;
+    }
+
+    public void setBuckets(List<Bucket> buckets) {
+        this.buckets = buckets;
     }
 }

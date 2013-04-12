@@ -23,7 +23,8 @@
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
-
+<!--YAHOO marketing-->
+<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -377,7 +378,7 @@
             Invalid request!
         </c:otherwise>
     </c:choose>
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
+
 </s:layout-component>
 
 <s:layout-component name="analytics">

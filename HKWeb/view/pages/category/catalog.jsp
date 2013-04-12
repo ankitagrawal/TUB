@@ -175,6 +175,9 @@
 <s:layout-component name="catalog">
 <!--google remarketing page type-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" categories="${ca.allCategories}" topLevelCategory="${ca.topCategoryUrlSlug}"/>
+<!-- yahoo marketing page -->
+<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}"/>
+
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${ca.topCategoryUrlSlug}" secondaryLevelCategory="${ca.childCategorySlug}" />
 
 <div style="display: none;">
@@ -436,8 +439,9 @@
 				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
 				frameborder="0"></iframe>
 		</c:if>
-		<div style="height:75px"></div>
+		
 
+		<div style="height:75px"></div>
 </s:layout-component>
 
 </s:layout-render>
