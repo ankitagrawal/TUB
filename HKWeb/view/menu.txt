@@ -14,8 +14,8 @@
 --/sports-nutrition/pre-post-workout/creatine : Creatine
 --/sports-nutrition/pre-post-workout/glutamine : Glutamine
 --/sports-nutrition/pre-post-workout/nitric-oxide : Nitric Oxide
----/sports-nutrition/pre-post-workout /carb-blends : Carb Blends
---/sports-nutrition/pre-post-workout /electrolytes : Electrolytes
+---/sports-nutrition/pre-post-workout/carb-blends : Carb Blends
+--/sports-nutrition/pre-post-workout/electrolytes : Electrolytes
 --/sports-nutrition/pre-post-workout/hardcore : Hardcore
 -/sports-nutrition/weight-management: Weight Management
 --/sports-nutrition/weight-management/fat-burner : Fat Burner
@@ -42,15 +42,15 @@
 --/brand/sports-nutrition/ON: ON
 --/brand/sports-nutrition/Dymatize: Dymatize
 --/brand/sports-nutrition/Muscletech: MuscleTech
---/ brand/sports-nutrition/MuscleBlaze: MuscleBlaze
---/ brand/sports-nutrition/ TWINLAB: Twinlab
---/ brand/sports-nutrition/ Gaspari+Nutrition: Gaspari Nutrition
---/ brand/sports-nutrition/ Universal+Nutrition: Universal Nutrition
---/ brand/sports-nutrition/ Ultimate+Nutrition: Ultimate Nutrition
---/ brand/sports-nutrition/ MusclePharm: MusclePharm
---/ brand/sports-nutrition/Nature%27s+Best: Nature's Best
---/ brand/sports-nutrition/ Weider: Weider
---/ brand/sports-nutrition/BSN : BSN
+--/brand/sports-nutrition/MuscleBlaze: MuscleBlaze
+--/brand/sports-nutrition/TWINLAB: Twinlab
+--/brand/sports-nutrition/Gaspari+Nutrition: Gaspari Nutrition
+--/brand/sports-nutrition/Universal+Nutrition: Universal Nutrition
+--/brand/sports-nutrition/Ultimate+Nutrition: Ultimate Nutrition
+--/brand/sports-nutrition/MusclePharm: MusclePharm
+--/brand/sports-nutrition/Nature%27s+Best: Nature's Best
+--/brand/sports-nutrition/Weider: Weider
+--/brand/sports-nutrition/BSN : BSN
 
 
 /health-nutrition
