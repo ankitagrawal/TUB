@@ -57,7 +57,7 @@ public class GoogleCatalogPLAAction extends BaseAction {
 
 
         //categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
-        products = getProductService().getProductByCategory("workout-essentials");
+        products = getProductService().getProductByCategory(categories);
         return new ForwardResolution("/pages/googlePLACatalog.jsp");
     }
 
