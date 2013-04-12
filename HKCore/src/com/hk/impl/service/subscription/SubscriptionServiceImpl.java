@@ -200,7 +200,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired, "Subscription marked as expired");
             Order order = subscription.getBaseOrder();
             boolean parentBOHasProducts = false;
-            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId()) || order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())) {
+            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId()) || order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())
+                        || order.getOrderStatus().getId().equals(EnumOrderStatus.SubscriptionInProgress.getId())) {
                 for (CartLineItem cartLineItem : order.getCartLineItems()) {
                     if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
                         parentBOHasProducts = true;

@@ -746,6 +746,18 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
 
+        //the following if is added to handle orders which have just subscriptions in them.
+        if(productCartLineItems.size()==0){
+            Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+            if(subscriptionCartLineItems.size()>0){
+                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                    order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+                    order = save(order);
+                }
+                return true;
+            }
+        }
+
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
