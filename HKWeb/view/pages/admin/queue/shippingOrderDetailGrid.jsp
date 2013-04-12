@@ -280,23 +280,6 @@
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Cancel SO
     </s:link>)
-        <script type="text/javascript">
-
-            $('.cancelSO').ajaxForm({dataType: 'json', success: _cancelShippingOrder});
-
-            function _cancelShippingOrder(res) {
-                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                    var status = res.data.orderStatus.name;
-                    if (status == "SO Cancelled") {
-                        alert("SO Cancelled");
-                        location.reload();
-                    } else {
-                        alert("SO cannot be cancelled");
-                        location.reload();
-                    }
-                }
-            }
-        </script>
     </c:if>
     <c:if test="${isSearchShippingOrder}">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">

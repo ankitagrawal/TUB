@@ -56,7 +56,48 @@
 </s:form>
 
 <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
-  
+
+    <script type="text/javascript">
+
+        $('.cancelSO').click(function() {
+            var proceed = confirm('Are you sure you want to cancel shipping order?');
+            if (!proceed) return false;
+
+            var clickedLink = $(this);
+            $.getJSON(clickedLink.attr('href'), function(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    alert(res.message);
+                    window.location.reload();
+                } else {
+                    alert("SO cannot be cancelled");
+                    location.reload();
+                }
+            });
+
+            return false;
+        });
+
+        $('.orderStatusLink').click(function() {
+            var proceed = confirm('Are you sure?');
+            if (!proceed) return false;
+
+            var clickedLink = $(this);
+            var clickedP = clickedLink.parents('p');
+            clickedP.find('.orderStatusName').html($('#ajaxLoader').html());
+
+            $.getJSON($(this).attr('href'), function(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    window.location.reload();
+                }  else {
+                    alert("SO cannot be put on hold");
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+    </script>
+
      <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                shippingOrders="${searchShippingOrderBean.shippingOrderList}" hasAction="false" showCourier="true" isSearchShippingOrder = "true"/>
 </s:layout-component>
