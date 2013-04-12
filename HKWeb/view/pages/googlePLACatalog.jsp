@@ -5,7 +5,7 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
-<s:useActionBean beanclass="com.hk.web.action.core.catalog.GoogleCatalogAction" var="googleBean"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.GoogleCatalogPLAAction" var="googleBean"/>
                 <channel>
                 <title>Healthkart Google Product Feed</title>
                 <link>http://www.healthkart.com</link>

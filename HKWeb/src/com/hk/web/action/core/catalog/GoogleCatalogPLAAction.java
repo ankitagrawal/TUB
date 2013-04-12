@@ -35,28 +35,29 @@ public class GoogleCatalogPLAAction extends BaseAction {
     public Resolution pre() {
 
         List<String> categories = new ArrayList<String>();
+        categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
         //todo: For now these are hard-coded
-        categories.add("workout-essentials");
-        categories.add("accessories");
-        categories.add("healthy-food");
-        categories.add("diabetic-food");
-        categories.add("weight-management");
-        categories.add("foot-care");
-        categories.add("pain-management");
-        categories.add("medical-care");
-        categories.add("devices");
-        categories.add("eye");
-        categories.add("foot-care-pedicure");
-        categories.add("oral-hygiene");
-        categories.add("misc");
-        categories.add("diapering");
-        categories.add("bath-skin-care");
-        categories.add("health-safety");
-        categories.add("toys-more");
+//        categories.add("workout-essentials");
+//        categories.add("accessories");
+//        categories.add("healthy-food");
+//        categories.add("diabetic-food");
+//        categories.add("weight-management");
+//        categories.add("foot-care");
+//        categories.add("pain-management");
+//        categories.add("medical-care");
+//        categories.add("devices");
+//        categories.add("eye");
+//        categories.add("foot-care-pedicure");
+//        categories.add("oral-hygiene");
+//        categories.add("misc");
+//        categories.add("diapering");
+//        categories.add("bath-skin-care");
+//        categories.add("health-safety");
+//        categories.add("toys-more");
 
 
         //categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
-        products = getProductService().getProductByCategories(categories);
+        products = getProductService().getProductByCategory("workout-essentials");
         return new ForwardResolution("/pages/googlePLACatalog.jsp");
     }
 
