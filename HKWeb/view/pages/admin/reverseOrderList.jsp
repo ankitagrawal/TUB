@@ -98,6 +98,11 @@
                     alert("Please mark the order picked/ received first");
                     return false;
                  }
+
+                  if(!ob1.children('.markReconciled').is(':visible')){
+                    alert("Order has been reconciled, cannot change advice");
+                      return false;
+                  }
               });
          });
 
@@ -243,7 +248,13 @@
 			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                          </s:link>
-                        </c:if>                      
+                        </c:if>
+                        <%--<c:if test="${reverseOrderRequest.receivedDate == null}">--%>
+                           <%--<s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="cancelReverseOrder" class="cancelRPO">Cancel Order--%>
+			                    <%--<s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>--%>
+                                <%--<s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>--%>
+                         <%--</s:link> --%>
+                        <%--</c:if>--%>
 
                     </td>
                     <td>

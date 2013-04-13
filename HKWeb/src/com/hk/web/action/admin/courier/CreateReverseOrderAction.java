@@ -90,7 +90,7 @@ public class CreateReverseOrderAction extends BaseAction {
 		if (reverseOrderService.getReverseOrderByShippingOrderId(shippingOrder.getId()) == null) {
 			ReverseOrder reverseOrder = reverseOrderService.createReverseOrder(shippingOrder, returnOrderReason, reverseOrderType);
 			reverseOrderService.createReverseLineItems(reverseOrder, itemMap);
-			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated);
+			shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Reverse_Pickup_Initiated, null, returnOrderReason);
 			shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus());
 			shippingOrderService.save(shippingOrder);
 			return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrder.getId());

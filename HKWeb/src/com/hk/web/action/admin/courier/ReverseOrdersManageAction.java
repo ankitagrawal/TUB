@@ -153,6 +153,15 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
+//	public Resolution cancelReverseOrder(){
+//		if(orderRequestId != null){
+//			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+//			reverseOrderService.
+//		}
+//		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order marked reconciled");//, data);
+//		return new JsonResolution(healthkartResponse);
+//	}
+
 	@Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
 	public Resolution generateExcelForReversePickup(){
 		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());

@@ -167,6 +167,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
 								skuItemDao.save(skuItem);
+								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}
 
@@ -175,6 +176,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
 								skuItemDao.save(skuItem);
+								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}
 
@@ -183,9 +185,10 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
 								skuItemDao.save(skuItem);
+								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}
-							inventoryService.checkInventoryHealth(productVariant);
+							//inventoryService.checkInventoryHealth(productVariant);
 						}
 					}
 
@@ -211,42 +214,34 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 		List<SkuItem> checkedOutSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, -1L);
 		List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, null, lineItem, 1L);
 
-//		if(shippingOrder.getOrderStatus().equals(EnumShippingOrderStatus.SO_RTO)){
-//			if(lineItem.getQty() == checkedInSkuItems.size()){
-//				addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
-//			}
-//		} else if (reverseLineItem != null && (reverseLineItem.getReturnQty() == checkedInSkuItems.size())) {
-//			addRedirectAlertMessage(new SimpleMessage("All sku items for this particular line item have been checked in"));
-//			return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", shippingOrder.getId());
-//		} else {
-			checkedOutSkuItems.removeAll(checkedInSkuItems);
+		checkedOutSkuItems.removeAll(checkedInSkuItems);
 
-			ProductVariant productVariant = lineItem.getSku().getProductVariant();
-			Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedOutSkuItems);
+		ProductVariant productVariant = lineItem.getSku().getProductVariant();
+		Map<Long, String> skuItemDataMap = adminInventoryService.skuItemBarcodeMap(checkedOutSkuItems);
 
-			String barcodeFilePath = null;
-			Warehouse userWarehouse = null;
-			if (getUserService().getWarehouseForLoggedInUser() != null) {
-				userWarehouse = userService.getWarehouseForLoggedInUser();
-			} else {
-				addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
-				return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
-			}
-			if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
-				barcodeFilePath = barcodeGurgaon;
-			} else {
-				barcodeFilePath = barcodeMumbai;
-			}
-			barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "reCheckin_" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
+		String barcodeFilePath = null;
+		Warehouse userWarehouse = null;
+		if (getUserService().getWarehouseForLoggedInUser() != null) {
+			userWarehouse = userService.getWarehouseForLoggedInUser();
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+			return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+		}
+		if (userWarehouse.getState().equalsIgnoreCase(StateList.HARYANA)) {
+			barcodeFilePath = barcodeGurgaon;
+		} else {
+			barcodeFilePath = barcodeMumbai;
+		}
+		barcodeFilePath = barcodeFilePath + "/" + "printBarcode_" + "reCheckin_" + productVariant + "_" + StringUtils.substring(userWarehouse.getCity(), 0, 3) + ".txt";
 
-			try {
-				printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
-			} catch (IOException e) {
-				logger.error("Exception while appending on barcode file", e);
-			}
-			addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
-			return new HTTPResponseResolution();
-		//}
+		try {
+			printBarcode = BarcodeUtil.createBarcodeFileForSkuItem(barcodeFilePath, skuItemDataMap);
+		} catch (IOException e) {
+			logger.error("Exception while appending on barcode file", e);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Print Barcodes downloaded Successfully."));
+		return new HTTPResponseResolution();
+
 	}
 
 

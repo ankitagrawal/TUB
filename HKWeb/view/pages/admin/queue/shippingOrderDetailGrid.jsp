@@ -294,7 +294,18 @@
                                     <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
                                 </s:option>
                             </s:select>
+                            <br/><b>Customer Reason:</b>
+                            <s:select name="customerSatisfyReason" id="customer-reason">
+                                <s:option value="null">-Select Reason-</s:option>
+                                <s:option value="Damaged Product">Damaged Product</s:option>
+                                <s:option value="Expired Product">Expired Product</s:option>
+                                <s:option value="Wrong Product">Wrong Product</s:option>
+                                <s:option value="Not Interested">Not Interested</s:option>
+                            </s:select>
+                            <s:submit class="markOrderCustomerSatisfyButton" name="markOrderCustomerSatisfy" value="Save"
+                                  style="padding:1px;"/>
                         </c:if>
+
                         <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
                             <b>Customer Return:</b>
                             <s:select name="shippingOrder.orderStatus">
@@ -305,23 +316,15 @@
                                     <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
                                 </s:option>
                             </s:select>
-                        </c:if>
-                        <br/><b>Customer Return Reason:</b>
-                        <s:select name="customerReturnReason" id="return-reason">
-                            <s:option value="null">-Select Reason-</s:option>
-                            <s:option value="Damaged Product">Damaged Product</s:option>
-                            <s:option value="Expired Product">Expired Product</s:option>
-                            <s:option value="Wrong Product">Wrong Product</s:option>
-                            <s:option value="Not Interested">Not Interested</s:option>
-                        </s:select>
-
-                        <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save"
+                            <s:submit name="markOrderCustomerReturn" value="Save"
                                   style="padding:1px;"/>
+                        </c:if>
                     </s:form>
+
                     <script type="text/javascript">
-                        $('.markOrderCustomerReturnButton').click(function() {
-                            if ($('#return-reason').val() == "null") {
-                                alert("Please select a reason for Customer Return !");
+                        $('.markOrderCustomerSatisfyButton').click(function() {
+                            if ($('#customer-reason').val() == "null") {
+                                alert("Please select a reason for Customer Satisfaction !");
                                 return false;
                             }
 
@@ -584,14 +587,16 @@
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
-        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
-            <div class="floatleft">
-                <s:link beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction"
-                        target="_blank">
-                    <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link>
-            </div>
-            <div class="clear"></div>
-        </c:if>   
+        <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
+            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                <div class="floatleft">
+                    <s:link beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction"
+                            target="_blank">
+                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link>
+                </div>
+                <div class="clear"></div>
+            </c:if>
+        </shiro:hasAnyRoles>
     </td>
 </c:if>
 <td>
