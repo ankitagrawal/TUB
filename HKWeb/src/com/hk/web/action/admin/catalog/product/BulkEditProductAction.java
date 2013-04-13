@@ -91,6 +91,12 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
     @SuppressWarnings("unchecked")
     public Resolution defineOptionsMap() {
+        if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
+            String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
+            for (String option : options) {
+                toBeEditedOptions.put(option, Boolean.TRUE);
+            }
+        }
         return new ForwardResolution(BulkEditProductAction.class, "bulkEdit").addParameters(toBeEditedOptions);
     }
 
