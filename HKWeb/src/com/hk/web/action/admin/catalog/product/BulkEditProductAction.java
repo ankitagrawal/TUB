@@ -102,12 +102,14 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
     @SuppressWarnings("unchecked")
     public Resolution bulkEdit() {
-        if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
-            String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
-            for (String option : options) {
-                toBeEditedOptions.put(option, Boolean.TRUE);
+        Map<String, String[]> paramValueMap = getContext().getRequest().getParameterMap();
+        for (Map.Entry<String, String[]> paramValueEntry : paramValueMap.entrySet()) {
+            if(paramValueEntry.getKey().equals("defineOptionsMap") || paramValueEntry.getKey().equals("category") || paramValueEntry.getKey().equals("brand")){
+            }else{
+                toBeEditedOptions.put(paramValueEntry.getKey(), Boolean.TRUE);
             }
         }
+
         productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
         products = new ArrayList<Product>();
         if (productPage != null) {
