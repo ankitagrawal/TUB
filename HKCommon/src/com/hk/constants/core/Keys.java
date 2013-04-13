@@ -120,9 +120,14 @@ public class Keys {
         /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
         public static final String maxCODCallCount                  = "maxCODCallCount";
 
-        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String hkApiAccessKey = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
+
 		public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+
+        public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
+
+
     }
 
     /*

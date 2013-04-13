@@ -45,7 +45,7 @@
         <fileset file="${lib.root.dir}/thirdParty/jets3t-0.8.1.jar"/>
         <fileset file="${lib.root.dir}/thirdParty/IOTCourierTrack.jar" />
 
-		<fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.0.jar" />
+		<fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.1.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar" />
 		<fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar" />

@@ -10,6 +10,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
+<%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -82,6 +83,15 @@
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
 <c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
+
+<c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
+<c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
+<c:set var="CO" value="<%=VariantConfigOptionParam.COATING.param()%>"/>
+<c:set var="COBF" value="<%=VariantConfigOptionParam.BFCOATING.param()%>"/>
+<c:set var="BRANDCO" value="<%=VariantConfigOptionParam.BRANDCO.param()%>"/>
+<c:set var="BRANDTH" value="<%=VariantConfigOptionParam.BRANDTH.param()%>"/>
+<c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
+
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -455,7 +465,7 @@
 			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
-                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
+                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
                     <c:choose>
                         <c:when test="${hk:bookedQty(sku) <= skuNetInventory}">
                             <tr style="border-left:5px solid green;">
@@ -478,80 +488,96 @@
                 </c:otherwise>
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
-                ${productVariant.product.name}
+                    ${productVariant.id}
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" event="pre" style="font-size:12px !important; font-weight:bold !important;" >
+                    <s:param name="productId" value="${productVariant.product.id}"/>
+                     ${productVariant.product.name}
+                </s:link>
                 <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
                 </span>
                 </c:if>
-                <c:if test="${productVariant.paymentType.id == lineItem_Service_Postpaid}">
-                <span style="color:blue;text-decoration:underline">
-                <br/>(Postpaid Service: ${productVariant.product.name})
-                </span>
-                </c:if>
+                <em>
+                    <span>
+                        <c:forEach items="${productVariant.productOptions}"
+                                   var="productOption">
+                            <c:if test="${hk:showOptionOnUI(productOption.name)}">
+                                ${productOption.name}:${productOption.value};
+                            </c:if>
+                        </c:forEach>
+                    </span>
+                    <span>
+                            ${cartLineItem.extraOptionsPipeSeparated}
+                    </span>
+                </em>
 
-                <%--<div class="floatleft">--%>
-                <%--<br/>Dispatch Within: ${productVariant.product.minDays} - ${productVariant.product.maxDays} Days--%>
-                <%--</div>--%>
+                <c:if test="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues !=null}">
 
-                <c:if test="${not empty productVariant.productOptions}">
-                    <%--<br/>--%>
-                    <%-- <span style="word-wrap:break-word">--%>
-                    <c:forEach items="${productVariant.productOptions}" var="productOption"
-                               varStatus="optionCtr">
-                        ${productOption.name} ${productOption.value}${!optionCtr.last?',':'|'}
-                        <c:if test="${not empty cartLineItem.cartLineItemExtraOptions}">
-                            <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOptions"
-                                       varStatus="extraOptionCtr">
-                                ${extraOptions.name} ${extraOptions.value}${!extraOptionCtr.last?',':''}
-                            </c:forEach>
+                    <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                               var="configValue" varStatus="configValueCtr">
+                        <c:set var="additinalParam"
+                               value="${configValue.variantConfigOption.additionalParam}"/>
+                        <c:if
+                                test="${( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF) }">
+                            ${configValue.variantConfigOption.displayName}:${configValue.value}|
+
                         </c:if>
                     </c:forEach>
-                    <%-- </span>--%>
+                    <table>
+                        <tr>
+                            <td style="width:10%;" ><b>Right</b></td>
+                            <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                                       var="configValue" varStatus="configValueCtr">
+                                <c:set var="additinalParam"
+                                       value="${configValue.variantConfigOption.additionalParam}"/>
 
+                                <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                <c:if
+                                        test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF) }">
+                                    <td style="width:25%;">
+                                        <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                    </td>
+                                </c:if>
+                            </c:forEach>
+                        </tr>
+                        <tr>
+                            <td style="width:10%;"><b>Left</b></td>
+                            <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                                       var="configValue" varStatus="configValueCtr">
+                                <c:set var="additinalParam"
+                                       value="${configValue.variantConfigOption.additionalParam}"/>
+                                <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                <c:if
+                                        test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF)}">
+                                    <td style="width:25%;">
+                                        <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                    </td>
+                                </c:if>
+                            </c:forEach>
+                        </tr>
+                    </table>
                 </c:if>
                     <c:choose>
                         <c:when test="${productVariant.product.groundShipping}">
-                             <span style="margin-left:10px;color: #ff0000;">(G)</span>
+                             <span style="color: #ff0000;">(G)</span>
                         </c:when>
                         <c:otherwise>
-                            <span style="margin-left:10px;color: #ff0000;">(A)</span>
+                            <span style="color: #ff0000;">(A)</span>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${shippingOrder.dropShipping}">
-                        <span style="margin-left:10px;color: #ff0000;">(D)</span>
+                        <span style="color: #ff0000;">(D)</span>
                     </c:if>
-                    <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
-
-                    <c:set var="TH" value="TH"/>
-                    <c:set var="THBF" value="THBF"/>
-                    <c:set var="CO" value="CO"/>
-                    <c:set var="COBF" value="COBF"/>
-                    <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue"
-                               varStatus="configCtr">
-                        <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-                        <c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>
-                        ${variantConfigOption.displayName} : ${configValue.value}
-                        <c:if
-                                test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">
-                            <c:if
-                                    test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                                (R)
-                            </c:if>
-                            <c:if
-                                    test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                                (L)
-                            </c:if>
+                        <c:if test="${isActionQueue == true}">
+                            Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days
                         </c:if>
-                        ${!configCtr.last?',':''}
-
-                    </c:forEach>
-                </c:if>
-                               <c:if test="${isActionQueue == true}">
-                    <%--<c:if test="${productVariant.product.jit}">--%>
-                        ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
-                    <%--</c:if>--%>
-                </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>

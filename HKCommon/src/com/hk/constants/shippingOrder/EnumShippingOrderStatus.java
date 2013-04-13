@@ -107,6 +107,10 @@ public enum EnumShippingOrderStatus {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
     }
 
+    public static List<Long> getStatusIdsForActionQueue() {
+        return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId());
+    }
+
     public static List<EnumShippingOrderStatus> getStatusForPicking() {
         return Arrays.asList(EnumShippingOrderStatus.SO_MarkedForPrinting);
     }
