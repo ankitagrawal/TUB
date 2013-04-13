@@ -103,7 +103,9 @@ public class BulkEditProductAction extends BasePaginatedAction {
     @SuppressWarnings("unchecked")
     public Resolution bulkEdit() {
         for (String option : getParamSet()) {
-            toBeEditedOptions.put(option, Boolean.TRUE);
+            if(!option.equals("brand") || option.equals("category")){
+                toBeEditedOptions.put(option, Boolean.TRUE);
+            }
         }
         productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
         products = new ArrayList<Product>();
