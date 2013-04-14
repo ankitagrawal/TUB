@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
+import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 
 public interface LoyaltyProgramService {
 	
@@ -49,7 +49,7 @@ public interface LoyaltyProgramService {
 	 * This method returns the categories for loyalty products.
 	 * @return
 	 */
-	public List<Category> getLoyaltyCatalog();
+	public List<CategoryLoyaltyDto> getLoyaltyCatalog();
 
 	/**
 	 * This method returns the list of Loyalty products based on a given category.
@@ -57,4 +57,13 @@ public interface LoyaltyProgramService {
 	 * @return
 	 */
 	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
+
+
+	/**
+	 * This method returns Loyalty Products on the basis of points.
+	 * @param minPoints
+	 * @param maxPoints
+	 * @return
+	 */
+	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints);
 }

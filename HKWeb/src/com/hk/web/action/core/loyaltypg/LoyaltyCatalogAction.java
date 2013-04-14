@@ -16,9 +16,9 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.RoleConstants;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
@@ -33,16 +33,18 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private List<Badge> badgeList;
-	private List<Category> categories;
-
+	private List<CategoryLoyaltyDto> categories;
+	private String categoryName;
+	private double minPoints;
+	private double maxPoints;
+	
+	
 	@Autowired
 	LoyaltyProgramService loyaltyProgramService;
 
 	@DefaultHandler
 	public Resolution pre() {
 		SearchCriteria criteria = new SearchCriteria();
-//		this.loyaltyProgramService.getProductsByCategoryName("Sports Nutrition");
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		int startRow = (this.getPageNo()-1)*this.getPerPage();
 		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
 
@@ -55,7 +57,8 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		for (ProductAdapter productAdapter : list) {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
-
+		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
@@ -65,10 +68,15 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}
 	
-	public Resolution getProductsByCategory(String categoryName) {
+	/**
+	 * @param categoryName
+	 * @return
+	 */
+	public Resolution listProductsByCategory() {
 
 		SearchCriteria criteria = new SearchCriteria();
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.setCategories(this.getCategories());		
+		//this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		int startRow = (this.getPageNo()-1)*this.getPerPage();
 		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
 
@@ -82,7 +90,31 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
 */
-		this.productList = this.loyaltyProgramService.getProductsByCategoryName(categoryName);
+		this.productList = this.loyaltyProgramService.getProductsByCategoryName(this.categoryName);
+		
+		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
+
+		return new ForwardResolution("/pages/loyalty/catalog.jsp");
+	}
+	
+	public Resolution listProductsByPoints () {
+		
+		SearchCriteria criteria = new SearchCriteria();
+		this.setCategories(this.getCategories());
+		int startRow = (this.getPageNo()-1)*this.getPerPage();
+		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
+
+		criteria.setStartRow(startRow);
+		criteria.setMaxRows(maxRow);
+
+		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
+		/*List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
+		this.productList = new ArrayList<LoyaltyProduct>();
+		for (ProductAdapter productAdapter : list) {
+			this.productList.add(productAdapter.getLoyaltyProduct());
+		}
+*/
+		this.productList = this.loyaltyProgramService.getProductsByPoints(this.minPoints, this.maxPoints);
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 
@@ -121,11 +153,53 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		this.badgeList = badgeList;
 	}
 
-	public List<Category> getCategories() {
+	public List<CategoryLoyaltyDto> getCategories() {
 		return this.categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<CategoryLoyaltyDto> categories) {
 		this.categories = categories;
+	}
+
+	/**
+	 * @return the minPoints
+	 */
+	public double getMinPoints() {
+		return this.minPoints;
+	}
+
+	/**
+	 * @param minPoints the minPoints to set
+	 */
+	public void setMinPoints(double minPoints) {
+		this.minPoints = minPoints;
+	}
+
+	/**
+	 * @return the maxPoints
+	 */
+	public double getMaxPoints() {
+		return this.maxPoints;
+	}
+
+	/**
+	 * @param maxPoints the maxPoints to set
+	 */
+	public void setMaxPoints(double maxPoints) {
+		this.maxPoints = maxPoints;
+	}
+
+	/**
+	 * @return the categoryName
+	 */
+	public String getCategoryName() {
+		return this.categoryName;
+	}
+
+	/**
+	 * @param categoryName the categoryName to set
+	 */
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 }

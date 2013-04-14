@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
@@ -31,6 +30,7 @@ import com.hk.domain.user.User;
 import com.hk.exception.HealthkartRuntimeException;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
 import com.hk.loyaltypg.dao.UserOrderKarmaProfileDao;
+import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.loyaltypg.service.UserBadgeInfo;
 import com.hk.pact.dao.BaseDao;
@@ -263,7 +263,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 
 	@Override
-	public List<Category> getLoyaltyCatalog() {
+	public List<CategoryLoyaltyDto> getLoyaltyCatalog() {
 
 		return this.loyaltyProductDao.getCategoryForLoyaltyProducts();
 	}
@@ -284,11 +284,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return this.userOrderKarmaProfileDao.listKarmaPointsForUser(user, page, perPage);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#getProductsByPoints(double, double)
+	 */
+	@Override
 	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints) {
 		
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.add(Restrictions.ge("points", minPoints));
-		criteria.add(Restrictions.lt("points", maxPoints));
+		criteria.add(Restrictions.le("points", maxPoints));
+		criteria.addOrder(org.hibernate.criterion.Order.asc("points"));
 		
 		@SuppressWarnings("unchecked")
 		List<LoyaltyProduct> prodList = this.loyaltyProductDao.findByCriteria(criteria);

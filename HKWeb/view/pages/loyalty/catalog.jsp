@@ -47,20 +47,36 @@ pageContext.setAttribute("isSecure", isSecure);
 				<div class="priceRange">
                   <input type="checkbox">
                   <span  id= "pointRange">
-                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="pre" title="Show History">less than 100</s:link>
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="0"/>
+                  <s:param name="maxPoints" value="100"/>
+                  less than 100</s:link>
                   </span>
 			     </div>
 				<div class="priceRange">
                   <input type="checkbox">
-                  <span  id= "pointRange">101-200</span>
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="101"/>
+                  <s:param name="maxPoints" value="200"/>
+                  101-200</s:link></span>
+                  
 			     </div>
 				<div class="priceRange">
                   <input type="checkbox">
-                  <span  id= "pointRange">201-300</span>
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="201"/>
+                  <s:param name="maxPoints" value="300"/>
+                  201-300</s:link></span>
 			     </div>
 				<div class="priceRange">
                   <input type="checkbox">
-                  <span  id= "pointRange">301 and above</span>
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="301"/>
+                  <s:param name="maxPoints" value="10000"/>
+                  301 and above</s:link></span>
 			     </div>
 			 
 			<div class="jspVerticalBar"><div class="jspCap jspCapTop"></div>
@@ -82,7 +98,10 @@ pageContext.setAttribute("isSecure", isSecure);
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">
 				<div class="priceRange">
                   <input type="checkbox">
-                  <span  id= "categoryName">${loyaltyCategory.displayName}</span>
+                  <span  id= "categoryNameSpan">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="getProductsByCategory" >
+                  <s:param name="categoryName" value="${loyaltyCategory.name}"/>
+                  ${loyaltyCategory.displayName} (${loyaltyCategory.count}) </s:link></span>
 			     </div>
 			 </c:forEach>
 			</div>

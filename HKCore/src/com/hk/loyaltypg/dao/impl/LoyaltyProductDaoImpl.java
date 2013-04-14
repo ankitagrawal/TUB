@@ -4,16 +4,17 @@ import java.util.List;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
+import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 
 @Repository
 public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProductDao {
@@ -28,21 +29,22 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 	}
 
 	@Override
-	public List<Category> getCategoryForLoyaltyProducts() {
+	public List<CategoryLoyaltyDto> getCategoryForLoyaltyProducts() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("prod.categories", "category", CriteriaSpecification.LEFT_JOIN);
-		
+		criteria.addOrder(Order.asc("category.displayName"));
 		ProjectionList projectionsList = Projections.projectionList();
 		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
 		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
-
+		projectionsList.add(Projections.groupProperty("category.displayName"));
+		projectionsList.add(Projections.alias(Projections.rowCount(), "count"));
 		criteria.setProjection(Projections.distinct(projectionsList));
-		criteria.setResultTransformer(Transformers.aliasToBean(Category.class));
+		criteria.setResultTransformer(Transformers.aliasToBean(CategoryLoyaltyDto.class));
 		
 		@SuppressWarnings("unchecked")
-		List<Category> list = this.findByCriteria(criteria);
+		List<CategoryLoyaltyDto> list = this.findByCriteria(criteria);
 		return list;
 	}
 
