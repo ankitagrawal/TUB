@@ -221,8 +221,10 @@
 	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>
         <url-pattern>/personal-care/*</url-pattern>
-        <url-pattern>/nutrition</url-pattern>
-        <url-pattern>/nutrition/*</url-pattern>
+        <url-pattern>/sports-nutrition</url-pattern>
+        <url-pattern>/sports-nutrition/*</url-pattern>
+        <url-pattern>/health-nutrition</url-pattern>
+        <url-pattern>/health-nutrition/*</url-pattern>
         <url-pattern>/search</url-pattern>
         <url-pattern>/search/*</url-pattern>
         <url-pattern>/autocomplete-search</url-pattern>
