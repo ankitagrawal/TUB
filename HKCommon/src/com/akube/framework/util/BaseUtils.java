@@ -505,4 +505,19 @@ public class BaseUtils {
         }
         return set;
     }
+
+    public Map<String,Object> addParameter(Map<String,Object> parameters, String name, Object... values) {
+        if (parameters.containsKey(name)) {
+            Object[] src = (Object[]) parameters.get(name);
+            Object[] dst = new Object[src.length + values.length];
+            System.arraycopy(src, 0, dst, 0, src.length);
+            System.arraycopy(values, 0, dst, src.length, values.length);
+            parameters.put(name, dst);
+        }
+        else {
+            parameters.put(name, values);
+        }
+        return parameters;
+    }
+
 }
