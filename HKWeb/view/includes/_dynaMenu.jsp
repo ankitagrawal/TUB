@@ -20,7 +20,7 @@
             var menuStr = "";
             //menuStr += "<li class='lvl1' title='go to healthkart home' id='home_button'><a href='/'><div id='homeIcon'></div></a></li>";
         <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-        <c:if test="${topMenuNode.name != 'Baby'} || ${topMenuNode.name != 'Home & Living'}">
+        <c:if test="${topMenuNode.url != '/home-living'}">
             menuStr += "<li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''}'><a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a><div class='lvl2'>";
         <c:forEach items='${topMenuNode.childNodes}' var='firstLevelMenuNode'>
             menuStr += "<div class='categories'><a href='${pageContext.request.contextPath}${firstLevelMenuNode.url}' ${topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}><span class='head2'>${firstLevelMenuNode.name}</span></a><ul>";
