@@ -242,7 +242,7 @@ public class InventoryCheckinAction extends BaseAction {
                         	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
                         	po.setExtraInventoryId(id);
                         }
-                        grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
+                        grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
                         getAdminEmailManager().sendGRNEmail(grn);
                         editPVFillRate(grn);
