@@ -12057,4 +12057,122 @@
     <changeSet author="Pratham (generated)" id="1365581845195-51">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="bucket_owner" constraintName="fk_user_has_bucket_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-1">
+        <createTable tableName="action_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(90)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_action_item_id" type="INT"/>
+            <column name="priority" type="INT"/>
+            <column name="acknowledged" type="TINYINT"/>
+            <column name="range" type="INT"/>
+            <column name="hierarchy" type="INT"/>
+            <column name="acknowledged_by" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-2">
+        <createTable tableName="action_queue">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_action_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reporter" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="traffic_state_id" type="INT"/>
+            <column defaultValueNumeric="0" name="flagged" type="INT"/>
+            <column name="first_push_date" type="DATETIME"/>
+            <column name="last_push_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-3">
+        <createTable tableName="classification">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="primary" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="secondary" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-4">
+        <createTable tableName="traffic_state">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-5">
+        <createTable tableName="watcher">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="action_queue_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-6">
+        <addColumn tableName="bucket">
+            <column name="classification_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-8">
+        <modifyDataType columnName="name" newDataType="VARCHAR(100)" tableName="bucket"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-9">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="bucket"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-12">
+        <dropForeignKeyConstraint baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-14">
+        <addForeignKeyConstraint baseColumnNames="acknowledged_by" baseTableName="action_item" constraintName="fk_action_item_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-15">
+        <addForeignKeyConstraint baseColumnNames="next_action_item_id" baseTableName="action_item" constraintName="fk_action_item_action_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-16">
+        <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="action_queue" constraintName="fk_action_queue_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-17">
+        <addForeignKeyConstraint baseColumnNames="current_action_item_id" baseTableName="action_queue" constraintName="fk_action_queue_action_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-18">
+        <addForeignKeyConstraint baseColumnNames="reporter" baseTableName="action_queue" constraintName="fk_table1_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-19">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="action_queue" constraintName="fk_table1_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-20">
+        <addForeignKeyConstraint baseColumnNames="traffic_state_id" baseTableName="action_queue" constraintName="fk_action_queue_traffic_state1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="traffic_state" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-21">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-23">
+        <addForeignKeyConstraint baseColumnNames="action_queue_id" baseTableName="watcher" constraintName="fk_watcher_action_queue1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_queue" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-24">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="watcher" constraintName="fk_watcher_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1365969747360-25">
+        <dropColumn columnName="description" tableName="bucket"/>
+    </changeSet>
 </databaseChangeLog>
