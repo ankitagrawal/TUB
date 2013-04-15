@@ -45,15 +45,27 @@
      <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Superliner Worth Rs 625/- With Purchase of L’oreal Skin and Make Up Worth Rs 1500/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Infallible Lipstick Worth Rs 990/- With Purchase of Loreal Skin and Make Up Worth Rs 1800/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Manicure Kit With Purchase Of L'oreal Paris Skin Care and Make Up Worth Rs 2200/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth Rs 3000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth
+             </br> Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE Maybelline New York Watershine Liquid Diamonds Lip Gloss Worth Rs 210/- with Purchase of Maybelline Make Up Worth Rs 1200/-</a></p>
          <p><a href="http://www.healthkart.com/product/maybelline-color-senstational-lip-color/MYBLN5">FREE Lipstick Holder with Purchase of Maybelline Color Sensational Lip Color</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">Buy Manufaktura Products Worth Rs 4500/- and Get One Manufaktura Beer Shampoo Worth Rs 960/- Absolutely FREE</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">FREE Manufaktura Beer Shampoo worth Rs 960/- with purchase of Manufaktura products worth Rs 4500/-</a></p>
 
 
+         <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Auto Eye Pencil Worth  Rs 225/- With Purchase of NYX Products Worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Diamond Sparkle Lip Gloss  Worth Rs 600/- With Purchase  of NYX Products Worth Rs 2000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Luscious Lip Gloss Pallet Worth Rs 900/- With Purchase  of NYX Products Worth Rs 3500/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Colorbar">FREE Colorbar Precision Waterproof Liquid Eye Line Worth Rs 350/- With Purchase  of  Colorbar Products Worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/VLCC">FREE VEGA Set of 7 Make-up Brushes Worth Rs 450/- With Purchase  of VLCC Products Worth Rs 3000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Lotus+Herbals">FREE Lotus Herbals Jojobawash Active Milli Capsules Nourishing Face Wash Worth Rs 75/- With Purchase  of Lotus Herbals Products Worth Rs 500/-</a></p>
+         <p><a href="http://www.healthkart.com/search?query=Schwarzkopf&search.x=-815&search.y=-54">FREE Vega Premium Collection  Straightening Hair Brush Worth Rs 450/- With Purchase  of Schwarzkopf Products Worth
+             </br> Rs 3000/-</a></p>
+         <p><a href="http://www.healthkart.com/beauty/make-up/eyes">FREE Basicare Syling Eyelash Worth Rs 200/- With Purchase  of Eye Makeup Worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Kent">FREE Herbal Essences Shampoo Worth Rs 190/- With Purchase  of Any Kent Hairbrush</a></p>
+         <p><a href="http://www.healthkart.com/product/vaadi-herbals-fair-skin-gift-pack/ARVDC33">FREE Auravedic Ritual Skin Lightening Mask Worth Rs 200/- With Purchase of Beauty Products Worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Vichy">FREE Vichy Bi-White Med Foam Cleanser Worth Rs 1290/- With Purchase of Vichy Products Worth Rs 2500/-</a></p>
 
-         <p><a href="http://www.healthkart.com/beauty">FREE Auravedic Skin Lighting Mask With Purchase of  Beauty Products Worth Rs 1000/-</a></p>
 
 
 
