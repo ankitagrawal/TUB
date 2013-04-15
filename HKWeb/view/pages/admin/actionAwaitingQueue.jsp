@@ -333,7 +333,7 @@
                                            value="${store.id}"/> ${store.prefix}</label>
                     </c:forEach>
                 </li>
-                <shiro:hasAnyRoles name="<%=RoleConstants.ACTION_QUEUE%>">
+                <shiro:hasAnyRoles name="<%=RoleConstants.ACTION_QUEUE_MANAGER%>">
                     <li>
                         <label style="float:left;width:50px;">Payment Modes</label>
 
