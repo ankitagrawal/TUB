@@ -12019,8 +12019,6 @@
             insert into role_has_permission values ('CATEGORY_MANAGER','SPLIT_BO');
         </sql>
     </changeSet>
-<<<<<<< HEAD
-=======
     <changeSet author="Pratham (generated)" id="1365581845195-1">
         <createTable tableName="bucket">
             <column autoIncrement="true" name="id" type="INT">
@@ -12076,5 +12074,12 @@
     <changeSet author="Pratham (generated)" id="1365581845195-51">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="bucket_owner" constraintName="fk_user_has_bucket_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
->>>>>>> master
+	<changeSet author="rahul" id="12-04-2013-01">
+		<sql>
+			insert into warehouse(id, city, state, wh_phone, line1, line2, name, pincode,tin) values
+			(401, 'Delhi', 'Delhi', '12345', '2nd Floor, Safexpress Cargo Complex , 971/1 ',
+			'Opposite Fun and Food Village, Kapashera, New Delhi', 'Kapashera Warehouse', '110037', '07320452122')
+			ON DUPLICATE KEY UPDATE wh_phone ='12345';
+		</sql>
+	</changeSet>
 </databaseChangeLog>

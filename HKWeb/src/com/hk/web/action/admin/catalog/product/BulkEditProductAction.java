@@ -1,30 +1,5 @@
 package com.hk.web.action.admin.catalog.product;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.pact.service.catalog.ProductService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
@@ -41,9 +16,22 @@ import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -57,10 +45,8 @@ public class BulkEditProductAction extends BasePaginatedAction {
     List<String> supplierTin;
     String brand;
     String productVariantId = "";
-    // List<String> options;
-    // List<String> extraOptions;
+
     Map<String, Boolean> toBeEditedOptions = new HashMap<String, Boolean>();
-    Object toBeEditedOptionsObject;
     private Integer defaultPerPage = 20;
     Page productPage;
 
@@ -111,21 +97,24 @@ public class BulkEditProductAction extends BasePaginatedAction {
                 toBeEditedOptions.put(option, Boolean.TRUE);
             }
         }
-        toBeEditedOptionsObject = new HashMap(toBeEditedOptions);
-        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit").addParameters(toBeEditedOptions);
     }
 
     @SuppressWarnings("unchecked")
     public Resolution bulkEdit() {
-        if (products.isEmpty()) {
-            productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
-            if (productPage != null)
-                products.addAll(productPage.getList());
+        Map<String, String[]> paramValueMap = getContext().getRequest().getParameterMap();
+        for (Map.Entry<String, String[]> paramValueEntry : paramValueMap.entrySet()) {
+            if(paramValueEntry.getKey().equals("defineOptionsMap") || paramValueEntry.getKey().equals("category") || paramValueEntry.getKey().equals("brand")){
+            }else{
+                toBeEditedOptions.put(paramValueEntry.getKey(), Boolean.TRUE);
+            }
         }
-        // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed
-        // cannot be rendered.
-        // Therefore, the object again needs to be converted to a map.
-        toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
+
+        productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
+        products = new ArrayList<Product>();
+        if (productPage != null) {
+            products.addAll(productPage.getList());
+        }
         return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
     }
 
@@ -133,27 +122,20 @@ public class BulkEditProductAction extends BasePaginatedAction {
         if (products != null) {
             int ctr = 0;
 
-            // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden
-            // parameter for the bean.
-            // So for further use,the string needs to be converted again into a map
-            toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
-
             for (Product product : products) {
-                logger.debug("productId: " + product.getId());
                 Combo combo = comboDao.get(Combo.class, product.getId());
                 for (ProductVariant productVariant : product.getProductVariants()) {
-                    logger.debug("variant id " + productVariant.getId());
 
                     if (productVariant.getClearanceSale() == null || productVariant.getClearanceSale().equals(Boolean.FALSE)) {
                         if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
                             addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-                            return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+                            return sendResponse();
                         }
                     }
 
                     if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
                         addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-                        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+                        return sendResponse();
                     }
                     productVariant = getProductVariantService().save(productVariant);
                 }
@@ -181,7 +163,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
                     Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory.get(ctr)));
                     if (secondaryCat == null) {
                         addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category for product: " + product.getId()));
-                        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+                        return sendResponse();
                     }
                     product.setSecondaryCategory(secondaryCat);
                 }
@@ -190,7 +172,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
                     Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
                     if (combo == null && supplier == null) {
                         addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
-                        return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
+                        return sendResponse();
                     }
                     product.setSupplier(supplier);
                 }
@@ -200,8 +182,11 @@ public class BulkEditProductAction extends BasePaginatedAction {
             }
         }
         addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
+        return sendResponse();
+    }
 
+    private Resolution sendResponse() {
+        return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("category", this.category).addParameters(toBeEditedOptions);
     }
 
     @SuppressWarnings("unchecked")
@@ -232,43 +217,6 @@ public class BulkEditProductAction extends BasePaginatedAction {
         noCache();
         return new JsonResolution(healthkartResponse);
     }
-
-    // public List<ProductOption> getProductOptionList(int i) {
-    // List<ProductOption> productOptionList = new ArrayList<ProductOption>();
-    // String[] productOptionStrings;
-    // productOptionStrings = StringUtils.split(options.get(i), "|");
-    // for (String productOptionString : productOptionStrings) {
-    // String name = productOptionString.substring(0, productOptionString.indexOf(":"));
-    // String value = productOptionString.substring(productOptionString.indexOf(":") + 1);
-    //
-    // //checking whether the product option already exists or not
-    // ProductOption productOption = productOptionDao.findByNameAndValue(name, value);
-    // if (productOption == null) {
-    // productOption = new ProductOption(name, value);
-    // productOption = productOptionDao.save(productOption);
-    // }
-    //
-    // productOptionList.add(productOption);
-    // }
-    // return productOptionList;
-    // }
-    //
-    // public List<ProductExtraOption> getProductExtraOptionList(int i) {
-    // List<ProductExtraOption> productExtraOptionList = new ArrayList<ProductExtraOption>();
-    // String[] temp;
-    // if (!extraOptions.isEmpty()) {
-    // temp = extraOptions.get(i).split(",");
-    // for (String productExtraOptionString : temp) {
-    // ProductExtraOption productExtraOption = new ProductExtraOption();
-    // String name = productExtraOptionString.substring(0, productExtraOptionString.indexOf(":"));
-    // String value = productExtraOptionString.substring(productExtraOptionString.indexOf(":") + 1);
-    // productExtraOption.setName(name);
-    // productExtraOption.setValue(value);
-    // productExtraOptionList.add(productExtraOption);
-    // }
-    // }
-    // return productExtraOptionList;
-    // }
 
     public boolean isProductDeleted(Product product) {
         boolean isProductDeleted = true;
@@ -326,14 +274,6 @@ public class BulkEditProductAction extends BasePaginatedAction {
         this.toBeEditedOptions = toBeEditedOptions;
     }
 
-    public Object getToBeEditedOptionsObject() {
-        return toBeEditedOptionsObject;
-    }
-
-    public void setToBeEditedOptionsObject(Object toBeEditedOptionsObject) {
-        this.toBeEditedOptionsObject = toBeEditedOptionsObject;
-    }
-
     private Map<String, Boolean> getMapFromString(String str) {
         str = str.replace("=", ":");
         Map<String, Boolean> map;
@@ -361,7 +301,6 @@ public class BulkEditProductAction extends BasePaginatedAction {
         params.add("category");
         params.add("brand");
         params.add("toBeEditedOptions");
-        params.add("toBeEditedOptionsObject");
         return params;
     }
 
