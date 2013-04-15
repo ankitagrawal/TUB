@@ -809,8 +809,6 @@
 --/home-living/home-appliances/lights:Emergency Light
 -/home-living/clean-purify:Clean & Purify
 --/home-living/clean-purify/vacuum-cleaner:Vacuum Cleaner
---/home-living/clean-purify/water-purifier:Water Purifier
---/home-living/clean-purify/veg-purifier:Vegetable Purifier
 
 
 /parenting
