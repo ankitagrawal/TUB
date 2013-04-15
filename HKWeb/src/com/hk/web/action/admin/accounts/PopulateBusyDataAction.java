@@ -54,11 +54,11 @@ public class PopulateBusyDataAction extends BaseAction {
 		 	logger.info("Populating Sales ");
       busyPopulateSalesData.transactionHeaderForSalesGenerator();
 
-			logger.info("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();
+//			logger.info("Populating Purchases ");
+//			busyTableTransactionGenerator.populatePurchaseData();
 
-			logger.info("Populating RTO data ");
-      busyPopulateRtoData.transactionHeaderForRtoGenerator();
+//			logger.info("Populating RTO data ");
+//      busyPopulateRtoData.transactionHeaderForRtoGenerator();
 
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
