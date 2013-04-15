@@ -143,24 +143,21 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 			String skuGroupBarcode, skuItemBarcode;
 			if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
 				int recheckinCounter = 0;
+				findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_OUT.getId());
 					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
-						findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_OUT.getId());
+						SkuItem skuItem;
 						if(findSkuItemByBarcode != null){
+							skuItem = findSkuItemByBarcode;
 							skuItemBarcode = findSkuItemByBarcode.getBarcode();
 						} else{
+							skuItem = checkedOutInventory.getSkuItem();
 							skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
 							skuItemBarcode = skuGroupBarcode;
 						}
 
-						if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckinBarcode) &&
+						if (skuItemBarcode != null && skuItemBarcode.equalsIgnoreCase(recheckinBarcode) && skuItem.getId().equals(checkedOutInventory.getSkuItem().getId()) &&
 								checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
-							SkuItem skuItem;
-							  if (findSkuItemByBarcode != null){
-								  skuItem = findSkuItemByBarcode;
-							  }  else{
-								 skuItem = checkedOutInventory.getSkuItem();
-							  }
 
 							if (conditionOfItem.equals(GOOD)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
@@ -188,7 +185,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								inventoryService.checkInventoryHealth(productVariant);
 								break;
 							}
-							//inventoryService.checkInventoryHealth(productVariant);
+
 						}
 					}
 
@@ -198,7 +195,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
 					addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
 				} else{
-					addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesnt match any of the items OR item not in correct status"));
+					addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesn't match any of the items OR item not in correct status"));
 				}
 			}
 			else {
