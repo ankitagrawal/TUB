@@ -311,7 +311,7 @@ public class InventoryCheckinAction extends BaseAction {
         }
 
         if (stockTransferLineItemAgainstCheckInSkuGrp == null) {
-            checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, skuGroup.getStockTransfer(), sku);
+            checkinSkuGroup = getAdminInventoryService().createSkuGroupWithoutBarcode(skuGroup.getBatchNumber(), skuGroup.getMfgDate(), skuGroup.getExpiryDate(), skuGroup.getCostPrice(), skuGroup.getMrp(), null, null, stockTransfer, sku);
             checkinSkuGroup.setBarcode(skuGroup.getBarcode());
             checkinSkuGroup = (SkuGroup) getBaseDao().save(checkinSkuGroup);
         } else {

@@ -14,6 +14,7 @@ public interface WarehouseService {
     public static final Long MUMBAI_WAREHOUSE_ID  = 2L;
     public static final Long GURGAON_PHARMA_WAREHOUSE_ID  = 101L;
 		public static final Long PUNJABI_BAGH_WH_STORE_ID = 301L;
+		public static final Long KAPASHERA_WAREHOUSE_ID = 401L;
     public static final Long CORPORATE_OFFICE_ID  = 999L;
 
     public Warehouse getWarehouseById(Long warehouseId);
