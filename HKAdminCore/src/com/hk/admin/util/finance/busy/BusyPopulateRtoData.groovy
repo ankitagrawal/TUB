@@ -73,8 +73,9 @@ public class BusyPopulateRtoData {
 									left join gateway pay_gate on p.gateway_id = pay_gate.id
 									inner join warehouse w on w.id = so.warehouse_id
 
-									where (so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70))
-									and (ship.return_date >=${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
+									where ((so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70)) and so.shipping_order_status_id <> 999)
+									and (ship.return_date >=${lastUpdateDate}
+									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
 									and ship.return_date is not null
 									GROUP BY so.id
 									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
