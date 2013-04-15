@@ -50,8 +50,8 @@
             });
 
             $('.downloadCheck').click(function() {
-                var checkedinQty = $('.shippingRow').children('.checkedin').children('.checkedinQty').html();
-                var qty = $('.shippingRow').children('.qty').html();
+                var checkedinQty = Number($(this).parents('.shippingRow').children('.checkedin').children('.checkedinQty').html());
+                var qty = Number($(this).parents('.shippingRow').children('.qty').html());
                 if(qty == checkedinQty){
                     alert("All sku items for this particular line item have been checked in");
                     return false;
