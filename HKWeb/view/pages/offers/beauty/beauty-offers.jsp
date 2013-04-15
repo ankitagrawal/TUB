@@ -52,9 +52,9 @@
          <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">Buy Manufaktura Products Worth Rs 4500/- and Get One Manufaktura Beer Shampoo Worth Rs 960/- Absolutely FREE</a></p>
 
 
-          <!---
-         <p><a href="http://www.healthkart.com/beauty">FREE auravedic skin lighting mask with purchase of  Beauty products worth Rs 1000/-</a></p>
-          --->
+
+         <p><a href="http://www.healthkart.com/beauty">FREE Auravedic Skin Lighting Mask With Purchase of  Beauty Products Worth Rs 1000/-</a></p>
+
 
 
      </div>
