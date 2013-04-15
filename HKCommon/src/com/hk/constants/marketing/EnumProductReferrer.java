@@ -23,6 +23,8 @@ public enum EnumProductReferrer {
   homePageBanner(19L, "home_page_banner"),
   categoryHomePage(20L, "category_home_page"),
   categoryHomePageBanner(21L, "category_home_page_banner"),
+	healthNutrition(22L, "health-nutrition"),
+	sportsNutrition(23L, "sports-nutrition"),
 	;
 
   private String name;

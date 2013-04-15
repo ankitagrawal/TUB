@@ -10,6 +10,9 @@
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
       $(document).ready(function() {
+          $('#checkoutItem').click(function(){
+             $(this).hide();
+          });
         $(document).find('#skuGroup').attr("checked", true);
 
         $('.upc').change(function() {
@@ -153,7 +156,7 @@
 		              <s:link beanclass="com.hk.web.action.admin.inventory.SkuGroupAction" target="_blank">
 			              <s:param name="gatewayOrderId" value="${icBean.shippingOrder.gatewayOrderId}"/>
 			              <s:param name="skuGroup" value="${skuGroup.id}"/>
-                          <s:param name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>
+                          <%--<s:param name="skuItemBarcode"  value = "${icBean.skuItemBarcode.id}"/>--%>
 			              <img src="${pageContext.request.contextPath}/images/edit.gif" alt="Edit Batch"/>
 		              </s:link>
 	              </td>
@@ -162,7 +165,7 @@
               <tfoot style="border-top:1px solid gray">
               <tr>
                 <td colspan="6" align="left">
-                  <s:submit name="selectItemFromSkuGroup" value="Checkout" style="font-size:2.0em;padding:4px"/>
+                  <s:submit id = "checkoutItem" name="selectItemFromSkuGroup" value="Checkout" style="font-size:2.0em;padding:4px"/>
                 </td>
                 <td colspan="3" align="right">
                   <c:if test="${hk:isFreeVariant(productVariant)}">

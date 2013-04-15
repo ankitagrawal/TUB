@@ -21,7 +21,7 @@
       }
     </style>
 
-    <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+    <link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
     <%--<link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>--%>
 
   </s:layout-component>

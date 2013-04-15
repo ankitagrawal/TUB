@@ -9,7 +9,7 @@
 
     <s:layout-component name="htmlHead">
       <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
-      <link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+      <link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
       <%--<link href="${pageContext.request.contextPath}/css/admin.css" rel="stylesheet" type="text/css"/>--%>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
       <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
