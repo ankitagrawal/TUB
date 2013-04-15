@@ -12,6 +12,7 @@ import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
@@ -29,6 +30,7 @@ import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -87,6 +89,9 @@ public class GRNAction extends BasePaginatedAction {
     AdminInventoryService adminInventoryService;
     @Autowired
     InventoryService inventoryService;
+    @Autowired 
+    private ExtraInventoryService extraInventoryService;
+
 
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -263,6 +268,11 @@ public class GRNAction extends BasePaginatedAction {
 						}
 					}
 				}
+				if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                	PurchaseOrder po = grn.getPurchaseOrder();
+                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                	po.setExtraInventoryId(id);
+                }
 				getAdminEmailManager().sendGRNEmail(grn);
 			}
 
@@ -710,7 +720,15 @@ public class GRNAction extends BasePaginatedAction {
 		this.purchaseOrderService = purchaseOrderService;
 	}
 
-  public Set<String> getParamSet() {
+	public ExtraInventoryService getExtraInventoryService() {
+		return extraInventoryService;
+	}
+
+	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+		this.extraInventoryService = extraInventoryService;
+	}
+
+public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("productVariant");
 		params.add("invoiceNumber");

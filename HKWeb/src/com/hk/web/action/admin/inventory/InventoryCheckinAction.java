@@ -8,6 +8,7 @@ import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
@@ -22,6 +23,7 @@ import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
@@ -89,6 +91,8 @@ public class InventoryCheckinAction extends BaseAction {
     BaseDao baseDao;
     @Autowired
     private AdminEmailManager                 adminEmailManager;
+    @Autowired
+    private ExtraInventoryService extraInventoryService;
     private List<SkuGroup> skuGroupList;
 
     // SkuGroupDao skuGroupDao;
@@ -233,6 +237,11 @@ public class InventoryCheckinAction extends BaseAction {
         						}
         					}
         				}
+                    	if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                        	PurchaseOrder po = grn.getPurchaseOrder();
+                        	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                        	po.setExtraInventoryId(id);
+                        }
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
                         getAdminEmailManager().sendGRNEmail(grn);
@@ -772,6 +781,13 @@ public class InventoryCheckinAction extends BaseAction {
 	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
 		this.adminEmailManager = adminEmailManager;
 	}
-    
+
+	public ExtraInventoryService getExtraInventoryService() {
+		return extraInventoryService;
+	}
+
+	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+		this.extraInventoryService = extraInventoryService;
+	}
 
 }

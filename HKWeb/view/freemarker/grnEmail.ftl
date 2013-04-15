@@ -13,15 +13,15 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
   <#if grn.purchaseOrder.supplier.name??>
   Supplier = ${grn.purchaseOrder.supplier.name} <br/>
   </#if>
-  PO Fill Rate = ${grn.purchaseOrder.fillRate};
-  Approx. payable amount = ${grn.purchaseOrder.payable} <br/>
-  <#if grn.purchaseOrder.extraInventory??>
-  Extra Inventory = ${grn.purchaseOrder.extraInventory.id};
+  PO Fill Rate = ${grn.purchaseOrder.fillRate} %; <br/>
+  Approx. payable amount = ${grn.purchaseOrder.payable}; <br/>
+  <#if grn.purchaseOrder.extraInventoryId??>
+  Extra Inventory ID= ${grn.purchaseOrder.extraInventoryId}; <br/>
   <#else>
-  Extra Inventory = N/A;
+  Extra Inventory ID = N/A; <br/>
   </#if>
   <#if grn.purchaseOrder.estDelDate??>
-  Est. Delivery Date = ${grn.purchaseOrder.estDelDate} <br/>
+  Est. Delivery Date = ${grn.purchaseOrder.estDelDate}; <br/>
   <#else>
   Est. Delivery Date = N/A <br/>
   </#if>

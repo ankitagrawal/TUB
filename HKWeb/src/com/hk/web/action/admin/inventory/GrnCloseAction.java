@@ -3,10 +3,12 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.constants.inventory.EnumGrnStatus;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -32,6 +34,8 @@ public class GrnCloseAction extends BaseAction {
     private GoodsReceivedNoteDao goodsReceivedNoteDao;
     @Autowired
     private AdminEmailManager adminEmailManager;
+    @Autowired 
+    private ExtraInventoryService extraInventoryService;
 
     public Resolution pre() {
         int dayAgo = 21;
@@ -50,6 +54,11 @@ public class GrnCloseAction extends BaseAction {
     					}
     				}
     			}
+                if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                	PurchaseOrder po = grn.getPurchaseOrder();
+                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                	po.setExtraInventoryId(id);
+                }
     			getAdminEmailManager().sendGRNEmail(grn);
             }
             getBaseDao().saveOrUpdate(checkedInGrns);
@@ -69,5 +78,14 @@ public class GrnCloseAction extends BaseAction {
 	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
 		this.adminEmailManager = adminEmailManager;
 	}
+
+	public ExtraInventoryService getExtraInventoryService() {
+		return extraInventoryService;
+	}
+
+	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+		this.extraInventoryService = extraInventoryService;
+	}
+	
     
 }
