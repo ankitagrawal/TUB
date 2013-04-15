@@ -22,7 +22,7 @@ public class TrafficState implements java.io.Serializable {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "trafficState")
-    private Set<ActionQueue> actionQueues = new HashSet<ActionQueue>(0);
+    private Set<ActionItem> actionItems = new HashSet<ActionItem>(0);
 
     public Long getId() {
         return this.id;
@@ -40,12 +40,12 @@ public class TrafficState implements java.io.Serializable {
         this.name = name;
     }
 
-    public Set<ActionQueue> getActionQueues() {
-        return this.actionQueues;
+    public Set<ActionItem> getActionItems() {
+        return this.actionItems;
     }
 
-    public void setActionQueues(Set<ActionQueue> actionQueues) {
-        this.actionQueues = actionQueues;
+    public void setActionItems(Set<ActionItem> actionItems) {
+        this.actionItems = actionItems;
     }
 
 

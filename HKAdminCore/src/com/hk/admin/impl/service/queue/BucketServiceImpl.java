@@ -1,14 +1,20 @@
 package com.hk.admin.impl.service.queue;
 
-import com.hk.admin.pact.service.queue.BucketService;
+import com.hk.pact.dao.queue.ActionItemDao;
+import com.hk.constants.queue.EnumBucket;
+import com.hk.constants.queue.EnumTrafficState;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.Classification;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import com.hk.pact.service.UserService;
+import com.hk.util.BucketAllocator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
  * User: Pratham
@@ -16,6 +22,12 @@ import java.util.Map;
 */
 @Service
 public class BucketServiceImpl implements BucketService {
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ActionItemDao actionItemDao;
 
     @Override
     public List<Param> getParamsForBucket(List<Bucket> bucketList) {
@@ -34,6 +46,59 @@ public class BucketServiceImpl implements BucketService {
             parameters.put(param.getParamName(), param.getParamValues());
         }
         return parameters;
+    }
+
+    @Override
+    public ActionItem allocateBuckets(ShippingOrder shippingOrder) {
+        List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
+        ActionItem actionItem;
+        actionItem = existsActionItem(shippingOrder);
+        if(actionItem == null){
+            actionItem = new ActionItem();
+        }
+        if (enumBuckets != null && !enumBuckets.isEmpty()) {
+            actionItem.setBuckets(EnumBucket.getBuckets(enumBuckets));
+            actionItem.setShippingOrder(shippingOrder);
+            pushToActionQueue(actionItem);
+        }
+        return null;
+    }
+
+    @Override
+    public ActionItem existsActionItem(ShippingOrder shippingOrder) {
+        List<ActionItem> actionItems = actionItemDao.searchActionItem(shippingOrder, null, null, null, null, null, null, null);
+        return actionItems != null && !actionItems.isEmpty() ? actionItems.get(0) : null;
+    }
+
+    @Override
+    public ActionItem pushToActionQueue(ActionItem actionItem) {
+        actionItem.setFirstPushDate(new Date());
+        actionItem.setFlagged(false);
+        actionItem.setReporter(userService.getAdminUser());
+        actionItem.setLastPushDate(new Date());
+        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+        return saveActionItem(actionItem);
+    }
+
+    @Override
+    public ActionItem popFromActionQueue(ActionItem actionItem) {
+        return null;
+    }
+
+    @Override
+    public ActionItem changeBucket(ActionItem actionItem, List<Bucket> bucketList) {
+        actionItem.setBuckets(bucketList);
+        return saveActionItem(actionItem);
+    }
+
+    @Override
+    public List<Bucket> findBucket(List<String> bucketNames, Classification classification) {
+        return null;
+    }
+
+    @Override
+    public ActionItem saveActionItem(ActionItem actionItem) {
+        return actionItemDao.save(actionItem);
     }
 
 }

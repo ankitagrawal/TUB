@@ -60,6 +60,12 @@ public enum EnumPaymentStatus {
         return Arrays.asList(EnumPaymentStatus.SUCCESS.asPaymenStatus(), EnumPaymentStatus.ON_DELIVERY.asPaymenStatus());
     }
 
+    public static List<PaymentStatus> getOnlinePaymentErrorStatuses() {
+        return Arrays.asList(EnumPaymentStatus.REQUEST.asPaymenStatus(),
+                EnumPaymentStatus.ERROR.asPaymenStatus(),
+                EnumPaymentStatus.AUTHORIZATION_PENDING.asPaymenStatus());
+    }
+
   public static List<Long> getPaymentSuccessPageStatusIds() {
       return getEnumIDs(Arrays.asList(EnumPaymentStatus.SUCCESS,EnumPaymentStatus.ON_DELIVERY, EnumPaymentStatus.AUTHORIZATION_PENDING));
   }

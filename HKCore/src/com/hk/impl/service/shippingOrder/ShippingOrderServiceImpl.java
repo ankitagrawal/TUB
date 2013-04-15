@@ -12,6 +12,7 @@ import com.hk.domain.courier.Zone;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
+import com.hk.impl.service.queue.BucketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
     @Autowired
 	private EmailManager        emailManager;
-
+    @Autowired
+    BucketService bucketService;
     private OrderService               orderService;
 	private ShipmentService 				shipmentService;
 
@@ -349,6 +351,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             	logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
 			}
         }
+
+        bucketService.allocateBuckets(shippingOrder);
+
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }

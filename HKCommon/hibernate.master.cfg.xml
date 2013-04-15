@@ -8,7 +8,7 @@
       com.mysql.jdbc.Driver
     </property>
     <property name="hibernate.connection.url">
-      jdbc:mysql://localhost:3306/healthkart_ajeet
+      jdbc:mysql://localhost:3306/healthkart_dev_15_04
     </property>
     <property name="hibernate.connection.username">
       root

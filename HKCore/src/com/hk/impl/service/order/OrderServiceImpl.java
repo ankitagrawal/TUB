@@ -34,6 +34,7 @@ import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.OrderDateUtil;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
@@ -93,9 +94,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService orderStatusService;
     @Autowired
     private RewardPointService rewardPointService;
-    /*
-     * @Autowired private CategoryService categoryService;
-     */
     @Autowired
     private OrderLoggingService orderLoggingService;
     @Autowired
@@ -104,17 +102,11 @@ public class OrderServiceImpl implements OrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     LineItemDao lineItemDao;
-
     @Autowired
     ShipmentService shipmentService;
+    @Autowired
+    BucketService bucketService;
 
-
-    /*
-     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
-     */
-
-    // @Value("#{hkEnvProps['codMaxAmount']}")
-    // private Double codMaxAmount;
     @Transactional
     public Order save(Order order) {
         return getOrderDao().save(order);
@@ -785,15 +777,16 @@ public class OrderServiceImpl implements OrderService {
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
                     shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                    //auto allocate buckets, based on business use case
+                    bucketService.allocateBuckets(shippingOrder);
                 }
             }
             shippingOrderAlreadyExists = true;
-
         }
 
         setTargetDispatchDelDatesOnBO(order);
 
-        // Check Inventory health of order lineitems
+        // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }

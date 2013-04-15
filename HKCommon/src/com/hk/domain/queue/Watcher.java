@@ -27,8 +27,8 @@ public class Watcher  implements java.io.Serializable {
     private Long id;
  
 @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="action_queue_id", nullable=false)
-    private ActionQueue actionQueue;
+    @JoinColumn(name="action_item_id", nullable=false)
+    private ActionItem actionItem;
  
     
     @Column(name="user_id", nullable=false)
@@ -41,12 +41,12 @@ public class Watcher  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public ActionQueue getActionQueue() {
-        return this.actionQueue;
+    public ActionItem getActionItem() {
+        return this.actionItem;
     }
     
-    public void setActionQueue(ActionQueue actionQueue) {
-        this.actionQueue = actionQueue;
+    public void setActionItem(ActionItem actionItem) {
+        this.actionItem = actionItem;
     }
     public Long getUserId() {
         return this.userId;

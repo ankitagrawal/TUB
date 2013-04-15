@@ -2,7 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
-import com.hk.admin.pact.service.queue.BucketService;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
