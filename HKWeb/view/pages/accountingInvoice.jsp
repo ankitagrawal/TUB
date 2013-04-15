@@ -22,7 +22,7 @@
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${isB2BOrder}">
+      <c:when test="${isB2BOrder&&orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
            TAX INVOICE            
       </c:when>
       <c:otherwise>
