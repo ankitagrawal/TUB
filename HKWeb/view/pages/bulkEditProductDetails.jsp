@@ -37,7 +37,7 @@
 <s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
 <s:hidden name="category" value="${bep.category}"/>
 <s:hidden name="brand" value="${bep.brand}"/>
-<s:hidden name="toBeEditedOptionsObject" value="${bep.toBeEditedOptionsObject}"/>
+<s:hidden name="toBeEditedOptions" value="${bep.toBeEditedOptions}"/>
 
 <table border="1" class="zebra_vert">
 <tr>
