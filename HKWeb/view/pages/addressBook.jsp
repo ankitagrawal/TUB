@@ -103,9 +103,9 @@
             </h3>
 
             <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-                <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
+                <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="raj_addressLink" event="checkout" title="Click to use this address and proceed">
                     <s:param name="selectedAddress" value="${address.id}"/>
-                    <div class="address" style="position: relative;">
+                    <div class="address raj_address">
                         <h5 class="name">${address.name}</h5>
                         <div class='street street1'>${address.line1}</div>
                         <c:if test="${hk:isNotBlank(address.line2)}">
@@ -115,13 +115,13 @@
                         <div class='state'>${address.state}</div>
                         <div class='pin'>${address.pincode.pincode}</div>
                         <div class='phone'>${address.phone}</div>
-                        <br/>
-                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete">
+
+                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" style="left: 0px;top: -7px;border-radius: 0px;" class="appliedButton">
                             <s:param name="deleteAddress" value="${address.id}"/>
-                            (delete)
+                            DELETE
                         </s:link>
 
-                        <span class="edit">(edit)</span>
+                        <span style="left: 0px;top: -7px;border-radius: 0px;margin-bottom: 12px;" class="appliedButton edit">EDIT</span>
 
                         <div class="hidden help yellow">
                             Click to use this address
@@ -205,7 +205,7 @@
                 <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;" >
                     <s:layout-render name="/layouts/addressLayout.jsp" />
                     <s:hidden name="countryId" value="${countryId}"/>
-                    <s:submit name="create" value="Use this address and continue" style="margin:15px 0 0 26px;width:260px;position: static;" class="button"/>
+                    <s:submit name="create" value="Use this address and continue" class="placeOrderButtonNew" style="width: 240px;"/>
                 </s:form>
             </div>
 

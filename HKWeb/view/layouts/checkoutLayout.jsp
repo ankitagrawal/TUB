@@ -43,7 +43,7 @@
     <div class="main_container">
       <s:layout-component name="steps"/>
       <s:layout-component name="steps_content"/>
-      <div class="floatfix"></div>
+      <div class="floatfix" style="margin-bottom: 150px;"></div>
     </div>
     <s:layout-render name="/includes/_footer.jsp"/>
 

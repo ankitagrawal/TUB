@@ -25,24 +25,15 @@
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
-<%--<s:layout-component name="htmlHead">
+<s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#publishOnFBWindow').jqm({trigger: '#publishOnFBLink', ajax: '@href'});
-    <c:if test="${!hk:alreadyPublishedDeal(actionBean.payment.order) && hk:getTopDealVariant(actionBean.payment.order) != null && actionBean.payment.amount >= 500}">
-      $('#publishOnFBLink').click();   // For amount greater than 500 only.
-    </c:if>
+        $("#learnMore").click(function(){
+            $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
+        });
     });
   </script>
 </s:layout-component>
-<s:layout-component name="modal">
-  <div class="jqmWindow" id="publishOnFBWindow" style="display: none; width:auto;padding:10px;">
-    <s:link beanclass="com.hk.web.action.core.user.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
-      <s:param name="order" value="${actionBean.payment.order.id}"/>
-      Publish on facebook
-    </s:link>
-  </div>
-</s:layout-component>--%>
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="steps">
@@ -94,11 +85,7 @@
         </div>
     </c:if>--%>
 
-    <div style="margin-top: 25px;">
-        <h1 class="green" style="font-size: 1.2em;">
-            Payment Successful
-        </h1>
-    </div>
+
 </s:layout-component>
 
 <s:layout-component name="left_col">
@@ -293,7 +280,8 @@
                     <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg">
                 </s:link>
             </div>--%>
-            <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
+            <div class="congratsText">Congratulations. Your order has been placed.</div>
+            <h2 class="orderIdText">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
             <shiro:hasRole name="<%=RoleConstants.HK_UNVERIFIED%>">
@@ -349,13 +337,15 @@
             </c:if>--%>
             <br/>
 
-            <h2 class="paymentH2">Shipping & Delivery</h2>
+            <div class="confirmationEmailText" style="border-bottom: 1px solid #ddd;">
+                <p>You will shortly be getting a confirmation email. The Dispatch date for each product is mentioned below.
+                The delivery time would be above that and the delivery date will vary according to your location.</p>
+                <p id="learnMore" class="learnMore" style="margin: 0px;float: right;" >learn more</p>
+            </div>
 
-            <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
-
-            <h2 class="paymentH2">Customer Support</h2>
-
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4616444</p>
+            <div class="confirmationEmailText">
+                <p>For any query please call us: 0124-4502950 or you can drop us an email at info@healthkart.com with your Order ID.</p>
+            </div>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
@@ -386,27 +376,28 @@
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
-                <div class="floatfix"></div>
+                <div class="orderShippedTo">
+                    <h2 class="paymentH2" style="border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
 
+                    <p>
+                        <c:set var="address" value="${actionBean.payment.order.address}"/>
+                        <strong>${address.name}</strong> <br/>
+                            ${address.line1},
+                        <c:if test="${not empty address.line2}">
+                            ${address.line2},
+                        </c:if>
+                            ${address.city} - ${address.pincode.pincode}<br/>
+                            ${address.state}, <span class="upc">INDIA</span><br/>
+                        <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+                    </p>
+                </div>
             </div>
           
           <div style="clear:both;"></div>
-             <div style="margin-top: 10px; float: left; margin-right: 5px;">
-                <h2 class="paymentH2">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
 
-                <p>
-                    <c:set var="address" value="${actionBean.payment.order.address}"/>
-                    <strong>${address.name}</strong> <br/>
-                        ${address.line1},
-                    <c:if test="${not empty address.line2}">
-                        ${address.line2},
-                    </c:if>
-                        ${address.city} - ${address.pincode.pincode}<br/>
-                        ${address.state}, <span class="upc">INDIA</span><br/>
-                    <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
-                </p>
-            </div>
-              <div class="floatfix"></div>
+            <a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
+
+              <div class="floatfix" style="margin-bottom: 40px;"></div>
         </c:when>
         <c:otherwise>
             Invalid request!

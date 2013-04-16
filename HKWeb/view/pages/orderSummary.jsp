@@ -94,6 +94,7 @@
     <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
 <%----%>
+        <div class="leftHalf">
     <jsp:include page="/includes/checkoutNotice.jsp"/>
       
     <c:if test="${orderSummary.availableCourierList == null}">
@@ -108,11 +109,13 @@
       $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>${orderSummary.pricingDto.productLineCount}</span> item in<br/>your shopping cart");
 
     </script>
+     </div>
+    <div class="rightHalf">
 
     <c:if test="${orderSummary.redeemableRewardPoints > 0}">
-      <div class="right_container" style="left: 40px;">
+      <div class="right_container" style="left: 40px;width: 230px;padding: 5px 10px;">
         <div class="title">
-          <h5>
+          <h5 style="font-size: 12px;">
             REDEEM REWARD POINTS
           </h5>
 
@@ -143,35 +146,35 @@
         </div>
       </div>
     </c:if>
-    <div class="right_container" style="left: 40px;">
+    <div class="right_container" style="left: 40px;width: 230px;padding: 5px 10px;">
       <div class="title">
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
           <div style="margin:10px; padding-top:0px">
               <div class="buttons">
-                  <s:submit name="orderReviewed" value="Make Payment" class="requiredFieldValidator"/>
+                  <s:submit style="margin: 0px !important;margin-left: 50px !important;margin-bottom: 10px !important;" name="orderReviewed" value="Make Payment" class="requiredFieldValidator placeOrderButtonNew"/>
               </div>
           </div>
-            <h5>
+            <h5 style="font-size: 13px;">
                 Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
             </h5>
-        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:175px;height:110px"/>
+        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:220px;height:54px"/>
           <%--<div class="title">
             <h5>
               Confirm order
             </h5>
           </div>--%>
 	      <div class="comment_type">
-		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing Type
-		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
-		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
+              <div class="commentTypeText"><s:radio value="1" name="order.commentType" class="commentType"/> Packing</div>
+              <div class="commentTypeText"><s:radio value="2" name="order.commentType" class="commentType"/> Delivery</div>
+              <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType"/> Others</div>
 	      </div>
 
       </div>
       </s:form>
 
     </div>
-      <div class='right_container address_box' style="left:75%;">
+      <div class='right_container address_box' style="width: 230px;padding: 5px 10px;">
           <div class='title'>
               <h5>
                   To be shipped to
@@ -201,6 +204,8 @@
           <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
               (change) </s:link>
         </span>
+      </div>
+      </div>
       </div>
     <c:choose>
     <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">

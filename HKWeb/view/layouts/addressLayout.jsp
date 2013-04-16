@@ -156,8 +156,8 @@
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="Name*"/>
-		<s:text name="address.name"  class="rowText"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="Name*"/>
+		<s:text name="address.name"  class="signUpInputNew2 rowText"/>
 	</div>
 
 	<div class="clear"></div>
@@ -165,8 +165,8 @@
 
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="Address Line1*"/>
-		<s:text name="address.line1" class="rowText" id="line1"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="Address Line1*"/>
+		<s:text name="address.line1" class="signUpInputNew2 rowText" id="line1"/>
 	</div>
 
 	<div class="clear"></div>
@@ -174,8 +174,8 @@
 
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="Address Line2"/>
-		<s:text name="address.line2" id="line2" style="width: 250px !important;"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="Address Line2"/>
+		<s:text class="signUpInputNew2" name="address.line2" id="line2" style="width: 250px !important;"/>
 	</div>
 
 	<div class="clear"></div>
@@ -183,25 +183,25 @@
 
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="Pincode*"/>
-		<s:text name="address.pincode" class="rowText" id="pin" maxlength="6"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="Pincode*"/>
+		<s:text name="address.pincode" class="signUpInputNew2 rowText" id="pin" maxlength="6"/>
 	</div>
 
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="City*"/>
-		<s:text style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" name="address.city" class="rowText" id="cityselect" title="enter city name"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="City*"/>
+		<s:text style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" name="address.city" class="signUpInputNew2 rowText" id="cityselect" title="enter city name"/>
 	</div>
 
 	<div class="clear"></div>
 	<div style="margin-top:10px"></div>
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="State*"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="State*"/>
 
-		<s:select name="address.state" id="stateselect" style="width:260px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" >
+		<s:select class="signUpInputNew2" name="address.state" id="stateselect" style="width:260px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" >
 			<s:option value=""> ----------------- Select State --------------- </s:option>
 			<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="stateList"
 			                           value="name" label="name"/>
@@ -213,8 +213,8 @@
 	<div style="margin-top:10px"></div>
 
 	<div class="row" style="padding-left:initial;">
-		<s:label class="rowLabel widthInitial" name="Phone/Mobile*"/>
-		<s:text name="address.phone" class="rowText" id="phone"/>
+		<s:label class="rowLabel widthInitial newLabel2" name="Phone/Mobile*"/>
+		<s:text name="address.phone" class="signUpInputNew2 rowText" id="phone"/>
 	</div>
         <div class="clear"></div>
         <br>

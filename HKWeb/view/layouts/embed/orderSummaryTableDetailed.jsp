@@ -19,12 +19,23 @@ Pass an attribute called pricingDto to render a table with pricing details
   if (pricingDto != null && orderDate != null) {
 %>
 
-<div class='products_container' style="overflow: visible;">
+<div class="topFullContainer">
+<div class='orderSummaryHeading'>
+    <div class="productGrid">Product</div>
+    <div class="prodQuantityGrid">Qty</div>
+    <div class='name' style="width: 20%;left: 19px;position: relative;float: left;">
+        <span class="dispatchDateText2">Dispatch Date</span>
+        <span class="dispatchDateQuesMark">?</span>
+        <span class="deliveryDateText">Delivery Date would be extra</span>
+    </div>
+    <div class="prodPriceGrid">Price</div>
+</div>
+<div class='products_container' style="overflow: visible;min-height: 0px;clear: both;">
 <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
   <c:if
       test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
-    <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
-      <div class='img48' style="vertical-align:top;">
+    <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+      <div class='img48' style="vertical-align:top;position: relative;float: left;">
         <c:choose>
           <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
             <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
@@ -37,8 +48,8 @@ Pass an attribute called pricingDto to render a table with pricing details
           </c:otherwise>
         </c:choose>
       </div>
-      <div class='name'>
-        <table width="70%">
+      <div class='name' style="position: relative;float: left;width: 37%;">
+        <table width="100%">
           <tr>
             <td>
                 ${invoiceLineItem.productVariant.product.name} <br/>
@@ -92,16 +103,16 @@ Pass an attribute called pricingDto to render a table with pricing details
         </table>
       </div>
 
-      <div class='price'>
+        <div class="dispatchedDateNew2"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+      <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
         <div class="hk">
         </div>
-        <div class="num"> Rs
+        <div class="num" style="left: 70px;position: relative;"> Rs
           <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
               value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
               pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
         </div>
       </div>
-        <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
       <div class='floatix'></div>
     </div>
   </c:if>
@@ -112,8 +123,8 @@ Pass an attribute called pricingDto to render a table with pricing details
     <c:if test="${!fn:contains(firstComboLineItem,invoiceLineItem.comboInstance.id)}">
       <%--<c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>--%>
         <c:set var="firstComboLineItem" value="${firstComboLineItem} + ',' + ${invoiceLineItem.comboInstance.id} + ','" />
-        <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
-        <div class='img48' style="vertical-align:top;">
+        <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+        <div class='img48' style="vertical-align:top;position: relative;float: left;">
           <c:choose>
             <c:when test="${invoiceLineItem.comboInstance.combo.mainImageId != null}">
               <hk:productImage imageId="${invoiceLineItem.comboInstance.combo.mainImageId}"
@@ -126,8 +137,8 @@ Pass an attribute called pricingDto to render a table with pricing details
             </c:otherwise>
           </c:choose>
         </div>
-        <div class='name'>
-          <table width="70%">
+        <div class='name' style="position: relative;float: left;width: 37%;">
+          <table width="100%">
             <tr>
               <td>
                   ${invoiceLineItem.comboInstance.combo.name}<br/>
@@ -146,41 +157,42 @@ Pass an attribute called pricingDto to render a table with pricing details
           </table>
         </div>
 
-        <div class='price'>
+        <div class="dispatchedDateNew2"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+        <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
           <div class="hk">
           </div>
-          <div class="num"> Rs
+          <div class="num" style="left: 70px;position: relative;"> Rs
             <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
                 value="${invoiceLineItem.comboInstance.combo.hkPrice * hk:getComboCount(invoiceLineItem)}"
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
           </div>
         </div>
-            <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
             <div class='floatix'></div>
       </div>
 
     </c:if>
   </c:if>
 </c:forEach>
+</div>
 <c:if test="${pricingDto.grandTotalPayable > 0.00}">
-  <div class='totals'>
-    <div class='left'>
-      <div class='shipping'>
+  <div class='totals newTotals'>
+    <div class='left' style="width: 40%;left: 0px;">
+      <div class='shipping' style="font-size: 13px;font-weight: normal;">
         Shipping:
       </div>
       <c:if test="${pricingDto.redeemedRewardPoints > 0}">
         <div style="font-size:.8em" class="green">Reward Points</div>
       </c:if>
       <c:if test="${pricingDto.codLineCount > 0}">
-        <div style="font-size:.8em" class="shipping">COD Charges</div>
+        <div style="font-size: 13px;font-weight: normal;" class="shipping">COD Charges</div>
       </c:if>
       <c:if
           test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount > 0.00}">
-        <div class='discount special'>
+        <div class='discount special' style="font-size: 13px;font-weight: normal;color: rgb(68, 68, 68);">
           You saved:
         </div>
       </c:if>
-      <div class='total'>
+      <div class='total' style="font-size: 13px;font-weight: normal;color: rgb(68, 68, 68);">
         Total:
       </div>
       <c:if test="${pricingDto.totalCashback > 0.00}">
@@ -189,8 +201,8 @@ Pass an attribute called pricingDto to render a table with pricing details
         </div>
       </c:if>
     </div>
-    <div class='right'>
-      <div class='shipping num'>
+    <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 13px;">
+      <div class='shipping num' style="font-size: 13px;">
         Rs ${pricingDto.shippingTotal}
       </div>
       <c:if test="${pricingDto.redeemedRewardPoints > 0}">
@@ -204,13 +216,13 @@ Pass an attribute called pricingDto to render a table with pricing details
       <c:if
           test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount+pricingDto.subscriptionDiscount > 0.00}">
         <div class='discount num green special'>
-          <span><fmt:formatNumber
+          <span style="font-size: 13px;font-weight: bold;color: rgb(68, 68, 68 );font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><fmt:formatNumber
               value="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount}"
               type="currency" currencySymbol="Rs. "/></span>
         </div>
       </c:if>
-      <div class='total num'>
-        <strong>
+      <div class='total num' style="font-size: 14px;">
+        <strong style="font-size: 13px;color: rgb(68,68,68);font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
           <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
         </strong>
       </div>
@@ -223,8 +235,8 @@ Pass an attribute called pricingDto to render a table with pricing details
   </div>
 </c:if>
 <c:if test="${pricingDto.grandTotalPayable == 0.00}">
-  <div class='totals'>
-    <div class='left'>
+  <div class='totals newTotals'>
+    <div class='left' style="width: 40%;left: 0px;">
       <div class='shipping'>
         Shipping:
       </div>
@@ -242,11 +254,11 @@ Pass an attribute called pricingDto to render a table with pricing details
           Cashback:
         </div>
       </c:if>
-      <div class='total'>
+      <div class='total' style="font-size: 14px;">
         Total:
       </div>
     </div>
-    <div class='right'>
+    <div class='right' style="width: 50%;left: 0px;text-align: right;">
       <div class='shipping num'>
         Rs ${pricingDto.shippingTotal}
       </div>
@@ -268,7 +280,7 @@ Pass an attribute called pricingDto to render a table with pricing details
           <span><fmt:formatNumber value="${pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>
         </div>
       </c:if>
-      <div class='total num'>
+      <div class='total num' style="font-size: 14px;">
         <strong>
           <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
         </strong>
@@ -280,8 +292,8 @@ Pass an attribute called pricingDto to render a table with pricing details
 <c:if test="${pricingDto.postpaidServicesTotal > 0.00}">
   <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
     <c:if test="${invoiceLineItem.productVariant.paymentType.name == 'Postpaid'}">
-      <div class='product' style="border-bottom-style: solid;height: auto;padding-bottom: 20px;">
-        <div class='img48' style="vertical-align:top;">
+      <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+        <div class='img48' style="vertical-align:top;position: relative;float: left;">
           <c:choose>
             <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
               <hk:productImage imageId="${invoiceLineItem.productVariant.product.mainImageId}"
@@ -294,8 +306,8 @@ Pass an attribute called pricingDto to render a table with pricing details
             </c:otherwise>
           </c:choose>
         </div>
-        <div class='name'>
-          <table width="70%">
+        <div class='name' style="position: relative;float: left;width: 37%;">
+          <table width="100%">
             <tr>
               <td>
                   ${invoiceLineItem.productVariant.product.name} <br/>
@@ -305,36 +317,36 @@ Pass an attribute called pricingDto to render a table with pricing details
             </tr>
           </table>
         </div>
-        <div class='price'>
+        <div class="dispatchedDateNew2"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+        <div class='price' style="position: relative;margin-left: 0px;width: 32%">
           <div class="hk">
           </div>
-          <div class="num"> Rs
+          <div class="num" style="left: 70px;position: relative;"> Rs
             <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
                 value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
           </div>
         </div>
-          <div class="dispatchedDate">Will be Dispatched from Warehouse by - 26 April 2013</div>
         <div class='floatix'></div>
       </div>
     </c:if>
   </c:forEach>
-  <div class='totals'>
-    <div class='left'>
+  <div class='totals newTotals'>
+    <div class='left' style="width: 40%;left: 0px;">
       <div class='discount special'>
         You saved:
       </div>
-      <div class='total'>
+      <div class='total' style="font-size: 14px;">
         Total:
       </div>
     </div>
-    <div class='right'>
+    <div class='right' style="width: 50%;left: 0px;text-align: right;">
       <div class='discount num green special'>
         <span id="summaryTotalDiscountPostpaid"><fmt:formatNumber
             value="${pricingDto.postpaidServiceMrpSubTotal - pricingDto.postpaidServiceHkSubTotal + pricingDto.postpaidServiceDiscount}"
             type="currency" currencySymbol="Rs. "/></span>
       </div>
-      <div class='total num'>
+      <div class='total num' style="font-size: 14px;">
         <strong>
           <fmt:formatNumber value="${pricingDto.postpaidServicesTotal}" type="currency" currencySymbol="Rs. "/>
         </strong>
@@ -342,6 +354,27 @@ Pass an attribute called pricingDto to render a table with pricing details
     </div>
   </div>
 </c:if>
+</div>
+
+<div class='orderSummaryHeading'>
+    <div class="deliveryDetails"> DELIVERY DETAILS</div>
+    <ul>
+        <li>
+            - The time taken for delivery after dispatch from our warehouse varies with location.
+        </li>
+        <li>
+            - For Metroes: 1-3 business days
+        </li>
+        <li>
+            - For Major Cities: 2-4 business days
+        </li>
+        <li>
+            - For Other Town/Cities: 3-6 business days
+        </li>
+        <li>
+            - For Rest of India Nonservcable through Couriers: 7-15 business days (Delivery done by Indian Post)
+        </li>
+    </ul>
 </div>
 <%
   }

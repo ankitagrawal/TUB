@@ -5549,7 +5549,29 @@ color: #e62580;
     top: 5px;
     text-decoration: underline;
     font-weight: bold;
-    color: #888;
+    color: #808080;
+    font-size: 13px;
+}
+
+.couponInput{
+    font-size: 13px !important;
+    border-radius: 0px !important;
+    border: 1px solid #808080 !important;
+    left: 0px !important;
+    margin-left: 0px !important;
+    width: 168px !important;
+}
+
+.new_button_grey{
+    border-radius: 0px !important;
+    background: #808080 !important;
+    height: 15px !important;
+    top: 0px !important;
+    left: 0px !important;
+    margin-left: 0px !important;
+    padding-top: 7px !important;
+    font-size: 13px !important;
+    margin-right: 0px !important;
 }
 
 .appliedOfferTitle{
@@ -5652,13 +5674,17 @@ color: #e62580;
     left: 3px;
     width: 202px;
     height: auto;
-    border-radius: 8px;
     position: relative;
     float: left;
     margin-bottom: 5px;
     word-wrap: break-word;
-    border: 1px solid #ddd;
+    border: 1px solid #DCA;
     margin-right: 8px;
+    background: #fffdd6;
+}
+
+.minHeight{
+    min-height: 95px !important;
 }
 
 .applicableOfferTerms{
@@ -5741,6 +5767,7 @@ color: #e62580;
     width: 73%;
     border-radius: 5px;
     height: auto;
+    margin-bottom: 50px;
 }
 
 .offerContainer:hover {
@@ -5757,20 +5784,82 @@ color: #e62580;
     position: relative;
     float: left;
     left: 30px;
-    border: 1px solid rgb(190, 190, 190);
     border-radius:5px;
     margin-bottom: 10px;
     height: auto;
 }
 
+.gotACoupon{
+    left: 0px !important;
+    margin-bottom: 5px !important;
+    border: none !important;
+    width: 258px !important;
+    margin-left: initial !important;
+    margin-right: initial !important;
+    padding: 0px !important;
+    margin-top: 10px !important;
+}
+
+.checkoutContainer{
+    left: 30px !important;
+    margin-bottom: 2px !important;
+    width: 258px !important;
+    margin-left: initial !important;
+    margin-right: initial !important;
+    border: none !important;
+    padding: 0px !important;
+}
+
+.checkoutContainerText{
+    position: relative;
+    float: left;
+}
+
+.checkoutContainerTextRight{
+    position: relative;
+    float: right;
+}
+
+.youPay{
+    font-size: 18px;
+    color: #ce731a;
+    position: relative;
+    float: left;
+    left: 0px;
+    margin-left: 0px;
+}
+
+.youPayValue{
+    font-size: 18px;
+    color: #ce731a;
+    position: relative;
+    float: right;
+}
+
+.newShippingHandling{
+    position: relative;
+    float: left;
+    text-align: left;
+    margin-bottom: 15px;
+    font-style: italic;
+    font-family: Georgia, Cambria, serif;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.checkoutHead5{
+    border-bottom: 1px solid #ccc !important;
+    padding-bottom: 15px;
+}
+
 .button_raj{
-    background: initial !important;
+    background: #ddd !important;
     color: black !important;
     font-size: 9px !important;
     font-weight: initial !important;
-    border: 1px solid rgb(91, 208, 253) !important;
+    border: 1px solid #ddd !important;
     height: 22px !important;
-    border-radius: 3px !important;
+    border-radius: 0px !important;
     position: relative !important;
     float: left !important;
     left: 0px !important;
@@ -5824,7 +5913,6 @@ color: #e62580;
     font-size: 9px;
     color: black;
     font-weight: bold;
-    border-radius: 4px;
     position: relative;
     float: left;
     left: 10px;
@@ -5858,11 +5946,11 @@ color: #e62580;
 }
 
 .appliedOfferNew{
-    left: 30px !important;
+    left: 35px !important;
     width: 255px !important;
     border: 1px solid #DCA !important;
-    background: rgb(248, 255, 163) !important;
-    border-radius: 5px !important;
+    background: #fffdd6 !important;
+    border-radius: 0px !important;
 }
 
 .offerCloseButton{
@@ -5878,13 +5966,12 @@ color: #e62580;
 .offerTextOnTop{
     position: relative;
     float: left;
-    border: 1px solid;
-    border-radius: 5px;
+    border: 1px solid #DCA;
     padding: 12px;
     margin-bottom: 10px;
     width: 67%;
     font-size: 14px;
-    background: rgb(248, 255, 163);
+    background: #fffdd6;
 }
 
 .offerTextOnTopButton{
@@ -5983,6 +6070,14 @@ color: #e62580;
     text-align: right;
 }
 
+.newLabel2{
+    position: relative;
+    float: left;
+    margin-top:0px !important;
+    width: 90px !important;
+    text-align: right;
+}
+
 .signUpButtonNew{
     position: relative !important;
     float: left;
@@ -5995,6 +6090,32 @@ color: #e62580;
     font-size: 13.5px !important;
 }
 
+.placeOrderButtonNew{
+    position: relative !important;
+    float: left;
+    margin: 22px !important;
+    border-radius: 0px !important;
+    background: rgb(255, 102, 0) !important;
+    left: -20px !important;
+    height: 32px;
+    width: 125px;
+    font-size: 13.5px !important;
+}
+
+.dispatchedDateNew{
+    position: relative;
+    float: left;
+    margin-left: 15px;
+    margin-right: 15px
+}
+
+.dispatchedDateNew2{
+    position: relative;
+    float: left;
+    margin-left: 30px;
+    left: 15px;
+}
+
 .signUpInputNew{
     border-radius: 0px !important;
     box-shadow: 5px 9px 12px -15px;
@@ -6004,6 +6125,228 @@ color: #e62580;
     height: 30px !important;
 }
 
+.signUpInputNew2{
+    border-radius: 0px !important;
+    box-shadow: 5px 9px 12px -15px;
+    background: none !important;
+    margin-bottom: 0px !important;
+    border: 1px solid rgb(214, 214, 214) !important;
+    height: 30px !important;
+}
+
+.tableTitleNew{
+    background: none !important;
+    border: 1px solid #ddd;
+    height: 20px;
+    border-radius: 0px;
+}
+
+.dispatchDateQuesMark{
+    border: 1px solid #ddd;
+    background: #ddd;
+    border-radius: 9px;
+    width: 12px;
+    height: 11px;
+    position: relative;
+    float: left;
+    padding: 3px;
+    text-align: center;
+    cursor: pointer;
+    top: -3px;
+}
+
+.dispatchDateText2{
+    margin-bottom: 7px;
+    position: relative;
+    float: left;
+    margin-right: 5px;
+}
+
+.popUpDDate{
+    display: none;
+    position: absolute;
+    border: 1px solid #ddd;
+    background: #ddd;
+    border-radius: 12px;
+    bottom: 45px;
+    width: 215px;
+    padding: 11px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.learnMore{
+    text-decoration: underline;
+    cursor: pointer;
+    position: relative;
+    float: left;
+    margin-top: 8px;
+}
+
+.arrowNew{
+    position: relative;
+    z-index: 1000;
+    float: left;
+    left: 23px;
+    top: 30px;
+    border-top: 15px solid #ddd;
+    border-top-color: #ddd;
+    border-right: 22px solid transparent;
+}
+
+.deliveryDateText{
+    position: relative;
+    float: left;
+    font-size: 9px;
+    font-weight: normal;
+}
+
+.orderSummaryHeading{
+    position: relative;
+    float: left;
+    border: 1px solid #ddd;
+    width: 618px;
+    left: 5px;
+    padding: 5px;
+}
+
+.newProductContainer{
+    border: 1px solid #ddd;
+    height: auto;
+    padding-bottom: 20px;
+    border-top: none;
+}
+
+.productGrid{
+    position: relative;
+    float: left;
+    width: 47%;
+}
+
+.prodQuantityGrid{
+    position: relative;
+    float: left;
+    width: 3%;
+}
+
+.prodPriceGrid{
+    position: relative;
+    float: left;
+    width: 25%;
+    left: 35px;
+}
+
+.newTotals{
+    top: -40px;
+    padding: 0px !important;
+    width: 20% !important;
+    left: 40px !important;
+    background: white !important;
+    border-bottom: 1px solid #ddd !important;
+    border-top: 1px solid #ddd !important;
+}
+
+.deliveryDetails{
+    position: relative;
+    left: 30px;
+    font-size: 14px;
+    padding-top: 10px;
+    margin-bottom: -10px;
+}
+
+.orderShippedTo{
+    margin-top: 10px;
+    float: left;
+    margin-right: 5px;
+    width: 30%;
+    left: 30px;
+    position: relative;
+}
+
+.leftHalf{
+    position: relative;
+    width: 70%;
+    float: left;
+}
+
+.rightHalf{
+    top: 130px;
+    position: relative;
+    width: 30%;
+    float: left;
+}
+
+.backTOHomeButton{
+    width: 265px;
+    float: right;
+    left: 0px;
+    font-size: 13px;
+    height: 23px;
+    color: black;
+    font-weight: bold;
+    border-radius: 4px;
+    position: relative;
+    top: 14px;
+    border: 1px solid #ddd;
+    padding-top: 7px;
+    background: #ddd;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.topFullContainer{
+    position: relative;
+    width: 140%;
+    float: left;
+    font-size: 13px;
+}
+
+.commentTypeText{
+    position: relative;
+    float: left;
+}
+
+.raj_address{
+    position: relative;
+    float: left;
+    width: auto;
+    border: 1px solid #ddd !important;
+    border-radius: 0px !important;
+}
+
+.raj_addressLink{
+    position: relative;
+    float: left;
+    width: 100%;
+    margin-bottom: 13px;
+}
+
+.orderIdText{
+    font-size: 1em;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    width: 65%;
+    left: 15px;
+    position: relative;
+}
+
+.congratsText{
+    position: relative;
+    float: left;
+    width: 65%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    left: 15px;
+    margin-bottom: 15px;
+    margin-top: 45px;
+}
+
+.confirmationEmailText{
+    position: relative;
+    float: left;
+    width: 65%;
+}
 
 /*
 slider pager end
