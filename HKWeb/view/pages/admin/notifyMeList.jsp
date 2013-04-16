@@ -111,7 +111,15 @@
 
       </s:form>
     </fieldset>
-	   <c:choose>
+
+      <fieldset>
+          <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+              <s:submit name="sendAllNotifyMails" value="send all mails"/>
+          </s:form>
+
+      </fieldset>
+
+      <c:choose>
 		      <c:when test="${notifyMeBean.notifyMeList!=null}">
     <div id="table_container">
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
