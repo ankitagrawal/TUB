@@ -44,7 +44,7 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
 		return null;
 	}
 
-    //Seema
+
 	public boolean isBrandAudited(String brand) {
         List<Long> cycleCountOpenStatusList = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
 		String queryString = "from CycleCount cc where cc.brand = :brand and cc.cycleStatus in (:cycleCountOpenStatus) ";
