@@ -155,7 +155,7 @@ public class InventoryCheckoutAction extends BaseAction {
                             String productId = lineItem.getSku().getProductVariant().getProduct().getId();
                             String variantId = lineItem.getSku().getProductVariant().getId();
 
-                            if (StringUtils.isNotBlank(brand) && brandsToExcludeList.contains(brand.toLowerCase())) {
+                            if (StringUtils.isNotBlank(brand) && brandsToExcludeList.contains(brand)) {
                                 cycleCountNeedTobeClose.append(brand).append("<br/>");
                                 cycleCountInProgress = true;
                             }
