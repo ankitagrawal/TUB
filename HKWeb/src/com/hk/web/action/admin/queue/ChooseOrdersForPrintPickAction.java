@@ -19,6 +19,7 @@ import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.util.CustomDateTypeConvertor;
+import com.hk.util.HKCollectionUtils;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -242,9 +243,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
                 String variantId = lineItem.getSku().getProductVariant().getId();
 
 
-                if (StringUtils.isNotBlank(brandName) && brandsToExcludeList.contains(brandName)) {
-                    shouldAdd = false;
-                    break;
+                if (StringUtils.isNotBlank(brandName)) {
+                    if (HKCollectionUtils.listContainsKey(brandsToExcludeList, brandName)) {
+                        shouldAdd = false;
+                        break;
+                    }
                 }
 
                 if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {

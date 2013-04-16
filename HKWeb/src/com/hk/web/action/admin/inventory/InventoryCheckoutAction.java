@@ -8,6 +8,7 @@ import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.util.HKCollectionUtils;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -155,9 +156,11 @@ public class InventoryCheckoutAction extends BaseAction {
                             String productId = lineItem.getSku().getProductVariant().getProduct().getId();
                             String variantId = lineItem.getSku().getProductVariant().getId();
 
-                            if (StringUtils.isNotBlank(brand) && brandsToExcludeList.contains(brand)) {
-                                cycleCountNeedTobeClose.append(brand).append("<br/>");
-                                cycleCountInProgress = true;
+                            if (StringUtils.isNotBlank(brand)) {
+                                if (HKCollectionUtils.listContainsKey(brandsToExcludeList, brand)) {
+                                    cycleCountNeedTobeClose.append(brand).append("<br/>");
+                                    cycleCountInProgress = true;
+                                }
                             }
 
                             if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {
