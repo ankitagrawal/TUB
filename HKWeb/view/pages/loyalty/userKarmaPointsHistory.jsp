@@ -10,7 +10,8 @@
  
   <s:layout-component name="contents">
   <div id="memberInfo" style="float: left;">
-  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.user.createDate}" /> | Spent: | Points earned: | Redeemed: | <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
+  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.user.createDate}" /> | Spent: ??| Points earned: ${userKarmaHA.pointsCredited} 
+  	    	| Redeemed: ${userKarmaHA.pointsDebited} | <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" /> ${badge.badgeName}
   </div>
   <hr>
   <div id="levelInfo" style="float: left;"> 
@@ -47,7 +48,7 @@
                             </td>
                             <td>
                                     <c:forEach items="${karmaProfile.userOrderKey.order.cartLineItems}" var="items">
-   										${items.productVariant.product.name} , 		
+   										${items.productVariant.product.name} 
                                     </c:forEach>
                                     
                             </td>

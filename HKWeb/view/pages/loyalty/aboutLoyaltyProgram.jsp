@@ -20,7 +20,6 @@
 			<li><strong>${badge.badgeName}: </strong> ${badge.loyaltyPercentage}</li>
 		</c:forEach>
 	</ul>
-<s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" event="pre" title="Show History"><span id="link2" style="font-weight: bold;">Show History</span></s:link>
 
 </stripes:layout-component>
 </stripes:layout-render>

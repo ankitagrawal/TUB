@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.akube.framework.dao.Page;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
@@ -58,6 +59,11 @@ public interface LoyaltyProgramService {
 	 */
 	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
 
+	/**
+	 * A tets method
+	 * @return
+	 */
+	public List<Category> getCategoryForLoyaltyProducts ();
 
 	/**
 	 * This method returns Loyalty Products on the basis of points.

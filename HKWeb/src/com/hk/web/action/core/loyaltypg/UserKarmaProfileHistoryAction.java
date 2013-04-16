@@ -18,6 +18,8 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 /**
@@ -38,13 +40,28 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	@Autowired  
 	private LoyaltyProgramService loyaltyProgramService;
 
-
+	private double pointsDebited;
+	private double pointsCredited;
+	
 	@DefaultHandler
 	public Resolution pre() {
 		if (this.getPrincipal() != null) {
 			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
 			this.pointsPage = this.loyaltyProgramService.getProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 			this.karmaList = this.pointsPage.getList();
+			this.pointsCredited=0;
+			this.pointsDebited=0;
+			for(UserOrderKarmaProfile profile : this.karmaList) {
+				
+				if (TransactionType.DEBIT.equals(profile.getTransactionType())
+						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
+					this.pointsDebited += profile.getKarmaPoints();
+				} else if (TransactionType.CREDIT.equals(profile.getTransactionType())
+						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
+					this.pointsCredited += profile.getKarmaPoints();
+				}
+			}
+			
 		}
 
 		return new ForwardResolution("/pages/loyalty/userKarmaPointsHistory.jsp");
@@ -101,6 +118,34 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 */
 	public void setKarmaList(List<UserOrderKarmaProfile> karmaList) {
 		this.karmaList = karmaList;
+	}
+
+	/**
+	 * @return the pointsDebited
+	 */
+	public double getPointsDebited() {
+		return this.pointsDebited;
+	}
+
+	/**
+	 * @param pointsDebited the pointsDebited to set
+	 */
+	public void setPointsDebited(double pointsDebited) {
+		this.pointsDebited = pointsDebited;
+	}
+
+	/**
+	 * @return the pointsCredited
+	 */
+	public double getPointsCredited() {
+		return this.pointsCredited;
+	}
+
+	/**
+	 * @param pointsCredited the pointsCredited to set
+	 */
+	public void setPointsCredited(double pointsCredited) {
+		this.pointsCredited = pointsCredited;
 	}
 
 }

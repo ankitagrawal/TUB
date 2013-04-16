@@ -17,6 +17,10 @@ src: url("../Fonts/WhitneyHTF-BookSC.otf") format("opentype");
 
 body{font-family: "whitneyBook";font-size: 16px;line-height: 20px;color: #424242; background:#fff;}
 a{text-decoration: none;outline: 0;color: #424242}
+a:hover{
+	color: rgb(49, 118, 241);
+	cursor: pointer;
+}
 a:focus{outline:1px dotted invert}hr{border:0#ccc solid;border-top-width:1px;clear:both;height:0}
 h1{font-size:25px}h2{font-size:23px}h3{font-size:21px}h4{font-size:19px}h5{font-size:17px;}h6{font-size:15px}ol{list-style:decimal}
 ul{position: relative;float: left;list-style: none;width: 100%;list-style:none;}li{margin-left:30px}

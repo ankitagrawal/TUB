@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
@@ -29,7 +30,7 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 	}
 
 	@Override
-	public List<CategoryLoyaltyDto> getCategoryForLoyaltyProducts() {
+	public List<Category> getCategoryForLoyaltyProducts() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.LEFT_JOIN);
@@ -38,7 +39,27 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		ProjectionList projectionsList = Projections.projectionList();
 		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
 		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
-		projectionsList.add(Projections.groupProperty("category.displayName"));
+	//	projectionsList.add(Projections.groupProperty("displayName"));
+		//projectionsList.add(Projections.alias(Projections.rowCount(), "count"));
+		criteria.setProjection(Projections.distinct(projectionsList));
+		criteria.setResultTransformer(Transformers.aliasToBean(Category.class));
+		
+		@SuppressWarnings("unchecked")
+		List<Category> list = this.findByCriteria(criteria);
+		return list;
+	}
+
+	@Override
+	public List<CategoryLoyaltyDto> getCategoryDtoForLoyaltyProducts() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("prod.categories", "category", CriteriaSpecification.LEFT_JOIN);
+		criteria.addOrder(Order.asc("category.displayName"));
+		ProjectionList projectionsList = Projections.projectionList();
+		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
+		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
+		//projectionsList.add(Projections.groupProperty("category.displayName"));
 		projectionsList.add(Projections.alias(Projections.rowCount(), "count"));
 		criteria.setProjection(Projections.distinct(projectionsList));
 		criteria.setResultTransformer(Transformers.aliasToBean(CategoryLoyaltyDto.class));
@@ -48,6 +69,7 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		return list;
 	}
 
+	
 	@Override
 	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName) {
 

@@ -16,6 +16,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.core.RoleConstants;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
@@ -34,6 +35,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private List<LoyaltyProduct> productList;
 	private List<Badge> badgeList;
 	private List<CategoryLoyaltyDto> categories;
+	private List<Category> testList ;
 	private String categoryName;
 	private double minPoints;
 	private double maxPoints;
@@ -50,14 +52,16 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
-
+		
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
 		this.productList = new ArrayList<LoyaltyProduct>();
 		for (ProductAdapter productAdapter : list) {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+	
+	//	this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.testList = this.loyaltyProgramService.getCategoryForLoyaltyProducts();
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
@@ -201,5 +205,19 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	 */
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	/**
+	 * @return the testList
+	 */
+	public List<Category> getTestList() {
+		return this.testList;
+	}
+
+	/**
+	 * @param testList the testList to set
+	 */
+	public void setTestList(List<Category> testList) {
+		this.testList = testList;
 	}
 }
