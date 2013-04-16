@@ -163,6 +163,7 @@ public class CycleCountAction extends BasePaginatedAction {
         Warehouse warehouse = auditor.getSelectedWarehouse();
         if (!doesBrandExist) {
             message = "Invalid Brand";
+            return false;
         } else {
             /* Cycle Count of brand , CC of product and CC of product variant related to brand should not in pending status */
             List<CycleCount> cycleCounts = cycleCountService.getCycleCountInProgress(auditBy, null, null, userService.getWarehouseForLoggedInUser());
