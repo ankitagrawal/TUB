@@ -11592,7 +11592,7 @@
             alter table brands_to_audit add column `update_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
             update brands_to_audit set update_dt = audit_date;
         </sql>
-    </changeSet>    
+    </changeSet>
     <changeSet author="Ajeet (generated)" id="1361868792355-1">
         <createTable tableName="entity_audit_trail">
             <column autoIncrement="true" name="id" type="INT">
@@ -11666,69 +11666,6 @@
     <changeSet author="Vaibhav (generated)" id="1362395307901-11">
         <addForeignKeyConstraint baseColumnNames="change_group_id" baseTableName="change_item" constraintName="fk_change_item_change_group1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="change_group" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1360522388245-1">
-        <createTable tableName="reverse_order">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="amount" type="DOUBLE"/>
-            <column name="action_proposed" type="VARCHAR(45)"/>
-            <column name="create_dt" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="shipping_order_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="reconciliation_status_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="courier_pickup_detail_id" type="INT"/>   
-        </createTable>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360522388245-3">
-        <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="reverse_order" constraintName="fk_reverse_order_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360522388245-4">
-        <addForeignKeyConstraint baseColumnNames="reconciliation_status_id" baseTableName="reverse_order" constraintName="fk_reverse_order_reconciliation_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_status" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360522388245-5">
-        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="reverse_order" constraintName="fk_reverse_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360522388245-6">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="reverse_order" constraintName="fk_reverse_order_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360566211728-1">
-        <createTable tableName="reverse_line_item">
-            <column autoIncrement="true" name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="return_qty" type="VARCHAR(45)"/>
-            <column name="create_dt" type="DATETIME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="reverse_order_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="referred_line_item_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1360566211728-5">
-        <addForeignKeyConstraint baseColumnNames="referred_line_item_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
-    </changeSet>
-
-    <changeSet author="Neha (generated)" id="1360566211728-6">
-        <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1361432007800-1">
-        <addColumn tableName="replacement_order">
-            <column name="reverse_order_id" type="INT"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="Rohit (generated)" id="1362465491508-1">
         <createTable tableName="stock_transfer_status">
             <column name="id" type="INT">
@@ -11744,20 +11681,20 @@
             <column name="stock_transfer_status_id" type="INT"/>
         </addColumn>
     </changeSet>
-    <!--<changeSet author="Rohit (generated)" id="1362465491508-3">-->
-        <!--<createIndex indexName="name" tableName="manufacturer" unique="true">-->
-            <!--<column name="name"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
+    <changeSet author="Rohit (generated)" id="1362465491508-3">
+        <createIndex indexName="name" tableName="manufacturer" unique="true">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
     <changeSet author="Rohit (generated)" id="1362465491508-4">
         <addForeignKeyConstraint baseColumnNames="stock_transfer_status_id" baseTableName="stock_transfer" constraintName="fk_stock_transfer_stock_transfer_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="stock_transfer_status" referencesUniqueColumn="false"/>
     </changeSet>
-    <!--<changeSet author="Rohit (generated)" id="1362465491508-5">-->
-        <!--<dropColumn columnName="cost_price" tableName="sku"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Rohit (generated)" id="1362465491508-6">-->
-        <!--<dropColumn columnName="lead_time" tableName="sku"/>-->
-    <!--</changeSet>--><!--    -->
+    <changeSet author="Rohit (generated)" id="1362465491508-5">
+        <dropColumn columnName="cost_price" tableName="sku"/>
+    </changeSet>
+    <changeSet author="Rohit (generated)" id="1362465491508-6">
+        <dropColumn columnName="lead_time" tableName="sku"/>
+    </changeSet>
     <changeSet author="Ankit" id="05-03-2013-01">
         <sql>
             update gateway_issuer_mapping set issuer_code = 'CID041' where issuer_id = 37  and gateway_id = 80;
@@ -11779,27 +11716,14 @@
             <column name="free_variant_id" type="VARCHAR(20)"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1361432007800-2">
-        <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="replacement_order" constraintName="fk_replacement_order_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
+    <changeSet author="Ajeet (generated)" id="1360060156998-5">
+        <addForeignKeyConstraint baseColumnNames="free_variant_id" baseTableName="offer_action" constraintName="fk_offer_action_product_variant1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Neha (generated)" id="1361783221682-1">
-        <addColumn tableName="reverse_order">
-            <column name="return_reason" type="VARCHAR(45)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1363262394293-1">
-        <addColumn tableName="reverse_order">
-            <column name="receive_dt" type="DATETIME"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1363262394293-2">
-        <createIndex indexName="SO_UNIQUE" tableName="reverse_order" unique="true">
-            <column name="shipping_order_id"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="Neha (generated)" id="1363262394293-3">
-        <addColumn tableName="reverse_order">
-            <column name="reverse_order_type" type="VARCHAR(45)"/>
+    <changeSet author="Ajeet (generated)" id="1360415137386-1">
+        <addColumn tableName="offer">
+            <column defaultValue="0" name="show_promptly" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1360415137386-2">
@@ -12141,5 +12065,95 @@
 			ON DUPLICATE KEY UPDATE wh_phone ='12345';
 		</sql>
 	</changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-1">
+        <createTable tableName="reverse_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="return_qty" type="VARCHAR(45)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reverse_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referred_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-2">
+        <createTable tableName="reverse_order">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="amount" type="DOUBLE"/>
+            <column name="return_reason" type="VARCHAR(45)"/>
+            <column name="reverse_order_type" type="VARCHAR(45)"/>
+            <column name="action_proposed" type="VARCHAR(45)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receive_dt" type="DATETIME"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reconciliation_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_pickup_detail_id" type="INT"/>
+            <column name="shipping_order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-3">
+        <addColumn tableName="replacement_order">
+            <column name="reverse_order_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-4">
+        <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="replacement_order" constraintName="fk_replacement_order_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-5">
+        <addForeignKeyConstraint baseColumnNames="referred_line_item_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-6">
+        <addForeignKeyConstraint baseColumnNames="reverse_order_id" baseTableName="reverse_line_item" constraintName="fk_reverse_line_item_reverse_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reverse_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-7">
+        <addForeignKeyConstraint baseColumnNames="courier_pickup_detail_id" baseTableName="reverse_order" constraintName="fk_reverse_order_courier_pickup_detail1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="courier_pickup_detail" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-8">
+        <addForeignKeyConstraint baseColumnNames="reconciliation_status_id" baseTableName="reverse_order" constraintName="fk_reverse_order_reconciliation_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reconciliation_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-9">
+        <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="reverse_order" constraintName="fk_reverse_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-10">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="reverse_order" constraintName="fk_reverse_order_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Neha (generated)" id="1366107463794-11">
+        <createIndex indexName="shipping_order_id_UNIQUE" tableName="reverse_order" unique="true">
+            <column name="shipping_order_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Neha" id="16-04-2013-01">
+		<sql>
+          INSERT INTO role VALUES("OPS_MANAGER_REVERSE_PICKUP"),("CUSTOMER_SUPPORT_REVERSE_PICKUP"),("WH_EMPLOYEE_REVERSE_PICKUP");
 
+          INSERT INTO permission VALUES ("CREATE_REVERSE_PICKUP_ORDER"),("SCHEDULE_COURIER_FOR_PICKUP"),("MARK_PICKED"),("MARK_RECEIVED"),
+            ("MARK_RECONCILED"),("ADVICE_PROPOSED"),("EDIT_AWB_NO"),("EDIT_BOOKING_NO"),("GENERATE_EXCEL_FOR_REVERSE_PICKUP");
+
+          INSERT INTO role_has_permission VALUES ("OPS_MANAGER_REVERSE_PICKUP","CREATE_REVERSE_PICKUP_ORDER"),("OPS_MANAGER_REVERSE_PICKUP","SCHEDULE_COURIER_FOR_PICKUP"),
+            ("OPS_MANAGER_REVERSE_PICKUP","MARK_PICKED"),("OPS_MANAGER_REVERSE_PICKUP","MARK_RECEIVED"),("OPS_MANAGER_REVERSE_PICKUP","ADVICE_PROPOSED"),
+            ("OPS_MANAGER_REVERSE_PICKUP","EDIT_AWB_NO"),("OPS_MANAGER_REVERSE_PICKUP","EDIT_BOOKING_NO"),("OPS_MANAGER_REVERSE_PICKUP","GENERATE_EXCEL_FOR_REVERSE_PICKUP");
+
+          INSERT INTO role_has_permission VALUES ("CUSTOMER_SUPPORT_REVERSE_PICKUP","CREATE_REVERSE_PICKUP_ORDER"),("CUSTOMER_SUPPORT_REVERSE_PICKUP","SCHEDULE_COURIER_FOR_PICKUP"),
+            ("CUSTOMER_SUPPORT_REVERSE_PICKUP","MARK_PICKED"),("CUSTOMER_SUPPORT_REVERSE_PICKUP","MARK_RECONCILED"),("CUSTOMER_SUPPORT_REVERSE_PICKUP","EDIT_AWB_NO"),
+            ("CUSTOMER_SUPPORT_REVERSE_PICKUP","EDIT_BOOKING_NO"),("CUSTOMER_SUPPORT_REVERSE_PICKUP","GENERATE_EXCEL_FOR_REVERSE_PICKUP");
+
+          INSERT INTO role_has_permission VALUES ("WH_EMPLOYEE_REVERSE_PICKUP","MARK_RECEIVED"),("WH_EMPLOYEE_REVERSE_PICKUP","ADVICE_PROPOSED");
+        </sql>
+    </changeSet>
 </databaseChangeLog>
