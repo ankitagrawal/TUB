@@ -242,7 +242,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
                 String variantId = lineItem.getSku().getProductVariant().getId();
 
 
-                if (StringUtils.isNotBlank(brandName) && brandsToExcludeList.contains(brandName.toLowerCase())) {
+                if (StringUtils.isNotBlank(brandName) && brandsToExcludeList.contains(brandName)) {
                     shouldAdd = false;
                     break;
                 }
