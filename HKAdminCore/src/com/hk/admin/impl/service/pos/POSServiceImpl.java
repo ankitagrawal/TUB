@@ -247,10 +247,10 @@ public class POSServiceImpl implements POSService {
 
     public Address createDefaultAddressForUser(User customer, String phone, Warehouse warehouse) {
         Address address = new Address();
-        address.setLine1(warehouse.getLine1());
-        address.setLine2(warehouse.getLine2());
-        address.setCity(warehouse.getCity());
-        address.setState(warehouse.getState());
+	      address.setLine1("NA");
+	    	address.setLine2("NA");
+	    	address.setCity("NA");
+	      address.setState(warehouse.getState());
         address.setPincode(pincodeService.getByPincode(warehouse.getPincode()));
 
         address.setName(customer.getName());
