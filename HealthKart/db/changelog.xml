@@ -12065,5 +12065,22 @@
 			ON DUPLICATE KEY UPDATE wh_phone ='12345';
 		</sql>
 	</changeSet>
-
+	<changeSet author="Nihal (generated)" id="1366099681480-1">
+        <createTable tableName="pi_line_item_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1366099681480-2">
+        <addColumn tableName="purchase_invoice_line_item">
+            <column name="pi_line_item_type_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1366099681480-5">
+        <addForeignKeyConstraint baseColumnNames="pi_line_item_type_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_pi_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pi_line_item_type" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
