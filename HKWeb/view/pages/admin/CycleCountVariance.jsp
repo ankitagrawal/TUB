@@ -17,16 +17,17 @@
     %>
     <div style="text-align: center;">
         CYCLE COUNT # ${cycle.cycleCount.id}
+        <br/>
         <c:set value="" var="auditOn"/>
-        <c:if test="${cycleCountV.brand != null}">
-            BRAND : ${cycleCountV.brand}
+        <c:if test="${cycle.cycleCount.brand != null}">
+            BRAND : ${cycle.cycleCount.brand}
         </c:if>
-        <c:if test="${cycleCountV.product != null}">
-            PRODUCT : ${cycleCountV.product.id}
+        <c:if test="${cycle.cycleCount.product != null}">
+            PRODUCT : ${cycle.cycleCount.product.id}
         </c:if>
 
-        <c:if test="${cycleCountV.productVariant != null}">
-            PRODUCT VARIANT : ${cycleCountV.productVariant.id}
+        <c:if test="${cycle.cycleCount.productVariant != null}">
+            PRODUCT VARIANT : ${cycle.cycleCount.productVariant.id}
 
         </c:if>
 
