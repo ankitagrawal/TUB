@@ -547,10 +547,12 @@ public class CycleCountAction extends BasePaginatedAction {
         List<CycleCountItem> cycleCountItemsForAddRecon = new ArrayList<CycleCountItem>();
         populateScannedSkuGroupSystemQtyMap(cycleCountItems);
         for (CycleCountItem cycleCountItem : cycleCountItems) {
-            int pvi = cycleCountPviMap.get(cycleCountItem.getId());
-            int scannedQty = cycleCountItem.getScannedQty();
-            if ((pvi - scannedQty) < 0) {
-                cycleCountItemsForAddRecon.add(cycleCountItem);
+            if (cycleCountItem.getSkuGroup() != null) {
+                int pvi = cycleCountPviMap.get(cycleCountItem.getId());
+                int scannedQty = cycleCountItem.getScannedQty();
+                if ((pvi - scannedQty) < 0) {
+                    cycleCountItemsForAddRecon.add(cycleCountItem);
+                }
             }
         }
         Date todayDate = new Date();
