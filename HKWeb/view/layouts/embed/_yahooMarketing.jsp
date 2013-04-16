@@ -28,17 +28,22 @@
         if (AnalyticsConstants.analytics) {
     %>
         <c:if test = "${pageType == 'category' ||  pageType == 'product'}">
-            <c:if test = "${(topLevelCategory == 'nutrition') || (topLevelCategory == 'diabetes') ||  (topLevelCategory == 'eye')}">
+            <c:if test = "${(topLevelCategory == 'nutrition') || (topLevelCategory == 'diabetes') ||  (topLevelCategory == 'eye') ||  (topLevelCategory == 'parenting')}">
                 <!-- Advertiser 'BRIGHT LIFECARE PVT LTD',  Include user in segment 'BRIGHT LIFECARE PVT LTD_SRT_PIXEL_040213' - DO NOT MODIFY THIS PIXEL IN ANY WAY -->
-                <img src="https://ad.yieldmanager.com/pixel?id=2354094&t=2" width="1" height="1" />
+                <!--<img src="https://ad.yieldmanager.com/pixel?id=2354094&t=2" width="1" height="1" />-->
                 <!-- End of segment tag -->
+                
+                <!-- Advertiser 'Aquamarine Healthcare Pvt. Ltd.',  Include user in segment '1532137_Aquamarine_SegPixel_041513' - DO NOT MODIFY THIS PIXEL IN ANY WAY -->
+					<img src="https://ad.yieldmanager.com/pixel?id=2358977&t=2" width="1" height="1" />
+				<!-- End of segment tag -->
             </c:if>
         </c:if>
 
         <c:if test = "${pageType == 'purchase'}">
             <!-- Yahoo conversion tracking code -->
             <!-- Advertiser 'BRIGHT LIFECARE PVT LTD',  Conversion tracking 'BRIGHT LIFECARE PVT LTD_CONVERSION_PIXEL_040213' - DO NOT MODIFY THIS PIXEL IN ANY WAY -->
-            <img  src="https://ad.yieldmanager.com/pixel?id=2354092&t=2" width="1" height="1" />
+            <!--<img  src="https://ad.yieldmanager.com/pixel?id=2354092&t=2" width="1" height="1" />-->
+            <img src="https://ad.yieldmanager.com/pixel?id=2358976&t=2" width="1" height="1" />
             <!-- End of conversion tag -->
         </c:if>
     <%
