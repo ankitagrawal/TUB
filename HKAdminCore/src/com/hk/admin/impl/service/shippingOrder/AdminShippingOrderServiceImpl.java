@@ -5,6 +5,7 @@ import java.util.*;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.impl.service.queue.BucketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,12 +44,13 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
-		private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
     private AdminInventoryService adminInventoryService;
-
+    @Autowired
+    BucketService bucketService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -66,8 +68,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
-	@Autowired
-	UserService userService;
+    @Autowired
+    UserService userService;
 //	@Autowired
 //	SMSManager smsManager;
 
@@ -296,11 +298,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
-        shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
-
+        shippingOrder = getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-//        getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+        bucketService.allocateBuckets(shippingOrder);
         return shippingOrder;
     }
 
