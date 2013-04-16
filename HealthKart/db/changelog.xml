@@ -12131,7 +12131,7 @@
         <addForeignKeyConstraint baseColumnNames="shipping_order_id" baseTableName="reverse_order" constraintName="fk_reverse_order_shipping_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="shipping_order" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Neha (generated)" id="1366107463794-10">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="reverse_order" constraintName="fk_reverse_order_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="reverse_order" constraintName="fk_reverse_order_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Neha (generated)" id="1366107463794-11">
         <createIndex indexName="shipping_order_id_UNIQUE" tableName="reverse_order" unique="true">
