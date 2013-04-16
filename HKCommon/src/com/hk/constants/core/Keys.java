@@ -24,6 +24,7 @@ public class Keys {
         public static final String personalCareAdminEmails         = "personalCareAdminEmails";
         public static final String servicesAdminEmails             = "servicesAdminEmails";
         public static final String sportsAdminEmails               = "sportsAdminEmails";
+        public static final String homeLivingAdminEmails           = "homeLivingAdminEmails";
 
         public static final String logisticsOpsEmails              = "logisticsOpsEmails";
         public static final String hkReportAdminEmails             = "hkReportAdminEmails";

@@ -78,6 +78,7 @@ public class EmailManager {
     private Set<String>         personalCareAdminEmails       = null;
     private Set<String>         sportsAdminEmails             = null;
     private Set<String>         servicesAdminEmails           = null;
+    private Set<String>         homeLivingAdminEmails           = null;
 
     @Autowired
     private BaseDao             baseDao;
@@ -122,6 +123,8 @@ public class EmailManager {
     private String              sportsAdminEmailsString       = null;
     @Value("#{hkEnvProps['" + Keys.Env.servicesAdminEmails + "']}")
     private String              servicesAdminEmailsString     = null;
+    @Value("#{hkEnvProps['" + Keys.Env.homeLivingAdminEmails + "']}")
+    private String              homeLivingAdminEmailsString     = null;
 
     @Value("#{hkEnvProps['" + Keys.Env.hkNoReplyEmail + "']}")
     private String              hkNoReplyEmail;
@@ -147,6 +150,7 @@ public class EmailManager {
         this.personalCareAdminEmails = BaseUtils.split(personalCareAdminEmailsString, ",");
         this.sportsAdminEmails = BaseUtils.split(sportsAdminEmailsString, ",");
         this.servicesAdminEmails = BaseUtils.split(servicesAdminEmailsString, ",");
+        this.homeLivingAdminEmails = BaseUtils.split(homeLivingAdminEmailsString, ",");
     }
 
     // TODO:rewrite
@@ -269,6 +273,8 @@ public class EmailManager {
             categoryAdmins = servicesAdminEmails;
         } else if (category.getName().equals(CategoryConstants.SPORTS)) {
             categoryAdmins = sportsAdminEmails;
+        } else if (category.getName().equals(CategoryConstants.HOME_LIVING)) {
+            categoryAdmins = homeLivingAdminEmails;
         }
 
         return categoryAdmins;
