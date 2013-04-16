@@ -92,12 +92,14 @@ public enum EnumShippingOrderStatus {
 
 	public static List<EnumShippingOrderStatus> getStatusForPuttingOrderOnHold() {
 
-        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
-                EnumShippingOrderStatus.SO_ReadyForProcess,
-                EnumShippingOrderStatus.SO_MarkedForPrinting,
-                EnumShippingOrderStatus.SO_Picking,
-                EnumShippingOrderStatus.SO_CheckedOut,
-                EnumShippingOrderStatus.SO_Packed);
+        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting
+//                ,
+//                EnumShippingOrderStatus.SO_ReadyForProcess,
+//                EnumShippingOrderStatus.SO_MarkedForPrinting,
+//                EnumShippingOrderStatus.SO_Picking,
+//                EnumShippingOrderStatus.SO_CheckedOut,
+//                EnumShippingOrderStatus.SO_Packed
+        );
     }
 
 

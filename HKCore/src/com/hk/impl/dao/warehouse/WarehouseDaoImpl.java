@@ -1,14 +1,13 @@
 package com.hk.impl.dao.warehouse;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.warehouse.WarehouseDao;
 import com.hk.pact.service.core.WarehouseService;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
@@ -40,6 +39,7 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
         warehouseIdList.add(WarehouseService.CORPORATE_OFFICE_ID);
         warehouseIdList.add(WarehouseService.GURGAON_PHARMA_WAREHOUSE_ID);
 	    warehouseIdList.add(WarehouseService.PUNJABI_BAGH_WH_STORE_ID);
+	    warehouseIdList.add(WarehouseService.KAPASHERA_WAREHOUSE_ID);
         return (Warehouse) getSession().createQuery("from Warehouse w where w.id  not in ( :warehouseIdList)").setParameterList("warehouseIdList", warehouseIdList).uniqueResult();
 
     }
