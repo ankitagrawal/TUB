@@ -416,7 +416,7 @@ public class OrderManager {
                 getRewardPointService().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
             }
 
-            if(order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
+            if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
                 Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
                 if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
                     subscriptionService.placeSubscriptions(order);
