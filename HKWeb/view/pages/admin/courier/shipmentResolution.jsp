@@ -162,7 +162,7 @@
                Select Reason for Changing the courier
                <s:select name="reasoning" id="reasoning">
                    <s:option value="">-------Select-------</s:option>
-                   <c:forEach items="<%=EnumReason.getCourierReasons()%>" var="courierReason" >
+                   <c:forEach items="${hk:getReasonsByType('Courier Change Reason')}" var="courierReason" >
                        <s:option value="${courierReason.id}">${courierReason.primaryClassification}</s:option>
                    </c:forEach>
                 </s:select>
@@ -193,7 +193,7 @@
                          Select Reason for Changing the Courier or Awb
                          <s:select name="awbReasoning" id="awbReasoning">
                              <s:option value="">-------Select-------</s:option>
-                             <c:forEach items="<%=EnumReason.getAwbReasons()%>" var="awbReason">
+                             <c:forEach items="${hk:getReasonsByType('Awb Change Reason')}" var="awbReason">
                                  <s:option value="${awbReason.id}"> ${awbReason.primaryClassification}</s:option>
                              </c:forEach>
                          </s:select>

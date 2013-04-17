@@ -57,34 +57,28 @@ public enum EnumReason {
         return reason;
     }
 
-    public static List<EnumReason> getCourierReasons(){
-        return Arrays.asList(EnumReason.CourierServiceChange,EnumReason.ChangeFromGroundToAirShipping,EnumReason.CcRequest,EnumReason.RtoDueToOda, EnumReason.BrightMovement);
-    }
-    public static List<EnumReason> getAwbReasons(){
-        return  Arrays.asList(EnumReason.DummyAwb,EnumReason.B2bOrder,EnumReason.ChangedByCourier,EnumReason.DuplicateAwb,EnumReason.TechIssue);
-    }
     public Long getId() {
-            return id;
-        }
+        return id;
+    }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public String getPrimaryClassification() {
-            return primaryClassification;
-        }
+    public String getPrimaryClassification() {
+        return primaryClassification;
+    }
 
-        public void setPrimaryClassification(String primaryClassification) {
-            this.primaryClassification = primaryClassification;
-        }
+    public void setPrimaryClassification(String primaryClassification) {
+        this.primaryClassification = primaryClassification;
+    }
 
-        public String getReasonType() {
-            return reasonType;
-        }
+    public String getReasonType() {
+        return reasonType;
+    }
 
-        public void setReasonType(String reasonType) {
-            this.reasonType = reasonType;
-        }
+    public void setReasonType(String reasonType) {
+        this.reasonType = reasonType;
+    }
 
 }
