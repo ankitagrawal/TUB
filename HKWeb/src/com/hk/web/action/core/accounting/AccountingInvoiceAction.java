@@ -237,7 +237,15 @@ public class AccountingInvoiceAction extends BaseAction {
     return reverseOrderInvoiceDto;
   }
 
+  public void setReverseOrderInvoiceDto(ReverseOrderInvoiceDto reverseOrderInvoiceDto) {
+    this.reverseOrderInvoiceDto = reverseOrderInvoiceDto;
+  }
+
   public ReverseOrder getReverseOrder() {
     return reverseOrder;
+  }
+
+  public void setReverseOrder(ReverseOrder reverseOrder) {
+    this.reverseOrder = reverseOrder;
   }
 }
