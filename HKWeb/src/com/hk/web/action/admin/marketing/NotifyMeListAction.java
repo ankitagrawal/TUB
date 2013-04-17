@@ -15,7 +15,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hk.admin.util.emailer.ProductVariantNotifyMeEmailer;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.web.action.core.user.NotifyMeAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -70,7 +70,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     @Autowired
     private EmailCampaignDao emailCampaignDao;
     @Autowired
-    ProductVariantNotifyMeEmailer productVariantNotifyMeEmailer;
+    ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService;
 
 
     File xlsFile;
@@ -204,7 +204,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     }
 
     public Resolution sendAllNotifyMails() {
-        productVariantNotifyMeEmailer.sendNotifyMeEmail();
+        productVariantNotifyMeEmailService.sendNotifyMeEmail();
         return new RedirectResolution(NotifyMeAction.class);
     }
 

@@ -1,24 +1,21 @@
-package com.hk.admin.util.emailer;
+package com.hk.admin.impl.service.email;
 
 import com.hk.admin.manager.AdminEmailManager;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.Keys;
-
-import com.hk.domain.catalog.product.ProductVariant;
-
 import com.hk.domain.marketing.NotifyMe;
-
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,10 +24,10 @@ import java.util.*;
  * Time: 1:24 PM
  * To change this template use File | Settings | File Templates.
  */
-@Component
-public class ProductVariantNotifyMeEmailer {
+@Service
+public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNotifyMeEmailService {
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ProductVariantNotifyMeEmailer.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ProductVariantNotifyMeEmailServiceImpl.class);
     @Autowired
 
     NotifyMeDao notifyMeDao;
@@ -48,42 +45,42 @@ public class ProductVariantNotifyMeEmailer {
 
     public void sendNotifyMeEmail() {
 
-        Map<ProductVariant, Integer> allowedUserPerVariantMap = new HashMap<ProductVariant, Integer>();
-        Map<String, List<ProductVariant>> finalUserListForNotificationMap = new HashMap<String, List<ProductVariant>>();
-        Map<ProductVariant, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<ProductVariant, Integer>();
+        Map<String, Integer> allowedUserPerVariantMap = new HashMap<String, Integer>();
+        Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
+        Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
         List<NotifyMe> notifyMeList = notifyMeDao.getNotifyMeListForProductVariantInStock();
         try {
 
             for (NotifyMe notifyMe : notifyMeList) {
-                ProductVariant productVariant = notifyMe.getProductVariant();
+                String productVariantId = notifyMe.getProductVariant().getId();
                 String email = notifyMe.getEmail();
                 int allowedUserNumber;
                 // get number of eligible user  to be notified for variant by formula
-                if (!(allowedUserPerVariantMap.containsKey(productVariant))) {
+                if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
                     // get inventory in warehouse
-                    int availableInventory = adminInventoryService.getNetInventory(productVariant).intValue();
+                    int availableInventory = adminInventoryService.getNetInventory(notifyMe.getProductVariant()).intValue();
                     allowedUserNumber = (int) (availableInventory / (notifyConversionRate * bufferRate));
-                    allowedUserPerVariantMap.put(productVariant, allowedUserNumber);
+                    allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
 
                 } else {
-                    allowedUserNumber = allowedUserPerVariantMap.get(productVariant);
+                    allowedUserNumber = allowedUserPerVariantMap.get(productVariantId);
 
                 }
-                if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariant))) {
-                    userPerVariantAlreadyNotifiedMap.put(productVariant, 0);
+                if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
+                    userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
                 }
-                int alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariant);
+                int alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
                 if (alreadyNotified < allowedUserNumber) {
                     // get List of user to be informed
-                    List<ProductVariant> variantList = null;
+                    List<NotifyMe> notifyMeListPerUser = null;
                     if ((finalUserListForNotificationMap.containsKey(email))) {
-                        variantList = finalUserListForNotificationMap.get(email);
+                        notifyMeListPerUser = finalUserListForNotificationMap.get(email);
                     } else {
-                        variantList = new ArrayList<ProductVariant>();
+                        notifyMeListPerUser = new ArrayList<NotifyMe>();
                     }
-                    variantList.add(productVariant);
-                    finalUserListForNotificationMap.put(email, variantList);
-                    userPerVariantAlreadyNotifiedMap.put(productVariant, (alreadyNotified + 1));
+                    notifyMeListPerUser.add(notifyMe);
+                    finalUserListForNotificationMap.put(email, notifyMeListPerUser);
+                    userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
 
                 }
 

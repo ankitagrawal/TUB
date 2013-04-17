@@ -4,6 +4,7 @@ package com.hk.domain.marketing;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,113 +18,135 @@ import java.util.Date;
 /*@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)*/
 public class NotifyMe implements java.io.Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
 
-  @Column(name = "name", nullable = false, length = 45)
-  private String name;
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
 
-  @Column(name = "email", nullable = false, length = 45)
-  private String email;
+    @Column(name = "email", nullable = false, length = 45)
+    private String email;
 
-  @Column(name = "phone", length = 45)
-  private String phone;
+    @Column(name = "phone", length = 45)
+    private String phone;
 
 
-	//Todo drop this created date from here.
-  @Temporal(TemporalType.DATE)
-  @Column(name = "created_date", nullable = false, length = 19)
-  private Date createdDate;
+    //Todo drop this created date from here.
+    @Temporal(TemporalType.DATE)
+    @Column(name = "created_date", nullable = false, length = 19)
+    private Date createdDate;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_variant_id", nullable = false)
-  private ProductVariant productVariant;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id", nullable = false)
+    private ProductVariant productVariant;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "notified_date", nullable = true, length = 19)
-  private Date notifiedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "notified_date", nullable = true, length = 19)
+    private Date notifiedDate;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "notified_by_user_id", nullable = true)
-  private User notifiedByUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notified_by_user_id", nullable = true)
+    private User notifiedByUser;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_dt", nullable = false)
-	private Date createDate = new Date();
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_dt", nullable = false)
+    private Date createDate = new Date();
 
-	public Long getId() {
-    return this.id;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getName() {
-    return this.name;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getEmail() {
-    return this.email;
-  }
+    public String getEmail() {
+        return this.email;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public String getPhone() {
-    return this.phone;
-  }
+    public String getPhone() {
+        return this.phone;
+    }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-  public Date getCreatedDate() {
-    return this.createdDate;
-  }
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
 
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
-  }
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-  public ProductVariant getProductVariant() {
-    return productVariant;
-  }
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
 
-  public void setProductVariant(ProductVariant productVariant) {
-    this.productVariant = productVariant;
-  }
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
 
-  public Date getNotifiedDate() {
-    return notifiedDate;
-  }
+    public Date getNotifiedDate() {
+        return notifiedDate;
+    }
 
-  public void setNotifiedDate(Date notifiedDate) {
-    this.notifiedDate = notifiedDate;
-  }
+    public void setNotifiedDate(Date notifiedDate) {
+        this.notifiedDate = notifiedDate;
+    }
 
-  public User getNotifiedByUser() {
-    return notifiedByUser;
-  }
+    public User getNotifiedByUser() {
+        return notifiedByUser;
+    }
 
-  public void setNotifiedByUser(User notifiedByUser) {
-    this.notifiedByUser = notifiedByUser;
-  }
+    public void setNotifiedByUser(User notifiedByUser) {
+        this.notifiedByUser = notifiedByUser;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof NotifyMe)) {
+            return false;
+        }
+        NotifyMe notifyMe = (NotifyMe) o;
+
+        if (id != null && notifyMe.getId() != null) {
+            return id.equals(notifyMe.getId());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
 
 

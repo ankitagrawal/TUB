@@ -59,8 +59,8 @@ You requested to be notified when some products were back in stock
                         <strong>
 
 
-                        <#list variantList as variant>
-                        ${variant_index + 1} . ${variant.product.name}
+                        <#list notifyList as notify>
+                        ${notify_index + 1} . ${notify.productVariant.product.name}
                         </#list>
 
                         </strong>
@@ -76,9 +76,9 @@ You requested to be notified when some products were back in stock
                 </tr>
                 <tr>
 
-                <#list variantList as variant>
+                <#list notifyList as notify>
                     <td height="15"><a
-                            href="www.healthkart.com/product/${variant.product.slug}/${variant.product.id}?utm_source=notifyme&utm_medium=email"><img
+                            href="www.healthkart.com/product/${notify.productVariant.product.slug}/${notify.productVariant.product.id}?utm_source=notifyme&utm_medium=email"><img
                             src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg"
                             alt="Click here to shop now" width="157" height="26" border="0"/></a></td>
                 </#list>
