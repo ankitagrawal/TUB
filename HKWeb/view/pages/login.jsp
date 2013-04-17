@@ -26,8 +26,8 @@
   <s:layout-component name="checkoutStep">
     <div class='current_step_content'>
       <div class='left' style="width: 410px;background: none;">
-        <h3 style="margin-bottom: 1.75em;color: black;font-size: 16px;">
-          CREATE A NEW HEALTHKART ACCOUNT
+        <h3 style="margin-bottom: 1.75em;font-size: 16px;">
+          Create a new Healthkart account
         </h3>
 
         <div class='signup' style="width: 410px; left: 0px">
@@ -54,8 +54,8 @@
         </div>
       </div>
       <div class='right' style="width: 410px;background: none;position: relative;left: 80px;">
-        <h3 style="margin-bottom: 1.75em;color: black;font-size: 16px;">
-          LOGIN USING AN EXISTING ACCOUNT
+        <h3 style="margin-bottom: 1.75em;font-size: 16px;">
+            Login using an existing account
         </h3>
 
         <div class='login'  style="width: 410px;left: 0px;">
