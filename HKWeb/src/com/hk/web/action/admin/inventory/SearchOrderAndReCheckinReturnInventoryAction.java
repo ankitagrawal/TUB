@@ -1,58 +1,51 @@
 package com.hk.web.action.admin.inventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.io.*;
-
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.ProductVariantDamageInventoryDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.admin.util.BarcodeUtil;
-import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
-import com.hk.constants.courier.StateList;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.ProductVariantInventory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderStatus;
-import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.user.User;
-import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.reverseOrder.ReverseLineItem;
+import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
-import com.hk.pact.dao.sku.SkuItemDao;
 import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Secure(hasAnyPermissions = { PermissionConstants.INVENTORY_CHECKIN }, authActionBean = AdminPermissionAction.class)
 @Component
@@ -170,7 +163,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(DAMAGED)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 1L, loggedOnUser);
+										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
@@ -179,7 +172,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 
 							if (conditionOfItem.equals(EXPIRED)){
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
-										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 1L, loggedOnUser);
+										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
 								skuItemDao.save(skuItem);
 								inventoryService.checkInventoryHealth(productVariant);
