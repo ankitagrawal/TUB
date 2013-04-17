@@ -191,6 +191,14 @@
             var google_remarketing_only = true;
             /* ]]> */
         </script>
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 988370835;
+            var google_conversion_label = "6HxaCN3_1wQQk6-l1wM";
+            var google_custom_params = window.google_tag_params;
+            var google_remarketing_only = true;
+            /* ]]> */
+        </script>
         <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
         </script>
         <noscript>
@@ -217,7 +225,10 @@
 			<div style="display:inline;">
 				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1011104799/?value=0&amp;label=LaMfCMGthAUQn_iQ4gM&amp;guid=ON&amp;script=0"/>
 			</div>
-			</noscript>
+            <div style="display:inline;">
+                <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/988370835/?value=0&amp;label=6HxaCN3_1wQQk6-l1wM&amp;guid=ON&amp;script=0"/>
+            </div>
+	    </noscript>
         </c:if>
         
         <c:if test = "${topLevelCategory == 'sports'}">
