@@ -312,7 +312,7 @@ public class AdminEmailManager {
     }
 
 
-    public boolean sendNotifyUsersMails(Map<String, List<ProductVariant>> userNotifyMeListMap) {
+    public void sendNotifyUsersMails(Map<String, List<ProductVariant>> userNotifyMeListMap) {
 
         HashMap valuesMap = new HashMap();
         User notifedByuser = userService.getAdminUser();
@@ -328,7 +328,7 @@ public class AdminEmailManager {
                 if (notifyMeListForSameUser != null && notifyMeListForSameUser.size() > 0) {
                     notifyMeObject = notifyMeListForSameUser.get(0);
                     valuesMap.put("variantList", variantList);
-                    valuesMap.put("notifiedUser",notifyMeObject);
+                    valuesMap.put("notifiedUser", notifyMeObject);
                     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForMultipleVariants);
                     mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
                 }
@@ -337,8 +337,8 @@ public class AdminEmailManager {
                 notifyMeListForSameUser = getNotifyMeDao().getPendingNotifyMeList(emailId, variantList.get(0));
                 if (notifyMeListForSameUser != null && notifyMeListForSameUser.size() > 0) {
                     notifyMeObject = notifyMeListForSameUser.get(0);
-                    valuesMap.put("product",notifyMeObject.getProductVariant().getProduct());
-                    valuesMap.put("notifiedUser",notifyMeObject);
+                    valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
+                    valuesMap.put("notifiedUser", notifyMeObject);
                     Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForSingleVariant);
                     mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
                 }
@@ -358,7 +358,6 @@ public class AdminEmailManager {
             }
 
         }
-        return true;
 
     }
 

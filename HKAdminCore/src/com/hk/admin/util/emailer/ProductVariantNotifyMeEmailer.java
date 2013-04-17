@@ -47,7 +47,7 @@ public class ProductVariantNotifyMeEmailer {
     int bufferRate;
 
     public void sendNotifyMeEmail() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
         Map<ProductVariant, Integer> allowedUserPerVariantMap = new HashMap<ProductVariant, Integer>();
         Map<String, List<ProductVariant>> finalUserListForNotificationMap = new HashMap<String, List<ProductVariant>>();
         Map<ProductVariant, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<ProductVariant, Integer>();
@@ -73,7 +73,7 @@ public class ProductVariantNotifyMeEmailer {
                     userPerVariantAlreadyNotifiedMap.put(productVariant, 0);
                 }
                 int alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariant);
-                if (alreadyNotified <= allowedUserNumber) {
+                if (alreadyNotified < allowedUserNumber) {
                     // get List of user to be informed
                     List<ProductVariant> variantList = null;
                     if ((finalUserListForNotificationMap.containsKey(email))) {
@@ -89,10 +89,7 @@ public class ProductVariantNotifyMeEmailer {
 
 
             }
-
-
             //send mails
-
             adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
         } catch (Exception ex) {
             logger.error("Exception :: " + ex.getMessage());

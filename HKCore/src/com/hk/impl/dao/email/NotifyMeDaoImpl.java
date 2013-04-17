@@ -97,8 +97,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     public List<NotifyMe> getNotifyMeListForProductVariantInStock() {
         return (List<NotifyMe>) getSession().createQuery(
-                "Select nm from NotifyMe nm, ProductVariant pv where pv =nm.productVariant and nm.notifiedByUser is null"
-                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
+                "Select nm from NotifyMe nm, ProductVariant pv where pv =nm.productVariant and nm.notifiedByUser is null "
+                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock  order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
     }
 
     public Page getNotifyMeListForProductVariantInStock(int pageNo, int perPage) {
