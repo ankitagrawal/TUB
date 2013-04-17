@@ -4,13 +4,16 @@
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.BaseDao" %>
+<%@ page import="com.hk.domain.order.ShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
 <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
     pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
-	pageContext.setAttribute("soStatusList", EnumShippingOrderStatus.getStatusForPuttingOrderOnHold());
+	pageContext.setAttribute("soStatusList", baseDao.getAll(ShippingOrderStatus.class));
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 

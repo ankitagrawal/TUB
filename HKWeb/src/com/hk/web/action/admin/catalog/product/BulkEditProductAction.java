@@ -37,367 +37,318 @@ import java.util.*;
 @Component
 public class BulkEditProductAction extends BasePaginatedAction {
 
-  private static Logger logger = LoggerFactory.getLogger(BulkEditProductAction.class);
+    private static Logger logger = LoggerFactory.getLogger(BulkEditProductAction.class);
 
-  List<Product> products = new ArrayList<Product>();
-  String category;
-  List<String> secondaryCategory;
-  List<String> supplierTin;
-  String brand;
-  String productVariantId = "";
-  // List<String> options;
-  // List<String> extraOptions;
-  Map<String, Boolean> toBeEditedOptions = new HashMap<String, Boolean>();
-  Object toBeEditedOptionsObject;
-  private Integer defaultPerPage = 20;
-  Page productPage;
+    List<Product> products = new ArrayList<Product>();
+    String category;
+    List<String> secondaryCategory;
+    List<String> supplierTin;
+    String brand;
+    String productVariantId = "";
 
-  @Autowired
-  ProductService productService;
+    Map<String, Boolean> toBeEditedOptions = new HashMap<String, Boolean>();
+    private Integer defaultPerPage = 20;
+    Page productPage;
 
-  @Autowired
-  private ProductVariantService productVariantService;
+    @Autowired
+    ProductService productService;
 
-  @Autowired
-  private CategoryService categoryService;
-  @Autowired
-  CategoryDao categoryDao;
-  @Autowired
-  XslParser xslParser;
+    @Autowired
+    private ProductVariantService productVariantService;
 
-  @Autowired
-  private ComboDao comboDao;
-  @Autowired
-  private SupplierDao supplierDao;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    CategoryDao categoryDao;
+    @Autowired
+    XslParser xslParser;
 
-  @ValidationMethod(on = "bulkEdit")
-  public void validateCategoryAndBrand() {
-    if (!StringUtils.isBlank(brand)) {
-      if (!productService.doesBrandExist(brand)) {
-        getContext().getValidationErrors().add("1", new SimpleError("Brand not found"));
-      }
-    }
+    @Autowired
+    private ComboDao comboDao;
+    @Autowired
+    private SupplierDao supplierDao;
 
-    if (!StringUtils.isBlank(category)) {
-      if (categoryDao.getCategoryByName(category) == null) {
-        getContext().getValidationErrors().add("1", new SimpleError("Category not found"));
-      }
-    }
-  }
-
-  @DefaultHandler
-  @DontValidate
-  public Resolution pre() {
-    return new ForwardResolution("/pages/bulkProductDetails.jsp");
-  }
-
-  @SuppressWarnings("unchecked")
-  public Resolution defineOptionsMap() {
-    if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
-      String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
-      for (String option : options) {
-        toBeEditedOptions.put(option, Boolean.TRUE);
-      }
-    }
-    toBeEditedOptionsObject = new HashMap(toBeEditedOptions);
-    return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
-  }
-
-  @SuppressWarnings("unchecked")
-  public Resolution bulkEdit() {
-    productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
-    products = new ArrayList<Product>();
-    if (productPage != null) {
-      products.addAll(productPage.getList());
-    }
-    // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed
-    // cannot be rendered.
-    // Therefore, the object again needs to be converted to a map.
-    toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
-    return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
-  }
-
-  public Resolution save() {
-    if (products != null) {
-      int ctr = 0;
-
-      // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden
-      // parameter for the bean.
-      // So for further use,the string needs to be converted again into a map
-      toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
-
-      for (Product product : products) {
-        logger.debug("productId: " + product.getId());
-        Combo combo = comboDao.get(Combo.class, product.getId());
-        for (ProductVariant productVariant : product.getProductVariants()) {
-          logger.debug("variant id " + productVariant.getId());
-
-          if (productVariant.getClearanceSale() == null || productVariant.getClearanceSale().equals(Boolean.FALSE)) {
-            if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
-              addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-              return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+    @ValidationMethod(on = "bulkEdit")
+    public void validateCategoryAndBrand() {
+        if (!StringUtils.isBlank(brand)) {
+            if (!productService.doesBrandExist(brand)) {
+                getContext().getValidationErrors().add("1", new SimpleError("Brand not found"));
             }
-          }
-
-          if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
-            addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
-          }
-          productVariant = getProductVariantService().save(productVariant);
-        }
-        Set<Category> newCatList = new HashSet<Category>(0);
-        String categoryString = product.getCategoriesPipeSeparated();
-        logger.debug("categoryString: " + categoryString);
-        List<Category> categoryList = xslParser.getCategroyListFromCategoryString(categoryString);
-        for (Category category : categoryList) {
-          category = getCategoryService().save(category);
-          newCatList.add(category);
-        }
-        // to avoid duplicate primary key in the many to many mapping.. converting to set and then back to
-        // list.. eliminating duplicate category names
-        product.setCategories(new ArrayList<Category>(newCatList));
-
-        if (product.isDeleted().equals(Boolean.FALSE)) {
-          if (combo == null) {
-            product.setDeleted(isProductDeleted(product));
-          } else {
-            product.setDeleted(isComboDeleted(combo));
-          }
         }
 
-        if (secondaryCategory != null) {
-          Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory.get(ctr)));
-          if (secondaryCat == null) {
-            addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category for product: " + product.getId()));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
-          }
-          product.setSecondaryCategory(secondaryCat);
+        if (!StringUtils.isBlank(category)) {
+            if (categoryDao.getCategoryByName(category) == null) {
+                getContext().getValidationErrors().add("1", new SimpleError("Category not found"));
+            }
         }
-
-        if (supplierTin != null && product.isDeleted().equals(Boolean.FALSE)) {
-          Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
-          if (combo == null && supplier == null) {
-            addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
-          }
-          product.setSupplier(supplier);
-        }
-
-        product = productService.save(product);
-        ctr++;
-      }
     }
-    addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-    return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
 
-  }
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/bulkProductDetails.jsp");
+    }
 
-  @SuppressWarnings("unchecked")
-  public Resolution getPVDetails() {
-    Map dataMap = new HashMap();
-    if (StringUtils.isNotBlank(productVariantId)) {
-      ProductVariant pv = getProductVariantService().getVariantById(productVariantId);
-      if (pv != null) {
-        try {
-          dataMap.put("variant", pv);
-          dataMap.put("product", pv.getProduct().getName());
-          dataMap.put("options", pv.getOptionsCommaSeparated());
-          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
-          noCache();
-          return new JsonResolution(healthkartResponse);
-        } catch (Exception e) {
-          HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
-          noCache();
-          return new JsonResolution(healthkartResponse);
+    @SuppressWarnings("unchecked")
+    public Resolution defineOptionsMap() {
+        if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
+            String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
+            for (String option : options) {
+                toBeEditedOptions.put(option, Boolean.TRUE);
+            }
         }
-      }
-    } else {
-      HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product VariantID field is empty", null);
-      noCache();
-      return new JsonResolution(healthkartResponse);
+        return new ForwardResolution(BulkEditProductAction.class, "bulkEdit").addParameters(toBeEditedOptions);
     }
-    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", null);
-    noCache();
-    return new JsonResolution(healthkartResponse);
-  }
 
-  // public List<ProductOption> getProductOptionList(int i) {
-  // List<ProductOption> productOptionList = new ArrayList<ProductOption>();
-  // String[] productOptionStrings;
-  // productOptionStrings = StringUtils.split(options.get(i), "|");
-  // for (String productOptionString : productOptionStrings) {
-  // String name = productOptionString.substring(0, productOptionString.indexOf(":"));
-  // String value = productOptionString.substring(productOptionString.indexOf(":") + 1);
-  //
-  // //checking whether the product option already exists or not
-  // ProductOption productOption = productOptionDao.findByNameAndValue(name, value);
-  // if (productOption == null) {
-  // productOption = new ProductOption(name, value);
-  // productOption = productOptionDao.save(productOption);
-  // }
-  //
-  // productOptionList.add(productOption);
-  // }
-  // return productOptionList;
-  // }
-  //
-  // public List<ProductExtraOption> getProductExtraOptionList(int i) {
-  // List<ProductExtraOption> productExtraOptionList = new ArrayList<ProductExtraOption>();
-  // String[] temp;
-  // if (!extraOptions.isEmpty()) {
-  // temp = extraOptions.get(i).split(",");
-  // for (String productExtraOptionString : temp) {
-  // ProductExtraOption productExtraOption = new ProductExtraOption();
-  // String name = productExtraOptionString.substring(0, productExtraOptionString.indexOf(":"));
-  // String value = productExtraOptionString.substring(productExtraOptionString.indexOf(":") + 1);
-  // productExtraOption.setName(name);
-  // productExtraOption.setValue(value);
-  // productExtraOptionList.add(productExtraOption);
-  // }
-  // }
-  // return productExtraOptionList;
-  // }
+    @SuppressWarnings("unchecked")
+    public Resolution bulkEdit() {
+        Map<String, String[]> paramValueMap = getContext().getRequest().getParameterMap();
+        for (Map.Entry<String, String[]> paramValueEntry : paramValueMap.entrySet()) {
+            if(paramValueEntry.getKey().equals("defineOptionsMap") || paramValueEntry.getKey().equals("category") || paramValueEntry.getKey().equals("brand")){
+            }else{
+                toBeEditedOptions.put(paramValueEntry.getKey(), Boolean.TRUE);
+            }
+        }
 
-  public boolean isProductDeleted(Product product) {
-    boolean isProductDeleted = true;
-    for (ProductVariant productVariant : product.getProductVariants()) {
-      isProductDeleted = isProductDeleted && productVariant.isDeleted();
+        productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
+        products = new ArrayList<Product>();
+        if (productPage != null) {
+            products.addAll(productPage.getList());
+        }
+        return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
     }
-    return isProductDeleted;
-  }
 
-  public Boolean isComboDeleted(Combo combo) {
-    Boolean isComboDeleted = Boolean.TRUE;
-    for (ComboProduct comboProduct : combo.getComboProducts()) {
-      isComboDeleted = isComboDeleted && comboProduct.getProduct().isDeleted();
+    public Resolution save() {
+        if (products != null) {
+            int ctr = 0;
+
+            for (Product product : products) {
+                Combo combo = comboDao.get(Combo.class, product.getId());
+                for (ProductVariant productVariant : product.getProductVariants()) {
+
+                    if (productVariant.getClearanceSale() == null || productVariant.getClearanceSale().equals(Boolean.FALSE)) {
+                        if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
+                            addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
+                            return sendResponse();
+                        }
+                    }
+
+                    if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
+                        addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
+                        return sendResponse();
+                    }
+                    productVariant = getProductVariantService().save(productVariant);
+                }
+                Set<Category> newCatList = new HashSet<Category>(0);
+                String categoryString = product.getCategoriesPipeSeparated();
+                logger.debug("categoryString: " + categoryString);
+                List<Category> categoryList = xslParser.getCategroyListFromCategoryString(categoryString);
+                for (Category category : categoryList) {
+                    category = getCategoryService().save(category);
+                    newCatList.add(category);
+                }
+                // to avoid duplicate primary key in the many to many mapping.. converting to set and then back to
+                // list.. eliminating duplicate category names
+                product.setCategories(new ArrayList<Category>(newCatList));
+
+                if (product.isDeleted().equals(Boolean.FALSE)) {
+                    if (combo == null) {
+                        product.setDeleted(isProductDeleted(product));
+                    } else {
+                        product.setDeleted(isComboDeleted(combo));
+                    }
+                }
+
+                if (secondaryCategory != null) {
+                    Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory.get(ctr)));
+                    if (secondaryCat == null) {
+                        addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category for product: " + product.getId()));
+                        return sendResponse();
+                    }
+                    product.setSecondaryCategory(secondaryCat);
+                }
+
+                if (supplierTin != null && product.isDeleted().equals(Boolean.FALSE)) {
+                    Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
+                    if (combo == null && supplier == null) {
+                        addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
+                        return sendResponse();
+                    }
+                    product.setSupplier(supplier);
+                }
+
+                product = productService.save(product);
+                ctr++;
+            }
+        }
+        addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+        return sendResponse();
     }
-    return isComboDeleted;
-  }
 
-  public List<Product> getProducts() {
-    return products;
-  }
+    private Resolution sendResponse() {
+        return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("category", this.category).addParameters(toBeEditedOptions);
+    }
 
-  public void setProducts(List<Product> products) {
-    this.products = products;
-  }
+    @SuppressWarnings("unchecked")
+    public Resolution getPVDetails() {
+        Map dataMap = new HashMap();
+        if (StringUtils.isNotBlank(productVariantId)) {
+            ProductVariant pv = getProductVariantService().getVariantById(productVariantId);
+            if (pv != null) {
+                try {
+                    dataMap.put("variant", pv);
+                    dataMap.put("product", pv.getProduct().getName());
+                    dataMap.put("options", pv.getOptionsCommaSeparated());
+                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Valid Product Variant", dataMap);
+                    noCache();
+                    return new JsonResolution(healthkartResponse);
+                } catch (Exception e) {
+                    HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), dataMap);
+                    noCache();
+                    return new JsonResolution(healthkartResponse);
+                }
+            }
+        } else {
+            HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Product VariantID field is empty", null);
+            noCache();
+            return new JsonResolution(healthkartResponse);
+        }
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Invalid Product VariantID", null);
+        noCache();
+        return new JsonResolution(healthkartResponse);
+    }
 
-  public String getCategory() {
-    return category;
-  }
+    public boolean isProductDeleted(Product product) {
+        boolean isProductDeleted = true;
+        for (ProductVariant productVariant : product.getProductVariants()) {
+            isProductDeleted = isProductDeleted && productVariant.isDeleted();
+        }
+        return isProductDeleted;
+    }
 
-  public void setCategory(String category) {
-    this.category = category;
-  }
+    public Boolean isComboDeleted(Combo combo) {
+        Boolean isComboDeleted = Boolean.TRUE;
+        for (ComboProduct comboProduct : combo.getComboProducts()) {
+            isComboDeleted = isComboDeleted && comboProduct.getProduct().isDeleted();
+        }
+        return isComboDeleted;
+    }
 
-  public String getBrand() {
-    return brand;
-  }
+    public List<Product> getProducts() {
+        return products;
+    }
 
-  public void setBrand(String brand) {
-    this.brand = brand;
-  }
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
-  public List<String> getSecondaryCategory() {
-    return secondaryCategory;
-  }
+    public String getCategory() {
+        return category;
+    }
 
-  public void setSecondaryCategory(List<String> secondaryCategory) {
-    this.secondaryCategory = secondaryCategory;
-  }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-  public Map<String, Boolean> getToBeEditedOptions() {
-    return toBeEditedOptions;
-  }
+    public String getBrand() {
+        return brand;
+    }
 
-  public void setToBeEditedOptions(Map<String, Boolean> toBeEditedOptions) {
-    this.toBeEditedOptions = toBeEditedOptions;
-  }
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
-  public Object getToBeEditedOptionsObject() {
-    return toBeEditedOptionsObject;
-  }
+    public List<String> getSecondaryCategory() {
+        return secondaryCategory;
+    }
 
-  public void setToBeEditedOptionsObject(Object toBeEditedOptionsObject) {
-    this.toBeEditedOptionsObject = toBeEditedOptionsObject;
-  }
+    public void setSecondaryCategory(List<String> secondaryCategory) {
+        this.secondaryCategory = secondaryCategory;
+    }
 
-  private Map<String, Boolean> getMapFromString(String str) {
-    str = str.replace("=", ":");
-    Map<String, Boolean> map;
+    public Map<String, Boolean> getToBeEditedOptions() {
+        return toBeEditedOptions;
+    }
 
-    Type mapType = new TypeToken<Map<String, Boolean>>() {
-    }.getType();
-    map = new Gson().fromJson(str, mapType);
-    return map;
-  }
+    public void setToBeEditedOptions(Map<String, Boolean> toBeEditedOptions) {
+        this.toBeEditedOptions = toBeEditedOptions;
+    }
 
-  public int getPerPageDefault() {
-    return defaultPerPage;
-  }
+    private Map<String, Boolean> getMapFromString(String str) {
+        str = str.replace("=", ":");
+        Map<String, Boolean> map;
 
-  public int getPageCount() {
-    return productPage == null ? 0 : productPage.getTotalPages();
-  }
+        Type mapType = new TypeToken<Map<String, Boolean>>() {
+        }.getType();
+        map = new Gson().fromJson(str, mapType);
+        return map;
+    }
 
-  public int getResultCount() {
-    return productPage == null ? 0 : productPage.getTotalResults();
-  }
+    public int getPerPageDefault() {
+        return defaultPerPage;
+    }
 
-  public Set<String> getParamSet() {
-    HashSet<String> params = new HashSet<String>();
-    params.add("category");
-    params.add("brand");
-    params.add("toBeEditedOptions");
-    params.add("toBeEditedOptionsObject");
-    return params;
-  }
+    public int getPageCount() {
+        return productPage == null ? 0 : productPage.getTotalPages();
+    }
 
-  public List<String> getSupplierTin() {
-    return supplierTin;
-  }
+    public int getResultCount() {
+        return productPage == null ? 0 : productPage.getTotalResults();
+    }
 
-  public void setSupplierTin(List<String> supplierTin) {
-    this.supplierTin = supplierTin;
-  }
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("category");
+        params.add("brand");
+        params.add("toBeEditedOptions");
+        return params;
+    }
 
-  public ProductVariantService getProductVariantService() {
-    return productVariantService;
-  }
+    public List<String> getSupplierTin() {
+        return supplierTin;
+    }
 
-  public void setProductVariantService(ProductVariantService productVariantService) {
-    this.productVariantService = productVariantService;
-  }
+    public void setSupplierTin(List<String> supplierTin) {
+        this.supplierTin = supplierTin;
+    }
 
-  public CategoryService getCategoryService() {
-    return categoryService;
-  }
+    public ProductVariantService getProductVariantService() {
+        return productVariantService;
+    }
 
-  public void setCategoryService(CategoryService categoryService) {
-    this.categoryService = categoryService;
-  }
+    public void setProductVariantService(ProductVariantService productVariantService) {
+        this.productVariantService = productVariantService;
+    }
 
-  public String getProductVariantId() {
-    return productVariantId;
-  }
+    public CategoryService getCategoryService() {
+        return categoryService;
+    }
 
-  public void setProductVariantId(String productVariantId) {
-    this.productVariantId = productVariantId;
-  }
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-  // public List<String> getOptions() {
-  // return options;
-  // }
-  //
-  // public void setOptions(List<String> options) {
-  // this.options = options;
-  // }
-  //
-  // public List<String> getExtraOptions() {
-  // return extraOptions;
-  // }
-  //
-  // public void setExtraOptions(List<String> extraOptions) {
-  // this.extraOptions = extraOptions;
-  // }
+    public String getProductVariantId() {
+        return productVariantId;
+    }
+
+    public void setProductVariantId(String productVariantId) {
+        this.productVariantId = productVariantId;
+    }
+
+    // public List<String> getOptions() {
+    // return options;
+    // }
+    //
+    // public void setOptions(List<String> options) {
+    // this.options = options;
+    // }
+    //
+    // public List<String> getExtraOptions() {
+    // return extraOptions;
+    // }
+    //
+    // public void setExtraOptions(List<String> extraOptions) {
+    // this.extraOptions = extraOptions;
+    // }
 }

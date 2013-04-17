@@ -265,11 +265,6 @@
                 </s:link>)
                 </c:if>
             </shiro:hasAnyRoles>
-            &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
-                                 class="cancelSO">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Cancel SO
-        </s:link>)
             <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
                                      class="resolveShipment" target="_blank">
@@ -278,16 +273,15 @@
             </s:link>)
             </shiro:hasPermission>
         </c:if>
-
-        <c:if test="${isSearchShippingOrder}">
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
-                                     class="flipWarehouse">
-                <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Flip Warehouse
-            </s:link>)
-
-            </shiro:hasAnyRoles>
+    <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
+                             event="cancelShippingOrder"
+                             class="cancelSO">
+        <s:param name="shippingOrder" value="${shippingOrder}"/>
+        Cancel SO
+    </s:link>)
+    </c:if>
+    <c:if test="${isSearchShippingOrder}">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
                 <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
