@@ -8,9 +8,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,7 +55,16 @@ public class GoogleCatalogPLAAction extends BaseAction {
 
 
         //categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
-        products = getProductService().getProductByCategory(categories);
+        List<Product> catProducts = getProductService().getProductByCategory(categories);
+        Map<String,Product> productMap = new HashMap<String,Product>();
+        //Need to ensure that there are not duplicate items
+        for (Product product : catProducts){
+            if (productMap.get(product.getId()) == null ){
+                products.add(product);
+                productMap.put(product.getId(), product);
+            }
+        }
+
         return new ForwardResolution("/pages/googlePLACatalog.jsp");
     }
 
