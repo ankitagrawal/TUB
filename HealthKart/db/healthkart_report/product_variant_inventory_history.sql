@@ -173,12 +173,12 @@ ALTER EVENT healthkart_prod.insert_product_variant_inventory_history
 ON SCHEDULE
 
 EVERY '1' DAY
-STARTS '2013-04-05 01:30:01'
+STARTS '2013-04-05 00:00:01'
 DO
 BEGIN
-	drop table if exists temp_pvi_history;
+	drop table if exists healthkart_prod.temp_pvi_history;
 
-	create table temp_pvi_history
+	create table healthkart_prod.temp_pvi_history
 	SELECT s.id as sku_id,
 	ifnull(COUNT( si.id ),0) as current_qty,
 	pv.marked_price,
