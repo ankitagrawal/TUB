@@ -50,7 +50,7 @@ public class ShippingOrderAction extends BaseAction {
 
 	private ReplacementOrderReason rtoReason;
 
-  private String customerReturnReason;
+  private String customerSatisfyReason;
 
 	public Resolution flipWarehouse() {
 		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
@@ -79,11 +79,18 @@ public class ShippingOrderAction extends BaseAction {
 		return new JsonResolution(healthkartResponse);
 	}
 
-  public Resolution markOrderCustomerReturn() {
-    getBaseDao().save(shippingOrder);
-    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Return, null, customerReturnReason);
+  	public Resolution markOrderCustomerReturn() {
+    	getBaseDao().save(shippingOrder);
+    	shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Return);
 		return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderId", shippingOrder.getId());
 	}
+
+	public Resolution markOrderCustomerSatisfy(){
+		getBaseDao().save(shippingOrder);
+    	shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Customer_Satisfaction, null, customerSatisfyReason);
+		return new RedirectResolution(SearchShippingOrderAction.class, "searchShippingOrder").addParameter("shippingOrderId", shippingOrder.getId());
+	}
+
 
 	@JsonHandler
 	public Resolution markRTO() {
@@ -184,7 +191,11 @@ public class ShippingOrderAction extends BaseAction {
 		this.rtoReason = rtoReason;
 	}
 
-  public void setCustomerReturnReason(String customerReturnReason) {
-    this.customerReturnReason = customerReturnReason;
-  }
+  	public void setCustomerSatisfyReason(String customerSatisfyReason) {
+    	this.customerSatisfyReason = customerSatisfyReason;
+  	}
+
+	public String getCustomerSatisfyReason() {
+		return customerSatisfyReason;
+	}
 }
