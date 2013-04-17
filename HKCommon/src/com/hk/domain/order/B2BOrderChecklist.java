@@ -11,10 +11,6 @@ import javax.persistence.*;
 @Table(name = "b2b_order_checklist")
 public class B2BOrderChecklist implements java.io.Serializable {
 
-
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -53,8 +49,7 @@ public class B2BOrderChecklist implements java.io.Serializable {
   public void setCForm(boolean cForm) {
     this.cForm = cForm;
   }
-
-
+  
 }
 
 
