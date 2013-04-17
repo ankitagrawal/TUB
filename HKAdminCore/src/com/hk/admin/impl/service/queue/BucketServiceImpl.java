@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.queue;
 
+import com.hk.domain.user.User;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
@@ -55,6 +56,7 @@ public class BucketServiceImpl implements BucketService {
         actionItem = existsActionItem(shippingOrder);
         if(actionItem == null){
             actionItem = new ActionItem();
+            actionItem.setFirstPushDate(new Date());
         }
         if (enumBuckets != null && !enumBuckets.isEmpty()) {
             actionItem.setBuckets(EnumBucket.getBuckets(enumBuckets));
@@ -72,9 +74,12 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public ActionItem pushToActionQueue(ActionItem actionItem) {
-        actionItem.setFirstPushDate(new Date());
         actionItem.setFlagged(false);
-        actionItem.setReporter(userService.getAdminUser());
+        User reporter = userService.getLoggedInUser();
+        if(reporter == null){
+          reporter = userService.getAdminUser();
+        }
+        actionItem.setReporter(reporter);
         actionItem.setLastPushDate(new Date());
         actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
         return saveActionItem(actionItem);
@@ -89,6 +94,16 @@ public class BucketServiceImpl implements BucketService {
     public ActionItem changeBucket(ActionItem actionItem, List<Bucket> bucketList) {
         actionItem.setBuckets(bucketList);
         return saveActionItem(actionItem);
+    }
+
+    @Override
+    public ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> bucketList) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        if (actionItem != null) {
+            actionItem.setBuckets(bucketList);
+            actionItem = saveActionItem(actionItem);
+        }
+        return actionItem;
     }
 
     @Override

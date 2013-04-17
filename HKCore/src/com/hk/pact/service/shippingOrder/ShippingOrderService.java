@@ -1,6 +1,7 @@
 package com.hk.pact.service.shippingOrder;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
@@ -39,15 +40,9 @@ public interface ShippingOrderService {
 
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
 
-	/**
-	 * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
-	 * orders from action queue to processing queue accordingly.
-	 *
-	 * @param shippingOrder
-	 * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
-	 * @description shipping order
-	 */
 	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
+
+    public List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder);
 
 	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 

@@ -12151,9 +12151,9 @@
     <changeSet author="Pratham (generated)" id="1366048162469-11">
         <addPrimaryKey columnNames="action_item_id, user_id" tableName="watcher"/>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="1366048162469-13">
-        <addForeignKeyConstraint baseColumnNames="action_task_id" baseTableName="action_item" constraintName="fk_action_item_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Pratham (generated)" id="1366048162469-13">-->
+        <!--<addForeignKeyConstraint baseColumnNames="action_task_id" baseTableName="action_item" constraintName="fk_action_item_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="Pratham (generated)" id="1366048162469-14">
         <addForeignKeyConstraint baseColumnNames="reporter" baseTableName="action_item" constraintName="fk_table1_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
@@ -12195,4 +12195,103 @@
 			ON DUPLICATE KEY UPDATE wh_phone ='12345';
 		</sql>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-1">
+        <createTable tableName="action_item_labels">
+            <column name="action_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-2">
+        <createTable tableName="label">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="color_code" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-3">
+        <createTable tableName="reason_has_bucket">
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-4">
+        <addColumn tableName="action_item">
+            <column name="current_action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-5">
+        <addColumn tableName="action_item">
+            <column name="pop_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-6">
+        <addColumn tableName="action_item">
+            <column name="previous_action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-7">
+        <addColumn tableName="action_item">
+            <column name="priority" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-8">
+        <addColumn tableName="reason">
+            <column name="classification_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-9">
+        <addPrimaryKey columnNames="action_item_id, label_id" tableName="action_item_labels"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-10">
+        <addPrimaryKey columnNames="reason_id, bucket_id" tableName="reason_has_bucket"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-11">
+        <dropForeignKeyConstraint baseTableName="action_item" constraintName="fk_action_item_action_task1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-13">
+        <addForeignKeyConstraint baseColumnNames="current_action_task_id" baseTableName="action_item" constraintName="fk_action_item_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-14">
+        <addForeignKeyConstraint baseColumnNames="previous_action_task_id" baseTableName="action_item" constraintName="fk_action_item_action_task2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-15">
+        <addForeignKeyConstraint baseColumnNames="action_item_id" baseTableName="action_item_labels" constraintName="fk_action_item_has_label_action_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-16">
+        <addForeignKeyConstraint baseColumnNames="label_id" baseTableName="action_item_labels" constraintName="fk_action_item_has_label_label1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="label" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-17">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-18">
+        <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="reason_has_bucket" constraintName="fk_reason_has_bucket_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-19">
+        <addForeignKeyConstraint baseColumnNames="reason_id" baseTableName="reason_has_bucket" constraintName="fk_reason_has_bucket_reason1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="reason" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-20">
+        <dropColumn columnName="action_task_id" tableName="action_item"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-21">
+        <dropColumn columnName="primary_classification" tableName="reason"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1366178817557-22">
+        <dropColumn columnName="secondary_classification" tableName="reason"/>
+    </changeSet>
 </databaseChangeLog>

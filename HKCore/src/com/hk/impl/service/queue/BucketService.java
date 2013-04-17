@@ -31,6 +31,8 @@ public interface BucketService {
 
     ActionItem changeBucket(ActionItem actionItem, List<Bucket> bucketList);
 
+    ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> buckets);
+
     List<Bucket> findBucket(List<String> name, Classification classification);
 
     ActionItem saveActionItem(ActionItem actionItem);

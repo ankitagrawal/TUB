@@ -301,7 +301,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder = getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-        bucketService.allocateBuckets(shippingOrder);
+        bucketService.changeBucket(shippingOrder, shippingOrder.getReason().getBuckets());
         return shippingOrder;
     }
 

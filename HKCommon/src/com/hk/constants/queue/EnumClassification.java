@@ -15,7 +15,10 @@ public enum EnumClassification {
     JIT(220L, "JIT", "JIT"),
     DropShip(230L, "JIT", "DropShip"),
     Services(240L, "JIT", "Services"),
-    Dispatch_Issues(310L, "Dispatch Issue", "Shipment Not Created");
+    Dispatch_Issues(310L, "Dispatch Issue", "Shipment Not Created"),
+    Warehouse(410L, "Warehouse Processing" , "In Process"),
+    AD_HOC(410L, "AD_HOC" , "Pending with CC"),
+    Vendor(460L, "Vendor", "Procurement");
 
     private Long id;
     private String primary;

@@ -90,7 +90,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             for (Reason reason : reasons) {
                 shippingOrderService.logShippingOrderActivity
                         (shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), null, "");
-                adminEmailManager.sendNoShipmentEmail(reason.getPrimaryClassification(), shippingOrder, shippingOrder.getBaseOrder());
+                adminEmailManager.sendNoShipmentEmail(reason.getClassification().getPrimary(), shippingOrder, shippingOrder.getBaseOrder());
             }
             if (reasons.isEmpty()) {
                 validShipment = new Shipment();

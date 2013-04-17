@@ -1,5 +1,6 @@
 package com.hk.constants.analytics;
 
+import com.hk.constants.queue.EnumClassification;
 import com.hk.domain.analytics.Reason;
 
 /*
@@ -26,19 +27,26 @@ public enum EnumReason {
 
 
     Long id;
-    String primaryClassification;
+    EnumClassification enumClassification;
     String reasonType;
 
+    //todo ps migration
     EnumReason(Long id, String primaryClassification, EnumReasonType enumReasonType) {
         this.id = id;
-        this.primaryClassification = primaryClassification;
+        this.enumClassification = enumClassification;
+        this.reasonType = enumReasonType.getName();
+    }
+
+    EnumReason(Long id, EnumClassification enumClassification, EnumReasonType enumReasonType) {
+        this.id = id;
+        this.enumClassification = enumClassification;
         this.reasonType = enumReasonType.getName();
     }
 
     public Reason asReason() {
         Reason reason = new Reason();
         reason.setId(id);
-        reason.setPrimaryClassification(primaryClassification);
+        reason.setClassification(enumClassification.asClassification());
         reason.setType(reasonType);
         return reason;
     }

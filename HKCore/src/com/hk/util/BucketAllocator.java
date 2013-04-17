@@ -8,7 +8,9 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
  * User: Pratham
@@ -40,7 +42,7 @@ public class BucketAllocator {
         } else {
 
             // now that its decided that its category call, decide which category buckets is the order applicable
-            List<String> categoryNames = new ArrayList<String>();
+            Set<String> categoryNames = new HashSet<String>();
             for (ShippingOrderCategory shippingOrderCategory : shippingOrder.getShippingOrderCategories()) {
                 categoryNames.add(shippingOrderCategory.getCategory().getName());
             }

@@ -1,6 +1,14 @@
 package com.hk.domain.analytics;
 
+import com.akube.framework.gson.JsonSkip;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.queue.Classification;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
  * User: Pratham
@@ -15,11 +23,16 @@ public class Reason {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "primary_classification", nullable = false, length = 100)
-    private String primaryClassification;
+    @Column(name = "classification")
+    private Classification classification;
 
-    @Column(name = "secondary_classification", nullable = false, length = 100)
-    private String secondaryClassification;
+    @Transient
+    private boolean selected;
+
+    @JsonSkip
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "reason_has_buckets", uniqueConstraints = @UniqueConstraint(columnNames = {"reason_id", "bucket_id"}), joinColumns = {@JoinColumn(name = "reason_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)})
+    private List<Bucket> buckets = new ArrayList<Bucket>(0);
 
     @Column(name = "type", nullable = false, length = 45)
     private String type;
@@ -32,20 +45,20 @@ public class Reason {
         this.id = id;
     }
 
-    public String getPrimaryClassification() {
-        return primaryClassification;
+    public Classification getClassification() {
+        return classification;
     }
 
-    public void setPrimaryClassification(String primaryClassification) {
-        this.primaryClassification = primaryClassification;
+    public void setClassification(Classification classification) {
+        this.classification = classification;
     }
 
-    public String getSecondaryClassification() {
-        return secondaryClassification;
+    public List<Bucket> getBuckets() {
+        return buckets;
     }
 
-    public void setSecondaryClassification(String secondaryClassification) {
-        this.secondaryClassification = secondaryClassification;
+    public void setBuckets(List<Bucket> buckets) {
+        this.buckets = buckets;
     }
 
     public String getType() {
