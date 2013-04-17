@@ -3,4 +3,5 @@ Allow: /
 Disallow: /Cart.action
 Disallow: /Login.action
 Disallow: /action/invite/
+Disallow: /brand/all/
 Sitemap: http://www.healthkart.com/sitemap.xml
