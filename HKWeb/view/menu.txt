@@ -777,41 +777,38 @@
 --/beauty/men/talc
 --/beauty/men/fragrances
 
-/baby
--/baby/diapering
---/baby/diapering/diapers
---/baby/diapering/wipes
---/baby/diapering/diaper-rash-cream
---/baby/diapering/cloth-diapers-nappies : Cloth Diapers/Nappies
--/baby/baby-food
---/baby/baby-food/cereal
---/baby/baby-food/puree
---/baby/baby-food/formula
---/baby/baby-food/supplements
---/baby/baby-food/mom-supplements
--/baby/feeding-nursing : Feeding & Nursing
---/baby/feeding-nursing/breast-feeding
---/baby/feeding-nursing/bottles-accessories : Bottles & Accessories
---/baby/feeding-nursing/bottle-cleaning-sterlization : Bottle Cleaning & Sterlization
---/baby/feeding-nursing/sippers-cups : Sippers & Cups
---/baby/feeding-nursing/dishes-utensils : Dishes & Utensils
---/baby/feeding-nursing/bibs
--/baby/bath-skincare : Bath & Skincare
---/baby/bath-skincare/soaps-shampoos-body-wash : Soaps, Shampoos & Body Wash
---/baby/bath-skincare/lotions-oils-powders : Lotions, Oils & Powders
--/baby/health-safety : Health & Safety
---/baby/health-safety/thermometers
---/baby/health-safety/oral-care
---/baby/health-safety/pacifiers-teethers : Pacifiers & Teethers
---/baby/health-safety/health-baby-care : Health & Baby Care
---/baby/health-safety/toys-squatters : Toys & Squatters
---/baby/health-safety/maternity
---/baby/health-safety/strollers-prams-car-seats: Strollers,prams & car seats
--/baby/what-s-new: What's New
---/baby/what-s-new/christmas-offer
---/baby/what-s-new/gift-pack
---/baby/what-s-new/top-deals
---/baby/what-s-new/latest-arrivals
+/home-living:Home & Living
+-/home-living/breakfast-maker:Breakfast Maker
+--/home-living/breakfast-maker/sandwich-maker:Sandwich Maker
+--/home-living/breakfast-maker/popup-toaster:Pop-up Toaster
+--/home-living/breakfast-maker/coffee-maker:Coffee Maker
+--/home-living/breakfast-maker/electric-kettles:Electric Kettles
+-/home-living/mix-grind-chop:Mixer & Blender
+--/home-living/mix-grind-chop/juicer-mixer-grinder:Juicer Mixer Grinder
+---/home-living/mix-grind-chop/juicer-mixer-grinder/juicer:Juicer
+---/home-living/mix-grind-chop/juicer-mixer-grinder/mixer-grinder:Mixer Grinder
+---/home-living/mix-grind-chop/juicer-mixer-grinder/jmg:Juicer Mixer Grinder
+--/home-living/mix-grind-chop/hand-blender:Hand Blender
+--/home-living/mix-grind-chop/food-processor:Food Processor
+--/home-living/mix-grind-chop/chopper:Chopper
+-/home-living/cook-fry:Cook & Fry
+--/home-living/cook-fry/induction-cooker:Induction Cooker
+--/home-living/cook-fry/cooker:Cooker
+---/home-living/cook-fry/cooker/rice-cooker:Rice Cooker
+---/home-living/cook-fry/cooker/pressure-cooker:Pressure Cooker
+--/home-living/cook-fry/steamer-fryer:Steamer & Fryer
+--/home-living/cook-fry/microwave:Microwave & OTG
+---/home-living/cook-fry/microwave/solo:Solo
+---/home-living/cook-fry/microwave/grill:Grill
+---/home-living/cook-fry/microwave/convection:Convection
+---/home-living/cook-fry/microwave/OTG:OTG
+-/home-living/home-appliances:Home Appliances
+--/home-living/home-appliances/iron:Iron
+---/home-living/home-appliances/iron/dry:Dry Iron
+---/home-living/home-appliances/iron/steam:Steam Iron
+--/home-living/home-appliances/lights:Emergency Light
+--/home-living/home-appliances/vacuum-cleaner:Vacuum Cleaner
+
 
 /parenting
 -/parenting/moms-maternity : Moms & Maternity

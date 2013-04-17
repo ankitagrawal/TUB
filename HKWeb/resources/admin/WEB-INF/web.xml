@@ -201,6 +201,8 @@
         <url-pattern>/diabetes/*</url-pattern>
         <url-pattern>/home-devices</url-pattern>
         <url-pattern>/home-devices/*</url-pattern>
+        <url-pattern>/home-living</url-pattern>
+        <url-pattern>/home-living/*</url-pattern>
 	    <url-pattern>/health-devices</url-pattern>
 	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>

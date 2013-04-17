@@ -26,6 +26,8 @@ public interface ProductDao extends BaseDao {
 
     public List<Product> getProductByCategory(String category);
 
+    public List<Product> getProductByCategory(List<String> category);
+
     /**
      * returns list of all the products irrespective of whether they are deleted or not.
      *

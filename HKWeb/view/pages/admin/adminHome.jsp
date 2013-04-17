@@ -130,8 +130,8 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
 
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+	<h3><s:link
+			beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
@@ -195,7 +195,6 @@
     </h3>
     <c:if test="${whAction.setWarehouse != null}">
 
-
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
@@ -205,6 +204,9 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
+
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>--%>
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -212,6 +214,11 @@
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
+
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"--%>
+	            <%--event="generateCourierReport">Download Courier Excel--%>
+		<%--<s:param name="courierDownloadFunctionality" value="false"/>--%>
+	<%--</s:link></h3>--%>
 
     </c:if>
     <h3>

@@ -137,7 +137,7 @@ public class MasterDataService {
 	@Autowired
 	SkuItemStatusSeedData skuItemStatusSeedData;
 	@Autowired
-	CourierPickupStatusSeedData courierPickupStatusSeedData;
+	PickupStatusSeedData pickupStatusSeedData;
 	@Autowired
 	StockTransferStatusSeed stockTransferStatusSeed;
 
@@ -302,7 +302,7 @@ public class MasterDataService {
 		skuItemStatusSeedData.invokeInsert();
 
 		logger.debug("inserting courier pickup status");
-		courierPickupStatusSeedData.invokeInsert();
+		pickupStatusSeedData.invokeInsert();
 
 		logger.debug("inserting Stock Transfer Status");
 		stockTransferStatusSeed.invokeInsert();
