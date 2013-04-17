@@ -49,7 +49,7 @@ public class GoogleCatalogPLAAction extends BaseAction {
 //        categories.add("eye");
 //        categories.add("foot-care-pedicure");
 //        categories.add("oral-hygiene");
-//        categories.add("misc");
+//        categories.add("misc");                                 u
 //        categories.add("diapering");
 //        categories.add("bath-skin-care");
 //        categories.add("health-safety");
