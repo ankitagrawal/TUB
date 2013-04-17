@@ -13,6 +13,7 @@ import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -189,4 +190,6 @@ public interface MasterDataDao
 	public List<Long> getDiscountsForPOS();
 
     public List<ReconciliationType> getProductAuditedReconVoucherType();
+
+    public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList();
 }

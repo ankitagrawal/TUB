@@ -23,11 +23,10 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     @Override
     public Consignment getConsignmentByAwbNumber(String awbNumber) {
         String query = "from Consignment cn where cn.awbNumber = :awbNumber";
-        return (Consignment) findUniqueByNamedParams(query,new String[]{"awbNumber"},new Object[]{awbNumber});
+        return (Consignment) findUniqueByNamedParams(query, new String[]{"awbNumber"}, new Object[]{awbNumber});
     }
 
 
-    
     @Override
     public List<String> getDuplicateAwbNumbersinRunsheet(List<String> trackingIdList) {
         String query = "select cn.awbNumber from Consignment cn where cn.runsheet != null and cn.runsheet.runsheetStatus.id = :runsheetStatusId and cn.awbNumber in (:trackingIdList)";
@@ -37,23 +36,23 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     @Override
     public List<String> getDuplicateAwbNumbersinConsignment(List<String> trackingIdList) {
         String query = "select cn.awbNumber from Consignment cn where cn.awbNumber in (:trackingIdList)";
-        return (List<String>)findByNamedParams(query,new String[]{"trackingIdList"},new Object[]{trackingIdList});
+        return (List<String>) findByNamedParams(query, new String[]{"trackingIdList"}, new Object[]{trackingIdList});
     }
 
     @Override
     public List<Consignment> getConsignmentListByAwbNumbers(List<String> awbNumbers) {
         String query = "from Consignment cn where cn.awbNumber in (:trackingIdList)";
-        return (List<Consignment>)findByNamedParams(query,new String[]{"trackingIdList"},new Object[]{awbNumbers});
+        return (List<Consignment>) findByNamedParams(query, new String[]{"trackingIdList"}, new Object[]{awbNumbers});
     }
 
     @Override
     public List<ShippingOrder> getShippingOrderFromConsignments(List<String> cnnNumberList) {
         String query = "from ShippingOrder sh where sh.gatewayOrderId in (:cnnNumberList)";
-        return (List<ShippingOrder>) findByNamedParams(query,new String[]{"cnnNumberList"},new Object[]{cnnNumberList});
+        return (List<ShippingOrder>) findByNamedParams(query, new String[]{"cnnNumberList"}, new Object[]{cnnNumberList});
     }
 
     @Override
-    public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Runsheet runsheet, Boolean reconciled, int pageNo, int perPage){
+    public Page searchConsignment(Consignment consignment, String awbNumber, Date startDate, Date endDate, ConsignmentStatus consignmentStatus, Hub hub, Runsheet runsheet, Boolean reconciled, int pageNo, int perPage) {
         DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
 
         if (consignment != null) {
@@ -78,16 +77,15 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
             consignmentCriteria.add(Restrictions.eq("hub", hub));
         }
 
-        if(reconciled != null){
-            if(reconciled){
+        if (reconciled != null) {
+            if (reconciled) {
                 consignmentCriteria.add(Restrictions.isNotNull("hkdeliveryPaymentReconciliation"));
-            }
-            else{
+            } else {
                 consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
             }
         }
 
-        if(runsheet != null){
+        if (runsheet != null) {
             consignmentCriteria.add(Restrictions.eq("runsheet", runsheet));
         }
 
@@ -96,31 +94,31 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment) {
-         String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId";
-        return (List<ConsignmentTracking>) findByNamedParams(query,new String[]{"consignmentId"},new Object[]{consignment.getId()});
+        String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId";
+        return (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentId"}, new Object[]{consignment.getId()});
     }
 
-	public ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus){
-		String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId and " +
-				"ct.runsheet.id = :runsheetId and ct.consignmentLifecycleStatus.id = :consignmentLifecycleStatusId " +
-				"order by ct.createDate desc";
+    public ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus) {
+        String query = "from ConsignmentTracking ct where ct.consignment.id = :consignmentId and " +
+                "ct.runsheet.id = :runsheetId and ct.consignmentLifecycleStatus.id = :consignmentLifecycleStatusId " +
+                "order by ct.createDate desc";
 
-		List<ConsignmentTracking> consignmentTrackingList = (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentId", "runsheetId", "consignmentLifecycleStatusId"},
-				new Object[]{consignment.getId(), runsheet.getId(), consignmentLifecycleStatus.getId()});
-		if(consignmentTrackingList != null && consignmentTrackingList.size() > 0){
-			return consignmentTrackingList.get(0);
-		}
-		return null;
-	}
+        List<ConsignmentTracking> consignmentTrackingList = (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentId", "runsheetId", "consignmentLifecycleStatusId"},
+                new Object[]{consignment.getId(), runsheet.getId(), consignmentLifecycleStatus.getId()});
+        if (consignmentTrackingList != null && consignmentTrackingList.size() > 0) {
+            return consignmentTrackingList.get(0);
+        }
+        return null;
+    }
 
     @Override
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment) {
         String query = "from ShippingOrder sh where sh.gatewayOrderId = :cnnNumber)";
-                return (ShippingOrder) findUniqueByNamedParams(query,new String[]{"cnnNumber"},new Object[]{consignment.getCnnNumber()});
+        return (ShippingOrder) findUniqueByNamedParams(query, new String[]{"cnnNumber"}, new Object[]{consignment.getCnnNumber()});
     }
 
     @Override
-    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage) {
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate, int pageNo, int perPage) {
         DetachedCriteria paymentReconciliationCriteria = DetachedCriteria.forClass(HkdeliveryPaymentReconciliation.class);
 
 
@@ -134,27 +132,50 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
         return list(paymentReconciliationCriteria, pageNo, perPage);
     }
 
-	@Override
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
-		DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
-		if (startDate != null) {
+    @Override
+    public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub) {
+        DetachedCriteria consignmentCriteria = DetachedCriteria.forClass(Consignment.class);
+        if (startDate != null) {
             consignmentCriteria.add(Restrictions.ge("deliveryDate", startDate));
         }
         if (endDate != null) {
             consignmentCriteria.add(Restrictions.le("deliveryDate", endDate));
         }
-		if(hub != null){
-			consignmentCriteria.add(Restrictions.eq("hub.id", hub.getId()));
-		}
+        if (hub != null) {
+            consignmentCriteria.add(Restrictions.eq("hub.id", hub.getId()));
+        }
 
-		consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
+        consignmentCriteria.add(Restrictions.isNull("hkdeliveryPaymentReconciliation"));
 
-		consignmentCriteria.add(Restrictions.eq("consignmentStatus.id", EnumConsignmentStatus.ShipmentDelivered.getId()));
+        consignmentCriteria.add(Restrictions.eq("consignmentStatus.id", EnumConsignmentStatus.ShipmentDelivered.getId()));
 
-		consignmentCriteria.add(Restrictions.like("paymentMode", HKDeliveryConstants.COD));
-		
-		consignmentCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
-		return findByCriteria(consignmentCriteria);
-	}
+        consignmentCriteria.add(Restrictions.like("paymentMode", HKDeliveryConstants.COD));
+
+        consignmentCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
+        return findByCriteria(consignmentCriteria);
+    }
+
+    @Override
+    public Page searchConsignmentTracking(Date startDate,Long consignmentLifecycleStatus, Long sourceHubId, Long destinationHubId, int pageNo, int perPage) {
+        DetachedCriteria consignmentTrackingCriteria = DetachedCriteria.forClass(ConsignmentTracking.class);
+
+        if (startDate != null) {
+            consignmentTrackingCriteria.add(Restrictions.ge("createDate", startDate));
+        }
+        if (consignmentLifecycleStatus != null) {
+            consignmentTrackingCriteria.add(Restrictions.eq("consignmentLifecycleStatus.id", consignmentLifecycleStatus));
+        }
+
+        if (sourceHubId != null) {
+            consignmentTrackingCriteria.add(Restrictions.eq("sourceHub.id", sourceHubId));
+        }
+
+        if (destinationHubId != null) {
+            consignmentTrackingCriteria.add(Restrictions.eq("destinationHub.id", destinationHubId));
+        }
+
+        consignmentTrackingCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+        return list(consignmentTrackingCriteria, pageNo, perPage);
+    }
 }
 
