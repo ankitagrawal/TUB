@@ -103,7 +103,13 @@ Pass an attribute called pricingDto to render a table with pricing details
         </table>
       </div>
 
-        <div class="dispatchedDateNew2"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+         <%--HTML code for dispatch date--%>
+        <div class="dispatchedDateNew2">
+            <div>8 April 2013</div>
+            <div style="font-size: 10px;">3 days from today</div>
+        </div>
+
+
       <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
         <div class="hk">
         </div>

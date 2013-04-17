@@ -420,7 +420,14 @@
 
       </table>
     </div>
-      <div class="dispatchedDateNew"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+
+      <%--HTML code for dispatch date--%>
+      <div class="dispatchedDateNew">
+          <div>8 April 2013</div>
+          <div style="font-size: 10px;">3 days from today</div>
+      </div>
+
+
     <div class="quantity" style="width: 80px;left: 15px;">
       <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
       <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
