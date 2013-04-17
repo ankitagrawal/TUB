@@ -15,10 +15,12 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
+import com.hk.admin.dto.accounting.ReverseOrderInvoiceDto;
 import com.hk.constants.core.EnumTax;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.B2bUserDetails;
+import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
@@ -43,10 +45,14 @@ public class AccountingInvoiceAction extends BaseAction {
     @Validate(required = true, encrypted = true)
     private ShippingOrder  shippingOrder;
     private InvoiceDto     invoiceDto;
+	private ReverseOrderInvoiceDto reverseOrderInvoiceDto;
+
     // private Order order;
     private B2bUserDetails b2bUserDetails;
     
     private List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
+
+	private ReverseOrder reverseOrder;
 
     @DefaultHandler
     public Resolution pre() {
@@ -85,6 +91,23 @@ public class AccountingInvoiceAction extends BaseAction {
 				invoiceDto = new InvoiceDto(shippingOrder, b2bUserDetails);
 			}
 			return new ForwardResolution("/pages/pos/posAccountingInvoice.jsp");
+		} else {
+			addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
+			return new ForwardResolution("pages/admin/adminHome.jsp");
+		}
+	}
+
+	public Resolution reverseOrderInvoice(){
+		if (reverseOrder != null) {
+
+			String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().getB2bOrder());
+			if (invoiceType.equals(InvoiceNumHelper.PREFIX_FOR_B2B_ORDER)) {
+				b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(shippingOrder.getBaseOrder().getUser());
+			}
+
+			reverseOrderInvoiceDto = new ReverseOrderInvoiceDto(reverseOrder, b2bUserDetails);
+
+			return new ForwardResolution("/pages/reverseOrderInvoice.jsp");
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Given shipping order doesnot exist"));
 			return new ForwardResolution("pages/admin/adminHome.jsp");
@@ -163,15 +186,7 @@ public class AccountingInvoiceAction extends BaseAction {
 
     public void setShippingOrder(ShippingOrder shippingOrder) {
         this.shippingOrder = shippingOrder;
-    }
-
-    public InvoiceDto getInvoiceDto() {
-        return invoiceDto;
-    }
-
-    public void setInvoiceDto(InvoiceDto invoiceDto) {
-        this.invoiceDto = invoiceDto;
-    }
+    }   
 
     public B2bUserDetails getB2bUserDetails() {
         return b2bUserDetails;
@@ -184,4 +199,28 @@ public class AccountingInvoiceAction extends BaseAction {
     public List<EnumTax> getEnumTaxes() {
         return enumTaxes;
     }
+
+	public ReverseOrder getReverseOrder() {
+		return reverseOrder;
+	}
+
+	public void setReverseOrder(ReverseOrder reverseOrder) {
+		this.reverseOrder = reverseOrder;
+	}
+
+	public ReverseOrderInvoiceDto getReverseOrderInvoiceDto() {
+		return reverseOrderInvoiceDto;
+	}
+
+	public void setReverseOrderInvoiceDto(ReverseOrderInvoiceDto reverseOrderInvoiceDto) {
+		this.reverseOrderInvoiceDto = reverseOrderInvoiceDto;
+	}
+
+	public InvoiceDto getInvoiceDto() {
+		return invoiceDto;
+	}
+
+	public void setInvoiceDto(InvoiceDto invoiceDto) {
+		this.invoiceDto = invoiceDto;
+	}
 }
