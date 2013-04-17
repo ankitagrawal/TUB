@@ -2,19 +2,23 @@ package com.hk.admin.util.emailer;
 
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
-import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.constants.core.Keys;
+
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.email.EmailCampaign;
+
 import com.hk.domain.marketing.NotifyMe;
-import com.hk.domain.user.User;
+
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
-import com.hk.util.SendGridUtil;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +29,10 @@ import java.util.*;
  */
 @Component
 public class ProductVariantNotifyMeEmailer {
+
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(ProductVariantNotifyMeEmailer.class);
     @Autowired
+
     NotifyMeDao notifyMeDao;
     @Autowired
     EmailCampaignDao emailCampaignDao;
@@ -34,8 +41,10 @@ public class ProductVariantNotifyMeEmailer {
     @Autowired
     AdminInventoryService adminInventoryService;
 
-    float notifyConversionRate = 0.01f;
-    float bufferRate = 2;
+    @Value("#{hkEnvProps['" + Keys.Env.notifyConversionRate + "']}")
+    float notifyConversionRate;
+    @Value("#{hkEnvProps['" + Keys.Env.bufferRate + "']}")
+    int bufferRate;
 
     public void sendNotifyMeEmail() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,11 +61,9 @@ public class ProductVariantNotifyMeEmailer {
                 // get number of eligible user  to be notified for variant by formula
                 if (!(allowedUserPerVariantMap.containsKey(productVariant))) {
                     // get inventory in warehouse
-
                     int availableInventory = adminInventoryService.getNetInventory(productVariant).intValue();
                     allowedUserNumber = (int) (availableInventory / (notifyConversionRate * bufferRate));
                     allowedUserPerVariantMap.put(productVariant, allowedUserNumber);
-
 
                 } else {
                     allowedUserNumber = allowedUserPerVariantMap.get(productVariant);
@@ -88,7 +95,7 @@ public class ProductVariantNotifyMeEmailer {
 
             adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
         } catch (Exception ex) {
-
+            logger.error("Exception :: " + ex.getMessage());
 
         }
     }

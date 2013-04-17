@@ -115,13 +115,16 @@ public class Keys {
         public static final String fedExAuthKey                    = "fedExAuthKey";
         public static final String fedExPassword                   = "fedExPassword";
         public static final String fedExMeterNo                    = "fedExMeterNo";
-        public static final String fedExAccountNo                  = "fedExAccountNo";
+        public static final String fedExAccountNo = "fedExAccountNo";
 
         /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
-        public static final String maxCODCallCount                  = "maxCODCallCount";
+        public static final String maxCODCallCount = "maxCODCallCount";
 
-        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String hkApiAccessKey = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
+
+        public static final String notifyConversionRate = "notifyConversionRate";
+        public static final String bufferRate = "bufferRate";
     }
 
     /*
