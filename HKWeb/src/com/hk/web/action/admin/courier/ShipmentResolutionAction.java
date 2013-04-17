@@ -6,6 +6,8 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.analytics.EnumReasonType;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.courier.EnumCourierOperations;
@@ -13,13 +15,16 @@ import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.Awb;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -56,7 +61,8 @@ public class ShipmentResolutionAction extends BaseAction {
     Shipment shipment;
     Courier updateCourier;
     List<Courier> applicableCouriers;
-    String reasoning;
+    private Reason reasoning;
+    private Reason awbReasoning;
     Awb awb;
     boolean preserveAwb;
     Long shipmentServiceTypeId;
@@ -124,10 +130,11 @@ public class ShipmentResolutionAction extends BaseAction {
         }
         shipment = shipmentService.save(shipment);
         Awb updatedAwb = shipment.getAwb();
+
         if (!currentAwb.equals(updatedAwb)) {
             String comments = "Courier/Awb changed to " + updatedAwb.getCourier().getName() + "-->" + updatedAwb.getAwbNumber();
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, comments);
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, reasoning);
+            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, reasoning,reasoning.getPrimaryClassification());
         }
         addRedirectAlertMessage(new SimpleMessage("Your Courier has been changed"));
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
@@ -157,7 +164,7 @@ public class ShipmentResolutionAction extends BaseAction {
                 }
                   if(bool) {
                       addRedirectAlertMessage(new SimpleMessage("Awb Number Changed!!!"));
-                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null, "Reason to change Awb--> "+reasoning);
+                      shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, awbReasoning, "Reason to change Awb--> "+awbReasoning.getPrimaryClassification());
                   }
                      return new RedirectResolution(ShipmentResolutionAction.class,"search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
      }
@@ -209,8 +216,6 @@ public class ShipmentResolutionAction extends BaseAction {
         addRedirectAlertMessage(new SimpleMessage("Awb and Shipment has been created, please Enter Gateway Order Id again to check !!!!!"));
         return new RedirectResolution(ShipmentResolutionAction.class);
     }
-
-
     public Awb getAwb() {
         return awb;
     }
@@ -219,11 +224,19 @@ public class ShipmentResolutionAction extends BaseAction {
         this.awb = awb;
     }
 
-    public String getReasoning() {
+    public Reason getAwbReasoning() {
+        return awbReasoning;
+    }
+
+    public void setAwbReasoning(Reason awbReasoning) {
+        this.awbReasoning = awbReasoning;
+    }
+
+    public Reason getReasoning() {
         return reasoning;
     }
 
-    public void setReasoning(String reasoning) {
+    public void setReasoning(Reason reasoning) {
         this.reasoning = reasoning;
     }
 
