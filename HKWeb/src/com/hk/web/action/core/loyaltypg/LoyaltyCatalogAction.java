@@ -60,14 +60,14 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
 	
-	//	this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		this.testList = this.loyaltyProgramService.getCategoryForLoyaltyProducts();
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 
-	public Resolution aboutLoyaltyProgram(){
+	public Resolution aboutLoyaltyProgram() {
 		this.badgeList = this.loyaltyProgramService.getAllBadges();
 		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}

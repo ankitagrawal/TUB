@@ -13,8 +13,8 @@ public class CategoryLoyaltyDto {
 	
 	private String              name;
     private String              displayName;
-    private int 				count;
-    
+   
+    private int					prodCount;
     CategoryLoyaltyDto () {}
 	
     
@@ -78,14 +78,14 @@ public class CategoryLoyaltyDto {
 	/**
 	 * @return the count
 	 */
-	public int getCount() {
-		return this.count;
+	public int getProdCount() {
+		return this.prodCount;
 	}
 	/**
 	 * @param count the count to set
 	 */
-	public void setCount(int count) {
-		this.count = count;
+	public void setProdCount(int prodCount) {
+		this.prodCount = prodCount;
 	}
     
 

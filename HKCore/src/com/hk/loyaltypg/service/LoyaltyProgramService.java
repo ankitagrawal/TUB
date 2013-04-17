@@ -7,6 +7,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
+import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
@@ -27,11 +28,24 @@ public interface LoyaltyProgramService {
 	
 	public void cancelKarmaPoints(Long orderId);
 
-	public double aggregatePoints(Collection<CartLineItem> cartLineItems);
 	
-	public double calculateKarmaPoints(Long userId);
-	
+/*	public double calculateKarmaPoints(Long userId);
+*/	
+	/**
+	 * This method calculates aggregate value an order.
+	 * It calls its overloaded method to aggergate all cartline items
+	 * @param Long orderId
+	 * @return aggregatePoints
+	 */
 	public double aggregatePoints(Long orderId);
+	
+	
+	/**
+	 * This method calculates aggregate value for all the loyalty products added into the cart
+	 * @param Collection cartLineItems
+	 * @return aggregatePoints
+	 */
+	public double aggregatePoints(Collection<CartLineItem> cartLineItems);
 	
 	public UserBadgeInfo getUserBadgeInfo(Long userId);
 

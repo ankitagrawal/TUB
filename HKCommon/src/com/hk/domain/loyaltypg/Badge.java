@@ -25,14 +25,14 @@ public class Badge {
 	@Column(name = "badge_name")
 	private String badgeName;
 	
-	@Column(name = "loyalty_percentage")
-	private double loyaltyPercentage;
+	@Column(name = "loyalty_multiplier")
+	private double loyaltyMultiplier;
 	
 	@Column(name = "icon_rel_url")
 	private String iconRelUrl;
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -40,7 +40,7 @@ public class Badge {
 	}
 
 	public double getMinScore() {
-		return minScore;
+		return this.minScore;
 	}
 
 	public void setMinScore(double minScore) {
@@ -48,7 +48,7 @@ public class Badge {
 	}
 
 	public double getMaxScore() {
-		return maxScore;
+		return this.maxScore;
 	}
 
 	public void setMaxScore(double maxScore) {
@@ -56,23 +56,23 @@ public class Badge {
 	}
 
 	public String getBadgeName() {
-		return badgeName;
+		return this.badgeName;
 	}
 
 	public void setBadgeName(String badgeName) {
 		this.badgeName = badgeName;
 	}
 
-	public double getLoyaltyPercentage() {
-		return loyaltyPercentage;
+	public double getLoyaltyMultiplier() {
+		return this.loyaltyMultiplier;
 	}
 
-	public void setLoyaltyPercentage(double loyaltyPercentage) {
-		this.loyaltyPercentage = loyaltyPercentage;
+	public void setLoyaltyMultiplier(double loyaltyMultiplier) {
+		this.loyaltyMultiplier = loyaltyMultiplier;
 	}
 
 	public String getIconRelUrl() {
-		return iconRelUrl;
+		return this.iconRelUrl;
 	}
 
 	public void setIconRelUrl(String iconRelUrl) {
