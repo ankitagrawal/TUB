@@ -230,7 +230,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 10) {
+            if (shippingOrdersList.size() == 20) {
                 break;
             }
             boolean shouldAdd = true;

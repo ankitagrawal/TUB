@@ -44,13 +44,13 @@
 						//Normal Partial Invoice
 						document.getElementById("orderInvoice").src = invoiceLinks[i].href;
 						if (document.getElementById("orderInvoice").src != "") {
-							alert("Sending copy 1 to printer of " + j + " of  " + len + " orders");
+//							alert("Sending copy 1 to printer of " + j + " of  " + len + " orders");
 							printInvoice('orderInvoice');
 						}
 						//Personal Care Partial Invoice
 						document.getElementById("orderInvoice").src = personalCareInvoiceLinks[i].href;
 						if (document.getElementById("orderInvoice").src != "") {
-							alert("Sending copy 2 to printer of " + j + " of  " + len + " orders");
+//							alert("Sending copy 2 to printer of " + j + " of  " + len + " orders");
 							printInvoice('orderInvoice');
 						}
 					}
