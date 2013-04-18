@@ -195,4 +195,8 @@ public class ReportConstants {
     public static final String HEIGHT = "HEIGHT(Cms)";
     public static final String PIECES = "PIECES";
     public static final String AREA_CUSTOMER_CODE = "AREA CUSTOMER CODE";
+    public static final String Ggn_Cod_Vendor_Code = "373925";
+    public static final String Ggn_Prepaid_Vendor_Code = "373914";
+    public static final String Mumbai_Cod_Vendor_Code = "608322";
+    public static final String Mumbai_Prepaid_Vendor_Code = "608333";
 }
