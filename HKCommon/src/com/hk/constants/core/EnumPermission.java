@@ -106,7 +106,9 @@ public enum EnumPermission {
   POPULATE_BUSY_DATA                             (PermissionConstants.POPULATE_BUSY_DATA),
   DISPATCH_LOT_OPERATIONS                        (PermissionConstants.DISPATCH_LOT_OPERATIONS),
   EDIT_GRN	                                     (PermissionConstants.EDIT_GRN),
+  CREATE_REVERSE_PICKUP_ORDER	                 (PermissionConstants.CREATE_REVERSE_PICKUP_ORDER),
   STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER);
+
 
   String permissionName;
 

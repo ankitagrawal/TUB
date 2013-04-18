@@ -240,6 +240,11 @@ public class InventoryServiceImpl implements InventoryService {
   }
 
   @Override
+  public Long getAvailableUnbookedInventory(ProductVariant productVariant){
+    return this.getAvailableUnbookedInventory(getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant));    
+  }
+
+  @Override
   public Long getUnbookedInventoryInProcessingQueue(List<Sku> skuList) {
     Long netInventory = getProductVariantInventoryDao().getNetInventory(skuList);
     Long bookedInventory = this.getBookedQtyOfSkuInProcessingQueue(skuList);

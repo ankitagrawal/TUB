@@ -7,6 +7,7 @@ public class HealthkartConstants {
 
   public static class Session {
     public static final String userSearchFilterKey = "userSearchFilterKey";
+    public static final String b2bUserSearchFilterKey = "b2bUserSearchFilterKey";
     public static final String useRewardPoints = "useRewardPoints";
     public static final String perPageCatalog = "perPageCatalog";
     public static final String affId = "affId";

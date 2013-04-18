@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
+import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
+import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.pact.dao.ReconciliationStatusDao;
@@ -48,6 +50,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	UserService                        userService;
 	@Autowired
 	ShipmentService shipmentService;
+	@Autowired
+	ReverseOrderService reverseOrderService;
     
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
@@ -64,13 +68,16 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
                 // lineItem = lineItemDao.getLineItem(lineItem.getSku(), shippingOrder);
                 // LineItem lineItemNew = ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem);
                 lineItem.setShippingOrder(replacementOrder);
+				/*
+				This case is to replace for customer returns, a reverse order is created first and then the replacement order.
+				 */
                 if (!isRto) {
-                    lineItem.setHkPrice(0.00);
-                    lineItem.setCodCharges(0.00);
-                    lineItem.setDiscountOnHkPrice(0.00);
-                    lineItem.setOrderLevelDiscount(0.00);
-                    lineItem.setShippingCharges(0.00);
-                    lineItem.setRewardPoints(0.00);
+                    //lineItem.setHkPrice(0.00);
+                    //lineItem.setCodCharges(0.00);
+                    //lineItem.setDiscountOnHkPrice(0.00);
+                    //lineItem.setOrderLevelDiscount(0.00);
+                    //lineItem.setShippingCharges(0.00);
+                    //lineItem.setRewardPoints(0.00);
                 }
                 lineItemSet.add(lineItem);
                 // lineItem.setShippingOrder(replacementOrder);
@@ -87,7 +94,10 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
         replacementOrder.setShippingOrderCategories(orderService.getCategoriesForShippingOrder(replacementOrder));
         shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(replacementOrder);
 	    replacementOrder.getBaseOrder().setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-
+		
+		if (!isRto){
+			replacementOrder.setReverseOrder(reverseOrderService.getReverseOrderByShippingOrderId(replacementOrder.getRefShippingOrder().getId()));
+		}
 	    replacementOrder = (ReplacementOrder)getReplacementOrderDao().save(replacementOrder);
 	    shippingOrderService.logShippingOrderActivity(replacementOrder, loggedOnUser,
 				        EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
