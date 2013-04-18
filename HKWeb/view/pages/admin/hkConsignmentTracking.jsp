@@ -48,6 +48,12 @@
                                        label="name"/>
           </s:select>
         </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
+          <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>">
+            <c:set var="hub" value="${hk:getHubForHkdeliveryUser(consignmentTrackingAction.loggedOnUser)}"/>
+            <s:hidden name="hubId" value="${hub.id}"/><strong>${hub.name}</strong>&nbsp;&nbsp;
+          </shiro:lacksPermission>
+        </shiro:hasPermission>
         <s:submit name="searchConsignmentTracking" value="Search"/>
       </s:form>
     </fieldset>

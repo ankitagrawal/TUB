@@ -3,6 +3,8 @@ package com.hk.web.action.admin.hkDelivery;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.EnumPermission;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
@@ -28,6 +30,8 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
 
   @Autowired
   private ConsignmentService consignmentService;
+  @Autowired
+  private HubService hubService;
 
   @DefaultHandler
   public Resolution pre() {
@@ -37,6 +41,10 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
 
   @SuppressWarnings("unchecked")
   public Resolution searchConsignmentTracking() {
+    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+    if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
+      hubId = getHubService().getHubForUser(loggedOnUser).getId();
+    }
     consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
     if (consignmentTrackingPage != null) {
       consignmentList = consignmentTrackingPage.getList();
@@ -118,4 +126,9 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
   public ConsignmentService getConsignmentService() {
     return consignmentService;
   }
+
+  public HubService getHubService() {
+    return hubService;
+  }
+
 }
