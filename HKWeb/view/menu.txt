@@ -807,8 +807,7 @@
 ---/home-living/home-appliances/iron/dry:Dry Iron
 ---/home-living/home-appliances/iron/steam:Steam Iron
 --/home-living/home-appliances/lights:Emergency Light
--/home-living/clean-purify:Clean & Purify
---/home-living/clean-purify/vacuum-cleaner:Vacuum Cleaner
+--/home-living/home-appliances/vacuum-cleaner:Vacuum Cleaner
 
 
 /parenting

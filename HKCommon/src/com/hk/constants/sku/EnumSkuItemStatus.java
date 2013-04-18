@@ -10,6 +10,7 @@ import com.hk.domain.sku.SkuItemStatus;
  * To change this template use File | Settings | File Templates.
  */
 public enum EnumSkuItemStatus {
+
     Checked_IN(10L, "CHECKED IN"),
     Checked_OUT(20L, "CHECKED OUT"),
     Stock_Transfer_Out(30L, "Stock Transfer Out"),

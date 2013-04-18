@@ -114,14 +114,11 @@ public class SkuItemDaoImpl extends BaseDaoImpl implements SkuItemDao {
         return skuItems != null && !skuItems.isEmpty() ? skuItems.get(0) : null;
     }
 
-
     public List<SkuItem> getCheckedInSkuItems(Sku sku) {
         String sql = "from SkuItem si where  si.skuItemStatus.id =  :checkedInStatusId  and  si.skuGroup.sku = :sku order by si.skuGroup.expiryDate asc";
         Query query = getSession().createQuery(sql).setParameter("sku", sku).setParameter("checkedInStatusId", EnumSkuItemStatus.Checked_IN.getId());
         return query.list();
     }
-
-
 }
 
 
