@@ -143,6 +143,14 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Primary Category cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
+        if(product.getMaxDays() == null || product.getMinDays() == null){
+            addRedirectAlertMessage(new SimpleMessage("Min/Max cannot be blank"));
+            return new ForwardResolution("/pages/editProductDetails.jsp");
+        }
+        if(product.getMinDays() >= product.getMaxDays()){
+            addRedirectAlertMessage(new SimpleMessage("Min cannot be less than max days"));
+            return new ForwardResolution("/pages/editProductDetails.jsp");
+        }
         List<Category> listFromPrimaryCategoryString = xslParser.getCategroyListFromCategoryString(primaryCategory);
         if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
             product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));

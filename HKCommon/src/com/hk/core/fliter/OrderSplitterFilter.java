@@ -40,6 +40,25 @@ public class OrderSplitterFilter {
         return bucketCartLineItems;
     }
 
+    public static  Map<String, List<CartLineItem>> bucketCartLineItems(List<CartLineItem> cartLineItems){
+        Map<String, List<CartLineItem>> bucketCartLineItems = new HashMap<String, List<CartLineItem>>();
+        for (CartLineItem cartLineItem : cartLineItems) {
+            Product product = cartLineItem.getProductVariant().getProduct();
+            if(product.getMaxDays() == null || product.getMaxDays() <= 3){
+                bucketCartLineItems = getPutMap(bucketCartLineItems, "B3", cartLineItem);
+            }else if(product.getMaxDays() <= 6){
+                bucketCartLineItems = getPutMap(bucketCartLineItems, "B6", cartLineItem);
+            }else if(product.getMaxDays() <= 9){
+                bucketCartLineItems = getPutMap(bucketCartLineItems, "B9", cartLineItem);
+            }else if(product.getMaxDays() <= 12){
+                bucketCartLineItems = getPutMap(bucketCartLineItems, "B12", cartLineItem);
+            }else {
+                bucketCartLineItems = getPutMap(bucketCartLineItems, "BMX", cartLineItem);
+            }
+        }
+        return bucketCartLineItems;
+    }
+
     private static Map<String, List<CartLineItem>> getPutMap(Map<String, List<CartLineItem>> bucketCartLineItems, String key, CartLineItem cartLineItem) {
         List<CartLineItem> currentCLI = new ArrayList<CartLineItem>();
         currentCLI.add(cartLineItem);

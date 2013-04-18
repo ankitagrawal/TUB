@@ -431,29 +431,32 @@ public class OrderServiceImpl implements OrderService {
                             boolean isDropShipped = false;
                             boolean containsJitProducts = false;
                             ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
-                            for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
-                                isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
-                                containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
-                                Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
-                                LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
-                                shippingOrder.getLineItems().add(shippingOrderLineItem);
+                            Map<String, List<CartLineItem>> bucketedCartLineItemMap = OrderSplitterFilter.classifyOrder(order);
+                            for (Map.Entry<String, List<CartLineItem>> bucketedCartLineItemEntry : bucketedCartLineItemMap.entrySet()) {
+                                for (CartLineItem cartLineItem : bucketedCartLineItemEntry.getValue()) {
+                                    isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
+                                    containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
+                                    Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                                    LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
+                                    shippingOrder.getLineItems().add(shippingOrderLineItem);
+                                }
+                                shippingOrder.setDropShipping(isDropShipped);
+                                shippingOrder.setContainsJitProducts(containsJitProducts);
+                                ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
+                                shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
+                                shippingOrder = shippingOrderService.save(shippingOrder);
+                                /**
+                                 * this additional call to save is done so that we have shipping order id to generate
+                                 * shipping order gateway id
+                                 */
+                                shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+                                shippingOrder = shippingOrderService.save(shippingOrder);
+                                Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
+                                shippingOrder.setShippingOrderCategories(categories);
+                                shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
+                                shippingOrder = shippingOrderService.save(shippingOrder);
+                                shippingOrders.add(shippingOrder);
                             }
-                            shippingOrder.setDropShipping(isDropShipped);
-                            shippingOrder.setContainsJitProducts(containsJitProducts);
-                            ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
-                            shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                            shippingOrder = shippingOrderService.save(shippingOrder);
-                            /**
-                             * this additional call to save is done so that we have shipping order id to generate
-                             * shipping order gateway id
-                             */
-                            shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-                            shippingOrder = shippingOrderService.save(shippingOrder);
-                            Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
-                            shippingOrder.setShippingOrderCategories(categories);
-                            shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
-                            shippingOrder = shippingOrderService.save(shippingOrder);
-                            shippingOrders.add(shippingOrder);
                         }
                     }
                     long endTime = (new Date()).getTime();
