@@ -1,39 +1,15 @@
 package com.hk.admin.manager;
 
-import java.io.File;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.mail.HtmlEmail;
-import org.hibernate.Session;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.util.BaseUtils;
 import com.akube.framework.util.DateUtils;
 import com.hk.admin.dto.marketing.GoogleBannedWordDto;
 import com.hk.admin.pact.service.email.AdminEmailService;
+import com.hk.cache.RoleCache;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.EnumEmailType;
-import com.hk.constants.core.Keys;
 import com.hk.constants.core.EnumRole;
+import com.hk.constants.core.Keys;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
 import com.hk.domain.catalog.category.Category;
@@ -42,6 +18,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.core.EmailType;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.courier.Courier;
 import com.hk.domain.email.EmailCampaign;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.email.EmailerHistory;
@@ -51,9 +28,8 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.User;
 import com.hk.domain.user.Role;
-import com.hk.domain.courier.Courier;
+import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
@@ -72,12 +48,25 @@ import com.hk.util.SendGridUtil;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKFileWriter;
 import com.hk.util.io.HKRow;
-import com.hk.cache.RoleCache;
-
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.mail.HtmlEmail;
+import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Component
@@ -306,21 +295,25 @@ public class AdminEmailManager {
 	}
 
 	public boolean sendGRNEmail(GoodsReceivedNote grn) {
-        HashMap valuesMap = new HashMap();
-        valuesMap.put("grn", grn);
-        boolean success = true;
-        Category category = grn.getGrnLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
-        Set<String> categoryAdmins = emailManager.categoryAdmins(category);
-        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.grnEmail);
-        for (String emailString : categoryAdmins) {
-			boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailString,
-	                category.getName()+" Category Admin");
-			if(!sent){
-				success = false;
+		HashMap valuesMap = new HashMap();
+		valuesMap.put("grn", grn);
+		boolean success = true;
+		if (grn.getGrnLineItems() != null && grn.getGrnLineItems().get(0) != null) {
+			Category category = grn.getGrnLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+			Set<String> categoryAdmins = emailManager.categoryAdmins(category);
+			Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.grnEmail);
+			for (String emailString : categoryAdmins) {
+				boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailString,
+						category.getName() + " Category Admin");
+				if (!sent) {
+					success = false;
+				}
 			}
+			return success;
+		} else {
+			return false;
 		}
-        return success;
-    }
+	}
 
     public boolean sendNotifyUsersMails(List<NotifyMe> notifyMeList, EmailCampaign emailCampaign, String xsmtpapi, Product product, ProductVariant productVariant,
                                         User notifedByuser) {
