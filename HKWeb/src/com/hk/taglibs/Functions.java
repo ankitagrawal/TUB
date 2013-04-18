@@ -478,7 +478,7 @@ public class Functions {
     public static Long getReCheckedinUnitsCount(Object o1) {
         AdminProductVariantInventoryDao productVariantInventoryDao = ServiceLocatorFactory.getService(AdminProductVariantInventoryDao.class);
         LineItem lineItem = (LineItem) o1;
-        return productVariantInventoryDao.getCheckedInPVIAgainstRTO(lineItem);
+        return productVariantInventoryDao.getCheckedInPVIAgainstReturn(lineItem);
     }
 
     public static Long getDamageUnitsCount(Object o1) {

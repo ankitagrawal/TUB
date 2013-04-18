@@ -9,6 +9,7 @@ public enum EnumTax {
     VAT_5("0.05", .05D),
     VAT_12_5("0.125", .125D),
     VAT_12_36("0.1236", .1236D),
+    CST("0.02",0.02D),
     NA("NA", .0D),;
 
   private Double value;
