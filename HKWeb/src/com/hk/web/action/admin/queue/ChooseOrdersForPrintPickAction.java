@@ -143,7 +143,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             shippingOrderSearchCriteria.setSearchForPrinting(true);
         }
         if(dfault){
-            shippingOrderSearchCriteria.setStartTargetDispatchDate(DateUtils.getEndOfDay(new Date())).setEndTargetDispatchDate(DateUtils.getStartOfPreviousYear(new Date()));
+            shippingOrderSearchCriteria.setStartTargetDispatchDate(DateUtils.getStartOfPreviousYear(new Date())).setEndTargetDispatchDate(DateUtils.getEndOfDay(new Date()));
         }
         if(custom){
             if (baseGatewayOrderId != null) {
