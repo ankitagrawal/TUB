@@ -7,9 +7,11 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.cycleCount.CycleCount;
 
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
 import com.hk.constants.inventory.EnumAuditStatus;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -45,13 +47,17 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
     }
 
 
-    public boolean isBrandAudited(String brand) {
-        String queryString = "from CycleCount cc where cc.brand = :brand and cc.cycleStatus = :cycleStatus";
-        List<CycleCount> cycleCountList = findByNamedParams(queryString, new String[]{"brand", "cycleStatus"}, new Object[]{brand, EnumCycleCountStatus.Closed.getId()});
-        if (cycleCountList != null && (!cycleCountList.isEmpty())) {
-            return true;
+    public boolean isAuditClosed(ProductVariant productVariant, Warehouse warehouse) {
+        List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
+        String queryString = " from CycleCount cc  where cc.warehouse.id = :warehouseId and cc.cycleStatus in (:cycleStatusList) and " +
+                "cc.productVariant.id = :productVariantId or cc.brand = :brand or cc.product.id = :productId ";
+        Query query = getSession().createQuery(queryString).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus)
+                .setParameter("productVariantId", productVariant.getId()).setParameter("productId", productVariant.getProduct().getId()).setParameter("brand", productVariant.getProduct().getBrand());
+        List<CycleCount> cycleCountList = query.list();
+        if (cycleCountList != null && cycleCountList.size() > 0) {
+            return false;
         }
-        return false;
+        return true;
 
     }
 
