@@ -1,0 +1,639 @@
+html,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;font-weight: normal;}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outline:0}ins{text-decoration:none}
+del{text-decoration:line-through}
+table{border-collapse:collapse;border-spacing:0;width: 100%;}
+table td{padding:10px 0;}
+@font-face {
+font-family: whitneyBook;
+src: url("../Fonts/WhitneyHTF-Book.otf") format("opentype");
+}
+
+@font-face {
+font-family: whitneybookSC;
+src: url("../Fonts/WhitneyHTF-BookSC.otf") format("opentype");	
+}
+
+body{font-family: "whitneyBook";font-size: 16px;line-height: 20px;color: #424242; background:#fff;}
+a{text-decoration: none;outline: 0;color: #424242}
+a:hover{
+	color: rgb(49, 118, 241);
+	cursor: pointer;
+}
+a:focus{outline:1px dotted invert}hr{border:0#ccc solid;border-top-width:1px;clear:both;height:0}
+h1{font-size:25px}h2{font-size:23px}h3{font-size:21px}h4{font-size:19px}h5{font-size:17px;}h6{font-size:15px}ol{list-style:decimal}
+ul{position: relative;float: left;list-style: none;width: 100%;list-style:none;}li{margin-left:30px}
+.borderBottom{
+	border-bottom: 1px  dashed #646464;
+	
+}
+.zeropadding{
+	padding: 0 !important;
+}
+.liNoStyle{
+	color:#424242;list-style:none !important;   margin:0px !important;
+	padding: 5px 50px;
+	border-bottom: 1px dashed #ccc;
+	cursor: pointer;
+}
+.liNoStyle:hover{
+	background: #969696;
+	color:#fff;
+	border-bottom: 1px dashed #969696;
+}
+.marginBox{
+	margin:50px 0 20px 0;
+}
+.noBorder{
+	border: none;
+}
+.NavBox{
+	border: 1px solid #ccc;
+	text-align: left;
+	font-size: 18px;
+	box-shadow:10px 10px 32px #ccc;
+
+}
+#NavBox{
+	position:absolute;
+	width: 218px;
+}
+.imgBox1{
+	border:1px solid #ccc;padding:10px;
+}
+.imgBox2{
+	border:1px solid #ccc;padding:20px;
+}
+.imgBox3{
+	border:1px solid #ccc;padding:5px;
+}
+.fullBorder{
+
+	border:1px solid #ccc;
+}
+.alignRight{
+	text-align: right;
+}
+.alignCenter{
+text-align: center;
+}
+.alignLeft{
+
+	text-align: left;
+}
+/*Author : Sachit*/
+#wrapper {
+font-family: "whitneyBook";
+color: #424242;
+}
+
+.font-caps{
+font-family: "whitneybookSC" !important;
+text-transform: uppercase;
+}
+#header{
+margin-top: 20px;
+}
+
+.nav-menu{
+float:right;min-width:360px;margin-top:20px;height:36px;
+}
+.nav-menu div{
+float:right;width:80px;margin-left: 10px;
+}
+
+.nav-menu p{
+margin:0;
+}
+.logo-block{float:left;width:auto;margin-bottom:20px;}
+.logoSubblock{width: 70px;float: left;}
+.hkpolicy{font-size:12px;float:right;margin-top:34px;margin-left: 40px;}
+.section1{font-size:10px;}
+.section2{font-size:14px;line-height:14px;}
+
+
+.leftBlock{
+position: relative;
+float: left;
+height: auto;
+}
+
+.mainContent{
+position: relative;
+float: left;
+height: auto;
+}
+
+.product{
+width: 210px;
+height: auto;
+display: inline;
+float: left;
+margin-left: 10px;
+margin-right: 10px;
+}
+
+.productCategoryText{
+position: relative;
+float: left;
+width: 210px;
+text-align: center;
+}
+
+.productCategoryText2{
+	position: relative;
+	float: left;
+	font-size: 20px;
+	text-align: center;
+	color:#1396d6;
+}
+
+
+.dottedLine{
+	margin-left: 10px;
+	position: relative;
+	float: left;
+	border-bottom: 1px solid #ddd;
+	top: 45px;
+	width: 225px;
+}
+
+.embedMargin{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.embedMargin5{
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+.embedMarginTop50{
+	margin-top: 50px;
+}
+
+.embedMarginTop119{
+	margin-top: 119px;
+}
+
+.embedMarginBottom40{
+	margin-bottom: 40px;
+}
+
+.embedMarginTop100{
+	margin-top: 100px;
+}
+
+.embedMarginTop20{
+	margin-top: 20px;
+}
+
+.offerbox{border:1px solid #d3d3d3;position:relative; bottom:8px;box-shadow:10px 10px 32px #ccc;font-size:14px;padding: 10px 5px;}
+.uparrow{position:relative;left: 50px;}
+.embedMarginleft{margin-left: 20px;}
+.embedMargin{
+margin-bottom: 10px;
+margin-top: 10px;
+}
+.buttonblock{
+	border:1px solid #c8c8c8;width:578px;height:30px;background:#dcdcdc;
+}
+.embedMargin2{
+margin-bottom: 20px;
+margin-top: 40px;
+float: left;
+}
+.embedMargin5{
+margin-bottom: 5px;
+margin-top: 5px;
+}
+
+.autoHeight{
+height: auto;
+}
+
+.productDescription{
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+.priceAndVariant{
+position: relative;
+float: left;
+border-top: 1px solid #c8c8c8;
+border-bottom: 1px solid #c8c8c8;
+}
+
+.variant{
+position: relative;
+float: left;
+}
+
+.price{
+position: relative;
+float: left;
+}
+
+.addToCompare{
+position: relative;
+float: left;
+border: 2px solid #ddd;
+padding: 9px;
+padding-left: 29px;
+padding-right: 29px;
+font-size: 12px;
+cursor: pointer;
+}
+
+.removeBorder{
+border: none;
+}
+
+.rating{
+cursor: pointer;
+}
+
+.browseBy{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.priceFilter{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: 275px;
+	padding-bottom: 20px;
+}
+
+.brandsContainer{
+	position: relative;
+	float: left;
+	width: 218px;
+	height: 220px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.brands{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.form{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+
+.condition{
+	position: relative;
+	float: left;
+	width: 218px;
+	border: 1px solid #c8c8c8;
+	height: auto;
+}
+
+.filterBy{
+	position: relative;
+	float: left;
+	font-weight: bold;
+	width: 220px;
+}
+
+.priceFilterHeading{
+	font-size: 14px;
+	position: relative;
+	float: left;
+	height: auto;
+	width: 220px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.priceFilterContainerOne{
+	position: relative;
+	float: left;
+	height: auto;
+	width: 220px;
+	border: 1px solid #c8c8c8;
+	box-shadow: 0px 8px 9px -3px #888;
+}
+
+.priceRange{
+	position: relative;
+	float: left;
+	width: 218px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.priceRange span{
+	position: relative;
+	float: left;
+	left: 20px;
+	font-size: 14px;
+}
+
+.priceRange input[type="checkbox"]{
+	position: relative;
+	float: left;
+	left: 10px;
+}
+
+.priceFilter p{
+	position: relative;
+	left: 15px;
+	margin-top: 10px;
+	font-size: 14px;
+	width: 80%;
+}
+
+.embedSpace{
+	position: relative;
+	float: left;
+	margin-top: 25px;
+	margin-bottom: 25px;
+	width: 220px;
+}
+
+.paginationContainer{
+	position: relative;
+	float: right;
+}
+
+/*search menu css begins*/
+
+.searchText{
+position: relative;
+z-index: 1000;
+float: left;
+width: 200px;
+height: 12px;
+border: none;
+padding:10px;
+background: rgb(235, 230, 230);
+}
+
+.searchButton{
+z-index: 1000;
+position: relative;
+float: left;
+height: 30px;
+width: 170px;
+background: rgb(235, 230, 230);
+border: 1px solid transparent;
+padding-left: 5px;
+}
+
+.searchButton-hover{
+background: white;
+color: rgb(49, 118, 241);
+border: 1px solid rgb(235, 230, 230);
+border-bottom: none;
+cursor: pointer;
+}
+
+.searchButtonText{
+position: relative;
+float: left;
+font-size: 11px;
+top: 6px;
+left: 18px;
+}
+
+.searchLense{
+	position: relative;
+	float: left;
+	top: 6px;
+	left: -30px;
+	width: 20px;
+	height: 20px;
+	z-index: 1000;
+}
+
+.searchbox{
+display: none;
+position: absolute;
+z-index: 1;
+float: left;
+clear: both;
+left: 63%;
+border: 1px solid rgb(235, 230, 230);
+width: 124px;
+box-shadow: 0px 8px 10px -3px #888;
+top: 30px;
+padding: 35px;
+background: white;
+}
+
+.searchitem{
+position: relative;
+font-size: 14px;
+float: left;
+margin-bottom: 10px;
+clear: both;
+}
+
+.searchitem:hover{
+color: rgb(49, 118, 241);
+cursor: pointer;
+}
+
+.search{
+position: relative;
+float: right;
+left: 0%;
+margin-top: 20px;
+}
+
+.searchMore{
+width: 0; 
+height: 0; 
+border-left: 5px solid transparent;
+border-right: 5px solid transparent;
+border-top: 5px solid #464646;
+float: left;
+margin-top: 13px;
+
+}
+
+.searchMore-hover{
+border-top: 5px solid #5c9dff;
+}
+
+/*Search menu css ends*/
+
+.stellarLogo{
+	width: 210px;
+	height: 65px;
+}
+
+.headerNav{
+	position: relative;
+	float: left;
+	margin-right: 20px;
+	font-size: 13px;
+}
+
+.headerNavs{
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+.userName{
+	position: relative;
+	float: right;
+}
+
+.footerLeft{
+	position: relative;
+	float: left;
+	font-size: 12px;
+}
+.footerRight{
+	font-size: 12px;
+	float: right;
+	position: relative;
+}
+
+.stellarPoints{
+	position: relative;
+	float: left;
+	width: 100%;
+	font-size: 12px;
+}
+
+.sorting{
+	position: relative;
+	float: left;
+	width: 87%;
+	font-size: 12px;
+	padding: 15px;
+	border-bottom: 1px dotted;
+}
+
+.productImage{
+	border: 1px solid #ddd;
+}
+
+/*top drop down*/
+.box{
+	display: none;
+	position: relative;
+	z-index: 1;
+	float: left;
+	clear: both;
+	border: 1px solid rgb(211, 211, 211);
+	box-shadow: 0px 8px 10px -3px #888;
+	top: -2px;
+	width: 220px;
+	background: white;
+}
+
+.item{
+	position: relative;
+	left: 22px;
+	top: 20px;
+	font-size: 11px;
+	float: left;
+	margin-bottom: 20px;
+	clear: both;
+	font-family: roboto-medium;
+}
+
+.item:hover{
+	color: rgb(49, 118, 241);
+	cursor: pointer;
+}
+
+.searchButton{
+	z-index: 1000;
+	position: relative;
+	background: white;
+	float: left;
+	height: 35px;
+	width: 115px;
+	border: 1px solid rgb(211, 211, 211);
+	left: 6px;
+}
+
+.searchButton-hover{
+	background: white;
+	color: rgb(49, 118, 241);
+	border: 1px solid rgb(211, 211, 211);
+	border-bottom: none;
+	cursor: pointer;
+}
+
+.arrowDown{
+	position: relative;
+	float: left;
+	width: 8px;
+	top: 12px;
+	left: 25%;
+}
+
+.searchButtonText{
+	position: relative;
+	float: left;
+	font-size: 14px;
+	top: 6px;
+	left: 18px;
+	font-family: roboto-medium;
+}
+
+.topToDown{
+	position: relative;
+	float: left;
+	left: 10%;
+}
+
+.seperator{
+	position: relative;
+	float: left;
+    width:100%;
+    border-bottom: 1px dotted rgb(179, 177, 177);
+	margin-bottom: 10px;
+	margin-top: 10px;
+ }
+
+ .downToTop{
+ 	position: absolute;
+ 	float: left;
+ 	top: 10%;
+ 	left: 30%;
+ }
+
+ #topToDown{
+ 	position: absolute;
+ 	top: 201px;
+ 	left: 62px;
+ }
+
+ .topToDown-hover{
+	background: white;
+	color: rgb(49, 118, 241);
+	border: 1px solid rgb(211, 211, 211);
+	border-top: none;
+	cursor: pointer;
+}
+
+.topDropDown{
+	position: absolute;
+	z-index: 2000;
+	float: left;
+}

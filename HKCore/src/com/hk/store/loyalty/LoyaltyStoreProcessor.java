@@ -30,7 +30,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	
 	@Override
 	public List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria) {
-		List<LoyaltyProduct> list = loyaltyProgramService.listProucts(criteria.getStartRow(), criteria.getMaxRows());
+		List<LoyaltyProduct> list = this.loyaltyProgramService.listProucts(criteria.getStartRow(), criteria.getMaxRows());
 		List<ProductAdapter> productList = new ArrayList<ProductAdapter>(list.size());
 		for (LoyaltyProduct loyaltyProduct : list) {
 			ProductAdapter adapter = new ProductAdapter();
@@ -48,19 +48,19 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Override
 	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
-		Order order = orderService.find(orderId);
-		Payment payment = paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
-		loyaltyProgramService.debitKarmaPoints(orderId);
+		Order order = this.orderService.find(orderId);
+		Payment payment = this.paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
+		this.loyaltyProgramService.debitKarmaPoints(orderId);
 		payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
 		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-		baseDao.saveOrUpdate(payment);
+		this.baseDao.saveOrUpdate(payment);
 		return payment;
 	}
 
 	@Override
 	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException {
-		double shoppingPoints = loyaltyProgramService.aggregatePoints(cartLineItems);
-		double userKarmaPoints = loyaltyProgramService.calculateKarmaPoints(userId);
+		double shoppingPoints = this.loyaltyProgramService.aggregatePoints(cartLineItems);
+		double userKarmaPoints = this.loyaltyProgramService.calculateValidPoints(userId);
 		if(shoppingPoints > userKarmaPoints ) {
 			throw new InvalidOrderException("Not sufficient karma points in account to purchase the product.");
 		}
@@ -68,12 +68,12 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	public Double calculateDebitAmount(Long orderId) {
-		return loyaltyProgramService.aggregatePoints(orderId);
+		return this.loyaltyProgramService.aggregatePoints(orderId);
 	}
 
 	@Override
 	protected void validatePayment(Long orderId) throws InvalidOrderException {
-		Order order = orderService.find(orderId);
+		Order order = this.orderService.find(orderId);
 		if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.asPaymenStatus().getId())) {
 			throw new InvalidOrderException("Loyalty points are not debited yet. Unsuccessfull Payment.");
 		}
@@ -81,6 +81,6 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	public int countProducts(Long userId, SearchCriteria criteria) {
-		return loyaltyProgramService.countProucts();
+		return this.loyaltyProgramService.countProucts();
 	}
 }

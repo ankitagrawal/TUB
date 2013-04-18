@@ -23,7 +23,73 @@ pageContext.setAttribute("isSecure", isSecure);
 %>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
-  <stripes:layout-component name="contents">
+
+<stripes:layout-component name="lhsContent">
+
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca"/>
+
+  
+        <div class="grid_4 leftBlock">
+          <div class="embedMarginTop119"></div>
+          <div class="priceFilterContainerOne">
+            <div class="sorting">SORT BY POINTS</div>
+                   <div class="brandsContainer">
+			<%-- <c:forEach items="${lca.categories}" var="loyaltyCategory">
+			      <span  id= "categoryName">${loyaltyCategory.displayName}</span>
+			     </div>
+			 </c:forEach>
+			 --%>
+				<div class="priceRange">
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="0"/>
+                  <s:param name="maxPoints" value="100"/>
+                  <s:param name="testList" value="${lca.testList}"/>
+                  less than 100</s:link>
+                  </span></div>
+				<div class="priceRange">
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="101"/>
+                  <s:param name="maxPoints" value="200"/>
+                  <s:param name="testList" value="${lca.testList}"/>
+                  101-200</s:link></span></div>
+				<div class="priceRange">
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="201"/>
+                  <s:param name="maxPoints" value="300"/>
+                  <s:param name="testList" value="${lca.testList}"/>
+                  201-300</s:link></span></div>
+				<div class="priceRange">
+                  <span  id= "pointRange">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
+                  <s:param name="minPoints" value="301"/>
+                  <s:param name="maxPoints" value="10000"/>
+                  <s:param name="testList" value="${lca.testList}"/>
+                  301 and above</s:link></span></div>
+				  </div>
+			<div class="sorting">SORT BY CATEGORY</div>
+              <div class="brandsContainer ">
+               
+			<%-- <c:forEach items="${lca.categories}" var="loyaltyCategory">  (${loyaltyCategory.count})
+			 --%>
+			 <c:forEach items="${lca.testList}" var="loyaltyCategory">
+			 <div class="priceRange">
+			   <span  id= "categoryNameSpan">
+                  <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
+                  <s:param name="testList" value="${lca.testList}"/>
+                  <s:param name="categoryName" value="${loyaltyCategory.name}"/>
+                  ${loyaltyCategory.displayName}  </s:link></span>
+			     </div>
+			 </c:forEach>
+			</div>
+			</div></div>
+            
+        
+	</stripes:layout-component>
+  
+  <stripes:layout-component name="rhsContent">
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -60,7 +126,6 @@ pageContext.setAttribute("isSecure", isSecure);
         });
       });
     </script>
-    <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca"/>
     <div id="successToolTip" class="row" style="display: none;">
       <div class="span12">
         <div class="alert alert-success">
@@ -79,37 +144,42 @@ pageContext.setAttribute("isSecure", isSecure);
       </div>
     </div>
 
-    <p>
+ <%--    <p>
       <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${lca}"/>
       <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${lca}"/>
     </p>
+ --%>
+    <div class="grid_12 mainContent">
+            <div class="grid_12 embedMarginBottom40" id="productCategory">
+              <div class="dottedLine"></div>
+              <div class="productCategoryText">
+                <img src="/healthkart/pages/loyalty/LoyaltyJunk/images/stellarLogo.png" class="stellarLogo" alt="1">
+              </div>
+              <div class="dottedLine"></div>
+            </div>           
 
-    <div class="row">
-      <c:forEach items="${lca.productList}" var="lp">
-        <c:set var="variant" value="${lp.variant}"/>
-        <c:set var="product" value="${variant.product}"/>
-          <div class="span3">
-          	<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
-			   title="${product.name}">
-				<img itemprop="image" src="${hk:getS3ImageUrl(imageMediumSize, product.mainImageId,isSecure)}" alt="${product.name}"
-				     title="${product.name}">
-			</a>
-           
-            <h4>${product.name}</h4>
-            <h6>${lp.points} Points</h6>
-
-            <p>
-
-            <form method="post" action="/core/loyaltypg/Cart.action"
-                  id="${variant.id}-cartForm">
-              <input type="hidden" value="${variant.id}"
-                     name="productVariantId">
-              <input type="hidden" value="1" name="qty">
-              <input type="submit" class="btn" name="addToCart" value="Add to Cart »">
-            </form>
-          </div>
-      </c:forEach>
+			<div class="grid_12 embedMargin autoHeight" id="productsRow1">
+			<c:forEach items="${lca.productList}" var="lp">
+				<c:set var="variant" value="${lp.variant}"/>
+				<c:set var="product" value="${variant.product}"/>
+				<div class="product clickable">
+	
+				<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+					title="${product.name}">
+				<img src="<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"
+				     title="${product.name}" class="productImage" ></a>
+                <div class="productDescription embedMargin">${product.name}</div>
+                <div class="stellarPoints">${lp.points} PTS</div>
+                <form method="post" action="/core/loyaltypg/Cart.action" id="${variant.id}-cartForm">
+				<input type="hidden" value="${variant.id}" name="productVariantId">
+				<input type="hidden" value="1" name="qty">
+				<input type="submit" class="addToCompare font-caps embedMargin5" name="addToCart" value="REDEEM">
+				</form></div>
+			</c:forEach>
+              </div>
     </div>
+
   </stripes:layout-component>
+  
 </stripes:layout-render>
 

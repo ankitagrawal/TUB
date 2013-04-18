@@ -21,7 +21,6 @@
 		</c:forEach>
 	</ul>
 
-
 </stripes:layout-component>
 </stripes:layout-render>
 

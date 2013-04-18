@@ -841,7 +841,7 @@ public class Functions {
 		if(userId == null){
 			return 0.0;
 		}
-		return loyaltyProgramService.calculateKarmaPoints(userId);
+		return loyaltyProgramService.calculateValidPoints(userId);
 	}
 
 	public static Badge getBadgeInfoForUser(Long userId){
