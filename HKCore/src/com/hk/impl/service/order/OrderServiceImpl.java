@@ -420,7 +420,7 @@ public class OrderServiceImpl implements OrderService {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {
             Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>(bucketCartLineItemMap.getValue());
-            if (!cartLineItems.isEmpty() && !bucketCartLineItemMap.getKey().startsWith("Service")) {
+            if (!cartLineItems.isEmpty() && !bucketCartLineItemMap.getKey().equals("Service")) {
                 List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartLineItems);
                 if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                     long startTime = (new Date()).getTime();
@@ -687,6 +687,9 @@ public class OrderServiceImpl implements OrderService {
                 orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
                 shippingOrders = createShippingOrders(order);
+                if (shippingOrders != null && shippingOrders.size() > 0) {
+
+                }
             }
         }
 
