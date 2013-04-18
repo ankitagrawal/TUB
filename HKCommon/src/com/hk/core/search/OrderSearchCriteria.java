@@ -9,9 +9,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderStatus;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import java.util.Date;
 import java.util.List;
@@ -48,7 +46,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      * shipping order fields
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
-    private Set<String>               shippingOrderCategories;
+    private Set<Category>               shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
     private Set<Reason> reasonList;
 
@@ -96,7 +94,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public OrderSearchCriteria setShippingOrderCategories(Set<String> shippingOrderCategories) {
+    public OrderSearchCriteria setShippingOrderCategories(Set<Category> shippingOrderCategories) {
         this.shippingOrderCategories = shippingOrderCategories;
         return this;
     }
@@ -198,7 +196,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         if (SOLifecycleActivityList != null && !SOLifecycleActivityList.isEmpty()) {
             DetachedCriteria shippingLifeCycleCriteria = null;
             if (shippingOrderCriteria == null){
-                shippingOrderCriteria = criteria.createCriteria("shippingOrders");
+                shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
                 shippingLifeCycleCriteria =  shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
                 shippingLifeCycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", SOLifecycleActivityList));
@@ -210,16 +208,25 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 }
                 lifecycleCriteria.add(Restrictions.in("reason", reasonList));
             }
-
-
         }
 
         if (shippingOrderCategories != null && !shippingOrderCategories.isEmpty()) {
             if (shippingOrderCriteria == null) {
-                shippingOrderCriteria = criteria.createCriteria("shippingOrders");
+                shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
 
-            shippingOrderCriteria.add(Restrictions.in("basketCategory", shippingOrderCategories));
+            DetachedCriteria shippingOrderCategoryCriteria = null;
+            if (shippingOrderCategoryCriteria == null) {
+                shippingOrderCategoryCriteria = shippingOrderCriteria.createCriteria("shippingOrderCategories");
+            }
+            shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
+        }
+
+        if(sortByLastEscDate){
+            if(shippingOrderCriteria == null){
+                shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
+                shippingOrderCriteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
+            }
         }
 
         /**
@@ -237,23 +244,22 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
+        if(sortByDispatchDate){
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+        }
         if (sortByPaymentDate) {
             paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
-
-        }
-        if(sortByDispatchDate){
-            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
         }
         if (sortByScore) {
             criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         }
-
         if(dropShip != null  )  {
              shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
          }
         if(containsJit != null  )  {
             shippingOrderCriteria.add(Restrictions.eq("containsJitProducts",containsJit));
-        }        return criteria;
+        }
+        return criteria;
     }
 
     public Boolean isDropShip() {

@@ -160,7 +160,7 @@
         </div>
       </div>
     </c:if>
-    <div class="right_container" style="left: 40px;">
+    <div class="right_container" style="float: right; margin-right:50px;">
       <div class="title">
         <h5>
           Instructions if any (e.g Preferred Delivery Time/Flavour Needed)

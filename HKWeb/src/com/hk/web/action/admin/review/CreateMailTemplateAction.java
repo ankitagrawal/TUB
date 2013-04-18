@@ -55,7 +55,7 @@ public class CreateMailTemplateAction extends BaseAction {
     String htmlPath,ftlContents;
 
     private String starImageBinary = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAK8AAACvABQqw0mAAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAInSURBVDiNnZI/TBNhGMZ/vV7va3vXu4otYCSNxYIJhBhDAiZUEjdlcXJhAMKkCXFycyNOmJgYZiMDAWTBxdGlaU10hiJaSgKKloZE24Y7Kr3PgT8BQ5vos715/rxvvueDBsikU5cz6VRPI43aiASmgBhwq55AabA9GQqZw5FINJlJp4b/KSCTTnmB6eaWFqLRKMBUJp0yztN6/jL2Aq3AndbWSxPhC2GkdCmVynzf3p4DngOVgeTg2klAJp1KAO+AmK4b+DQflhVGDwbZrzpIKdE0DcepUtzZwXVr2LYN8AO4pwwkB3P5/MZ0KBSi81onbW1tBAICZ98GQEqJbduoqpf2q+10dfdgmibZ1ezrgeTgRy/A0tKb9zf7+2JCiBuqquI4NlJyElCrHeA4NgcHv9n+9pXl5ZW3o2PjI3CqxpXV1QemZcWFJm77g36qVQePRwEktVoNVfVRKe+Rz298yOXW75/7iDOvXsbj8Sv5REeCSqWConhwXYmULoYRIvdlnc3NrdjI6NjWuTU2NTUlgvphW16vghCCQCCAqh4equs6VtjqOO05EyCE6DF0AyECBIMG5fIev36WEELH7w9iWiZC0/pOe858ZVX1deuGQaFQYKdQyDmO80xKKsVi8Ulzc0vXxUgEn0/rrxsgpXv989qn/O7u7ovJyaczK9ls6YiaW5iffRiJRB8ritJLPczPzY7XJY+wuLjwaGjobvh49sjjwv8TfwCXtcZoRHu4ugAAAABJRU5ErkJggg==";
-    private String reviewLink = "<a href=\"${review_Link}&amp;starRating=1\"><img title=\"Bad\" alt=\"1\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=2\"><img title=\"Poor\" alt=\"2\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=3\"><img title=\"Regular\" alt=\"3\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=4\"><img title=\"Good\" alt=\"4\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=5\"><img title=\"Excellent\" alt=\"5\" src=\""+starImageBinary+"\" /></a>";
+    private String reviewLink = "<a href=\"${review_Link}&amp;starRating=1\" style=\"text-decoration:none;\"><img style =\"font-size:20px; font-weight:bold; vertical-align:middle;\" title=\"Bad\" alt=\"*\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=2\" style=\"text-decoration:none;\"><img style =\"font-size:20px; font-weight:bold; vertical-align:middle;\" title=\"Poor\" alt=\"*\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=3\" style=\"text-decoration:none;\"><img style =\"font-size:20px; font-weight:bold; vertical-align:middle;\" title=\"Regular\" alt=\"*\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=4\" style=\"text-decoration:none;\"><img style =\"font-size:20px; font-weight:bold; vertical-align:middle;\" title=\"Good\" alt=\"*\" src=\""+starImageBinary+"\" /></a> <a href=\"${review_Link}&amp;starRating=5\" style=\"text-decoration:none;\"><img style =\"font-size:20px; font-weight:bold; vertical-align:middle;\" title=\"Excellent\" alt=\"*\" src=\""+starImageBinary+"\" /></a>";
 
 
     @DefaultHandler
@@ -89,7 +89,7 @@ public class CreateMailTemplateAction extends BaseAction {
         try {
             if (contentBean != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String contentZipPath = adminUploadsPath + "/emailContentFiles/" + mail.getName() + "-"+ sdf.format(new Date()) + ".zip";
+                String contentZipPath = adminUploadsPath + "/emailContentFiles/reviewCollection/" + mail.getName() + "-"+ sdf.format(new Date()) + ".zip";
                 contentZipFolder = new File(contentZipPath);
                 contentZipFolder.getParentFile().mkdirs();
                 contentBean.save(contentZipFolder);
@@ -114,7 +114,7 @@ public class CreateMailTemplateAction extends BaseAction {
                         }
                     }
 
-                    String ftlPath = adminUploadsPath + "/emailContentFiles/" + mail.getName() + ".ftl";
+                    String ftlPath = adminUploadsPath + "/emailContentFiles/reviewCollection/" + mail.getName() + ".ftl";
                     File ftlFile = FtlUtils.generateFtlFromHtml(htmlFiles[0], ftlPath,contentFolder.getName());
 
                     String htmlContent = HKFileUtils.fileToString(ftlFile);

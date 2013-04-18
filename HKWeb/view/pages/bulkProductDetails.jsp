@@ -125,26 +125,12 @@
                             <div style="float: right; width: 50%;">
                                     <s:checkbox name="toBeEditedOptions" value="productVariantInventory"/>INVENTORY
                                 <div style="margin-top: 10px"></div>
-
-                                    <%--<s:checkbox name="toBeEditedOptions" value="productVariantCutOffInventory"/>CUT-OFF INVENTORY--%>
-                                    <%--<div style="margin-top: 10px"></div>--%>
-
                                     <s:checkbox name="toBeEditedOptions" value="productVariantWeight"/>WEIGHT
                                 <div style="margin-top: 10px"></div>
 
                                     <s:checkbox name="toBeEditedOptions" value="productVariantClearanceSale"/>CLEARANCE
                                 SALE
                                 <div style="margin-top: 10px"></div>
-
-                                    <%--<s:checkbox name="toBeEditedOptions" value="productVariantLength"/>LENGTH--%>
-                                    <%--<div style="margin-top: 10px"></div>--%>
-
-                                    <%--<s:checkbox name="toBeEditedOptions" value="productVariantBreadth"/>BREADTH--%>
-                                    <%--<div style="margin-top: 10px"></div>--%>
-
-                                    <%--<s:checkbox name="toBeEditedOptions" value="productVariantHeigth"/>HEIGHT--%>
-                                    <%--<div style="margin-top: 10px"></div>--%>
-
                                     <s:checkbox name="toBeEditedOptions" value="productVariantConsumptionTime"/>CONSUMPTION
                                 TIME
                                 <div style="margin-top: 10px"></div>
@@ -174,16 +160,6 @@
                     </div>
                 </div>
             </div>
-
-            <%--<div class="clear"></div>--%>
-
-            <%--<fieldset>--%>
-            <%--<div style="text-align: center;">--%>
-            <%--Category : <s:text name="category" id="category"/>--%>
-            <%--&nbsp; &nbsp;Brand : <s:text name="brand" id="brand"/>--%>
-            <%--<s:submit name="bulkEdit" value="Bulk Edit" class="submitButton" style="font-size: 0.9em"/>--%>
-            <%--</div>--%>
-            <%--</fieldset>--%>
         </s:form>
     </s:layout-component>
 </s:layout-render>

@@ -119,13 +119,13 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://localhost:3306/healthkart_lpg</value>
+			<value>jdbc:mysql://localhost:3306/hkdev</value>
 		</property>
 		<property name="username">
 			<value>root</value>
 		</property>
 		<property name="password">
-			<value>root</value>
+			<value></value>
 		</property>
 		<property name="maxActive">
 			<value>50</value>

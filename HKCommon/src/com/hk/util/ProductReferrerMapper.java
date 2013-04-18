@@ -1,11 +1,11 @@
 package com.hk.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.constants.marketing.ProductReferrerConstants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +24,9 @@ public class ProductReferrerMapper {
     referrerMap.put(CategoryConstants.EYE, EnumProductReferrer.eye.getId());
     referrerMap.put(CategoryConstants.HEALTH_DEVICES, EnumProductReferrer.healthDevices.getId());
     referrerMap.put(CategoryConstants.NUTRITION, EnumProductReferrer.nutrition.getId());
+    referrerMap.put(CategoryConstants.HEALTH_NUTRITION, EnumProductReferrer.healthNutrition.getId());
+    referrerMap.put(CategoryConstants.SPORTS_NUTRITION, EnumProductReferrer.sportsNutrition.getId());
+    referrerMap.put(CategoryConstants.HOME_LIVING, EnumProductReferrer.homeLiving.getId());
     referrerMap.put(CategoryConstants.PERSONAL_CARE, EnumProductReferrer.personalCare.getId());
     referrerMap.put(CategoryConstants.SERVICES, EnumProductReferrer.services.getId());
     referrerMap.put(CategoryConstants.SPORTS, EnumProductReferrer.sports.getId());

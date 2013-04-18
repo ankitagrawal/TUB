@@ -12,6 +12,7 @@
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="cFormAvailable" value="${orderSummary.CFormAvailable}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
 <c:set var="warehouse" value="${shippingOrder.warehouse}"/>
@@ -21,7 +22,7 @@
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${isB2BOrder}">
+      <c:when test="${isB2BOrder&&orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
            TAX INVOICE            
       </c:when>
       <c:otherwise>
@@ -69,7 +70,7 @@
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice
@@ -129,7 +130,16 @@
       <th>Item</th>
       <th>Qty</th>
       <th>Rate (per unit)</th>
-      <th>Tax Rate</th>
+      <th>
+      <c:choose>
+      <c:when test="${isB2BOrder&&cFormAvailable}">
+        Tax Rate (CST)
+        </c:when>
+        <c:otherwise>
+        Tax Rate
+        </c:otherwise>
+      </c:choose>
+    </th>
       <th>Taxable</th>
       <th>Tax</th>
       <th>Surcharge</th>
@@ -201,7 +211,8 @@
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td>
+      <%-- <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td> --%>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
     </tr>
   </table>
 
@@ -218,7 +229,16 @@
       </td>
     </tr>
     <tr>
-      <th width="17%">VAT Percent</th>
+      <th width="17%">
+      <c:choose>
+      <c:when test="${isB2BOrder&&cFormAvailable}">
+        CST
+        </c:when>
+        <c:otherwise>
+        VAT
+        </c:otherwise>
+      </c:choose>
+    </th>
       <th width="5%">Qty</th>
       <th width="10%">Amount</th>
       <th width="16%">Tax on Amount</th>

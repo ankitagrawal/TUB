@@ -7,6 +7,7 @@ import com.hk.admin.manager.IHOManager;
 import com.hk.constants.coupon.EnumCouponType;
 import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.coupon.CouponType;
@@ -24,6 +25,7 @@ import com.hk.pact.dao.offer.OfferDao;
 import com.hk.pact.dao.offer.OfferInstanceDao;
 import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.util.OfferTriggerMatcher;
 import com.hk.util.json.JSONResponseBuilder;
 import com.shiro.PrincipalImpl;
@@ -57,6 +59,8 @@ public class CartResource extends BaseAction {
   private OfferInstanceDao offerInstanceDao;
   @Autowired
   private OrderDao orderDao;
+  @Autowired
+  private OrderService orderService;
   @Autowired
   private OrderManager orderManager;
   @Autowired
@@ -215,34 +219,27 @@ public class CartResource extends BaseAction {
   @Path("/otherApplicableOffers")
   @Produces("application/json")
   public String otherApplicableOffers() {
-    User user = null;
-    if (getPrincipal() != null) {
-      user = getUserService().getUserById(getPrincipal().getId());
-      if (user == null) {
-        user = userManager.createAndLoginAsGuestUser(null, null);
-      }
-    } else {
-      user = userManager.createAndLoginAsGuestUser(null, null);
-    }
     Offer appliedOffer = null;
-    if (user != null) {
-      order = orderManager.getOrCreateOrder(user);
-      if (order.getOfferInstance() != null) {
-        appliedOffer = order.getOfferInstance().getOffer();
+    if (getPrincipal() != null) {
+      User user = getUserService().getUserById(getPrincipal().getId());
+      if (user != null) {
+        order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+        if (order != null) {
+          if (order.getOfferInstance() != null) {
+            appliedOffer = order.getOfferInstance().getOffer();
+          }
+          applicableOffers = this.getApplicableOffers(order);
+        }
       }
-      applicableOffers = this.getApplicableOffers(order);
     }
-
     return new JSONResponseBuilder().addField("applicableOffers", applicableOffers).addField("appliedOffer", appliedOffer).build();
   }
 
   public Set<Offer> getApplicableOffers(Order order) {
-    applicableOffers = new HashSet<Offer>();    
+    applicableOffers = new HashSet<Offer>();
     User user = order.getUser();
-    //if (user.getRoles().contains(getRoleService().getRoleByName(RoleConstants.HK_USER))) {
-      Page activeOffersPage = offerDao.listAllValidShowPromptly(1, 10);
-      if (activeOffersPage != null) {
-        List<Offer> activeOffers = activeOffersPage.getList();
+      List<Offer> activeOffers = offerDao.listAllValidShowPromptly();
+      if (activeOffers != null) {
         for (Offer activeOffer : activeOffers) {
           if (activeOffer.getOfferTrigger() != null) {
             logger.debug("Active Offer ID -> " + activeOffer.getId());
@@ -266,7 +263,6 @@ public class CartResource extends BaseAction {
           applicableOffers.add(instance.getOffer());
         }
       }
-    //}
     return applicableOffers;
   }
 
@@ -396,6 +392,14 @@ public class CartResource extends BaseAction {
 
   public void setUserService(UserService userService) {
     this.userService = userService;
+  }
+
+  public OrderService getOrderService() {
+    return orderService;
+  }
+
+  public void setOrderService(OrderService orderService) {
+    this.orderService = orderService;
   }
 
   public Set<Offer> getApplicableOffers() {

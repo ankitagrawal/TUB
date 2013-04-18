@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.hk.util.HKDateUtil;
+
 public class Test {
 
     @SuppressWarnings("unused")
@@ -28,7 +30,8 @@ public class Test {
 
             boolean isAM = calendar.get(Calendar.AM_PM) == Calendar.AM;
 
-            System.out.println(hour + ":" + isAM);
+            Date dateTemp  = HKDateUtil.addToDate(new Date(), Calendar.DAY_OF_MONTH, 10);
+            System.out.println( ":" + dateTemp);
         } catch (ParseException e) {
             e.printStackTrace();
         }

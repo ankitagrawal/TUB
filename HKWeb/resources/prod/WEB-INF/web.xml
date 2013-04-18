@@ -217,12 +217,16 @@
         <url-pattern>/diabetes/*</url-pattern>
         <url-pattern>/home-devices</url-pattern>
         <url-pattern>/home-devices/*</url-pattern>
+        <url-pattern>/home-living</url-pattern>
+        <url-pattern>/home-living/*</url-pattern>
 	    <url-pattern>/health-devices</url-pattern>
 	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>
         <url-pattern>/personal-care/*</url-pattern>
-        <url-pattern>/nutrition</url-pattern>
-        <url-pattern>/nutrition/*</url-pattern>
+        <url-pattern>/sports-nutrition</url-pattern>
+        <url-pattern>/sports-nutrition/*</url-pattern>
+        <url-pattern>/health-nutrition</url-pattern>
+        <url-pattern>/health-nutrition/*</url-pattern>
         <url-pattern>/search</url-pattern>
         <url-pattern>/search/*</url-pattern>
         <url-pattern>/autocomplete-search</url-pattern>
@@ -266,7 +270,6 @@
 	    <url-pattern>/feedback</url-pattern>
         <url-pattern>/clearance-sale</url-pattern>
         <url-pattern>/valentines-day-2013</url-pattern>
-	    <url-pattern>/loyaltypg/*</url-pattern>
     </servlet-mapping>
     
     <servlet>

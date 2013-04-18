@@ -201,12 +201,16 @@
         <url-pattern>/diabetes/*</url-pattern>
         <url-pattern>/home-devices</url-pattern>
         <url-pattern>/home-devices/*</url-pattern>
+        <url-pattern>/home-living</url-pattern>
+        <url-pattern>/home-living/*</url-pattern>
 	    <url-pattern>/health-devices</url-pattern>
 	    <url-pattern>/health-devices/*</url-pattern>
         <url-pattern>/personal-care</url-pattern>
         <url-pattern>/personal-care/*</url-pattern>
-        <url-pattern>/nutrition</url-pattern>
-        <url-pattern>/nutrition/*</url-pattern>
+        <url-pattern>/sports-nutrition</url-pattern>
+        <url-pattern>/sports-nutrition/*</url-pattern>
+        <url-pattern>/health-nutrition</url-pattern>
+        <url-pattern>/health-nutrition/*</url-pattern>
         <url-pattern>/search</url-pattern>
         <url-pattern>/search/*</url-pattern>
         <url-pattern>/autocomplete-search</url-pattern>
@@ -304,7 +308,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <filter>
+    <!--  <filter>
         <filter-name>AnalyticsFilter</filter-name>
         <filter-class>
             com.hk.web.filter.AnalyticsFilter
@@ -316,6 +320,7 @@
         <url-pattern>*.jsp</url-pattern>
         <url-pattern>/</url-pattern>
     </filter-mapping>
+-->
 
     <filter>
         <filter-name>ServiceCityFilter</filter-name>

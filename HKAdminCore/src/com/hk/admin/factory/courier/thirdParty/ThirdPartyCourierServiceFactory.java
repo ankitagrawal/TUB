@@ -1,10 +1,11 @@
 package com.hk.admin.factory.courier.thirdParty;
 
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
+import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyPickupService;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.service.ServiceLocatorFactory;
 
-public class ThirdPartyAwbServiceFactory {
+public class ThirdPartyCourierServiceFactory {
     
     public static ThirdPartyAwbService getThirdPartyAwbService(Long courierId){
         
@@ -16,5 +17,16 @@ public class ThirdPartyAwbServiceFactory {
         
         return null;
     }
+
+	 public static ThirdPartyPickupService getThirdPartyPickupService(Long courierId){
+
+
+        if(courierId.equals(EnumCourier.FedEx.getId()) || courierId.equals(EnumCourier.FedEx_Surface.getId())){
+            return (ThirdPartyPickupService) ServiceLocatorFactory.getService("FedExPickupServiceImpl");
+        }
+
+        return null;
+    }
+
 
 }

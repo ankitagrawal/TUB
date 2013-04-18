@@ -10,6 +10,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
+<%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -81,6 +82,16 @@
 <c:set var="shippingOrderStatusLost" value="<%=EnumShippingOrderStatus.SO_Lost.getId()%>"/>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <c:set var="shippingOrderStatusDropShippingAwaiting" value="<%=EnumShippingOrderStatus.SO_ReadyForDropShipping.getId()%>"/>
+<c:set var="shippingOrderStatusReversePickup" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.getId()%>"/>
+
+<c:set var="TH" value="<%=VariantConfigOptionParam.THICKNESS.param()%>"/>
+<c:set var="THBF" value="<%=VariantConfigOptionParam.BFTHICKNESS.param()%>"/>
+<c:set var="CO" value="<%=VariantConfigOptionParam.COATING.param()%>"/>
+<c:set var="COBF" value="<%=VariantConfigOptionParam.BFCOATING.param()%>"/>
+<c:set var="BRANDCO" value="<%=VariantConfigOptionParam.BRANDCO.param()%>"/>
+<c:set var="BRANDTH" value="<%=VariantConfigOptionParam.BRANDTH.param()%>"/>
+<c:set var="BRANDTHBF" value="<%=VariantConfigOptionParam.BRANDTHBF.param()%>"/>
+
 
 
 <table width="100%" class="align_top" style="margin:1px;padding:0;">
@@ -117,6 +128,11 @@
 <div class="floatleft">
     Gateway Id: <strong>${shippingOrder.gatewayOrderId}</strong>
 </div>
+<c:if test="${isSearchShippingOrder == true}">
+    <div class="floatleft">
+        BO Id: <strong>${shippingOrder.baseOrder.gatewayOrderId}</strong>
+    </div>
+</c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
     Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
@@ -157,35 +173,55 @@
     </div>
 </c:if>
 <div class="clear"></div>
+<c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+    <c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
+        <label style="font-weight:bold;">Last Activity:</label><br>
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on
+        <br>
+        <fmt:formatDate
+                value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"
+                type="both"/> by
+        "${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].user.name}"
+    </c:if>
+</c:if>
+<div class="clear"></div>
     <div class="floatleft">
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders" target="_blank">
+    <c:if test="${isActionQueue == false}">
+        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"
+                 target="_blank">
         <s:param name="orderId" value="${shippingOrder.baseOrder.id}"/> Search BO
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
-                 target="_blank">
+    </c:if>
+    (<s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction" event="searchShippingOrder"
+             target="_blank">
         <s:param name="shippingOrderGatewayId" value="${shippingOrder.gatewayOrderId}"/> Search SO
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction" event="pre" target="_blank">
         SO Lifecycle
         <s:param name="shippingOrder" value="${shippingOrder}"/>
     </s:link>)
-        (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre" target="_blank">
+    (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" class="invoiceLink" event="pre"
+             target="_blank">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Invoice
     </s:link>)
+    <%--<c:if test="${isProcessingQueue == true || isSearchShippingOrder == true}">--%>
         &nbsp;&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre"
                                    target="_blank" class="personalCareInvoiceLink">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         <s:param name="printable" value="true"/>
         PC Invoice
     </s:link>)
-        <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
-            (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" target="_blank">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Accounting Invoice
-        </s:link>)
-        </shiro:hasAnyRoles>
-
+    <%--</c:if>--%>
+    <c:if test="${isSearchShippingOrder == true}">
+            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
+                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
+                         target="_blank">
+                <s:param name="shippingOrder" value="${shippingOrder}"/>
+                Accounting Invoice
+            </s:link>)
+            </shiro:hasAnyRoles>
+        </c:if>
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
@@ -222,19 +258,16 @@
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.SplitShippingOrderAction"
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Split Shipping Order
+                Split SO
             </s:link>)
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
-                                     class="pseudoSplitBaseOrder" event="splitOrderPractically">
-                <s:param name="gatewayOrderId" value="${shippingOrder.baseOrder.gatewayOrderId}"/>
-                BO Split Analytics
-            </s:link>)
+                <c:if test="${isSearchShippingOrder == true}">
+                    &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
+                                         class="pseudoSplitBaseOrder" event="splitOrderPractically">
+                    <s:param name="gatewayOrderId" value="${shippingOrder.baseOrder.gatewayOrderId}"/>
+                    BO Split Analytics
+                </s:link>)
+                </c:if>
             </shiro:hasAnyRoles>
-            &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="cancelShippingOrder"
-                                 class="cancelSO">
-            <s:param name="shippingOrder" value="${shippingOrder}"/>
-            Cancel SO
-        </s:link>)
             <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="search"
                                      class="resolveShipment" target="_blank">
@@ -244,44 +277,63 @@
             </shiro:hasPermission>
         </c:if>
 
-        <c:if test="${isSearchShippingOrder}">
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
-                                     class="flipWarehouse">
-                <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Flip Warehouse
-            </s:link>)
+    <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
+        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
+                             event="cancelShippingOrder"
+                             class="cancelSO">
+        <s:param name="shippingOrder" value="${shippingOrder}"/>
+        Cancel SO
+    </s:link>)
+    </c:if>
+    
+    <c:if test="${isSearchShippingOrder}">
+            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered ||
+                    shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
 
-            </shiro:hasAnyRoles>
-            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
                 <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
                         <s:hidden name="shippingOrder" value="${shippingOrder.id}"/>
-                        <b>Customer Return:</b>
-                        <s:select name="shippingOrder.orderStatus">
-                            <s:option
-                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
-                            </s:option>
-                            <s:option
-                                    value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>"><%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
-                            </s:option>
-                        </s:select>
-                        <br/><b>Customer Return Reason:</b>
-                        <s:select name="customerReturnReason" id="return-reason">
-		                    <s:option value="null">-Select Reason-</s:option>
-		                    <s:option value="Damaged Product">Damaged Product</s:option>
-		                    <s:option value="Expired Product">Expired Product</s:option>
-		                    <s:option value="Wrong Product">Wrong Product</s:option>
-		                    <s:option value="Not Interested">Not Interested</s:option>
-	                    </s:select>
-                        <s:submit class="markOrderCustomerReturnButton" name="markOrderCustomerReturn" value="Save" style="padding:1px;"/>
+                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                            <b>Customer Satisfaction:</b>
+                            <s:select name="shippingOrder.orderStatus">
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Appeasement.getName()%>
+                                </s:option>
+                            </s:select>
+                            <br/><b>Customer Reason:</b>
+                            <s:select name="customerSatisfyReason" id="customer-reason">
+                                <s:option value="null">-Select Reason-</s:option>
+                                <s:option value="Damaged Product">Damaged Product</s:option>
+                                <s:option value="Expired Product">Expired Product</s:option>
+                                <s:option value="Wrong Product">Wrong Product</s:option>
+                                <s:option value="Not Interested">Not Interested</s:option>
+                            </s:select>
+                            <s:submit class="markOrderCustomerSatisfyButton" name="markOrderCustomerSatisfy" value="Save"
+                                  style="padding:1px;"/>
+                        </c:if>
+
+                        <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
+                            <b>Customer Return:</b>
+                            <s:select name="shippingOrder.orderStatus">
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()%>
+                                </s:option>
+                                <s:option value="<%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getId()%>">
+                                    <%=EnumShippingOrderStatus.SO_Customer_Return_Refunded.getName()%>
+                                </s:option>
+                            </s:select>
+                            <s:submit name="markOrderCustomerReturn" value="Save"
+                                  style="padding:1px;"/>
+                        </c:if>
                     </s:form>
+
                     <script type="text/javascript">
-                        $('.markOrderCustomerReturnButton').click(function() {
-	                        if($('#return-reason').val()=="null"){
-		                        alert("Please select a reason for Customer Return !");
-		                        return false;
-	                        }
+                        $('.markOrderCustomerSatisfyButton').click(function() {
+                            if ($('#customer-reason').val() == "null") {
+                                alert("Please select a reason for Customer Satisfaction !");
+                                return false;
+                            }
+
                             var proceed = confirm('Are you sure?');
                             if (!proceed) return false;
                         });
@@ -409,7 +461,7 @@
 			<%--<tr>--%>
             <c:choose>
                 <%--if order is in action awaiting state draw appropriate colour border for line item div--%>
-                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id}">
+                <c:when test="${shippingOrderStatusActionAwaiting == shippingOrder.orderStatus.id || shippingOrderStatusHold == shippingOrder.orderStatus.id}">
                     <c:choose>
                         <c:when test="${hk:bookedQty(sku) <= skuNetInventory}">
                             <tr style="border-left:5px solid green;">
@@ -432,80 +484,96 @@
                 </c:otherwise>
             </c:choose>
             <td style="border-bottom:1px solid gray;border-top:1px solid gray;">
-                ${productVariant.product.name}
+                    ${productVariant.id}
+                <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" event="pre" style="font-size:12px !important; font-weight:bold !important;" >
+                    <s:param name="productId" value="${productVariant.product.id}"/>
+                     ${productVariant.product.name}
+                </s:link>
                 <c:if test="${cartLineItem.comboInstance != null}">
                 <span style="color:crimson;text-decoration:underline">
                 <br/>(Part of Combo: ${cartLineItem.comboInstance.combo.name})
                 </span>
                 </c:if>
-                <c:if test="${productVariant.paymentType.id == lineItem_Service_Postpaid}">
-                <span style="color:blue;text-decoration:underline">
-                <br/>(Postpaid Service: ${productVariant.product.name})
-                </span>
-                </c:if>
+                <em>
+                    <span>
+                        <c:forEach items="${productVariant.productOptions}"
+                                   var="productOption">
+                            <c:if test="${hk:showOptionOnUI(productOption.name)}">
+                                ${productOption.name}:${productOption.value};
+                            </c:if>
+                        </c:forEach>
+                    </span>
+                    <span>
+                            ${cartLineItem.extraOptionsPipeSeparated}
+                    </span>
+                </em>
 
-                <%--<div class="floatleft">--%>
-                <%--<br/>Dispatch Within: ${productVariant.product.minDays} - ${productVariant.product.maxDays} Days--%>
-                <%--</div>--%>
+                <c:if test="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues !=null}">
 
-                <c:if test="${not empty productVariant.productOptions}">
-                    <%--<br/>--%>
-                    <%-- <span style="word-wrap:break-word">--%>
-                    <c:forEach items="${productVariant.productOptions}" var="productOption"
-                               varStatus="optionCtr">
-                        ${productOption.name} ${productOption.value}${!optionCtr.last?',':'|'}
-                        <c:if test="${not empty cartLineItem.cartLineItemExtraOptions}">
-                            <c:forEach items="${cartLineItem.cartLineItemExtraOptions}" var="extraOptions"
-                                       varStatus="extraOptionCtr">
-                                ${extraOptions.name} ${extraOptions.value}${!extraOptionCtr.last?',':''}
-                            </c:forEach>
+                    <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                               var="configValue" varStatus="configValueCtr">
+                        <c:set var="additinalParam"
+                               value="${configValue.variantConfigOption.additionalParam}"/>
+                        <c:if
+                                test="${( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF) }">
+                            ${configValue.variantConfigOption.displayName}:${configValue.value}|
+
                         </c:if>
                     </c:forEach>
-                    <%-- </span>--%>
+                    <table>
+                        <tr>
+                            <td style="width:10%;" ><b>Right</b></td>
+                            <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                                       var="configValue" varStatus="configValueCtr">
+                                <c:set var="additinalParam"
+                                       value="${configValue.variantConfigOption.additionalParam}"/>
 
+                                <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                <c:if
+                                        test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF) }">
+                                    <td style="width:25%;">
+                                        <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                    </td>
+                                </c:if>
+                            </c:forEach>
+                        </tr>
+                        <tr>
+                            <td style="width:10%;"><b>Left</b></td>
+                            <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}"
+                                       var="configValue" varStatus="configValueCtr">
+                                <c:set var="additinalParam"
+                                       value="${configValue.variantConfigOption.additionalParam}"/>
+                                <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                <c:if
+                                        test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
+								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH
+								|| additinalParam == BRANDTHBF)}">
+                                    <td style="width:25%;">
+                                        <b>${configValue.variantConfigOption.displayName}:${configValue.value}</b>
+                                    </td>
+                                </c:if>
+                            </c:forEach>
+                        </tr>
+                    </table>
                 </c:if>
                     <c:choose>
                         <c:when test="${productVariant.product.groundShipping}">
-                             <span style="margin-left:10px;color: #ff0000;">(G)</span>
+                             <span style="color: #ff0000;">(G)</span>
                         </c:when>
                         <c:otherwise>
-                            <span style="margin-left:10px;color: #ff0000;">(A)</span>
+                            <span style="color: #ff0000;">(A)</span>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${shippingOrder.dropShipping}">
-                        <span style="margin-left:10px;color: #ff0000;">(D)</span>
+                        <span style="color: #ff0000;">(D)</span>
                     </c:if>
-                    <c:if test="${not empty cartLineItem.cartLineItemConfig.cartLineItemConfigValues}">
-
-                    <c:set var="TH" value="TH"/>
-                    <c:set var="THBF" value="THBF"/>
-                    <c:set var="CO" value="CO"/>
-                    <c:set var="COBF" value="COBF"/>
-                    <c:forEach items="${cartLineItem.cartLineItemConfig.cartLineItemConfigValues}" var="configValue"
-                               varStatus="configCtr">
-                        <c:set var="variantConfigOption" value="${configValue.variantConfigOption}"/>
-                        <c:set var="additionalParam" value="${variantConfigOption.additionalParam}"/>
-                        ${variantConfigOption.displayName} : ${configValue.value}
-                        <c:if
-                                test="${(additionalParam ne TH) or (additionalParam ne THBF) or (additionalParam ne CO) or (additionalParam ne COBF) }">
-                            <c:if
-                                    test="${fn:startsWith(variantConfigOption.name, 'R')==true}">
-                                (R)
-                            </c:if>
-                            <c:if
-                                    test="${fn:startsWith(variantConfigOption.name, 'L')==true}">
-                                (L)
-                            </c:if>
+                        <c:if test="${isActionQueue == true}">
+                            Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days
                         </c:if>
-                        ${!configCtr.last?',':''}
-
-                    </c:forEach>
-                </c:if>
-                               <c:if test="${isActionQueue == true}">
-                    <%--<c:if test="${productVariant.product.jit}">--%>
-                        ,<strong>Dispatch : ${productVariant.product.minDays}-${productVariant.product.maxDays} days </strong>
-                    <%--</c:if>--%>
-                </c:if>
             </td>
             <td style="border:1px solid gray;border-left:none;">
                 <%--<c:if test="${orderStatusActionAwaiting == shippingOrder.shippingOrderStatus.id}">--%>
@@ -541,6 +609,16 @@
             Picker: ${shipment.picker}, Packer: ${shipment.packer}
         </div>
         <div class="clear"></div>
+        <shiro:hasAnyRoles name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
+            <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered}">
+                <div class="floatleft">
+                    <s:link beanclass="com.hk.web.action.admin.courier.CreateReverseOrderAction"
+                            target="_blank">
+                        <s:param name="shippingOrder" value="${shippingOrder.id}"/>Reverse Pickup</s:link>
+                </div>
+                <div class="clear"></div>
+            </c:if>
+        </shiro:hasAnyRoles>
     </td>
 </c:if>
 <td>
