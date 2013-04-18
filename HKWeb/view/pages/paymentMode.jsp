@@ -37,26 +37,46 @@
             src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
 </s:layout-component>
 <s:layout-component name="steps">
-    <div class='steps'><s:link
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
+    <div class='steps'>
+        <hr noshade class="stepLine">
+        <s:link
             beanclass="com.hk.web.action.core.user.SelectAddressAction"
             style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step1">
-            <h2>Step 1</h2>
+        <div class='newStep' id="step1">
+            <div class="newStepCount">1</div>
 
-            <div class='small'>Select shipping address</div>
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
         </div>
     </s:link> <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction"
                       style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step2">
-            <h2>Step 2</h2>
+        <div class='newStep ' id="step2">
+            <div class="newStepCount">2</div>
 
-            <div class='small'>Confirm your order</div>
+            <div class='newStepText'>
+                Confirm your order
+            </div>
         </div>
     </s:link>
-        <div class='step current_step'>
-            <h2>Step 3</h2>
+        <div class='newStep '>
+            <div class="newStepCount current_step">3</div>
 
-            <div class='small'>Choose Payment Method</div>
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
         </div>
     </div>
 </s:layout-component>
@@ -145,7 +165,7 @@
     </c:forEach>
     </table>
     <div style="float: right; width: 90%;"><s:submit
-            name="proceed" value="Make Payment >" class="button makePayment"
+            name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
     </div>
 </s:form></div>
@@ -173,7 +193,7 @@
             </div>
         </div>
         <div style="float: right; width: 90%;"><s:submit
-                name="proceed" value="Make Payment >" class="button makePayment"
+                name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
                 disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
         </div>
     </s:form></div>
@@ -237,16 +257,20 @@
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
                         <s:hidden name="order" value="${orderSummary.order}"/>
-                        <div class="label">Contact Name</div>
-                        <s:text name="codContactName"
-                                value="${orderSummary.order.address.name}"/>
-                        <div class="label">Contact Phone</div>
-                        <s:text name="codContactPhone"
-                                value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                        <div style="margin-bottom: 15px;">
+                            <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
+                            <s:text class="signUpInputNew2" name="codContactName"
+                                    value="${orderSummary.order.address.name}"/>
+                        </div>
+                        <div>
+                            <div class="label newLabel" style="width: 100px !important;">Contact Phone</div>
+                            <s:text class="signUpInputNew2" name="codContactPhone"
+                                    value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                        </div>
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
-                            <s:submit name="pre" value="Place Order"
-                                      class="positive phoneValidation"/></div>
+                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="Place Order"
+                                      class="positive phoneValidation placeOrderButtonNew"/></div>
                         <br/>
                         <br/>
 
@@ -267,16 +291,23 @@
         <div id="tabs_content5" class="tab_content" style="display: none;">
             <h2 class="offer">Payment Details</h2>
 
-            <div class="left" style="padding-left: 20px;"><s:form
+            <div class="left" style="width: 415px;">
+                <s:form
                     beanclass="com.hk.web.action.core.payment.ChequeCashPaymentReceiveAction"
                     method="post" id="paymentForm">
                 <s:hidden name="order" value="${orderSummary.order}"/>
-                <div class="label">Bank Name <span class="aster">*</span></div>
-                <s:text name="bankName"/>
-                <div class="label">Bank Branch <span class="aster">*</span></div>
-                <td><s:text name="bankBranch"/></td>
-                <div class="label">City <span class="aster">*</span></div>
-                <td><s:text name="bankCity"/></td>
+                <div style="margin-bottom: 10px;">
+                    <div class="label newLabel2">Bank Name <span class="aster">*</span></div>
+                    <s:text class="signUpInputNew2" name="bankName"/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <div class="label newLabel2">Bank Branch <span class="aster">*</span></div>
+                    <td><s:text class="signUpInputNew2" name="bankBranch"/></td>
+                </div>
+                <div>
+                    <div class="label newLabel2">City <span class="aster">*</span></div>
+                    <td><s:text class="signUpInputNew2" name="bankCity"/></td>
+                </div>
                 <div class="label">Payment Mode <span class="aster">*</span></div>
                 <label><s:radio name='paymentMode'
                                 value='<%=EnumPaymentMode.NEFT.getId()%>' checked="checked"/>&nbsp;Online
@@ -312,9 +343,8 @@
                     <fmt:formatNumber
                             value="${orderSummary.pricingDto.grandTotalPayable}"
                             currencySymbol="Rs. " type="currency"/></div>
-                <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                                 value="Place Order" class="button makePayment"
-                                                                 style="font-size: 1.5em;"/></div>
+                <div style="width: 50%;">
+                    <s:submit name="pre" value="Place Order" class="button makePayment signUpButtonNew" style="font-size: 1.5em;width: 125px;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
             </s:form></div>
             <div class="right"
                  style="width: 30%; padding: 10px; line-height: 21px;">
@@ -357,7 +387,7 @@
                     value="${orderSummary.pricingDto.grandTotalPayable}"
                     currencySymbol="Rs. " type="currency"/></div>
         <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                         value="Place Order" class="button makePayment"
+                                                         value="Place Order" class="button makePayment placeOrderButtonNew"
                                                          style="font-size: 1.5em;"/></div>
     </s:form></div>
 

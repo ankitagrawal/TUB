@@ -54,26 +54,38 @@
 </s:layout-component>
 
 <s:layout-component name="steps">
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
     <div class='steps'>
-        <div class='step current_step'>
-            <h2>Step 1</h2>
-
-            <div class='small'>
+        <hr noshade class="stepLine">
+        <div class='newStep '>
+            <div class="newStepCount current_step">1</div>
+            <div class='newStepText'>
                 Select A shipping address
             </div>
         </div>
-        <div class='step'>
-            <h2>Step 2</h2>
+        <div class='newStep'>
+            <div class="newStepCount">2</div>
 
-            <div class='small'>
+            <div class='newStepText'>
                 Confirm your order
             </div>
         </div>
-        <div class='step'>
-            <h2>Step 3</h2>
+        <div class='newStep'>
+            <div class="newStepCount">3</div>
 
-            <div class='small'>
+            <div class='newStepText'>
                 Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
             </div>
         </div>
     </div>
@@ -91,9 +103,9 @@
             </h3>
 
             <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
-                <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="checkout" title="Click to use this address and proceed">
+                <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="raj_addressLink" event="checkout" title="Click to use this address and proceed">
                     <s:param name="selectedAddress" value="${address.id}"/>
-                    <div class="address" style="position: relative;">
+                    <div class="address raj_address">
                         <h5 class="name">${address.name}</h5>
                         <div class='street street1'>${address.line1}</div>
                         <c:if test="${hk:isNotBlank(address.line2)}">
@@ -103,13 +115,13 @@
                         <div class='state'>${address.state}</div>
                         <div class='pin'>${address.pincode.pincode}</div>
                         <div class='phone'>${address.phone}</div>
-                        <br/>
-                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" class="delete">
+
+                        <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="remove" style="left: 0px;top: -7px;border-radius: 0px;" class="appliedButton">
                             <s:param name="deleteAddress" value="${address.id}"/>
-                            (delete)
+                            DELETE
                         </s:link>
 
-                        <span class="edit">(edit)</span>
+                        <span style="left: 0px;top: -7px;border-radius: 0px;margin-bottom: 12px;" class="appliedButton edit">EDIT</span>
 
                         <div class="hidden help yellow">
                             Click to use this address
@@ -183,16 +195,17 @@
         <div class='or'>
             or
         </div>
-        <div class='right'>
-            <h3>
-                Add a new shipping address
-            </h3>
+                <h3 class="shippingAddressheading">
+                    Add a new shipping address
+                </h3>
+        <div class='right' style="width: 440px;background: initial;">
 
-            <div class="addressContainer shipping_address">
-                <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm">
+
+            <div class="addressContainer shipping_address" style="left: 5px;">
+                <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;" >
                     <s:layout-render name="/layouts/addressLayout.jsp" />
                     <s:hidden name="countryId" value="${countryId}"/>
-                    <s:submit name="create" value="Use this address and continue" style="margin:15px 0 0 26px;width:260px;position: static;" class="button"/>
+                    <s:submit name="create" value="Use this address and continue" class="placeOrderButtonNew" style="width: 240px;"/>
                 </s:form>
             </div>
 

@@ -25,6 +25,17 @@
   <s:layout-component name="htmlHead">
 	  <script type="text/javascript">
 		  $(document).ready(function() {
+              $("#learnMore").click(function(){
+                  $('html, body').animate({scrollTop: $(".products_container").height() + 200}, 1000);
+              });
+
+              $("#dispatchDateQuesMark").click(function(){
+                  $("#popUpDDate").toggle();
+              });
+
+              $("#crossNew").click(function(){
+                  $("#popUpDDate").hide();
+              });
 
 			 $('.requiredFieldValidator').click(function() {
 				 if( $.trim($('#userComments').val()) != '' && ! $('.commentType').is(':checked') ) {
@@ -49,31 +60,44 @@
 </s:layout-component>
 
   <s:layout-component name="steps">
+      <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+          <s:link href="/" title='go to healthkart home'>
+              <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+          </s:link>
+      </div>
     <div class='steps'>
+        <hr noshade class="stepLine">
       <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step'>
-          <h2>Step 1</h2>
+        <div class='newStep'>
+            <div class="newStepCount">1</div>
 
-          <div class='small'>
-            Select shipping address
-          </div>
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
         </div>
       </s:link>
 
-      <div class='step current_step'>
-        <h2>Step 2</h2>
+      <div class='newStep '>
+          <div class="newStepCount current_step">2</div>
 
-        <div class='small'>
-          Confirm your order
-        </div>
+          <div class='newStepText'>
+              Confirm your order
+          </div>
       </div>
-      <div class='step'>
-        <h2>Step 3</h2>
+      <div class='newStep'>
+          <div class="newStepCount">3</div>
 
-        <div class='small'>
-          Choose Payment Method
-        </div>
+          <div class='newStepText'>
+              Choose Payment Method
+          </div>
       </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
+        </div>
     </div>
   </s:layout-component>
 
@@ -81,6 +105,7 @@
     <s:useActionBean beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre" var="orderSummary"/>
     <div class='current_step_content step2'>
 <%----%>
+        <div class="leftHalf">
     <jsp:include page="/includes/checkoutNotice.jsp"/>
       
     <c:if test="${orderSummary.availableCourierList == null}">
@@ -95,41 +120,13 @@
       $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>${orderSummary.pricingDto.productLineCount}</span> item in<br/>your shopping cart");
 
     </script>
-    <div class='right_container address_box'>
-      <div class='title'>
-        <h5>
-          To be shipped to
-        </h5>
-      </div>
-      <div class='detail'>
-        <div class='name'>
-            ${orderSummary.order.address.name}
-        </div>
-        <div class='address'>
-            ${orderSummary.order.address.line1}
-          <c:if test="${hk:isNotBlank(orderSummary.order.address.line2)}">
-            <br/>
-            ${orderSummary.order.address.line2}
-          </c:if>
-          <br/>
-            ${orderSummary.order.address.city}
-          <br/>
-            ${orderSummary.order.address.state}
-          <br/>
-            ${orderSummary.order.address.pincode.pincode}
-          <br/>
-            ${orderSummary.order.address.phone}
-        </div>
-      </div>
-        <span class="small">
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
-            (change) </s:link>
-        </span>
-    </div>
+     </div>
+    <div class="rightHalf">
+
     <c:if test="${orderSummary.redeemableRewardPoints > 0}">
-      <div class="right_container" style="left: 40px;">
+      <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
         <div class="title">
-          <h5>
+          <h5 style="font-size: 12px;">
             REDEEM REWARD POINTS
           </h5>
 
@@ -160,34 +157,67 @@
         </div>
       </div>
     </c:if>
-    <div class="right_container" style="float: right; margin-right:50px;">
+    <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
       <div class="title">
-        <h5>
-          Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
-        </h5>
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
-        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:175px;height:110px"/>
+          <div style="margin:10px; padding-top:0px">
+              <div class="buttons">
+                  <s:submit style="margin: 0px !important;margin-left: 50px !important;margin-bottom: 10px !important;" name="orderReviewed" value="Make Payment" class="requiredFieldValidator placeOrderButtonNew"/>
+              </div>
+          </div>
+            <h5 style="font-size: 13px;">
+                Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
+            </h5>
+        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:220px;height:54px"/>
           <%--<div class="title">
             <h5>
               Confirm order
             </h5>
           </div>--%>
 	      <div class="comment_type">
-		      <br><s:radio value="1" name="order.commentType" class="commentType"/> Packing Type
-		      <br><s:radio value="2" name="order.commentType" class="commentType"/> Delivery Type
-		      <br><s:radio value="3" name="order.commentType" class="commentType"/> Others
+              <div class="commentTypeText"><s:radio value="1" name="order.commentType" class="commentType"/> Packing</div>
+              <div class="commentTypeText"><s:radio value="2" name="order.commentType" class="commentType"/> Delivery</div>
+              <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType"/> Others</div>
 	      </div>
-          <div style="margin:10px; padding-top:10px">
-            <div class="buttons">
-              <s:submit name="orderReviewed" value="Make Payment" class="requiredFieldValidator"/>
-            </div>
-          </div>
 
       </div>
       </s:form>
 
     </div>
+      <div class='right_container address_box' style="width: 230px;padding: 5px 10px;left: 15px;">
+          <div class='title'>
+              <h5>
+                  To be shipped to
+              </h5>
+          </div>
+          <div class='detail'>
+              <div class='name'>
+                      ${orderSummary.order.address.name}
+              </div>
+              <div class='address'>
+                      ${orderSummary.order.address.line1}
+                  <c:if test="${hk:isNotBlank(orderSummary.order.address.line2)}">
+                      <br/>
+                      ${orderSummary.order.address.line2}
+                  </c:if>
+                  <br/>
+                      ${orderSummary.order.address.city}
+                  <br/>
+                      ${orderSummary.order.address.state}
+                  <br/>
+                      ${orderSummary.order.address.pincode.pincode}
+                  <br/>
+                      ${orderSummary.order.address.phone}
+              </div>
+          </div>
+        <span class="small">
+          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
+              (change) </s:link>
+        </span>
+      </div>
+      </div>
+      </div>
     <c:choose>
     <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">
