@@ -86,4 +86,28 @@ public interface LoyaltyProgramService {
 	 * @return
 	 */
 	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints);
+	
+	/**
+	 * @param user
+	 * @return
+	 */
+	public double calculateValidPoints(Long userId);
+	
+	/**
+	 * @param user
+	 * @return
+	 */
+	public double calculateAnnualSpend(User user);
+	
+	/**
+	 * @param user
+	 * @param amount
+	 */
+	public void reviseBadgeInfoForUser(User user, Double amount);
+	
+	/**
+	 * @param info
+	 * @return
+	 */
+	public double calculateUpgradePoints(UserBadgeInfo info);
 }

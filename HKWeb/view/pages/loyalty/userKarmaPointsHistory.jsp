@@ -11,7 +11,7 @@
   <s:layout-component name="contents">
   <div id="memberInfo" style="float: left;">
   	    	Member since:  <fmt:formatDate value = "${userKarmaHA.user.createDate}" /> | Spent: ??| Points earned: ${userKarmaHA.pointsCredited} 
-  	    	| Redeemed: ${userKarmaHA.pointsDebited} | <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" /> ${badge.badgeName}
+  	    	| Redeemed: ${userKarmaHA.pointsDebited} | <c:set var="badgeInfo" value="${userKarmaHA.badgeInfo}" /> ${badgeInfo.badge.badgeName}
   </div>
   <hr>
   <div id="levelInfo" style="float: left;"> 

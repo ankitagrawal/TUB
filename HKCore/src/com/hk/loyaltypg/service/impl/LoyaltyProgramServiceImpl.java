@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -51,7 +52,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<LoyaltyProduct> listProucts(int startRow, int maxRows) {
-		DetachedCriteria criteria = this.prepareCommonLoyalProdCriteria();
+		DetachedCriteria criteria = this.prepareCommonCriteria();
 		
 				/*DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
@@ -71,7 +72,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 * This method returns common necessary conditions for a LoyaltyProduct 
 	 * @return DetachedCriteria criteria
 	 */
-	private DetachedCriteria prepareCommonLoyalProdCriteria() {
+	private DetachedCriteria prepareCommonCriteria() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "pv");
 		criteria.add(Restrictions.eq("pv.outOfStock", Boolean.FALSE));
@@ -161,7 +162,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void debitKarmaPoints(Long orderId) {
 		Order order = this.orderDao.get(Order.class, orderId);
-		double existingKarmaPoints = this.calculateValidPoints(order.getUser());//this.calculateKarmaPoints(order.getUser().getId());
+		double existingKarmaPoints = this.calculateValidPoints(order.getUser().getId());//this.calculateKarmaPoints(order.getUser().getId());
 		double karmaPoints = this.aggregatePoints(orderId);
 		if (existingKarmaPoints < karmaPoints) {
 			throw new HealthkartRuntimeException("Not sufficient karma points") {
@@ -205,7 +206,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 */
 	@Override
 	public LoyaltyProduct getProductByVariantId(String variantId) {
-		DetachedCriteria criteria = this.prepareCommonLoyalProdCriteria();
+		DetachedCriteria criteria = this.prepareCommonCriteria();
 		//DetachedCriteria.forClass(LoyaltyProduct.class);
 		//criteria.createAlias("variant", "pv");
 		criteria.add(Restrictions.eq("pv.id", variantId));
@@ -274,7 +275,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 */
 	@Override
 	public Page getProfileHistory(User user, int page, int perPage) {
-
 		return this.userOrderKarmaProfileDao.listKarmaPointsForUser(user, page, perPage);
 	}
 	
@@ -283,8 +283,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 */
 	@Override
 	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints) {
-		
-		DetachedCriteria criteria = this.prepareCommonLoyalProdCriteria();
+		DetachedCriteria criteria = this.prepareCommonCriteria();
 		//DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.add(Restrictions.ge("points", minPoints));
 		criteria.add(Restrictions.le("points", maxPoints));
@@ -301,9 +300,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 * @param User user
 	 * @return validPoints
 	 */
-	public Double calculateValidPoints(User user) {
+	@Override
+	public double calculateValidPoints(Long userId) {
 		DetachedCriteria crit = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		crit.add(Restrictions.eq("user", user));
+		crit.add(Restrictions.eq("userOrderKey.user.id", userId));
 		crit.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
 		
 		// Check for 2 years
@@ -317,75 +317,36 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return validPoints;
 	}
 	
+
 	/**
-	 * This method calculates credited points from a UserOrderKarmaProfile based on the following logic
-	 * From badge upgrade date or from past 1 year whichever is latest.
+	 * This method calculates annual spend for a given user 
 	 * @param info
 	 * @return
 	 */
-	public Double calculateCreditedPoints(UserBadgeInfo info) {
+	@Override
+	public double calculateAnnualSpend(User user) {
 		
-		User user = info.getUser();
-		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
 		criteria.add(Restrictions.eq("user", user));
-		
 		this.calendar = Calendar.getInstance();
 		this.calendar.add(Calendar.YEAR, -1);
-		/*if (info.getUpdationTime().after(this.calendar.getTime())) {
-			criteria.add(Restrictions.ge("updateTime", info.getUpdationTime()));
-		} else {
-			criteria.add(Restrictions.ge("updateTime", this.calendar.getTime()));
-		}
-		*/
-		criteria.add(Restrictions.ge("updateTime", this.calendar.getTime()));
 		
-		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
-		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
-		
-		criteria.setProjection(Projections.sum("karmaPoints"));
-		
-		Double creditedPoints = (Double) this.loyaltyProductDao.findByCriteria(criteria).get(0);
-		return creditedPoints;
+		criteria.add(Restrictions.ge("createDate", this.calendar.getTime()));
+		criteria.createAlias("payment", "pmt");
+		criteria.setProjection(Projections.sum("pmt.amount"));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
+
+		Double annualSpend = (Double) this.loyaltyProductDao.findByCriteria(criteria).iterator().next();
+		return annualSpend;
 
 	}
 
 	
 	/**
-	 * This method calculates debited points from a UserOrderKarmaProfile based on the following logic
-	 * From badge upgrade date or from past 1 year whichever is latest.
-	 * @param info
-	 * @return
-	 */
-	public Double calculateDebitedPoints(UserBadgeInfo info) {
-		
-		User user = info.getUser();
-		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.add(Restrictions.eq("user", user));
-		
-		this.calendar = Calendar.getInstance();
-		this.calendar.add(Calendar.YEAR, -1);
-		/*if (info.getUpdationTime().after(this.calendar.getTime())) {
-			criteria.add(Restrictions.ge("updateTime", info.getUpdationTime()));
-		} else {
-			criteria.add(Restrictions.ge("updateTime", this.calendar.getTime()));
-		}
-		*/
-		criteria.add(Restrictions.ge("updateTime", this.calendar.getTime()));
-		
-		criteria.add(Restrictions.eq("transactionType", TransactionType.DEBIT));
-		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
-		
-		criteria.setProjection(Projections.sum("karmaPoints"));
-		
-		Double debitedPoints = (Double) this.loyaltyProductDao.findByCriteria(criteria).get(0);
-		return debitedPoints;
-
-	}
-
-	/**
 	 * This method is used to revise a user's status.
 	 * @param user
 	 */
+	@Override
 	public void reviseBadgeInfoForUser (User user, Double transactionAmount) {
 		
 		DetachedCriteria crit = DetachedCriteria.forClass(UserBadgeInfo.class);
@@ -398,18 +359,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			Badge oldBadge = info.getBadge();
 			//info.setCreditedPoints(info.getCreditedPoints() + 
 				//	(transactionAmount * oldBadge.getLoyaltyMultiplier()) );
-			
-			info.setCreditedPoints(this.calculateCreditedPoints(info));
-			info.setDebitedPoints(this.calculateDebitedPoints(info));
-			info.setValidPoints(this.calculateValidPoints(user));
+			info.setValidPoints(this.calculateValidPoints(user.getId()));
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.YEAR, -1);
-			if (info.getCreditedPoints() > info.getBadge().getMaxScore() || 
+			Double spend = this.calculateAnnualSpend(user);
+			if (spend > info.getBadge().getMaxScore() || 
 					info.getUpdationTime().before(cal.getTime())) {
 				// revise Badge
-				Double creditedPoints = info.getCreditedPoints();
+				
 				for (Badge badge : this.getAllBadges()) {
-					if (creditedPoints > badge.getMinScore() && creditedPoints < badge.getMaxScore()) {
+					if (spend > badge.getMinScore() && spend < badge.getMaxScore()) {
 						info.setBadge(badge);
 						info.setUpdationTime(Calendar.getInstance().getTime());
 						break;
@@ -434,10 +393,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			info.setBadge(newBadge);
 			
 			// Set all the points
-			info.setCreditedPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
+/*			info.setCreditedPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
 			info.setDebitedPoints(0.0);
 			info.setValidPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
-			
+*/			
+			info.setValidPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
 			Calendar cal = Calendar.getInstance();
 			Date currentTime = cal.getTime();
 			
@@ -447,7 +407,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			
 			// next points expire date 2 years from now
 			cal.add(Calendar.YEAR, 2);
-			info.setPointsRevisionDate(cal.getTime());
+//			info.setPointsRevisionDate(cal.getTime());
 			
 		}
 	}
@@ -463,8 +423,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	 * @param UserBadgeInfo info
 	 * @return upgradePoints
 	 */
-	public Double calculateUpgradePoints (UserBadgeInfo info) {
-		Double creditedPoints = this.calculateCreditedPoints(info);
+	@Override
+	public double calculateUpgradePoints (UserBadgeInfo info) {
+		Double creditedPoints = this.calculateAnnualSpend(info.getUser());
 		//info.getCreditedPoints();
 		for (Badge badge : this.getAllBadges()) {
 			if (creditedPoints > badge.getMinScore() && creditedPoints < badge.getMaxScore()) {

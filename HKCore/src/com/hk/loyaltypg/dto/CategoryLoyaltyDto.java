@@ -15,8 +15,13 @@ public class CategoryLoyaltyDto {
     private String              displayName;
    
     private int					prodCount;
-    CategoryLoyaltyDto () {}
-	
+    public CategoryLoyaltyDto () {}
+
+    public CategoryLoyaltyDto (String name, String displayName, int prodCount) {
+    	this.name = name;
+    	this.displayName = displayName;
+    	this.prodCount = prodCount;
+    }
     
     /**
      * This method converts a CategoryLoyaltyDto object into a category object.

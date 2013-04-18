@@ -17,6 +17,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
@@ -33,7 +34,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 
 
 	private User user;
-
+	private UserBadgeInfo badgeInfo;
 	private List<UserOrderKarmaProfile> karmaList;
 	private Page pointsPage;
 	
@@ -49,6 +50,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
 			this.pointsPage = this.loyaltyProgramService.getProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 			this.karmaList = this.pointsPage.getList();
+			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user.getId());
 			this.pointsCredited=0;
 			this.pointsDebited=0;
 			for(UserOrderKarmaProfile profile : this.karmaList) {
@@ -146,6 +148,20 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 */
 	public void setPointsCredited(double pointsCredited) {
 		this.pointsCredited = pointsCredited;
+	}
+
+	/**
+	 * @return the badgeInfo
+	 */
+	public UserBadgeInfo getBadgeInfo() {
+		return this.badgeInfo;
+	}
+
+	/**
+	 * @param badgeInfo the badgeInfo to set
+	 */
+	public void setBadgeInfo(UserBadgeInfo badgeInfo) {
+		this.badgeInfo = badgeInfo;
 	}
 
 }
