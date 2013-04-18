@@ -39,7 +39,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
   <c:if
       test="${invoiceLineItem.comboInstance == null && invoiceLineItem.productVariant.paymentType.name != 'Postpaid'}">
-    <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+    <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
       <div class='img48' style="vertical-align:top;position: relative;float: left;">
         <c:choose>
           <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
@@ -134,7 +134,7 @@ Pass an attribute called pricingDto to render a table with pricing details
     <c:if test="${!fn:contains(firstComboLineItem,invoiceLineItem.comboInstance.id)}">
       <%--<c:set var="firstComboLineItem" value="${invoiceLineItem.comboInstance.combo}"/>--%>
         <c:set var="firstComboLineItem" value="${firstComboLineItem} + ',' + ${invoiceLineItem.comboInstance.id} + ','" />
-        <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+        <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
         <div class='img48' style="vertical-align:top;position: relative;float: left;">
           <c:choose>
             <c:when test="${invoiceLineItem.comboInstance.combo.mainImageId != null}">
@@ -303,7 +303,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 <c:if test="${pricingDto.postpaidServicesTotal > 0.00}">
   <c:forEach items="${pricingDto.productLineItems}" var="invoiceLineItem" varStatus="ctr1">
     <c:if test="${invoiceLineItem.productVariant.paymentType.name == 'Postpaid'}">
-      <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;padding-bottom: 45px;">
+      <div class='product newProductContainer' style="border-bottom-style: solid;height: auto;">
         <div class='img48' style="vertical-align:top;position: relative;float: left;">
           <c:choose>
             <c:when test="${invoiceLineItem.productVariant.product.mainImageId != null}">
