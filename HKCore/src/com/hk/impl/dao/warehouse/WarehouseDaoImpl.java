@@ -12,40 +12,41 @@ import java.util.List;
 @Repository
 public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
 
-    public List<Warehouse> getAllWarehouses() {
-        return getAll(Warehouse.class);
-    }
+  public List<Warehouse> getAllWarehouses() {
+    return getAll(Warehouse.class);
+  }
 
-    public Warehouse getWarehouseById(Long warehouseId) {
-        return get(Warehouse.class, warehouseId);
-    }
+  public Warehouse getWarehouseById(Long warehouseId) {
+    return get(Warehouse.class, warehouseId);
+  }
 
-    public List<Warehouse> findByIds(List<Long> warehouseIds) {
-        List<Warehouse> warehouses = getSession().createQuery("from Warehouse w where w.id in (:warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
-        return warehouses;
+  public List<Warehouse> findByIds(List<Long> warehouseIds) {
+    List<Warehouse> warehouses = getSession().createQuery("from Warehouse w where w.id in (:warehouseIds)").setParameterList("warehouseIds", warehouseIds).list();
+    return warehouses;
 
-    }
+  }
 
-    /**
-     * Currently since we only have two warehouses, so can assume it as a flip. This will change when we have more than
-     * two warehouseses.
-     * 
-     * @param currentWarehouseForSO
-     * @return
-     */
-    public Warehouse getWarehoueForFlipping(Warehouse currentWarehouseForSO) {
-        List<Long> warehouseIdList = new ArrayList<Long>();
-        warehouseIdList.add(currentWarehouseForSO.getId());
-        warehouseIdList.add(WarehouseService.CORPORATE_OFFICE_ID);
-        warehouseIdList.add(WarehouseService.GURGAON_PHARMA_WAREHOUSE_ID);
-	    warehouseIdList.add(WarehouseService.PUNJABI_BAGH_WH_STORE_ID);
-	    warehouseIdList.add(WarehouseService.KAPASHERA_WAREHOUSE_ID);
-        return (Warehouse) getSession().createQuery("from Warehouse w where w.id  not in ( :warehouseIdList)").setParameterList("warehouseIdList", warehouseIdList).uniqueResult();
+  /**
+   * Currently since we only have two warehouses, so can assume it as a flip. This will change when we have more than
+   * two warehouseses.
+   *
+   * @param currentWarehouseForSO
+   * @return
+   */
+  public List<Warehouse> getWarehoueForFlipping(Warehouse currentWarehouseForSO) {
+    List<Long> warehouseIdList = new ArrayList<Long>();
+    // Add all Bright WH for B2B+B2C
+    warehouseIdList.add(WarehouseService.GGN_BRIGHT_WH_ID);
+    warehouseIdList.add(WarehouseService.MUM_BRIGHT_WH_ID);
+    // Remove the base WH
+    warehouseIdList.remove(currentWarehouseForSO.getId());
 
-    }
+    return (List<Warehouse>) getSession().createQuery("from Warehouse w where w.id  in ( :warehouseIdList)").setParameterList("warehouseIdList", warehouseIdList).list();
 
-    public Warehouse findByName(String name) {
-        return (Warehouse) getSession().createQuery("from Warehouse wh where wh.name = :name").setString("name", name).uniqueResult();
-    }
+  }
+
+  public Warehouse findByName(String name) {
+    return (Warehouse) getSession().createQuery("from Warehouse wh where wh.name = :name").setString("name", name).uniqueResult();
+  }
 
 }

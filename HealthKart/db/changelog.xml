@@ -12173,4 +12173,42 @@
     <changeSet author="Ajeet (generated)" id="1366219849770-3">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1366281640164-1">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="honoring_b2c_orders" remarks="1 = Serving B2B+B2C the way we are doing right now, 0 = Exclusive to B2B" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366281640164-2">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="warehouse_type" remarks="1 =  Online B2B, 2 =  Online B2C, 3 =  Offline B2C, 4=Pharma, 5=Corporate" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+                                                                                                            
+    <!--<changeSet author="Ajeet (written)" id="20130418-01">
+        <sql>
+            ALTER TABLE warehouse MODIFY COLUMN tin VARCHAR(45) NOT NULL AFTER id;
+            ALTER TABLE warehouse MODIFY COLUMN identifier VARCHAR(100) NOT NULL AFTER tin;
+            ALTER TABLE warehouse MODIFY COLUMN name VARCHAR(100) NOT NULL AFTER identifier;
+            ALTER TABLE warehouse MODIFY COLUMN line1 VARCHAR(100) AFTER name;
+            ALTER TABLE warehouse MODIFY COLUMN line2 VARCHAR(100) AFTER line1;
+            ALTER TABLE warehouse MODIFY COLUMN wh_phone VARCHAR(45) AFTER pincode;
+        </sql>
+    </changeSet>-->
+    
+    <changeSet author="Ajeet (generated)" id="1366286805259-1">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="wh_phone" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366288560740-1">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

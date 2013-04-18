@@ -18,7 +18,7 @@ public interface WarehouseDao extends BaseDao {
      * @param currentWarehouseForSO
      * @return
      */
-    public Warehouse getWarehoueForFlipping(Warehouse currentWarehouseForSO);
+    public List<Warehouse> getWarehoueForFlipping(Warehouse currentWarehouseForSO);
 
     public Warehouse findByName(String name);
 

@@ -53,4 +53,7 @@ public interface SkuService {
 
 	public List<Sku> getSKUsByProductNameAndWarehouse(String productName, Long warehouseId);
 
+ public List<Sku> getSkus(ProductVariant productVariant, List<Warehouse> warehouseList);
+  
+
 }
