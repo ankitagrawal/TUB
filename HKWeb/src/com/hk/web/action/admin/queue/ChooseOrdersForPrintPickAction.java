@@ -141,6 +141,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(shippingOrderStatuses));
         if(!backup){
             shippingOrderSearchCriteria.setSearchForPrinting(true);
+        }else{
+            shippingOrderSearchCriteria.setSortByPaymentDate(true);
         }
         if(dfault){
             shippingOrderSearchCriteria.setStartTargetDispatchDate(DateUtils.getStartOfPreviousYear(new Date())).setEndTargetDispatchDate(DateUtils.getEndOfDay(new Date()));
@@ -157,8 +159,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
                 shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
                 shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
             } else if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
-                shippingOrderSearchCriteria.setPaymentStartDate(startTargetDispatchDate);
-                shippingOrderSearchCriteria.setPaymentEndDate(endTargetDispatchDate);
+                shippingOrderSearchCriteria.setStartTargetDispatchDate(startTargetDispatchDate);
+                shippingOrderSearchCriteria.setEndTargetDispatchDate(endTargetDispatchDate);
             } else if (courier != null) {
                 List<Courier> couriers = new ArrayList<Courier>();
                 couriers.add(courier);
