@@ -419,6 +419,7 @@ public class OrderServiceImpl implements OrderService {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {
+            logger.debug("bucketedCartLineItemMapEntry Key " +  bucketCartLineItemMap.getKey() + " Size " + bucketCartLineItemMap.getValue().size());
             Set<CartLineItem> cartLineItems = new HashSet<CartLineItem>(bucketCartLineItemMap.getValue());
             if (!cartLineItems.isEmpty() && !bucketCartLineItemMap.getKey().equals("Service")) {
                 List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartLineItems);
@@ -432,8 +433,10 @@ public class OrderServiceImpl implements OrderService {
                             boolean containsJitProducts = false;
                             ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
                             Map<String, List<CartLineItem>> bucketedCartLineItemMap = OrderSplitterFilter.bucketCartLineItems(dummyOrder.getCartLineItemList());
-                            for (List<CartLineItem> bucketedCartLineItems : bucketedCartLineItemMap.values()) {
-                                for (CartLineItem cartLineItem : bucketedCartLineItems) {
+                            logger.debug("bucketedCartLineItemMap Size " + bucketedCartLineItemMap.size());
+                            for (Map.Entry<String, List<CartLineItem>> bucketedCartLineItemMapEntry : bucketedCartLineItemMap.entrySet()) {
+                                logger.debug("bucketedCartLineItemMapEntry Key " +  bucketedCartLineItemMapEntry.getKey() + " Size " + bucketedCartLineItemMapEntry.getValue().size());
+                                for (CartLineItem cartLineItem : bucketedCartLineItemMapEntry.getValue()) {
                                     isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
                                     containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
                                     Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
@@ -445,10 +448,6 @@ public class OrderServiceImpl implements OrderService {
                                 ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                                 shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
                                 shippingOrder = shippingOrderService.save(shippingOrder);
-                                /**
-                                 * this additional call to save is done so that we have shipping order id to generate
-                                 * shipping order gateway id
-                                 */
                                 shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
                                 shippingOrder = shippingOrderService.save(shippingOrder);
                                 Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
