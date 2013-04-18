@@ -38,8 +38,8 @@
     <s:layout-component name="header">
       <s:layout-render name="/layouts/embed/_header.jsp"/>
     </s:layout-component>
-	<s:layout-component name="menu">
-    </s:layout-component>
+	<%--<s:layout-component name="menu">
+    </s:layout-component>--%>
     <div class="main_container">
       <s:layout-component name="steps"/>
       <s:layout-component name="steps_content"/>

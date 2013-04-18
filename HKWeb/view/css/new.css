@@ -5813,11 +5813,19 @@ color: #e62580;
 .checkoutContainerText{
     position: relative;
     float: left;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    color: rgb(136, 136, 136);
 }
 
 .checkoutContainerTextRight{
     position: relative;
     float: right;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    color: rgb(136, 136, 136);
 }
 
 .youPay{
@@ -5841,7 +5849,6 @@ color: #e62580;
     float: left;
     text-align: left;
     margin-bottom: 15px;
-    font-style: italic;
     font-family: Georgia, Cambria, serif;
     font-size: 12px;
     line-height: 15px;
@@ -6239,8 +6246,8 @@ color: #e62580;
 .newTotals{
     top: -40px;
     padding: 0px !important;
-    width: 20% !important;
-    left: 40px !important;
+    width: 22% !important;
+    left: 19px !important;
     background: white !important;
     border-bottom: 1px solid #ddd !important;
     border-top: 1px solid #ddd !important;
@@ -6270,7 +6277,7 @@ color: #e62580;
 }
 
 .rightHalf{
-    top: 130px;
+    top: 155px;
     position: relative;
     width: 30%;
     float: left;

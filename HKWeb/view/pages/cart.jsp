@@ -428,10 +428,10 @@
       </div>
 
 
-    <div class="quantity" style="width: 80px;left: 15px;">
+    <div class="quantity" style="width: 80px;left: 35px;">
       <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
       <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
-      <a class='remove removeLink' href='#'>
+      <a style="position: relative;float:left;" class='remove removeLink' href='#'>
         (remove)
       </a>
       </c:if>
@@ -530,9 +530,9 @@
       </c:forEach>
     </div>
       <div class="dispatchedDateNew"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
-    <div class="quantity" style="width: 80px;left: 15px;">
+    <div class="quantity" style="width: 80px;left: 35px;">
       <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty" style="width: 20px; height: 18px;"/>
-      <a class='remove removeComboLink' href='#'>
+      <a style="position: relative;float:left;" class='remove removeComboLink' href='#'>
         (remove)
       </a>
     </div>
@@ -753,7 +753,7 @@
             - For Other Town/Cities: 3-6 business days
         </li>
         <li>
-            - For Rest of India Nonservcable through Couriers: 7-15 business days (Delivery done by Indian Post)
+            - For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
         </li>
     </ul>
 </div>

@@ -113,7 +113,7 @@
     <div class="rightHalf">
 
     <c:if test="${orderSummary.redeemableRewardPoints > 0}">
-      <div class="right_container" style="left: 40px;width: 230px;padding: 5px 10px;">
+      <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
         <div class="title">
           <h5 style="font-size: 12px;">
             REDEEM REWARD POINTS
@@ -146,7 +146,7 @@
         </div>
       </div>
     </c:if>
-    <div class="right_container" style="left: 40px;width: 230px;padding: 5px 10px;">
+    <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
       <div class="title">
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
@@ -174,7 +174,7 @@
       </s:form>
 
     </div>
-      <div class='right_container address_box' style="width: 230px;padding: 5px 10px;">
+      <div class='right_container address_box' style="width: 230px;padding: 5px 10px;left: 15px;">
           <div class='title'>
               <h5>
                   To be shipped to
