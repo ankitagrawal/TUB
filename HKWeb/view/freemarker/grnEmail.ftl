@@ -13,7 +13,11 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
   <#if grn.purchaseOrder.supplier.name??>
   Supplier = ${grn.purchaseOrder.supplier.name} <br/>
   </#if>
+  <#if grn.purchaseOrder.fillRate??>
   PO Fill Rate = ${grn.purchaseOrder.fillRate} %; <br/>
+  <#else>
+  PO Fill Rate =N/A; <br/>
+  </#if>
   Approx. payable amount = ${grn.purchaseOrder.payable}; <br/>
   <#if grn.purchaseOrder.extraInventoryId??>
   Extra Inventory ID= ${grn.purchaseOrder.extraInventoryId}; <br/>
@@ -41,7 +45,11 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 	<tr>
 		<td>${grnLineItem.sku.productVariant.id}</td>
 		<td>${grnLineItem.sku.productVariant.product.name}</td>
-		<td>${grnLineItem.fillRate}</td>
+		<td><#if grnLineItem.fillRate??>
+ 		 ${grnLineItem.fillRate}
+  		<#else>
+  		N/A
+  		</#if></td>
 		<td>${grnLineItem.qty}</td>
 		<td>${grnLineItem.checkedInQty}</td>
 		<td>${grnLineItem.costPrice}</td>
