@@ -325,7 +325,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate, Long consignmentLifecycleStatus,Long sourceHubId, Long destinationHubId, int pageNo, int perPage) {
-        return consignmentDao.searchConsignmentTracking(startDate, consignmentLifecycleStatus, sourceHubId, destinationHubId, pageNo, perPage);
+    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
+        return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, pageNo, perPage);
     }
 }

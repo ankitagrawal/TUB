@@ -1,6 +1,5 @@
 package com.hk.web.action.admin.hkDelivery;
 
-
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
@@ -18,113 +17,105 @@ import java.util.*;
 @Component
 public class HKDConsignmentTrackingAction extends BasePaginatedAction {
 
-    private static Logger logger = LoggerFactory.getLogger(HKDConsignmentAction.class);
-    private Long hubId;
-    private Long sourceHubId;
-    private Long destinationHubId;
-    private Page consignmentTrackingPage;
-    private Date startDate;
-    private User loggedOnUser;
-    private Long consignmentLifecycleStatus;
-    private List<ConsignmentTracking> consignmentList = new ArrayList<ConsignmentTracking>();
-    private Integer defaultPerPage = 10;
+  private Long hubId;
+  private Page consignmentTrackingPage;
+  private Date startDate;
+  private Date endDate;
+  private User loggedOnUser;
+  private Long consignmentLifecycleStatus;
+  private List<ConsignmentTracking> consignmentList = new ArrayList<ConsignmentTracking>();
+  private Integer defaultPerPage = 10;
 
-    @Autowired
-    private ConsignmentService consignmentService;
+  @Autowired
+  private ConsignmentService consignmentService;
 
-    @DefaultHandler
-    public Resolution pre() {
-        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
+  @DefaultHandler
+  public Resolution pre() {
+    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+    return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
+  }
+
+  @SuppressWarnings("unchecked")
+  public Resolution searchConsignmentTracking() {
+    consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
+    if (consignmentTrackingPage != null) {
+      consignmentList = consignmentTrackingPage.getList();
     }
+    return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
+  }
 
-    @SuppressWarnings("unchecked")
-    public Resolution searchConsignmentTracking() {
-        sourceHubId = getHubId();
-        destinationHubId = getHubId();
-        consignmentTrackingPage = consignmentService.searchConsignmentTracking(startDate, consignmentLifecycleStatus, sourceHubId, destinationHubId, getPageNo(), getPerPage());
-        if (consignmentTrackingPage != null) {
-            consignmentList = consignmentTrackingPage.getList();
-        }
-        return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
-    }
+  public Long getHubId() {
+    return hubId;
+  }
 
-    public Long getHubId() {
-        return hubId;
-    }
+  public void setHubId(Long hubId) {
+    this.hubId = hubId;
+  }
 
-    public void setHubId(Long hubId) {
-        this.hubId = hubId;
-    }
+  public int getPerPageDefault() {
+    return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
+  }
 
-    public int getPerPageDefault() {
-        return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
-    }
+  public int getPageCount() {
+    return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalPages();
+  }
 
-    public int getPageCount() {
-        return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalPages();
-    }
+  public int getResultCount() {
+    return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalResults();
+  }
 
-    public int getResultCount() {
-        return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalResults();
-    }
+  public Set<String> getParamSet() {
+    HashSet<String> params = new HashSet<String>();
+    params.add("hubId");
+    params.add("endDate");
+    params.add("startDate");
+    params.add("consignmentLifecycleStatus");
+    return params;
+  }
 
-    public Set<String> getParamSet() {
-        HashSet<String> params = new HashSet<String>();
-        params.add("sourceHubId");
-        params.add("destinationHubId");
-        params.add("startDate");
-        params.add("consignmentLifecycleStatus");
-        return params;
-    }
+  public Date getStartDate() {
+    return startDate;
+  }
 
-    public Date getStartDate() {
-        return startDate;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
 
-    @Validate(converter = CustomDateTypeConvertor.class)
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+  public Date getEndDate() {
+    return endDate;
+  }
 
-    public User getLoggedOnUser() {
-        return loggedOnUser;
-    }
+  @Validate(converter = CustomDateTypeConvertor.class)
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 
-    public void setLoggedOnUser(User loggedOnUser) {
-        this.loggedOnUser = loggedOnUser;
-    }
+  public User getLoggedOnUser() {
+    return loggedOnUser;
+  }
 
-    public void setConsignmentLifecycleStatus(Long consignmentLifecycleStatus) {
-        this.consignmentLifecycleStatus = consignmentLifecycleStatus;
-    }
+  public void setLoggedOnUser(User loggedOnUser) {
+    this.loggedOnUser = loggedOnUser;
+  }
 
-    public Long getConsignmentLifecycleStatus() {
-        return consignmentLifecycleStatus;
-    }
+  public void setConsignmentLifecycleStatus(Long consignmentLifecycleStatus) {
+    this.consignmentLifecycleStatus = consignmentLifecycleStatus;
+  }
 
-    public List<ConsignmentTracking> getConsignmentList() {
-        return consignmentList;
-    }
+  public Long getConsignmentLifecycleStatus() {
+    return consignmentLifecycleStatus;
+  }
 
-    public void setConsignmentList(List<ConsignmentTracking> consignmentList) {
-        this.consignmentList = consignmentList;
-    }
+  public List<ConsignmentTracking> getConsignmentList() {
+    return consignmentList;
+  }
 
-    public Long getSourceHubId() {
-        return sourceHubId;
-    }
+  public void setConsignmentList(List<ConsignmentTracking> consignmentList) {
+    this.consignmentList = consignmentList;
+  }
 
-    public void setSourceHubId(Long sourceHubId) {
-        this.sourceHubId = sourceHubId;
-    }
-
-    public Long getDestinationHubId() {
-        return destinationHubId;
-    }
-
-    public void setDestinationHubId(Long destinationHubId) {
-        this.destinationHubId = destinationHubId;
-    }
-
+  public ConsignmentService getConsignmentService() {
+    return consignmentService;
+  }
 }
