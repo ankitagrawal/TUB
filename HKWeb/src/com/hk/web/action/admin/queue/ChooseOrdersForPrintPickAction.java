@@ -109,7 +109,11 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             shippingOrdersList = getShippingOrdersForPrintingInCategory(shippingOrderSearchCriteria);
             addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
         }
-        if(shippingOrdersList != null && !shippingOrdersList.isEmpty()){
+        logger.debug("shippingOrdersList is " + shippingOrdersList);
+        if(shippingOrdersList != null){
+            logger.debug("shippingOrdersList size is " + shippingOrdersList.size());
+        }
+        if(shippingOrdersList == null || shippingOrdersList.isEmpty()){
             shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
             ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting(), false, true, false);
             shippingOrdersList = getShippingOrdersForPrintingInCategory(shippingOrderSearchCriteria);
