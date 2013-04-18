@@ -432,8 +432,8 @@ public class OrderServiceImpl implements OrderService {
                             boolean containsJitProducts = false;
                             ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
                             Map<String, List<CartLineItem>> bucketedCartLineItemMap = OrderSplitterFilter.bucketCartLineItems(dummyOrder.getCartLineItemList());
-                            for (Map.Entry<String, List<CartLineItem>> bucketedCartLineItemEntry : bucketedCartLineItemMap.entrySet()) {
-                                for (CartLineItem cartLineItem : bucketedCartLineItemEntry.getValue()) {
+                            for (List<CartLineItem> bucketedCartLineItems : bucketedCartLineItemMap.values()) {
+                                for (CartLineItem cartLineItem : bucketedCartLineItems) {
                                     isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
                                     containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
                                     Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
