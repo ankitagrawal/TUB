@@ -161,6 +161,9 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		Double amount = NumberUtils.toDouble(amountStr);
 		String authStatus = paramMap.get(EbsPaymentGatewayWrapper.ResponseCode);
 		String flag_status = paramMap.get(EbsPaymentGatewayWrapper.IsFlagged);
+        String ePGTxnID = paramMap.get(EbsPaymentGatewayWrapper.TransactionID);
+        String TxMsg = paramMap.get(EbsPaymentGatewayWrapper.ResponseMessage);
+        String rrn = paramMap.get(EbsPaymentGatewayWrapper.PaymentID);
 		String merchantParam = null;
 
 		Resolution resolution = null;
@@ -170,17 +173,17 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 
 			// payment callback has been verified. now see if it is successful or failed from the gateway response
 			if (EbsPaymentGatewayWrapper.authStatus_Success.equals(authStatus) && EbsPaymentGatewayWrapper.is_Flagged_False.equalsIgnoreCase(flag_status)) {
-				paymentManager.success(gatewayOrderId);
+				paymentManager.success(gatewayOrderId,ePGTxnID,rrn,TxMsg,null);
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
 				paymentManager.pendingApproval(gatewayOrderId);
 				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else {
-				paymentManager.fail(gatewayOrderId);
+				 paymentManager.fail(gatewayOrderId, ePGTxnID,TxMsg);
 				resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			}
 		} catch (HealthkartPaymentGatewayException e) {
-			paymentManager.error(gatewayOrderId, e);
+			 paymentManager.error(gatewayOrderId, ePGTxnID, e, TxMsg);
 			resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
 		}
 		return resolution;

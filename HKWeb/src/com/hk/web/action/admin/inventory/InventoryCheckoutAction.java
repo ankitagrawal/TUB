@@ -304,7 +304,11 @@ public class InventoryCheckoutAction extends BaseAction {
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
                             SkuItem skuItem;
                             if (skuItemBarcode != null) {
-                                skuItem = skuItemBarcode;
+                              skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+                                 if (skuItem == null){
+                                     addRedirectAlertMessage(new SimpleMessage("You are doing something wrong, Please scan properly with barcode"));
+                                     return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+                                 }
                             } else {
                                 skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                             }

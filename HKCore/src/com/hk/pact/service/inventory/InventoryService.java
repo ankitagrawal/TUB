@@ -32,6 +32,8 @@ public interface InventoryService {
 
     public Long getAvailableUnbookedInventory(List<Sku> skuList);
 
+    public Long getAvailableUnbookedInventory(ProductVariant productVariant);
+
     //public List<Warehouse> getWarehousesForSkuAndQty(List<Sku> skuList, Long qty);
 
     public Supplier getSupplierForSKU(Sku sku);
