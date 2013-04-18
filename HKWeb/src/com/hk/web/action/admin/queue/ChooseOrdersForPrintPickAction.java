@@ -142,6 +142,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         if(!backup){
             shippingOrderSearchCriteria.setSearchForPrinting(true);
         }else{
+            shippingOrderSearchCriteria.setPaymentStartDate(DateUtils.getStartOfPreviousYear(new Date())).setPaymentEndDate(DateUtils.getEndOfDay(new Date()));
             shippingOrderSearchCriteria.setSortByPaymentDate(true);
         }
         if(dfault){
