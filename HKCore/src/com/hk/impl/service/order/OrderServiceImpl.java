@@ -429,13 +429,13 @@ public class OrderServiceImpl implements OrderService {
                     for (DummyOrder dummyOrder : dummyOrders) {
                         if (dummyOrder.getCartLineItemList().size() > 0) {
                             Warehouse warehouse = dummyOrder.getWarehouse();
-                            boolean isDropShipped = false;
-                            boolean containsJitProducts = false;
-                            ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
                             Map<String, List<CartLineItem>> bucketedCartLineItemMap = OrderSplitterFilter.bucketCartLineItems(dummyOrder.getCartLineItemList());
                             logger.debug("bucketedCartLineItemMap Size " + bucketedCartLineItemMap.size());
                             for (Map.Entry<String, List<CartLineItem>> bucketedCartLineItemMapEntry : bucketedCartLineItemMap.entrySet()) {
                                 logger.debug("bucketedCartLineItemMapEntry Key " +  bucketedCartLineItemMapEntry.getKey() + " Size " + bucketedCartLineItemMapEntry.getValue().size());
+                                ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                                boolean isDropShipped = false;
+                                boolean containsJitProducts = false;
                                 for (CartLineItem cartLineItem : bucketedCartLineItemMapEntry.getValue()) {
                                     isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
                                     containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
