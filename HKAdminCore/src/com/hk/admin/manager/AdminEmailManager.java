@@ -36,6 +36,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.EnumRole;
 import com.hk.constants.email.EmailMapKeyConstants;
 import com.hk.constants.email.EmailTemplateConstants;
+import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
@@ -125,6 +126,8 @@ public class AdminEmailManager {
     private FreeMarkerService freeMarkerService;
     @Autowired
     private AdminEmailService adminEmailService;
+    @Autowired
+    private EmailManager emailManager;
 
 
     private final int COMMIT_COUNT = 100;
@@ -305,10 +308,18 @@ public class AdminEmailManager {
 	public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
         valuesMap.put("grn", grn);
-
+        boolean success = true;
+        Category category = grn.getGrnLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
+        Set<String> categoryAdmins = emailManager.categoryAdmins(category);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.grnEmail);
-        return emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, grn.getPurchaseOrder().getCreatedBy().getEmail(),
-                grn.getPurchaseOrder().getCreatedBy().getName());
+        for (String emailString : categoryAdmins) {
+			boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailString,
+	                category.getName()+" Category Admin");
+			if(!sent){
+				success = false;
+			}
+		}
+        return success;
     }
 
     public boolean sendNotifyUsersMails(List<NotifyMe> notifyMeList, EmailCampaign emailCampaign, String xsmtpapi, Product product, ProductVariant productVariant,
