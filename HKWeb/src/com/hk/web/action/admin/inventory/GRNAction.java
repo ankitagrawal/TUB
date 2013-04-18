@@ -16,6 +16,7 @@ import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.inventory.EnumPILineItemType;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.catalog.Supplier;
@@ -407,6 +408,7 @@ public class GRNAction extends BasePaginatedAction {
 				purchaseInvoiceLineItem.setTaxAmount(taxComponent.getTax());
 				purchaseInvoiceLineItem.setSurchargeAmount(taxComponent.getSurcharge());
 				purchaseInvoiceLineItem.setPayableAmount(taxComponent.getPayable());
+				purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Normal.asPiLineItemType());
 				getPurchaseInvoiceDao().save(purchaseInvoiceLineItem);
 
 			}
