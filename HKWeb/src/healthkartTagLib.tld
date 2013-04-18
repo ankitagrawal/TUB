@@ -968,7 +968,7 @@
             returns true if cod is allowed on order
         </description>
         <name>getHubForHkdeliveryUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>                                ;
+        <function-class>com.hk.taglibs.Functions</function-class>                             
         <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
         <example>
             ${hk:getHubForHkdeliveryUser(${user})}
@@ -1133,12 +1133,23 @@
             ${hk:getReasonsByType(${o1})}
         </example>
     </function>
+    <function>
+        <description>
+            returns action Awaiting SO's for a BO
+        </description>
+        <name>getActionAwaitingSO</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List getActionAwaitingSO(com.hk.domain.order.Order)</function-signature>
+        <example>
+            ${hk:getActionAwaitingSO(${o1})}
+        </example>
+    </function>
 	<function>
         <description>
             returns loyalty karma points for a user
         </description>
         <name>getLoyaltyKarmaPointsForUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>                                ;
+        <function-class>com.hk.taglibs.Functions</function-class>                                
         <function-signature>double getLoyaltyKarmaPointsForUser(java.lang.Long))</function-signature>
         <example>
             ${hk:getLoyaltyKarmaPointsForUser(${userId})}
@@ -1149,7 +1160,7 @@
             returns loyalty karma points for a user
         </description>
         <name>getBadgeInfoForUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>                                ;
+        <function-class>com.hk.taglibs.Functions</function-class>                                
         <function-signature>com.hk.domain.loyaltypg.Badge getBadgeInfoForUser(java.lang.Long))</function-signature>
         <example>
             ${hk:getBadgeInfoForUser(${userId})}

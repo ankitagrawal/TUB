@@ -52,15 +52,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public List<LoyaltyProduct> listProucts(int startRow, int maxRows) {
 		DetachedCriteria criteria = this.prepareCommonCriteria();
-		
-				/*DetachedCriteria.forClass(LoyaltyProduct.class);
-		criteria.createAlias("variant", "pv");
-		criteria.add(Restrictions.eq("pv.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("pv.deleted", Boolean.FALSE));
-		criteria.createAlias("pv.product", "p");
-		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("p.deleted", Boolean.FALSE));
-*/
 		if (maxRows == 0) {
 			return this.loyaltyProductDao.findByCriteria(criteria);
 		}
@@ -126,30 +117,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public UserBadgeInfo getUserBadgeInfo(Long userId) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
 		criteria.add(Restrictions.eq("user.id", userId));
-		UserBadgeInfo info = (UserBadgeInfo) this.loyaltyProductDao.findByCriteria(criteria).get(0);
 		
-/*		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
-		criteria.createAlias("payment", "pmt");
-		criteria.setProjection(Projections.sum("pmt.amount"));
-		criteria.add(Restrictions.eq("user.id", userId));
-		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
-
-		Double completePurchase = (Double) this.baseDao.findByCriteria(criteria).iterator().next();
-		Badge userBadge = BADGES.iterator().next();
-		for (Badge badge : BADGES) {
-			if (completePurchase != null
-					&& (completePurchase >= badge.getMinScore() && completePurchase < badge.getMaxScore())) {
-				userBadge = badge;
-				break;
-			}
+		List infos = this.loyaltyProductDao.findByCriteria(criteria);
+		UserBadgeInfo info = null;
+		if(infos == null || infos.isEmpty()) {
+			info  = new UserBadgeInfo();
+			info.setBadge(this.baseDao.load(Badge.class, 1l));
+			info.setValidPoints(0d);
+			return info;
 		}
-		Double loyaltyPoints = this.calculateKarmaPoints(userId);
-		UserBadgeInfo badgeInfo = new UserBadgeInfo();
-		badgeInfo.setBadge(userBadge);
-		badgeInfo.setValidPoints(loyaltyPoints);
-//		badgeInfo.setUserId(userId);
-		return badgeInfo;*/
-		return info;
+		return (UserBadgeInfo) infos.get(0);
 	}
 
 	@Override
@@ -308,8 +285,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
 		crit.setProjection(Projections.sum("karmaPoints"));
 		
-		Double validPoints = (Double) this.loyaltyProductDao.findByCriteria(crit).get(0);
-		return validPoints;
+		List vList = this.loyaltyProductDao.findByCriteria(crit);
+		if(vList == null || vList.isEmpty()) {
+			return 0d;
+		}
+		return  (Double)vList.get(0);
 	}
 	
 

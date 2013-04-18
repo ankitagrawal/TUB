@@ -270,7 +270,6 @@
 	    <url-pattern>/feedback</url-pattern>
         <url-pattern>/clearance-sale</url-pattern>
         <url-pattern>/valentines-day-2013</url-pattern>
-		<url-pattern>/loyaltypg/*</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -424,4 +423,6 @@
         <filter-name>WebContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+
 </web-app>
