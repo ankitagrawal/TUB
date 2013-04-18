@@ -25,6 +25,17 @@
   <s:layout-component name="htmlHead">
 	  <script type="text/javascript">
 		  $(document).ready(function() {
+              $("#learnMore").click(function(){
+                  $('html, body').animate({scrollTop: $(".products_container").height() + 200}, 1000);
+              });
+
+              $("#dispatchDateQuesMark").click(function(){
+                  $("#popUpDDate").toggle();
+              });
+
+              $("#crossNew").click(function(){
+                  $("#popUpDDate").hide();
+              });
 
 			 $('.requiredFieldValidator').click(function() {
 				 if( $.trim($('#userComments').val()) != '' && ! $('.commentType').is(':checked') ) {

@@ -6180,6 +6180,7 @@ color: #e62580;
     padding: 11px;
     font-size: 12px;
     font-weight: normal;
+    z-index: 1;
 }
 
 .learnMore{

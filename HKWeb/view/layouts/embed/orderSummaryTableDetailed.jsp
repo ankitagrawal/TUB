@@ -25,7 +25,12 @@ Pass an attribute called pricingDto to render a table with pricing details
     <div class="prodQuantityGrid">Qty</div>
     <div class='name' style="width: 20%;left: 19px;position: relative;float: left;">
         <span class="dispatchDateText2">Dispatch Date</span>
-        <span class="dispatchDateQuesMark">?</span>
+        <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
+        <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
+            <span id="learnMore" class="learnMore">learn more</span>
+            <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
+            <span class="arrowNew"></span>
+        </div>
         <span class="deliveryDateText">Delivery Date would be extra</span>
     </div>
     <div class="prodPriceGrid">Price</div>
@@ -187,7 +192,7 @@ Pass an attribute called pricingDto to render a table with pricing details
         Shipping:
       </div>
       <c:if test="${pricingDto.redeemedRewardPoints > 0}">
-        <div style="font-size:.8em" class="green">Reward Points</div>
+        <div style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);" class="green">Reward Points</div>
       </c:if>
       <c:if test="${pricingDto.codLineCount > 0}">
         <div style="font-size: 12px;font-weight: normal;" class="shipping">COD Charges</div>
@@ -207,12 +212,12 @@ Pass an attribute called pricingDto to render a table with pricing details
         </div>
       </c:if>
     </div>
-    <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 13px;">
-      <div class='shipping num' style="font-size: 12px;">
+    <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 12px;">
+      <div class='shipping num' style="font-size: 12px;color: rgb(68, 68, 68);font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
         Rs ${pricingDto.shippingTotal}
       </div>
       <c:if test="${pricingDto.redeemedRewardPoints > 0}">
-        <div class="green">
+        <div class="green" style="font-size: 12px;color: rgb(68, 68, 68);">
           (<fmt:formatNumber value="${pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=""/>)
         </div>
       </c:if>

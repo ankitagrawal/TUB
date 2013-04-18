@@ -28,7 +28,15 @@
 <s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function() {
-        $("#learnMore").click(function(){
+
+        $("#dispatchDateQuesMark").click(function(){
+            $("#popUpDDate").toggle();
+        });
+
+        $("#crossNew").click(function(){
+            $("#popUpDDate").hide();
+        });
+        $(".learnMore").click(function(){
             $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
         });
     });
