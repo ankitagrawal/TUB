@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 
 @Component
-public class CourierPickupStatusSeedData extends BaseSeedData {
+public class PickupStatusSeedData extends BaseSeedData {
 
 	public void insert(java.lang.String status, java.lang.Long id) {
 		PickupStatus pickupStatus = new PickupStatus();

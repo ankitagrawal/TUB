@@ -637,3 +637,12 @@ border-top: 5px solid #5c9dff;
 	z-index: 2000;
 	float: left;
 }
+
+.connectLink{
+border-bottom:none;
+position: relative;
+float: left;
+margin-left: 5px;
+bottom: 5px;
+
+}

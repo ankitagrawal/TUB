@@ -11,7 +11,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
@@ -27,29 +26,6 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		@SuppressWarnings("unchecked")
 		List<LoyaltyProduct> list = this.findByCriteria(criteria);
 		return list.get(0);
-	}
-
-	@Override
-	public List<Category> getCategoryForLoyaltyProducts() {
-		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
-		
-		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.LEFT_JOIN);
-		criteria.add(Restrictions.eq("prodVariant.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("prodVariant.deleted", Boolean.FALSE));
-		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.LEFT_JOIN);
-		criteria.add(Restrictions.eq("prod.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("prod.deleted", Boolean.FALSE));
-		criteria.createAlias("prod.categories", "category", CriteriaSpecification.LEFT_JOIN);
-		criteria.addOrder(Order.asc("category.displayName"));
-		ProjectionList projectionsList = Projections.projectionList();
-		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
-		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
-		criteria.setProjection(Projections.distinct(projectionsList));
-		criteria.setResultTransformer(Transformers.aliasToBean(Category.class));
-		
-		@SuppressWarnings("unchecked")
-		List<Category> list = this.findByCriteria(criteria);
-		return list;
 	}
 
 	@Override

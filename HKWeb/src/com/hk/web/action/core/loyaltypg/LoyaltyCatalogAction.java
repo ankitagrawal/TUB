@@ -61,7 +61,6 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		}
 	
 		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
-		this.testList = this.loyaltyProgramService.getCategoryForLoyaltyProducts();
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
@@ -80,7 +79,6 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		SearchCriteria criteria = new SearchCriteria();
 		this.setCategories(this.getCategories());		
-		//this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		int startRow = (this.getPageNo()-1)*this.getPerPage();
 		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
 
@@ -95,6 +93,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		}
 */
 		this.productList = this.loyaltyProgramService.getProductsByCategoryName(this.categoryName);
+		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 
@@ -119,6 +118,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		}
 */
 		this.productList = this.loyaltyProgramService.getProductsByPoints(this.minPoints, this.maxPoints);
+		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 

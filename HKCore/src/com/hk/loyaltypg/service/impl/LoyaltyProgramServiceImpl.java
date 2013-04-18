@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
@@ -84,17 +83,17 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 	
 	@Override
-	@Deprecated
 	public int countProucts() {
-		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		DetachedCriteria criteria = this.prepareCommonCriteria();
+		
 		criteria.setProjection(Projections.count("pv.id"));
-		criteria.createAlias("variant", "pv");
+		/*criteria.createAlias("variant", "pv");
 		criteria.add(Restrictions.eq("pv.outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq("pv.deleted", Boolean.FALSE));
 		criteria.createAlias("pv.product", "p");
 		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq("p.deleted", Boolean.FALSE));
-
+*/
 		Integer count = (Integer) this.baseDao.findByCriteria(criteria).iterator().next();
 		if (count == null) {
 			return 0;
@@ -258,11 +257,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				//return this.loyaltyProductDao.getCategoryForLoyaltyProducts();
 	}
 
-	@Override
-	public List<Category> getCategoryForLoyaltyProducts () {
-		
-		return this.loyaltyProductDao.getCategoryForLoyaltyProducts();
-	}
+
 	@Override
 	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName) {
 		return this.loyaltyProductDao.getProductsByCategoryName(categoryName);
@@ -318,10 +313,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 	
 
-	/**
-	 * This method calculates annual spend for a given user 
-	 * @param info
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#calculateAnnualSpend(com.hk.domain.user.User, java.util.Date)
 	 */
 	@Override
 	public double calculateAnnualSpend(User user) {
@@ -330,7 +323,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		criteria.add(Restrictions.eq("user", user));
 		this.calendar = Calendar.getInstance();
 		this.calendar.add(Calendar.YEAR, -1);
-		
 		criteria.add(Restrictions.ge("createDate", this.calendar.getTime()));
 		criteria.createAlias("payment", "pmt");
 		criteria.setProjection(Projections.sum("pmt.amount"));

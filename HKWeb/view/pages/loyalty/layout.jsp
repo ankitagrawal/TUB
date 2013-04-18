@@ -169,13 +169,33 @@
             </div>
           </div>
           <div class="grid_12">
-            <div class="footerRight">
+            <div class="footerRight" style="width: 672px;">
+            <div class="footerLeft" >
               info@healthkartplus.com | Established in India | Privacy Policy | Terms and Conditions | Connect with Us:
+            </div>
+             	<a rel="nofollow" href="http://www.facebook.com/healthkart"
+						target="_blank" class="connectLink"> <img
+						src="<hk:vhostImage/>/images/banners/home/facebook.png"></a> <a
+						rel="nofollow" href="http://www.twitter.com/healthkart"
+						target="_blank" class="connectLink"> <img
+						src="<hk:vhostImage/>/images/banners/home/twitter.png"
+						alt="HealthKart Twitter">
+					</a> <a
+						href="https://plus.google.com/116027214366934328880?prsrc=3"
+						rel="publisher" target="_blank" class="connectLink"> <img
+						src="<hk:vhostImage/>/images/banners/home/googleplus.png"
+						alt="HealthKart Google Plus">
+					</a> <a href="${pageContext.request.contextPath}/blog"
+						target="_blank" class="connectLink"> <img
+						src="<hk:vhostImage/>/images/banners/home/Blog.png"
+						alt="HealthKart Blog"></a>
+
+				</div>
+              
             </div>
           </div>
         </div>
-      </div>
-
+     
 	
     
 </body>

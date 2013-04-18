@@ -34,17 +34,11 @@ pageContext.setAttribute("isSecure", isSecure);
           <div class="priceFilterContainerOne">
             <div class="sorting">SORT BY POINTS</div>
                    <div class="brandsContainer">
-			<%-- <c:forEach items="${lca.categories}" var="loyaltyCategory">
-			      <span  id= "categoryName">${loyaltyCategory.displayName}</span>
-			     </div>
-			 </c:forEach>
-			 --%>
-				<div class="priceRange">
+					<div class="priceRange">
                   <span  id= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="0"/>
                   <s:param name="maxPoints" value="100"/>
-                  <s:param name="testList" value="${lca.testList}"/>
                   less than 100</s:link>
                   </span></div>
 				<div class="priceRange">
@@ -52,35 +46,29 @@ pageContext.setAttribute("isSecure", isSecure);
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="101"/>
                   <s:param name="maxPoints" value="200"/>
-                  <s:param name="testList" value="${lca.testList}"/>
                   101-200</s:link></span></div>
 				<div class="priceRange">
                   <span  id= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="201"/>
                   <s:param name="maxPoints" value="300"/>
-                  <s:param name="testList" value="${lca.testList}"/>
                   201-300</s:link></span></div>
 				<div class="priceRange">
                   <span  id= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
                   <s:param name="minPoints" value="301"/>
                   <s:param name="maxPoints" value="10000"/>
-                  <s:param name="testList" value="${lca.testList}"/>
                   301 and above</s:link></span></div>
 				  </div>
 			<div class="sorting">SORT BY CATEGORY</div>
               <div class="brandsContainer ">
                
-			<%-- <c:forEach items="${lca.categories}" var="loyaltyCategory">  (${loyaltyCategory.count})
-			 --%>
-			 <c:forEach items="${lca.testList}" var="loyaltyCategory">
+			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
 			   <span  id= "categoryNameSpan">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
-                  <s:param name="testList" value="${lca.testList}"/>
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
-                  ${loyaltyCategory.displayName}  </s:link></span>
+                  ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} ) </s:link></span>
 			     </div>
 			 </c:forEach>
 			</div>
@@ -158,12 +146,17 @@ pageContext.setAttribute("isSecure", isSecure);
               <div class="dottedLine"></div>
             </div>           
 
-			<div class="grid_12 embedMargin autoHeight" id="productsRow1">
+			<% int rowCount=0; int colCount=0;%>
 			<c:forEach items="${lca.productList}" var="lp">
+			<% if (colCount %3==0) { colCount++; rowCount++; %>
+			<div class="grid_12 embedMargin autoHeight" id="productsRow<%=rowCount%>">
+			<%
+			} else { colCount++; }
+			%>
+				<div class="product clickable">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
-				<div class="product clickable">
-	
+			
 				<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 					title="${product.name}">
 				<img src="<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"
@@ -174,9 +167,14 @@ pageContext.setAttribute("isSecure", isSecure);
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">
 				<input type="submit" class="addToCompare font-caps embedMargin5" name="addToCart" value="REDEEM">
-				</form></div>
+				</form>
+				</div>
+			<% if (colCount %3==0) { %>
+			</div>
+			<% } %>
+			
 			</c:forEach>
-              </div>
+              
     </div>
 
   </stripes:layout-component>

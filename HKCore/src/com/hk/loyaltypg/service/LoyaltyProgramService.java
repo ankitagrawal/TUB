@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.akube.framework.dao.Page;
-import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
@@ -33,7 +32,7 @@ public interface LoyaltyProgramService {
 */	
 	/**
 	 * This method calculates aggregate value an order.
-	 * It calls its overloaded method to aggergate all cartline items
+	 * It calls its overloaded method to aggregate all cartline items
 	 * @param Long orderId
 	 * @return aggregatePoints
 	 */
@@ -74,12 +73,6 @@ public interface LoyaltyProgramService {
 	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
 
 	/**
-	 * A tets method
-	 * @return
-	 */
-	public List<Category> getCategoryForLoyaltyProducts ();
-
-	/**
 	 * This method returns Loyalty Products on the basis of points.
 	 * @param minPoints
 	 * @param maxPoints
@@ -93,7 +86,9 @@ public interface LoyaltyProgramService {
 	 */
 	public double calculateValidPoints(Long userId);
 	
+	
 	/**
+	 * This method calculates annual spend for a given user 
 	 * @param user
 	 * @return
 	 */

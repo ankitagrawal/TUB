@@ -1,10 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<%-- <%@include file="/loyalty/LoyaltyJunk/css/style2.css" %>
-<%@include file="/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" %>
-<%@include file="/loyalty/LoyaltyJunk/css/grid.css" %>
-<%@include file="/loyalty/LoyaltyJunk/css/accordian_navs.css" %>
- --%>
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" var="userKarmaHA"/>
 <s:layout-render name="/pages/loyalty/layout.jsp">
  
