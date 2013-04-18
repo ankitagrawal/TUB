@@ -2,7 +2,6 @@ package com.hk.admin.impl.dao.inventory;
 
 import com.hk.admin.dto.inventory.CreateInventoryFileDto;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
-import com.hk.admin.util.BarcodeUtil;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.Product;
@@ -71,9 +70,9 @@ public class AdminProductVariantInventoryDaoImpl extends BaseDaoImpl implements 
     }
 
     public Long getCheckedInPVIAgainstReturn(LineItem lineItem) {
-        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem and pvi.qty = :qty " +	"and pvi.invTxnType.id " +
+        return (Long) getSession().createQuery("select count(pvi.id) from ProductVariantInventory pvi where pvi.lineItem = :lineItem " +	"and pvi.invTxnType.id " +
 				"in(" + EnumInvTxnType.RETURN_CHECKIN_GOOD.getId() + "," + EnumInvTxnType.RETURN_CHECKIN_DAMAGED.getId() + "," +
-				EnumInvTxnType.RETURN_CHECKIN_EXPIRED.getId() + ")").setParameter("lineItem",lineItem).setParameter("qty", 1L).uniqueResult();
+				EnumInvTxnType.RETURN_CHECKIN_EXPIRED.getId() + ")").setParameter("lineItem",lineItem).uniqueResult();
     }
 
     public List<ProductVariantInventory> getPVIForRV(Sku sku, RvLineItem rvLineItem) {
