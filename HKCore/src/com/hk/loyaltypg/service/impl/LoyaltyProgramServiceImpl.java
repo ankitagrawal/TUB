@@ -6,9 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,67 +35,78 @@ import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.store.SearchCriteria;
 
 @Service
 public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
-	@Autowired
-	private LoyaltyProductDao loyaltyProductDao;
-	@Autowired
-	private OrderDao orderDao;
-	@Autowired
-	private UserOrderKarmaProfileDao userOrderKarmaProfileDao;
-	@Autowired
-	private BaseDao baseDao;
-
-	private Calendar calendar;
-	
+	@Autowired private LoyaltyProductDao loyaltyProductDao;
+	@Autowired private OrderDao orderDao;
+	@Autowired private UserOrderKarmaProfileDao userOrderKarmaProfileDao;
+	@Autowired private BaseDao baseDao;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<LoyaltyProduct> listProucts(int startRow, int maxRows) {
-		DetachedCriteria criteria = this.prepareCommonCriteria();
-		if (maxRows == 0) {
+	public List<LoyaltyProduct> listProucts(SearchCriteria searchCriteria) {
+		DetachedCriteria criteria = this.prepareLoyaltyProductCriteria(searchCriteria);
+		if (searchCriteria.getMaxRows() == 0) {
 			return this.loyaltyProductDao.findByCriteria(criteria);
 		}
-		return this.loyaltyProductDao.findByCriteria(criteria, startRow, maxRows);
+		return this.loyaltyProductDao.findByCriteria(criteria, searchCriteria.getStartRow(), searchCriteria.getMaxRows());
 	}
-
-	/**
-	 * This method returns common necessary conditions for a LoyaltyProduct 
-	 * @return DetachedCriteria criteria
-	 */
-	private DetachedCriteria prepareCommonCriteria() {
+	
+	private DetachedCriteria prepareLoyaltyProductCriteria(SearchCriteria search) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
-		criteria.createAlias("variant", "pv");
+		criteria.createAlias("variant", "pv", CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq("pv.outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq("pv.deleted", Boolean.FALSE));
-		criteria.createAlias("pv.product", "p");
+		criteria.createAlias("pv.product", "p", CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq("p.deleted", Boolean.FALSE));
+		if(search !=null && search.getCategoryName() != null) {
+			criteria.createAlias("p.categories", "category", CriteriaSpecification.INNER_JOIN);
+			criteria.add(Restrictions.eq("category.name", search.getCategoryName()));
+		}
 		return criteria;
 	}
 	
 	@Override
-	public int countProucts() {
-		DetachedCriteria criteria = this.prepareCommonCriteria();
-		
-		criteria.setProjection(Projections.count("pv.id"));
-		/*criteria.createAlias("variant", "pv");
-		criteria.add(Restrictions.eq("pv.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("pv.deleted", Boolean.FALSE));
-		criteria.createAlias("pv.product", "p");
-		criteria.add(Restrictions.eq("p.outOfStock", Boolean.FALSE));
-		criteria.add(Restrictions.eq("p.deleted", Boolean.FALSE));
-*/
-		Integer count = (Integer) this.baseDao.findByCriteria(criteria).iterator().next();
+	public int countProucts(SearchCriteria criteria) {
+		DetachedCriteria crit = this.prepareLoyaltyProductCriteria(criteria);
+		crit.setProjection(Projections.count("pv.id"));
+		Integer count = (Integer) this.baseDao.findByCriteria(crit).iterator().next();
 		if (count == null) {
 			return 0;
 		}
 		return count;
 	}
 
-
+	@Override
+	public List<CategoryLoyaltyDto> getLoyaltyCatalog() {
+		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.INNER_JOIN);
+		criteria.add(Restrictions.eq("prodVariant.outOfStock", Boolean.FALSE));
+		criteria.add(Restrictions.eq("prodVariant.deleted", Boolean.FALSE));
+		criteria.createAlias("prodVariant.product", "prod", CriteriaSpecification.INNER_JOIN);
+		criteria.add(Restrictions.eq("prod.outOfStock", Boolean.FALSE));
+		criteria.add(Restrictions.eq("prod.deleted", Boolean.FALSE));
+		criteria.createAlias("prod.categories", "category", CriteriaSpecification.INNER_JOIN);
+		
+		ProjectionList projectionsList = Projections.projectionList();
+		projectionsList.add(Projections.alias(Projections.property("category.name"), "name"));
+		projectionsList.add(Projections.alias(Projections.property("category.displayName"), "displayName"));
+		projectionsList.add(Projections.alias(Projections.count("prod.id"), "prodCount"));
+		projectionsList.add(Projections.groupProperty("category.name"));
+		criteria.setProjection(projectionsList);
+		criteria.addOrder(org.hibernate.criterion.Order.asc("category.name"));
+		
+		criteria.setResultTransformer(Transformers.aliasToBean(CategoryLoyaltyDto.class));
+		
+		@SuppressWarnings("unchecked")
+		List<CategoryLoyaltyDto> list = this.loyaltyProductDao.findByCriteria(criteria);
+		return list;
+	}
+	
 	@Override
 	@Transactional
 	public void creditKarmaPoints(Long orderId) {
@@ -101,7 +115,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser().getId());
 		double loyaltyMultiplier = badgeInfo.getBadge().getLoyaltyMultiplier();
 		Double amount = order.getPayment().getAmount();
-		//double karmaPoints = (amount * (loyaltyPercentage / 100));
 
 		double karmaPoints = (amount * loyaltyMultiplier);
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
@@ -118,6 +131,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
 		criteria.add(Restrictions.eq("user.id", userId));
 		
+		@SuppressWarnings("rawtypes")
 		List infos = this.loyaltyProductDao.findByCriteria(criteria);
 		UserBadgeInfo info = null;
 		if(infos == null || infos.isEmpty()) {
@@ -138,8 +152,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void debitKarmaPoints(Long orderId) {
 		Order order = this.orderDao.get(Order.class, orderId);
-		double existingKarmaPoints = this.calculateValidPoints(order.getUser().getId());//this.calculateKarmaPoints(order.getUser().getId());
-		double karmaPoints = this.aggregatePoints(orderId);
+		double existingKarmaPoints = this.calculateValidPoints(order.getUser().getId());
+		double karmaPoints = this.calculateLoyaltyPointsForOrder(orderId);
 		if (existingKarmaPoints < karmaPoints) {
 			throw new HealthkartRuntimeException("Not sufficient karma points") {
 				private static final long serialVersionUID = 1L;
@@ -160,14 +174,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void approveKarmaPoints(Long orderId) {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(orderId);
 		profile.setStatus(KarmaPointStatus.APPROVED);
+		//TODO recalculate the user badge
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
-	/**
-	 * This method returns an user order karma profile based on order id.
-	 * @param orderId
-	 * @return
-	 */
 	private UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
 		Order order = this.orderDao.get(Order.class, orderId);
 		UserOrderKey uOKey = new UserOrderKey();
@@ -177,14 +187,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return profile;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#getProductByVariantId(java.lang.String)
-	 */
 	@Override
 	public LoyaltyProduct getProductByVariantId(String variantId) {
-		DetachedCriteria criteria = this.prepareCommonCriteria();
-		//DetachedCriteria.forClass(LoyaltyProduct.class);
-		//criteria.createAlias("variant", "pv");
+		DetachedCriteria criteria = this.prepareLoyaltyProductCriteria(null);
 		criteria.add(Restrictions.eq("pv.id", variantId));
 
 		@SuppressWarnings("unchecked")
@@ -195,21 +200,15 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#aggregatePoints(java.lang.Long)
-	 */
 	@Override
-	public double aggregatePoints(Long orderId) {
+	public double calculateLoyaltyPointsForOrder(Long orderId) {
 		Order order = this.orderDao.get(Order.class, orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
-		return this.aggregatePoints(cartLineItems);
+		return this.calculateLoyaltyPointsForCart(cartLineItems);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#aggregatePoints(java.util.Collection)
-	 */
 	@Override
-	public double aggregatePoints(Collection<CartLineItem> cartLineItems) {
+	public double calculateLoyaltyPointsForCart(Collection<CartLineItem> cartLineItems) {
 		double points = 0d;
 		for (CartLineItem cartLineItem : cartLineItems) {
 			LoyaltyProduct loyaltyProduct = this.getProductByVariantId(cartLineItem.getProductVariant().getId());
@@ -218,44 +217,23 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return points;
 	}
 
-
 	@Override
-	public void cancelKarmaPoints(Long orderId) {
+	public void cancelLoyaltyPoints(Long orderId) {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(orderId);
 		profile.setStatus(KarmaPointStatus.CANCELED);
+		//TODO recalculate the badge.
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
 
 	@Override
-	public List<CategoryLoyaltyDto> getLoyaltyCatalog() {
-
-		return this.loyaltyProductDao.getCategoryDtoForLoyaltyProducts();
-				//return this.loyaltyProductDao.getCategoryForLoyaltyProducts();
-	}
-
-
-	@Override
-	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName) {
-		return this.loyaltyProductDao.getProductsByCategoryName(categoryName);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#getProfileHistory()
-	 */
-	@Override
-	public Page getProfileHistory(User user, int page, int perPage) {
+	public Page getUserLoyaltyProfileHistory(User user, int page, int perPage) {
 		return this.userOrderKarmaProfileDao.listKarmaPointsForUser(user, page, perPage);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#getProductsByPoints(double, double)
-	 */
 	@Override
 	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints) {
-		DetachedCriteria criteria = this.prepareCommonCriteria();
+		DetachedCriteria criteria = this.prepareLoyaltyProductCriteria(null);
 		//DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.add(Restrictions.ge("points", minPoints));
 		criteria.add(Restrictions.le("points", maxPoints));
@@ -267,11 +245,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return prodList;
 	}
 
-	/**
-	 * This method checks for the valid points for a given user
-	 * @param User user
-	 * @return validPoints
-	 */
 	@Override
 	public double calculateValidPoints(Long userId) {
 		DetachedCriteria crit = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
@@ -285,42 +258,33 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	
 		crit.setProjection(Projections.sum("karmaPoints"));
 		
+		@SuppressWarnings("rawtypes")
 		List vList = this.loyaltyProductDao.findByCriteria(crit);
-		if(vList == null || vList.isEmpty()) {
+		if(vList == null || vList.isEmpty() || vList.get(0) == null) {
 			return 0d;
 		}
 		return  (Double)vList.get(0);
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see com.hk.loyaltypg.service.LoyaltyProgramService#calculateAnnualSpend(com.hk.domain.user.User, java.util.Date)
-	 */
 	@Override
 	public double calculateAnnualSpend(User user) {
-		
 		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
 		criteria.add(Restrictions.eq("user", user));
-		this.calendar = Calendar.getInstance();
-		this.calendar.add(Calendar.YEAR, -1);
-		criteria.add(Restrictions.ge("createDate", this.calendar.getTime()));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -1);
+		criteria.add(Restrictions.ge("createDate", calendar.getTime()));
 		criteria.createAlias("payment", "pmt");
 		criteria.setProjection(Projections.sum("pmt.amount"));
 		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.Delivered.asOrderStatus().getId()));
 
 		Double annualSpend = (Double) this.loyaltyProductDao.findByCriteria(criteria).iterator().next();
 		return annualSpend;
-
 	}
 
 	
-	/**
-	 * This method is used to revise a user's status.
-	 * @param user
-	 */
 	@Override
 	public void reviseBadgeInfoForUser (User user, Double transactionAmount) {
-		
 		DetachedCriteria crit = DetachedCriteria.forClass(UserBadgeInfo.class);
 		crit.add(Restrictions.eq("user", user));
 //		crit.setResultTransformer(Transformers.aliasToBean(UserBadgeInfo.class));
@@ -389,12 +353,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 	
 	
-	/**
-	 * This method checks the user's credited points against the badge limits and returns the
-	 * difference of the points to be eligible for upgrade.
-	 * @param UserBadgeInfo info
-	 * @return upgradePoints
-	 */
 	@Override
 	public double calculateUpgradePoints (UserBadgeInfo info) {
 		Double creditedPoints = this.calculateAnnualSpend(info.getUser());
@@ -410,10 +368,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		
 	}
 	
-	/**
-	 * 
-	 * Setters and getters start from here.
-	 */
+	@Override
+	public void reviseUserBadgeInfo(User user) {
+		// TODO Auto-generated method stub
+	}
 	
 	public LoyaltyProductDao getLoyaltyProductDao() {
 		return this.loyaltyProductDao;
@@ -446,5 +404,4 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void setBaseDao(BaseDao baseDao) {
 		this.baseDao = baseDao;
 	}
-
 }

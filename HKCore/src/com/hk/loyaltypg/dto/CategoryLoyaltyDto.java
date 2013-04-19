@@ -36,25 +36,6 @@ public class CategoryLoyaltyDto {
     	return cat;
     }
     
-   
-    /**
-     * This method does as name suggests.
-     * @param dto
-     * @return
-     */
-  /*  public static Category toCategoryDto(List<Category> listCat) {
-    	
-    	List<CategoryLoyaltyDto> dtoList = new 
-    	for (Category cat: listCat) {
-    		cat.setName(dto.getName());
-        	cat.setDisplayName(dto.getDisplayName());
-        		
-    	}
-    	
-    	return cat;
-    }
-  */ 
-    
     /**
 	 * @return the name
 	 */

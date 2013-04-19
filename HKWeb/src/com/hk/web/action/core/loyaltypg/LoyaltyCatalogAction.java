@@ -84,15 +84,14 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
-
+		criteria.setCategoryName(this.categoryName);
+		
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
-		/*List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
+		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
 		this.productList = new ArrayList<LoyaltyProduct>();
 		for (ProductAdapter productAdapter : list) {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
-*/
-		this.productList = this.loyaltyProgramService.getProductsByCategoryName(this.categoryName);
 		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);

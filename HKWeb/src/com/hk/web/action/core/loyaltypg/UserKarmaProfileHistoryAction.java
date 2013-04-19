@@ -48,7 +48,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	public Resolution pre() {
 		if (this.getPrincipal() != null) {
 			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
-			this.pointsPage = this.loyaltyProgramService.getProfileHistory(this.user, this.getPageNo(), this.getPerPage());
+			this.pointsPage = this.loyaltyProgramService.getUserLoyaltyProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 			this.karmaList = this.pointsPage.getList();
 			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user.getId());
 			this.pointsCredited=0;

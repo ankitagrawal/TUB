@@ -177,7 +177,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 }
             }
 
-	        loyaltyProgramService.cancelKarmaPoints(order.getId());
+	        loyaltyProgramService.cancelLoyaltyPoints(order.getId());
 
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {

@@ -1,8 +1,5 @@
 package com.hk.loyaltypg.dao.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -27,13 +24,5 @@ public class UserOrderKarmaProfileDaoImpl extends BaseDaoImpl implements UserOrd
         criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
         return this.list(criteria, page, perPage);
     }
-
-	@Override
-	public Map<String, String> getUserPointsData(Long userId) {
-		Map<String,String> pointsMap = new HashMap<String, String>();
-		
-		
-		return pointsMap;
-	}
 
 }

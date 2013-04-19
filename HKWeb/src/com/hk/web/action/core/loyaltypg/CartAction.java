@@ -67,7 +67,7 @@ public class CartAction extends AbstractLoyaltyAction {
 			}
       // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
 
-			totalShoppingPoints = loyaltyProgramService.aggregatePoints(order.getId());
+			totalShoppingPoints = loyaltyProgramService.calculateLoyaltyPointsForOrder(order.getId());
 		}
 	}
 

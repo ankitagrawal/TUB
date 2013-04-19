@@ -2,20 +2,13 @@ package com.hk.store;
 
 public class SearchCriteria {
 
-	private String searchPattern;
+	private String categoryName;
+	private Range range; 
 	private int startRow;
 	private int maxRows;
 
-	public String getSearchPattern() {
-		return searchPattern;
-	}
-
-	public void setSearchPattern(String searchPattern) {
-		this.searchPattern = searchPattern;
-	}
-
 	public int getStartRow() {
-		return startRow;
+		return this.startRow;
 	}
 
 	public void setStartRow(int startRow) {
@@ -23,11 +16,36 @@ public class SearchCriteria {
 	}
 
 	public int getMaxRows() {
-		return maxRows;
+		return this.maxRows;
 	}
 
 	public void setMaxRows(int maxRows) {
 		this.maxRows = maxRows;
 	}
-
+	
+	public String getCategoryName() {
+		return this.categoryName;
+	}
+	
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	
+	public Range getRange() {
+		return this.range;
+	}
+	
+	public void setRange(Range range) {
+		this.range = range;
+	}
+	
+	public static class Range {
+		int start;
+		int end;
+		
+		public Range(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+	}
 }

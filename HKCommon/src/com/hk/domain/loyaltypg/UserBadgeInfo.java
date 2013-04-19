@@ -41,18 +41,6 @@ public class UserBadgeInfo {
 	@Column(name = "valid_points")
 	private Double validPoints;
 	
-	/*@Column(name = "credited_points")
-	private Double creditedPoints;
-	
-	@Column(name = "debited_points")
-	private Double debitedPoints;
-
-    @JsonSkip
-    @Temporal(TemporalType.DATE)
-    @Column(name = "points_revision_date", nullable = true, length = 19)
-    private Date pointsRevisionDate;
-
-	*/
     @Column(name = "creation_time", nullable = true, length = 19)
 	private Date creationTime;
 	
@@ -102,33 +90,6 @@ public class UserBadgeInfo {
 		this.validPoints = validPoints;
 	}
 
-	/**
-	 * @return the creditedPoints
-	 *//*
-	public Double getCreditedPoints() {
-		return this.creditedPoints;
-	}
-
-	*//**
-	 * @param creditedPoints the creditedPoints to set
-	 *//*
-	public void setCreditedPoints(Double creditedPoints) {
-		this.creditedPoints = creditedPoints;
-	}
-
-	*//**
-	 * @return the debitedPoints
-	 *//*
-	public Double getDebitedPoints() {
-		return this.debitedPoints;
-	}
-
-	*//**
-	 * @param debitedPoints the debitedPoints to set
-	 *//*
-	public void setDebitedPoints(Double debitedPoints) {
-		this.debitedPoints = debitedPoints;
-	}*/
 
 	/**
 	 * @return the creationTime
@@ -158,20 +119,4 @@ public class UserBadgeInfo {
 		this.updationTime = updationTime;
 	}
 
-/*	*//**
-	 * @return the pointsRevisionDate
-	 *//*
-	public Date getPointsRevisionDate() {
-		return this.pointsRevisionDate;
-	}
-
-	*//**
-	 * @param pointsRevisionDate the pointsRevisionDate to set
-	 *//*
-	public void setPointsRevisionDate(Date pointsRevisionDate) {
-		this.pointsRevisionDate = pointsRevisionDate;
-	}
-*/	
-	
-	
 }

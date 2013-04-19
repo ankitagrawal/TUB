@@ -30,7 +30,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	
 	@Override
 	public List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria) {
-		List<LoyaltyProduct> list = this.loyaltyProgramService.listProucts(criteria.getStartRow(), criteria.getMaxRows());
+		List<LoyaltyProduct> list = this.loyaltyProgramService.listProucts(criteria);
 		List<ProductAdapter> productList = new ArrayList<ProductAdapter>(list.size());
 		for (LoyaltyProduct loyaltyProduct : list) {
 			ProductAdapter adapter = new ProductAdapter();
@@ -59,7 +59,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	protected void validateCart(Long userId, Collection<CartLineItem> cartLineItems) throws InvalidOrderException {
-		double shoppingPoints = this.loyaltyProgramService.aggregatePoints(cartLineItems);
+		double shoppingPoints = this.loyaltyProgramService.calculateLoyaltyPointsForCart(cartLineItems);
 		double userKarmaPoints = this.loyaltyProgramService.calculateValidPoints(userId);
 		if(shoppingPoints > userKarmaPoints ) {
 			throw new InvalidOrderException("Not sufficient karma points in account to purchase the product.");
@@ -68,7 +68,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	public Double calculateDebitAmount(Long orderId) {
-		return this.loyaltyProgramService.aggregatePoints(orderId);
+		return this.loyaltyProgramService.calculateLoyaltyPointsForOrder(orderId);
 	}
 
 	@Override
@@ -81,6 +81,6 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Override
 	public int countProducts(Long userId, SearchCriteria criteria) {
-		return this.loyaltyProgramService.countProucts();
+		return this.loyaltyProgramService.countProucts(criteria);
 	}
 }
