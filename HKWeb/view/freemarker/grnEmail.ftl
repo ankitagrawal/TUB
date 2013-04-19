@@ -35,18 +35,24 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 	<tr>
 		<th>Product Variant ID</th>
 		<th>Product Detail</th>
+		<th>Product Weight</th>
 		<th>Product Fill Rate</th>
 		<th>Asked Qty</th>
 		<th>Checked In Qty </th>
 		<th>Cost Price</th>
 		<th>MRP</th>
-		<th><RP On HK</th>
+		<th>MRP On HK</th>
 		<th>Payable Amount</th>
 	</tr>
 	 <#list grn.grnLineItems as grnLineItem>
 	<tr>
 		<td>${grnLineItem.sku.productVariant.id}</td>
 		<td>${grnLineItem.sku.productVariant.product.name}<br/>${grnLineItem.sku.productVariant.optionsCommaSeparated}</td>
+		<td><#if grnLineItem.sku.productVariant.weight??>
+ 		 $${grnLineItem.sku.productVariant.weight}
+  		<#else>
+  		N/A
+  		</#if></td>
 		<td><#if grnLineItem.fillRate??>
  		 ${grnLineItem.fillRate}
   		<#else>
