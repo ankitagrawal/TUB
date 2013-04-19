@@ -1,10 +1,13 @@
 package com.hk.impl.dao.warehouse;
 
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.warehouse.WarehouseDao;
 import com.hk.pact.service.core.WarehouseService;
 import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,17 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
 
   public List<Warehouse> getAllWarehouses() {
     return getAll(Warehouse.class);
+  }
+
+  public List<Warehouse> getAllWarehouses(Long warehouseType, Boolean honoringB2COrders, Boolean active) {
+    DetachedCriteria criteria = DetachedCriteria.forClass(Warehouse.class);
+    if (warehouseType != null)
+      criteria.add(Restrictions.eq("warehouseType", warehouseType));
+    if (honoringB2COrders != null)
+      criteria.add(Restrictions.eq("honoringB2COrders", honoringB2COrders));
+    if (active != null)
+      criteria.add(Restrictions.eq("active", active));
+    return (List<Warehouse>) findByCriteria(criteria);
   }
 
   public Warehouse getWarehouseById(Long warehouseId) {

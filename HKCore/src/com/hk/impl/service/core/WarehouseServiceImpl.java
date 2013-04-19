@@ -14,6 +14,7 @@ import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.UserService;
 import com.hk.web.filter.WebContext;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.warehouse.EnumWarehouseType;
 
 /**
  * @author vaibhav.adlakha
@@ -32,8 +33,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public List<Warehouse> getAllWarehouses() {
-        return getWarehouseDao().getAllWarehouses();
+        return getWarehouseDao().getAllWarehouses();                                                            
     }
+
+  public List<Warehouse> getAllActiveB2BWarehouses(){
+    return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+  }
 
     /**
      * Currently since we only have two warehouses, so can assume it as a flip. This will change when we have more than
@@ -50,13 +55,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     public List<Warehouse> getServiceableWarehouses() {
       User user = userService.getLoggedInUser();
       if (user.getRoleStrings().contains(RoleConstants.B2B_USER.toString())) {
-        return getWarehouseDao().findByIds(Arrays.asList(GGN_BRIGHT_WH_ID, MUM_BRIGHT_WH_ID, DEL_KAPASHERA_BRIGHT_WH_ID));
+        return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
-      return getWarehouseDao().findByIds(Arrays.asList(GGN_BRIGHT_WH_ID, MUM_BRIGHT_WH_ID));
+      return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
     }
 
 		public List<Warehouse> getWarehousesToMarkOOS() {
-			return getWarehouseDao().findByIds(Arrays.asList(GGN_BRIGHT_WH_ID, MUM_BRIGHT_WH_ID, GGN_CORPORATE_OFFICE_ID));
+			return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
 		}
 
     public Warehouse getCorporateOffice() {

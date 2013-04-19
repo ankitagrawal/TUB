@@ -9,6 +9,8 @@ public interface WarehouseDao extends BaseDao {
 
     public List<Warehouse> getAllWarehouses();
 
+    public List<Warehouse> getAllWarehouses(Long warehouseType, Boolean honoringB2COrders, Boolean active);
+
     public Warehouse getWarehouseById(Long warehouseId);
 
     /**

@@ -23,6 +23,8 @@ public interface WarehouseService {
 
   public List<Warehouse> getAllWarehouses();
 
+  public List<Warehouse> getAllActiveB2BWarehouses();
+
   /**
    * Currently since we only have two warehouses, so can assume it as a flip. This will change when we have more than
    * two warehouses.
