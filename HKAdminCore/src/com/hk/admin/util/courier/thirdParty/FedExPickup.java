@@ -59,7 +59,7 @@ public class FedExPickup {
         request.setWebAuthenticationDetail(createWebAuthenticationDetail());
         //
 	    TransactionDetail transactionDetail = new TransactionDetail();
-	    transactionDetail.setCustomerTransactionId("java sample - Pickup Request"); // This is a reference field for the customer.  Any value can be used and will be provided in the response.
+	    transactionDetail.setCustomerTransactionId("Healthkart Pickup Request"); // This is a reference field for the customer.  Any value can be used and will be provided in the response.
 	    request.setTransactionDetail(transactionDetail);
 
         //
@@ -111,12 +111,10 @@ public class FedExPickup {
 
 		int closeHour = startHour + 2;
 	    Calendar close = Calendar.getInstance(); //current date and time
-	    close.add(Calendar.DATE,ready.get(Calendar.DATE));//1);
-	    close.set(Calendar.HOUR_OF_DAY, closeHour );//13);
-	    close.set(Calendar.MINUTE, ready.get(Calendar.MINUTE));//0);
-	    close.set(Calendar.SECOND, ready.get(Calendar.SECOND));//0);
+	    close.setTime(date);
+	    close.set(Calendar.HOUR_OF_DAY, closeHour );//13); 	    
 
-        PickupOriginDetail.setCompanyCloseTime(new Time(close)); // Package Location Closing Time
+        PickupOriginDetail.setCompanyCloseTime(new Time(close.getTime().toString().split(" ")[3])); // Package Location Closing Time
         request.setOriginDetail(PickupOriginDetail);
         request.setPackageCount(new PositiveInteger("1")); //Number of Packages to Pickup
 	    // Packages Weight
@@ -126,7 +124,7 @@ public class FedExPickup {
 	    request.setTotalWeight(weight);
 	    request.setCarrierCode(CarrierCodeType.FDXE); //CarrierCodeTypes are FDXC(Cargo), FDXE (Express), FDXG (Ground), FDCC (Custom Critical), FXFR (Freight)
 	    //request.setOversizePackageCount(new PositiveInteger("1")); // Set this value if package is over sized
-	    request.setRemarks("Testing - do not pickup"); // Courier Remarks
+	    request.setRemarks("Healthkart pickup"); // Courier Remarks
 	    //
 		try {
 			// Initialize the service
@@ -147,7 +145,7 @@ public class FedExPickup {
 				if(reply.getMessageCode()!=null)
 					logger.debug("Message Code: " + reply.getMessageCode() + " Message: " + reply.getMessage() );
 				pickupReply.add(CourierConstants.SUCCESS);
-				pickupReply.add(reply.getPickupConfirmationNumber());
+				pickupReply.add(reply.getLocation() + reply.getPickupConfirmationNumber());
 				return pickupReply;
 			}
 

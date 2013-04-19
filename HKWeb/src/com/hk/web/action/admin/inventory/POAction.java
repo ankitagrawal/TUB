@@ -224,8 +224,6 @@ public class POAction extends BasePaginatedAction {
             getGoodsReceivedNoteDao().save(grnLineItem);
         }
 
-        getAdminEmailManager().sendGRNEmail(grn);
-
         addRedirectAlertMessage(new SimpleMessage("GRN generated from PO. Please adjust it according to invoice. Also email set to po creator."));
         return new RedirectResolution(GRNAction.class).addParameter("view").addParameter("grn", grn.getId());
 
