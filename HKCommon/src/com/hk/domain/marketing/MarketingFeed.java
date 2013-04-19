@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "marketing_feed")
 public class MarketingFeed {
 
+    @Id
     @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
