@@ -1,14 +1,17 @@
 package com.hk.web.action.admin.marketing;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.marketing.EnumMarketingFeed;
 import com.hk.pact.service.marketing.MarketingFeedService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,19 +37,25 @@ public class MarketingProductFeedAction extends BaseAction{
      * Name of Marketing feed
      */
     private String marketingFeed;
-    private List<String> feedNames;
+
+    private List<String> feedNames = new ArrayList<String>();
 
     @Autowired
     MarketingFeedService marketingFeedService;
 
-
-
     public Resolution pre() {
+        List<String> marketingFeedNames = new ArrayList<String>();
+        for (EnumMarketingFeed enumMarketingFeed : EnumMarketingFeed.values()){
+            feedNames.add(enumMarketingFeed.getName());
+        }
         return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
     }
 
     public Resolution saveProductsForFeed() {
-
+        if (StringUtils.isNotEmpty(productIds)) {
+            marketingFeedService.addProductsToFeed(marketingFeed, productIds);
+        }
+        return new ForwardResolution("/pages/admin/adminHome.jsp");
     }
 
     public String getProductIds() {
@@ -71,5 +80,13 @@ public class MarketingProductFeedAction extends BaseAction{
 
     public void setFeedNames(List<String> feedNames) {
         this.feedNames = feedNames;
+    }
+
+    public MarketingFeedService getMarketingFeedService() {
+        return marketingFeedService;
+    }
+
+    public void setMarketingFeedService(MarketingFeedService marketingFeedService) {
+        this.marketingFeedService = marketingFeedService;
     }
 }

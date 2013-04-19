@@ -12173,4 +12173,17 @@
     <changeSet author="Ajeet (generated)" id="1366219849770-3">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="marut (generated)" id="1366356450756-01">
+        <createTable tableName="marketing_feed">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="feed_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(155)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
