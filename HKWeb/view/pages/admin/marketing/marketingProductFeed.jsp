@@ -15,11 +15,15 @@
     <s:layout-component name="content">
         <h2>Please Enter comma separated product ids for product feed : </h2>
         <s:form beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction">
-            <s:select name="${productFeedBean.marketingFeed}" value="${productFeedBean.feedNames}"/>
+            <s:select name="${productFeedBean.marketingFeed}">
+                <c:forEach items="${productFeedBean.feedNames}" var="feedName">
+                    <s:option value="${feedName}">${feedName}</s:option>
+                </c:forEach>
+            </s:select>
             <s:textarea name="${productFeedBean.productIds}" value=""/>
             <br/>
             <s:submit name="saveProductsForFeed" value="Add Products"/>
-            <s:submit name="saveProductsForFeed" value="Add Products"/>
+            <s:submit name="saveProductsForFeed" value="Remove Products"/>
         </s:form>
     </s:layout-component>
 </s:layout-render>
