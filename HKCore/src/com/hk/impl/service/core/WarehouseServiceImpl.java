@@ -36,8 +36,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return getWarehouseDao().getAllWarehouses();                                                            
     }
 
-  public List<Warehouse> getAllActiveB2BWarehouses(){
-    return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+  public List<Warehouse> getAllActiveWarehouses(){
+    return getWarehouseDao().getAllWarehouses(null, null, Boolean.TRUE);
   }
 
     /**
