@@ -28,7 +28,7 @@ public class GoogleCatalogPLAAction extends BaseAction {
 
     String category;
 
-    private List<Product> products;
+    private List<Product> products = new ArrayList<Product>();
 
     public Resolution pre() {
 
