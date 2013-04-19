@@ -3,6 +3,7 @@ package com.hk.web.action.admin.marketing;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.marketing.EnumMarketingFeed;
 import com.hk.pact.service.marketing.MarketingFeedService;
+import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +44,7 @@ public class MarketingProductFeedAction extends BaseAction{
     @Autowired
     MarketingFeedService marketingFeedService;
 
+    @DefaultHandler
     public Resolution pre() {
         List<String> marketingFeedNames = new ArrayList<String>();
         for (EnumMarketingFeed enumMarketingFeed : EnumMarketingFeed.values()){
