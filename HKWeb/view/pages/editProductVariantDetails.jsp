@@ -176,6 +176,7 @@
             <td><s:text name="productVariants[${ctr.index}].followingAvailableDate" class="date_input" formatPattern="yyyy-MM-dd" style="width:100px;"/></td>
 	        <td><s:text name="productVariants[${ctr.index}].supplierCode" style="width:50px;"/></td>
 	        <td><s:textarea name="productVariants[${ctr.index}].otherRemark" style="width:auto; height:auto;"/></td>
+	        <td><s:textarea name="productVariants[${ctr.index}].otherRemark" style="width:auto; height:auto;"/></td>
 
           </tr>
         </c:forEach>
