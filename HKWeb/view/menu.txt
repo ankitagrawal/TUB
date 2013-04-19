@@ -358,10 +358,6 @@
 ---/health-devices/pain-management/physiotherapy-aids/orthotic-aids
 ---/health-devices/pain-management/physiotherapy-aids/traction-kits
 ---/health-devices/pain-management/physiotherapy-aids/compression-stockings : Compression Stockings
---/health-devices/pain-management/ergonomic-supports
----/health-devices/pain-management/ergonomic-supports/chairs
----/health-devices/pain-management/ergonomic-supports/recliners
----/health-devices/pain-management/ergonomic-supports/stands
 -/health-devices/medical-care : Medical Care
 --/health-devices/medical-care/weighing-scales
 ---/health-devices/medical-care/weighing-scales/digital
@@ -807,8 +803,7 @@
 ---/home-living/home-appliances/iron/dry:Dry Iron
 ---/home-living/home-appliances/iron/steam:Steam Iron
 --/home-living/home-appliances/lights:Emergency Light
--/home-living/clean-purify:Clean & Purify
---/home-living/clean-purify/vacuum-cleaner:Vacuum Cleaner
+--/home-living/home-appliances/vacuum-cleaner:Vacuum Cleaner
 
 
 /parenting
