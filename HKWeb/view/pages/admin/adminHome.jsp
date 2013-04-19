@@ -100,8 +100,6 @@
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
                 beanclass="com.hk.web.action.admin.user.PopulateUnsubscribeTokenAction"> Populate User Unsubscribe Token </s:link></h3>
-        <h3><s:link
-                beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
     </shiro:hasRole>
     <shiro:hasRole name="<%=RoleConstants.ADMIN%>">
         <h3><s:link
@@ -331,6 +329,8 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 
