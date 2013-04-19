@@ -30,16 +30,31 @@ public class MarketingFeedDaoImpl extends BaseDaoImpl implements MarketingFeedDa
 
     public void addProductsToFeed(List<MarketingFeed> marketingFeedList) {
         for (MarketingFeed marketingFeed : marketingFeedList){
-
+            if (findProductInFeed(marketingFeed.getFeedName(), marketingFeed.getProductId()) == null){
+                save(marketingFeed);
+            }
         }
+    }
+
+    public MarketingFeed findProductInFeed(String feedName, String productId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(MarketingFeed.class);
+        criteria.add(Restrictions.eq("feedName", feedName));
+        criteria.add(Restrictions.eq("productId", productId));
+        List<MarketingFeed> marketingFeeds = findByCriteria(criteria);
+        if (marketingFeeds.size() > 0){
+            return marketingFeeds.get(0);
+        }
+        return null;
     }
 
     public void addProductsToFeed(String feedName, Collection<Product> products) {
         for (Product product : products){
-            MarketingFeed marketingFeed = new MarketingFeed();
-            marketingFeed.setFeedName(feedName);
-            marketingFeed.setProductId(product.getId());
-            save(marketingFeed);
+            if (findProductInFeed(feedName, product.getId()) == null){
+                MarketingFeed marketingFeed = new MarketingFeed();
+                marketingFeed.setFeedName(feedName);
+                marketingFeed.setProductId(product.getId());
+                save(marketingFeed);
+            }
         }
     }
 
@@ -52,5 +67,15 @@ public class MarketingFeedDaoImpl extends BaseDaoImpl implements MarketingFeedDa
             feedProducts.add(marketingFeed.getProductId());
         }
         return feedProducts;
+    }
+
+    public void removeProductsFromFeed(String feedName, String commaSeparatedProductIds) {
+        String[] products = commaSeparatedProductIds.split(",");
+        for (String product : products){
+            MarketingFeed marketingFeed = findProductInFeed(feedName, product);
+            if (marketingFeed != null){
+               super.delete(marketingFeed);
+            }
+        }
     }
 }

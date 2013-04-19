@@ -17,6 +17,9 @@ import java.util.List;
 public interface MarketingFeedDao extends BaseDao {
     public MarketingFeed save(MarketingFeed marketingFeed);
     public void addProductsToFeed(List<MarketingFeed> marketingFeedList);
+    public MarketingFeed findProductInFeed(String feedName,String productId);
     public void addProductsToFeed(String feedName, Collection<Product> productIds);
     public List<String> getProductIds(String feedName);
+
+    void removeProductsFromFeed(String feedName, String commaSeparatedProductIds);
 }

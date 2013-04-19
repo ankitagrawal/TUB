@@ -2,6 +2,7 @@ package com.hk.web.action.admin.marketing;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.marketing.EnumMarketingFeed;
+import com.hk.domain.catalog.product.Product;
 import com.hk.pact.service.marketing.MarketingFeedService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -61,7 +62,20 @@ public class MarketingProductFeedAction extends BaseAction{
 
     public Resolution removeProductsFromFeed() {
         if (StringUtils.isNotEmpty(productIds)) {
-            marketingFeedService.addProductsToFeed(marketingFeed, productIds);
+            marketingFeedService.removeProductsFromFeed(marketingFeed, productIds);
+        }
+        return new ForwardResolution("/pages/admin/adminHome.jsp");
+    }
+
+    public Resolution getProductsForFeed() {
+        if (StringUtils.isNotEmpty(productIds)) {
+            List<Product> products = marketingFeedService.getProducts(marketingFeed);
+            StringBuffer productStr = new StringBuffer();
+            for (Product product : products){
+                productStr.append(product.getId());
+                productStr.append(",");
+            }
+            productIds = productStr.toString();
         }
         return new ForwardResolution("/pages/admin/adminHome.jsp");
     }

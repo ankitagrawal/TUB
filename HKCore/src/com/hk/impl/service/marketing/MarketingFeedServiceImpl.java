@@ -44,7 +44,7 @@ public class MarketingFeedServiceImpl implements MarketingFeedService {
     }
 
     public void removeProductsFromFeed(String feedName, String commaSeparatedProductIds) {
-
+        marketingFeedDao.removeProductsFromFeed(feedName, commaSeparatedProductIds);
     }
 
     public List<Product> getProducts(String feedName) {
