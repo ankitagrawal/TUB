@@ -43,6 +43,10 @@ public class MarketingFeedServiceImpl implements MarketingFeedService {
         marketingFeedDao.addProductsToFeed(feedName, products);
     }
 
+    public void removeProductsFromFeed(String feedName, String commaSeparatedProductIds) {
+
+    }
+
     public List<Product> getProducts(String feedName) {
         List<String> productIds = marketingFeedDao.getProductIds(feedName);
         List<Product> products = new ArrayList<Product>();

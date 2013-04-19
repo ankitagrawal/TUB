@@ -15,5 +15,6 @@ import java.util.List;
 public interface MarketingFeedService {
     public void addProductsToFeed(String feedName, Collection<Product> productIds);
     public void addProductsToFeed(String feedName, String commaSeparatedProductIds);
+    public void removeProductsFromFeed(String feedName, String commaSeparatedProductIds);
     public List<Product> getProducts(String feedName);
 }

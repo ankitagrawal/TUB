@@ -16,7 +16,9 @@
         <h2>Please Enter comma separated product ids for product feed : </h2>
         <s:form beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction">
             <s:select name="${productFeedBean.marketingFeed}" value="${productFeedBean.feedNames}"/>
-            <s:textarea name="${productFeedBean.productIds}"/>
+            <s:textarea name="${productFeedBean.productIds}" value=""/>
+            <br/>
+            <s:submit name="saveProductsForFeed" value="Add Products"/>
             <s:submit name="saveProductsForFeed" value="Add Products"/>
         </s:form>
     </s:layout-component>

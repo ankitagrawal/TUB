@@ -1,5 +1,9 @@
 package com.hk.constants.marketing;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: marut
@@ -26,11 +30,10 @@ public enum EnumMarketingFeed {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public static List<String> getAllFeeds(){
+        List<String> feedNames = new ArrayList<String>();
+        feedNames.add(EnumMarketingFeed.Google_PLA.getName());
+        feedNames.add(EnumMarketingFeed.Google_DR.getName());
+        return feedNames;
     }
 }

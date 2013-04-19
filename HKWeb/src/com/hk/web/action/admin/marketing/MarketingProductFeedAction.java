@@ -47,13 +47,19 @@ public class MarketingProductFeedAction extends BaseAction{
     @DefaultHandler
     public Resolution pre() {
         List<String> marketingFeedNames = new ArrayList<String>();
-        for (EnumMarketingFeed enumMarketingFeed : EnumMarketingFeed.values()){
-            feedNames.add(enumMarketingFeed.getName());
-        }
+        feedNames = EnumMarketingFeed.getAllFeeds();
+
         return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
     }
 
     public Resolution saveProductsForFeed() {
+        if (StringUtils.isNotEmpty(productIds)) {
+            marketingFeedService.addProductsToFeed(marketingFeed, productIds);
+        }
+        return new ForwardResolution("/pages/admin/adminHome.jsp");
+    }
+
+    public Resolution removeProductsFromFeed() {
         if (StringUtils.isNotEmpty(productIds)) {
             marketingFeedService.addProductsToFeed(marketingFeed, productIds);
         }
