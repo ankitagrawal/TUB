@@ -93,15 +93,13 @@ public class InventoryCheckinAction extends BaseAction {
     private StockTransferDao stockTransferDao;
     @Autowired
     private ProductVariantSupplierInfoService productVariantSupplierInfoService;
-
     @Autowired
     private SkuGroupService skuGroupService;
     @Autowired
     BaseDao baseDao;
     @Autowired
-
     CycleCountService cycleCountService;
-
+    @Autowired
     private AdminEmailManager adminEmailManager;
     @Autowired
     private ExtraInventoryService extraInventoryService;
