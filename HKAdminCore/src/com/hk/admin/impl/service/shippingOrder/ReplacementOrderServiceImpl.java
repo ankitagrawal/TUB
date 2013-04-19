@@ -8,6 +8,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,8 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 	ShipmentService shipmentService;
 	@Autowired
 	ReverseOrderService reverseOrderService;
+	@Autowired
+	InventoryService inventoryService;
     
 
     public ReplacementOrder createReplaceMentOrder(ShippingOrder shippingOrder, List<LineItem> lineItems, Boolean isRto, ReplacementOrderReason replacementOrderReason,
@@ -80,6 +83,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
                     //lineItem.setRewardPoints(0.00);
                 }
                 lineItemSet.add(lineItem);
+
                 // lineItem.setShippingOrder(replacementOrder);
                 // lineItemDao.save(lineItemNew);
             }
@@ -110,6 +114,11 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 
 	    shipmentService.createShipment(replacementOrder, true);
 	    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+
+	    //updating inventory health
+	    for(LineItem lineItem : replacementOrder.getLineItems()){
+		    inventoryService.checkInventoryHealth(lineItem.getSku().getProductVariant());
+	    }
         return replacementOrder;
     }
 

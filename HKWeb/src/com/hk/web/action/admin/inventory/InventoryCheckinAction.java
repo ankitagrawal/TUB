@@ -2,13 +2,21 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+
 import com.hk.admin.dto.inventory.CycleCountDto;
+
+import com.hk.admin.manager.AdminEmailManager;
+
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+
 import com.hk.admin.pact.service.inventory.CycleCountService;
+
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.admin.util.XslParser;
@@ -19,10 +27,12 @@ import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumInvTxnType;
 import com.hk.constants.inventory.EnumStockTransferStatus;
 import com.hk.constants.sku.EnumSkuItemStatus;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.*;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
@@ -89,8 +99,12 @@ public class InventoryCheckinAction extends BaseAction {
     @Autowired
     BaseDao baseDao;
     @Autowired
+
     CycleCountService cycleCountService;
 
+    private AdminEmailManager adminEmailManager;
+    @Autowired
+    private ExtraInventoryService extraInventoryService;
     private List<SkuGroup> skuGroupList;
 
     // SkuGroupDao skuGroupDao;
@@ -239,8 +253,21 @@ public class InventoryCheckinAction extends BaseAction {
                     getInventoryService().checkInventoryHealth(productVariant);
 
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
-                        grn.setGrnStatus(EnumGrnStatus.InventoryCheckedIn.asGrnStatus());
+                        for (GrnLineItem grnLItem : grn.getGrnLineItems()) {
+                            for (PoLineItem poLineItem : grn.getPurchaseOrder().getPoLineItems()) {
+                                if (grnLItem.getSku().getId().equals(poLineItem.getSku().getId())) {
+                                    grnLItem.setFillRate(poLineItem.getFillRate());
+                                }
+                            }
+                        }
+                        if (grn.getPurchaseOrder().isExtraInventoryCreated()) {
+                            PurchaseOrder po = grn.getPurchaseOrder();
+                            Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                            po.setExtraInventoryId(id);
+                        }
+                        grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
+                        getAdminEmailManager().sendGRNEmail(grn);
                         editPVFillRate(grn);
                     } else {
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
@@ -768,6 +795,22 @@ public class InventoryCheckinAction extends BaseAction {
 
     public void setGrnLineItem(GrnLineItem grnLineItem) {
         this.grnLineItem = grnLineItem;
+    }
+
+    public AdminEmailManager getAdminEmailManager() {
+        return adminEmailManager;
+    }
+
+    public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+        this.adminEmailManager = adminEmailManager;
+    }
+
+    public ExtraInventoryService getExtraInventoryService() {
+        return extraInventoryService;
+    }
+
+    public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+        this.extraInventoryService = extraInventoryService;
     }
 
 }

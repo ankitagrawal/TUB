@@ -24,6 +24,7 @@ public enum EnumSecondaryReferrerForOrder {
   INBOUND_FWD(17L, "inbound_fwd"),
   CALLBACK_REQUEST(18L, "callback_request"),
   EMAIL_REQUEST(19L, "email_request"),
+  PAYMENT_FAIL(20L, "payment_fail"),
   ;
 
 
