@@ -26,7 +26,7 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
   private User loggedOnUser;
   private Long consignmentLifecycleStatus;
   private List<ConsignmentTracking> consignmentList = new ArrayList<ConsignmentTracking>();
-  private Integer defaultPerPage = 10;
+  private Integer defaultPerPage = 30;
 
   @Autowired
   private ConsignmentService consignmentService;
@@ -42,12 +42,16 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
   @SuppressWarnings("unchecked")
   public Resolution searchConsignmentTracking() {
     loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-    if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
-      hubId = getHubService().getHubForUser(loggedOnUser).getId();
-    }
-    consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
-    if (consignmentTrackingPage != null) {
-      consignmentList = consignmentTrackingPage.getList();
+    if (getStartDate().compareTo(getEndDate()) > 0) {
+       addRedirectAlertMessage(new SimpleMessage("Invalid dates!"));
+    } else {
+      if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
+        hubId = getHubService().getHubForUser(loggedOnUser).getId();
+      }
+      consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
+      if (consignmentTrackingPage != null) {
+        consignmentList = consignmentTrackingPage.getList();
+      }
     }
     return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
   }
