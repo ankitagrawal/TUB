@@ -1,8 +1,10 @@
 package com.hk.web.action.core.catalog;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.marketing.EnumMarketingFeed;
 import com.hk.domain.catalog.product.Product;
 import com.hk.pact.service.catalog.ProductService;
+import com.hk.pact.service.marketing.MarketingFeedService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import java.util.*;
 public class GoogleCatalogPLAAction extends BaseAction {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private MarketingFeedService marketingFeedService;
 
     String category;
 
@@ -56,6 +60,9 @@ public class GoogleCatalogPLAAction extends BaseAction {
 
         //categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
         List<Product> catProducts = getProductService().getProductByCategory(categories);
+        List<Product> individualProducts = marketingFeedService.getProducts(EnumMarketingFeed.Google_PLA.getName());
+        catProducts.addAll(individualProducts);
+
         Map<String,Product> productMap = new HashMap<String,Product>();
         //Need to ensure that there are not duplicate items
         for (Product product : catProducts){
