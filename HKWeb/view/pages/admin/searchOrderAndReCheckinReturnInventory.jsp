@@ -32,6 +32,8 @@
             });
 
             $('.good').change(function() {
+                $('.rto2').remove();
+                $('.rto3').remove();
                 $('#conditionOfItem').attr('value', "good");
                  obj = $(this);
                 $('#submitButton').click();
@@ -39,6 +41,7 @@
 
             $('.damaged').change(function() {
                 $('.rto1').remove();
+                $('.rto3').remove();
                 $('#conditionOfItem').attr('value', "damaged");
                 obj = $(this);
                 $('#submitButton').click();
