@@ -1,5 +1,7 @@
 package com.hk.domain.loyaltypg;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +11,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "badge")
-public class Badge {
+public class Badge implements Serializable, Comparable<Badge>{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)
@@ -77,5 +81,10 @@ public class Badge {
 
 	public void setIconRelUrl(String iconRelUrl) {
 		this.iconRelUrl = iconRelUrl;
+	}
+
+	@Override
+	public int compareTo(Badge o) {
+		return Double.valueOf(this.maxScore).compareTo(Double.valueOf(o.maxScore));
 	}
 }

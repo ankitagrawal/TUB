@@ -11,6 +11,8 @@ public interface StoreProcessor {
 	
 	List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria);
 	
+	List<CategoryDto> listCategories();
+	
 	int countProducts(Long userId, SearchCriteria criteria);
 	
 	Long createOrder(Long userId);

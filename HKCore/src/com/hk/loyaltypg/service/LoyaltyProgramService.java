@@ -8,8 +8,9 @@ import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
-import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
+import com.hk.store.CategoryDto;
 import com.hk.store.SearchCriteria;
 
 public interface LoyaltyProgramService {
@@ -20,35 +21,27 @@ public interface LoyaltyProgramService {
 	
 	public LoyaltyProduct getProductByVariantId(String variantId);
 	
-	public void creditKarmaPoints(Long orderId);
+	public void creditKarmaPoints(Order order);
 	
-	public void debitKarmaPoints(Long orderId);
+	public void debitKarmaPoints(Order order);
 
-	public void approveKarmaPoints(Long orderId);
+	public void approveKarmaPoints(Order order);
 	
-	public void cancelLoyaltyPoints(Long orderId);
+	public void cancelLoyaltyPoints(Order order);
 
-	public UserBadgeInfo getUserBadgeInfo(Long userId);
+	public UserBadgeInfo getUserBadgeInfo(User user);
 
 	public List<Badge> getAllBadges();
 	
 	public Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
 	
-	public List<CategoryLoyaltyDto> getLoyaltyCatalog();
+	public List<CategoryDto> listCategories();
 
-	public List<LoyaltyProduct> getProductsByPoints(double minPoints, double maxPoints);
+	public double calculateLoyaltyPoints(User user);
 	
-	public double calculateValidPoints(Long userId);
+	public double calculateLoyaltyPoints(Order order);
 	
-	public double calculateAnnualSpend(User user);
-	
-	public void reviseBadgeInfoForUser(User user, Double amount);
-	
-	public void reviseUserBadgeInfo(User user);
-	
-	public double calculateUpgradePoints(UserBadgeInfo info);
-	
-	public double calculateLoyaltyPointsForOrder(Long orderId);
-	
-	public double calculateLoyaltyPointsForCart(Collection<CartLineItem> cartLineItems);
+	public double calculateLoyaltyPoints(Collection<CartLineItem> cartLineItems);
+
+	double calculateAnualSpend(User user);
 }

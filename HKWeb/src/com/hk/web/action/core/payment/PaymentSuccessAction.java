@@ -168,7 +168,7 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-	    loyaltyProgramService.creditKarmaPoints(order.getId());
+	    loyaltyProgramService.creditKarmaPoints(order);
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }

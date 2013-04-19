@@ -133,7 +133,7 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
 	            //loyalty program
-	            loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder().getId());
+	            loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as Delivered"));
         } else {

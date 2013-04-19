@@ -19,8 +19,8 @@ import com.hk.constants.core.RoleConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
-import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
+import com.hk.store.CategoryDto;
 import com.hk.store.ProductAdapter;
 import com.hk.store.SearchCriteria;
 
@@ -34,7 +34,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private List<Badge> badgeList;
-	private List<CategoryLoyaltyDto> categories;
+	private List<CategoryDto> categories;
 	private List<Category> testList ;
 	private String categoryName;
 	private double minPoints;
@@ -60,7 +60,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
 	
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.setCategories(this.loyaltyProgramService.listCategories());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
@@ -92,7 +92,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		for (ProductAdapter productAdapter : list) {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.setCategories(this.loyaltyProgramService.listCategories());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 
@@ -108,16 +108,15 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
+		criteria.setRange(criteria.new Range(this.minPoints, this.maxPoints));
 
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
-		/*List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
+		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
 		this.productList = new ArrayList<LoyaltyProduct>();
 		for (ProductAdapter productAdapter : list) {
 			this.productList.add(productAdapter.getLoyaltyProduct());
 		}
-*/
-		this.productList = this.loyaltyProgramService.getProductsByPoints(this.minPoints, this.maxPoints);
-		this.setCategories(this.loyaltyProgramService.getLoyaltyCatalog());
+		this.setCategories(this.loyaltyProgramService.listCategories());
 		
 		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
 
@@ -156,11 +155,11 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		this.badgeList = badgeList;
 	}
 
-	public List<CategoryLoyaltyDto> getCategories() {
+	public List<CategoryDto> getCategories() {
 		return this.categories;
 	}
 
-	public void setCategories(List<CategoryLoyaltyDto> categories) {
+	public void setCategories(List<CategoryDto> categories) {
 		this.categories = categories;
 	}
 

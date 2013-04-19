@@ -65,9 +65,7 @@ public class CartAction extends AbstractLoyaltyAction {
 				loyaltyProduct.setQty(cartLineItem.getQty());
 				loyaltyProductList.add(loyaltyProduct);
 			}
-      // Trimming cart line items in case of zero qty ie deleted/outofstock/removed
-
-			totalShoppingPoints = loyaltyProgramService.calculateLoyaltyPointsForOrder(order.getId());
+			totalShoppingPoints = loyaltyProgramService.calculateLoyaltyPoints(order);
 		}
 	}
 

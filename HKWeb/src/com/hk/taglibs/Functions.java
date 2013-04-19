@@ -89,6 +89,7 @@ import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
@@ -841,7 +842,7 @@ public class Functions {
 		if(userId == null){
 			return 0.0;
 		}
-		return loyaltyProgramService.calculateValidPoints(userId);
+		return loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId));
 	}
 
 	public static Badge getBadgeInfoForUser(Long userId){
@@ -849,7 +850,7 @@ public class Functions {
 		if(userId == null){
 			return null;
 		}
-		return loyaltyProgramService.getUserBadgeInfo(userId).getBadge();
+		return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
 	}
 
 }

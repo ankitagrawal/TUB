@@ -39,13 +39,21 @@ public class SearchCriteria {
 		this.range = range;
 	}
 	
-	public static class Range {
-		int start;
-		int end;
+	public class Range {
+		double start;
+		double end;
 		
-		public Range(int start, int end) {
+		public Range(double start, double end) {
 			this.start = start;
 			this.end = end;
+		}
+		
+		public double getStart() {
+			return this.start;
+		}
+		
+		public double getEnd() {
+			return this.end;
 		}
 	}
 }
