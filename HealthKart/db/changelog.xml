@@ -12205,9 +12205,9 @@
         <addPrimaryKey columnNames="purchase_invoice_id, rtv_note_id" tableName="purchase_invoice_has_rtv_note"/>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1366281358648-8">
-        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_rtv_note" baseTableSchemaName="healthkart_workbench" constraintName="fk_purchase_invoice_has_rtv_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1366281358648-9">
-        <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="purchase_invoice_has_rtv_note" baseTableSchemaName="healthkart_workbench" constraintName="fk_purchase_invoice_has_rtv_note_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencedTableSchemaName="healthkart_workbench" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

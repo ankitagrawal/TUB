@@ -7,11 +7,14 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseFormType;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.rtv.RtvNote;
+import com.hk.domain.inventory.rtv.RtvNoteStatus;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,6 +110,15 @@ public class PurchaseInvoice implements java.io.Serializable {
 	)
 	private List<GoodsReceivedNote> goodsReceivedNotes = new ArrayList<GoodsReceivedNote>();
 
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "purchase_invoice_has_rtv_note",
+	    joinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "rtv_note_id", nullable = false, updatable = false)}
+	)
+	private List<RtvNote> rtvNotes = new ArrayList<RtvNote>();
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "surcharge_id")
 	private Surcharge surcharge;
@@ -339,8 +351,16 @@ public class PurchaseInvoice implements java.io.Serializable {
   public void setPaymentHistories(List<PaymentHistory> paymentHistories) {
     this.paymentHistories = paymentHistories;
   }
+  
+  public List<RtvNote> getRtvNotes() {
+	return rtvNotes;
+  }
 
-  @Override
+  public void setRtvNotes(List<RtvNote> rtvNotes) {
+	this.rtvNotes = rtvNotes;
+  }
+
+@Override
   public String toString() {
       return id == null ? "" : id.toString();
   }
