@@ -15,11 +15,44 @@
 	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />
 	<span class="muted" style="font-size:20px;">Following badges can be earned by a user: </span>
 	<br>
-	<ul style="margin-top:20px;">
-		<c:forEach items="${lca.badgeList}" var="badge">
-			<li><strong>${badge.badgeName}: </strong> ${badge.loyaltyPercentage}</li>
-		</c:forEach>
-	</ul>
+		<% int i=1; %>
+		<table class="cont footer_color">
+     	 <c:forEach items="${lca.badgeList}" var="badge">
+			<c:set var="badge_<%=i %>" value=${badge}> </c:set>
+			<% i++; %>
+		
+			<strong>${badge.badgeName}: </strong> ${badge.loyaltyMultiplier}
+	
+	
+                    <tr>
+                        <th> </th>
+					<c:forEach items="${lca.badgeList}" var="badge">
+						<th><strong>${badge.badgeName} </strong></th>
+					</c:forEach>
+
+                    </tr>
+                    <tbody>
+                        <tr>
+                            <td>
+                               Points earned per Rupee Spent
+
+                            </td>
+                            <td>
+ 								${badge.loyaltyMultiplier} 
+                            </td>
+                            <td>
+                                    ${badge.loyaltyMultiplier}
+                            </td>
+                            <td>
+                            ${badge.loyaltyMultiplier}
+                            </td>
+ 									
+ 	                        <td>
+    						${badge.loyaltyMultiplier}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
 </stripes:layout-component>
 </stripes:layout-render>

@@ -1,5 +1,7 @@
 package com.hk.domain.loyaltypg;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -34,9 +36,9 @@ public class UserOrderKarmaProfile {
 
 	@Column(name = "points")
 	private Double karmaPoints;
-	
+		
 	public UserOrderKey getUserOrderKey() {
-		return userOrderKey;
+		return this.userOrderKey;
 	}
 	
 	public void setUserOrderKey(UserOrderKey userOrderKey) {
@@ -44,7 +46,7 @@ public class UserOrderKarmaProfile {
 	}
 	
 	public TransactionType getTransactionType() {
-		return transactionType;
+		return this.transactionType;
 	}
 	
 	public void setTransactionType(TransactionType transactionType) {
@@ -52,7 +54,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public KarmaPointStatus getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(KarmaPointStatus status) {
@@ -60,7 +62,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public Double getKarmaPoints() {
-		return karmaPoints;
+		return this.karmaPoints;
 	}
 
 	public void setKarmaPoints(Double karmaPoints) {
@@ -68,7 +70,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public Date getCreationTime() {
-		return creationTime;
+		return this.creationTime;
 	}
 
 	public void setCreationTime(Date creationTime) {
@@ -76,7 +78,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public Date getUpdateTime() {
-		return updateTime;
+		return this.updateTime;
 	}
 
 	public void setUpdateTime(Date updateTime) {
@@ -90,4 +92,15 @@ public class UserOrderKarmaProfile {
 	public static enum TransactionType {
 		DEBIT, CREDIT;
 	}
+	
+	public String getExpiryDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.creationTime);
+		cal.add(Calendar.YEAR, 2);
+		if (TransactionType.DEBIT.equals(this.transactionType)) {
+			return "Expired";
+		} 
+		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
+	}
+
 }

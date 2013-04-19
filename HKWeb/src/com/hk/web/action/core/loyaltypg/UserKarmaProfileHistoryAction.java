@@ -3,6 +3,8 @@
  */
 package com.hk.web.action.core.loyaltypg;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,8 +21,6 @@ import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
-import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
-import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 /**
@@ -38,11 +38,12 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	private List<UserOrderKarmaProfile> karmaList;
 	private Page pointsPage;
 	
+	
 	@Autowired  
 	private LoyaltyProgramService loyaltyProgramService;
-
-	private double pointsDebited;
-	private double pointsCredited;
+	
+	private double validPoints;
+	private String upgradeString;
 	
 	@DefaultHandler
 	public Resolution pre() {
@@ -50,10 +51,20 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
 			this.pointsPage = this.loyaltyProgramService.getProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 			this.karmaList = this.pointsPage.getList();
+			this.validPoints = this.loyaltyProgramService.calculateValidPoints(this.user.getId());
 			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user.getId());
-			this.pointsCredited=0;
-			this.pointsDebited=0;
-			for(UserOrderKarmaProfile profile : this.karmaList) {
+			double upgradeAmount =  this.loyaltyProgramService.calculateUpgradePoints(this.badgeInfo);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(this.badgeInfo.getUpdationTime());
+			cal.add(Calendar.YEAR, 1);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			if (upgradeAmount != -1) {
+				this.upgradeString = "To move up a level, you need to spend :  Rs. " + upgradeAmount + " before " + dateFormat.format(cal.getTime());
+				} else {
+					this.upgradeString = "Congratulations! You are at highest level till at least " +  dateFormat.format(cal.getTime());
+				}
+			
+			/*for(UserOrderKarmaProfile profile : this.karmaList) {
 				
 				if (TransactionType.DEBIT.equals(profile.getTransactionType())
 						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
@@ -62,7 +73,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
 					this.pointsCredited += profile.getKarmaPoints();
 				}
-			}
+			}*/
 			
 		}
 
@@ -122,33 +133,6 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 		this.karmaList = karmaList;
 	}
 
-	/**
-	 * @return the pointsDebited
-	 */
-	public double getPointsDebited() {
-		return this.pointsDebited;
-	}
-
-	/**
-	 * @param pointsDebited the pointsDebited to set
-	 */
-	public void setPointsDebited(double pointsDebited) {
-		this.pointsDebited = pointsDebited;
-	}
-
-	/**
-	 * @return the pointsCredited
-	 */
-	public double getPointsCredited() {
-		return this.pointsCredited;
-	}
-
-	/**
-	 * @param pointsCredited the pointsCredited to set
-	 */
-	public void setPointsCredited(double pointsCredited) {
-		this.pointsCredited = pointsCredited;
-	}
 
 	/**
 	 * @return the badgeInfo
@@ -162,6 +146,34 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 */
 	public void setBadgeInfo(UserBadgeInfo badgeInfo) {
 		this.badgeInfo = badgeInfo;
+	}
+
+	/**
+	 * @return the upgradeString
+	 */
+	public String getUpgradeString() {
+		return this.upgradeString;
+	}
+
+	/**
+	 * @param upgradeString the upgradeString to set
+	 */
+	public void setUpgradeString(String upgradeString) {
+		this.upgradeString = upgradeString;
+	}
+
+	/**
+	 * @return the validPoints
+	 */
+	public double getValidPoints() {
+		return this.validPoints;
+	}
+
+	/**
+	 * @param validPoints the validPoints to set
+	 */
+	public void setValidPoints(double validPoints) {
+		this.validPoints = validPoints;
 	}
 
 }

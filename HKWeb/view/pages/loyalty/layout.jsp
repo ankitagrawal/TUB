@@ -1,4 +1,4 @@
-<%@ page import="com.shiro.PrincipalImpl" %>
+\<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <!DOCTYPE html>
@@ -8,8 +8,6 @@
 <stripes:layout-definition>
 <html lang="en">
 <head>
-<%--	<% PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
-	principal.ge%>--%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>HealthKart | Stellar Program</title>
@@ -19,6 +17,7 @@
 
     <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/grid.css" rel="stylesheet">
     <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/style.css" rel="stylesheet">
+    <link href="<hk:vhostJs/>/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" rel="stylesheet">
 	<script src="<hk:vhostJs/>/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery-1.9.0.js"></script>
@@ -26,37 +25,41 @@
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery.jcarousel.min.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery-ui.min.js"></script>
 	<script type="text/javascript">
+    $(document).ready(function(){
+        $('.brandsContainer').jScrollPane({verticalDragMaxHeight:30, positionDragY:30});
+        $(".jspDrag").css("width","7px");
+        $(".jspTrack").css("left","-45px");
 
-	$(document).ready(function() {
-		$('.brandsContainer').jScrollPane({
-			verticalDragMaxHeight : 30,
-			positionDragY : 30
-		});
-		$(".jspDrag").css("width", "7px");
-		$(".jspTrack").css("left", "-10px");
-		//Top Drop Down
-		$('#menuDropDown').hover(function() {
-			$("#box1").css("display", "block");
-			$("#menuDropDown").addClass("searchButton-hover");
-		}, function() {
-			$("#box1").css("display", "none");
-			$("#menuDropDown").removeClass("searchButton-hover");
-		});
-		$('#topToDown').hover(function() {
-			$("#box2").css("display", "block");
-			$("#topToDown").addClass("topToDown-hover");
-		}, function() {
-			$("#box2").css("display", "none");
-			$("#topToDown").removeClass("topToDown-hover");
-		});
-		$('#box1').hover(function() {
-			$("#box1").css("display", "block");
-			$("#menuDropDown").addClass("searchButton-hover");
-		}, function() {
-			$("#box1").css("display", "none");
-			$("#menuDropDown").removeClass("searchButton-hover");
-		});
-	});
+
+        //Top Drop Down
+        $('#searchButton').hover(function(){
+          $("#box1").css("display","block");
+          $("#searchButton").addClass("searchButton-hover");
+        },
+        function(){
+          $("#box1").css("display","none");
+          $("#searchButton").removeClass("searchButton-hover");
+        }
+        );
+        $('#topToDown').hover(function(){
+          $("#box2").css("display","block");
+          $("#topToDown").addClass("topToDown-hover");
+        },
+        function(){
+          $("#box2").css("display","none");
+          $("#topToDown").removeClass("topToDown-hover");
+        }
+        );
+        $('#box1').hover(function(){
+          $("#box1").css("display","block");
+          $("#searchButton").addClass("searchButton-hover");
+        },
+        function(){
+          $("#box1").css("display","none");
+          $("#searchButton").removeClass("searchButton-hover");
+        }
+        );
+      });
 </script>
 
 	<%
@@ -77,85 +80,71 @@
 
     <div class="embedMargin" id="header">
         <div class="container_16 clearfix">
-        <div class="grid_7" id="logo">
-		<c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
-          <div class="headerNavs">
-            <div class="headerNav"><s:link href="/" title='go to healthkart home'>healthKart</s:link></div>
-            <div class="headerNav"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></div>
-            <div class="headerNav">${badge.badgeName}</div>
-          </div>
-          <div class="logo-block">
-            <div class="logoSubblock">
-              <a title="healthkart" href="#">
-                <img width="234" height="72" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyJunk/images/healthkartStellarLogo.png">
+	<c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}" />
+        
+		<div id="logo" class="grid_6">
+            <div class="logo-block">
+              <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home'>healthKart</s:link></span>
+			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
+			  </p>
+              <div class="logoSubblock">
+			  <a title="healthkart" href="/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyJunk/images/hkStellar.png">
               </a>
+              </div>
+  
             </div>
-          </div>
         </div>
-		<div class="grid_3">
-          <div class="userName">
-            <p class="section1 font-caps">
-			Hello <strong>
+
+        <div class="grid_10">
+			<div id="nav" class="nav-menu">
+				<div>
+				<p class="section2">Hello 
                   <shiro:hasAnyRoles name="<%=roles%>">
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
-                </strong>
-			</p>
-          </div>
+				  ,</p>
+				<p class="section1 rewardText"> ${badge.badgeName} member</p>
+				<p class="section1 rewardText">you have ${hk:getLoyaltyKarmaPointsForUser(userId)} points</p> 
+            </div>
+           <div>
+              <p class="section2 ">
+			  <s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" event="pre" title="View my account">
+			  my <span class="boldfont">account</span> 
+			  </s:link>
+			  </p>
+            </div>
+
+            <div>
+              <p class="section2">
+				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram">
+				about <span class="boldfont">  stellar </span>
+				</s:link>
+				</p> 
+            </div>
+<!--             <div>
+              <p class="section2 font-caps"> signout</p>
+            </div>
+ -->
+            <div>
+              <p class="section2 font-caps"> <a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">cart</a></p>
+            </div>
+
         </div>
         
-		<div class="grid_6">
-          <div class="topDropDown">
-            <div class="topToDown">
-              <div class="searchButton" id="menuDropDown" >
-                <div class="searchButtonText">stellarstore</div>
-                <img src="/healthkart/pages/loyalty/LoyaltyJunk/images/arrow.png" class="arrowDown">
-              </div>
-              <div class="box" id="box1">
-                <div class="item">Redeem points</div>
-                <div class="item">
-				<s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" event="pre" title="View History">View History</s:link>
-				</div>
-                <div class="seperator"></div>
-                <div style="top: 0px;" class="item">
-				<s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="aboutLoyaltyProgram">How stellar works</s:link>
-				</div>
-              </div>
-            </div>
-          </div>
-          <div class="nav-menu" id="nav">
-              <div>
-                <p class="section1 font-caps"> <a href="<hk:vhostJs/>/core/loyaltypg/Cart.action"> Cart</a></p>
-              </div>
-          </div>
-          
-          <div class="search" id="search">
-            <input type="text" placeholder="Search" class="searchText">
-            <img width="11" height="13" src="/healthkart/pages/loyalty/LoyaltyJunk/images/searchIcon.png" class="searchLense" alt="search">
-          </div>
+<!--         <div id="search" class="search">
+          <input type="text" class="searchText" placeholder="Search">
+          <img alt="search" class="searchLense" width="11" height="13" src="../images/search.png">
+     
         </div>
+ -->
+      </div>		
+
       </div>
     </div>
-		  <!-- 
-	    <span style="float:left">
-		    Total available loyalty points: ${hk:getLoyaltyKarmaPointsForUser(userId)}
-	    </span>
 	    
-	    
-	    <span class="pull-right">
-	    Welcome,
-	      <strong>
-                  <shiro:hasAnyRoles name="<%=roles%>">
-                    <shiro:principal property="firstName"/>
-                  </shiro:hasAnyRoles>
-                </strong>
-		    &nbsp;&nbsp;&nbsp; (${badge.badgeName})
-		</span>
 
-
-      <hr>
-      -->
-        <div class="mainContainer embedMarginTop100">
+      <div class="mainContainer ">
       <div class="container_16 clearfix">
       <s:layout-component name="lhsContent"/>      
 			<stripes:layout-component name="contents"/>

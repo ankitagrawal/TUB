@@ -45,6 +45,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Autowired
 	private BaseDao baseDao;
 
+	//@Autowired
+	//private RewardPointServiceImpl rewardPointService;
+	
 	private Calendar calendar;
 	
 
@@ -360,16 +363,29 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			
 			// Fetch lowest Badge
 			DetachedCriteria criteriaForBadge = DetachedCriteria.forClass(Badge.class);
-			criteriaForBadge.add(Restrictions.eq("minScore", 0));
-			Badge newBadge = (Badge)this.loyaltyProductDao.findByCriteria(criteriaForBadge).get(0);
-			info.setBadge(newBadge);
+			Double spend = this.calculateAnnualSpend(user);
+				
+			for (Badge badge : this.getAllBadges()) {
+				if (spend > badge.getMinScore() && spend < badge.getMaxScore()) {
+					info.setBadge(badge);
+					info.setUpdationTime(Calendar.getInstance().getTime());
+					break;
+				}
+
+			}
+			
+//			criteriaForBadge.add(Restrictions.eq("minScore", 0));
+			//Badge newBadge = (Badge)this.loyaltyProductDao.findByCriteria(criteriaForBadge).get(0);
+		//	info.setBadge(newBadge);
 			
 			// Set all the points
 /*			info.setCreditedPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
 			info.setDebitedPoints(0.0);
 			info.setValidPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
 */			
-			info.setValidPoints(transactionAmount * newBadge.getLoyaltyMultiplier());
+			if (transactionAmount != null ) {
+				info.setValidPoints(transactionAmount * info.getBadge().getLoyaltyMultiplier());
+			}
 			Calendar cal = Calendar.getInstance();
 			Date currentTime = cal.getTime();
 			
@@ -384,7 +400,24 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 	}
 	
-	public void convertLoyaltyToRewardPoints () {
+	public void  convertLoyaltyToRewardPoints (UserBadgeInfo info, Order referredOrder, Double loyaltyPoints, String comment ) {
+		
+		User user = info.getUser();
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		criteria.add(Restrictions.eq("userOrderKey.user", user));
+		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
+		
+		// Check for 2 years
+		this.calendar = Calendar.getInstance();
+		this.calendar.add(Calendar.YEAR, -2);
+		criteria.add(Restrictions.ge("updateTime", this.calendar.getTime()));
+		
+		criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
+		while (loyaltyPoints > 0 ) {
+			
+		}
+	//	this.rewardPointService.addRewardPoints(user, null, referredOrder, value, comment,
+		//		EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 		
 	}
 	
@@ -398,9 +431,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public double calculateUpgradePoints (UserBadgeInfo info) {
 		Double creditedPoints = this.calculateAnnualSpend(info.getUser());
-		//info.getCreditedPoints();
+		
 		for (Badge badge : this.getAllBadges()) {
-			if (creditedPoints > badge.getMinScore() && creditedPoints < badge.getMaxScore()) {
+			if (creditedPoints >= badge.getMinScore() && creditedPoints <= badge.getMaxScore()) {
 				return (badge.getMaxScore() - creditedPoints) + 1;
 			}
 		}
@@ -409,6 +442,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return -1.0;
 		
 	}
+	
+	
 	
 	/**
 	 * 

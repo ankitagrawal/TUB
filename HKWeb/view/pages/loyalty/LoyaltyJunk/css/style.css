@@ -17,10 +17,6 @@ src: url("../Fonts/WhitneyHTF-BookSC.otf") format("opentype");
 
 body{font-family: "whitneyBook";font-size: 16px;line-height: 20px;color: #424242; background:#fff;}
 a{text-decoration: none;outline: 0;color: #424242}
-a:hover{
-	color: rgb(49, 118, 241);
-	cursor: pointer;
-}
 a:focus{outline:1px dotted invert}hr{border:0#ccc solid;border-top-width:1px;clear:both;height:0}
 h1{font-size:25px}h2{font-size:23px}h3{font-size:21px}h4{font-size:19px}h5{font-size:17px;}h6{font-size:15px}ol{list-style:decimal}
 ul{position: relative;float: left;list-style: none;width: 100%;list-style:none;}li{margin-left:30px}
@@ -88,30 +84,76 @@ font-family: "whitneyBook";
 color: #424242;
 }
 
-.font-caps{
-font-family: "whitneybookSC" !important;
-text-transform: uppercase;
-}
+
+/*header start*/
 #header{
 margin-top: 20px;
 }
 
+
+.logo-block{float:left;width:auto;margin-bottom:20px;}
+.logoSubblock{width: auto;float: left;}
+.hkpolicy{font-size:12px;float:left;margin-bottom:10px;margin-left:10px;}
+.boldfont{font-size:16px; font-weight:bold;}
+/*search menu css begins*/
+
+.searchText{
+
+float: left;
+width: 200px;
+height: 12px;
+border: none;
+padding:10px;
+background: rgb(235, 230, 230);
+}
+
+.searchLense{
+position: relative;
+float: left;
+top: 10px;
+right: 20px;
+}
+.search{
+position: relative;
+float: right;
+left: 0%;
+margin-top: 20px;
+}
+
+
+/*Search menu css ends*/
+
+.rewardText{
+
+	line-height: 10px;
+	text-align: right;
+}
+
 .nav-menu{
-float:right;min-width:360px;margin-top:20px;height:36px;
+float:right;min-width:360px;height:36px;
 }
 .nav-menu div{
-float:right;width:80px;margin-left: 10px;
+float:left;min-width:40px;margin-left: 25px;text-align: left;
 }
 
 .nav-menu p{
 margin:0;
 }
-.logo-block{float:left;width:auto;margin-bottom:20px;}
-.logoSubblock{width: 70px;float: left;}
-.hkpolicy{font-size:12px;float:right;margin-top:34px;margin-left: 40px;}
+
 .section1{font-size:10px;}
 .section2{font-size:14px;line-height:14px;}
 
+
+/*header ends*/
+
+
+
+
+
+.font-caps{
+font-family: "whitneybookSC" !important;
+text-transform: uppercase;
+}
 
 .leftBlock{
 position: relative;
@@ -327,9 +369,10 @@ cursor: pointer;
 	position: relative;
 	float: left;
 	height: auto;
-	width: 220px;
+	width: 183px;
 	border: 1px solid #c8c8c8;
 	box-shadow: 0px 8px 9px -3px #888;
+	padding-bottom: 32px;
 }
 
 .priceRange{
@@ -376,16 +419,6 @@ cursor: pointer;
 
 /*search menu css begins*/
 
-.searchText{
-position: relative;
-z-index: 1000;
-float: left;
-width: 200px;
-height: 12px;
-border: none;
-padding:10px;
-background: rgb(235, 230, 230);
-}
 
 .searchButton{
 z-index: 1000;
@@ -412,16 +445,6 @@ float: left;
 font-size: 11px;
 top: 6px;
 left: 18px;
-}
-
-.searchLense{
-	position: relative;
-	float: left;
-	top: 6px;
-	left: -30px;
-	width: 20px;
-	height: 20px;
-	z-index: 1000;
 }
 
 .searchbox{
@@ -452,12 +475,6 @@ color: rgb(49, 118, 241);
 cursor: pointer;
 }
 
-.search{
-position: relative;
-float: right;
-left: 0%;
-margin-top: 20px;
-}
 
 .searchMore{
 width: 0; 
@@ -520,7 +537,7 @@ border-top: 5px solid #5c9dff;
 .sorting{
 	position: relative;
 	float: left;
-	width: 87%;
+	width: 84%;
 	font-size: 12px;
 	padding: 15px;
 	border-bottom: 1px dotted;
@@ -597,7 +614,7 @@ border-top: 5px solid #5c9dff;
 }
 
 .topToDown{
-	position: relative;
+	position: absolute;
 	float: left;
 	left: 10%;
 }
@@ -638,11 +655,197 @@ border-top: 5px solid #5c9dff;
 	float: left;
 }
 
-.connectLink{
-border-bottom:none;
-position: relative;
-float: left;
-margin-left: 5px;
-bottom: 5px;
+.topText{
+	position: relative;
+	float: left;
+	border-top: 1px solid #ddd;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 100%;
+}
 
+.clickForPoints{
+	text-decoration: underline;
+	color:#3f91d4;
+}
+
+.floatRight{
+	float: right;
+}
+
+.dashedLine{
+	margin-left: 10px;
+	position: relative;
+	float: left;
+	border-bottom: 1px solid #ddd;
+	top: 10px;
+	width: 40%;
+}
+
+.historyText{
+	position: relative;
+	float: left;
+	width: 15%;
+	text-align: center;
+	font-size: 30px;
+	color: rgb(153, 153, 153);
+}
+
+.embedMarginTop40 {
+	margin-top: 40px;
+}
+
+.history{
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+.tableHistory{
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+.headRowValue{
+	position: relative;
+	float: left;
+	width: 20%;
+}
+
+.headRowEmptyValue{
+	position: relative;
+	float: left;
+	width: 20%;
+	border: 1px solid transparent;
+	width: 12%;
+}
+
+.headingRow{
+	position: relative;
+	margin-left: 5px;
+	float: left;
+	width: 97%;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+	margin-right: 5px;
+}
+
+.normalRow{
+	position: relative;
+	margin-left: 5px;
+	float: left;
+	width: 97%;
+	padding-bottom: 10px;
+	margin-right: 5px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.pagination{
+	position: relative;
+	float: right;
+	width: 55%;
+}
+
+.pageNums{
+	position: relative;
+	float: left;
+}
+
+.pageNum{
+	position: relative;
+	float: left;
+	border: 1px solid #ddd;
+	margin-left: 5px;
+	padding: 8px 10px 8px 10px;
+	font-size: 11px;
+	cursor: pointer;
+}
+
+.pageNum:hover{
+	background: #ddd;
+}
+
+.dots{
+	position: relative;
+	float: left;
+	margin-left: 5px;
+}
+
+.grayedButton{
+	background: #ddd;
+}
+
+.signUpPart{
+	position: relative;
+	float: left;
+	padding: 25px;
+	text-align: center;
+	margin: 0px;
+}
+
+.threePartition{
+	position: relative;
+	float: left;
+	border-top: 2px solid #ddd;
+	padding-top: 10px;
+}
+
+.joinNow{
+	position: relative;
+	float: left;
+	font-size: 25px;
+	left: 25px;
+	width: 100%;
+	text-align: left;
+	margin-bottom: 25px;
+}
+
+.signUp{
+	position: relative;
+	float: left;
+	text-align: left;
+	left: 25px;
+	margin-top: 20px;
+}
+
+.name{
+	position: relative;
+	float: left;
+	width: 240px;
+	height: 26px;
+	background: rgb(235, 235, 235);
+	border: none;
+	padding-left: 15px;
+	margin-bottom: 15px;
+}
+
+.continueButton{
+	position: relative;
+	float: left;
+	border: 2px solid #ddd;
+	padding: 5px;
+	width: 90px;
+	height: 23px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.earnStellar{
+	position: relative;
+	float: left;
+	border-right: 2px solid #ddd;
+	height: 324px;
+	padding: 5px;
+	text-align: center;
+}
+
+.exploreStellar{
+	position: relative;
+	float: left;
+	border-left: 2px solid #ddd;
+	height: 324px;
+	padding: 5px;
+	text-align: center;
 }

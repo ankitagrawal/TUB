@@ -16,8 +16,10 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.domain.user.User;
 import com.hk.dto.user.UserLoginDto;
 import com.hk.exception.HealthkartLoginException;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.UserManager;
 
 @Component
@@ -38,6 +40,9 @@ public class SignInAction extends BaseAction {
 	@Autowired
 	UserManager userManager;
 
+	@Autowired
+	LoyaltyProgramService loyaltyProgramService; 
+
 	@DefaultHandler
 	@DontValidate
 	public Resolution pre() {
@@ -47,23 +52,25 @@ public class SignInAction extends BaseAction {
 	public Resolution login() {
 		UserLoginDto userLoginDto = null;
 		try {
-			userLoginDto = userManager.login(email, password, true);
+			userLoginDto = this.userManager.login(this.email, this.password, true);
 		} catch (HealthkartLoginException e) {
-			addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
-			return getContext().getSourcePageResolution();
+			this.addValidationError("e1", new LocalizableError("/Login.action.user.notFound"));
+			return this.getContext().getSourcePageResolution();
 		}
 
-		userId = userLoginDto.getLoggedUser().getId().toString();
+		User user = userLoginDto.getLoggedUser();
+		this.userId = user.getId().toString();
 
-		if (!StringUtils.isBlank(redirectUrl)) {
-			return new RedirectResolution(redirectUrl, false);
+		if (!StringUtils.isBlank(this.redirectUrl)) {
+			return new RedirectResolution(this.redirectUrl, false);
 		}
 
+		this.loyaltyProgramService.reviseBadgeInfoForUser(user, 10.0);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}
 
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 
 	public void setEmail(String email) {
@@ -71,7 +78,7 @@ public class SignInAction extends BaseAction {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
@@ -79,7 +86,7 @@ public class SignInAction extends BaseAction {
 	}
 
 	public String getRedirectUrl() {
-		return redirectUrl;
+		return this.redirectUrl;
 	}
 
 	public void setRedirectUrl(String redirectUrl) {
@@ -87,7 +94,7 @@ public class SignInAction extends BaseAction {
 	}
 
 	public boolean isRememberMe() {
-		return rememberMe;
+		return this.rememberMe;
 	}
 
 	public void setRememberMe(boolean rememberMe) {
