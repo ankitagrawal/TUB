@@ -1,0 +1,23 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: marut
+  Date: 18/04/13
+  Time: 6:58 PM
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/includes/_taglibInclude.jsp" %>
+
+<s:useActionBean beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction" var="productFeedBean"/>
+
+<s:layout-render name="/layouts/defaultAdmin.jsp">
+    <s:layout-component name="heading">Add Products to Feed</s:layout-component>
+    <s:layout-component name="content">
+        <h2>Please Enter comma separated product ids for product feed : </h2>
+        <s:form beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction">
+            <s:select name="${productFeedBean.marketingFeed}" value="${productFeedBean.feedNames}"/>
+            <s:textarea name="${productFeedBean.productIds}"/>
+            <s:submit name="saveProductsForFeed" value="Add Products"/>
+        </s:form>
+    </s:layout-component>
+</s:layout-render>

@@ -17,7 +17,7 @@
 
                     </c:when>
                     <c:otherwise>
-                    <c:if test="${fn:length(product.productVariants) > 0
+                    <c:if test="${fn:length(product.productVariants) > 0 && !product.deleted
                             && product.mainImageId != null&& product.minimumMRPProducVariant.hkPrice != null && product.maximumMRPProducVariant.hkPrice != null}">
                         <item>
                         <title><![CDATA[${hk:escapeXML(product.name)}]]></title>
