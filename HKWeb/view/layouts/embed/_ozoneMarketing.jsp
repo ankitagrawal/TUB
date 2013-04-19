@@ -96,12 +96,16 @@
         </c:forEach>
 
         <c:if test = "${pageType == 'cart'}">
-            <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=5&pid=${googleProductsSelected}" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0">
-            </iframe>
+            <c:if test="${not empty googleProductsSelected}">
+                <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=5&pid=${googleProductsSelected}" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0">
+                </iframe>
+            </c:if>
         </c:if>
         <c:if test = "${pageType == 'purchase'}">
-            <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=6&orderID=${order.id}&saleValue=${order.payment.amount}&paymentMode=${order.payment.paymentMode.name}&currency=INR&pid=${googleProductsSelected}" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0">
-            </iframe>
+            <c:if test="${not empty googleProductsSelected}">
+                <iframe src="http://px.ozonemedia.com/data?px_id=000033&type=2&adv_id=ADV000029&section=6&orderID=${order.id}&saleValue=${order.payment.amount}&paymentMode=${order.payment.paymentMode.name}&currency=INR&pid=${googleProductsSelected}" scrolling="no" width="1" height="1" marginheight="0" marginwidth="0" frameborder="0">
+                </iframe>
+            </c:if>
         </c:if>
 
     </c:when>
