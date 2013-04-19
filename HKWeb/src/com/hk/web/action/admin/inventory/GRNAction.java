@@ -265,6 +265,7 @@ public class GRNAction extends BasePaginatedAction {
 					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
 						if(grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())){
 							grnLineItem.setFillRate(poLineItem.getFillRate());
+							grnLineItem.setAskedQty(poLineItem.getQty());
 						}
 					}
 				}

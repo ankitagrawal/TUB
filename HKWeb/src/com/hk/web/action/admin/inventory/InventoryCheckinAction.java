@@ -234,6 +234,7 @@ public class InventoryCheckinAction extends BaseAction {
         					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
         						if(grnLItem.getSku().getId().equals(poLineItem.getSku().getId())){
         							grnLItem.setFillRate(poLineItem.getFillRate());
+        							grnLineItem.setAskedQty(poLineItem.getQty());
         						}
         					}
         				}

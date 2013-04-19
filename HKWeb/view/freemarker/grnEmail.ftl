@@ -11,7 +11,7 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 <p style="margin-bottom:1em">
   Goods are received for Purchase Order # ${grn.purchaseOrder.id}.<br/>
   <#if grn.purchaseOrder.supplier.name??>
-  Supplier = ${grn.purchaseOrder.supplier.name} <br/>
+  Supplier = ${grn.purchaseOrder.supplier.name}; Credit Days = ${grn.purchaseOrder.supplier.creditDays}<br/>
   </#if>
   <#if grn.purchaseOrder.fillRate??>
   PO Fill Rate = ${grn.purchaseOrder.fillRate} %; <br/>
@@ -40,11 +40,13 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 		<th>Checked In Qty </th>
 		<th>Cost Price</th>
 		<th>MRP</th>
+		<th><RP On HK</th>
+		<th>Payable Amount</th>
 	</tr>
 	 <#list grn.grnLineItems as grnLineItem>
 	<tr>
 		<td>${grnLineItem.sku.productVariant.id}</td>
-		<td>${grnLineItem.sku.productVariant.product.name}</td>
+		<td>${grnLineItem.sku.productVariant.product.name}<br/>${grnLineItem.sku.productVariant.optionsCommaSeparated}</td>
 		<td><#if grnLineItem.fillRate??>
  		 ${grnLineItem.fillRate}
   		<#else>
@@ -53,10 +55,29 @@ GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 		<td>${grnLineItem.qty}</td>
 		<td>${grnLineItem.checkedInQty}</td>
 		<td>${grnLineItem.costPrice}</td>
-		<td>${grnLineItem.mrp}</td>	
+		<td>${grnLineItem.mrp}</td>
+		<td>${grnLineItem.sku.productVariant.markedPrice}</td>
+		<td><#if grnLineItem.payableAmount??>
+ 		 $${grnLineItem.payableAmount}
+  		<#else>
+  		N/A
+  		</#if></td>
 	</tr>
 	</#list>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>Total Payable </td>
+	<td><#if grn.payable??>
+ 		 $${grn.payable}
+  		<#else>
+  		N/A
+  		</#if></td>
 </table>
+
 
 
 <p style="margin-bottom:1em"><strong>HealthKart Team</strong></p>
