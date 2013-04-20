@@ -12211,4 +12211,17 @@
         </addColumn>
     </changeSet>
     
+    <changeSet author="Ajeet (generated)" id="1366279888165-2">
+        <addColumn tableName="warehouse">
+            <column defaultValue="Warehouse" name="identifier" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366426068617-2">
+        <createIndex indexName="identifier_UNIQUE" tableName="warehouse" unique="true">
+            <column name="identifier"/>
+        </createIndex>
+    </changeSet>
+   
 </databaseChangeLog>

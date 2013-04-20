@@ -49,6 +49,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
@@ -92,6 +93,7 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -825,5 +827,19 @@ public class Functions {
         }
         return actionAwaitingSO;
     }
+
+  public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    if (shippingOrder.getBaseOrder().isB2bOrder() != null && shippingOrder.getBaseOrder().isB2bOrder()) {
+      return shippingOrder.getWarehouse();
+    } else {
+      if (shippingOrder.getWarehouse().equals(warehouseService.getMumbaiWarehouse())) {
+        return warehouseService.getWarehouseById(WarehouseService.MUM_AQUA_WH_ID);
+      } else if (shippingOrder.getWarehouse().equals(warehouseService.getDefaultWarehouse())) {
+        return warehouseService.getWarehouseById(WarehouseService.GGN_AQUA_WH_ID);
+      }
+    }
+    return shippingOrder.getWarehouse();
+  }
 
 }

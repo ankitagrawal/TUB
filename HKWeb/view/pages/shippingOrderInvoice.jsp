@@ -271,7 +271,7 @@ ORDER INVOICE <c:choose>
         Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
     </div>
     <hr/>
-    <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
+     <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
      <c:set var="supplier" value="${orderSummary.supplier}"/>
     <c:choose>
         <c:when test="${orderSummary.shippingOrder.dropShipping}">
@@ -279,7 +279,11 @@ ORDER INVOICE <c:choose>
             ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN: 
              ${supplier.tinNumber}  </p>
         </c:when>
-        <c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
+        <c:set value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}" var="shippingWarehouse"/>
+        ${shippingWarehouse.name} | ${shippingWarehouse.line1} | ${shippingWarehouse.line2} |
+        ${shippingWarehouse.city} | ${shippingWarehouse.state} - ${shippingWarehouse.pincode} |
+        TIN: ${shippingWarehouse.tin}
+        <%--<c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
             <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
                 Badshahpur |
                 Gurgaon, Haryana- 122101 | TIN:
@@ -289,7 +293,7 @@ ORDER INVOICE <c:choose>
             <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |
                     ${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:
                     ${warehouse.tin} </p>
-        </c:otherwise>
+        </c:otherwise>--%>
     </c:choose>
 
 </div>

@@ -59,8 +59,8 @@ public class WarehouseDaoImpl extends BaseDaoImpl implements WarehouseDao {
 
   }
 
-  public Warehouse findByName(String name) {
-    return (Warehouse) getSession().createQuery("from Warehouse wh where wh.name = :name").setString("name", name).uniqueResult();
+  public Warehouse findByIdentifier(String identifier) {
+    return (Warehouse) getSession().createQuery("from Warehouse wh where wh.identifier = :identifier").setString("identifier", identifier).uniqueResult();
   }
 
 }

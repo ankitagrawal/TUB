@@ -1,6 +1,5 @@
 package com.hk.impl.service.core;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +11,6 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.UserService;
-import com.hk.web.filter.WebContext;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.warehouse.EnumWarehouseType;
 
@@ -96,8 +94,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         return null;
     }
     
-    public Warehouse findByName(String name){
-        return getWarehouseDao().findByName(name);
+    public Warehouse findByIdentifier(String identifier){
+        return getWarehouseDao().findByIdentifier(identifier);
     }
 
     public WarehouseDaoImpl getWarehouseDao() {

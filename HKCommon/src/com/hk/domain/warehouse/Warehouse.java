@@ -28,7 +28,7 @@ public class Warehouse implements java.io.Serializable {
   @Column(name = "tin", nullable = false, length = 45)
   private String tin;
 
-  @Column(name = "identifier", nullable = false, length = 100)
+  @Column(name = "identifier", nullable = false, length = 100, unique = true)
   private String identifier;
 
 

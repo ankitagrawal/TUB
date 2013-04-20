@@ -52,5 +52,5 @@ public interface WarehouseService {
 
   public Warehouse getWarehouseToBeAssignedByDefinedLogicForSplitting(Set<Warehouse> warehouses);
 
-  public Warehouse findByName(String name);
+  public Warehouse findByIdentifier(String identifier);
 }

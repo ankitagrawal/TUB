@@ -1144,5 +1144,16 @@
             ${hk:getActionAwaitingSO(${o1})}
         </example>
     </function>
+     <function>
+        <description>
+            returns appropriate WH based on SO
+        </description>
+        <name>getShippingWarehouse</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.warehouse.Warehouse getShippingWarehouse(com.hk.domain.order.ShippingOrder))</function-signature>
+        <example>
+            ${hk:getShippingWarehouse(${o1})}
+        </example>
+    </function>
 
 </taglib>
