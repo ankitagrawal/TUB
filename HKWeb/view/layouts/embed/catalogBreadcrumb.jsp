@@ -32,7 +32,6 @@
     }
   %>
   <s:layout-component name="breadcrumb">
-  
     <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
       <%
@@ -44,15 +43,11 @@
         <%
           if (menuNodeStack.isEmpty() && !lastLink) {
         %>
-        <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb" style="float:left;">
-          		<a href="#" itemprop="url"><span class="crumb last" itemprop="title" style="font-size: 12px;"><%=menuNode.getName()%></span></a>
-         </div>
+          <span class="crumb last" style="font-size: 12px;"><%=menuNode.getName()%></span>
           <%
           } else {
           %>
-          <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb" style="float:left;">
-            	<a class="crumb" itemprop="url" href="<%=url%>"><span itemprop="title"><%=menuNode.getName()%></span></a>
-          </div>
+            <a class="crumb" href="<%=url%>"><%=menuNode.getName()%></a>
             <%
           }
           }
@@ -60,7 +55,6 @@
     <h1 class='title'>
       ${topHeading}
     </h1>
-  </div>
   </div>
   </s:layout-component>
 </s:layout-definition>
