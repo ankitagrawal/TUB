@@ -44,13 +44,13 @@
         <%
           if (menuNodeStack.isEmpty() && !lastLink) {
         %>
-        <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+        <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb" style="float:left;">
           		<a href="#" itemprop="url"><span class="crumb last" itemprop="title" style="font-size: 12px;"><%=menuNode.getName()%></span></a>
          </div>
           <%
           } else {
           %>
-          <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+          <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb" style="float:left;">
             	<a class="crumb" itemprop="url" href="<%=url%>"><span itemprop="title"><%=menuNode.getName()%></span></a>
           </div>
             <%
