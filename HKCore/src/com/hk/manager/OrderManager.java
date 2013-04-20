@@ -584,7 +584,7 @@ public class OrderManager {
           else{
 
           if (skuList == null || skuList.isEmpty()
-              || product.isDeleted() || product.isHidden() || product.isOutOfStock()
+              || product.isDeleted() || product.isOutOfStock()
               || productVariant.isDeleted() || productVariant.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
