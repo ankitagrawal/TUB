@@ -1,14 +1,14 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Goods Received Note (GRN) List">
   <%
-      WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-      pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+      WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+      pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
   %>
 	<c:set var="checkinInProcess" value="<%=EnumGrnStatus.InventoryCheckinInProcess.getId()%>"/>
 	<c:set var="inventoryCheckedIn" value="<%=EnumGrnStatus.InventoryCheckedIn.getId()%>"/>
@@ -40,13 +40,13 @@
           <c:choose>
             <c:when test="${whAction.setWarehouse != null}">
               <s:hidden name="warehouse" value="${whAction.setWarehouse}"/>
-              ${whAction.setWarehouse.city}
+              ${whAction.setWarehouse.identifier}
             </c:when>
             <c:otherwise>
               <s:select name="warehouse">
                 <s:option value="0">-All-</s:option>
                 <c:forEach items="${whList}" var="wh">
-                  <s:option value="${wh.id}">${wh.name}</s:option>
+                  <s:option value="${wh.id}">${wh.identifier}</s:option>
                 </c:forEach>
               </s:select>
             </c:otherwise>
@@ -93,13 +93,13 @@
           <c:choose>
             <c:when test="${whAction.setWarehouse != null}">
               <s:hidden name="warehouse" value="${whAction.setWarehouse}"/>
-              ${whAction.setWarehouse.city}
+              ${whAction.setWarehouse.identifier}
             </c:when>
             <c:otherwise>
               <s:select name="warehouse">
                 <s:option value="0">-All-</s:option>
                 <c:forEach items="${whList}" var="wh">
-                  <s:option value="${wh.id}">${wh.name}</s:option>
+                  <s:option value="${wh.id}">${wh.identifier}</s:option>
                 </c:forEach>
               </s:select>
             </c:otherwise>
@@ -154,7 +154,7 @@
           <td><fmt:formatDate value="${grn.grnDate}"/></td>
           <td>${grn.invoiceNumber}</td>
           <td>${grn.receivedBy.name}</td>
-          <td>${grn.warehouse.city}</td>
+          <td>${grn.warehouse.identifier}</td>
           <td>${grn.purchaseOrder.supplier.name}</td>
           <td>${grn.purchaseOrder.supplier.tinNumber}</td>
           <td>${grn.grnStatus.name}</td>

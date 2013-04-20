@@ -53,7 +53,11 @@ public class ShippingOrderAction extends BaseAction {
   private String customerSatisfyReason;
 
 	public Resolution flipWarehouse() {
-		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
+    // TODO : Fix the flipping logic for multiple candidates
+    Warehouse warehouseToUpdate = null;
+    List<Warehouse> flippingWHs = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
+    if(flippingWHs != null && !flippingWHs.isEmpty())
+      warehouseToUpdate = flippingWHs.get(0);
 
 		boolean isWarehouseUpdated = adminShippingOrderService.updateWarehouseForShippingOrder(shippingOrder, warehouseToUpdate);
 

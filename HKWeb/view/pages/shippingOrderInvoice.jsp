@@ -279,6 +279,7 @@ ORDER INVOICE <c:choose>
             ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN: 
              ${supplier.tinNumber}  </p>
         </c:when>
+      <c:otherwise>
         <c:set value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}" var="shippingWarehouse"/>
         ${shippingWarehouse.name} | ${shippingWarehouse.line1} | ${shippingWarehouse.line2} |
         ${shippingWarehouse.city} | ${shippingWarehouse.state} - ${shippingWarehouse.pincode} |
@@ -292,8 +293,8 @@ ORDER INVOICE <c:choose>
         <c:otherwise>
             <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |
                     ${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:
-                    ${warehouse.tin} </p>
-        </c:otherwise>--%>
+                    ${warehouse.tin} </p> --%>
+        </c:otherwise>
     </c:choose>
 
 </div>

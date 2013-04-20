@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.UserService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.warehouse.EnumWarehouseType;
+import com.hk.service.ServiceLocatorFactory;
 
 /**
  * @author vaibhav.adlakha
@@ -98,7 +100,21 @@ public class WarehouseServiceImpl implements WarehouseService {
         return getWarehouseDao().findByIdentifier(identifier);
     }
 
-    public WarehouseDaoImpl getWarehouseDao() {
+  @Override
+  public Warehouse findShippingWarehouse(ShippingOrder shippingOrder) {
+    if (shippingOrder.getBaseOrder().isB2bOrder() != null && shippingOrder.getBaseOrder().isB2bOrder()) {
+      return shippingOrder.getWarehouse();
+    } else {
+      if (shippingOrder.getWarehouse().getId().equals(WarehouseService.MUM_BRIGHT_WH_ID)) {
+        return getWarehouseById(WarehouseService.MUM_AQUA_WH_ID);
+      } else if (shippingOrder.getWarehouse().getId().equals(WarehouseService.GGN_BRIGHT_WH_ID)) {
+        return getWarehouseById(WarehouseService.GGN_AQUA_WH_ID);
+      }
+    }
+    return shippingOrder.getWarehouse();
+  }
+
+  public WarehouseDaoImpl getWarehouseDao() {
         return warehouseDao;
     }
 

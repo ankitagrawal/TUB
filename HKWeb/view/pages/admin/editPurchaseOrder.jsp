@@ -299,7 +299,7 @@ function temp() {
 		<td>For Warehouse</td>
 		<td>
 			<s:hidden name="purchaseOrder.warehouse" value="${pa.purchaseOrder.warehouse}" class="warehouse"/>
-				${pa.purchaseOrder.warehouse}
+				${pa.purchaseOrder.warehouse.identifier}
 		</td>
 		<td>Credit Days</td>
 		<td>

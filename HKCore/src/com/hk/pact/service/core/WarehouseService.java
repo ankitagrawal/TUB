@@ -1,6 +1,7 @@
 package com.hk.pact.service.core;
 
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.ShippingOrder;
 
 import java.util.List;
 import java.util.Set;
@@ -53,4 +54,6 @@ public interface WarehouseService {
   public Warehouse getWarehouseToBeAssignedByDefinedLogicForSplitting(Set<Warehouse> warehouses);
 
   public Warehouse findByIdentifier(String identifier);
+
+  public Warehouse findShippingWarehouse(ShippingOrder shippingOrder);
 }

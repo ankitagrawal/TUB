@@ -830,16 +830,7 @@ public class Functions {
 
   public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-    if (shippingOrder.getBaseOrder().isB2bOrder() != null && shippingOrder.getBaseOrder().isB2bOrder()) {
-      return shippingOrder.getWarehouse();
-    } else {
-      if (shippingOrder.getWarehouse().equals(warehouseService.getMumbaiWarehouse())) {
-        return warehouseService.getWarehouseById(WarehouseService.MUM_AQUA_WH_ID);
-      } else if (shippingOrder.getWarehouse().equals(warehouseService.getDefaultWarehouse())) {
-        return warehouseService.getWarehouseById(WarehouseService.GGN_AQUA_WH_ID);
-      }
-    }
-    return shippingOrder.getWarehouse();
+    return warehouseService.findShippingWarehouse(shippingOrder);
   }
 
 }
