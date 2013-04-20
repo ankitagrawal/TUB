@@ -32,6 +32,7 @@
     }
   %>
   <s:layout-component name="breadcrumb">
+  <div itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
     <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
       <%
@@ -55,6 +56,7 @@
     <h1 class='title'>
       ${topHeading}
     </h1>
+  </div>
   </div>
   </s:layout-component>
 </s:layout-definition>
