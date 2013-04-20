@@ -53,7 +53,7 @@
         Categories
     </th>
 
-    <c:if test="${bep.toBeEditedOptions['productBrand']}">
+    <c:if test="${bep.toBeEditedOptions.options['productBrand']}">
         <th>
             Brand
         </th>
@@ -67,19 +67,19 @@
         Supplier Tin
     </th>
 
-    <c:if test="${bep.toBeEditedOptions['productOrderRanking']}">
+    <c:if test="${bep.toBeEditedOptions.options['productOrderRanking']}">
         <th>
             Sorting
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productCodAllowed']}">
+    <c:if test="${bep.toBeEditedOptions.options}['productCodAllowed']}">
         <th>
             Is COD Allowed
         </th>
     </c:if>
 
-        <%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
+        <%--<c:if test="${bep.toBeEditedOptions.options['productDeleted']}">--%>
     <th>
         Is Deleted
     </th>
@@ -89,43 +89,43 @@
         Is Hidden
     </th>
 
-    <c:if test="${bep.toBeEditedOptions['productMinDays']}">
+    <c:if test="${bep.toBeEditedOptions.options['productMinDays']}">
         <th>
             Min Days
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productMaxDays']}">
+    <c:if test="${bep.toBeEditedOptions.options['productMaxDays']}">
         <th>
             Max Days
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productColorOptions']}">
+    <c:if test="${bep.toBeEditedOptions.options['productColorOptions']}">
         <th width="50px">
             Color Product?
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productGoogleAd']}">
+    <c:if test="${bep.toBeEditedOptions.options['productGoogleAd']}">
         <th width="50px">
             Is Google Ad Disallowed?
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productAmazonProduct']}">
+    <c:if test="${bep.toBeEditedOptions.options['productAmazonProduct']}">
         <th width="50px">
             Is Amazon Product?
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productService']}">
+    <c:if test="${bep.toBeEditedOptions.options['productService']}">
         <th width="50px">
             Is Service?
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productJit']}">
+    <c:if test="${bep.toBeEditedOptions.options['productJit']}">
         <th width="50px">
             Is JIT?
         </th>
@@ -141,38 +141,38 @@
             readonly="readonly"/>
 </td>
 <td valign="top">
-    <c:if test="${!bep.toBeEditedOptions['productName']}">
+    <c:if test="${!bep.toBeEditedOptions.options['productName']}">
         ${product.name}
     </c:if>
-    <c:if test="${bep.toBeEditedOptions['productName']}">
+    <c:if test="${bep.toBeEditedOptions.options['productName']}">
         <s:text name="products[${ctr.index}].name" style="width : 200px"/>
     </c:if>
 </td>
 
 <td valign="top">
-    <c:if test="${!bep.toBeEditedOptions['productCategories']}">
+    <c:if test="${!bep.toBeEditedOptions.options['productCategories']}">
         <s:text name="products[${ctr.index}].categoriesPipeSeparated" value="${product.pipeSeparatedCategories}"
                 style="width:400px; border: 0" readonly="readonly"/>
     </c:if>
-    <c:if test="${bep.toBeEditedOptions['productCategories']}">
+    <c:if test="${bep.toBeEditedOptions.options['productCategories']}">
         <s:text name="products[${ctr.index}].categoriesPipeSeparated" value="${product.pipeSeparatedCategories}"
                 style="width:400px"/>
     </c:if>
 </td>
 
-<c:if test="${bep.toBeEditedOptions['productBrand']}">
+<c:if test="${bep.toBeEditedOptions.options['productBrand']}">
     <td valign="top">
         <s:text name="products[${ctr.index}].brand" style="width:70px" class="productBrand"/>
     </td>
 </c:if>
 
 <td valign="top">
-    <c:if test="${!bep.toBeEditedOptions['productSecondaryCategory']}">
+    <c:if test="${!bep.toBeEditedOptions.options['productSecondaryCategory']}">
         <s:text class="productSecondaryCategory" name="secondaryCategory[${ctr.index}]"
                 value="${product.secondaryCategory.displayName}"
                 style="width: 150px; border: 0" readonly="readonly"/>
     </c:if>
-    <c:if test="${bep.toBeEditedOptions['productSecondaryCategory']}">
+    <c:if test="${bep.toBeEditedOptions.options['productSecondaryCategory']}">
         <s:text class="productSecondaryCategory" name="secondaryCategory[${ctr.index}]"
                 value="${product.secondaryCategory.displayName}"
                 style="width: 150px;"
@@ -181,25 +181,25 @@
 </td>
 
 <td valign="top">
-    <c:if test="${!bep.toBeEditedOptions['productSupplierTin']}">
+    <c:if test="${!bep.toBeEditedOptions.options['productSupplierTin']}">
         <s:text class="productSupplierTin" name="supplierTin[${ctr.index}]"
                 value="${product.supplier.tinNumber}"
                 style="width: 150px; border: 0" readonly="readonly"/>
     </c:if>
-    <c:if test="${bep.toBeEditedOptions['productSupplierTin']}">
+    <c:if test="${bep.toBeEditedOptions.options['productSupplierTin']}">
         <s:text class="productSupplierTin" name="supplierTin[${ctr.index}]"
                 value="${product.supplier.tinNumber}"
                 style="width: 150px;"/>
     </c:if>
 </td>
 
-<c:if test="${bep.toBeEditedOptions['productOrderRanking']}">
+<c:if test="${bep.toBeEditedOptions.options['productOrderRanking']}">
     <td valign="top">
         <s:text name="products[${ctr.index}].orderRanking" style="width:70px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productCodAllowed']}">
+<c:if test="${bep.toBeEditedOptions.options['productCodAllowed']}">
     <td width="60px" align="right" class="productCodAllowed">
         <s:select name="products[${ctr.index}].codAllowed" class="productCodAllowedDropDown">
             <s:option value="${product.codAllowed}" selected="true">${product.codAllowed}</s:option>
@@ -215,7 +215,7 @@
     </td>
 </c:if>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productDeleted']}">--%>
+    <%--<c:if test="${bep.toBeEditedOptions.options['productDeleted']}">--%>
 <td width="60px" align="right" class="productDeleted">
     <s:select name="products[${ctr.index}].deleted" class="productDeletedDropDown" >
         <s:option value="${product.deleted}" selected="true">${product.deleted}</s:option>
@@ -245,43 +245,43 @@
     </s:select>
 </td>
 
-<c:if test="${bep.toBeEditedOptions['productMinDays']}">
+<c:if test="${bep.toBeEditedOptions.options['productMinDays']}">
     <td valign="top">
         <s:text name="products[${ctr.index}].minDays" style="width:70px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productMaxDays']}">
+<c:if test="${bep.toBeEditedOptions.options['productMaxDays']}">
     <td valign="top">
         <s:text name="products[${ctr.index}].maxDays" style="width:70px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productColorOptions']}">
+<c:if test="${bep.toBeEditedOptions.options['productColorOptions']}">
     <td width="60px" valign="top">
         <s:checkbox name="products[${ctr.index}].productHaveColorOptions"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productGoogleAd']}">
+<c:if test="${bep.toBeEditedOptions.options['productGoogleAd']}">
     <td width="60px" valign="top">
         <s:checkbox name="products[${ctr.index}].googleAdDisallowed"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productAmazonProduct']}">
+<c:if test="${bep.toBeEditedOptions.options['productAmazonProduct']}">
     <td width="60px" valign="top">
         <s:checkbox name="products[${ctr.index}].amazonProduct"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productService']}">
+<c:if test="${bep.toBeEditedOptions.options['productService']}">
     <td width="60px" valign="top">
         <s:checkbox name="products[${ctr.index}].service"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productJit']}">
+<c:if test="${bep.toBeEditedOptions.options['productJit']}">
     <td width="60px" valign="top">
         <s:checkbox name="products[${ctr.index}].jit"/>
     </td>
@@ -295,128 +295,128 @@
         Variant ID
     </th>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantUpc']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantUpc']}">
         <th width="90px" style="text-align:center;">
             UPC
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantCostPrice']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantCostPrice']}">
         <th width="80px" style="text-align:center;">
             Cost Price
         </th>
     </c:if>
 
     <c:if
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <th width="80px" style="text-align:center;">
             MRP
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantB2BPrice']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantB2BPrice']}">
         <th width="80px" style="text-align:center;">
             B2B Price
         </th>
     </c:if>
 
     <c:if
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <th width="80px" style="text-align:center;">
             Postpaid Amount
         </th>
     </c:if>
 
     <c:if
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <th width="80px" style="text-align:center;">
             HK Price
         </th>
     </c:if>
 
     <c:if
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <th width="80px" style="text-align:center;">
             Discount
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantAffiliateCategory']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantAffiliateCategory']}">
         <th width="100px" style="text-align:center;">
             Affiliate<br/> Category
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantClearanceSale']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantClearanceSale']}">
         <th width="100px" style="text-align:center;">
             Clearance Sale
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantOutOfStock']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantOutOfStock']}">
         <th width="50px" style="text-align:center;">
             Out of stock
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantDeleted']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantDeleted']}">
         <th width="50px" style="text-align:center;">
             Deleted
         </th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantInventory']}">
         <th width="75px" style="text-align:center;">
             INVTRY
         </th>
     </c:if>
 
-        <%--<c:if test="${bep.toBeEditedOptions['productVariantCutOffInventory']}">--%>
+        <%--<c:if test="${bep.toBeEditedOptions.options['productVariantCutOffInventory']}">--%>
         <%--<th width="75px" style="text-align:center;">--%>
         <%--Cut-off INVTRY--%>
         <%--</th>--%>
         <%--</c:if>--%>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantWeight']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantWeight']}">
         <th style="text-align:center;">Wt.(gm)</th>
     </c:if>
 
-        <%--<c:if test="${bep.toBeEditedOptions['productVariantLength']}">--%>
+        <%--<c:if test="${bep.toBeEditedOptions.options['productVariantLength']}">--%>
         <%--<th style="text-align:center;">L(cm)</th>--%>
         <%--</c:if>--%>
 
-        <%--<c:if test="${bep.toBeEditedOptions['productVariantBreadth']}">--%>
+        <%--<c:if test="${bep.toBeEditedOptions.options['productVariantBreadth']}">--%>
         <%--<th style="text-align:center;">B(cm)</th>--%>
         <%--</c:if>--%>
 
-        <%--<c:if test="${bep.toBeEditedOptions['productVariantHeigth']}">--%>
+        <%--<c:if test="${bep.toBeEditedOptions.options['productVariantHeigth']}">--%>
         <%--<th style="text-align:center;">H(cm)</th>--%>
         <%--</c:if>--%>
-    <c:if test="${bep.toBeEditedOptions['productVariantConsumptionTime']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantConsumptionTime']}">
         <th style="text-align:center;">Consumption Time(in days)</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantLeadTime']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantLeadTime']}">
         <th style="text-align:center;">Laed Time</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantLeadTimeFactor']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantLeadTimeFactor']}">
         <th style="text-align:center;">Lead Time Factor</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantBufferTime']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantBufferTime']}">
         <th style="text-align:center;">Buffer Time</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantNextAvailDate']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantNextAvailDate']}">
         <th style="text-align:center;">Next Available Date</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantFollAvailDate']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantFollAvailDate']}">
         <th style="text-align:center;">Following Available Date</th>
     </c:if>
 
-    <c:if test="${bep.toBeEditedOptions['productVariantHasFreeProductVariant']}">
+    <c:if test="${bep.toBeEditedOptions.options['productVariantHasFreeProductVariant']}">
         <th style="text-align:center;">Free Product Variant</th>
         <th></th>
     </c:if>
@@ -428,13 +428,13 @@
         ${variant.optionsCommaSeparated}
 </td>
 
-<c:if test="${bep.toBeEditedOptions['productVariantUpc']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantUpc']}">
     <td width="80px">
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].upc" style="width:70px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantCostPrice']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantCostPrice']}">
     <td width="50px">
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].costPrice" size="5"
                 style="width:50px"/>
@@ -443,14 +443,14 @@
 
 <c:choose>
     <c:when
-            test="${bep.toBeEditedOptions['productVariantMRP'] && (bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] && (bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount'])}">
         <td width="50px" align="center">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
                     class="markedPrice" size="5" style="width:50px"/>
         </td>
     </c:when>
     <c:when
-            test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <td width="50px" align="center">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].markedPrice"
                     class="markedPrice" size="5" style="width:50px; border: 0;" readonly="readonly"/>
@@ -458,7 +458,7 @@
     </c:when>
 </c:choose>
 
-<c:if test="${bep.toBeEditedOptions['productVariantB2BPrice']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantB2BPrice']}">
     <td width="50px" align="right">
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].b2bPrice" size="5"
                 style="width:50px"
@@ -468,7 +468,7 @@
 
 <c:choose>
     <c:when
-            test="${bep.toBeEditedOptions['productVariantPostpaidAmount'] && (bep.toBeEditedOptions['productVariantPostpaidAmount'] || bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount'])}">
+            test="${bep.toBeEditedOptions.options['productVariantPostpaidAmount'] && (bep.toBeEditedOptions.options['productVariantPostpaidAmount'] || bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount'])}">
         <td width="50px" align="right">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
                     style="width:50px"
@@ -476,7 +476,7 @@
         </td>
     </c:when>
     <c:when
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantHKPrice'] || bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantHKPrice'] || bep.toBeEditedOptions.options['productVariantDiscount']}">
         <td width="50px" align="right">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].postpaidAmount" size="5"
                     style="width:50px; border: 0;" readonly="readonly"
@@ -487,7 +487,7 @@
 
 <c:choose>
     <c:when
-            test="${bep.toBeEditedOptions['productVariantHKPrice']}">
+            test="${bep.toBeEditedOptions.options['productVariantHKPrice']}">
         <td width="50px" align="right">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
                     style="width:50px"
@@ -501,7 +501,7 @@
     </c:when>
 
     <c:when
-            test="${bep.toBeEditedOptions['productVariantDiscount']}">
+            test="${bep.toBeEditedOptions.options['productVariantDiscount']}">
         <td width="50px" align="right">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
                     style="width:50px; border: 0;"
@@ -515,7 +515,7 @@
     </c:when>
 
     <c:when
-            test="${bep.toBeEditedOptions['productVariantMRP'] || bep.toBeEditedOptions['productVariantPostpaidAmount']}">
+            test="${bep.toBeEditedOptions.options['productVariantMRP'] || bep.toBeEditedOptions.options['productVariantPostpaidAmount']}">
         <td width="50px" align="right">
             <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].hkPrice" size="5"
                     style="width:50px; border: 0;"
@@ -529,7 +529,7 @@
     </c:when>
 </c:choose>
 
-<c:if test="${bep.toBeEditedOptions['productVariantAffiliateCategory']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantAffiliateCategory']}">
     <td width="100px">
         <s:select name="products[${ctr.index}].productVariants[${ctrVariant.index}].affiliateCategory"
                   value="${variant.affiliateCategory.affiliateCategoryName}" class="affiliateCategory"
@@ -542,7 +542,7 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantClearanceSale']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantClearanceSale']}">
     <td width="60px" align="right" class="productVariantClearanceSale">
             <%--<s:text name="productVariantClearanceSale" class="productVariantClearanceSaleText" value="${variant.clearanceSale}"--%>
             <%--readonly="readonly" style="border: 0;"/>--%>
@@ -561,7 +561,7 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantOutOfStock']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantOutOfStock']}">
     <td width="50px" align="right">
         <c:choose>
             <c:when test="${!variant.product.jit}">
@@ -574,13 +574,13 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantDeleted']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantDeleted']}">
     <td width="60px" align="right">
         <s:checkbox name="products[${ctr.index}].productVariants[${ctrVariant.index}].deleted"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantInventory']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantInventory']}">
     <td width="100px" align="right">
         <s:link beanclass="com.hk.web.action.admin.inventory.ListBatchesAndCheckinInventory" target="_blank">
             <strong>${hk:netInventoryAtServiceableWarehouses(variant)}</strong>
@@ -589,77 +589,77 @@
     </td>
 </c:if>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantCutOffInventory']}">--%>
+    <%--<c:if test="${bep.toBeEditedOptions.options['productVariantCutOffInventory']}">--%>
     <%--<td>--%>
     <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].cutOffInventory" size="2"--%>
     <%--style="width:30px"/>--%>
     <%--</td>--%>
     <%--</c:if>--%>
 
-<c:if test="${bep.toBeEditedOptions['productVariantWeight']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantWeight']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].weight" size="2"
                 style="width:40px"/>
     </td>
 </c:if>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantLength']}">--%>
+    <%--<c:if test="${bep.toBeEditedOptions.options['productVariantLength']}">--%>
     <%--<td>--%>
     <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].length" size="2"--%>
     <%--style="width:40px"/>--%>
     <%--</td>--%>
     <%--</c:if>--%>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantBreadth']}">--%>
+    <%--<c:if test="${bep.toBeEditedOptions.options['productVariantBreadth']}">--%>
     <%--<td>--%>
     <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].breadth" size="2"--%>
     <%--style="width:40px"/>--%>
     <%--</td>--%>
     <%--</c:if>--%>
 
-    <%--<c:if test="${bep.toBeEditedOptions['productVariantHeigth']}">--%>
+    <%--<c:if test="${bep.toBeEditedOptions.options['productVariantHeigth']}">--%>
     <%--<td>--%>
     <%--<s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].height" size="2"--%>
     <%--style="width:40px"/>--%>
     <%--</td>--%>
     <%--</c:if>--%>
 
-<c:if test="${bep.toBeEditedOptions['productVariantConsumptionTime']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantConsumptionTime']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].consumptionTime" size="2"
                 style="width:40px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantLeadTime']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantLeadTime']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].leadTime" size="2"
                 style="width:40px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantLeadTimeFactor']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantLeadTimeFactor']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].leadTimeFactor" size="2"
                 style="width:40px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantBufferTime']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantBufferTime']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].bufferTime" size="2"
                 style="width:40px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantNextAvailDate']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantNextAvailDate']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].nextAvailableDate" class="date_input"
                 formatPattern="yyyy-MM-dd" style="width:100px"/>
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantFollAvailDate']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantFollAvailDate']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].followingAvailableDate"
                 class="date_input"
@@ -667,7 +667,7 @@
     </td>
 </c:if>
 
-<c:if test="${bep.toBeEditedOptions['productVariantHasFreeProductVariant']}">
+<c:if test="${bep.toBeEditedOptions.options['productVariantHasFreeProductVariant']}">
     <td>
         <s:text name="products[${ctr.index}].productVariants[${ctrVariant.index}].freeProductVariant"
                 class="freeVariant"/>
