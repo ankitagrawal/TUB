@@ -1,10 +1,9 @@
 package com.hk.impl.service.subscription;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.core.fliter.CartLineItemFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,23 +65,36 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     /**
      * Used to update subscription status to placed after the order containing subscriptions is placed
-     * 
+     *
      * @param order
      * @return
      */
     public List<Subscription> placeSubscriptions(Order order) {
         List<Subscription> inCartSubscriptions = getSubscriptions(order, EnumSubscriptionStatus.InCart.asSubscriptionStatus());
-        for (Subscription subscription : inCartSubscriptions) {
-            subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
-            subscription.setAddress(order.getAddress());
-            if (subscription.getStartDate().getTime() < BaseUtils.getCurrentTimestamp().getTime()) {
-                subscription.setStartDate(BaseUtils.getCurrentTimestamp());
-                subscription.setNextShipmentDate(BaseUtils.getCurrentTimestamp());
+        if(order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())){
+            for (Subscription subscription : inCartSubscriptions) {
+                subscription.setSubscriptionStatus(EnumSubscriptionStatus.Placed.asSubscriptionStatus());
+                subscription.setAddress(order.getAddress());
+                if (subscription.getStartDate().getTime() < BaseUtils.getCurrentTimestamp().getTime()) {
+                    subscription.setStartDate(BaseUtils.getCurrentTimestamp());
+                    subscription.setNextShipmentDate(BaseUtils.getCurrentTimestamp());
+                }
+                subscription = subscriptionDao.save(subscription);
+                subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
+                emailManager.sendSubscriptionPlacedEmailToUser(subscription);
+                emailManager.sendSubscriptionPlacedEmailToAdmin(subscription);
             }
-            subscription = subscriptionDao.save(subscription);
-            subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
-            emailManager.sendSubscriptionPlacedEmailToUser(subscription);
-            emailManager.sendSubscriptionPlacedEmailToAdmin(subscription);
+            //the following if is added to handle orders which have just subscriptions in them.
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            if(productCartLineItems.size()==0){
+                Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+                if(subscriptionCartLineItems.size()>0){
+                    if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                        order.setOrderStatus(EnumOrderStatus.SubscriptionInProgress.asOrderStatus());
+                        order = (Order)baseDao.save(order);
+                    }
+                }
+            }
         }
         return inCartSubscriptions;
     }
@@ -142,7 +154,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     /**
      * get subscriptions with a particular status
-     * 
+     *
      * @param subscriptionStatus
      * @return
      */
@@ -200,7 +212,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionExpired, "Subscription marked as expired");
             Order order = subscription.getBaseOrder();
             boolean parentBOHasProducts = false;
-            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId()) || order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())) {
+            if (order.getOrderStatus().getId().equals(EnumOrderStatus.InProcess.getId()) || order.getOrderStatus().getId().equals(EnumOrderStatus.Placed.getId())
+                    || order.getOrderStatus().getId().equals(EnumOrderStatus.SubscriptionInProgress.getId())) {
                 for (CartLineItem cartLineItem : order.getCartLineItems()) {
                     if (cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
                         parentBOHasProducts = true;
