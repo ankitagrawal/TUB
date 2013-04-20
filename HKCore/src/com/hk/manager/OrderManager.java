@@ -583,7 +583,9 @@ public class OrderManager {
           }
           else{
 
-          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
+          if (skuList == null || skuList.isEmpty()
+              || product.isDeleted() || product.isHidden() || product.isOutOfStock()
+              || productVariant.isDeleted() || productVariant.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
               }
