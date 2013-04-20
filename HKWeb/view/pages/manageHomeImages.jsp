@@ -81,7 +81,7 @@
           <c:if test="${fn:toLowerCase(categoryImage.position) eq('center')}">
             <tr style="border:1px">
               <td>
-                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
               </td>
               <td>
                 <s:checkbox name="categoryImages[${ctr.index}].hidden"/>
