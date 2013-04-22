@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
-import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
+import com.hk.store.CategoryDto;
 
 @Repository
 public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProductDao {
@@ -25,11 +25,14 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		criteria.add(Restrictions.eq("variant.id", variantId));
 		@SuppressWarnings("unchecked")
 		List<LoyaltyProduct> list = this.findByCriteria(criteria);
+		if(list == null || list.isEmpty()) {
+			return null;
+		}
 		return list.get(0);
 	}
 
 	@Override
-	public List<CategoryLoyaltyDto> getCategoryDtoForLoyaltyProducts() {
+	public List<CategoryDto> getCategoryDtoForLoyaltyProducts() {
 		DetachedCriteria criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		criteria.createAlias("variant", "prodVariant", CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq("prodVariant.outOfStock", Boolean.FALSE));
@@ -47,10 +50,10 @@ public class LoyaltyProductDaoImpl extends BaseDaoImpl implements LoyaltyProduct
 		criteria.setProjection(projectionsList);
 		criteria.addOrder(Order.asc("category.name"));
 		
-		criteria.setResultTransformer(Transformers.aliasToBean(CategoryLoyaltyDto.class));
+		criteria.setResultTransformer(Transformers.aliasToBean(CategoryDto.class));
 		
 		@SuppressWarnings("unchecked")
-		List<CategoryLoyaltyDto> list = this.findByCriteria(criteria);
+		List<CategoryDto> list = this.findByCriteria(criteria);
 		return list;
 	}
 

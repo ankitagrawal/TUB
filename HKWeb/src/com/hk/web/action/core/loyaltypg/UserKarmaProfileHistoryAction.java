@@ -49,10 +49,10 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	public Resolution pre() {
 		if (this.getPrincipal() != null) {
 			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
-			this.pointsPage = this.loyaltyProgramService.getProfileHistory(this.user, this.getPageNo(), this.getPerPage());
+			this.pointsPage = this.loyaltyProgramService.getUserLoyaltyProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 			this.karmaList = this.pointsPage.getList();
-			this.validPoints = this.loyaltyProgramService.calculateValidPoints(this.user.getId());
-			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user.getId());
+			this.validPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.user);
+			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user);
 			double upgradeAmount =  this.loyaltyProgramService.calculateUpgradePoints(this.badgeInfo);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.badgeInfo.getUpdationTime());
@@ -63,17 +63,6 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 				} else {
 					this.upgradeString = "Congratulations! You are at highest level till at least " +  dateFormat.format(cal.getTime());
 				}
-			
-			/*for(UserOrderKarmaProfile profile : this.karmaList) {
-				
-				if (TransactionType.DEBIT.equals(profile.getTransactionType())
-						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
-					this.pointsDebited += profile.getKarmaPoints();
-				} else if (TransactionType.CREDIT.equals(profile.getTransactionType())
-						&& KarmaPointStatus.APPROVED.equals(profile.getStatus())) {
-					this.pointsCredited += profile.getKarmaPoints();
-				}
-			}*/
 			
 		}
 

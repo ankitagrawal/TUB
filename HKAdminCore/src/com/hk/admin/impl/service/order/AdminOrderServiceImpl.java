@@ -1,10 +1,12 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.*;
-import com.hk.pact.service.review.ReviewCollectionFrameworkService;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.loyaltypg.service.LoyaltyProgramService;
-import com.hk.domain.payment.Payment;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +16,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.Address;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
@@ -49,6 +51,8 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.review.ReviewCollectionFrameworkService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
@@ -116,27 +120,29 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
 
 
-    @Transactional
+    @Override
+	@Transactional
     public Order putOrderOnHold(Order order) {
 
         ShippingOrderFilter shippingOrderFilter = new ShippingOrderFilter(order.getShippingOrders());
         Set<ShippingOrder> shippingOrdersToPutOnHold = shippingOrderFilter.filterShippingOrdersByStatus(EnumShippingOrderStatus.getStatusForPuttingOrderOnHold());
 
         for (ShippingOrder shippingOrder : shippingOrdersToPutOnHold) {
-            getAdminShippingOrderService().putShippingOrderOnHold(shippingOrder);
+            this.getAdminShippingOrderService().putShippingOrderOnHold(shippingOrder);
         }
-        order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.OnHold));
-        order = getOrderService().save(order);
+        order.setOrderStatus(this.getOrderService().getOrderStatus(EnumOrderStatus.OnHold));
+        order = this.getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
          */
-        logOrderActivity(order, EnumOrderLifecycleActivity.OrderPutOnHold);
+        this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderPutOnHold);
 
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser) {
         boolean shouldCancel = true;
 
@@ -148,44 +154,44 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
 
         if (shouldCancel) {
-            order.setOrderStatus((getOrderStatusService().find(EnumOrderStatus.Cancelled)));
+            order.setOrderStatus((this.getOrderStatusService().find(EnumOrderStatus.Cancelled)));
             order.setCancellationType(cancellationType);
             order.setCancellationRemark(cancellationRemark);
-            order = getOrderService().save(order);
+            order = this.getOrderService().save(order);
 
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
             if (shippingOrders != null) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+                    this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
                 }
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
                 for (CartLineItem cartLineItem : cartLineItems) {
-                    inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+                    this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
                 }
             }
 
-            affilateService.cancelTxn(order);
+            this.affilateService.cancelTxn(order);
 
             if (order.getRewardPointsUsed() != null && order.getRewardPointsUsed() > 0) {
-                referrerProgramManager.refundRedeemedPoints(order);
+                this.referrerProgramManager.refundRedeemedPoints(order);
             }
-            List<RewardPoint> rewardPointList = getRewardPointService().findByReferredOrder(order);
+            List<RewardPoint> rewardPointList = this.getRewardPointService().findByReferredOrder(order);
             if (rewardPointList != null && rewardPointList.size() > 0) {
                 for (RewardPoint rewardPoint : rewardPointList) {
-                    rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
+                    this.rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
 
-	        loyaltyProgramService.cancelKarmaPoints(order.getId());
+	        this.loyaltyProgramService.cancelLoyaltyPoints(order);
 
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                emailManager.sendOrderCancelEmailToUser(order);
+                this.emailManager.sendOrderCancelEmailToUser(order);
             }
-            emailManager.sendOrderCancelEmailToAdmin(order);
+            this.emailManager.sendOrderCancelEmailToAdmin(order);
 
-            this.logOrderActivity(order, loggedOnUser, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), cancellationRemark);
+            this.logOrderActivity(order, loggedOnUser, this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCancelled), cancellationRemark);
         } else {
             String comment = "All SOs of BO#" + order.getGatewayOrderId() + " are not in Action Awaiting Status - Aborting Cancellation.";
             logger.info(comment);
@@ -193,50 +199,53 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order unHoldOrder(Order order) {
 
         ShippingOrderFilter shippingOrderFilter = new ShippingOrderFilter(order.getShippingOrders());
         Set<ShippingOrder> shippingOrdersToPutOnHold = shippingOrderFilter.filterShippingOrdersByStatus(Arrays.asList(EnumShippingOrderStatus.SO_OnHold));
 
         for (ShippingOrder shippingOrder : shippingOrdersToPutOnHold) {
-            getAdminShippingOrderService().unHoldShippingOrder(shippingOrder);
+            this.getAdminShippingOrderService().unHoldShippingOrder(shippingOrder);
         }
 
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         if (shippingOrders != null && !shippingOrders.isEmpty()) {
-            order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.InProcess));
+            order.setOrderStatus(this.getOrderService().getOrderStatus(EnumOrderStatus.InProcess));
         } else {
-            order.setOrderStatus(getOrderService().getOrderStatus(EnumOrderStatus.Placed));
+            order.setOrderStatus(this.getOrderService().getOrderStatus(EnumOrderStatus.Placed));
         }
 
-        order = getOrderService().save(order);
+        order = this.getOrderService().save(order);
 
         /**
          * Order lifecycle activity logging - Order Put OnHold
          */
-        logOrderActivity(order, EnumOrderLifecycleActivity.OrderRemovedOnHold);
+        this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderRemovedOnHold);
 
         return order;
     }
 
-    public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
-        User user = userService.getLoggedInUser();
+    @Override
+	public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
+        User user = this.userService.getLoggedInUser();
         //User user = UserCache.getInstance().getLoggedInUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
-        logOrderActivity(order, user, orderLifecycleActivity, null);
+        OrderLifecycleActivity orderLifecycleActivity = this.getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
+        this.logOrderActivity(order, user, orderLifecycleActivity, null);
     }
 
-    public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
+    @Override
+	public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
         //User user = UserCache.getInstance().getAdminUser();
-        User user = userService.getAdminUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
-        logOrderActivity(order, user, orderLifecycleActivity, comments);
+        User user = this.userService.getAdminUser();
+        OrderLifecycleActivity orderLifecycleActivity = this.getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
+        this.logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
 
     @Override
     public void logOrderActivity(Order order, User user, OrderLifecycleActivity orderLifecycleActivity, String comments) {
-        getOrderLoggingService().logOrderActivity(order, user, orderLifecycleActivity, comments);
+        this.getOrderLoggingService().logOrderActivity(order, user, orderLifecycleActivity, comments);
     }
 
     /**
@@ -249,7 +258,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-	        if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+	        if (!this.shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
 		        if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
 			        shouldUpdate = false;
 			        break;
@@ -258,8 +267,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
 
         if (shouldUpdate) {
-            order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
-            order = getOrderService().save(order);
+            order.setOrderStatus(this.getOrderStatusService().find(boStatusOnSuccess));
+            order = this.getOrderService().save(order);
         }
         /*
          * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
@@ -269,88 +278,93 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return shouldUpdate;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsShipped(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
             // update in case of subscription orders
-            subscriptionOrderService.markSubscriptionOrderAsShipped(order);
+            this.subscriptionOrderService.markSubscriptionOrderAsShipped(order);
 
             // incase of other store orders
             if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                order = orderService.save(order);
-                storeOrderService.updateOrderStatusInStore(order);
+                order = this.orderService.save(order);
+                this.storeOrderService.updateOrderStatusInStore(order);
             }
         }
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsDelivered(Order order) {
         if (!order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
-            boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
+            boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
             if (isUpdated) {
-                logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
-                rewardPointService.approvePendingRewardPointsForOrder(order);
-                affilateService.approvePendingAffiliateTxn(order);
+                this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
+                this.rewardPointService.approvePendingRewardPointsForOrder(order);
+                this.affilateService.approvePendingAffiliateTxn(order);
                 // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put
                 // a
                 // check if payment mode was COD and email hasn't been sent yet
                 // sendEmailToServiceProvidersForOrder(order);
 
                 // if the order is a subscription order update subscription status
-                subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
+                this.subscriptionOrderService.markSubscriptionOrderAsDelivered(order);
 
                 // incase of other store orders
                 if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                    order = orderService.save(order);
-                    storeOrderService.updateOrderStatusInStore(order);
+                    order = this.orderService.save(order);
+                    this.storeOrderService.updateOrderStatusInStore(order);
                 }
                 if (!order.isDeliveryEmailSent() && order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                    if (getAdminEmailManager().sendOrderDeliveredEmail(order)) {
+                    if (this.getAdminEmailManager().sendOrderDeliveredEmail(order)) {
                         order.setDeliveryEmailSent(true);
-                        getOrderService().save(order);
+                        this.getOrderService().save(order);
                     }
-	                smsManager.sendOrderDeliveredSMS(order);
+	                this.smsManager.sendOrderDeliveredSMS(order);
 
-                    reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
+                    this.reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
                 }
             }
         }
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsCompletedWithInstallation(Order order){
 //       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
-        boolean isUpdated = updateOrderStatusFromShippingOrdersForInstallation(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrdersForInstallation(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
-            getAdminEmailManager().sendOrderInstalltionEmail(order);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderInstalled);
+            this.getAdminEmailManager().sendOrderInstalltionEmail(order);
         }
         return order;
     }
 
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsLost(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
         if (isUpdated) {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderLost);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderLost);
         } else {
-            logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyLost);
+            this.logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyLost);
         }
         return order;
     }
@@ -365,13 +379,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
            Set<ShippingOrder> baseShippingOrderList = order.getShippingOrders();
            List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
             for (ShippingOrder shippingOrder : baseShippingOrderList) {
-                if (shippingOrder.isDropShipping() && shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
+                if (shippingOrder.isDropShipping() && this.shipmentService.isShippingOrderHasInstallableItem(shippingOrder)) {
                     shippingOrderList.add(shippingOrder);
                 }
             }
 
            for (ShippingOrder shippingOrder : shippingOrderList) {
-               if (!shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
+               if (!this.shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
                    if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
                        shouldUpdate = false;
                        break;
@@ -380,8 +394,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
            }
 
            if (shouldUpdate) {
-               order.setOrderStatus(getOrderStatusService().find(boStatusOnSuccess));
-               order = getOrderService().save(order);
+               order.setOrderStatus(this.getOrderStatusService().find(boStatusOnSuccess));
+               order = this.getOrderService().save(order);
            }
            /*
             * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
@@ -396,9 +410,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Transactional
     public Order moveOrderBackToActionQueue(Order order, String shippingOrderGatewayId) {
         //User loggedInUser = UserCache.getInstance().getLoggedInUser();
-        User loggedInUser = getUserService().getLoggedInUser();
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
-        logOrderActivity(order, loggedInUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
+        User loggedInUser = this.getUserService().getLoggedInUser();
+        OrderLifecycleActivity orderLifecycleActivity = this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedBackToAwaitingQueue);
+        this.logOrderActivity(order, loggedInUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated back to  action queue");
 
         return order;
     }
@@ -406,7 +420,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     /**
      * TODO:#ankit please make keys in the map as some constants.
      */
-    public Map<String, String> isCODAllowed(Order order,Double payable) {
+    @Override
+	public Map<String, String> isCODAllowed(Order order,Double payable) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -423,40 +438,42 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         OrderSearchCriteria osc = new OrderSearchCriteria();
         osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
-        List<Order> rtoOrders = getOrderService().searchOrders(osc);
+        List<Order> rtoOrders = this.getOrderService().searchOrders(osc);
 
-        if (payable < codMinAmount || payable > codMaxAmount) {
+        if (payable < this.codMinAmount || payable > this.codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
             codFailureMap.put("CodOnSubscription", "N");
         } else if (!codAllowedonProduct) {
             codFailureMap.put("CodAllowedOnProduct", "N");
-        } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
+        } else if (!this.pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, this.pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
             codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
             osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
-            List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
-            if (rtoOrders.size() >= totalDeliveredOrders.size())
-                codFailureMap.put("MutipleRTOs", "Y");
+            List<Order> totalDeliveredOrders = this.getOrderService().searchOrders(osc);
+            if (rtoOrders.size() >= totalDeliveredOrders.size()) {
+				codFailureMap.put("MutipleRTOs", "Y");
+			}
         }
         return codFailureMap;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Payment confirmCodOrder(Order order, String source) {
         Payment payment = null;
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            payment = paymentManager.verifyCodPayment(order.getPayment());
-            orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
-            orderService.setTargetDispatchDelDatesOnBO(order);
-            getOrderLoggingService().logOrderActivity(order, userService.getAdminUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
+            payment = this.paymentManager.verifyCodPayment(order.getPayment());
+            this.orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+            this.orderService.setTargetDispatchDelDatesOnBO(order);
+            this.getOrderLoggingService().logOrderActivity(order, this.userService.getAdminUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
 
         }
         return payment;
     }
 
     public UserService getUserService() {
-        return userService;
+        return this.userService;
     }
 
     public void setUserService(UserService userService) {
@@ -464,7 +481,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public OrderStatusService getOrderStatusService() {
-        return orderStatusService;
+        return this.orderStatusService;
     }
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
@@ -472,7 +489,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public RewardPointService getRewardPointService() {
-        return rewardPointService;
+        return this.rewardPointService;
     }
 
     public void setRewardPointService(RewardPointService rewardPointService) {
@@ -480,10 +497,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminShippingOrderService getAdminShippingOrderService() {
-        if (adminShippingOrderService == null) {
-            adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
+        if (this.adminShippingOrderService == null) {
+            this.adminShippingOrderService = ServiceLocatorFactory.getService(AdminShippingOrderService.class);
         }
-        return adminShippingOrderService;
+        return this.adminShippingOrderService;
     }
 
     public void setAdminShippingOrderService(AdminShippingOrderService adminShippingOrderService) {
@@ -491,7 +508,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AffilateService getAffilateService() {
-        return affilateService;
+        return this.affilateService;
     }
 
     public void setAffilateService(AffilateService affilateService) {
@@ -499,7 +516,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public ReferrerProgramManager getReferrerProgramManager() {
-        return referrerProgramManager;
+        return this.referrerProgramManager;
     }
 
     public void setReferrerProgramManager(ReferrerProgramManager referrerProgramManager) {
@@ -507,7 +524,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public EmailManager getEmailManager() {
-        return emailManager;
+        return this.emailManager;
     }
 
     public void setEmailManager(EmailManager emailManager) {
@@ -515,7 +532,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public OrderService getOrderService() {
-        return orderService;
+        return this.orderService;
     }
 
     public void setOrderService(OrderService orderService) {
@@ -523,7 +540,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public OrderLoggingService getOrderLoggingService() {
-        return orderLoggingService;
+        return this.orderLoggingService;
     }
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
@@ -531,7 +548,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public SubscriptionOrderService getSubscriptionOrderService() {
-        return subscriptionOrderService;
+        return this.subscriptionOrderService;
     }
 
     public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {
@@ -539,7 +556,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public StoreService getStoreService() {
-        return storeService;
+        return this.storeService;
     }
 
     public void setStoreService(StoreService storeService) {
@@ -547,7 +564,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public StoreOrderService getStoreOrderService() {
-        return storeOrderService;
+        return this.storeOrderService;
     }
 
     public void setStoreOrderService(StoreOrderService storeOrderService) {
@@ -555,7 +572,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     public AdminEmailManager getAdminEmailManager() {
-        return adminEmailManager;
+        return this.adminEmailManager;
     }
 
 }

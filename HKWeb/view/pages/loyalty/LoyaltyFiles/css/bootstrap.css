@@ -265,6 +265,9 @@ body {
   content: "";
 }
 
+.row:after {
+  clear: both;
+}
 
 [class*="span"] {
   float: left;
@@ -280,7 +283,7 @@ body {
 }
 
 .span12 {
-  width: 650px;
+  width: 940px;
 }
 
 .span11 {

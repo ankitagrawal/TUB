@@ -28,8 +28,6 @@
           </div>
       <c:choose>
             <c:when test="${!empty userKarmaHA.karmaList}">
-                <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${userKarmaHA}"/>
-                <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${userKarmaHA}"/>
   
           <!-- Table starts -->
           <div class="tableHistory embedMarginTop40">
@@ -61,8 +59,8 @@
 
           </div>
           <!-- Table Ends -->
-          <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${userKarmaHA}"/>
-            <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${userKarmaHA}"/>
+       <%--    <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${userKarmaHA}"/> --%>
+            <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${userKarmaHA}"/>
                 <br/><br/>
             </c:when>
        <c:otherwise>
@@ -74,22 +72,6 @@
             </c:otherwise>
         </c:choose>
   
-          <div class="pagination embedMarginTop20">
-            <ul class="pageNums">
-              <li class="pageNum">PREVIOUS</li>
-              <li class="pageNum">03</li>
-              <li class="pageNum">04</li>
-              <li class="dots">...</li>
-              <li class="pageNum">11</li>
-              <li class="pageNum">12</li>
-              <li class="pageNum">13</li>
-              <li class="dots">...</li>
-              <li class="pageNum">22</li>
-              <li class="pageNum">23</li>
-              <li class="pageNum">NEXT</li>
-            </ul>
-          </div>
-
         </div>
 
       </div>
@@ -110,4 +92,16 @@
   window.onload = function() {
     document.getElementById("ohLink").style.fontWeight = "bold";
   };
+  
+  //Pagination click event
+  $(".pagi_link").click(function(){
+    if($(this).hasClass("grayedButton")){
+      $(this).removeClass("grayedButton");
+    }
+    else{
+      $(this).parent().find("li").removeClass("grayedButton");
+      $(this).addClass("grayedButton");
+    }
+  });
+
 </script>

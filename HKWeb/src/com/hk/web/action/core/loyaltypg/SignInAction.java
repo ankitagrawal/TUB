@@ -65,7 +65,6 @@ public class SignInAction extends BaseAction {
 			return new RedirectResolution(this.redirectUrl, false);
 		}
 
-		this.loyaltyProgramService.reviseBadgeInfoForUser(user, 10.0);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}
 

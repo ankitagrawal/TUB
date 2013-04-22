@@ -18,7 +18,7 @@
 		<% int i=1; %>
 		<table class="cont footer_color">
      	 <c:forEach items="${lca.badgeList}" var="badge">
-			<c:set var="badge_<%=i %>" value=${badge}> </c:set>
+			<c:set var="badge_<%=i %>" value="${badge}"> </c:set>
 			<% i++; %>
 		
 			<strong>${badge.badgeName}: </strong> ${badge.loyaltyMultiplier}
@@ -52,6 +52,7 @@
                             </td>
                         </tr>
                     </tbody>
+                    </c:forEach>
                 </table>
 
 </stripes:layout-component>

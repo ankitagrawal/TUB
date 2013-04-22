@@ -3,23 +3,15 @@ package com.hk.loyaltypg.dao;
 import java.util.List;
 
 import com.hk.domain.loyaltypg.LoyaltyProduct;
-import com.hk.loyaltypg.dto.CategoryLoyaltyDto;
 import com.hk.pact.dao.BaseDao;
+import com.hk.store.CategoryDto;
 
 public interface LoyaltyProductDao extends BaseDao {
 
 	LoyaltyProduct getProductbyVarientId(String variantId);
+
+	List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
+
+	List<CategoryDto> getCategoryDtoForLoyaltyProducts();
 	
-	
-	/**
-	 * @param categoryName
-	 * @return
-	 */
-	public List<LoyaltyProduct> getProductsByCategoryName(String categoryName);
-	
-	/**
-	 * Test method.
-	 * @return
-	 */
-	public List<CategoryLoyaltyDto> getCategoryDtoForLoyaltyProducts() ;
 }

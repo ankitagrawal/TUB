@@ -1,4 +1,4 @@
-\<%@ page import="com.shiro.PrincipalImpl" %>
+<%@ page import="com.shiro.PrincipalImpl" %>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <!DOCTYPE html>
@@ -15,15 +15,15 @@
     <meta name="description" content="">
     <meta name="author" content="Deepak Chauhan">
 
-    <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/grid.css" rel="stylesheet">
-    <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/style.css" rel="stylesheet">
-    <link href="<hk:vhostJs/>/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="/healthkart/pages/loyalty/LoyaltyJunk/css/jquery.jscrollpane.css" rel="stylesheet">
-	<script src="<hk:vhostJs/>/bootstrap/js/bootstrap.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery-1.9.0.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery.jscrollpane.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery.jcarousel.min.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyJunk/js/jquery-ui.min.js"></script>
+    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/grid.css" rel="stylesheet">
+    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/style.css" rel="stylesheet">
+    <%-- <link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet"> --%>
+    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/jquery.jscrollpane.css" rel="stylesheet">
+	<script src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery-1.9.0.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery.jscrollpane.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery.jcarousel.min.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery-ui.min.js"></script>
 	<script type="text/javascript">
     $(document).ready(function(){
         $('.brandsContainer').jScrollPane({verticalDragMaxHeight:30, positionDragY:30});
@@ -89,7 +89,7 @@
 			  </p>
               <div class="logoSubblock">
 			  <a title="healthkart" href="/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyJunk/images/hkStellar.png">
+                <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyFiles/images/hkStellar.png">
               </a>
               </div>
   

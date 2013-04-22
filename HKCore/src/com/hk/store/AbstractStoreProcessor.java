@@ -22,8 +22,8 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
-import com.hk.manager.payment.PaymentManager;
 import com.hk.manager.OrderManager;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductVariantService;
@@ -55,18 +55,18 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 
 	@Override
 	public Long createOrder(Long userId) {
-		Order order = getCart(userId);
+		Order order = this.getCart(userId);
 		if (order != null) {
 			return order.getId();
 		}
 		order = new Order();
-		order.setStore(getStore());
-		order.setUser(userService.getUserById(userId));
+		order.setStore(this.getStore());
+		order.setUser(this.userService.getUserById(userId));
 		order.setOrderStatus(EnumOrderStatus.InCart.asOrderStatus());
 		order.setAmount(0D);
 		order.setSubscriptionOrder(false);
-		orderService.save(order);
-		order = getCart(userId);
+		this.orderService.save(order);
+		order = this.getCart(userId);
 		return order.getId();
 	}
 
@@ -74,7 +74,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	public void addToCart(Long orderId, List<ProductVariantInfo> productVariants) throws InvalidOrderException {
 		Map<String, CartLineItem> cartItemMap = new HashMap<String, CartLineItem>();
 
-		Order order = orderService.find(orderId);
+		Order order = this.orderService.find(orderId);
 		Set<CartLineItem> cartItems = order.getCartLineItems();
 
 		List<ProductVariantInfo> processedVariants = new ArrayList<ProductVariantInfo>();
@@ -92,7 +92,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		}
 
 		for (ProductVariantInfo productVariantInfo : productVariants) {
-			ProductVariant productVariant = productVariantService.getVariantById(productVariantInfo
+			ProductVariant productVariant = this.productVariantService.getVariantById(productVariantInfo
 					.getProductVariantId());
 			CartLineItem cartLineItem = new CartLineItem();
 			cartLineItem.setProductVariant(productVariant);
@@ -105,16 +105,16 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 		}
 
-		validateCart(order.getUser().getId(), cartItemMap.values());
+		this.validateCart(order.getUser().getId(), cartItemMap.values());
 
 		for (CartLineItem cartLineItem : cartItemMap.values()) {
-			cartLineItemService.save(cartLineItem);
+			this.cartLineItemService.save(cartLineItem);
 		}
 	}
 
 	@Override
 	public Order getCart(Long userId) {
-		Store store = getStore();
+		Store store = this.getStore();
 
 		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
 		criteria.add(Restrictions.eq("user.id", userId));
@@ -124,68 +124,68 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		criteria.add(Restrictions.eq("os.name", EnumOrderStatus.InCart.getName()));
 
 		@SuppressWarnings("unchecked")
-		List<Order> orders = baseDao.findByCriteria(criteria);
+		List<Order> orders = this.baseDao.findByCriteria(criteria);
 		if (orders != null && orders.size() > 0) {
 			Order order = orders.iterator().next();
-			orderManager.trimEmptyLineItems(order);
-			return orderService.find(order.getId());
+			this.orderManager.trimEmptyLineItems(order);
+			return this.orderService.find(order.getId());
 		}
 		return null;
 	}
 
 	@Override
 	public Order getOrderById(Long orderId) {
-		return orderService.find(orderId);
+		return this.orderService.find(orderId);
 	}
 
 	@Override
 	public Payment makePayment(Long orderId, String remoteIp) throws InvalidOrderException {
-		Order order = orderService.find(orderId);
+		Order order = this.orderService.find(orderId);
 		Set<CartLineItem> cartLineItems = order.getCartLineItems();
-		validateCart(order.getUser().getId(), cartLineItems);
+		this.validateCart(order.getUser().getId(), cartLineItems);
 		List<CartLineItem> lineItems = new ArrayList<CartLineItem>(cartLineItems);
 		for (CartLineItem cartLineItem : lineItems) {
 			if (cartLineItem.getQty() == 0l) {
-				cartLineItemService.remove(cartLineItem.getId());
+				this.cartLineItemService.remove(cartLineItem.getId());
 			}
 		}
-		Payment payment = doPayment(orderId, remoteIp);
+		Payment payment = this.doPayment(orderId, remoteIp);
 		order.setPayment(payment);
 		order.setGatewayOrderId(payment.getGatewayOrderId());
-		orderService.save(order);
+		this.orderService.save(order);
 		return payment;
 	}
 
 	@Override
 	public void setShipmentAddress(Long orderId, Address address) {
-		Order order = orderService.find(orderId);
+		Order order = this.orderService.find(orderId);
 		User user = order.getUser();
 		address.setUser(user);
-		address = addressService.save(address);
+		address = this.addressService.save(address);
 		order.setAddress(address);
-		orderService.save(order);
+		this.orderService.save(order);
 	}
 
 	@Override
 	public void escalateOrder(Long orderId) throws InvalidOrderException {
-		validatePayment(orderId);
-		Order order = orderService.find(orderId);
-		Set<OrderCategory> categories = orderService.getCategoriesForBaseOrder(order);
+		this.validatePayment(orderId);
+		Order order = this.orderService.find(orderId);
+		Set<OrderCategory> categories = this.orderService.getCategoriesForBaseOrder(order);
 		order.setCategories(categories);
 		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-		order = orderService.save(order);
-		orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+		order = this.orderService.save(order);
+		this.orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 	}
 
 	@Override
 	public OrderStatus getOrderStatus(Long orderId) {
-		Order order = orderService.find(orderId);
+		Order order = this.orderService.find(orderId);
 		return order.getOrderStatus();
 	}
 
 	@Override
 	public List<Address> getUserAddresses(Long userId) {
-		return addressService.getVisibleAddresses(userService.getUserById(userId));
+		return this.addressService.getVisibleAddresses(this.userService.getUserById(userId));
 	}
 
 	protected abstract com.hk.domain.store.Store getStore();
