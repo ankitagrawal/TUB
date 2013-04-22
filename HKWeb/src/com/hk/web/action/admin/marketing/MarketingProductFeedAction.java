@@ -68,15 +68,14 @@ public class MarketingProductFeedAction extends BaseAction{
     }
 
     public Resolution getProductsForFeed() {
-        if (StringUtils.isNotEmpty(productIds)) {
-            List<Product> products = marketingFeedService.getProducts(marketingFeed);
-            StringBuffer productStr = new StringBuffer();
-            for (Product product : products){
-                productStr.append(product.getId());
-                productStr.append(",");
-            }
-            productIds = productStr.toString();
+
+        List<Product> products = marketingFeedService.getProducts(marketingFeed);
+        StringBuffer productStr = new StringBuffer();
+        for (Product product : products){
+            productStr.append(product.getId());
+            productStr.append(",");
         }
+        productIds = productStr.toString();
         feedNames = EnumMarketingFeed.getAllFeeds();
         return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
     }
