@@ -185,7 +185,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		List<Badge> badges = this.baseDao.getAll(Badge.class);
 		Badge calculatedBadge = this.baseDao.get(Badge.class, 1l);
 		for (Badge badge : badges) {
-			if(anualSpend >= badge.getMinScore() && anualSpend <= badge.getMaxScore()) {
+			if(anualSpend >= badge.getMinScore() && (anualSpend <= badge.getMaxScore() || badge.getMaxScore() == -1)) {
 				calculatedBadge = badge;
 				break;
 			}
