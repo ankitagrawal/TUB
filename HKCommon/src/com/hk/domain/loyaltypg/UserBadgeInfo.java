@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.hk.domain.user.User;
 
@@ -35,11 +36,12 @@ public class UserBadgeInfo {
 	@JoinColumn(name = "badge_id")
 	private Badge badge;
 	
-    @Column(name = "creation_time", nullable = true, length = 19)
-	private Date creationTime;
-	
-    @Column(name = "updation_time", nullable = true, length = 19)
-    private Date updationTime;
+	@Column(name = "creation_time", updatable = false)
+	private Date creationTime = new Date();
+
+	@Version
+	@Column(name = "updation_time")
+	private Date updationTime;
     
 	public Long getId() {
 		return id;

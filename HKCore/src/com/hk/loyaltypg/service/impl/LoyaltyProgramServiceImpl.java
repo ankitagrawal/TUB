@@ -85,6 +85,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public int countProucts(SearchCriteria criteria) {
 		DetachedCriteria crit = this.prepareLoyaltyProductCriteria(criteria);
 		crit.setProjection(Projections.distinct(Projections.id()));
+		@SuppressWarnings("unchecked")
 		List<Long> ids = this.loyaltyProductDao.findByCriteria(crit);
 		if (ids == null) {
 			return 0;
@@ -155,8 +156,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	@Override
-	public List<Badge> getAllBadges() {
-		return this.baseDao.getAll(Badge.class);
+	public Collection<Badge> getAllBadges() {
+		return new java.util.TreeSet<Badge>(this.baseDao.getAll(Badge.class));
 	}
 
 	@Override
@@ -283,12 +284,30 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 	
 	@Override
+	@Transactional
 	public NextLevelInfo fetchNextLevelInfo(User user) {
 		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
+		Badge currentBadge = userBadgeInfo.getBadge();
+		double anualSpend = this.calculateAnualSpend(user);
+		
+		Badge nextBadge = currentBadge;
+		Collection<Badge> badges = this.getAllBadges();
+		for (Badge badge : badges) {
+			if(currentBadge.getMaxScore() < badge.getMinScore()) {
+				nextBadge = badge;
+				break;
+			}
+		}
+		
 		NextLevelInfo nextLevelInfo = new NextLevelInfo();
-		nextLevelInfo.setCurrentSpend(0);
-		nextLevelInfo.setExistingBadge(userBadgeInfo.getBadge());
-		nextLevelInfo.setSpendRequired(0);
+		nextLevelInfo.setCurrentSpend(anualSpend);
+		nextLevelInfo.setExistingBadge(currentBadge);
+		nextLevelInfo.setNextBadge(nextBadge);
+		if(currentBadge.compareTo(nextBadge) == 0) {
+			nextLevelInfo.setSpendRequired(0d);
+		} else {
+			nextLevelInfo.setSpendRequired(nextBadge.getMinScore() - anualSpend);
+		}
 		return nextLevelInfo;
 	}
 	
@@ -322,7 +341,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		// Check for 2 years
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, -2);
-		criteria.add(Restrictions.ge("updateTime", cal.getTime()));
+		criteria.add(Restrictions.ge("creationTime", cal.getTime()));
 		
 		if(status != null && status.length > 0) {
 			if(status.length == 1) {

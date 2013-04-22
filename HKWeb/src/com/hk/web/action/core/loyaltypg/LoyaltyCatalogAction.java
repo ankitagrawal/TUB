@@ -1,6 +1,7 @@
 package com.hk.web.action.core.loyaltypg;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private int defaultPerPage = 10;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
-	private List<Badge> badgeList;
+	private Collection<Badge> badgeList;
 	private List<CategoryDto> categories;
 	private String categoryName;
 	private double minPoints;
@@ -145,7 +146,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		return this.productList;
 	}
 
-	public List<Badge> getBadgeList() {
+	public Collection<Badge> getBadgeList() {
 		return this.badgeList;
 	}
 
