@@ -15,35 +15,35 @@ import com.hk.store.SearchCriteria;
 
 public interface LoyaltyProgramService {
 	
-	public List<LoyaltyProduct> listProucts(SearchCriteria criteria);
+	List<LoyaltyProduct> listProucts(SearchCriteria criteria);
 	
-	public int countProucts(SearchCriteria criteria);
+	int countProucts(SearchCriteria criteria);
 	
-	public LoyaltyProduct getProductByVariantId(String variantId);
+	LoyaltyProduct getProductByVariantId(String variantId);
 	
-	public void creditKarmaPoints(Order order);
+	void creditKarmaPoints(Order order);
 	
-	public void debitKarmaPoints(Order order);
+	void debitKarmaPoints(Order order);
 
-	public void approveKarmaPoints(Order order);
+	void approveKarmaPoints(Order order);
 	
-	public void cancelLoyaltyPoints(Order order);
+	void cancelLoyaltyPoints(Order order);
 
-	public UserBadgeInfo getUserBadgeInfo(User user);
+	UserBadgeInfo getUserBadgeInfo(User user);
 
-	public List<Badge> getAllBadges();
+	List<Badge> getAllBadges();
 	
-	public Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
+	Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
 	
-	public List<CategoryDto> listCategories();
+	List<CategoryDto> listCategories();
 
-	public double calculateLoyaltyPoints(User user);
+	double calculateLoyaltyPoints(User user);
 	
-	public double calculateLoyaltyPoints(Order order);
+	double calculateLoyaltyPoints(Order order);
 	
-	public double calculateLoyaltyPoints(Collection<CartLineItem> cartLineItems);
+	double calculateLoyaltyPoints(Collection<CartLineItem> cartLineItems);
 
 	double calculateAnualSpend(User user);
-
-	double calculateUpgradePoints(UserBadgeInfo info);
+	
+	NextLevelInfo fetchNextLevelInfo(User user);
 }
