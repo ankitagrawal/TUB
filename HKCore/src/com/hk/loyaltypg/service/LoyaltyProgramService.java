@@ -31,7 +31,7 @@ public interface LoyaltyProgramService {
 
 	UserBadgeInfo getUserBadgeInfo(User user);
 
-	List<Badge> getAllBadges();
+	Collection<Badge> getAllBadges();
 	
 	Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
 	

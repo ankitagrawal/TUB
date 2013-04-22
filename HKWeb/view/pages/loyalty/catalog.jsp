@@ -159,7 +159,7 @@ pageContext.setAttribute("isSecure", isSecure);
 			
 				<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
 					title="${product.name}">
-				<img src="<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"
+				<img src="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" alt="${product.name}"
 				     title="${product.name}" class="productImage" ></a>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${lp.points} PTS</div>
