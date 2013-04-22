@@ -42,7 +42,6 @@ import java.util.List;
 public class EditProductAttributesAction extends BaseAction {
 
     private static Logger logger = Logger.getLogger(EditProductAttributesAction.class);
-
     String productId;
     Product product;
     String tin;
@@ -56,21 +55,11 @@ public class EditProductAttributesAction extends BaseAction {
     List<ProductVariant> productVariants;
     Affiliate affiliate;
     String affid;
-    private String categories;
     String primaryCategory;
     String secondaryCategory;
     List<String> options;
     List<String> extraOptions;
     Manufacturer manufacturer;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private ProductVariantService productVariantService;
-
-    @Autowired
-    private BaseDao baseDao;
     @Autowired
     MenuHelper menuHelper;
     @Autowired
@@ -91,7 +80,13 @@ public class EditProductAttributesAction extends BaseAction {
     InventoryService inventoryService;
     @Autowired
     ComboService comboService;
-
+    private String categories;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private ProductVariantService productVariantService;
+    @Autowired
+    private BaseDao baseDao;
     @Session(key = HealthkartConstants.Cookie.preferredZone)
     private String preferredZone;
     private String productImageId;
@@ -196,152 +191,7 @@ public class EditProductAttributesAction extends BaseAction {
         List<ProductVariant> productVariants = product.getProductVariants();
 
         if (productVariants != null && productVariants.size() > 0) {
-            /*for (ProductVariant productVariant : productVariants) {
-=======
-	private static Logger logger = Logger.getLogger(EditProductAttributesAction.class);
-	String productId;
-	Product product;
-	String tin;
-	String brand;
-	String description;
-	String overview;
-	List<ProductImage> productImages;
-	List<ProductFeature> productFeatures;
-	List<Product> relatedProducts;
-	String mainImageId;
-	List<ProductVariant> productVariants;
-	Affiliate affiliate;
-	String affid;
-	String primaryCategory;
-	String secondaryCategory;
-	List<String> options;
-	List<String> extraOptions;
-	Manufacturer manufacturer;
-	@Autowired
-	MenuHelper menuHelper;
-	@Autowired
-	AffiliateDao affiliateDao;
-	@Autowired
-	ComboDao comboDao;
-	@Autowired
-	MapIndiaDao mapIndiaDao;
-	@Autowired
-	XslParser xslParser;
-	@Autowired
-	XslGenerator xslGenerator;
-	@Autowired
-	SupplierDao supplierDao;
-	@Autowired
-	CategoryDaoImpl categoryDao;
-	@Autowired
-	InventoryService inventoryService;
-	@Autowired
-	ComboService comboService;
-	private String categories;
-	@Autowired
-	private ProductService productService;
-	@Autowired
-	private ProductVariantService productVariantService;
-	@Autowired
-	private BaseDao baseDao;
-	@Session(key = HealthkartConstants.Cookie.preferredZone)
-	private String preferredZone;
-	private String productImageId;
-
-	public Resolution editDescription() {
-		product = getProductService().getProductById(productId);
-		return new ForwardResolution("/pages/editDescription.jsp");
-	}
-
-	public Resolution editRelatedProducts() {
-		product = getProductService().getProductById(productId);
-		return new ForwardResolution("/pages/editRelatedProducts.jsp");
-	}
-
-	public Resolution editOverview() {
-		product = getProductService().getProductById(productId);
-		return new ForwardResolution("/pages/editOverview.jsp");
-	}
-
-	public Resolution editFeatures() {
-		logger.debug("product id " + product);
-		productFeatures = product.getProductFeatures();
-		return new ForwardResolution("/pages/editFeatures.jsp");
-	}
-
-	public Resolution editProductVariantDetails() {
-		logger.debug("product id " + product);
-		productVariants = product.getProductVariants();
-		return new ForwardResolution("/pages/editProductVariantDetails.jsp");
-	}
-
-	public Resolution saveProductDetails() throws Exception {
-		logger.debug("saving product attributes for product " + product.getId());
-		String productId = product.getId();
-		List<Category> categoriesList = xslParser.getCategroyListFromCategoryString(categories);
-		product.setCategories(categoriesList);
-		if (primaryCategory == null) {
-			addRedirectAlertMessage(new SimpleMessage("Primary Category cannot be null"));
-			return new ForwardResolution("/pages/editProductDetails.jsp");
-		}
-		List<Category> listFromPrimaryCategoryString = xslParser.getCategroyListFromCategoryString(primaryCategory);
-		if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
-			product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));
-		}
-		if (secondaryCategory == null) {
-			addRedirectAlertMessage(new SimpleMessage("Secondary Category cannot be null"));
-			return new ForwardResolution("/pages/editProductDetails.jsp");
-		}
-		Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
-		if (secondaryCat == null) {
-			addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category"));
-			return new ForwardResolution("/pages/editProductDetails.jsp");
-		}
-		product.setSecondaryCategory(secondaryCat);
-
-		// To do remove deleted as not null in DB
-		if (product.getDeleted() == null) {
-			product.setDeleted(Boolean.FALSE);
-		}
-		if (product.getService() == null) {
-			product.setService(Boolean.FALSE);
-		}
-		if (product.getGoogleAdDisallowed() == null) {
-			product.setGoogleAdDisallowed(Boolean.FALSE);
-		}
-
-		if (product.getInstallable() == null) {
-			product.setInstallable(Boolean.FALSE);
-		}
-
-		if (brand == null) {
-			addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
-			return new ForwardResolution("/pages/editProductDetails.jsp");
-		}
-		logger.debug("loading combo ");
-		Combo combo = getBaseDao().get(Combo.class, productId);
-		logger.debug("got combo ");
-		Supplier supplier = supplierDao.findByTIN(tin);
-		if (combo == null && supplier == null) {
-			addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
-			return new ForwardResolution("/pages/editProductDetails.jsp");
-		}
-		product.setSupplier(supplier);
-		product.setBrand(brand);
-		product.setManufacturer(manufacturer);
-
-		logger.debug("actual save call start ");
-		product = getProductService().save(product);
-		// Checking inventory of all product variants
-
-		if (product.getDeleted()) {
-			getProductVariantService().markProductVariantsAsDeleted(product);
-		}
-		List<ProductVariant> productVariants = product.getProductVariants();
-
-		if (productVariants != null && productVariants.size() > 0) {
 	          /*for (ProductVariant productVariant : productVariants) {
->>>>>>> master
                 getInventoryService().checkInventoryHealth(productVariant);
             }*/
 
