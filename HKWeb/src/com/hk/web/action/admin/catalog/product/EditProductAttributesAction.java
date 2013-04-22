@@ -1,22 +1,5 @@
 package com.hk.web.action.admin.catalog.product;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hk.pact.service.combo.ComboService;
-import com.hk.pact.service.inventory.InventoryService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.session.Session;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.catalog.image.EnumImageSize;
@@ -25,12 +8,7 @@ import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductExtraOption;
-import com.hk.domain.catalog.product.ProductFeature;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductOption;
-import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.*;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.helper.MenuHelper;
 import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
@@ -41,9 +19,20 @@ import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
+import com.hk.pact.service.combo.ComboService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.XslGenerator;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.session.Session;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA. User: PRATHAM Date: 3/23/12 Time: 11:31 PM To change this template use File | Settings |
@@ -52,60 +41,60 @@ import com.hk.web.HealthkartResponse;
 @Component
 public class EditProductAttributesAction extends BaseAction {
 
-    private static Logger         logger = Logger.getLogger(EditProductAttributesAction.class);
+    private static Logger logger = Logger.getLogger(EditProductAttributesAction.class);
 
-    String                        productId;
-    Product                       product;
-    String                        tin;
-    String                        brand;
-    String                        description;
-    String                        overview;
-    List<ProductImage>            productImages;
-    List<ProductFeature>          productFeatures;
-    List<Product>                 relatedProducts;
-    String                        mainImageId;
-    List<ProductVariant>          productVariants;
-    Affiliate                     affiliate;
-    String                        affid;
-    private String                categories;
-    String                        primaryCategory;
-    String                        secondaryCategory;
-    List<String>                  options;
-    List<String>                  extraOptions;
-    Manufacturer                  manufacturer;
+    String productId;
+    Product product;
+    String tin;
+    String brand;
+    String description;
+    String overview;
+    List<ProductImage> productImages;
+    List<ProductFeature> productFeatures;
+    List<Product> relatedProducts;
+    String mainImageId;
+    List<ProductVariant> productVariants;
+    Affiliate affiliate;
+    String affid;
+    private String categories;
+    String primaryCategory;
+    String secondaryCategory;
+    List<String> options;
+    List<String> extraOptions;
+    Manufacturer manufacturer;
 
     @Autowired
-    private ProductService        productService;
+    private ProductService productService;
 
     @Autowired
     private ProductVariantService productVariantService;
 
     @Autowired
-    private BaseDao               baseDao;
+    private BaseDao baseDao;
     @Autowired
-    MenuHelper                    menuHelper;
+    MenuHelper menuHelper;
     @Autowired
-    AffiliateDao                  affiliateDao;
+    AffiliateDao affiliateDao;
     @Autowired
-    ComboDao                      comboDao;
+    ComboDao comboDao;
     @Autowired
-    MapIndiaDao                   mapIndiaDao;
+    MapIndiaDao mapIndiaDao;
     @Autowired
-    XslParser                     xslParser;
+    XslParser xslParser;
     @Autowired
-    XslGenerator                  xslGenerator;
+    XslGenerator xslGenerator;
     @Autowired
-    SupplierDao                   supplierDao;
+    SupplierDao supplierDao;
     @Autowired
-    CategoryDaoImpl               categoryDao;
+    CategoryDaoImpl categoryDao;
     @Autowired
-    InventoryService              inventoryService;
+    InventoryService inventoryService;
     @Autowired
-    ComboService                  comboService;
+    ComboService comboService;
 
     @Session(key = HealthkartConstants.Cookie.preferredZone)
-    private String                preferredZone;
-    private String                productImageId;
+    private String preferredZone;
+    private String productImageId;
 
     public Resolution editDescription() {
         product = getProductService().getProductById(productId);
@@ -143,11 +132,11 @@ public class EditProductAttributesAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Primary Category cannot be null"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
-        if(product.getMaxDays() == null || product.getMinDays() == null){
+        if (product.getMaxDays() == null || product.getMinDays() == null) {
             addRedirectAlertMessage(new SimpleMessage("Min/Max cannot be blank"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
-        if(product.getMinDays() >= product.getMaxDays()){
+        if (product.getMinDays() >= product.getMaxDays()) {
             addRedirectAlertMessage(new SimpleMessage("Min cannot be less than max days"));
             return new ForwardResolution("/pages/editProductDetails.jsp");
         }
@@ -201,13 +190,158 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().save(product);
         // Checking inventory of all product variants
 
-        if(product.getDeleted()){
-        	getProductVariantService().markProductVariantsAsDeleted(product);
+        if (product.getDeleted()) {
+            getProductVariantService().markProductVariantsAsDeleted(product);
         }
         List<ProductVariant> productVariants = product.getProductVariants();
 
         if (productVariants != null && productVariants.size() > 0) {
             /*for (ProductVariant productVariant : productVariants) {
+=======
+	private static Logger logger = Logger.getLogger(EditProductAttributesAction.class);
+	String productId;
+	Product product;
+	String tin;
+	String brand;
+	String description;
+	String overview;
+	List<ProductImage> productImages;
+	List<ProductFeature> productFeatures;
+	List<Product> relatedProducts;
+	String mainImageId;
+	List<ProductVariant> productVariants;
+	Affiliate affiliate;
+	String affid;
+	String primaryCategory;
+	String secondaryCategory;
+	List<String> options;
+	List<String> extraOptions;
+	Manufacturer manufacturer;
+	@Autowired
+	MenuHelper menuHelper;
+	@Autowired
+	AffiliateDao affiliateDao;
+	@Autowired
+	ComboDao comboDao;
+	@Autowired
+	MapIndiaDao mapIndiaDao;
+	@Autowired
+	XslParser xslParser;
+	@Autowired
+	XslGenerator xslGenerator;
+	@Autowired
+	SupplierDao supplierDao;
+	@Autowired
+	CategoryDaoImpl categoryDao;
+	@Autowired
+	InventoryService inventoryService;
+	@Autowired
+	ComboService comboService;
+	private String categories;
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private ProductVariantService productVariantService;
+	@Autowired
+	private BaseDao baseDao;
+	@Session(key = HealthkartConstants.Cookie.preferredZone)
+	private String preferredZone;
+	private String productImageId;
+
+	public Resolution editDescription() {
+		product = getProductService().getProductById(productId);
+		return new ForwardResolution("/pages/editDescription.jsp");
+	}
+
+	public Resolution editRelatedProducts() {
+		product = getProductService().getProductById(productId);
+		return new ForwardResolution("/pages/editRelatedProducts.jsp");
+	}
+
+	public Resolution editOverview() {
+		product = getProductService().getProductById(productId);
+		return new ForwardResolution("/pages/editOverview.jsp");
+	}
+
+	public Resolution editFeatures() {
+		logger.debug("product id " + product);
+		productFeatures = product.getProductFeatures();
+		return new ForwardResolution("/pages/editFeatures.jsp");
+	}
+
+	public Resolution editProductVariantDetails() {
+		logger.debug("product id " + product);
+		productVariants = product.getProductVariants();
+		return new ForwardResolution("/pages/editProductVariantDetails.jsp");
+	}
+
+	public Resolution saveProductDetails() throws Exception {
+		logger.debug("saving product attributes for product " + product.getId());
+		String productId = product.getId();
+		List<Category> categoriesList = xslParser.getCategroyListFromCategoryString(categories);
+		product.setCategories(categoriesList);
+		if (primaryCategory == null) {
+			addRedirectAlertMessage(new SimpleMessage("Primary Category cannot be null"));
+			return new ForwardResolution("/pages/editProductDetails.jsp");
+		}
+		List<Category> listFromPrimaryCategoryString = xslParser.getCategroyListFromCategoryString(primaryCategory);
+		if (listFromPrimaryCategoryString != null && !listFromPrimaryCategoryString.isEmpty()) {
+			product.setPrimaryCategory(listFromPrimaryCategoryString.get(0));
+		}
+		if (secondaryCategory == null) {
+			addRedirectAlertMessage(new SimpleMessage("Secondary Category cannot be null"));
+			return new ForwardResolution("/pages/editProductDetails.jsp");
+		}
+		Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory));
+		if (secondaryCat == null) {
+			addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category"));
+			return new ForwardResolution("/pages/editProductDetails.jsp");
+		}
+		product.setSecondaryCategory(secondaryCat);
+
+		// To do remove deleted as not null in DB
+		if (product.getDeleted() == null) {
+			product.setDeleted(Boolean.FALSE);
+		}
+		if (product.getService() == null) {
+			product.setService(Boolean.FALSE);
+		}
+		if (product.getGoogleAdDisallowed() == null) {
+			product.setGoogleAdDisallowed(Boolean.FALSE);
+		}
+
+		if (product.getInstallable() == null) {
+			product.setInstallable(Boolean.FALSE);
+		}
+
+		if (brand == null) {
+			addRedirectAlertMessage(new SimpleMessage("Brand cannot be null"));
+			return new ForwardResolution("/pages/editProductDetails.jsp");
+		}
+		logger.debug("loading combo ");
+		Combo combo = getBaseDao().get(Combo.class, productId);
+		logger.debug("got combo ");
+		Supplier supplier = supplierDao.findByTIN(tin);
+		if (combo == null && supplier == null) {
+			addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist"));
+			return new ForwardResolution("/pages/editProductDetails.jsp");
+		}
+		product.setSupplier(supplier);
+		product.setBrand(brand);
+		product.setManufacturer(manufacturer);
+
+		logger.debug("actual save call start ");
+		product = getProductService().save(product);
+		// Checking inventory of all product variants
+
+		if (product.getDeleted()) {
+			getProductVariantService().markProductVariantsAsDeleted(product);
+		}
+		List<ProductVariant> productVariants = product.getProductVariants();
+
+		if (productVariants != null && productVariants.size() > 0) {
+	          /*for (ProductVariant productVariant : productVariants) {
+>>>>>>> master
                 getInventoryService().checkInventoryHealth(productVariant);
             }*/
 
@@ -270,8 +404,9 @@ public class EditProductAttributesAction extends BaseAction {
             }
 
             productVariant = getProductVariantService().save(productVariant);
-            if(!(productVariant.getProduct().isJit() || productVariant.getProduct().isService()))
-            getInventoryService().checkInventoryHealth(productVariant);
+            if (!(productVariant.getProduct().isJit() || productVariant.getProduct().isService())) {
+                getInventoryService().checkInventoryHealth(productVariant);
+            }
             i++;
         }
 
