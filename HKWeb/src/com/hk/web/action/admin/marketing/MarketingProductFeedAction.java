@@ -69,7 +69,7 @@ public class MarketingProductFeedAction extends BaseAction{
 
     public Resolution getProductsForFeed() {
 
-        List<Product> products = marketingFeedService.getProducts(marketingFeed);
+        List<Product> products = marketingFeedService.getProducts(marketingFeed.trim());
         StringBuffer productStr = new StringBuffer();
         for (Product product : products){
             productStr.append(product.getId());
