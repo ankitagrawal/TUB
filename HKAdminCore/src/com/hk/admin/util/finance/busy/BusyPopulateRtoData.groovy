@@ -57,7 +57,7 @@ public class BusyPopulateRtoData {
 									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
 									pay_gate.name as payment_gateway_name,
 									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
-									w.name as warehouse, w.id as warehouse_id, sum(li.reward_point_discount)+so.amount AS net_amount,
+									w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
 									so.shipping_order_status_id , ship.return_date as return_date
 									from line_item li
