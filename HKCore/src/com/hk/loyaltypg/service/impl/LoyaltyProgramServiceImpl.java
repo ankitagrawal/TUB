@@ -341,7 +341,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		// Check for 2 years
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, -2);
-		criteria.add(Restrictions.ge("updateTime", cal.getTime()));
+		criteria.add(Restrictions.ge("creationTime", cal.getTime()));
 		
 		if(status != null && status.length > 0) {
 			if(status.length == 1) {
