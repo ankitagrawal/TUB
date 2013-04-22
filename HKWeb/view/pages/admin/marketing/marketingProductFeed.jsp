@@ -21,7 +21,7 @@
                     <s:option value="${feedName}">${feedName}</s:option>
                 </c:forEach>
             </s:select>
-            <s:textarea name="productIds" value=""/>
+            <s:textarea name="productIds" value="${productFeedBean.productIds}"/>
             <br/>
             <s:submit name="getProductsForFeed" value="Get Feed Products"/>
             <s:submit name="saveProductsForFeed" value="Add Products"/>

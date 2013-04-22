@@ -77,7 +77,7 @@ public class MarketingProductFeedAction extends BaseAction{
             }
             productIds = productStr.toString();
         }
-        return new ForwardResolution("/pages/admin/adminHome.jsp");
+        return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
     }
 
     public String getProductIds() {
