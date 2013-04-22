@@ -34,7 +34,7 @@ public class MarketingProductFeedAction extends BaseAction{
     /**
      * Comma separated ids of products
      */
-    private String productIds;
+    private String productIds = "";
     /**
      * Name of Marketing feed
      */
