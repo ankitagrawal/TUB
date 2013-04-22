@@ -8,6 +8,8 @@ import java.util.Set;
 import com.hk.pact.service.core.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumTax;
@@ -27,6 +29,8 @@ import com.hk.pact.service.inventory.SkuService;
  */
 @Service
 public class SkuServiceImpl implements SkuService {
+
+   private static Logger logger = LoggerFactory.getLogger(SkuServiceImpl.class);
 
     @Autowired
     private SkuDao                skuDao;
@@ -79,7 +83,7 @@ public class SkuServiceImpl implements SkuService {
         Sku sku = getSkuDao().getSku(productVariant, warehouse);
 
         if (sku == null) {
-            // sku = createSku(productVariant, warehouse);
+            logger.debug("No sku for product variant(" + productVariant.getId() + ") and warehouse(" + warehouse.getIdentifier() + ").");
             throw new NoSkuException(productVariant, warehouse);
         }
 

@@ -245,8 +245,7 @@
             </s:link>)
             </shiro:hasPermission>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
-                                     class="flipWarehouse">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="pre">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)
