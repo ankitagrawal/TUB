@@ -991,3 +991,4 @@ cursor: pointer;
 background: #FFFFFF;
 font-family: whitneybookSC;
 }
+.imgContainer{width:200px;height:200px;border:1px solid #ddd; padding:5px;}

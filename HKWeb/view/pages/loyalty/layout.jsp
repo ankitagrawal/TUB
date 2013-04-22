@@ -88,7 +88,7 @@
 			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="healthkart" href="/loyaltypg">
+			  <a title="healthkart" href="/healthkart/loyaltypg">
                 <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyFiles/images/hkStellar.png">
               </a>
               </div>

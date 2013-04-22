@@ -156,11 +156,12 @@ pageContext.setAttribute("isSecure", isSecure);
 				<div class="product clickable">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
-			
-				<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
-					title="${product.name}">
-				<img src="<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg" alt="${product.name}"
-				     title="${product.name}" class="productImage" ></a>
+				<div class="imgContainer">
+					<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+						title="${product.name}">
+					<img src="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" alt="${product.name}"
+					     title="${product.name}" class="productImage" ></a>
+				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${lp.points} PTS</div>
                 <form method="post" action="/core/loyaltypg/Cart.action" id="${variant.id}-cartForm">
