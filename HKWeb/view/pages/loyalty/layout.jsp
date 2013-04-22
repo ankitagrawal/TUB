@@ -161,7 +161,7 @@
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
               info@healthkartplus.com | Established in India | Privacy Policy | Terms and Conditions | Connect with Us:
-            </div>
+            </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img
 						src="<hk:vhostImage/>/images/banners/home/facebook.png"></a> <a
