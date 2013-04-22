@@ -88,7 +88,7 @@
 
    <c:if test="${hk:collectionContains(topCategoryNameList, 'health-nutrition')}">
     <%--<jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>--%>
-     <jsp:include page="/categoryBanners/nutriCallback.jsp"/> 
+     <jsp:include page="/categoryBanners/healthNutriCallback.jsp"/> 
     <%--<jsp:include page="/categoryBanners/fitnessAccessoriesCashback.jsp"/>--%>
   </c:if>
 
@@ -96,6 +96,7 @@
   <%--<jsp:include page="/categoryBanners/nutriTenDiscount.jsp"/>--%>
    <%--<jsp:include page="/categoryBanners/nutriCallback.jsp"/>--%>
   <%--<jsp:include page="/categoryBanners/fitnessAccessoriesCashback.jsp"/>--%>
+   <jsp:include page="/categoryBanners/nutriCallback.jsp"/>  
   </c:if>
 
     <c:if test="${hk:collectionContains(topCategoryNameList, 'services')}">
