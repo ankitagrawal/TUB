@@ -61,7 +61,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
 		public List<Warehouse> getWarehousesToMarkOOS() {
-			return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+      //List<Warehouse> warehouseList = getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+      List<Warehouse> warehouseList = getServiceableWarehouses();
+      warehouseList.add(getCorporateOffice()); // Adding Corportae on top of serviceable WHs
+      return warehouseList;
 		}
 
     public Warehouse getCorporateOffice() {
