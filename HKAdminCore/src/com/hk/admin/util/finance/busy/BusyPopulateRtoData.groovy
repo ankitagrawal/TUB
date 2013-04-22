@@ -206,6 +206,27 @@ public class BusyPopulateRtoData {
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
         ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}
       )
+      ON DUPLICATE KEY UPDATE
+      series = ${series},
+      date = ${date},
+      vch_no = ${vch_no},
+      vch_type = ${vch_type},
+      sale_type = ${sale_type},
+      account_name = ${account_name},
+      debtors = ${debtors},
+      address_1 =  ${address_1},
+      address_2 = ${address_2},
+      address_3 = ${city},
+      address_4 = ${state},
+      tin_number = ${tin_number},
+      material_centre = ${material_centre},
+      narration = ${narration},
+      out_of_state = ${out_of_state},
+      against_form = ${against_form},
+      net_amount = ${net_amount},
+      imported = ${imported_flag},
+      create_date = NOW(),
+      hk_ref_no = ${shippingOrderId}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -252,6 +273,9 @@ public class BusyPopulateRtoData {
 
           VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, ${discount}, ${vat}, ${amount}, NOW(), ${lineItemId}, ${cost_price}
           )
+          ON DUPLICATE KEY UPDATE
+          vch_code = ${vch_code}, s_no = ${s_no}, item_code = ${item_code}, qty = ${qty}, unit = ${unit}, mrp = ${mrp}, rate = ${rate}, discount = ${discount},
+          vat = ${vat}, amount = ${amount}, create_date = NOW(), hk_ref_no = ${lineItemId}, cost_price = ${cost_price}
          """)
       }
       catch (Exception e) {
@@ -283,6 +307,9 @@ public class BusyPopulateRtoData {
 
         VALUES (${vch_code}, 1, 0, 'shipping charge',0 , ${shipping_charge}, NOW()
         )
+         ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 1, type = 0, bill_sundry_name = 'shipping charge',
+        percent = 0, amount = ${shipping_charge}, create_date = NOW()
        """)
 
 
@@ -294,6 +321,9 @@ public class BusyPopulateRtoData {
 
         VALUES (${vch_code}, 2, 0, 'cod charge',0 , ${cod_charge}, NOW()
         )
+        ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 2, type = 0, bill_sundry_name = 'cod charge',
+        percent = 0, amount = ${cod_charge}, create_date = NOW()
        """)
 
 	     busySql.executeInsert("""
@@ -304,6 +334,9 @@ public class BusyPopulateRtoData {
 
         VALUES (${vch_code}, 3, 1, 'reward_points_discount',0 , ${reward_points}, NOW()
         )
+        ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 3, type = 1, bill_sundry_name = 'reward_points_discount',
+        percent = 0, amount = ${reward_points}, create_date = NOW()
        """)
     }
     catch (Exception e) {
