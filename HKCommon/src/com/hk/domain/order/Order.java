@@ -425,7 +425,7 @@ public class Order implements java.io.Serializable {
     }
 
     public Boolean isB2bOrder() {
-        return b2bOrder;
+        return b2bOrder != null ? b2bOrder : false;
     }
 
     public Boolean getB2bOrder() {
