@@ -12175,7 +12175,7 @@
     </changeSet>
     <changeSet author="Pratham (generated)" id="2013-04-22-01">
         <addColumn tableName="base_order">
-            <column name="confirmation_date" type="DATE"/>
+            <column name="confirmation_date" type="DATETIME"/>
         </addColumn>
     </changeSet>
     <!--<changeSet author="Pratham (generated)" id="2013-04-22-02">-->
