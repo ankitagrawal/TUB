@@ -66,7 +66,7 @@ public class GoogleCatalogPLAAction extends BaseAction {
         Map<String,Product> productMap = new HashMap<String,Product>();
         //Need to ensure that there are not duplicate items
         for (Product product : catProducts){
-            if (productMap.get(product.getId()) == null ){
+            if (!productMap.containsKey(product.getId())){
                 products.add(product);
                 productMap.put(product.getId(), product);
             }
