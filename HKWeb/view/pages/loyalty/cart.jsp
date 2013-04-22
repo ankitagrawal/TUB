@@ -1,12 +1,11 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet">
 <%@include file="/includes/_taglibInclude.jsp"%>
-<%@ taglib prefix="stripes"
-	uri="http://stripes.sourceforge.net/stripes.tld"%>
+<%@ taglib prefix="stripes"	uri="http://stripes.sourceforge.net/stripes.tld"%>
 
-<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction"
-	var="ca" />
+<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
+
+<link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet">
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
