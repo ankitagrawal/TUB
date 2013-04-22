@@ -53,7 +53,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			this.karmaList = this.pointsPage.getList();
 			this.validPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.user);
 			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user);
-			double upgradeAmount =  this.loyaltyProgramService.calculateUpgradePoints(this.badgeInfo);
+			double upgradeAmount =  this.loyaltyProgramService.fetchNextLevelInfo(this.user).getSpendRequired();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.badgeInfo.getUpdationTime());
 			cal.add(Calendar.YEAR, 1);
