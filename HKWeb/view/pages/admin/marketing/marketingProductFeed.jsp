@@ -23,7 +23,7 @@
             </s:select>
             <s:textarea name="productIds" value=""/>
             <br/>
-            <%--<s:submit name="getProductsForFeed" value="Get Feed Products"/>--%>
+            <s:submit name="getProductsForFeed" value="Get Feed Products"/>
             <s:submit name="saveProductsForFeed" value="Add Products"/>
             <s:submit name="removeProductsFromFeed" value="Remove Products"/>
         </s:form>
