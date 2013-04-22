@@ -6,6 +6,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.pact.service.marketing.MarketingFeedService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -75,9 +76,8 @@ public class MarketingProductFeedAction extends BaseAction{
             productStr.append(product.getId());
             productStr.append(",");
         }
-        productIds = "NUT101";
         feedNames = EnumMarketingFeed.getAllFeeds();
-        return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
+        return new RedirectResolution("/pages/admin/marketing/marketingProductFeed.jsp").addParameter("productIds",productStr.toString());
     }
 
     public String getProductIds() {
