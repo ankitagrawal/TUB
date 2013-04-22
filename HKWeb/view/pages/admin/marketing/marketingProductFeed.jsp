@@ -21,8 +21,9 @@
                     <s:option value="${feedName}">${feedName}</s:option>
                 </c:forEach>
             </s:select>
+            <script type="text/javascript">alert(${productFeedBean.productIds})</script>
             <%--<s:textarea name="productIds"/>--%>
-            <s:text name="productIds" value="${productFeedBean.productIds}"/>
+            <s:text name="productIds"/>
             <br/>
             <s:submit name="getProductsForFeed" value="Get Feed Products"/>
             <s:submit name="saveProductsForFeed" value="Add Products"/>
