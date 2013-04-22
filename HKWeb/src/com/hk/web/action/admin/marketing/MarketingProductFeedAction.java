@@ -77,6 +77,7 @@ public class MarketingProductFeedAction extends BaseAction{
             }
             productIds = productStr.toString();
         }
+        feedNames = EnumMarketingFeed.getAllFeeds();
         return new ForwardResolution("/pages/admin/marketing/marketingProductFeed.jsp");
     }
 

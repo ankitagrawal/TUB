@@ -52,7 +52,7 @@ public class MarketingFeedServiceImpl implements MarketingFeedService {
         List<Product> products = new ArrayList<Product>();
         for (String productId : productIds){
             Product product = productService.getProductById(productId);
-            if (product != null){
+            if (product != null && !product.isDeleted()){
                products.add(product);
             }
         }

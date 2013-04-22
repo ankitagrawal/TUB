@@ -60,7 +60,7 @@ public class MarketingFeedDaoImpl extends BaseDaoImpl implements MarketingFeedDa
 
     public List<String> getProductIds(String feedName) {
         DetachedCriteria criteria = DetachedCriteria.forClass(MarketingFeed.class);
-        criteria.add(Restrictions.eq("feedName", feedName));
+        criteria.add(Restrictions.eq("feedName", feedName.trim()));
         List<MarketingFeed> marketingFeeds = findByCriteria(criteria);
         List<String> feedProducts = new ArrayList<String>();
         for (MarketingFeed marketingFeed : marketingFeeds){
