@@ -143,6 +143,7 @@ public class CheckPaymentAction extends BaseAction {
             getPaymentManager().success(payment.getGatewayOrderId());
             order.setConfirmationDate(new Date());
             orderService.save(order);
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
             getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
                     getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         }
