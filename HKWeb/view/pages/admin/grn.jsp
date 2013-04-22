@@ -515,7 +515,7 @@
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 
-    <c:if test='${itemCheckedin && pa.grn.grnStatus.id != GrnCloseId}' >
+    <c:if test='${itemCheckedin && pa.grn.grnStatus.id == GrnCloseId}' >
      <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
              <s:param name="grn" value="${pa.grn.id}"/>
     </s:link>
