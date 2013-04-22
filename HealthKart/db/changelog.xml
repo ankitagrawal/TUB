@@ -12173,4 +12173,12 @@
     <changeSet author="Ajeet (generated)" id="1366219849770-3">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-04-22-01">
+        <addColumn tableName="base_order">
+            <column name="confirmation_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="Pratham (generated)" id="2013-04-22-02">-->
+        <!--<dropColumn columnName="target_dispatch_date_on_verify" tableName="base_order"/>-->
+    <!--</changeSet>-->
 </databaseChangeLog>

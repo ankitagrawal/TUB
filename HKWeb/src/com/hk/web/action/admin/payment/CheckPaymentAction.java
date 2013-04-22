@@ -1,9 +1,6 @@
 package com.hk.web.action.admin.payment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
@@ -142,10 +139,14 @@ public class CheckPaymentAction extends BaseAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-        getPaymentManager().success(payment.getGatewayOrderId());
+        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
+            getPaymentManager().success(payment.getGatewayOrderId());
+            order.setConfirmationDate(new Date());
+            orderService.save(order);
+            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+        }
         orderService.sendEmailToServiceProvidersForOrder(order);
-        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
