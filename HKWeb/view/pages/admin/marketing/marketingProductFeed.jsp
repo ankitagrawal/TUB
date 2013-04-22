@@ -16,11 +16,11 @@
         <h2>Please Enter comma separated product ids for product feed : </h2>
         <s:form beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction">
             <s:label>Select your feed</s:label>
-            <s:select name="marketingFeed" value="">
-                <c:forEach items="${productFeedBean.feedNames}" var="feedName">
-                    <s:option value="${feedName}">${feedName}</s:option>
-                </c:forEach>
-            </s:select>
+            <%--<s:select name="marketingFeed" value="">--%>
+                <%--<c:forEach items="${productFeedBean.feedNames}" var="feedName">--%>
+                    <%--<s:option value="${feedName}">${feedName}</s:option>--%>
+                <%--</c:forEach>--%>
+            <%--</s:select>--%>
             <%--<s:textarea name="productIds" value=""/>--%>
             <br/>
             <%--<s:submit name="getProductsForFeed" value="Get Feed Products"/>--%>
