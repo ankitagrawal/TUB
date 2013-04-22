@@ -66,21 +66,30 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	public List<LoyaltyProduct> listProucts(SearchCriteria searchCriteria) {
 		DetachedCriteria criteria = this.prepareLoyaltyProductCriteria(searchCriteria);
-		if (searchCriteria.getMaxRows() == 0) {
-			return this.loyaltyProductDao.findByCriteria(criteria);
+		
+		criteria.setProjection(Projections.distinct(Projections.id()));
+		List<Long> ids = this.loyaltyProductDao.findByCriteria(criteria);
+		
+		DetachedCriteria distinctCriteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+		int fromIndex = searchCriteria.getStartRow();
+		int toIndex = searchCriteria.getStartRow() + searchCriteria.getMaxRows();
+		if (searchCriteria.getMaxRows() == 0 || toIndex > ids.size()) {
+			distinctCriteria.add(Restrictions.in("id", ids));
+		} else {
+			distinctCriteria.add(Restrictions.in("id", ids.subList(fromIndex, toIndex)));
 		}
-		return this.loyaltyProductDao.findByCriteria(criteria, searchCriteria.getStartRow(), searchCriteria.getMaxRows());
+		return this.loyaltyProductDao.findByCriteria(distinctCriteria);
 	}
 
 	@Override
 	public int countProucts(SearchCriteria criteria) {
 		DetachedCriteria crit = this.prepareLoyaltyProductCriteria(criteria);
-		crit.setProjection(Projections.count(LoyaltyProductAlias.VARIANT.alias + ".id"));
-		Integer count = (Integer) this.baseDao.findByCriteria(crit).iterator().next();
-		if (count == null) {
+		crit.setProjection(Projections.distinct(Projections.id()));
+		List<Long> ids = this.loyaltyProductDao.findByCriteria(crit);
+		if (ids == null) {
 			return 0;
 		}
-		return count;
+		return ids.size();
 	}
 
 	@Override
