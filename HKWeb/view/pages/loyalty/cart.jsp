@@ -5,7 +5,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
-<link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet">
+<link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
@@ -107,11 +107,12 @@
 						</div>
 					</div>
 				</div>
+			
 			</c:when>
 			<c:otherwise>
 				<div class="row">
 					<div class="span12">
-						<h4>Cart is Empty</h4>
+						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="/healthkart/loyaltypg"> Click here</a> to go back to home page.
 					</div>
 				</div>
 			</c:otherwise>

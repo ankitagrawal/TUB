@@ -141,11 +141,14 @@ pageContext.setAttribute("isSecure", isSecure);
             <div class="grid_12 embedMarginBottom40" id="productCategory">
               <div class="dottedLine"></div>
               <div class="productCategoryText">
-                <img src="/healthkart/pages/loyalty/LoyaltyFiles/images/stellarLogo.png" class="stellarLogo" alt="1">
+                <img src="/healthkart/pages/loyalty/resources/images/stellarLogo.png" class="stellarLogo" alt="1">
               </div>
               <div class="dottedLine"></div>
-            </div>           
-
+            </div>        
+               
+        <c:choose>
+			<c:when test="${not empty lca.productList}">
+			
 			<% int rowCount=0; int colCount=0;%>
 			<c:forEach items="${lca.productList}" var="lp">
 			<% if (colCount %3==0) { colCount++; rowCount++; %>
@@ -175,6 +178,15 @@ pageContext.setAttribute("isSecure", isSecure);
 			<% } %>
 			
 			</c:forEach>
+            </c:when>
+		<c:otherwise>
+			<div class="row">
+				<div class="span12">
+					<h4>No products to display in this category. Please choose some other category. </h4>
+				</div>
+			</div>
+		</c:otherwise>
+	</c:choose>
               
     </div>
             <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}"/>

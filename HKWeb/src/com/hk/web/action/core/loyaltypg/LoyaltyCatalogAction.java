@@ -30,7 +30,7 @@ import com.hk.store.SearchCriteria;
 @Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
-	private int defaultPerPage = 12;
+	private int defaultPerPage = 2;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private Collection<Badge> badgeList;

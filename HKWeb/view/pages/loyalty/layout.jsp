@@ -15,15 +15,15 @@
     <meta name="description" content="">
     <meta name="author" content="Deepak Chauhan">
 
-    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/grid.css" rel="stylesheet">
-    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/style.css" rel="stylesheet">
-    <%-- <link href="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/css/bootstrap.css" rel="stylesheet"> --%>
-    <link href="/healthkart/pages/loyalty/LoyaltyFiles/css/jquery.jscrollpane.css" rel="stylesheet">
-	<script src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/bootstrap.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery-1.9.0.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery.jscrollpane.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery.jcarousel.min.js"></script>
-	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/LoyaltyFiles/js/jquery-ui.min.js"></script>
+    <link href="/healthkart/pages/loyalty/resources/css/grid.css" rel="stylesheet">
+    <link href="/healthkart/pages/loyalty/resources/css/style.css" rel="stylesheet">
+    <%-- <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet"> --%>
+    <link href="/healthkart/pages/loyalty/resources/css/jquery.jscrollpane.css" rel="stylesheet">
+	<script src="<hk:vhostJs/>/pages/loyalty/resources/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jscrollpane.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jcarousel.min.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-ui.min.js"></script>
 	<script type="text/javascript">
     $(document).ready(function(){
         $('.brandsContainer').jScrollPane({verticalDragMaxHeight:30, positionDragY:30});
@@ -88,8 +88,8 @@
 			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="healthkart" href="/healthkart/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/LoyaltyFiles/images/hkStellar.png">
+			  <a title="go to stellar home" href="/healthkart/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="/healthkart/pages/loyalty/resources/images/hkStellar.png">
               </a>
               </div>
   

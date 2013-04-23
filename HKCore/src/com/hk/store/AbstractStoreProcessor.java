@@ -128,7 +128,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		if (orders != null && orders.size() > 0) {
 			Order order = orders.iterator().next();
 			// Was Commented only for testing purpose.
-			this.orderManager.trimEmptyLineItems(order);
+			//this.orderManager.trimEmptyLineItems(order);
 			return this.orderService.find(order.getId());
 		}
 		return null;
