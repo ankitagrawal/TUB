@@ -83,7 +83,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
                     stockReportDtoStore.setGrnCheckin(stockReportDto.getInventoryQty());
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_CHECKOUT.getId().longValue()) {
                     stockReportDtoStore.setLineItemCheckout(stockReportDto.getInventoryQty() * -1L);
-                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RTO_CHECKIN.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RETURN_CHECKIN_GOOD.getId().longValue()) {
                     stockReportDtoStore.setRtoCheckin(stockReportDto.getInventoryQty());
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_DAMAGED.getId().longValue()) {
                     stockReportDtoStore.setReconcileCheckout(stockReportDto.getInventoryQty() * -1L);

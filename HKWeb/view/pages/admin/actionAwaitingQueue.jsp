@@ -361,6 +361,7 @@
                         </shiro:hasAnyRoles>
                         <%--<div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>--%>
                         <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
+                        <div><s:checkbox name="b2bOrder"/>B2B Order</div>
                     </div>
 
 

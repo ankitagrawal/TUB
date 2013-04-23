@@ -6,8 +6,10 @@ import java.util.Properties;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +109,16 @@ public class CitrusCreditDebitSendReceiveAction extends BasePaymentGatewaySendRe
 
         try {
             String signature = sigGenerator.generateHMAC(data, key);
+             if (gatewayOrderId == null || StringUtils.isEmpty(gatewayOrderId)) {
+                logger.info("Received Empty gateway Id  from Citrus NetBank Gateway, redirecting to failure page");
+                return new ForwardResolution("/pages/payment/paymentFail.jsp");
+            }
+            if (signature == null || StringUtils.isEmpty(signature) || reqSignature == null || StringUtils.isEmpty(reqSignature)) {
+                logger.info("Exception in generating either signature  -->" + signature + " or  Request Signature -->" + reqSignature);
+                paymentManager.fail(gatewayOrderId, ePGTxnID, "Signature Generation isssue for GatewayOrder Id -->" + gatewayOrderId);
+                return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+            }
+
             if (reqSignature != null && !reqSignature.equalsIgnoreCase("") && !signature.equalsIgnoreCase(reqSignature)) {
                 paymentManager.fail(gatewayOrderId, ePGTxnID, responseMsg);
                 return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);

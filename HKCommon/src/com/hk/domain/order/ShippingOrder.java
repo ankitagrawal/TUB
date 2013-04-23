@@ -4,7 +4,6 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
-import com.hk.domain.core.CancellationType;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.queue.ActionItem;
@@ -48,13 +47,6 @@ public class ShippingOrder implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reconciliation_status_id", nullable = false)
     private ReconciliationStatus reconciliationStatus;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cancellation_type_id")
-    private CancellationType cancellationType;
-
-    @Column(name = "cancellation_remark", length = 65535)
-    private String cancellationRemark;
 
     @Column(name = "basket_category", length = 45)
     private String basketCategory;
@@ -102,7 +94,6 @@ public class ShippingOrder implements java.io.Serializable {
 
     @Column(name = "target_del_date", nullable = true)
     private Date targetDelDate;
-
 
     @Column(name = "drop_shipping")
     private boolean isDropShipping;
@@ -182,22 +173,6 @@ public class ShippingOrder implements java.io.Serializable {
 
     public void setReconciliationStatus(ReconciliationStatus reconciliationStatus) {
         this.reconciliationStatus = reconciliationStatus;
-    }
-
-    public CancellationType getCancellationType() {
-        return cancellationType;
-    }
-
-    public void setCancellationType(CancellationType cancellationType) {
-        this.cancellationType = cancellationType;
-    }
-
-    public String getCancellationRemark() {
-        return cancellationRemark;
-    }
-
-    public void setCancellationRemark(String cancellationRemark) {
-        this.cancellationRemark = cancellationRemark;
     }
 
     public String getAccountingInvoiceNumber() {

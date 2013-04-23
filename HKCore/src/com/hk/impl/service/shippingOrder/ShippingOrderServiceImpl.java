@@ -143,15 +143,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     @Override
     public void setTargetDispatchDelDatesOnSO(Date refDate, ShippingOrder shippingOrder) {
         Long[] dispatchDays = OrderUtil.getDispatchDaysForSO(shippingOrder);
-
-        Date targetDispatchDate = OrderDateUtil.getTargetDispatchDateForWH(refDate, dispatchDays[0]);
+        Date targetDispatchDate = HKDateUtil.addToDate(refDate, Calendar.DAY_OF_MONTH, dispatchDays[1].intValue());
         shippingOrder.setTargetDispatchDate(targetDispatchDate);
 
-        Long diffInPromisedTimes = (dispatchDays[1] - dispatchDays[0]);
-        int daysTakenForDelievery = Integer.valueOf(diffInPromisedTimes.toString());
-        Date targetDelDate = HKDateUtil.addToDate(targetDispatchDate, Calendar.DAY_OF_MONTH, daysTakenForDelievery);
-        shippingOrder.setTargetDelDate(targetDelDate);
-
+        //todo need to write correct logic for targetDeliveryDate, based on historical TAT
+        shippingOrder.setTargetDelDate(targetDispatchDate);
         getShippingOrderDao().save(shippingOrder);
     }
 
