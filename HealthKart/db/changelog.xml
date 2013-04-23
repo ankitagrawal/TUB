@@ -12173,6 +12173,14 @@
     <changeSet author="Ajeet (generated)" id="1366219849770-3">
         <addForeignKeyConstraint baseColumnNames="base_order_id" baseTableName="b2b_order_checklist" constraintName="fk_b2b_order_checklist_base_order1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-04-22-01">
+        <addColumn tableName="base_order">
+            <column name="confirmation_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="Pratham (generated)" id="2013-04-22-02">-->
+        <!--<dropColumn columnName="target_dispatch_date_on_verify" tableName="base_order"/>-->
+    <!--</changeSet>-->
 
     <changeSet author="Ajeet (generated)" id="1366281640164-1">
         <addColumn tableName="warehouse">
@@ -12188,8 +12196,8 @@
             </column>
         </addColumn>
     </changeSet>
-                                                                                                            
-    <!--<changeSet author="Ajeet (written)" id="20130418-01">
+
+    <changeSet author="Ajeet (written)" id="20130418-01">
         <sql>
             ALTER TABLE warehouse MODIFY COLUMN tin VARCHAR(45) NOT NULL AFTER id;
             ALTER TABLE warehouse MODIFY COLUMN identifier VARCHAR(100) NOT NULL AFTER tin;
@@ -12198,8 +12206,8 @@
             ALTER TABLE warehouse MODIFY COLUMN line2 VARCHAR(100) AFTER line1;
             ALTER TABLE warehouse MODIFY COLUMN wh_phone VARCHAR(45) AFTER pincode;
         </sql>
-    </changeSet>-->
-    
+    </changeSet>
+
     <changeSet author="Ajeet (generated)" id="1366286805259-1">
         <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="wh_phone" tableName="warehouse"/>
     </changeSet>
@@ -12210,7 +12218,7 @@
             </column>
         </addColumn>
     </changeSet>
-    
+
     <changeSet author="Ajeet (generated)" id="1366279888165-2">
         <addColumn tableName="warehouse">
             <column defaultValue="Warehouse" name="identifier" type="VARCHAR(100)">
@@ -12243,5 +12251,5 @@
             <column name="identifier"/>
         </createIndex>
     </changeSet>
-   
+    
 </databaseChangeLog>
