@@ -12197,17 +12197,6 @@
         </addColumn>
     </changeSet>
 
-    <changeSet author="Ajeet (written)" id="20130418-01">
-        <sql>
-            ALTER TABLE warehouse MODIFY COLUMN tin VARCHAR(45) NOT NULL AFTER id;
-            ALTER TABLE warehouse MODIFY COLUMN identifier VARCHAR(100) NOT NULL AFTER tin;
-            ALTER TABLE warehouse MODIFY COLUMN name VARCHAR(100) NOT NULL AFTER identifier;
-            ALTER TABLE warehouse MODIFY COLUMN line1 VARCHAR(100) AFTER name;
-            ALTER TABLE warehouse MODIFY COLUMN line2 VARCHAR(100) AFTER line1;
-            ALTER TABLE warehouse MODIFY COLUMN wh_phone VARCHAR(45) AFTER pincode;
-        </sql>
-    </changeSet>
-
     <changeSet author="Ajeet (generated)" id="1366286805259-1">
         <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="wh_phone" tableName="warehouse"/>
     </changeSet>
@@ -12250,6 +12239,17 @@
         <createIndex indexName="identifier_UNIQUE" tableName="warehouse" unique="true">
             <column name="identifier"/>
         </createIndex>
+    </changeSet>
+
+    <changeSet author="Ajeet (written)" id="20130418-01">
+        <sql>
+            ALTER TABLE warehouse MODIFY COLUMN tin VARCHAR(45) NOT NULL AFTER id;
+            ALTER TABLE warehouse MODIFY COLUMN identifier VARCHAR(100) NOT NULL AFTER tin;
+            ALTER TABLE warehouse MODIFY COLUMN name VARCHAR(100) NOT NULL AFTER identifier;
+            ALTER TABLE warehouse MODIFY COLUMN line1 VARCHAR(100) AFTER name;
+            ALTER TABLE warehouse MODIFY COLUMN line2 VARCHAR(100) AFTER line1;
+            ALTER TABLE warehouse MODIFY COLUMN wh_phone VARCHAR(45) AFTER pincode;
+        </sql>
     </changeSet>
     
 </databaseChangeLog>
