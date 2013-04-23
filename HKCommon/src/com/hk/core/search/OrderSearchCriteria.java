@@ -41,6 +41,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     private Boolean                  dropShip;
     private Boolean                  containsJit;
+    private boolean                   isB2BOrder;
 
     /**
      * shipping order fields
@@ -241,6 +242,10 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             orderCategoryCriteria.add(Restrictions.in("category", categories));
         }
 
+        if(isB2BOrder){
+            criteria.add(Restrictions.eq("b2bOrder",isB2BOrder));
+        }
+
         // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
@@ -276,5 +281,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setContainsJit(Boolean containsJit) {
         this.containsJit = containsJit;
+    }
+
+    public boolean isB2BOrder() {
+        return isB2BOrder;
+    }
+
+    public void setB2BOrder(boolean b2BOrder) {
+        isB2BOrder = b2BOrder;
     }
 }
