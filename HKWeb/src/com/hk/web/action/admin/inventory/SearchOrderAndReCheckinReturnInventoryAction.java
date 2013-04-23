@@ -125,24 +125,27 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
     public Resolution checkinReturnedUnits() {
         User loggedOnUser = userService.getLoggedInUser();
 
-        for (Map.Entry<LineItem, String> lineItemRecheckinBarcodeMapEntry : lineItemRecheckinBarcodeMap.entrySet()) {
-            LineItem lineItem = lineItemRecheckinBarcodeMapEntry.getKey();
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            ShippingOrder shippingOrder = lineItem.getShippingOrder();
-            String recheckinBarcode = lineItemRecheckinBarcodeMapEntry.getValue();
-            Long alreadyCheckedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstReturn(lineItem);
-            List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
-			SkuItem findSkuItemByBarcode;
-			String skuGroupBarcode, skuItemBarcode;
-			if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
-				int recheckinCounter = 0;
-				findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_OUT.getId());
+		if (lineItemRecheckinBarcodeMap != null && lineItemRecheckinBarcodeMap.size() > 1) {
+			addRedirectAlertMessage(new SimpleMessage("only one barcode can be checked in at one time"));
+		} else {
+			for (Map.Entry<LineItem, String> lineItemRecheckinBarcodeMapEntry : lineItemRecheckinBarcodeMap.entrySet()) {
+				LineItem lineItem = lineItemRecheckinBarcodeMapEntry.getKey();
+				ProductVariant productVariant = lineItem.getSku().getProductVariant();
+				ShippingOrder shippingOrder = lineItem.getShippingOrder();
+				String recheckinBarcode = lineItemRecheckinBarcodeMapEntry.getValue();
+				Long alreadyCheckedInUnits = getAdminProductVariantInventoryDao().getCheckedInPVIAgainstReturn(lineItem);
+				List<ProductVariantInventory> checkedOutInventories = getAdminProductVariantInventoryDao().getCheckedOutSkuItems(shippingOrder, lineItem);
+				SkuItem findSkuItemByBarcode;
+				String skuGroupBarcode, skuItemBarcode;
+				if (checkedOutInventories != null && !checkedOutInventories.isEmpty() && alreadyCheckedInUnits < checkedOutInventories.size()) {
+					int recheckinCounter = 0;
+					findSkuItemByBarcode = skuGroupService.getSkuItemByBarcode(recheckinBarcode, userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_OUT.getId());
 					for (ProductVariantInventory checkedOutInventory : checkedOutInventories) {
 						SkuItem skuItem;
-						if(findSkuItemByBarcode != null){
+						if (findSkuItemByBarcode != null) {
 							skuItem = findSkuItemByBarcode;
 							skuItemBarcode = findSkuItemByBarcode.getBarcode();
-						} else{
+						} else {
 							skuItem = checkedOutInventory.getSkuItem();
 							skuGroupBarcode = checkedOutInventory.getSkuItem().getSkuGroup().getBarcode();
 							skuItemBarcode = skuGroupBarcode;
@@ -152,7 +155,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								checkedOutInventory.getSkuItem().getSkuItemStatus().equals(EnumSkuItemStatus.Checked_OUT.getSkuItemStatus())) {
 							recheckinCounter++;
 
-							if (conditionOfItem.equals(GOOD)){
+							if (conditionOfItem.equals(GOOD)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_GOOD), 1L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
@@ -161,7 +164,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								break;
 							}
 
-							if (conditionOfItem.equals(DAMAGED)){
+							if (conditionOfItem.equals(DAMAGED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_DAMAGED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Damaged.getSkuItemStatus());
@@ -170,7 +173,7 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 								break;
 							}
 
-							if (conditionOfItem.equals(EXPIRED)){
+							if (conditionOfItem.equals(EXPIRED)) {
 								getAdminInventoryService().inventoryCheckinCheckout(checkedOutInventory.getSku(), skuItem, lineItem, shippingOrder, null, null,
 										null, getInventoryService().getInventoryTxnType(EnumInvTxnType.RETURN_CHECKIN_EXPIRED), 0L, loggedOnUser);
 								skuItem.setSkuItemStatus(EnumSkuItemStatus.Expired.getSkuItemStatus());
@@ -182,22 +185,22 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 						}
 					}
 
-				if (recheckinCounter != 0){
-					String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
-							productVariant.getOptionsCommaSeparated();
-					shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
-					addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
-				} else{
-					addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesn't match any of the items OR item not in correct status"));
+					if (recheckinCounter != 0) {
+						String comments = "Re Checked-in Returned Item : " + conditionOfItem + "--" + recheckinCounter + " x " + productVariant.getProduct().getName() + "<br/>" +
+								productVariant.getOptionsCommaSeparated();
+						shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ReCheckedIn, null, comments);
+						addRedirectAlertMessage(new SimpleMessage("Returned Units checked in accordingly"));
+					} else {
+						addRedirectAlertMessage(new SimpleMessage("The Barcode entered doesn't match any of the items OR item not in correct status"));
+					}
+				} else {
+					addRedirectAlertMessage(new SimpleMessage("Oops!!! Either Returned Units are already checked in OR No batch information was there while checking out items."));
 				}
+				orderId = shippingOrder.getId();
 			}
-			else {
-				addRedirectAlertMessage(new SimpleMessage("Oops!!! Either Returned Units are already checked in OR No batch information was there while checking out items."));
-			}
-			orderId = shippingOrder.getId();
-        }
+		}
 
-        return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
+		return new RedirectResolution(SearchOrderAndReCheckinReturnInventoryAction.class).addParameter("searchOrder").addParameter("orderId", orderId);
     }
 
 	public Resolution downloadBarcode() {
