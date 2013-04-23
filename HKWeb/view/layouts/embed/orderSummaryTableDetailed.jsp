@@ -367,7 +367,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 </c:if>
 </div>
 
-<div class='orderSummaryHeading'>
+<div class='orderSummaryHeading' style="margin-bottom: 50px;">
     <div class="deliveryDetails"> DELIVERY DETAILS</div>
     <ul>
         <li>
