@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hk.constants.report.ReportConstants;
 import com.hk.constants.user.EnumEmailSubscriptions;
+import com.hk.domain.email.EmailRecepient;
+import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -43,9 +46,12 @@ public class NotifyMeAction extends BaseAction {
     UserService userService;
     @Autowired
     private LinkManager linkManager;
+    @Autowired
+    EmailRecepientDao emailRecepientDao;
 
 
-    NotifyMe notifyMe;
+    private NotifyMe notifyMe;
+    private String subscribe;
 
     public static final int EXPIRY_DAYS = 10;
 
@@ -80,6 +86,29 @@ public class NotifyMeAction extends BaseAction {
             noCache();
             return new JsonResolution(healthkartResponse);
         }
+        User user = userService.findByLogin(notifyMe.getEmail());
+        if (user != null) {
+            //Subscribe User
+            if (subscribe != null && subscribe.equalsIgnoreCase(ReportConstants.Subscribe)) {
+                boolean userSubscribed = userService.subscribeUser(notifyMe.getEmail());
+                if (userSubscribed) {
+                    user = userService.save(user);
+                }
+            }
+            if (!(user.isSubscribedForNotify())) {
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for email , Click below link to subscribe  for Notify notification again", dataMap);
+                return new JsonResolution(healthkartResponse);
+            }
+        } else {
+            EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(notifyMe.getEmail());
+            if (emailRecepient != null) {
+                if (!(emailRecepient.isSubscribed())) {
+                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for email , Click below link to subscribe  for Notify notification again", dataMap);
+                    return new JsonResolution(healthkartResponse);
+                }
+            }
+        }
+
         List<NotifyMe> notifyMeList = notifyMeDao.getPendingNotifyMeList(notifyMe.getEmail(), notifyMe.getProductVariant());
         if (notifyMeList != null && notifyMeList.size() > 0) {
             addRedirectAlertMessage(new SimpleMessage("We have already received your request for this product. We will get back to you very soon. Thanks for your visit."));
@@ -87,14 +116,7 @@ public class NotifyMeAction extends BaseAction {
                     "Your request for this product has already been received. We will get back to you very soon. Thanks for your visit.", dataMap);
             return new JsonResolution(healthkartResponse);
         }
-        User user = userService.findByLogin(notifyMe.getEmail());
-        if (user != null) {
-            if (!(user.isSubscribedForNotify())) {
-                dataMap.put("subscribelink", linkManager.getSubscribeLink(notifyMe));
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for email , Click below link to subscribe  for Notify notification again", dataMap);
-                return new JsonResolution(healthkartResponse);
-            }
-        }
+
 
         notifyMeDao.save(notifyMe);
         healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Your request for Notification has been registered.", dataMap);
@@ -116,5 +138,13 @@ public class NotifyMeAction extends BaseAction {
 
     public void setNotifyMe(NotifyMe notifyMe) {
         this.notifyMe = notifyMe;
+    }
+
+    public String getSubscribe() {
+        return subscribe;
+    }
+
+    public void setSubscribe(String subscribe) {
+        this.subscribe = subscribe;
     }
 }

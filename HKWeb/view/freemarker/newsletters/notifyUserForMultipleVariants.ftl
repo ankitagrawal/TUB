@@ -138,6 +138,10 @@ You requested to be notified when some products were back in stock
     </tr>
     <tr>
         <td align="center" valign="middle"
+            style="border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px">
+            If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to
+            Unsubscribe</a><br/>
+        <td align="center" valign="middle"
             style="border-top: solid #FFFFFF 2px; font-size:11px; text-align:center; color:#929292; padding:10px">
 
             Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br/>

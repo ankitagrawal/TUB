@@ -66,7 +66,7 @@
     <div class="right_col" itemprop="availability" content="${product.productVariants[0].outOfStock ? '' : 'in_stock'}">
       <s:form beanclass="com.hk.web.action.core.cart.AddToCartAction" class="addToCartForm">
         <c:choose>
-          <c:when test="${product.productVariants[0].outOfStock}">
+          <c:when test="${product.outOfStock}">
             <%--<c:choose>--%>
               <%--<c:when test="${product.brand == 'Absolute'}">--%>
                 <%--<div class="outOfStock">Coming soon...</div>--%>

@@ -65,7 +65,7 @@ The products are back in stock. Yay! </td>
       <td height="15"></td>
     </tr>
     <tr>
-      <td height="15"><a href="www.healthkart.com/product/${product.slug}/${product.id}?utm_source=notifyme&utm_medium=email&utm_campaign=${emailCampaign.name}"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg" alt="Click here to shop now" width="157" height="26" border="0" /></a></td>
+      <td height="15"><a href="www.healthkart.com/product/${product.slug}/${product.id}?utm_source=notifyme&utm_medium=email"><img src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg" alt="Click here to shop now" width="157" height="26" border="0" /></a></td>
     </tr>
     <tr>
       <td height="15"></td>

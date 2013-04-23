@@ -171,4 +171,5 @@ public class ReportConstants {
 
 	public static final String ZONE = "ZONE";
 	public static final String BARCODE = "BARCODE";
+    public static final String Subscribe = "Subscribe";
 }

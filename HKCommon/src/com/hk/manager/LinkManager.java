@@ -250,8 +250,8 @@ public class LinkManager {
     }
 
     public String getSubscribeLink(NotifyMe notifyMe) {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("email", notifyMe.getEmail())
-                .addParameter("notifyMe",notifyMe);
+        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("email", notifyMe.getEmail()).
+                addParameter("variantId", notifyMe.getProductVariant().getId()).addParameter("name", notifyMe.getName()).addParameter("phone", notifyMe.getPhone());
         return getUrlFromResolution(redirectResolution);
     }
 
