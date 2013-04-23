@@ -939,15 +939,21 @@ span.error {
 /* line 135, ../sass/main.scss */
 .menuBar ul.lvl1 {
     list-style: none;
-    height: 30px;
+    height: 45px;
+    vertical-align: middle;
 }
 
 /* line 138, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 {
+    max-width:80px;
+    min-width:50px;
+    word-wrap:normal;
+    text-align:center;
+    height: 38px;
     float: left;
     vertical-align: middle;
     /*font-size: 18px;*/
-    padding: 5px 10px;
+    padding: 3px 5px;
     border-right: #888;
     border: 2px solid transparent;
     border-bottom: none;
@@ -1061,7 +1067,7 @@ span.error {
     width: 958px;
     display: none;
     position: absolute;
-    top: 28px;
+    top: 45px;
     left: 0px;
     border: 1px solid #aaa;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -3060,6 +3066,14 @@ a.close:hover {
 font-weight:bold;
 color: #e62580;
 }
+
+.raj_modal{
+    overflow: scroll;
+    height: 500px;
+    top: 60px;
+    padding: 15px 0 30px 30px;
+}
+
 /*
 slider pager end
 */

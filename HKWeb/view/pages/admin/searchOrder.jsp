@@ -234,24 +234,20 @@
   <span class="xsml gry">Order Status :</span>
 
   <span class="orderStatusName or">${order.orderStatus.name}</span>
-  <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold}">
-  Now to hold orders please use action queue !!!
-  
-    <!--<s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
-            class="orderStatusLink onHoldStatusLink"
-            style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
-      <s:param name="order" value="${order.id}"/>
-      <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
-    </s:link>
-    -->
-    <!--<s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
-            class="orderStatusLink normalStatusLink"
-            style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
-      <s:param name="order" value="${order.id}"/>
-      <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Order on Hold" title="Put Order on Hold"/>
-    </s:link>
-     -->
-  </c:if>
+    <c:if test="${order.orderStatus.id == orderStatusPending || order.orderStatus.id == orderStatusHold || order.orderStatus.id == orderStatusPlaced }">
+        <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldOrder" title="Unhold Order"
+                class="orderStatusLink onHoldStatusLink"
+                style="${order.orderStatus.id == orderStatusHold ? '': 'display:none;'}">
+            <s:param name="order" value="${order.id}"/>
+            <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Order" title="Unhold Order"/>
+        </s:link>
+        <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdOrder" title="Put Order on Hold"
+                class="orderStatusLink normalStatusLink"
+                style="${order.orderStatus.id == orderStatusHold ? 'display:none;': ''}">
+            <s:param name="order" value="${order.id}"/>
+            <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Order on Hold" title="Put Order on Hold"/>
+        </s:link>
+    </c:if>
   <c:if test="${order.orderStatus.id == orderStatusCancelled}">
     <br>
     <span>Cancellation Type :</span>
@@ -342,6 +338,11 @@
                <td >
           </c:otherwise>
         </c:choose>
+              <s:link beanclass="com.hk.web.action.admin.crm.OrderDetailsAction"
+                      style="float:right;background:#EEE;padding:3px;color:black;border:2px solid #AAA" target="_blank">
+                  <s:param name="gatewayOrderId" value="${order.gatewayOrderId}"/>
+                  View Details
+              </s:link>
   <span class="upc lgry sml">ID
   <strong><span class="or"> ${order.id}</span></strong>
   <c:if test="${order.orderStatus.id != orderStatusCart}">

@@ -24,9 +24,12 @@ public enum EnumShippingOrderStatus {
     RTO_Initiated(230L, "RTO Initiated"),
     SO_RTO(200L, "SO RTO"),
     SO_Lost(210L, "SO Lost"),
-    SO_Customer_Return_Replaced(250L, "SO Customer Return and Replaced"),
-    SO_Customer_Return_Refunded(260L, "SO Customer Return and Refunded"),
+    SO_Customer_Return_Replaced(250L, "SO Customer Return and Replace"),
+    SO_Customer_Return_Refunded(260L, "SO Customer Return and Refund"),
+	SO_Customer_Appeasement(270L, "SO Customer Satisfaction"),
+	SO_ReversePickup_Initiated(280L, "SO Reverse Pickup Initiated"),
     SO_Cancelled(999L, "SO Cancelled");
+
 
 
     private java.lang.String name;
@@ -91,17 +94,23 @@ public enum EnumShippingOrderStatus {
 
 	public static List<EnumShippingOrderStatus> getStatusForPuttingOrderOnHold() {
 
-        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
-                EnumShippingOrderStatus.SO_ReadyForProcess,
-                EnumShippingOrderStatus.SO_MarkedForPrinting,
-                EnumShippingOrderStatus.SO_Picking,
-                EnumShippingOrderStatus.SO_CheckedOut,
-                EnumShippingOrderStatus.SO_Packed);
+        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting
+//                ,
+//                EnumShippingOrderStatus.SO_ReadyForProcess,
+//                EnumShippingOrderStatus.SO_MarkedForPrinting,
+//                EnumShippingOrderStatus.SO_Picking,
+//                EnumShippingOrderStatus.SO_CheckedOut,
+//                EnumShippingOrderStatus.SO_Packed
+        );
     }
 
 
     public static List<EnumShippingOrderStatus> getStatusForActionQueue() {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
+    }
+
+    public static List<Long> getStatusIdsForActionQueue() {
+        return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId());
     }
 
     public static List<EnumShippingOrderStatus> getStatusForPicking() {
@@ -166,7 +175,6 @@ public enum EnumShippingOrderStatus {
         );
     }
 
-
     public static List<EnumShippingOrderStatus> getStatusForCreateUpdateShipment() {
            return Arrays.asList(
 //                   EnumShippingOrderStatus.SO_Packed,
@@ -179,6 +187,19 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Lost,
                 EnumShippingOrderStatus.SO_RTO,
                 EnumShippingOrderStatus.SO_Delivered);
+    }
+
+	public static List<ShippingOrderStatus> getStatusForReCheckinReturnItems(){
+		return Arrays.asList(EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus());
+	}
+
+    public static List<Long> getApplicableShippingOrderStatus(){
+        return Arrays.asList(EnumShippingOrderStatus.SO_Shipped.getId(),
+                EnumShippingOrderStatus.SO_Delivered.getId(),
+                EnumShippingOrderStatus.RTO_Initiated.getId(),
+                EnumShippingOrderStatus.SO_RTO.getId());
     }
 
 }

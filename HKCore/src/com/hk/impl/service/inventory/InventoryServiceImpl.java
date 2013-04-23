@@ -70,7 +70,7 @@ public class InventoryServiceImpl implements InventoryService {
 
   @Override
   public void checkInventoryHealth(ProductVariant productVariant) {
-    List<Sku> skuList = getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+    List<Sku> skuList = getSkuService().getSKUsForMarkingProductOOS(productVariant);
     if (skuList != null && !skuList.isEmpty()) {
       checkInventoryHealth(skuList, productVariant);
     } else {
@@ -237,6 +237,11 @@ public class InventoryServiceImpl implements InventoryService {
     long availableUnbookedInventory = netInventory - bookedInventory;
     logger.debug("net total AvailableUnbookedInventory " + availableUnbookedInventory);
     return availableUnbookedInventory;
+  }
+
+  @Override
+  public Long getAvailableUnbookedInventory(ProductVariant productVariant){
+    return this.getAvailableUnbookedInventory(getSkuService().getSKUsForProductVariantAtServiceableWarehouses(productVariant));    
   }
 
   @Override

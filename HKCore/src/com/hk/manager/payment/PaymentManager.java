@@ -45,199 +45,198 @@ import java.util.List;
 @Component
 @SuppressWarnings("unused")
 public class PaymentManager {
-	private static Logger logger = LoggerFactory.getLogger(PaymentManager.class);
+    private static Logger logger = LoggerFactory.getLogger(PaymentManager.class);
 
-	private final Double codCharges = 0D;
+    private final Double codCharges = 0D;
 
-	@Autowired
-	private OrderManager orderManager;
-	@Autowired
-	private UserManager userManager;
-	@Autowired
-	private OrderService orderService;
-	@Autowired
-	private RewardPointService rewardPointService;
-	@Autowired
-	private ReferrerProgramManager referrerProgramManager;
-	@Autowired
-	private InventoryService inventoryService;
-	@Autowired
-	private PaymentService paymentService;
-	@Autowired
-	SMSManager smsManager;
-	@Autowired
+    @Autowired
+    private OrderManager orderManager;
+    @Autowired
+    private UserManager userManager;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private RewardPointService rewardPointService;
+    @Autowired
+    private ReferrerProgramManager referrerProgramManager;
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    SMSManager smsManager;
+    @Autowired
     OrderEventPublisher orderEventPublisher;
 
-	@Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
-	private Double cashBackLimit;
+    @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
+    private Double cashBackLimit;
     @Value("#{hkEnvProps['" + Keys.Env.maxCODCallCount + "']}")
     private int maxCODCallCount;
     @Value("#{hkEnvProps['" + Keys.Env.defaultGateway + "']}")
-	private Long defaultGateway;
+    private Long defaultGateway;
 
-	@Autowired
-	private PaymentDao paymentDao;
-	@Autowired
-	private PaymentStatusDao paymentStatusDao;
+    @Autowired
+    private PaymentDao paymentDao;
+    @Autowired
+    private PaymentStatusDao paymentStatusDao;
 
-	// TODO: rewrite
+    // TODO: rewrite
 
-	/**
-	 * This method will throw an {@link com.hk.exception.HealthkartPaymentGatewayException} if the payment request
-	 * cannot be verified
-	 *
-	 * @param gatewayOrderId
-	 * @param amount
-	 * @param merchantParam
-	 * @throws com.hk.exception.HealthkartPaymentGatewayException
-	 *
-	 */
-	public void verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
-		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
-		if (payment == null) {
-			logger.info("Payment not found with gateway order id {}", gatewayOrderId);
-			throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.PAYMENT_NOT_FOUND);
-		}
+    /**
+     * This method will throw an {@link com.hk.exception.HealthkartPaymentGatewayException} if the payment request
+     * cannot be verified
+     *
+     * @param gatewayOrderId
+     * @param amount
+     * @param merchantParam
+     * @throws com.hk.exception.HealthkartPaymentGatewayException
+     *
+     */
+    public void verifyPayment(String gatewayOrderId, Double amount, String merchantParam) throws HealthkartPaymentGatewayException {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+        if (payment == null) {
+            logger.info("Payment not found with gateway order id {}", gatewayOrderId);
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.PAYMENT_NOT_FOUND);
+        }
 
-		logger.info("Verifying payment : gateway amount = " + amount + ", db amount = " + payment.getAmount());
-		if (!BaseUtils.doubleEquality(amount, payment.getAmount())) {
-			logger.info("Payment amount mismatch! Failing.");
-			throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH);
-		}
+        logger.info("Verifying payment : gateway amount = " + amount + ", db amount = " + payment.getAmount());
+        if (!BaseUtils.doubleEquality(amount, payment.getAmount())) {
+            logger.info("Payment amount mismatch! Failing.");
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH);
+        }
 
-		String checksum = getOrderChecksum(payment.getOrder());
-		if (StringUtils.isBlank(merchantParam)) {
-			// we're doing this because the merchant param that we get from the gateway may or may not be there
-			// depending on the gateway we're going to use.
-			// in gateways where such a facility is not availble, we simply want to check that the current checksum
-			// matches the checksum that was generated just before going to the gateway
-			merchantParam = checksum;
-		}
+        String checksum = getOrderChecksum(payment.getOrder());
+        if (StringUtils.isBlank(merchantParam)) {
+            // we're doing this because the merchant param that we get from the gateway may or may not be there
+            // depending on the gateway we're going to use.
+            // in gateways where such a facility is not availble, we simply want to check that the current checksum
+            // matches the checksum that was generated just before going to the gateway
+            merchantParam = checksum;
+        }
 
-		// Hence, the first condition is always false if merchantParam is blank
-		// otherwise that is also validated
+        // Hence, the first condition is always false if merchantParam is blank
+        // otherwise that is also validated
 
-		// noinspection ConstantConditions
-		if (!merchantParam.equals(checksum) || !checksum.equals(payment.getPaymentChecksum())) {
-			logger.info("checksum mismatch: merchantParam = {}, checksum = {}, payment.getPaymentChecksum = " + payment.getPaymentChecksum(), merchantParam, checksum);
-			throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.CHECKSUM_MISMATCH);
-		}
+        // noinspection ConstantConditions
+        if (!merchantParam.equals(checksum) || !checksum.equals(payment.getPaymentChecksum())) {
+            logger.info("checksum mismatch: merchantParam = {}, checksum = {}, payment.getPaymentChecksum = " + payment.getPaymentChecksum(), merchantParam, checksum);
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.CHECKSUM_MISMATCH);
+        }
 
-		// all seems well, if we've come this far. the request seems to be an authentic one
-		// now we can check if this is a double payment by mistake
-		if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
-				|| payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
-			// a payment is either successful or the payment is awaiting authorization means that this is a double
-			// payment.
-			logger.info("Seems like a double payment attempt. (or a page refresh)");
-			throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
-		}
-	}
+        // all seems well, if we've come this far. the request seems to be an authentic one
+        // now we can check if this is a double payment by mistake
+        if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
+                || payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId())) {
+            // a payment is either successful or the payment is awaiting authorization means that this is a double
+            // payment.
+            logger.info("Seems like a double payment attempt. (or a page refresh)");
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.DOUBLE_PAYMENT);
+        }
+    }
 
-	/**
-	 *
+    /**
      * @param order
      * @param paymentMode
      * @param remoteAddr
      * @param gateway
-     * @param issuer @return
+     * @param issuer         @return
      * @param billingAddress
      */
-	public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
-		Payment payment = new Payment();
-		payment.setAmount(order.getAmount());
-		payment.setOrder(order);
-		payment.setPaymentMode(paymentMode);
-		payment.setIp(remoteAddr);
+    public Payment createNewPayment(Order order, PaymentMode paymentMode, String remoteAddr, Gateway gateway, Issuer issuer, BillingAddress billingAddress) {
+        Payment payment = new Payment();
+        payment.setAmount(order.getAmount());
+        payment.setOrder(order);
+        payment.setPaymentMode(paymentMode);
+        payment.setIp(remoteAddr);
         payment.setGateway(gateway);
         payment.setIssuer(issuer);
 
-		payment.setBillingAddress(billingAddress);
+        payment.setBillingAddress(billingAddress);
 
-		// these two fields must be generated
-		// gateway order id is the order id passed to the payment gateway. this can be
-		// a string made up of our order id, the payment id, or a random string (unique)
-		payment.setGatewayOrderId(getUniqueGatewayOrderId(order));
+        // these two fields must be generated
+        // gateway order id is the order id passed to the payment gateway. this can be
+        // a string made up of our order id, the payment id, or a random string (unique)
+        payment.setGatewayOrderId(getUniqueGatewayOrderId(order));
 
-		// checksum is based on the items in the cart. this must be generated again when
-		// the payment gateway callback returns control back to us. This is used to make sure that
-		// the users do not alter the shopping cart when a payment is being made.
-		payment.setPaymentChecksum(getOrderChecksum(order));
+        // checksum is based on the items in the cart. this must be generated again when
+        // the payment gateway callback returns control back to us. This is used to make sure that
+        // the users do not alter the shopping cart when a payment is being made.
+        payment.setPaymentChecksum(getOrderChecksum(order));
 
-		payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.REQUEST));
+        payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.REQUEST));
 
-		payment = paymentDao.save(payment);
-		return payment;
-	}
+        payment = paymentDao.save(payment);
+        return payment;
+    }
 
-	public static String getUniqueGatewayOrderId(Order order) {
-		return TokenUtils.generateGatewayOrderId(order);
-		/*
-				 * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
-				 * if(payment.getGatewayOrderId().equals(gatewayOrderId)){ return TokenUtils.generateGatewayOrderId(order); } } }
-				 * return gatewayOrderId;
-				 */
-	}
+    public static String getUniqueGatewayOrderId(Order order) {
+        return TokenUtils.generateGatewayOrderId(order);
+        /*
+                   * Set<Payment> payments = order.getPayments(); if(payments != null){ for (Payment payment : payments) {
+                   * if(payment.getGatewayOrderId().equals(gatewayOrderId)){ return TokenUtils.generateGatewayOrderId(order); } } }
+                   * return gatewayOrderId;
+                   */
+    }
 
-	/**
-	 * Calculates the order checksum based on the line items. It should be roughly unique for different carts. Roughly
-	 * unique will do.
-	 *
-	 * @param order
-	 * @return
-	 */
-	public static String getOrderChecksum(Order order) {
-		// lets simply do an md5 checksum of line item ids + scaffold id's + qty's
-		StringBuffer checksumString = new StringBuffer();
-		Set<CartLineItem> cartLineItems = order.getCartLineItems();
+    /**
+     * Calculates the order checksum based on the line items. It should be roughly unique for different carts. Roughly
+     * unique will do.
+     *
+     * @param order
+     * @return
+     */
+    public static String getOrderChecksum(Order order) {
+        // lets simply do an md5 checksum of line item ids + scaffold id's + qty's
+        StringBuffer checksumString = new StringBuffer();
+        Set<CartLineItem> cartLineItems = order.getCartLineItems();
 
-		// TODO: # warehouse fix this.
+        // TODO: # warehouse fix this.
 
-		// Collections.sort(cartLineItems);
+        // Collections.sort(cartLineItems);
 
-		for (CartLineItem lineItem : cartLineItems) {
-			if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
-				if (lineItem.getProductVariant() != null) {
-					checksumString.append(lineItem.getId()).append(lineItem.getProductVariant().getId()).append(lineItem.getQty());
-				} else if (lineItem.getComboInstance().getCombo() != null) {
-					// PSXYZ
-					checksumString.append(lineItem.getId()).append(lineItem.getComboInstance().getCombo()).append(lineItem.getQty());
-				}
-			}
-		}
-		// also add the address id to the checksum as pricing may depend on that
-		checksumString.append(order.getAddress().getId());
+        for (CartLineItem lineItem : cartLineItems) {
+            if (lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.getId())) {
+                if (lineItem.getProductVariant() != null) {
+                    checksumString.append(lineItem.getId()).append(lineItem.getProductVariant().getId()).append(lineItem.getQty());
+                } else if (lineItem.getComboInstance().getCombo() != null) {
+                    // PSXYZ
+                    checksumString.append(lineItem.getId()).append(lineItem.getComboInstance().getCombo()).append(lineItem.getQty());
+                }
+            }
+        }
+        // also add the address id to the checksum as pricing may depend on that
+        checksumString.append(order.getAddress().getId());
 
-		return BaseUtils.getMD5Checksum(checksumString.toString());
-	}
+        return BaseUtils.getMD5Checksum(checksumString.toString());
+    }
 
-	public Order associateToOrder(String gatewayOrderId) {
-		return associateToOrder(gatewayOrderId, null);
-	}
+    public Order associateToOrder(String gatewayOrderId) {
+        return associateToOrder(gatewayOrderId, null);
+    }
 
-	@Transactional
-	public Order associateToOrder(String gatewayOrderId, String gatewayReferenceId) {
-		Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
+    @Transactional
+    public Order associateToOrder(String gatewayOrderId, String gatewayReferenceId) {
+        Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
 
-		Order order = null;
-		// if payment type is full, then send order to processing also, else just accept and update payment status
-		if (payment != null) {
-			if (StringUtils.isBlank(gatewayReferenceId)) {
-				gatewayReferenceId = gatewayOrderId;
-			}
-			payment.setGatewayReferenceId(gatewayReferenceId);
-			payment = paymentDao.save(payment);
+        Order order = null;
+        // if payment type is full, then send order to processing also, else just accept and update payment status
+        if (payment != null) {
+            if (StringUtils.isBlank(gatewayReferenceId)) {
+                gatewayReferenceId = gatewayOrderId;
+            }
+            payment.setGatewayReferenceId(gatewayReferenceId);
+            payment = paymentDao.save(payment);
 
-			// if order already has a payment associated, simply update the association
-			if (payment.getOrder().getPayment() != null) {
-				payment.getOrder().setPayment(payment);
-				getOrderService().save(payment.getOrder());
-			} else {
-				order = getOrderManager().orderPaymentReceieved(payment);
-			}
-		}
-		return order;
-	}
+            // if order already has a payment associated, simply update the association
+            if (payment.getOrder().getPayment() != null) {
+                payment.getOrder().setPayment(payment);
+                getOrderService().save(payment.getOrder());
+            } else {
+                order = getOrderManager().orderPaymentReceieved(payment);
+            }
+        }
+        return order;
+    }
 
     public Order success(String gatewayOrderId) {
         return success(gatewayOrderId, null);
@@ -453,12 +452,15 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            initiatePaymentFailureCall(payment.getOrder());
-            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            payment.setGatewayReferenceId(gatewayReferenceId);
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
-            payment.setErrorLog(e.getError().getMessage());
-            paymentDao.save(payment);
+            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
+                    || payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()))) {
+                initiatePaymentFailureCall(payment.getOrder());
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+                payment.setGatewayReferenceId(gatewayReferenceId);
+                payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
+                payment.setErrorLog(e.getError().getMessage());
+                paymentDao.save(payment);
+            }
         }
     }
 
@@ -466,13 +468,16 @@ public class PaymentManager {
     public void error(String gatewayOrderId, String gatewayReferenceId, HealthkartPaymentGatewayException e, String responseMessage) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            initiatePaymentFailureCall(payment.getOrder());
-            payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-            payment.setGatewayReferenceId(gatewayReferenceId);
-            payment.setResponseMessage(responseMessage);
-            payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
-            payment.setErrorLog(e.getError().getMessage());
-            paymentDao.save(payment);
+            if (!(payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())
+                    || payment.getPaymentStatus().getId().equals(EnumPaymentStatus.SUCCESS.getId()))) {
+                initiatePaymentFailureCall(payment.getOrder());
+                payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
+                payment.setGatewayReferenceId(gatewayReferenceId);
+                payment.setResponseMessage(responseMessage);
+                payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.ERROR));
+                payment.setErrorLog(e.getError().getMessage());
+                paymentDao.save(payment);
+            }
         }
     }
 
@@ -492,7 +497,7 @@ public class PaymentManager {
                     }
                     orderEventPublisher.publishPaymentFailureEvent(order);
                 } catch (DataIntegrityViolationException dataInt) {
-                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage() + " on time :: " + BaseUtils.getCurrentTimestamp() );
+                    logger.error("Exception in  inserting  Duplicate UserCodCall by publishing payment faliure: " + dataInt.getMessage() + " on time :: " + BaseUtils.getCurrentTimestamp());
                 } catch (Exception ex) {
                     logger.error("Error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                 }
@@ -520,51 +525,51 @@ public class PaymentManager {
         this.orderManager = orderManager;
     }
 
-	public OrderService getOrderService() {
-		return orderService;
-	}
+    public OrderService getOrderService() {
+        return orderService;
+    }
 
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
-	public RewardPointService getRewardPointService() {
-		return rewardPointService;
-	}
+    public RewardPointService getRewardPointService() {
+        return rewardPointService;
+    }
 
-	public void setRewardPointService(RewardPointService rewardPointService) {
-		this.rewardPointService = rewardPointService;
-	}
+    public void setRewardPointService(RewardPointService rewardPointService) {
+        this.rewardPointService = rewardPointService;
+    }
 
-	public InventoryService getInventoryService() {
-		return inventoryService;
-	}
+    public InventoryService getInventoryService() {
+        return inventoryService;
+    }
 
-	public void setInventoryService(InventoryService inventoryService) {
-		this.inventoryService = inventoryService;
-	}
+    public void setInventoryService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
 
-	public PaymentService getPaymentService() {
-		return paymentService;
-	}
+    public PaymentService getPaymentService() {
+        return paymentService;
+    }
 
-	public void setPaymentService(PaymentService paymentService) {
-		this.paymentService = paymentService;
-	}
+    public void setPaymentService(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
-	public ReferrerProgramManager getReferrerProgramManager() {
-		return referrerProgramManager;
-	}
+    public ReferrerProgramManager getReferrerProgramManager() {
+        return referrerProgramManager;
+    }
 
-	public void setReferrerProgramManager(ReferrerProgramManager referrerProgramManager) {
-		this.referrerProgramManager = referrerProgramManager;
-	}
+    public void setReferrerProgramManager(ReferrerProgramManager referrerProgramManager) {
+        this.referrerProgramManager = referrerProgramManager;
+    }
 
-	public UserManager getUserManager() {
-		return userManager;
-	}
+    public UserManager getUserManager() {
+        return userManager;
+    }
 
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
 }

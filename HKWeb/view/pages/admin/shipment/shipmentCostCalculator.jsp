@@ -153,6 +153,18 @@
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
+                <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+                    <fieldset class="top_label">
+                        <legend> Bulk SO Escalate</legend>
+
+                        <div class="clear"></div>
+
+                        <div style="margin-top:15px;"></div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="bulkEscalateShippingOrder" value="Bulk Escalate SO"/>
+                        </shiro:hasAnyRoles>
+                    </fieldset>
+                </s:form>
                 <div class="clear"></div>
                 <s:form beanclass="com.hk.web.action.admin.util.MarkVariantsInStockAction">
                     <fieldset class="top_label">

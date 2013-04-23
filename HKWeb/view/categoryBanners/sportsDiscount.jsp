@@ -17,17 +17,19 @@
     border-bottom: 0;
   }
 </style>
+
 <div style="margin-left: auto; margin-right: auto; width:960px;">
   <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-    <img src="${pageContext.request.contextPath}/images/banners/top/Home-Gym-Banner.gif" alt="Build Your Dream Gym at Home, Starting From Rs. 10,000.00">
+    <img src="${pageContext.request.contextPath}/images/banners/top/portable-home-gyms-banner.jpg" alt="Build Your Dream Gym at Home, Starting From Rs. 10,000.00">
   </s:link>  
   <script type="text/javascript">
     var params = {};
     params['srcUrl'] = document.location.href;
     params['topLevelCategory'] = $('#topCategoryContainer').html();
-    $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
 
-    $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
+    $('#discountCouponModal').jqm({trigger: '#sendCouponLink'});
+    $("#discountCouponModal").append($('<iframe id="raj_frame" src="https://docs.google.com/spreadsheet/embeddedform?formkey=dFFBeGVKUzR6dl9NTkJsVUNlQWRYZnc6MQ" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+    $("#discountCouponModal").addClass("raj_modal");
 
   </script>
 </div>

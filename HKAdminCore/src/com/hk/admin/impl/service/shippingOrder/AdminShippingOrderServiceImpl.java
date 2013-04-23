@@ -2,7 +2,9 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
+import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,7 +145,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
                 }
             }
 
-            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(shippingOrder).getName());
             ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
             shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
             shippingOrder = getShippingOrderService().save(shippingOrder);
@@ -152,6 +153,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
              * id
              */
             shippingOrder = getShippingOrderService().setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            Set<ShippingOrderCategory> categories = getOrderService().getCategoriesForShippingOrder(shippingOrder);
+            shippingOrder.setShippingOrderCategories(categories);
+            shippingOrder.setBasketCategory(getOrderService().getBasketCategory(categories).getName());
             shippingOrder = getShippingOrderService().save(shippingOrder);
 
 			//shipmentService.createShipment(shippingOrder);
@@ -163,18 +168,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return null;
     }
-    
-    
-    
-    
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
-        getAdminInventoryService().reCheckInInventory(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+            getAdminInventoryService().reCheckInInventory(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        }
         return shippingOrder;
     }
 
@@ -236,7 +238,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.RTO_Initiated));
         getShippingOrderService().save(shippingOrder);
 	    if(rtoReason != null){
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, rtoReason.getName());
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated, null, rtoReason.getName());
 	    }
 	    else{
 		    getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.RTO_Initiated);
@@ -292,13 +294,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ActionAwaiting));
+        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
         shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
 
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue);
+        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-        getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+//        getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
 

@@ -36,7 +36,6 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
-import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -266,7 +265,11 @@ public class InventoryCheckoutAction extends BaseAction {
                         if (Math.abs(checkedOutItemCount) < lineItem.getQty() && shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Picking.getId())) {
                             SkuItem skuItem;
                             if (skuItemBarcode != null) {
-                                skuItem = skuItemBarcode;
+                              skuItem = skuGroupService.getSkuItemByBarcode(skuItemBarcode.getBarcode(), userService.getWarehouseForLoggedInUser().getId(), EnumSkuItemStatus.Checked_IN.getId());
+                                 if (skuItem == null){
+                                     addRedirectAlertMessage(new SimpleMessage("You are doing something wrong, Please scan properly with barcode"));
+                                     return new RedirectResolution(InventoryCheckoutAction.class).addParameter("checkout").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+                                 }
                             } else {
                                 skuItem = skuGroupService.getSkuItem(skuGroup, EnumSkuItemStatus.Checked_IN.getSkuItemStatus());
                             }
@@ -279,7 +282,7 @@ public class InventoryCheckoutAction extends BaseAction {
                                 addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
                                 String comments = "Checked-out One Unit of Item: " + variant.getProduct().getName() + "<br/>" + variant.getOptionsCommaSeparated();
-                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
+                                shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, null, comments);
                             } else {
                                 addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
                             }
@@ -340,7 +343,7 @@ public class InventoryCheckoutAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage("SkuItem from selected Batch is checked out."));
 
                     String comments = "Free Checked-out One Unit of Item: " + productVariant.getProduct().getName() + "<br/>" + productVariant.getOptionsCommaSeparated();
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, comments);
+                    shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CheckedOut, null, comments);
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Some error to get skuitem for skugroup"));
                 }

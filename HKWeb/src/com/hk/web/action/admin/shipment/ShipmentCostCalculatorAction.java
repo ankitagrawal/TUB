@@ -101,6 +101,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
+    @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveActualShippingCostForShippingOrder() {
         ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
         if (shippingOrder != null) {
@@ -156,6 +157,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     }
 
 
+    @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveHistoricalShipmentCost() {
         List<Courier> courierList = new ArrayList<Courier>();
         for (Courier courier : applicableCourierList) {

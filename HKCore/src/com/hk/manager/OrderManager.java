@@ -416,12 +416,15 @@ public class OrderManager {
                 getRewardPointService().redeemRewardPoints(order, pricingDto.getRedeemedRewardPoints());
             }
 
-            Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
-            if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
-                subscriptionService.placeSubscriptions(order);
+            if(!order.getPayment().getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())){
+                Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
+                if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
+                    subscriptionService.placeSubscriptions(order);
+                }
             }
             getEmailManager().sendOrderConfirmEmailToAdmin(order);
         }
+
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
         if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
             // Send mail to Customer
@@ -430,7 +433,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-	    //Set Order in Traffic Tracking
+        //this is the most important method, so it is very important as to from where it is called
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+
+        //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 	    if (trafficTracking != null) {
 		    trafficTracking.setOrderId(order.getId());
@@ -441,7 +447,7 @@ public class OrderManager {
 		    }
 		    getBaseDao().save(trafficTracking);
 	    }
-	    
+
         return order;
     }
 
@@ -493,7 +499,8 @@ public class OrderManager {
     public CartLineItem createFreeLineItem(CartLineItem cartLineItem, ProductVariant freeVariant) throws OutOfStockException {
         Order order = cartLineItem.getOrder();
         freeVariant.setQty(cartLineItem.getQty());
-        if (!freeVariant.isOutOfStock()) {
+        //as on 04-02-13, free variants which are out of stock, will be added to an order, but they wont be processed
+//        if (!freeVariant.isOutOfStock()) {
             CartLineItem existingCartLineItem = getCartLineItemDao().getLineItem(freeVariant, order);
             if (existingCartLineItem == null) { // The variant is not added in user account already
                 CartLineItem freeCartLineItem = cartLineItemService.createCartLineItemWithBasicDetails(freeVariant, order);
@@ -504,8 +511,8 @@ public class OrderManager {
                 existingCartLineItem.setDiscountOnHkPrice(existingCartLineItem.getDiscountOnHkPrice() + (freeVariant.getHkPrice() * freeVariant.getQty()));
                 return cartLineItemService.save(existingCartLineItem);
             }
-        }
-        return null;
+//        }
+//        return null;
     }
 
     @Transactional
@@ -576,7 +583,9 @@ public class OrderManager {
           }
           else{
 
-          if (skuList == null || skuList.isEmpty() || productVariant.isOutOfStock() || productVariant.isDeleted() || product.isDeleted() || product.isOutOfStock()) {
+          if (skuList == null || skuList.isEmpty()
+              || product.isDeleted() || product.isOutOfStock()
+              || productVariant.isDeleted() || productVariant.isOutOfStock()) {
               if (comboInstance != null) {
                   toBeRemovedComboInstanceSet.add(comboInstance);
               }

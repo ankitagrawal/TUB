@@ -25,7 +25,7 @@ import com.google.gson.JsonObject;
 import com.hk.admin.util.ChhotuCourierDelivery;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.admin.util.courier.thirdParty.FedExTrackShipmentUtil;
-import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
+
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyTrackDetails;
 import com.hk.constants.courier.CourierConstants;
 import com.hk.constants.courier.EnumCourier;
@@ -140,31 +140,31 @@ public class TrackCourierAction extends BaseAction {
                 break;
             case DTDC_COD:
             case DTDC_Lite:
-            case DTDC_Plus:
-            case DTDC_Surface:
+            case DotZot_Economy:
+            case DotZot_Express:
                 courierName = CourierConstants.DTDC;
-                Map<String, String> responseMap = null;
-                try {
-                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
-                } catch (HealthkartCheckedException hce) {
-                    logger.debug("Exception occurred in TrackCourierAction");
-                }
-                if (responseMap != null) {
-                    for (Map.Entry entryObj : responseMap.entrySet()) {
-                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
-                            status = entryObj.getValue().toString();
-                        }
-                    }
-                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
-                } else {
-                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
-                }
+				resolution = new RedirectResolution("http://182.18.182.80/DMS_DOTZOT/GUI/Tracking_New/WebSite/TrackConsignment_new.Aspx?", false).addParameter("track_flag", "A").addParameter("CONSIGNMENT", trackingId);
+//                Map<String, String> responseMap = null;
+//                try {
+//                    responseMap = courierStatusUpdateHelper.updateDeliveryStatusDTDC(trackingId);
+//                } catch (HealthkartCheckedException hce) {
+//                    logger.debug("Exception occurred in TrackCourierAction");
+//                }
+//                if (responseMap != null) {
+//                    for (Map.Entry entryObj : responseMap.entrySet()) {
+//                        if (entryObj.getKey().equals(CourierConstants.DTDC_INPUT_STR_STATUS)) {
+//                            status = entryObj.getValue().toString();
+//                        }
+//                    }
+//                    resolution = new ForwardResolution("/pages/courierDetails.jsp");
+//                } else {
+//                    resolution = new RedirectResolution("/pages/trackShipment.jsp");
+//                }
                 break;
 			case FedEx:
 			case FedEx_Surface:	
 				//resolution = new RedirectResolution("https://www.fedex.com/Tracking?clienttype=dotcomreg&ascend_header=1&cntry_code=in&language=english&mi=n&", false).addParameter("tracknumbers", trackingId);
 				courierName = CourierConstants.FEDEX;
-        		///ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
 				ThirdPartyTrackDetails thirdPartyTrackDetails = new FedExTrackShipmentUtil().trackFedExShipment(trackingId);				
 				if(thirdPartyTrackDetails != null){
 				  status = thirdPartyTrackDetails.getAwbStatus();

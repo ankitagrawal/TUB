@@ -6,8 +6,9 @@ import com.hk.domain.inventory.GrnStatus;
 public enum EnumGrnStatus {
   GoodsReceived(10L, "Goods Received"),
   InventoryCheckinInProcess(20L, "Checkin In Process"),
-  InventoryCheckedIn(30L, "Checkin Completed"),
+  InventoryCheckedIn(30L, "Checkin Completed"),   //obselete
   Closed(100L, "Closed"),
+  PICreated(200L, "Purchase Invoice Created"),
   Deleted(1000L, "Deleted"),;
 
   private String name;

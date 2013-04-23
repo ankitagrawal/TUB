@@ -81,7 +81,7 @@
 				<label>End Date:</label><s:text style="width:150px" class="date_input endDate"
 				                                formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
 				                                name="dispatchEndDate"/>
-
+				<label>Awb no:</label><s:text name="awbNumber" />
 				<s:submit name="showDispatchLotList" value="Search Dispatch Lot"/>
 			</s:form>
 		</fieldset>
