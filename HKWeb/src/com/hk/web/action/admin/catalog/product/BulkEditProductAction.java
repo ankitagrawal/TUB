@@ -53,10 +53,9 @@ public class BulkEditProductAction extends BasePaginatedAction {
   List<String> supplierTin;
   String brand;
   String productVariantId = "";
-  // List<String> options;
-  // List<String> extraOptions;
-  Map<String, Boolean> editedOptions = new HashMap<String, Boolean>();
+  Map<String, Boolean> optionToEdit = new HashMap<String, Boolean>();
   BulkEditOptions toBeEditedOptions;
+  Object optionObject;
   private Integer defaultPerPage = 2;
   Page productPage;
 
@@ -110,7 +109,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
   @SuppressWarnings("unchecked")
   public Resolution defineOptionsMap() {
-    fillMap("toBeEditedOptions", editedOptions);
+    fillMap("optionToEdit", optionToEdit);
     return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
   }
 
@@ -121,22 +120,27 @@ public class BulkEditProductAction extends BasePaginatedAction {
     if (productPage != null) {
       products.addAll(productPage.getList());
     }
-
-    // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed cannot be rendered. Therefore, the object again needs to be converted to a map.
-    toBeEditedOptions = new BulkEditOptions();
-    toBeEditedOptions.setOptions(editedOptions);
+    // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed cannot be rendered.
+    // Therefore, the object again needs to be converted to a map.
+    if (optionToEdit != null && optionToEdit.size() != 0) {
+      toBeEditedOptions = new BulkEditOptions();
+      toBeEditedOptions.setOptions(optionToEdit);
+      optionToEdit = null;
+    } else {
+      // toBeEditedOptions = new BulkEditOptions();
+      toBeEditedOptions.setOptions(getMapFromString(toBeEditedOptions.getOptionObject().toString()));
+    }
     return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
   }
 
   public Resolution save() {
     if (products != null) {
       int ctr = 0;
-      fillMap("toBeEditedOptions", editedOptions);
-      toBeEditedOptions = new BulkEditOptions();
-      toBeEditedOptions.setOptions(editedOptions);
 
-      // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden parameter for the bean. So for further use,the string needs to be converted again into a map
-                                          //editedOptions = getMapFromString(toBeEditedOptions.getOptions().toString());
+      // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden parameter for the bean.
+      // So for further use,the string needs to be converted again into a map
+      optionObject = toBeEditedOptions.getOptionObject();
+      toBeEditedOptions.setOptions(getMapFromString(toBeEditedOptions.getOptionObject().toString()));
 
       for (Product product : products) {
         logger.debug("productId: " + product.getId());
@@ -204,7 +208,11 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
   public Resolution sendResponse() {
     return new RedirectResolution(BulkEditProductAction.class, "bulkEdit")
-        .addParameter("brand", brand).addParameter("category", category).addParameter("toBeEditedOptions", toBeEditedOptions);
+        .addParameter("brand", brand)
+        .addParameter("category", category)
+        .addParameter("toBeEditedOptions.optionObject", toBeEditedOptions.getOptionObject())
+        .addParameter("pageNo", pageNo)
+        .addParameter("perPage", getPerPage());
   }
 
   @SuppressWarnings("unchecked")
@@ -355,7 +363,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     HashSet<String> params = new HashSet<String>();
     params.add("category");
     params.add("brand");
-    params.add("toBeEditedOptions");
+    params.add("toBeEditedOptions.optionObject");
     return params;
   }
 
@@ -391,28 +399,19 @@ public class BulkEditProductAction extends BasePaginatedAction {
     this.productVariantId = productVariantId;
   }
 
-  // public List<String> getOptions() {
-  // return options;
-  // }
-  //
-  // public void setOptions(List<String> options) {
-  // this.options = options;
-  // }
-  //
-  // public List<String> getExtraOptions() {
-  // return extraOptions;
-  // }
-  //
-  // public void setExtraOptions(List<String> extraOptions) {
-  // this.extraOptions = extraOptions;
-  // }
-
-  public Map<String, Boolean> getEditedOptions() {
-    return editedOptions;
+  public Map<String, Boolean> getOptionToEdit() {
+    return optionToEdit;
   }
 
-  public void setEditedOptions(Map<String, Boolean> editedOptions) {
-    this.editedOptions = editedOptions;
+  public void setOptionToEdit(Map<String, Boolean> optionToEdit) {
+    this.optionToEdit = optionToEdit;
   }
 
+  public Object getOptionObject() {
+    return optionObject;
+  }
+
+  public void setOptionObject(Object optionObject) {
+    this.optionObject = optionObject;
+  }
 }

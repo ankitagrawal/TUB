@@ -15,55 +15,55 @@
             <fieldset>
               <legend>PRODUCT ATTRIBUTES</legend>
               <div style="float:left; width: 50%">
-                <s:checkbox name="toBeEditedOptions" value="productName"/>NAME
+                <s:checkbox name="" value="productName"/>NAME
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productCategories"/>CATEGORIES
+                <s:checkbox name="optionToEdit" value="productCategories"/>CATEGORIES
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productBrand"/>BRAND
+                <s:checkbox name="optionToEdit" value="productBrand"/>BRAND
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productSecondaryCategory"/>SECONDARY
+                <s:checkbox name="optionToEdit" value="productSecondaryCategory"/>SECONDARY
                 CATEGORY
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productSupplierTin"/>SUPPLIER TIN
+                <s:checkbox name="optionToEdit" value="productSupplierTin"/>SUPPLIER TIN
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productAmazonProduct"/>IS AMAZON PRODUCT
+                <s:checkbox name="optionToEdit" value="productAmazonProduct"/>IS AMAZON PRODUCT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productCodAllowed"/>IS COD ALLOWED
+                <s:checkbox name="optionToEdit" value="productCodAllowed"/>IS COD ALLOWED
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productColorOptions"/>HAS COLOUR OPTIONS
+                <s:checkbox name="optionToEdit" value="productColorOptions"/>HAS COLOUR OPTIONS
                 <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float:right; width: 50%">
-                <s:checkbox name="toBeEditedOptions" value="productJit"/>IS JIT
+                <s:checkbox name="optionToEdit" value="productJit"/>IS JIT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productGoogleAd"/>IS GOOGLE AD DISALLOWED
+                <s:checkbox name="optionToEdit" value="productGoogleAd"/>IS GOOGLE AD DISALLOWED
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productOrderRanking"/>SORTING
+                <s:checkbox name="optionToEdit" value="productOrderRanking"/>SORTING
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productService"/>SERVICE
+                <s:checkbox name="optionToEdit" value="productService"/>SERVICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productDeleted"/>IS DELETED
+                <s:checkbox name="optionToEdit" value="productDeleted"/>IS DELETED
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productHidden"/>IS HIDDEN
+                <s:checkbox name="optionToEdit" value="productHidden"/>IS HIDDEN
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productMinDays"/>MIN DAYS
+                <s:checkbox name="optionToEdit" value="productMinDays"/>MIN DAYS
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productMaxDays"/>MAX DAYS
+                <s:checkbox name="optionToEdit" value="productMaxDays"/>MAX DAYS
               </div>
             </fieldset>
           </div>
@@ -86,75 +86,75 @@
             <fieldset>
               <legend>PRODUCT VARIANT ATTRIBUTES</legend>
               <div style="float:left; width: 50%">
-                <s:checkbox name="toBeEditedOptions" value="productVariantUpc"/>UPC
+                <s:checkbox name="optionToEdit" value="productVariantUpc"/>UPC
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantMRP"/>MRP
+                <s:checkbox name="optionToEdit" value="productVariantMRP"/>MRP
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantHKPrice" id="hkPrice"/>HK
+                <s:checkbox name="optionToEdit" value="productVariantHKPrice" id="hkPrice"/>HK
                 PRICE(DISCOUNT
                 UNEDITABLE)
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantDiscount" id="discount"/>DISCOUNT(HK
+                <s:checkbox name="optionToEdit" value="productVariantDiscount" id="discount"/>DISCOUNT(HK
                 PRICE
                 UNEDITABLE)
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantCostPrice"/>COST PRICE
+                <s:checkbox name="optionToEdit" value="productVariantCostPrice"/>COST PRICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantB2BPrice"/>B2B PRICE
+                <s:checkbox name="optionToEdit" value="productVariantB2BPrice"/>B2B PRICE
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantPostpaidAmount"/>POSTPAID
+                <s:checkbox name="optionToEdit" value="productVariantPostpaidAmount"/>POSTPAID
                 AMOUNT
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantAffiliateCategory"/>AFFILIATE
+                <s:checkbox name="optionToEdit" value="productVariantAffiliateCategory"/>AFFILIATE
                 CATEGORY
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantOutOfStock"/>IS OUT OF STOCK
+                <s:checkbox name="optionToEdit" value="productVariantOutOfStock"/>IS OUT OF STOCK
                 <div style="margin-top: 10px"></div>
 
-                <s:checkbox name="toBeEditedOptions" value="productVariantDeleted"/>IS DELETED
+                <s:checkbox name="optionToEdit" value="productVariantDeleted"/>IS DELETED
                 <div style="margin-top: 10px"></div>
               </div>
 
               <div style="float: right; width: 50%;">
-                  <s:checkbox name="toBeEditedOptions" value="productVariantInventory"/>INVENTORY
+                  <s:checkbox name="optionToEdit" value="productVariantInventory"/>INVENTORY
                 <div style="margin-top: 10px"></div>
-                  <s:checkbox name="toBeEditedOptions" value="productVariantWeight"/>WEIGHT
+                  <s:checkbox name="optionToEdit" value="productVariantWeight"/>WEIGHT
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantClearanceSale"/>CLEARANCE
+                  <s:checkbox name="optionToEdit" value="productVariantClearanceSale"/>CLEARANCE
                 SALE
                 <div style="margin-top: 10px"></div>
-                  <s:checkbox name="toBeEditedOptions" value="productVariantConsumptionTime"/>CONSUMPTION
+                  <s:checkbox name="optionToEdit" value="productVariantConsumptionTime"/>CONSUMPTION
                 TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantLeadTime"/>LEAD TIME
+                  <s:checkbox name="optionToEdit" value="productVariantLeadTime"/>LEAD TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantLeadTimeFactor"/>LEAD TIME
+                  <s:checkbox name="optionToEdit" value="productVariantLeadTimeFactor"/>LEAD TIME
                 FACTOR
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantBufferTime"/>BUFFER TIME
+                  <s:checkbox name="optionToEdit" value="productVariantBufferTime"/>BUFFER TIME
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantNextAvailDate"/>NEXT
+                  <s:checkbox name="optionToEdit" value="productVariantNextAvailDate"/>NEXT
                 AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantFollAvailDate"/>FOLLWING
+                  <s:checkbox name="optionToEdit" value="productVariantFollAvailDate"/>FOLLWING
                 AVAILABLE DATE
                 <div style="margin-top: 10px"></div>
 
-                  <s:checkbox name="toBeEditedOptions" value="productVariantHasFreeProductVariant"/>FREE
+                  <s:checkbox name="optionToEdit" value="productVariantHasFreeProductVariant"/>FREE
                 PRODUCT VARIANT
                 <div style="margin-top: 10px"></div>
             </fieldset>
