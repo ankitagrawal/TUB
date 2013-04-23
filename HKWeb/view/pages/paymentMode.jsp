@@ -42,7 +42,7 @@
             <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
         </s:link>
     </div>
-    <div class='steps'>
+    <div class='steps' style="left:175px;">
         <hr noshade class="stepLine">
         <s:link
             beanclass="com.hk.web.action.core.user.SelectAddressAction"

@@ -6255,9 +6255,8 @@ color: #e62580;
     position: relative;
     float: left;
     border: 1px solid #ddd;
-    width: 620px;
+    width: 630px;
     left: 5px;
-    padding: 5px;
 }
 
 .newProductContainer{
@@ -6274,12 +6273,15 @@ color: #e62580;
     position: relative;
     float: left;
     width: 47%;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 .prodQuantityGrid{
     position: relative;
     float: left;
     width: 3%;
+    margin-top: 5px;
 }
 
 .prodPriceGrid{
@@ -6287,6 +6289,7 @@ color: #e62580;
     float: left;
     width: 25%;
     left: 35px;
+    margin-top: 5px;
 }
 
 .newTotals{

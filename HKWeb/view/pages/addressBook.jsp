@@ -59,7 +59,7 @@
             <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
         </s:link>
     </div>
-    <div class='steps'>
+    <div class='steps' style="left:175px;">
         <hr noshade class="stepLine">
         <div class='newStep '>
             <div class="newStepCount current_step">1</div>

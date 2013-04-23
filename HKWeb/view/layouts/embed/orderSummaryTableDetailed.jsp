@@ -23,7 +23,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 <div class='orderSummaryHeading'>
     <div class="productGrid">Product</div>
     <div class="prodQuantityGrid">Qty</div>
-    <div class='name' style="width: 20%;left: 19px;position: relative;float: left;">
+    <div class='name' style="width: 20%;left: 19px;position: relative;float: left;margin-top: 5px;">
         <span class="dispatchDateText2">Dispatch Date</span>
         <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
         <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
