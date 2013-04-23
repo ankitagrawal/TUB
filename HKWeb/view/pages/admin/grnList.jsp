@@ -11,7 +11,7 @@
       pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
   %>
 	<c:set var="checkinInProcess" value="<%=EnumGrnStatus.InventoryCheckinInProcess.getId()%>"/>
-	<c:set var="inventoryCheckedIn" value="<%=EnumGrnStatus.InventoryCheckedIn.getId()%>"/>
+	<c:set var="inventoryClosedStatus" value="<%=EnumGrnStatus.Closed.getId()%>"/>
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="poa"/>
   <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
   <s:layout-component name="htmlHead">
@@ -178,14 +178,14 @@
 		        <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="print" target="_blank">Print
 			        <s:param name="grn" value="${grn.id}"/></s:link>
 		        <br/>
-		        <c:if test="${grn.grnStatus.id < inventoryCheckedIn}">
+		        <c:if test="${grn.grnStatus.id < inventoryClosedStatus}">
 			        <s:link beanclass="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="pre">
 				        Inv.Checkin
 				        <s:param name="grn" value="${grn.id}"/></s:link>
 
 			        <br/>
 		        </c:if>
-		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryCheckedIn}">
+		        <c:if test="${grn.grnStatus.id == checkinInProcess || grn.grnStatus.id == inventoryClosedStatus}">
 			        <s:link beanclass="com.hk.web.action.admin.queue.JobCartAction" event="putList">
 				        Put List
 				        <s:param name="grn" value="${grn.id}"/></s:link>

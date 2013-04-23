@@ -29,6 +29,7 @@ import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.dto.B2BProduct;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
@@ -1129,6 +1130,35 @@ public class XslParser {
         } else
             return null;
     }
+
+public List<B2BProduct> parseExcelAndGetProductList(File excelFile) throws Exception {
+		List<B2BProduct> b2bProductList = new ArrayList<B2BProduct>();
+		InputStream poiInputStream = new FileInputStream(excelFile);
+		POIFSFileSystem objInFileSys = new POIFSFileSystem(poiInputStream);
+		HSSFWorkbook workbook = new HSSFWorkbook(objInFileSys);
+		HSSFSheet productSheet = workbook.getSheetAt(0);
+		Iterator<Row> objRowIt = productSheet.rowIterator();
+		Map<Integer, String> headerMap;
+		Map<Integer, String> rowMap;
+		try {
+			headerMap = getRowMap(objRowIt);
+			String variantId;
+			Long quantity;
+			while (objRowIt.hasNext()) {
+				B2BProduct b2bProduct = new B2BProduct();
+				rowMap = getRowMap(objRowIt);
+				variantId = getCellValue(XslConstants.VARIANT_ID, rowMap, headerMap);
+				quantity = getLong(getCellValue(XslConstants.QTY, rowMap, headerMap));
+				b2bProduct.setProductId(variantId);
+				b2bProduct.setQuantity(quantity);
+				b2bProductList.add(b2bProduct);
+			}
+		} catch (Exception e) {
+
+		}
+		return b2bProductList;
+	}
+
 
     private Supplier getSupplierDetails(String supplier_tin, String state, Integer rowCount) throws HealthKartCatalogUploadException {
         Supplier supplier = null;

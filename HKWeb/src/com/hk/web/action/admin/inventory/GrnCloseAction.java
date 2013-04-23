@@ -1,9 +1,14 @@
 package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.web.action.admin.AdminHomeAction;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.constants.inventory.EnumGrnStatus;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.SimpleMessage;
@@ -27,6 +32,10 @@ public class GrnCloseAction extends BaseAction {
 
     @Autowired
     private GoodsReceivedNoteDao goodsReceivedNoteDao;
+    @Autowired
+    private AdminEmailManager adminEmailManager;
+    @Autowired 
+    private ExtraInventoryService extraInventoryService;
 
     public Resolution pre() {
         int dayAgo = 21;
@@ -38,8 +47,22 @@ public class GrnCloseAction extends BaseAction {
         if (checkedInGrns != null && checkedInGrns.size() > 0) {
             for (GoodsReceivedNote grn : checkedInGrns) {
                 grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+                for(GrnLineItem grnLineItem : grn.getGrnLineItems()){
+    				for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
+    					if(grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())){
+    						grnLineItem.setFillRate(poLineItem.getFillRate());
+    					}
+    				}
+    			}
+                if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                	PurchaseOrder po = grn.getPurchaseOrder();
+                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                	po.setExtraInventoryId(id);
+                }
+    			getAdminEmailManager().sendGRNEmail(grn);
             }
             getBaseDao().saveOrUpdate(checkedInGrns);
+            
             addRedirectAlertMessage(new SimpleMessage(checkedInGrns.size() + " Grns created : " + dayAgo + " days ago are closed now."));
         } else {
             addRedirectAlertMessage(new SimpleMessage("No Grn has been found in Checkin Completed State"));
@@ -48,4 +71,21 @@ public class GrnCloseAction extends BaseAction {
         return new RedirectResolution(AdminHomeAction.class);
     }
 
+	public AdminEmailManager getAdminEmailManager() {
+		return adminEmailManager;
+	}
+
+	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+		this.adminEmailManager = adminEmailManager;
+	}
+
+	public ExtraInventoryService getExtraInventoryService() {
+		return extraInventoryService;
+	}
+
+	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+		this.extraInventoryService = extraInventoryService;
+	}
+	
+    
 }
