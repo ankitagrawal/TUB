@@ -12218,6 +12218,26 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (written)" id="20130423-01">
+        <sql>
+            set foreign_key_checks = 0;
+            truncate table warehouse;
+            set foreign_key_checks = 1;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20130423-02">
+        <sql>
+            insert into warehouse values (1,'06101832036','GGN Bright Warehouse','Bright Lifecare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Gurgaon','HARYANA','122101','1234567890',NULL,1,1,1);
+            insert into warehouse values (2,'27800897340V','MUM Bright Warehouse','Bright Lifecare Pvt Ltd','Mouje Walshind Village','Mumbai Nashik Highway NH 3, Walsind, Lonad','Mumbai','MAHARASHTRA','400101','1234567890',NULL,1,1,1);
+            insert into warehouse values (10,'06101832327','GGN Aqua Warehouse','Aquamarine Healthcare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Gurgaon','Haryana','122101','1234567890',NULL,1,2,0);
+            insert into warehouse values (20,'27800897340V','MUM Aqua Warehouse','Aquamarine Healthcare Pvt Ltd','Mouje Walshind Village','Mumbai Nashik Highway NH 3, Walsind, Lonad','Mumbai','Maharrashtra','400101','1234567890',NULL,1,2,0);
+            insert into warehouse values (101,'06101832036','GGN Bright Pharma Warehouse','Bright Lifecare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur\n			','Gurgaon','HARYANA','122101','1234567890',NULL,0,4,0);
+            insert into warehouse values (301,'07840464349','DEL Punjabi Bagh Store','Aquamarine Healthcare Pvt Ltd','Shop No 15, Ground Floor, North west Avenue, Club road,','Punjabi bagh Extn','Delhi','Delhi','110026','1234567890',101,1,3,1);
+            insert into warehouse values (401,'07320452122','DEL Kapashera Bright Warehouse','Bright Lifecare Pvt Ltd','2nd Floor, Safexpress Cargo Complex , 971/1 ','Opposite Fun and Food Village, Kapashera, New Delhi','Delhi','Delhi','110037','1234567890',NULL,0,1,1);
+            insert into warehouse values (999,'06101832327','GGN Corporate Office','Corporate Office','Parsvnath Arcadia','Sector-14','Gurgaon','HARYANA','122101','1234567890',NULL,0,5,0);
+        </sql>
+    </changeSet>
+
     <changeSet author="Ajeet (generated)" id="1366426068617-2">
         <createIndex indexName="identifier_UNIQUE" tableName="warehouse" unique="true">
             <column name="identifier"/>
