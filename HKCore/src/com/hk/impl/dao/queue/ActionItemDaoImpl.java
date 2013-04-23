@@ -1,8 +1,15 @@
 package com.hk.impl.dao.queue;
 
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.queue.TrafficState;
+import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
+
+import java.util.Date;
+import java.util.List;
 
 /*
  * User: Pratham
@@ -13,6 +20,11 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public ActionItem save(ActionItem actionItem) {
         return (ActionItem) super.save(actionItem);
+    }
+
+    @Override
+    public List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter) {
+        return null;
     }
 
 }
