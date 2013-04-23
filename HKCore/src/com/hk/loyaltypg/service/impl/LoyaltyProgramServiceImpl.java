@@ -293,7 +293,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		Badge nextBadge = currentBadge;
 		Collection<Badge> badges = this.getAllBadges();
 		for (Badge badge : badges) {
-			if(currentBadge.getMaxScore() < badge.getMinScore()) {
+			if(anualSpend < badge.getMinScore()) {
 				nextBadge = badge;
 				break;
 			}

@@ -98,7 +98,7 @@ pageContext.setAttribute("isSecure", isSecure);
             data: form.serialize(),
             success: function(resp) {
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
-                $("#" + form.context.id + ' input').attr('class', 'btn btn-success');
+                $("#" + form.context.id + ' input').attr('class', 'btn');
                 $("#" + form.context.id + ' input').attr('value', 'Added to Cart »');
                 $("#" + form.context.id + ' input').disabled = true;
 
@@ -127,7 +127,7 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span12">
         <div class="alert alert-error">
           <button id="errorToolTipBtn" type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">xxxx</span>
+          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">x</span>
         </div>
       </div>
     </div>
@@ -177,6 +177,7 @@ pageContext.setAttribute("isSecure", isSecure);
 			</c:forEach>
               
     </div>
+            <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}"/>
 
   </stripes:layout-component>
   

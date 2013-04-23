@@ -102,7 +102,7 @@
       <%
         if (basePaginatedAction.getPageNo() < basePaginatedAction.getPageCount()) {
       %>
-      <s:layout-render name="/pages/loyalty/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="<%=basePaginatedAction.getPageNo()+1%>" pageText="Next &rarr;"/>
+      <s:layout-render name="/pages/loyalty/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="<%=basePaginatedAction.getPageNo()+1%>" pageText="Next "/>
       <%
         }
       %>

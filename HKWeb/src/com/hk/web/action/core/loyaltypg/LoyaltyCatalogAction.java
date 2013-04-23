@@ -30,7 +30,7 @@ import com.hk.store.SearchCriteria;
 @Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
-	private int defaultPerPage = 10;
+	private int defaultPerPage = 12;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private Collection<Badge> badgeList;
@@ -47,7 +47,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	public Resolution pre() {
 		SearchCriteria criteria = new SearchCriteria();
 		int startRow = (this.getPageNo()-1)*this.getPerPage();
-		int maxRow = 100;//this.getPageNo()*this.getPerPage() - startRow;
+		int maxRow = this.getPageNo()*this.getPerPage() - startRow;
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
