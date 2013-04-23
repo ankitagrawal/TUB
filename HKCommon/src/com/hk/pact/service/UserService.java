@@ -11,39 +11,43 @@ import com.hk.domain.warehouse.Warehouse;
 
 public interface UserService {
 
-  public static final Long ADMIN_USER_ID = 1L;
+    public static final Long ADMIN_USER_ID = 1L;
 
-  public User getUserById(Long userId);
+    public User getUserById(Long userId);
 
-  public User findByLogin(String email);
+    public User findByLogin(String email);
 
-  public List<User> findByEmail(String email);
+    public List<User> findByEmail(String email);
 
-  public User getAdminUser();
+    public User getAdminUser();
 
-  public User getLoggedInUser();
+    public User getLoggedInUser();
 
-  public Warehouse getWarehouseForLoggedInUser();
+    public Warehouse getWarehouseForLoggedInUser();
 
-  public Page getMailingList(Category category, int pageNo, int perPage);
+    public Page getMailingList(Category category, int pageNo, int perPage);
 
-  public Page getAllMailingList(int pageNo, int perPage);
+    public Page getAllMailingList(int pageNo, int perPage);
 
-  public Page getAllUnverifiedMailingList(int pageNo, int perPage);
+    public Page getAllUnverifiedMailingList(int pageNo, int perPage);
 
-  public void updateIsProductBought(Order order);
+    public void updateIsProductBought(Order order);
 
-  public User findByUserHash(String userHash);
+    public User findByUserHash(String userHash);
 
-  public User save(User user);
+    public User save(User user);
 
-  public List<User> findByRole(Role role);
+    public List<User> findByRole(Role role);
 
-  public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
+    public Page findByRole(String name, String email, Role role, int pageNo, int perPage);
 
-  public User findByLoginAndStoreId(String login, Long storeId);
+    public User findByLoginAndStoreId(String login, Long storeId);
 
-  public void subscribeUserForOffers(String login, boolean subscribe);
+    public void subscribeUserForOffers(String login, boolean subscribe);
 
-  boolean unsubscribeUser(String unsubscribeToken);
+    boolean unsubscribeUser(String unsubscribeToken);
+
+    public boolean subscribeUser(String emailId);
+
+
 }

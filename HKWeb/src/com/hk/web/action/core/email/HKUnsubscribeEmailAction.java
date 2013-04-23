@@ -1,6 +1,7 @@
 package com.hk.web.action.core.email;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.email.EmailRecepientDao;
@@ -23,18 +24,30 @@ import org.springframework.stereotype.Component;
 public class HKUnsubscribeEmailAction extends BaseAction {
     @Autowired
     UserService userService;
+    @Autowired
+    EmailRecepientDao emailRecepientDao;
 
     public Resolution pre() {
         String unsubscribeToken = getContext().getRequest().getParameterValues("unsubscribeToken")[0];
         boolean success = userService.unsubscribeUser(unsubscribeToken);
         //EmailRecepient emailRecepient = emailRecepientDao.findByUnsubscribeToken(unsubscribeToken);
-        if(!success) {
+        if (!success) {
             addRedirectAlertMessage(new SimpleMessage("Invalid email."));
-        }else{
+        } else {
             addRedirectAlertMessage(new SimpleMessage("We have received your request. " +
                     "We will unsubscribe you from all future emails within next 30 minutes."));
         }
         return new ForwardResolution("/pages/unsubscribeEmail.jsp");
+    }
+
+    public Resolution subscribeUser() {
+        String emailId = getContext().getRequest().getParameterValues("email")[0];
+        boolean userSubscribed = userService.subscribeUser(emailId);
+        if (!userSubscribed) {
+            emailRecepientDao.subscribeForNotify(emailId);
+        }
+        addRedirectAlertMessage(new SimpleMessage("You are Subscribed , Please fill details click notify button again"));
+        return new ForwardResolution("/pages/modal/notifyMe.jsp");
     }
 
 }

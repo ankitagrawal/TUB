@@ -318,22 +318,38 @@ public class AdminEmailManager {
         User notifedByuser = userService.getAdminUser();
 
         for (String emailId : userNotifyMeListMap.keySet()) {
-            NotifyMe notifyMeObject;
+
             Boolean mailSentSuccessfully = false;
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
+            NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
+            User user = userService.findByLogin(emailId);
+            // find existing recipients or create recipients through the emails ids passed
+            EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
+            if (user != null) {
+                if (user.isSubscribedForNotify()) {
+                    valuesMap.put("unsubscribeLink", getLinkManager().getUnsubscribeLink(user));
+
+                } else {
+                    continue;
+                }
+            } else {
+                if (emailRecepient.isSubscribed()) {
+                    valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+                } else {
+                    continue;
+                }
+
+            }
+            valuesMap.put("notifiedUser", notifyMeObject);
             if (notifyMeListPerUser.size() > 1) {
                 //User has asked for multiple variant notification
-                notifyMeObject = notifyMeListPerUser.get(0);
                 valuesMap.put("notifyList", notifyMeListPerUser);
-                valuesMap.put("notifiedUser", notifyMeObject);
                 Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForMultipleVariants);
                 mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
 
             } else {
-                notifyMeObject = notifyMeListPerUser.get(0);
                 valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
-                valuesMap.put("notifiedUser", notifyMeObject);
-                Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForSingleVariant);
+                Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmail);
                 mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
 
             }

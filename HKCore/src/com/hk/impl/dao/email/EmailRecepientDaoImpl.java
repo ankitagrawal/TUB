@@ -74,6 +74,14 @@ public class EmailRecepientDaoImpl extends BaseDaoImpl implements EmailRecepient
         return emailIdsPresentInEmailReccepient;
     }
 
+    public EmailRecepient subscribeForNotify(String emailId) {
+        EmailRecepient emailRecepient = getOrCreateEmailRecepient(emailId);
+        emailRecepient.setSubscribed(true);
+        emailRecepient = (EmailRecepient) save(emailRecepient);
+        return emailRecepient;
+    }
+
+
     public EmailRecepient findByUnsubscribeToken(String unsubscribeToken) {
         return (EmailRecepient) getSession().createQuery("from EmailRecepient e where e.unsubscribeToken = :unsubscribeToken").setString("unsubscribeToken", unsubscribeToken).uniqueResult();
     }

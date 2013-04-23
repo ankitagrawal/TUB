@@ -30,6 +30,10 @@
 						}
 					}
 				} );
+
+
+
+
 				});
 		</script>
 	</s:layout-component>
@@ -83,6 +87,11 @@
                     $('#notifyMeWindow .notifyForm').hide();
                 } else  if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                     $('#notifyMeWindow .msg').html(res.message);
+                }
+                else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>>') {
+                    $('#notifyMeWindow .msg').html(res.message);
+                    $('#notifyMeWindow').html('<a href="'+res.link+'" />');
+
                 }
             }
             $('#notifyMeForm').ajaxForm({dataType: 'json', success: _registerNotifyMe});
