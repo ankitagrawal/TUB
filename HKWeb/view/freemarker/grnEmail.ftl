@@ -65,7 +65,6 @@ text-align:center;
 		<th>Deleted</th>
 		<th>Hidden</th>
 		<th>Other Remarks</th>
-		<th>First Time Purchase</th>
 		<th>Payable Amount</th>
 	</tr>
 	
@@ -172,13 +171,12 @@ text-align:center;
   		<#else>
   		N/A
   		</#if></td>
-  	<td></td>
 	<td>${poLineItem.payableAmount}</td>
 	</tr>
 	</#list>
 	
 	<tr>
-	<td colspan="16"></td>
+	<td colspan="15"></td>
 	<td colspan="2">Total Payable: <#if grn.purchaseOrder.payable??>
  		 ${grn.purchaseOrder.payable}
   		<#else>
