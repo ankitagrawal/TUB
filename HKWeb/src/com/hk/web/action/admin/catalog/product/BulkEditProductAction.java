@@ -56,15 +56,13 @@ public class BulkEditProductAction extends BasePaginatedAction {
   Map<String, Boolean> optionToEdit = new HashMap<String, Boolean>();
   BulkEditOptions toBeEditedOptions;
   Object optionObject;
-  private Integer defaultPerPage = 2;
+  private Integer defaultPerPage = 20;
   Page productPage;
 
   @Autowired
   ProductService productService;
-
   @Autowired
   private ProductVariantService productVariantService;
-
   @Autowired
   private CategoryService categoryService;
   @Autowired
@@ -98,23 +96,20 @@ public class BulkEditProductAction extends BasePaginatedAction {
     return new ForwardResolution("/pages/bulkProductDetails.jsp");
   }
 
-  public void fillMap(String param, Map optionMap) {
-    if (getContext().getRequest().getParameter(param) != null) {
-      String[] options = getContext().getRequest().getParameterValues(param);
-      for (String option : options) {
-        optionMap.put(option, Boolean.TRUE);
-      }
-    }
-  }
-
   @SuppressWarnings("unchecked")
   public Resolution defineOptionsMap() {
-    fillMap("optionToEdit", optionToEdit);
+    if (getContext().getRequest().getParameter("optionToEdit") != null) {
+      String[] options = getContext().getRequest().getParameterValues("optionToEdit");
+      for (String option : options) {
+        optionToEdit.put(option, Boolean.TRUE);
+      }
+    }
     return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
   }
 
   @SuppressWarnings("unchecked")
   public Resolution bulkEdit() {
+    toBeEditedOptions = new BulkEditOptions();
     productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
     products = new ArrayList<Product>();
     if (productPage != null) {
@@ -123,12 +118,11 @@ public class BulkEditProductAction extends BasePaginatedAction {
     // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed cannot be rendered.
     // Therefore, the object again needs to be converted to a map.
     if (optionToEdit != null && optionToEdit.size() != 0) {
-      toBeEditedOptions = new BulkEditOptions();
       toBeEditedOptions.setOptions(optionToEdit);
+      optionObject = optionToEdit.toString();
       optionToEdit = null;
-    } else {
-      // toBeEditedOptions = new BulkEditOptions();
-      toBeEditedOptions.setOptions(getMapFromString(toBeEditedOptions.getOptionObject().toString()));
+    } else if(optionObject != null && !optionObject.equals("{}")) {
+      toBeEditedOptions.setOptions(getMapFromString(optionObject.toString()));
     }
     return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
   }
@@ -139,9 +133,6 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
       // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden parameter for the bean.
       // So for further use,the string needs to be converted again into a map
-      optionObject = toBeEditedOptions.getOptionObject();
-      toBeEditedOptions.setOptions(getMapFromString(toBeEditedOptions.getOptionObject().toString()));
-
       for (Product product : products) {
         logger.debug("productId: " + product.getId());
         Combo combo = comboDao.get(Combo.class, product.getId());
@@ -210,9 +201,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     return new RedirectResolution(BulkEditProductAction.class, "bulkEdit")
         .addParameter("brand", brand)
         .addParameter("category", category)
-        .addParameter("toBeEditedOptions.optionObject", toBeEditedOptions.getOptionObject())
-        .addParameter("pageNo", pageNo)
-        .addParameter("perPage", getPerPage());
+        .addParameter("optionObject", optionObject);
   }
 
   @SuppressWarnings("unchecked")
@@ -363,7 +352,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     HashSet<String> params = new HashSet<String>();
     params.add("category");
     params.add("brand");
-    params.add("toBeEditedOptions.optionObject");
+    params.add("optionObject");
     return params;
   }
 

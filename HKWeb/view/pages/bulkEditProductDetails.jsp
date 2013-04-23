@@ -30,14 +30,12 @@
   </h2>
 </div>
 
-<div class="errors" style="background-color:salmon; margin-top: 20px; padding: 5px;">
-
-</div>
+<div class="errors" style="background-color:salmon; margin-top: 20px; padding: 5px;"></div>
 
 <s:form beanclass="com.hk.web.action.admin.catalog.product.BulkEditProductAction">
 <s:hidden name="category" value="${bep.category}"/>
 <s:hidden name="brand" value="${bep.brand}"/>
-<s:hidden name="toBeEditedOptions.optionObject" value="${bep.toBeEditedOptions.options}"/>
+<s:hidden name="optionObject" value="${bep.optionObject}"/>
 
 <table border="1" class="zebra_vert">
 <tr>

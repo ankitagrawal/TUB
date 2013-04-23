@@ -8,15 +8,6 @@ import java.util.Map;
 public class BulkEditOptions {
 
   Map<String, Boolean> options = new HashMap<String, Boolean>();
-  Object optionObject;
-
-  public Object getOptionObject() {
-    return optionObject;
-  }
-
-  public void setOptionObject(Object optionObject) {
-    this.optionObject = optionObject;
-  }
 
   public Map<String, Boolean> getOptions() {
     return options;
