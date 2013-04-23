@@ -35,22 +35,22 @@
     <div id="wrapper">
 
 
-        <div class="row01"> <a href="https://www.healthkart.com/brand/sports-nutrition/twinlab"><img src="${pageContext.request.contextPath}/images/nut-offers/banner6.jpg" alt="Up to 45% off on Twinlab Nutrition" /></a>
+        <div class="row01"> <a href="https://www.healthkart.com/brand/sports-nutrition/twinlab" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner6.jpg" alt="Up to 45% off on Twinlab Nutrition" /></a>
             <div class="space"></div>
-            <a href="https://www.healthkart.com/brand/sports-nutrition/allmax"><img src="${pageContext.request.contextPath}/images/nut-offers/banner4.jpg" alt="Up to 30% off on Allmax Nutrition" /></a>
+            <a href="https://www.healthkart.com/brand/sports-nutrition/allmax" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner4.jpg" alt="Up to 30% off on Allmax Nutrition" /></a>
         </div>
         <div class="space"></div>
         <div class="cl"></div>
 
-        <div class="row02"> <a href="https://www.healthkart.com/brand/sports-nutrition/vitamin+shoppe+bodytech"><img src="${pageContext.request.contextPath}/images/nut-offers/banner2.jpg" alt="Up to 30% off on Vitamine Shoppe BodyTech" /></a>
+        <div class="row02"> <a href="https://www.healthkart.com/brand/sports-nutrition/vitamin+shoppe+bodytech" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner2.jpg" alt="Up to 30% off on Vitamine Shoppe BodyTech" /></a>
             <div class="space"></div>
-            <a href="https://www.healthkart.com/brand/sports-nutrition/muscletech+six+star"><img src="${pageContext.request.contextPath}/images/nut-offers/banner3.jpg" alt="Up to 30% off on Six Star Pro Nutrition" /></a>
+            <a href="https://www.healthkart.com/brand/sports-nutrition/muscletech+six+star" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner3.jpg" alt="Up to 30% off on Six Star Pro Nutrition" /></a>
             <div class="space"></div>
             <div class="cl"></div>
-            <a href="https://www.healthkart.com/brand/sports-nutrition/vitamin+shoppe+true+athlete"><img src="${pageContext.request.contextPath}/images/nut-offers/banner5.jpg" alt="Up to 30% off on True Athlete Nutrition" /></a>
+            <a href="https://www.healthkart.com/brand/sports-nutrition/vitamin+shoppe+true+athlete" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner5.jpg" alt="Up to 30% off on True Athlete Nutrition" /></a>
         </div>
         <div class="space"></div>
-        <a href="https://www.healthkart.com/brand/sports-nutrition/weider"><img src="${pageContext.request.contextPath}/images/nut-offers/banner1.jpg" alt="Up to 10% off on Weider Nutrition" /></a>
+        <a href="https://www.healthkart.com/brand/sports-nutrition/weider" target="_blank"><img src="${pageContext.request.contextPath}/images/nut-offers/banner1.jpg" alt="Up to 10% off on Weider Nutrition" /></a>
 
 
     </div>
