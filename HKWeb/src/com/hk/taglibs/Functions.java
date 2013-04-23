@@ -708,10 +708,10 @@ public class Functions {
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
     }
 
-    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant, Order order) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
         //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
-	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant, order);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());

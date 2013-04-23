@@ -17,6 +17,7 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
 import com.hk.exception.NoSkuException;
 import com.hk.pact.dao.sku.SkuDao;
 import com.hk.pact.service.catalog.ProductService;
@@ -120,7 +121,11 @@ public class SkuServiceImpl implements SkuService {
 		return getSkuDao().getSkus(productVariant, warehouseService.getServiceableWarehouses());
 	}
 
-		/**
+  public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant, Order order) {
+    return getSkuDao().getSkus(productVariant, warehouseService.getServiceableWarehouses(order));
+  }
+
+  /**
 	 * this will return a list of all sku's (instance of product variant at serviceable warehouses only)
 	 *
 	 * @param productVariant

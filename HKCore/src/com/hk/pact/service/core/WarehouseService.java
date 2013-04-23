@@ -2,6 +2,7 @@ package com.hk.pact.service.core;
 
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.Order;
 
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,8 @@ public interface WarehouseService {
   public List<Warehouse> getWarehoueForFlipping(Warehouse currentWarehouseForSO);
 
   public List<Warehouse> getServiceableWarehouses();
+
+  public List<Warehouse> getServiceableWarehouses(Order order);
 
   public List<Warehouse> getWarehousesToMarkOOS();
 

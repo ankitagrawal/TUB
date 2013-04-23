@@ -167,13 +167,11 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
 
         Warehouse ggnWarehouse = warehouseService.getDefaultWarehouse();
         Warehouse mumWarehouse = warehouseService.getMumbaiWarehouse();
-        Warehouse kapashedaWH = warehouseService.getWarehouseById(WarehouseService.DEL_KAPASHERA_BRIGHT_WH_ID);
 
         List<CartLineItem> awaraCartLineItems = new ArrayList<CartLineItem>(); // these are the dicey lineItems for
                                                                                 // which whole algo has been written
         List<CartLineItem> ggnKiCartLineItems = new ArrayList<CartLineItem>();
         List<CartLineItem> mumKiCartLineItems = new ArrayList<CartLineItem>();
-        List<CartLineItem> kphdKiCartLineItems = new ArrayList<CartLineItem>();
 
         for (CartLineItem cartLineItem : cartLineItemWarehouseListMap.keySet()) {
             Set<Warehouse> applicableWarehouses = cartLineItemWarehouseListMap.get(cartLineItem);
@@ -186,13 +184,9 @@ public class OrderSplitterServiceImpl implements OrderSplitterService {
                     ggnKiCartLineItems.add(cartLineItem);
                 } else if (applicableWarehouse.equals(mumWarehouse)) {
                     mumKiCartLineItems.add(cartLineItem);
-                }else if (applicableWarehouse.equals(kapashedaWH)) {
-                    kphdKiCartLineItems.add(cartLineItem);
                 }
-            } else if (order.isB2bOrder() != null && order.isB2bOrder() && applicableWarehouses.contains(kapashedaWH)) {
-              kphdKiCartLineItems.add(cartLineItem);
             } else {
-              awaraCartLineItems.add(cartLineItem);
+                awaraCartLineItems.add(cartLineItem);
             }
         }
 

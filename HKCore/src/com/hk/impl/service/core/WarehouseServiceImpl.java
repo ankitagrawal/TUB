@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.order.Order;
 import com.hk.impl.dao.warehouse.WarehouseDaoImpl;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.UserService;
@@ -55,6 +56,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     public List<Warehouse> getServiceableWarehouses() {
       User user = userService.getLoggedInUser();
       if (user.getRoleStrings().contains(RoleConstants.B2B_USER.toString())) {
+        return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
+      }
+      return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
+    }
+
+  public List<Warehouse> getServiceableWarehouses(Order order) {
+      if (order.isB2bOrder() != null && order.isB2bOrder()) {
         return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
       return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);

@@ -135,10 +135,9 @@
 </c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
-    Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
-                <span
-                        style="margin-left:10px;">Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
- </span>
+  Warehouse: <strong>${shippingOrder.warehouse.identifier}</strong>
+  <br/>
+  Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
 </div>
 <div class="clear" style=""></div>
 <div class="floatleft">

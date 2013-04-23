@@ -3,6 +3,7 @@ package com.hk.pact.service.inventory;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.order.Order;
 
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,8 @@ public interface SkuService {
 	public List<Sku> getSKUsForProductVariant(ProductVariant productVariant);
 
 	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant);
+
+	public List<Sku> getSKUsForProductVariantAtServiceableWarehouses(ProductVariant productVariant, Order order);
 
 	public List<Sku> getSKUsForMarkingProductOOS(ProductVariant productVariant);
 
