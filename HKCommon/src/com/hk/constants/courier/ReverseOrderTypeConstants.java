@@ -14,6 +14,7 @@ public class ReverseOrderTypeConstants {
 
 	public static final String Healthkart_Managed_Courier = "Healthkart Managed Courier";
 	public static final String Customer_Managed_Courier = "Customer Managed Courier";
+	public static final String POS_RETURN_ORDER = "POS Return Order";
 
 	public static List<String> getReverseOrderTypes(){
 		return Arrays.asList(Healthkart_Managed_Courier, Customer_Managed_Courier);

@@ -1,6 +1,7 @@
 package com.hk.impl.dao.courier;
 
 
+import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -35,7 +36,7 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId) {
         DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
 		DetachedCriteria courierDetailCriteria = null;
-
+		orderCriteria.add(Restrictions.in("reverseOrderType", ReverseOrderTypeConstants.getReverseOrderTypes()));
 		if(shippingOrderId != null){
 			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
 			shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));

@@ -8,6 +8,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.pos.POSService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.constants.inventory.EnumReconciliationStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -320,7 +321,6 @@ public class POSAction extends BaseAction {
 	}
 
 	public Resolution createReverseOrderForPOS() {
-		//return new RedirectResolution(CreateReverseOrderAction.class, "createReverseOrderForPOS").addParameter("shippingGatewayOrderId", shippingGatewayOrderId);
 		if (!StringUtil.isBlank(shippingGatewayOrderId)) {
 			shippingOrder = shippingOrderService.findByGatewayOrderId(shippingGatewayOrderId);
 		}
@@ -346,6 +346,7 @@ public class POSAction extends BaseAction {
 			shippingOrderService.save(shippingOrder);
 			reverseOrder.setReceivedDate(new Date());
 			reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
+			reverseOrder.setReverseOrderType(ReverseOrderTypeConstants.POS_RETURN_ORDER);
 			reverseOrderService.save(reverseOrder);
 			addRedirectAlertMessage(new SimpleMessage("Reverse Order Created"));
 			return new RedirectResolution(POSAction.class);
