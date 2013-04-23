@@ -32,6 +32,10 @@ public class DummyOrder {
 
     boolean isGround;
 
+    boolean isDropShip;
+
+    boolean containsJIT;
+
     Pincode pincode;
 
     Payment payment;

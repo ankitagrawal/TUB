@@ -20,7 +20,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var obj;
-            $('#submit').click( function() {
+            $('#submitButton').click( function() {
                 $(this).hide();
                 var checkedinQty = obj.parents('.shippingRow').children('.checkedin').children('.checkedinQty').html();
                 var qty = obj.parents('.shippingRow').children('.qty').html();
@@ -32,14 +32,19 @@
             });
 
             $('.good').change(function() {
+                $('.rto2').remove();
+                $('.rto3').remove();
                 $('#conditionOfItem').attr('value', "good");
-                    obj = $(this);
+                 obj = $(this);
+                $('#submitButton').click();
             });
 
             $('.damaged').change(function() {
                 $('.rto1').remove();
+                $('.rto3').remove();
                 $('#conditionOfItem').attr('value', "damaged");
                 obj = $(this);
+                $('#submitButton').click();
             });
 
             $('.expired').change(function() {
@@ -47,6 +52,7 @@
                 $('.rto2').remove();
                 $('#conditionOfItem').attr('value', "expired");
                 obj = $(this);
+                $('#submitButton').click();
             });
 
             $('.downloadCheck').click(function() {
@@ -318,7 +324,7 @@
 
 </table>
 
-<div class="buttons"><s:submit name="checkinReturnedUnits" value="Checkin Returned Unit" id="submit"/></div>
+<div class="buttons"><s:submit name="checkinReturnedUnits" value="Checkin Returned Unit" id="submitButton"/></div>
 </s:form>
 
 </c:if>

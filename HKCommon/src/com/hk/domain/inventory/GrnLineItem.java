@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import com.google.gson.annotations.Expose;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.sku.Sku;
 
@@ -72,6 +73,9 @@ public class GrnLineItem implements java.io.Serializable {
 	@Column(name = "checkedin_qty")
 	private Long checkedInQty;
 
+	@Transient
+	private Double fillRate;
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -184,7 +188,15 @@ public class GrnLineItem implements java.io.Serializable {
 		this.procurementPrice = procurementPrice;
     }
 
-    @Override
+    public Double getFillRate() {
+		return fillRate;
+	}
+
+	public void setFillRate(Double fillRate) {
+		this.fillRate = fillRate;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

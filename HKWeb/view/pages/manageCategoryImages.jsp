@@ -35,7 +35,7 @@
         <c:forEach var="categoryImage" items="${ua.categoryImages}" varStatus="ctr">
           <tr>
             <td>
-              <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+              <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
             </td>
             <td>
               <s:checkbox name="categoryImages[${ctr.index}].hidden"/>
