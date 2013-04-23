@@ -25,22 +25,22 @@
                             ${lifecycleReason.reason.primaryClassification} - ${lifecycleReason.reason.secondaryClassification}
                         </c:forEach>
                     </c:when>
-                    <c:otherwise>
-                        <c:if test="${not empty hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}">
-                            <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction">
-                                <s:hidden name="lifecycleReason.shippingOrderLifecycle.id" value="${orderLifeCycle.id}"/>
-                                <s:hidden name="shippingOrder" value="${orderLifeCycleBean.shippingOrder}"/>
-                                <s:select name="lifecycleReason.reason">
-                                    <option value="">Choose Reason</option>
-                                    <%--<c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>--%>
-                                    <c:forEach items="${hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}" var="reason">
-                                        <option value="${reason.id}">${reason.primaryClassification}- ${reason.secondaryClassification}</option>
-                                    </c:forEach>
-                                </s:select>
-                                <s:submit name="logReasonForAnActivity" value="Log Reason"/>
-                            </s:form>
-                        </c:if>
-                    </c:otherwise>
+                    <%--<c:otherwise>--%>
+                        <%--<c:if test="${not empty hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}">--%>
+                            <%--<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction">--%>
+                                <%--<s:hidden name="lifecycleReason.shippingOrderLifecycle.id" value="${orderLifeCycle.id}"/>--%>
+                                <%--<s:hidden name="shippingOrder" value="${orderLifeCycleBean.shippingOrder}"/>--%>
+                                <%--<s:select name="lifecycleReason.reason">--%>
+                                    <%--<option value="">Choose Reason</option>--%>
+                                    <%--&lt;%&ndash;<c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>&ndash;%&gt;--%>
+                                    <%--<c:forEach items="${hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}" var="reason">--%>
+                                        <%--<option value="${reason.id}">${reason.primaryClassification}- ${reason.secondaryClassification}</option>--%>
+                                    <%--</c:forEach>--%>
+                                <%--</s:select>--%>
+                                <%--<s:submit name="logReasonForAnActivity" value="Log Reason"/>--%>
+                            <%--</s:form>--%>
+                        <%--</c:if>--%>
+                    <%--</c:otherwise>--%>
                 </c:choose>
                 ${orderLifeCycle.comments}</td>
         </tr>

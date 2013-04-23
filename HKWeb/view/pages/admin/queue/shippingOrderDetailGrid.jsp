@@ -277,15 +277,46 @@
             </shiro:hasPermission>
         </c:if>
 
-    <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
-        &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"
-                             event="cancelShippingOrder"
-                             class="cancelSO">
-        <s:param name="shippingOrder" value="${shippingOrder}"/>
-        Cancel SO
-    </s:link>)
+        <%--&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction"--%>
+                             <%--event="cancelShippingOrder"--%>
+                             <%--class="cancelSO button_orange">--%>
+        <%--<s:param name="shippingOrder" value="${shippingOrder}"/>--%>
+        <%--Cancel SO--%>
+    <%--</s:link>)--%>
+    <%--</c:if>--%>
+
+    <c:if test="${isActionQueue == true || isSearchShippingOrder == true }">
+    <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
+            <s:param name="shippingOrder" value="${shippingOrder}"/>
+            <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
+            <br>
+            Reason:
+            <s:select name="soReason" id="SoReason">
+            <s:option value="">-------Select-------</s:option>
+            <c:forEach items="${hk:getReasonsByType('SO  Cancelled')}" var="soCancelReason">
+            <s:option value="${soCancelReason.id}"> ${soCancelReason.primaryClassification} - ${soCancelReason.secondaryClassification} </s:option>
+            </c:forEach>
+             </s:select>
+             <br>
+             Remark:
+                <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
+                <div class="buttons">
+                   <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO" />
+                </div>
+            </c:if>
+        </s:form>
+        <script type="text/javascript">
+            $ ('.cancelSO').click(function(){
+                if($('#SoReason').val()==""){
+                alert("Please select Reason");
+                return false;
+                }
+                 var proceed = confirm('Are you sure you want to cancel shipping order?');
+                 if (!proceed) return false;
+
+             });
+        </script>
     </c:if>
-    
     <c:if test="${isSearchShippingOrder}">
             <c:if test="${shippingOrder.orderStatus.id == shippingOrderStatusDelivered ||
                     shippingOrder.orderStatus.id == shippingOrderStatusReversePickup}">
@@ -379,8 +410,7 @@
                     </script>
                 </c:if>
 
-                <c:if
-                        test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
+                <c:if test="${shippingOrderStatusId == shippingOrderStatusRTOInitiated}">
                     <br/>
                     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" class="markRTOForm">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
@@ -411,10 +441,10 @@
     <td>
         <c:choose>
             <c:when test="${baseOrder.priorityOrder}">
-                <div id="userContactDetails" style="background:#F6CECE;">
+                <div id="userContactDetails" style="background:#F6CECE;"> </div>
             </c:when>
             <c:otherwise>
-                <div id="userContactDetails" >
+                <div id="userContactDetails" >  </div>
             </c:otherwise>
         </c:choose>
 

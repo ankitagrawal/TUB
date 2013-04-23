@@ -138,17 +138,18 @@
             $('.cancelSO').click(function() {
                 var proceed = confirm('Are you sure you want to cancel shipping order?');
                 if (!proceed) return false;
-
-                var clickedLink = $(this);
-                $.getJSON(clickedLink.attr('href'), function(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        alert(res.message);
-                        window.location.reload();
-                    }
-                });
-
-                return false;
             });
+
+                <%--var clickedLink = $(this);--%>
+                <%--$.getJSON(clickedLink.attr('href'), function(res) {--%>
+                    <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
+                        <%--alert(res.message);--%>
+                        <%--window.location.reload();--%>
+                    <%--}--%>
+                <%--});--%>
+
+                <%--return false;--%>
+            <%--});--%>
 
         <%--
         Confirm cod order
@@ -662,7 +663,7 @@
                     <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${shippingOrders}" isActionQueue="true"/>
+                                             shippingOrders="${shippingOrders}" />
                         </td>
                     </c:when>
                     <c:otherwise>

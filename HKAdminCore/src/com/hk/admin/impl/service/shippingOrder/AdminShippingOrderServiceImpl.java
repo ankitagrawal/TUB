@@ -39,6 +39,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.UserService;
 import com.hk.service.ServiceLocatorFactory;
+import com.hk.domain.analytics.Reason;
 
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
@@ -49,6 +50,9 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     private AdminInventoryService adminInventoryService;
 
+
+    private Reason  SoReason;
+    private String CancellationRemark;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -71,7 +75,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 //	@Autowired
 //	SMSManager smsManager;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,Reason SoReason,String CancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -80,7 +84,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,SoReason,CancellationRemark);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){
@@ -435,4 +439,20 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public UserService getUserService() {
 		return userService;
 	}
+
+    public Reason getSoReason() {
+        return SoReason;
+    }
+
+    public void setSoReason(Reason soReason) {
+        SoReason = soReason;
+    }
+
+    public String getCancellationRemark() {
+        return CancellationRemark;
+    }
+
+    public void setCancellationRemark(String cancellationRemark) {
+        CancellationRemark = cancellationRemark;
+    }
 }

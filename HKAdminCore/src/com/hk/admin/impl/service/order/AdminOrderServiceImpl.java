@@ -151,7 +151,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
             if (shippingOrders != null) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+                    getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null,null);
                 }
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
