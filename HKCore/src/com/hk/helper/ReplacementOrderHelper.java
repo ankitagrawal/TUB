@@ -46,8 +46,6 @@ public class ReplacementOrderHelper {
         ReplacementOrder replacementOrder = new ReplacementOrder();
         replacementOrder.setBaseOrder(shippingOrder.getBaseOrder());
         replacementOrder.setWarehouse(shippingOrder.getWarehouse());
-        replacementOrder.setCancellationType(shippingOrder.getCancellationType());
-        replacementOrder.setCancellationRemark(shippingOrder.getCancellationRemark());
         replacementOrder.setBasketCategory(shippingOrder.getBasketCategory());
         replacementOrder.setServiceOrder(shippingOrder.isServiceOrder());
         replacementOrder.setVersion(shippingOrder.getVersion());

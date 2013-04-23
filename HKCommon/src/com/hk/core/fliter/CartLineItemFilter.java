@@ -13,20 +13,14 @@ import com.hk.domain.order.CartLineItem;
 
 public class CartLineItemFilter {
 
-    private Set<CartLineItem>         cartLineItems;
-    private Set<EnumCartLineItemType> cartLineItemTypes      = new HashSet<EnumCartLineItemType>();
-
-    /*
-     * private boolean onlyComboLineItems = false; private boolean onlyProductLineItems = false;
-     */
-    private boolean                   onlyServiceLineItems   = false;
-    private boolean                   onlyGroundShippedItems = false;
-    private boolean                   onlyDropShippedItems = false;
-
-
-    private String                    productVariantId;
-    private Long                      cartLineItemConfigId;
-    private String                    categoryName;
+    private Set<CartLineItem> cartLineItems;
+    private Set<EnumCartLineItemType> cartLineItemTypes = new HashSet<EnumCartLineItemType>();
+    private boolean onlyServiceLineItems = false;
+    private boolean onlyGroundShippedItems = false;
+    private boolean onlyDropShippedItems = false;
+    private String productVariantId;
+    private Long cartLineItemConfigId;
+    private String categoryName;
 
     public CartLineItemFilter(Set<CartLineItem> cartLineItems) {
         this.cartLineItems = cartLineItems;
@@ -39,20 +33,17 @@ public class CartLineItemFilter {
 
     public CartLineItemFilter hasOnlyServiceLineItems(boolean onlyServiceLineItems) {
         this.onlyServiceLineItems = onlyServiceLineItems;
-        //this.onlyGroundShippedItems = false;
         return this;
     }
 
     public CartLineItemFilter hasOnlyGroundShippedItems(boolean onlyGroundShippedItems) {
         this.onlyGroundShippedItems = onlyGroundShippedItems;
-        //this.onlyServiceLineItems = false;
         return this;
     }
 
 
     public CartLineItemFilter hasOnlyDropShippedItems(boolean onlyDropShippedItems) {
            this.onlyDropShippedItems = onlyDropShippedItems;
-           //this.onlyServiceLineItems = false;
            return this;
        }
 
@@ -60,12 +51,6 @@ public class CartLineItemFilter {
         this.categoryName = categoryName;
         return this;
     }
-
-    /*
-     * public CartLineItemFilter hasOnlyComboLineItems(boolean onlyComboLineItems) { this.onlyComboLineItems =
-     * onlyComboLineItems; return this; } public CartLineItemFilter hasOnlyProductLineItems(boolean
-     * onlyProductLineItems) { this.onlyProductLineItems = onlyProductLineItems; return this; }
-     */
 
     public CartLineItemFilter setProductVariantId(String productVariantId) {
         this.productVariantId = productVariantId;
@@ -181,25 +166,6 @@ public class CartLineItemFilter {
 
         currentLineItems.clear();
         currentLineItems.addAll(filteredCartLineItems);
-
-        /*
-         * if(onlyComboLineItems) { for (CartLineItem cartLineItem : currentLineItems) { if
-         * (cartLineItem.getComboInstance() == null) { filteredCartLineItems.remove(cartLineItem); } } }
-         * filteredCartLineItems.addAll(currentLineItems); currentLineItems.clear();
-         * currentLineItems.addAll(filteredCartLineItems); if(onlyProductLineItems) { for (CartLineItem cartLineItem :
-         * currentLineItems) { if (cartLineItem.getProductVariant() == null) {
-         * filteredCartLineItems.remove(cartLineItem); } } }
-         */
-
         return filteredCartLineItems;
     }
-    /*
-     * public Set<CartLineItem> filterCartLineItemsByType(EnumLineItemType lineItemType) { return
-     * filterCartLineItemsByType(Arrays.asList(lineItemType)); } public Set<CartLineItem> filterCartLineItemsByType(Set<EnumLineItemType>
-     * selectedLineItemTypes) { Set<CartLineItem> filteredCartLineItems = new HashSet<CartLineItem>(); List<Long>
-     * selectedCartLineItemTypeIDs = EnumLineItemType.getCartLineItemTypeIDs(selectedLineItemTypes); for (CartLineItem
-     * cartLineItem : cartLineItems) { if (selectedCartLineItemTypeIDs.contains(cartLineItem.getLineItemType().getId())) {
-     * filteredCartLineItems.add(cartLineItem); } } return filteredCartLineItems; }
-     */
-
 }
