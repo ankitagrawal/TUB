@@ -44,6 +44,6 @@ public interface AdminOrderService {
 	 */
     public Map<String, String> isCODAllowed(Order order, Double totalPayable);
 
-	public Payment confirmCodOrder(Order order ,String source);
+	public Payment confirmCodOrder(Order order ,String source , User user);
 
 }
