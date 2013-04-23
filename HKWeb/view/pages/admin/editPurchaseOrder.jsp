@@ -174,22 +174,27 @@ $(document).ready(function () {
 		$.getJSON(
 				$('#pvInfoLink').attr('href'), {productVariantId:productVariantId, warehouse: ${pa.purchaseOrder.warehouse}, purchaseOrder:${pa.purchaseOrder.id}},
 				function (res) {
-					if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-						variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
-						variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
-						variantRow.find('.mrp').val(res.data.variant.markedPrice);
-						variantRow.find('.costPrice').val(res.data.variant.costPrice);
-						variantRow.find('.taxCategory').val(res.data.tax);
-						variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
-						if (res.data.newSku) {
-							variantRow.css('background-color', 'goldenrod');
-						}
-						productVariantDetails.html(
-								res.data.product + '<br/>' +
-										res.data.options
-						);
+					if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {if(res.data.variant.deleted == true){
+						alert('The Variant is deleted, no longer exists');
+						variantRow.find('.variant').val("");
+					}
+					else{
+					variantRow.find('.supplierCode').html(res.data.variant.supplierCode);
+					variantRow.find('.otherRemark').html(res.data.variant.otherRemark);
+					variantRow.find('.mrp').val(res.data.variant.markedPrice);
+					variantRow.find('.costPrice').val(res.data.variant.costPrice);
+					variantRow.find('.taxCategory').val(res.data.tax);
+					variantRow.find('.last30DaysSales').html(res.data.last30DaysSales);
+					if (res.data.newSku) {
+						variantRow.css('background-color', 'goldenrod');
+					}
+					productVariantDetails.html(
+							res.data.product + '<br/>' +
+									res.data.options
+					);
 
-						variantRow.find('.historicalFillRate').html(res.data.historicalFillRate);
+					variantRow.find('.historicalFillRate').html(res.data.historicalFillRate);
+					}
 					} else {
 						$('.variantDetails').html('<h2>' + res.message + '</h2>');
 					}
