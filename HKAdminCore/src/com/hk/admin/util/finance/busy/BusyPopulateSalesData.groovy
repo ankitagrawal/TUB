@@ -79,6 +79,7 @@ public class BusyPopulateSalesData {
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
 							and (ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) < '2013-04-01'
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
