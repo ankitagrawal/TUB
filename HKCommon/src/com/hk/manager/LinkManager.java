@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.marketing.NotifyMe;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
@@ -31,7 +30,7 @@ public class LinkManager {
 
     /**
      * This method generated a full URL from the redirect resolution
-     *
+     * 
      * @param redirectResolution
      * @return
      */
@@ -90,13 +89,13 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getReviewPageLink(HashMap params) {
+    public String getReviewPageLink(HashMap params){
         RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getUnsubscribeLink(User user) {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken", user.getUnsubscribeToken());
+    public String getUnsubscribeLink(User user){
+        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken",user.getUnsubscribeToken());
         return getUrlFromResolution(redirectResolution);
     }
 
@@ -130,7 +129,7 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getSSOResetPasswordLink(TempToken token) {
+    public String getSSOResetPasswordLink(TempToken token){
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SSOPasswordReset.action").addParameter("token", token.getToken());
         return getUrlFromResolution(redirectResolution);
     }
@@ -172,41 +171,41 @@ public class LinkManager {
 
 
     public String getPayPalPaymentGatewayCancelUrl() {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
-        return getUrlFromResolution(redirectResolution);
-    }
+          RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+          return getUrlFromResolution(redirectResolution);
+      }
 
 
     public String getRelativeProductURL(Product product, Long productReferrerId) {
-        /* String productURL = null;
-                String productSlug = product.getSlug();
-                String productId = product.getId();
-                // commented to stop internal product tagging
-                // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
-                //productURL = "/product/" + productSlug + "/" + productId;
+       /* String productURL = null;
+        String productSlug = product.getSlug();
+        String productId = product.getId();
+        // commented to stop internal product tagging
+        // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+        //productURL = "/product/" + productSlug + "/" + productId;
+        
+         * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
+         * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
+         * getUrlFromResolution(redirectResolution);
+         
 
-                 * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
-                 * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
-                 * getUrlFromResolution(redirectResolution);
+        RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").addParameter("productId", productId).addParameter("productSlug",
+                productSlug);
+        return getUrlFromResolution(redirectResolution);
 
-
-                RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").addParameter("productId", productId).addParameter("productSlug",
-                        productSlug);
-                return getUrlFromResolution(redirectResolution);
-
-                //return productURL;
-        */
+        //return productURL;
+*/    
         String productURL = null;
         String productSlug = product.getSlug();
         String productId = product.getId();
         productURL = "/product/" + productSlug + "/" + productId;
-
+        
         if (productReferrerId != null && productReferrerId != 0) {
             productURL = productURL.concat("?productReferrerId=" + productReferrerId);
         }
-
+        
         return productURL;
-
+         
     }
 
     public String getProductURL(Product product, Long productReferrerId) {
@@ -230,11 +229,10 @@ public class LinkManager {
          */
 
     }
-
-    public String getFeedbackPage() {
-        RedirectResolution redirectResolution = new RedirectResolution("/feedback");
-        return getUrlFromResolution(redirectResolution);
-    }
+	public String getFeedbackPage() {
+		RedirectResolution redirectResolution = new RedirectResolution("/feedback");
+		return getUrlFromResolution(redirectResolution);
+	}
 
     public String getTryOnImageURL(ProductVariant productVariant) {
 
@@ -246,12 +244,6 @@ public class LinkManager {
 //            redirectResolution.addParameter("type", productVariant.getProduct().getSecondaryCategory());
         }
 
-        return getUrlFromResolution(redirectResolution);
-    }
-
-    public String getSubscribeLink(NotifyMe notifyMe) {
-        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("email", notifyMe.getEmail()).
-                addParameter("variantId", notifyMe.getProductVariant().getId()).addParameter("name", notifyMe.getName()).addParameter("phone", notifyMe.getPhone());
         return getUrlFromResolution(redirectResolution);
     }
 

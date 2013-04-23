@@ -88,22 +88,14 @@
                         $('#notifyMeWindow .notifyForm').hide();
                     } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                         $('#notifyMeWindow .msg').html(res.message);
-                    }
-                    else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
-
+                    } else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
                         var proceed = confirm(res.message);
                         if (proceed) {
                             alert(res.message);
-                            $.ajax({
-                                type: "post",
-                                url: ,
-                                data: $('#idoftheform').serialize(),
-                                success: function(result) {
-                                    alert('form successfully submitted');
-                                }
-                            });
-                        }
-                        else {
+                            $('#subscribe').val("Subscribe");
+                            $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
+                        }else {
+                            alert("hello");
                             $('#notifyMeWindow .notifyForm').hide();
                             return false;
                         }
