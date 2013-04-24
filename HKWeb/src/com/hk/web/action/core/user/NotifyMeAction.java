@@ -45,11 +45,7 @@ public class NotifyMeAction extends BaseAction {
     @Autowired
     UserService userService;
     @Autowired
-    private LinkManager linkManager;
-    @Autowired
     EmailRecepientDao emailRecepientDao;
-
-
     private NotifyMe notifyMe;
     private String subscribe;
 
@@ -88,22 +84,15 @@ public class NotifyMeAction extends BaseAction {
         }
         User user = userService.findByLogin(notifyMe.getEmail());
         if (user != null) {
-            //Subscribe User
-            if (subscribe != null && subscribe.equalsIgnoreCase(ReportConstants.Subscribe)) {
-                boolean userSubscribed = userService.subscribeUser(notifyMe.getEmail());
-                if (userSubscribed) {
-                    user = userService.save(user);
-                }
-            }
             if (!(user.isSubscribedForNotify())) {
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for email , Click below link to subscribe  for Notify notification again", dataMap);
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for all emails , Contact Customer Care", dataMap);
                 return new JsonResolution(healthkartResponse);
             }
         } else {
             EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(notifyMe.getEmail());
             if (emailRecepient != null) {
                 if (!(emailRecepient.isSubscribed())) {
-                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for email , Click below link to subscribe  for Notify notification again", dataMap);
+                    healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for all emails , Contact Customer Care", dataMap);
                     return new JsonResolution(healthkartResponse);
                 }
             }

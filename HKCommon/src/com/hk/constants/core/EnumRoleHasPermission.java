@@ -98,11 +98,11 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_DELIVERY_QUEUE,
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.ADD_HUB,
-		            EnumPermission.POPULATE_BUSY_DATA,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS,
-		            EnumPermission.EDIT_GRN
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.ADD_HUB,
+                    EnumPermission.POPULATE_BUSY_DATA,
+                    EnumPermission.DISPATCH_LOT_OPERATIONS,
+                    EnumPermission.EDIT_GRN
             )
     ),
 
@@ -112,14 +112,14 @@ public enum EnumRoleHasPermission {
                     EnumPermission.GRN_CREATION,
                     EnumPermission.RECON_VOUCHER_MANAGEMENT,
                     EnumPermission.SUPPLIER_MANAGEMENT,
-		            EnumPermission.EDIT_GRN
+                    EnumPermission.EDIT_GRN
             )),
 
     WH_MANAGER_L1(
             EnumRole.WH_MANAGER_L1,
             Arrays.asList(
                     EnumPermission.CHANGE_WAREHOUSE,
-		            EnumPermission.EDIT_GRN
+                    EnumPermission.EDIT_GRN
             )),
 
     OPS_MANAGER(
@@ -164,7 +164,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.ASSIGN_BIN,
                     EnumPermission.HK_EMPLOYEE,
                     EnumPermission.CREATE_EDIT_SKU,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+                    EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 
@@ -196,27 +196,27 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_TICKETS,
                     EnumPermission.CREATE_TICKETS,
                     EnumPermission.HK_EMPLOYEE,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
                     EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
                     EnumPermission.UPDATE_DROP_SHIPPING_QUEUE
             )
     ),
 
-	REWARD_POINT_MANAGER_L1(
-			EnumRole.REWARD_POINT_MANAGER_L1,
-			Arrays.asList(
-					EnumPermission.AWARD_REWARD_POINTS
-			)
-	),
+    REWARD_POINT_MANAGER_L1(
+            EnumRole.REWARD_POINT_MANAGER_L1,
+            Arrays.asList(
+                    EnumPermission.AWARD_REWARD_POINTS
+            )
+    ),
 
-	REWARD_POINT_MANAGER_L2(
-			EnumRole.REWARD_POINT_MANAGER_L2,
-			Arrays.asList(
-					EnumPermission.MODERATE_REWARD_POINTS
-			)
-	),
+    REWARD_POINT_MANAGER_L2(
+            EnumRole.REWARD_POINT_MANAGER_L2,
+            Arrays.asList(
+                    EnumPermission.MODERATE_REWARD_POINTS
+            )
+    ),
 
-	CUSTOMER_SUPPORT_L2(
+    CUSTOMER_SUPPORT_L2(
             EnumRole.CUSTOMER_SUPPORT_L2,
             Arrays.asList(
                     EnumPermission.CRM_REPORTS,
@@ -225,8 +225,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_OFFER,
                     EnumPermission.VIEW_COUPON,
                     EnumPermission.EDIT_LINEITEM,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.CREATE_REVERSE_PICKUP_ORDER
             )
     ),
 
@@ -240,9 +240,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.MODERATE_REWARD_POINTS,
                     EnumPermission.AWARD_REWARD_POINTS,
                     EnumPermission.EDIT_LINEITEM,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.CREATE_REPLACEMENT_ORDER,
-					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.CREATE_REPLACEMENT_ORDER,
+                    EnumPermission.CREATE_REVERSE_PICKUP_ORDER
             )
     ),
 
@@ -412,8 +412,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.PURCHASE_INVOICE_MANAGEMENT,
                     EnumPermission.MANAGE_PAYMENT_HISTORY,
                     EnumPermission.FINANCE_MANAGEMENT,
-		            EnumPermission.EDIT_PAYMENT_HISTORY,
-		            EnumPermission.POPULATE_BUSY_DATA
+                    EnumPermission.EDIT_PAYMENT_HISTORY,
+                    EnumPermission.POPULATE_BUSY_DATA
             )
     ),
 
@@ -432,7 +432,7 @@ public enum EnumRoleHasPermission {
                     EnumPermission.UPDATE_DELIVERY_QUEUE,
 
                     EnumPermission.VIEW_HUB,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING
             )
     ),
 
@@ -446,9 +446,9 @@ public enum EnumRoleHasPermission {
 
                     EnumPermission.SELECT_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.ADD_HUB,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.ADD_HUB,
+                    EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
     HK_DELIVERY_HUB_MANAGER(
@@ -461,18 +461,20 @@ public enum EnumRoleHasPermission {
 
                     EnumPermission.VIEW_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
-		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+                    EnumPermission.VIEW_CONSIGNMENT_TRACKING,
+                    EnumPermission.DISPATCH_LOT_OPERATIONS
             )
     ),
 
-	PAYMENT_MANAGER(EnumRole.PAYMENT_MANAGER, Arrays.asList(EnumPermission.UPDATE_PAYMENT)),
+    PAYMENT_MANAGER(EnumRole.PAYMENT_MANAGER, Arrays.asList(EnumPermission.UPDATE_PAYMENT)),
 
-	STORE_MANAGER(EnumRole.STORE_MANAGER, Arrays.asList(EnumPermission.STORE_MANAGER)),
+    STORE_MANAGER(EnumRole.STORE_MANAGER, Arrays.asList(EnumPermission.STORE_MANAGER)),
 
-	HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE));
+    HR(EnumRole.HR, Arrays.asList(EnumPermission.HK_EMPLOYEE)),
 
-	EnumRole enumRole;
+    NOTIFY_ME_EMAIL(EnumRole.NOTIFY_ME_EMAIL, Arrays.asList(EnumPermission.NOTIFY_ME_BULK_EMAIL));
+
+    EnumRole enumRole;
     List<EnumPermission> enumPermissions;
 
     EnumRoleHasPermission(EnumRole enumRole, List<EnumPermission> enumPermissions) {

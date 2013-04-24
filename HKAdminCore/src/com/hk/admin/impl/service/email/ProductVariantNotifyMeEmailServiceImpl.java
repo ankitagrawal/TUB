@@ -4,9 +4,13 @@ import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.core.Keys;
+import com.hk.domain.email.EmailRecepient;
 import com.hk.domain.marketing.NotifyMe;
+import com.hk.domain.user.User;
+import com.hk.pact.dao.email.EmailRecepientDao;
 import com.hk.pact.dao.email.NotifyMeDao;
 import com.hk.pact.dao.marketing.EmailCampaignDao;
+import com.hk.pact.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +41,10 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     AdminEmailManager adminEmailManager;
     @Autowired
     AdminInventoryService adminInventoryService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    EmailRecepientDao emailRecepientDao;
 
     public void sendNotifyMeEmail(final float notifyConversionRate, final int bufferRate) {
 
@@ -44,6 +52,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
         List<NotifyMe> notifyMeList = notifyMeDao.getNotifyMeListForProductVariantInStock();
+        Map<String, List<NotifyMe>> subscribedUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         try {
 
             for (NotifyMe notifyMe : notifyMeList) {
@@ -77,8 +86,31 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
                 }
             }
+
+            //Send mails to subscriber only
+            for (String emailId : finalUserListForNotificationMap.keySet()) {
+                User user = userService.findByLogin(emailId);
+                if (user != null) {
+                    if (user.isSubscribedForNotify()) {
+                        subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
+                    }
+                } else {
+                    // find existing recipients and check for subscribed
+                    EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(emailId);
+                    if (emailRecepient != null) {
+                        if (emailRecepient.isSubscribed()) {
+                            subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
+                        }
+                    } else {
+                        subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
+                    }
+                }
+            }
+
             //send mails
-            adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
+            adminEmailManager.sendNotifyUsersMails(subscribedUserListForNotificationMap);
+
+
         } catch (Exception ex) {
             logger.error("Unable to send bulk notify me emails " + ex.getMessage());
         }

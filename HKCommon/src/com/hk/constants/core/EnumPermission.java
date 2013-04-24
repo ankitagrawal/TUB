@@ -107,7 +107,8 @@ public enum EnumPermission {
   DISPATCH_LOT_OPERATIONS                        (PermissionConstants.DISPATCH_LOT_OPERATIONS),
   EDIT_GRN	                                     (PermissionConstants.EDIT_GRN),
   CREATE_REVERSE_PICKUP_ORDER	                 (PermissionConstants.CREATE_REVERSE_PICKUP_ORDER),
-  STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER);
+  STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER),
+  NOTIFY_ME_BULK_EMAIL                            (PermissionConstants.NOTIFY_ME_BULK_EMAIL);
 
 
   String permissionName;

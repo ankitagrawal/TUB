@@ -89,6 +89,9 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     private Category primaryCategory;
     private Boolean productInStock;
     private Boolean productDeleted;
+    private Float conversionRate = 0.01f;
+    private int bufferRate = 2;
+
 
     @DefaultHandler
     @DontValidate
@@ -204,10 +207,8 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     }
 
     public Resolution sendAllNotifyMails() {
-        double conversionRate = Double.parseDouble(getContext().getRequest().getParameter("conversionRate"));
-        int bufferRate = Integer.parseInt(getContext().getRequest().getParameter("bufferRate"));
-        productVariantNotifyMeEmailService.sendNotifyMeEmail((float)conversionRate, bufferRate);
-        return new RedirectResolution(NotifyMeAction.class);
+        productVariantNotifyMeEmailService.sendNotifyMeEmail(conversionRate, bufferRate);
+        return new RedirectResolution(NotifyMeListAction.class);
     }
 
     public List<NotifyMe> getNotifyMeList() {
@@ -337,5 +338,21 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     public void setProductDeleted(Boolean productDeleted) {
         this.productDeleted = productDeleted;
+    }
+
+    public Float getConversionRate() {
+        return conversionRate;
+    }
+
+    public void setConversionRate(Float conversionRate) {
+        this.conversionRate = conversionRate;
+    }
+
+    public int getBufferRate() {
+        return bufferRate;
+    }
+
+    public void setBufferRate(int bufferRate) {
+        this.bufferRate = bufferRate;
     }
 }
