@@ -12350,7 +12350,10 @@
         <addForeignKeyConstraint baseColumnNames="label_id" baseTableName="action_item_labels" constraintName="fk_action_item_has_label_label1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="label" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1366787798141-27">
+    <changeSet author="Pratham (generated)" id="1366787798141-27">
         <addForeignKeyConstraint baseColumnNames="acknowledged_by" baseTableName="action_task" constraintName="fk_action_item_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="acknowledged_by" baseTableName="action_task" constraintName="fk_action_item_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1366787798141-28">
         <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_task" constraintName="fk_action_task_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
