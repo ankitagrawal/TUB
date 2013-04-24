@@ -9,6 +9,6 @@ package com.hk.admin.pact.service.email;
  */
 public interface ProductVariantNotifyMeEmailService {
 
-    public void sendNotifyMeEmail();
+    public void sendNotifyMeEmail(final float notifyConversionRate, final int bufferRate);
 
 }

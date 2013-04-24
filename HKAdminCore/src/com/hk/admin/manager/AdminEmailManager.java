@@ -329,50 +329,43 @@ public class AdminEmailManager {
             User user = userService.findByLogin(emailId);
             // find existing recipients or create recipients through the emails ids passed
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
+            boolean isSubscribed = false;
             if (user != null) {
                 if (user.isSubscribedForNotify()) {
                     valuesMap.put("unsubscribeLink", getLinkManager().getUnsubscribeLink(user));
-
-                } else {
-                    continue;
+                    isSubscribed = true;
                 }
             } else {
                 if (emailRecepient.isSubscribed()) {
                     valuesMap.put("unsubscribeLink", getLinkManager().getEmailUnsubscribeLink(emailRecepient));
+                    isSubscribed = true;
+                }
+            }
+            //Do not send emails if user has unsubscribed for emails
+            if (isSubscribed){
+                valuesMap.put("notifiedUser", notifyMeObject);
+                if (notifyMeListPerUser.size() > 1) {
+                    //User has asked for multiple variant notification
+                    valuesMap.put("notifyList", notifyMeListPerUser);
+                    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForMultipleVariants);
+                    mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
+
                 } else {
-                    continue;
+                    valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
+                    Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmail);
+                    mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
                 }
-
-            }
-            valuesMap.put("notifiedUser", notifyMeObject);
-            if (notifyMeListPerUser.size() > 1) {
-                //User has asked for multiple variant notification
-                valuesMap.put("notifyList", notifyMeListPerUser);
-                Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmailForMultipleVariants);
-                mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
-
-            } else {
-                valuesMap.put("product", notifyMeObject.getProductVariant().getProduct());
-                Template freemarkerTemplate = freeMarkerService.getCampaignTemplate("/newsletters/" + EmailTemplateConstants.notifyUserEmail);
-                mailSentSuccessfully = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, emailId, notifyMeObject.getName(), "info@healthkart.com");
-
-            }
-            if (mailSentSuccessfully) {
-                for (NotifyMe notifyMe : notifyMeListPerUser) {
-                    {
-                        notifyMe.setNotifiedByUser(notifedByuser);
-                        notifyMe.setNotifiedDate(new Date());
-                        getNotifyMeDao().save(notifyMe);
-
+                if (mailSentSuccessfully) {
+                    for (NotifyMe notifyMe : notifyMeListPerUser) {
+                        {
+                            notifyMe.setNotifiedByUser(notifedByuser);
+                            notifyMe.setNotifiedDate(new Date());
+                            getNotifyMeDao().save(notifyMe);
+                        }
                     }
-
                 }
-
-
             }
-
         }
-
     }
 
 
