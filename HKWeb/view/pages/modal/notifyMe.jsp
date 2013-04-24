@@ -30,8 +30,6 @@
                         }
                     }
                 });
-
-
             });
         </script>
     </s:layout-component>
@@ -44,7 +42,6 @@
 
         <div class="notifyForm">
             <s:form beanclass="com.hk.web.action.core.user.NotifyMeAction" id="notifyMeForm">
-                <s:hidden id="subscribe" name="subscribe"/>
                 <div style="text-align: left; padding: 5px 0 5px 0; font-size: 1em;">
                     <table>
                         <tr>
@@ -80,50 +77,20 @@
 
         </div>
         <script type="text/javascript">
-
-            $(document).ready(function () {
-
-                function _registerNotifyMe(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        $('#notifyMeWindow .msg').html(res.message);
-                        $('#notifyMeWindow .notifyForm').hide();
-                    } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
-                        $('#notifyMeWindow .msg').html(res.message);
-                    } else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
-                        var href = $('#notifyMeForm').attr('action');
-                        alert('test'+form);
-                        var proceed = confirm(res.message);
-                        var emailData = new Object();
-                        emailData.email = "seema.sharma@healthkart.com";
-                        emailData.variantId = "NUT101-01";
-                        var param  = {};
-                        param.notifyMe.name = $('#notifyMeName').val();
-
-                        if (proceed) {
-                            $('#subscribe').val("Subscribe");
-                            var url = href+'?notifyMe=';
-                            $.ajax({
-                                type:"POST",
-                                url:url,
-                                data:param,
-                                dataType:'json'
-                            });
-                        } else {
-                            alert("hello");
-                            $('#notifyMeWindow .notifyForm').hide();
-                            return false;
-                        }
-                    }
+            function _registerNotifyMe(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                    $('#notifyMeWindow .msg').html(res.message);
+                    $('#notifyMeWindow .notifyForm').hide();
+                } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                    $('#notifyMeWindow .msg').html(res.message);
+                }
+                else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
+                    $('#notifyMeWindow .msg').html(res.message);
+                    $('#notifyMeWindow .notifyForm').hide();
                 }
 
-                $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
-
-                function _formSubmit() {
-                    $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
-                }
-
-            });
-
+            }
+            $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
         </script>
     </s:layout-component>
 
