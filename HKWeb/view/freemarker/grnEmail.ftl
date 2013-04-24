@@ -156,7 +156,7 @@ background: #ff0;
   		<#else>
   		<td>0</td>
   		</#if>
-  	<#if poLineItem.sku.productVariant.product.deleted>
+  	<#if poLineItem.sku.productVariant.deleted>
  		<td style="background:#ff0;">1</td>
   		<#else>
   		<td>0</td>
