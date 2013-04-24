@@ -22,9 +22,9 @@ public class LifecycleReason implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "shipping_order_lifecycle_id")
     public ShippingOrderLifecycle shippingOrderLifecycle;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_lifecycle_id")
     public OrderLifecycle orderLifecycle;
