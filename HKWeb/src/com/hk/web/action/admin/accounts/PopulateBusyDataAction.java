@@ -38,7 +38,7 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyPopulateItemData busyPopulateItemData = new BusyPopulateItemData(dbHostName, dbName, dbUser, dbPassword);
 			BusyPopulateSupplierData busyPopulateSupplierData = new BusyPopulateSupplierData(dbHostName, dbName, dbUser, dbPassword);
 			BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(dbHostName, dbName, dbUser, dbPassword);
-			BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(dbHostName, dbName, dbUser, dbPassword);
+//			BusyPopulateSalesData busyPopulateSalesData = new BusyPopulateSalesData(dbHostName, dbName, dbUser, dbPassword);
 			BusyPopulateRtoData busyPopulateRtoData = new BusyPopulateRtoData(dbHostName, dbName, dbUser, dbPassword);
 
 			//BusyMigrateInvoiceNum busyMigrateInvoiceNum = new BusyMigrateInvoiceNum(dbHostName, dbName, dbUser, dbPassword);
@@ -51,8 +51,8 @@ public class PopulateBusyDataAction extends BaseAction {
 			logger.info("Populating Suppliers ");
 			busyPopulateSupplierData.busySupplierUpdate();
 
-		 	logger.info("Populating Sales ");
-      busyPopulateSalesData.transactionHeaderForSalesGenerator();
+//		 	logger.info("Populating Sales ");
+//      busyPopulateSalesData.transactionHeaderForSalesGenerator();
 
 			logger.info("Populating Purchases ");
 			busyTableTransactionGenerator.populatePurchaseData();
