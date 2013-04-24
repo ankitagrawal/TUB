@@ -58,8 +58,7 @@ public enum EnumRole {
     HK_DELIVERY_GUY(RoleConstants.HK_DELIVERY_GUY),
     HK_DELIVERY_ADMIN(RoleConstants.HK_DELIVERY_ADMIN),
     HK_DELIVERY_HUB_MANAGER(RoleConstants.HK_DELIVERY_HUB_MANAGER),
-    STORE_MANAGER(RoleConstants.STORE_MANAGER),
-    NOTIFY_ME_EMAIL(RoleConstants.NOTIFY_ME_EMAIL);
+    STORE_MANAGER(RoleConstants.STORE_MANAGER);
 
     String roleName;
 
