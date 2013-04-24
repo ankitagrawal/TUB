@@ -21,20 +21,24 @@ background: #ff0;
 <p style="margin-bottom:1em">
   Goods are received for <a href="admin.healthkart.com/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${grn.purchaseOrder.id}">Purchase Order # ${grn.purchaseOrder.id}.</a><br/>
   <#if grn.purchaseOrder.supplier.name??>
+  <#if grn.purchaseOrder.supplier.creditDays??&&grn.purchaseOrder.supplier.creditDays==-1>
+  Supplier = ${grn.purchaseOrder.supplier.name}; Credit Days = <label style="background:#ff0;">${grn.purchaseOrder.supplier.creditDays}</label><br/>
+  <#else>
   Supplier = ${grn.purchaseOrder.supplier.name}; Credit Days = ${grn.purchaseOrder.supplier.creditDays}<br/>
+  </#if>
   </#if>
   <#if grn.purchaseOrder.fillRate??>
   <#if grn.purchaseOrder.fillRate==100>
-  PO Fill Rate = <label class="colortd">${grn.purchaseOrder.fillRate} % </label>;<br/>
+  PO Fill Rate = <label style="background:#ff0;">${grn.purchaseOrder.fillRate} % </label>;<br/>
   <#else>
-  PO Fill Rate = <label class="colortd">${grn.purchaseOrder.fillRate} %</label>; <br/>
+  PO Fill Rate = <label style="background:#ff0;">${grn.purchaseOrder.fillRate} %</label>; <br/>
   </#if>
   <#else>
   PO Fill Rate =N/A; <br/>
   </#if>
   Approx. payable amount = ${grn.purchaseOrder.payable}; <br/>
   <#if grn.purchaseOrder.extraInventoryId??>
-  Extra Inventory ID= <label class="colortd">${grn.purchaseOrder.extraInventoryId};</label> <br/>
+  Extra Inventory ID=  <a href="admin.healthkart.com/admin/rtv/ExtraInventory.action?purchaseOrderId=${grn.purchaseOrder.extraInventoryId}">${grn.purchaseOrder.extraInventoryId}</a>
   <#else>
   Extra Inventory ID = N/A; <br/>
   </#if>
@@ -70,7 +74,7 @@ background: #ff0;
 	<tr>
 	<#if poLineItem.sku.productVariant.deleted || poLineItem.sku.productVariant.product.hidden 
 		|| (poLineItem.sku.productVariant.weight??&&poLineItem.sku.productVariant.weight==0) || poLineItem.sku.productVariant.otherRemarks??>
- 		<td class="colortd"><a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}" style="color:#802A2A";>${poLineItem.sku.productVariant.id}</a></td>
+ 		<td style="background:#ff0;"><a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}" style="color:#802A2A";>${poLineItem.sku.productVariant.id}</a></td>
   		<#else>
   		<td><a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}">${poLineItem.sku.productVariant.id}</a></td>
   		</#if>
@@ -106,8 +110,8 @@ background: #ff0;
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign cptest = 1>
 		<#if grnLineItem.costPrice!=poLineItem.sku.productVariant.costPrice>
-			<td class="colortd">${grnLineItem.costPrice}</td>
-			<td class="colortd">${poLineItem.sku.productVariant.costPrice}</td>
+			<td style="background:#ff0;">${grnLineItem.costPrice}</td>
+			<td style="background:#ff0;">${poLineItem.sku.productVariant.costPrice}</td>
 		<#else>
 			<td>${grnLineItem.costPrice}</td>
 			<td>${poLineItem.sku.productVariant.costPrice}</td>
@@ -124,8 +128,8 @@ background: #ff0;
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign mptest =1>
 		<#if grnLineItem.mrp!=poLineItem.sku.productVariant.markedPrice>
-			<td class="colortd">${grnLineItem.mrp}</td>
-			<td class="colortd">${poLineItem.sku.productVariant.markedPrice}</td>
+			<td style="background:#ff0;">${grnLineItem.mrp}</td>
+			<td style="background:#ff0;">${poLineItem.sku.productVariant.markedPrice}</td>
 		<#else>
 			<td>${grnLineItem.mrp}</td>
 			<td>${poLineItem.sku.productVariant.markedPrice}</td>
@@ -138,27 +142,27 @@ background: #ff0;
 	</#if>
 	
 	<td>${poLineItem.sku.productVariant.hkPrice}</td>
-	<td><#if poLineItem.sku.productVariant.weight??>
+	<#if poLineItem.sku.productVariant.weight??>
 	<#if poLineItem.sku.productVariant.weight==0>
- 		 <font color="#0000FF">${poLineItem.sku.productVariant.weight}</font>
+ 		 <td style="background:#ff0;">${poLineItem.sku.productVariant.weight}</td>
  		 <#else>
- 		 ${poLineItem.sku.productVariant.weight}
+ 		 <td>${poLineItem.sku.productVariant.weight}</td>
  		 </#if>
   		<#else>
   		 
   		</#if></td>
   	<#if poLineItem.sku.productVariant.product.isJit()>
- 		<td class="colortd">1</td>
+ 		<td style="background:#ff0;">1</td>
   		<#else>
   		<td>0</td>
   		</#if>
   	<#if poLineItem.sku.productVariant.product.deleted>
- 		<td class="colortd">1</td>
+ 		<td style="background:#ff0;">1</td>
   		<#else>
   		<td>0</td>
   		</#if>
   	<#if poLineItem.sku.productVariant.product.hidden>
- 		<td class="colortd">1</td>
+ 		<td style="background:#ff0;">1</td>
   		<#else>
   		<td>0</td>
   		</#if>
@@ -167,11 +171,12 @@ background: #ff0;
   		<#else>
   		
   		</#if></td>
-  	<td><#if poLineItem.firstTimePurchased>
-  	Yes
+  	<#if poLineItem.firstTimePurchased>
+  	<td style="background:#ff0;">Yes</td>
   	<#else>
+  	<td></td>
   	</#if>
-  	</td>
+  	
 	<td>${poLineItem.payableAmount}</td>
 	</tr>
 	</#list>
