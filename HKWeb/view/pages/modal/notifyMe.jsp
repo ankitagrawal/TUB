@@ -82,6 +82,7 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
+
                 function _registerNotifyMe(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                         $('#notifyMeWindow .msg').html(res.message);
@@ -89,22 +90,37 @@
                     } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                         $('#notifyMeWindow .msg').html(res.message);
                     } else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
+                        var href = $('#notifyMeForm').attr('action');
+                        alert('test'+form);
                         var proceed = confirm(res.message);
+                        var emailData = new Object();
+                        emailData.email = "seema.sharma@healthkart.com";
+                        emailData.variantId = "NUT101-01";
+                        var param  = {};
+                        param.notifyMe.name = $('#notifyMeName').val();
+
                         if (proceed) {
-                            alert(res.message);
                             $('#subscribe').val("Subscribe");
-                            $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
-                        }else {
+                            var url = href+'?notifyMe=';
+                            $.ajax({
+                                type:"POST",
+                                url:url,
+                                data:param,
+                                dataType:'json'
+                            });
+                        } else {
                             alert("hello");
                             $('#notifyMeWindow .notifyForm').hide();
                             return false;
                         }
-
                     }
                 }
 
                 $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
 
+                function _formSubmit() {
+                    $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
+                }
 
             });
 
