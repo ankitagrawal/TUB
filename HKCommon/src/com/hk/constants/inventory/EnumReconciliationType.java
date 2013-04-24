@@ -12,22 +12,22 @@ import java.util.List;
 public enum EnumReconciliationType {
     Add(10L, "Add"),
     Subtract(20L, "Subtract"),
-    SubtractDamage(30L, "Damage"),
-    SubtractExpired(40L, "Expired"),
-    Lost(50L, "Lost"),
-    SubtractBatchMismatch(60L, "Batch Mismatch"),
-    MrpMismatch(70L, "Mrp Mismatch"),
-    NonMoving(80L, "Non Moving"),
-    SubtractFreeVariant(90L, "Free Variant"),
-    CustomerReturn(100L, "Customer Return"),
-    PharmaReturn(110L, "Pharma Return"),
-    ProductVariantAudited(120L, "Product Variant Audited"),
-    SubtractIncorrectCounting(130L, " Incorrect Counting"),
-    AddIncorrectCounting(140L, "Incorrect Counting"),
-    AddDamage(150L, "Damage"),
-    AddExpired(160L, "Expired"),
-    AddBatchMismatch(170L, " Batch Mismatch"),
-    AddFreeVariant(180L, "Free Variant"),;
+    SubtractDamage(30L, "Damage-Subtract"),
+    SubtractExpired(40L, "Expired-Subtract"),
+    Lost(50L, "Lost-Subtract"),
+    SubtractBatchMismatch(60L, "Batch Mismatch-Subtract"),
+    MrpMismatch(70L, "Mrp Mismatch-Subtract"),
+    NonMoving(80L, "Non Moving-Subtract"),
+    SubtractFreeVariant(90L, "Free Variant-Subtract"),
+    CustomerReturn(100L, "Customer Return-Add"),
+    PharmaReturn(110L, "Pharma Return-Add"),
+    ProductVariantAudited(120L, "Product Variant Audited-Subtract"),
+    SubtractIncorrectCounting(130L, "Incorrect Counting-Add"),
+    AddIncorrectCounting(140L, "Incorrect Counting-Subtract"),
+    AddDamage(150L, "Damage-Add"),
+    AddExpired(160L, "Expired-Add"),
+    AddBatchMismatch(170L, "Batch Mismatch-Add"),
+    AddFreeVariant(180L, "Free Variant-Add"),;
 
 
     private java.lang.String name;
@@ -54,7 +54,7 @@ public enum EnumReconciliationType {
             }
 
         }
-       return null;
+        return null;
     }
 
     public ReconciliationType asReconciliationType() {

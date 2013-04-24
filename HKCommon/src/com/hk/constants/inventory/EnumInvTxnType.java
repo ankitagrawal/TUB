@@ -30,15 +30,15 @@ public enum EnumInvTxnType {
     RV_SUBTRACT_FREE_VARIANT_RECONCILE(160L, "Inventory Checkout for Free Variant Reconcile"),
     RV_CUSTOMER_RETURN(170L, "Inventory Checkin for Customer Return"),
     RV_PHARMA_RETURN(180L, "Inventory Checkin for Pharama Return"),
-    PRODUCT_VARIANT_AUDITED(190L, "Product Variant Audited"),
-    RV_ADD_INCORRECT_COUNTING(200L,"rv add incorrect counting "),
-    RV_SUBTRACT_INCORRECT_COUNTING(210L,"rv subtract incorrect counting"),
+    PRODUCT_VARIANT_AUDITED(190L, "Product Variant Audited Subtracted"),
+    RV_ADD_INCORRECT_COUNTING(200L,"RV add Incorrect Counting "),
+    RV_SUBTRACT_INCORRECT_COUNTING(210L,"RV subtract Incorrect Counting"),
 
-    RV_ADD_DAMAGED(220L, "Stock Damaged for Rv Add"),           // +1
-    RV_ADD_EXPIRED(230L, "Stock expired for  RV Add"),
-    RV_ADD_FREE_VARIANT_RECONCILE(240L, "Free Variant For Rv Add "),
-    RV_ADD_BATCH_MISMATCH(250L, " Batch Mismatch for Rv Add"),
-    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "Rv Add automatic deletion for Expired"),;
+    RV_ADD_DAMAGED(220L, "Stock Damaged for RV Add"),           // +1
+    RV_ADD_EXPIRED(230L, "Stock Expired for  RV Add"),          // +1
+    RV_ADD_FREE_VARIANT_RECONCILE(240L, "Free Variant For RV Add "), // +1
+    RV_ADD_BATCH_MISMATCH(250L, "Batch Mismatch for RV Add"),      // +1
+    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired");
 
 
 
