@@ -5,6 +5,7 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -84,6 +85,8 @@ public class InventoryCheckinAction extends BaseAction {
     private StockTransferDao stockTransferDao;
     @Autowired
     private ProductVariantSupplierInfoService productVariantSupplierInfoService;
+    @Autowired
+	PoLineItemDao poLineItemDao;
 
     @Autowired
     private SkuGroupService skuGroupService;
@@ -230,14 +233,11 @@ public class InventoryCheckinAction extends BaseAction {
                     getInventoryService().checkInventoryHealth(productVariant);
 
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
-                    	for(GrnLineItem grnLItem : grn.getGrnLineItems()){
-        					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
-        						if(grnLItem.getSku().getId().equals(poLineItem.getSku().getId())){
-        							grnLItem.setFillRate(poLineItem.getFillRate());
-        							grnLineItem.setAskedQty(poLineItem.getQty());
-        						}
-        					}
-        				}
+                    	for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
+							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+								poLineItem.setFirstTimePurchased(true);
+							}
+                    	}
                     	if(grn.getPurchaseOrder().isExtraInventoryCreated()){
                         	PurchaseOrder po = grn.getPurchaseOrder();
                         	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
@@ -250,6 +250,7 @@ public class InventoryCheckinAction extends BaseAction {
                     } else {
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
+                        editPVFillRate(grn);
                     }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));

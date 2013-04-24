@@ -76,9 +76,6 @@ public class GrnLineItem implements java.io.Serializable {
 	@Transient
 	private Double fillRate;
 	
-	@Transient
-	private Long askedQty;
-	
 	public Long getId() {
 		return this.id;
 	}
@@ -199,13 +196,6 @@ public class GrnLineItem implements java.io.Serializable {
 		this.fillRate = fillRate;
 	}
 	
-	public Long getAskedQty() {
-		return askedQty;
-	}
-
-	public void setAskedQty(Long askedQty) {
-		this.askedQty = askedQty;
-	}
 
 	@Override
     public boolean equals(Object o) {

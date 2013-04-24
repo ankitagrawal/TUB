@@ -1,12 +1,14 @@
 GRN for Purchase Order # ${grn.purchaseOrder.id} closed
 <html>
 <style>
-#grnLineItemTable td{
-text-align:center;
-}
 #poLineItemTable td{
 text-align:center;
 }
+
+.colortd{
+background: #ff0;
+}
+
 </style>
 <head>
   <title>Welcome to HealthKart.com</title>
@@ -23,23 +25,18 @@ text-align:center;
   </#if>
   <#if grn.purchaseOrder.fillRate??>
   <#if grn.purchaseOrder.fillRate==100>
-  PO Fill Rate = ${grn.purchaseOrder.fillRate} %; <br/>
+  PO Fill Rate = <label class="colortd">${grn.purchaseOrder.fillRate} % </label>;<br/>
   <#else>
-  PO Fill Rate = <font color="#802A2A">${grn.purchaseOrder.fillRate} %</font>; <br/>
+  PO Fill Rate = <label class="colortd">${grn.purchaseOrder.fillRate} %</label>; <br/>
   </#if>
   <#else>
   PO Fill Rate =N/A; <br/>
   </#if>
   Approx. payable amount = ${grn.purchaseOrder.payable}; <br/>
   <#if grn.purchaseOrder.extraInventoryId??>
-  Extra Inventory ID= <font color="#802A2A">${grn.purchaseOrder.extraInventoryId};</font> <br/>
+  Extra Inventory ID= <label class="colortd">${grn.purchaseOrder.extraInventoryId};</label> <br/>
   <#else>
   Extra Inventory ID = N/A; <br/>
-  </#if>
-  <#if grn.purchaseOrder.estDelDate??>
-  Est. Delivery Date = ${grn.purchaseOrder.estDelDate}; <br/>
-  <#else>
-  Est. Delivery Date = N/A <br/>
   </#if>
 </p>
 
@@ -55,39 +52,38 @@ text-align:center;
 		<th>Asked Qty</th>
 		<th>Total Received Qty</th>
 		<th>CheckedIn With this GRN</th>
-		<th>Cost Price</th>
+		<th>GRN Cost Price</th>
 		<th>Site Cost Price</th>
-		<th>MRP</th>
+		<th>GRN MRP</th>
 		<th>Site MRP</th>
 		<th>HK Price</th>
-		<th>Weight</th>
+		<th>Weight(gm.)</th>
 		<th>JIT</th>
 		<th>Deleted</th>
 		<th>Hidden</th>
 		<th>Other Remarks</th>
+		<th>First Time Purchased</th>
 		<th>Payable Amount</th>
 	</tr>
 	
 	<#list grn.purchaseOrder.poLineItems as poLineItem>
 	<tr>
-	<td><#if poLineItem.sku.productVariant.deleted || poLineItem.sku.productVariant.product.hidden || poLineItem.costPrice!=poLineItem.sku.productVariant.costPrice || poLineItem.mrp!=poLineItem.sku.productVariant.markedPrice
+	<#if poLineItem.sku.productVariant.deleted || poLineItem.sku.productVariant.product.hidden 
 		|| (poLineItem.sku.productVariant.weight??&&poLineItem.sku.productVariant.weight==0) || poLineItem.sku.productVariant.otherRemarks??>
- 		<a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}" style="color:#802A2A";>${poLineItem.sku.productVariant.id}</a>
+ 		<td class="colortd"><a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}" style="color:#802A2A";>${poLineItem.sku.productVariant.id}</a></td>
   		<#else>
-  		<a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}">${poLineItem.sku.productVariant.id}</a>
+  		<td><a href="admin.healthkart.com/product/${poLineItem.sku.productVariant.product.slug}/${poLineItem.sku.productVariant.product.id}">${poLineItem.sku.productVariant.id}</a></td>
   		</#if>
-  		</td>
 	<td>${poLineItem.sku.productVariant.product.name}<br/>${poLineItem.sku.productVariant.optionsCommaSeparated}</td>
 	<td><#if poLineItem.fillRate??>
  		 ${poLineItem.fillRate}
-  		<#else>
-  		N/A
+  		<#else> 
   		</#if></td>
 	<td>${poLineItem.qty}</td>
 	<td><#if poLineItem.receivedQty??>
  		 ${poLineItem.receivedQty}
   		<#else>
-  		N/A
+  		 
   		</#if></td>
   		
   	<#assign checkedInQtytest = 0>
@@ -97,12 +93,12 @@ text-align:center;
 	<#if grnLineItem.checkedInQty??>
  		 <td>${grnLineItem.checkedInQty}</td>
   		<#else>
-  		<td>N/A</td>
+  		<td></td>
   		</#if>
 	</#if>
 	</#list>
 	<#if checkedInQtytest ==0>
-	<td> </td>
+	<td></td>
 	</#if>
 	
 	<#assign cptest = 0>
@@ -110,8 +106,8 @@ text-align:center;
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign cptest = 1>
 		<#if grnLineItem.costPrice!=poLineItem.sku.productVariant.costPrice>
-			<td><font color="#802A2A">${grnLineItem.costPrice}</font></td>
-			<td><font color="#802A2A">${poLineItem.sku.productVariant.costPrice}</font></td>
+			<td class="colortd">${grnLineItem.costPrice}</td>
+			<td class="colortd">${poLineItem.sku.productVariant.costPrice}</td>
 		<#else>
 			<td>${grnLineItem.costPrice}</td>
 			<td>${poLineItem.sku.productVariant.costPrice}</td>
@@ -119,7 +115,7 @@ text-align:center;
 	</#if>
 	</#list>
 	<#if cptest==0>
-			<td>N/A</td>
+			<td></td>
 			<td>${poLineItem.sku.productVariant.costPrice}</td>
 	</#if>
 	
@@ -128,8 +124,8 @@ text-align:center;
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign mptest =1>
 		<#if grnLineItem.mrp!=poLineItem.sku.productVariant.markedPrice>
-			<td><font color="#802A2A">${grnLineItem.mrp}</font></td>
-			<td><font color="#802A2A">${poLineItem.sku.productVariant.markedPrice}</font></td>
+			<td class="colortd">${grnLineItem.mrp}</td>
+			<td class="colortd">${poLineItem.sku.productVariant.markedPrice}</td>
 		<#else>
 			<td>${grnLineItem.mrp}</td>
 			<td>${poLineItem.sku.productVariant.markedPrice}</td>
@@ -137,7 +133,7 @@ text-align:center;
 	</#if>
 	</#list>
 	<#if mptest==0>
-			<td>N/A</td>
+			<td></td>
 			<td>${poLineItem.sku.productVariant.markedPrice}</td>
 	</#if>
 	
@@ -149,34 +145,39 @@ text-align:center;
  		 ${poLineItem.sku.productVariant.weight}
  		 </#if>
   		<#else>
-  		N/A
+  		 
   		</#if></td>
-  	<td><#if poLineItem.sku.productVariant.product.isJit()>
- 		 True
+  	<#if poLineItem.sku.productVariant.product.isJit()>
+ 		<td class="colortd">1</td>
   		<#else>
-  		False
-  		</#if></td>
-  	<td><#if poLineItem.sku.productVariant.product.deleted>
- 		 True
+  		<td>0</td>
+  		</#if>
+  	<#if poLineItem.sku.productVariant.product.deleted>
+ 		<td class="colortd">1</td>
   		<#else>
-  		False
-  		</#if></td>
-  	<td><#if poLineItem.sku.productVariant.product.hidden>
- 		 True
+  		<td>0</td>
+  		</#if>
+  	<#if poLineItem.sku.productVariant.product.hidden>
+ 		<td class="colortd">1</td>
   		<#else>
-  		False
-  		</#if></td>
+  		<td>0</td>
+  		</#if>
   	<td><#if poLineItem.sku.productVariant.otherRemark??>
  		 ${poLineItem.sku.productVariant.otherRemark}
   		<#else>
-  		N/A
+  		
   		</#if></td>
+  	<td><#if poLineItem.firstTimePurchased>
+  	Yes
+  	<#else>
+  	</#if>
+  	</td>
 	<td>${poLineItem.payableAmount}</td>
 	</tr>
 	</#list>
 	
 	<tr>
-	<td colspan="15"></td>
+	<td colspan="16"></td>
 	<td colspan="2">Total Payable: <#if grn.purchaseOrder.payable??>
  		 ${grn.purchaseOrder.payable}
   		<#else>

@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
@@ -91,6 +92,8 @@ public class GRNAction extends BasePaginatedAction {
     InventoryService inventoryService;
     @Autowired 
     private ExtraInventoryService extraInventoryService;
+    @Autowired
+	PoLineItemDao poLineItemDao;
 
 
 
@@ -261,14 +264,11 @@ public class GRNAction extends BasePaginatedAction {
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
-				for(GrnLineItem grnLineItem : grn.getGrnLineItems()){
 					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
-						if(grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())){
-							grnLineItem.setFillRate(poLineItem.getFillRate());
-							grnLineItem.setAskedQty(poLineItem.getQty());
-						}
+							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+								poLineItem.setFirstTimePurchased(true);
+							}
 					}
-				}
 				if(grn.getPurchaseOrder().isExtraInventoryCreated()){
                 	PurchaseOrder po = grn.getPurchaseOrder();
                 	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
