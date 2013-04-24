@@ -12183,7 +12183,7 @@
     <!--</changeSet>-->
     <changeSet author="Seema (generated)" id="1365072411708-1">
         <addColumn tableName="cycle_count">
-            <column name="brand" type="VARCHAR(45)"/>
+            <column name="brand" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
     <changeSet author="Seema (generated)" id="1365072411708-2">

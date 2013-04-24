@@ -14,33 +14,31 @@ public enum EnumInvTxnType {
     INV_CHECKOUT(20L, "Inventory Checkout"),                                   // -1
     RV_CHECKIN(30L, "Checkin against Reconciliation Voucher"),                 // +1
     RV_LOST_PILFERAGE(40L, "Lost/Pilferage against Reconciliation Voucher"),   // -1
-    RV_SUBTRACT_DAMAGED(45L, "Damaged Stock against Reconciliation Voucher"),           // -1
-    RV_SUBTRACT_EXPIRED(50L, "Expired against Reconciliation Voucher"),                 // -1
+    RV_SUBTRACT_DAMAGED(45L, "Damaged Stock against Reconciliation Voucher-Subtract"),           // -1
+    RV_SUBTRACT_EXPIRED(50L, "Expired against Reconciliation Voucher-Subtract"),                 // -1
     RETURN_CHECKIN_DAMAGED(60L, "Damaged against Returned items"),     // 0
-	RETURN_CHECKIN_EXPIRED(65L, "Expired against Returned items"),     // 0
-	RETURN_CHECKIN_GOOD(70L, "Checkin against Returned items"),                // +1
+    RETURN_CHECKIN_EXPIRED(65L, "Expired against Returned items"),     // 0
+    RETURN_CHECKIN_GOOD(70L, "Checkin against Returned items"),                // +1
     CANCEL_CHECKIN(80L, "Checkin against Cancellation"),                       // +1
     TRANSIT_LOST(90L, "Lost during transit"),                                  // -1
     INV_REPEAT_CHECKOUT(100L, "Inventory Checkout against Re-shipping"),       // -1
     STOCK_TRANSFER_CHECKOUT(110L, "Inventory Checkout against Stock-Transfer"),// -1
     STOCK_TRANSFER_CHECKIN(120L, "Inventory Checkin against Stock-Transfer"),  // +1
-    RV_SUBTRACT_BATCH_MISMATCH(130L, "Inventory Checkout for Batch Mismatch"),           //-1
-    RV_MRP_MISMATCH(140L, "Inventory Checkout for Mrp Mismatch"),               //-1
-    RV_NON_MOVING(150L, "Inventory Checkout for Non Moving Inventory"),         //-1
-    RV_SUBTRACT_FREE_VARIANT_RECONCILE(160L, "Inventory Checkout for Free Variant Reconcile"),
-    RV_CUSTOMER_RETURN(170L, "Inventory Checkin for Customer Return"),
-    RV_PHARMA_RETURN(180L, "Inventory Checkin for Pharama Return"),
-    PRODUCT_VARIANT_AUDITED(190L, "Product Variant Audited Subtracted"),
-    RV_ADD_INCORRECT_COUNTING(200L,"RV add Incorrect Counting "),
-    RV_SUBTRACT_INCORRECT_COUNTING(210L,"RV subtract Incorrect Counting"),
+    RV_SUBTRACT_BATCH_MISMATCH(130L, "Inventory Checkout for Batch Mismatch-RV Subtract"),           //-1
+    RV_SUBTRACT_MRP_MISMATCH(140L, "Inventory Checkout for Mrp Mismatch-RV Subtract"),               //-1
+    RV_SUBTRACT_NON_MOVING(150L, "Inventory Checkout for Non Moving Inventory-RV Subtract"),         //-1
+    RV_SUBTRACT_FREE_VARIANT_RECONCILE(160L, "Inventory Checkout for Free Variant-RV Subtract"), //-1
+    RV_ADD_CUSTOMER_RETURN(170L, "Inventory Checkin for Customer Return"), // +1
+    RV_ADD_PHARMA_RETURN(180L, "Inventory Checkin for Pharama Return"),    // +1
+    RV_SUBTRACT_VARIANT_AUDITED(190L, "Product Variant Audited-RV Subtract"),          // -1
+    RV_ADD_INCORRECT_COUNTING(200L,"rv add incorrect counting "),
+    RV_SUBTRACT_INCORRECT_COUNTING(210L,"rv subtract incorrect counting"),
 
-    RV_ADD_DAMAGED(220L, "Stock Damaged for RV Add"),           // +1
-    RV_ADD_EXPIRED(230L, "Stock Expired for  RV Add"),          // +1
-    RV_ADD_FREE_VARIANT_RECONCILE(240L, "Free Variant For RV Add "), // +1
-    RV_ADD_BATCH_MISMATCH(250L, "Batch Mismatch for RV Add"),      // +1
-    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired");
-
-
+    RV_ADD_DAMAGED(220L, "Damaged Stock against Reconciliation Voucher-Add"),           // +1
+    RV_ADD_EXPIRED(230L, "Expired against Reconciliation Voucher-Add"),
+    RV_ADD_FREE_VARIANT_RECONCILE(240L, "Inventory Checkin for Free Variant-RV Add"),
+    RV_ADD_BATCH_MISMATCH(250L, "Inventory Checkin for Batch Mismatch-RV Add"),
+    RV_ADD_EXPIRED_AUTOMATIC_DELETION(260L, "RV Add automatic deletion for Expired"),;
 
 
 
