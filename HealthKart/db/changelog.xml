@@ -12156,6 +12156,7 @@
             INSERT INTO role_has_permission VALUES ("WH_EMPLOYEE_REVERSE_PICKUP","MARK_RECEIVED"),("WH_EMPLOYEE_REVERSE_PICKUP","ADVICE_PROPOSED");
         </sql>
     </changeSet>
+
     <changeSet author="Ajeet (generated)" id="1366219849770-1">
         <createTable tableName="b2b_order_checklist">
             <column autoIncrement="true" name="id" type="INT">
