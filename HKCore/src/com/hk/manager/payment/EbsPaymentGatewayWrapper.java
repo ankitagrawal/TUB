@@ -40,6 +40,7 @@ public class EbsPaymentGatewayWrapper extends BasePaymentGatewayWrapper<EbsPayme
 	public static final String secure_hash_decrypted = "secure_hash_decrypted";
 	public static final String amount = "amount";
 	public static final String country = "country";
+    public static final String payment_option = "payment_option";
 
 
 	// response paramters

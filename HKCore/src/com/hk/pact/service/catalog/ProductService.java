@@ -18,6 +18,8 @@ public interface ProductService {
 
     public List<Product> getProductByCategory(String category);
 
+    public List<Product> getProductByCategory(List<String> category);
+
     public List<Product> getProductByCategories(List<String> categoryNames);
 
     /**

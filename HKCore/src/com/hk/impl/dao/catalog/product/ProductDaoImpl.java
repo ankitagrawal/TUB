@@ -82,6 +82,12 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 "category", category).setBoolean("deleted", true).setBoolean("isGoogleAdDisallowed", true).list();
     }
 
+    public List<Product> getProductByCategory(List<String> category) {
+        return getSession().createQuery(
+                "select p from Product p left join p.categories c where c.name in (:category) and p.deleted != :deleted and p.isGoogleAdDisallowed != :isGoogleAdDisallowed order by p.orderRanking asc").setParameterList(
+                "category", category).setBoolean("deleted", true).setBoolean("isGoogleAdDisallowed", true).list();
+    }
+
     public List<Product> getProductByCategories(List<String> categoryNames) {
         return getSession().createQuery("select p from Product p where p.primaryCategory.name in (:category) and deleted = :nonDeleted and isGoogleAdDisallowed != :adAllowed order by p.orderRanking asc")
                 .setParameterList("category", categoryNames)

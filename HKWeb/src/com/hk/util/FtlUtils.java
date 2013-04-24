@@ -52,7 +52,9 @@ public class FtlUtils {
         //adding "can't view this email and unsubsribe link" div to the ftl
         if (line.matches(bodyStartTagRegex)) {
           out.write(line + lineSeperator);
-          out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
+          if(!StringUtils.contains(destinationPath,"reviewCollection")){
+            out.write(FtlUtils.getCantViewEmailDiv(basicAmazonS3Path) + lineSeperator);
+          }
         } else if (line.matches(bodyEndTagRegex)) {
           out.write(FtlUtils.getUnsubscribeEmailDiv() + lineSeperator);
           out.write(line + lineSeperator);
