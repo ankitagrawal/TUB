@@ -107,8 +107,8 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.amount, amountStr);
 		ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.country, country);
         String issuerCode = data.getPaymentMethod();
-        if(issuerCode != null && StringUtils.isNotBlank(issuerCode)){
-            ebsPaymentGatewayWrapper.addParameter("payment_option", data.getPaymentMethod());
+        if(issuerCode != null && StringUtils.isNotBlank(issuerCode) ){
+            ebsPaymentGatewayWrapper.addParameter(EbsPaymentGatewayWrapper.payment_option, data.getPaymentMethod());
         }
 		return ebsPaymentGatewayWrapper;
 	}                                                                              
@@ -161,9 +161,9 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 		Double amount = NumberUtils.toDouble(amountStr);
 		String authStatus = paramMap.get(EbsPaymentGatewayWrapper.ResponseCode);
 		String flag_status = paramMap.get(EbsPaymentGatewayWrapper.IsFlagged);
-        String ePGTxnID = paramMap.get(EbsPaymentGatewayWrapper.TransactionID);
+        String rrn = paramMap.get(EbsPaymentGatewayWrapper.TransactionID);
         String TxMsg = paramMap.get(EbsPaymentGatewayWrapper.ResponseMessage);
-        String rrn = paramMap.get(EbsPaymentGatewayWrapper.PaymentID);
+        String ePGTxnID = paramMap.get(EbsPaymentGatewayWrapper.PaymentID);
 		String merchantParam = null;
 
 		Resolution resolution = null;
@@ -176,7 +176,7 @@ public class EbsSendReceiveAction extends BasePaymentGatewaySendReceiveAction<Eb
 				paymentManager.success(gatewayOrderId,ePGTxnID,rrn,TxMsg,null);
 				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else if (EbsPaymentGatewayWrapper.is_Flagged_True.equalsIgnoreCase(flag_status)) {
-				paymentManager.pendingApproval(gatewayOrderId);
+				paymentManager.pendingApproval(gatewayOrderId,ePGTxnID);
 				resolution = new RedirectResolution(PaymentPendingApprovalAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 			} else {
 				 paymentManager.fail(gatewayOrderId, ePGTxnID,TxMsg);
