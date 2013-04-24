@@ -174,9 +174,13 @@
 </c:if>
 <div class="clear"></div>
 <c:if test="${isActionQueue == true || isSearchShippingOrder == true}">
-    <c:if test="${! empty shippingOrder.shippingOrderLifecycles}">
+    <c:if test="${! empty shippingOrder.shippingOrderLifecycles || shippingOrder.shippingOrderStatus.id eq shippingOrderStatusCancelled }">
+
         <label style="font-weight:bold;">Last Activity:</label><br>
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} on
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name}
+        ${shippingOrder.reason.name}
+        <%--(${soCancelReason.primaryClassification} - ${soCancelReason.secondaryClassification} - ${cancellationRemark})--%>
+        on
         <br>
         <fmt:formatDate
                 value="${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].activityDate}"

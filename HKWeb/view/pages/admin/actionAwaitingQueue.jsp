@@ -140,16 +140,16 @@
                 if (!proceed) return false;
             });
 
-                <%--var clickedLink = $(this);--%>
-                <%--$.getJSON(clickedLink.attr('href'), function(res) {--%>
-                    <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
-                        <%--alert(res.message);--%>
-                        <%--window.location.reload();--%>
-                    <%--}--%>
-                <%--});--%>
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });
 
-                <%--return false;--%>
-            <%--});--%>
+                return false;
+            });
 
         <%--
         Confirm cod order
@@ -664,7 +664,7 @@
                     <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${shippingOrders}" />
+                                             shippingOrders="${shippingOrders}" isActionQueue="true"  />
                         </td>
                     </c:when>
                     <c:otherwise>
