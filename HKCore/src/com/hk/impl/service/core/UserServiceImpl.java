@@ -22,18 +22,17 @@ import com.hk.pact.service.store.StoreService;
 import com.hk.util.TokenUtils;
 import com.shiro.PrincipalImpl;
 import org.apache.shiro.SecurityUtils;
-
 import static com.hk.constants.user.EnumEmailSubscriptions.*;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserDao         userDao;
     @Autowired
-    private UserCartDao userCartDao;
+    private UserCartDao     userCartDao;
     @Autowired
-    private StoreService storeService;
+    private StoreService    storeService;
 
     public User getUserById(Long userId) {
         return getUserDao().getUserById(userId);
@@ -52,20 +51,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public boolean unsubscribeUser(String unsubscribeToken) {
+    public boolean unsubscribeUser(String unsubscribeToken){
         User user = getUserDao().findByUnsubscribeToken(unsubscribeToken);
-        if (user != null) {
+        if (user != null){
             user.setSubscribedMask(EnumEmailSubscriptions.UNSUBSCRIBED.getValue());
-            userDao.save(user);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean subscribeUser(String emailId) {
-        User user = getUserDao().findByLogin(emailId);
-        if (user != null) {
-            user.setSubscribedMask(EnumEmailSubscriptions.SUBSCRIBE_ALL);
             userDao.save(user);
             return true;
         }
@@ -95,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private PrincipalImpl getPrincipal() {
-        return (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
+        return (PrincipalImpl)  SecurityUtils.getSubject().getPrincipal();
     }
 
     public Page getMailingList(Category category, int pageNo, int perPage) {
@@ -127,10 +116,10 @@ public class UserServiceImpl implements UserService {
             if (user.getStore() == null) {
                 user.setStore(getStoreService().getDefaultStore());
             }
-            if (user.getSubscribedMask() == null) {
+            if (user.getSubscribedMask() == null){
                 user.setSubscribedMask(SUBSCRIBE_ALL);//Subscribe for all
             }
-            if (user.getUnsubscribeToken() == null) {
+            if (user.getUnsubscribeToken() == null){
                 user.setUnsubscribeToken(TokenUtils.getTokenToUnsubscribeWommEmail(user.getLogin()));//Subscribe for all
             }
         }
@@ -155,11 +144,11 @@ public class UserServiceImpl implements UserService {
 
     public void subscribeUserForOffers(String login, boolean subscribe) {
         int subscriptionMask = 0;
-        if (subscribe) {
+        if (subscribe){
             //if user has subscribed then all the type of emails will go to him
             subscriptionMask = EnumEmailSubscriptions.NOTIFY_ME.getValue()
                     | EnumEmailSubscriptions.PRODUCT_REPLENISHMENT.getValue() | EnumEmailSubscriptions.PROMOTIONAL_OFFERS.getValue() | EnumEmailSubscriptions.NEWSLETTERS.getValue();
-        } else {
+        }else{
             //if user has not subscribed then only this type of email will go to him
             subscriptionMask = EnumEmailSubscriptions.NOTIFY_ME.getValue() | EnumEmailSubscriptions.PRODUCT_REPLENISHMENT.getValue();
         }

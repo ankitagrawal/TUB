@@ -4,7 +4,6 @@ package com.hk.domain.marketing;
 
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.Date;

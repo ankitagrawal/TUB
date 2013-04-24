@@ -19,6 +19,4 @@ public interface EmailRecepientDao extends BaseDao {
 
     //For creating object only, and not saving into DB
     public EmailRecepient createEmailRecepientObject(String recepientEmail);
-
-    public EmailRecepient  subscribeForNotify(String emailId);
 }

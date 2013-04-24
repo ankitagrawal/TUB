@@ -1,6 +1,5 @@
 package com.hk.constants.core;
 
-import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.user.Role;
 
 import java.util.Arrays;
