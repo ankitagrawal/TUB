@@ -70,8 +70,15 @@ public class DateUtils {
     DateTime dateTime=new DateTime(date);
     return new Timestamp(dateTime.minusHours(6).toDateTime().getMillis());
   }
-  
-  public static Date getEndOfPreviousSixHours(Date date){
+
+    public static Date getStartOfPreviousYear(Date date) {
+        if (date == null)
+            return null;
+        DateTime dateTime = new DateTime(date);
+        return new Timestamp(dateTime.minusYears(1).toDateTime().getMillis());
+    }
+
+    public static Date getEndOfPreviousSixHours(Date date){
     if(date==null)
       return null;
     DateTime dateTime=new DateTime(date);
