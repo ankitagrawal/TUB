@@ -213,7 +213,7 @@ public class UserOrderResource {
                     logger.debug("Order Payment Already Confirmed" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                adminOrderService.confirmCodOrder(order, source);
+                adminOrderService.confirmCodOrder(order, source,null);
             }
             userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
             userCodCall.setRemark(action + " Request Successful");
