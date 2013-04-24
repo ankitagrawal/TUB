@@ -71,7 +71,7 @@
                 <tr>
                     <td><fmt:formatDate value="${auditBrand.auditDate}" pattern="dd/MM/yyyy"/></td>
                     <td><fmt:formatDate value="${auditBrand.updateDate}" pattern="dd/MM/yyyy"/></td>
-                    <td>${auditBrand.warehouse.name}</td>
+                    <td>${auditBrand.warehouse.identifier}</td>
                     <td>${auditBrand.auditor.login}</td>
                     <td>${auditBrand.brand}</td>
                     <td>

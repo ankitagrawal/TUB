@@ -106,7 +106,7 @@
                             '<td>' +
                             '<select name="pincodeDefaultCouriers[' + nextIndex + '].warehouse">' +
                                    <c:forEach items="${allWarehouse}" var="warehouse">
-                            '<option value="' + ${warehouse.id} + '"> ' + "${warehouse.name}" + '</option>' +
+                            '<option value="' + ${warehouse.id} + '"> ' + "${warehouse.identifier}" + '</option>' +
                                     </c:forEach>
                             '</select>' +
                             '</td>' +
@@ -204,7 +204,7 @@
                                 </script>
                             </td>
                             <td>
-                                    ${pincodeDefaultCourier.warehouse.name}
+                                    ${pincodeDefaultCourier.warehouse.identifier}
                                 <input type="hidden" name="pincodeDefaultCouriers[${ctr.index}].warehouse" value="${pincodeDefaultCourier.warehouse.id}"/>
                             </td>
                             <td>

@@ -15,7 +15,6 @@
 <c:set var="cFormAvailable" value="${orderSummary.CFormAvailable}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
-<%--<c:set var="warehouse" value="${shippingOrder.warehouse}"/>--%>
 <c:set var="warehouse" value="${hk:getShippingWarehouse(shippingOrder)}"/>
 <c:set var="isB2BOrder" value="${baseOrder.b2bOrder}"/>
 <c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
@@ -38,34 +37,10 @@
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
 		<div class="column">			
-			<%--<c:choose>
-				<c:when test="${isB2BOrder}">
-					<p>Bright Lifecare Pvt. Ltd.</p>
-				</c:when>
-				<c:otherwise>
-					<p>Aquamarine HealthCare Pvt. Ltd.</p>
-				</c:otherwise>
-			</c:choose>--%>
       <p>${warehouse.name}</p>
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
-			<%--<c:choose>
-				<c:when test="${isB2BOrder}">
-					<c:choose>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
-							<p> TIN# 06101832036</p>
-						</c:when>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
-							<p> TIN# 27210893736</p>
-						</c:when>
-					</c:choose>
-					<p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>
-				</c:when>
-				<c:otherwise>
-					TIN# ${warehouse.tin}
-				</c:otherwise>
-			</c:choose>--%>
       <p>TIN: ${warehouse.tin}</p>
       <c:if test="${isB2BOrder && warehouse.state == 'HARYANA'}">
         <p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>

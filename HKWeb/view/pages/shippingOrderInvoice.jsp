@@ -86,6 +86,8 @@
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
 <c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
+<c:set var="shippingWarehouse" value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}" />
+<c:set var="supplier" value="${orderSummary.supplier}"/>
 
 
 <div class="container_12" style="border: 1px solid; padding-top: 10px;">
@@ -229,7 +231,7 @@ ORDER INVOICE <c:choose>
         <div style="margin-top:5px;"></div>
         <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
         <c:if test="${!orderSummary.shippingOrder.dropShipping}">  
-        <p>Fulfillment Centre: ${orderSummary.shippingOrder.warehouse.name}</p>
+        <p>Fulfillment Centre: ${shippingWarehouse.identifier}</p>
        </c:if>
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
             <p>Return Location: <b>DEL/ITG/111117</b></p>
@@ -271,8 +273,6 @@ ORDER INVOICE <c:choose>
         Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
     </div>
     <hr/>
-     <c:set var="warehouse" value="${orderSummary.shippingOrder.warehouse}"/>
-     <c:set var="supplier" value="${orderSummary.supplier}"/>
     <c:choose>
         <c:when test="${orderSummary.shippingOrder.dropShipping}">
          <p style="font-size: .8em;"> ${supplier.name} | ${supplier.line1}, ${supplier.line2} |
@@ -280,20 +280,9 @@ ORDER INVOICE <c:choose>
              ${supplier.tinNumber}  </p>
         </c:when>
       <c:otherwise>
-        <c:set value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}" var="shippingWarehouse"/>
         ${shippingWarehouse.name} | ${shippingWarehouse.line1} | ${shippingWarehouse.line2} |
         ${shippingWarehouse.city} | ${shippingWarehouse.state} - ${shippingWarehouse.pincode} |
         TIN: ${shippingWarehouse.tin}
-        <%--<c:when test="${hk:collectionContains(baseOrder.user.roleStrings, b2bUser)}">
-            <p style="font-size: .8em;">Bright Lifecare Pvt. Ltd. | Khasra No. 146/25/2/1, Jail Road, Dhumaspur,
-                Badshahpur |
-                Gurgaon, Haryana- 122101 | TIN:
-                06101832036 </p>
-        </c:when>
-        <c:otherwise>
-            <p style="font-size: .8em;">Aquamarine Healthcare Pvt. Ltd. | ${warehouse.line1}, ${warehouse.line2} |
-                    ${warehouse.city}, ${warehouse.state}- ${warehouse.pincode} | TIN:
-                    ${warehouse.tin} </p> --%>
         </c:otherwise>
     </c:choose>
 

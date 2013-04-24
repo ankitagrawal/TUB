@@ -135,6 +135,8 @@
 </c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
+  IsB2B?: <strong>${shippingOrder.baseOrder.b2bOrder}</strong>
+  <br/>
   Warehouse: <strong>${shippingOrder.warehouse.identifier}</strong>
   <br/>
   Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
