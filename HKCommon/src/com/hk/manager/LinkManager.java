@@ -3,10 +3,12 @@ package com.hk.manager;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.ProductVariant;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.hk.domain.TempToken;
@@ -22,6 +24,9 @@ import com.hk.web.filter.WebContext;
 
 @Component
 public class LinkManager {
+
+    @Value("#{hkEnvProps['" + Keys.Env.userEmailLinksRedirected + "']}")
+    private Long userEmailLinksRedirected;
 
     public String getAuthRedirectUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/auth/AuthRequired.action");
@@ -66,7 +71,7 @@ public class LinkManager {
     public String getOrderTrackLink(String trackingId, Long courierId, ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/order/TrackCourier.action").addParameter("trackingId", trackingId).addParameter("courierId",
                 courierId).addParameter("shippingOrder", shippingOrder);
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getOrderInvoiceLink(Order order) {
@@ -76,7 +81,7 @@ public class LinkManager {
 
     public String getShippingOrderInvoiceLink(ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/accounting/SOInvoice.action").addParameter("shippingOrder", shippingOrder.getId());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getRetailInvoiceLink(AccountingInvoice accountingInvoice) {
@@ -91,32 +96,32 @@ public class LinkManager {
 
     public String getReviewPageLink(HashMap params) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getUnsubscribeLink(User user) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken", user.getUnsubscribeToken());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getUserActivationLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/VerifyUser.action").addParameter("token", token.getToken());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getReferralSignupLink(User user) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/referral/ReferralSignup.action").addParameter("userHash", user.getUserHash());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getReferralProgramUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/referral/ReferralProgram.action");
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getEmailUnsubscribeLink(EmailRecepient emailRecepient) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/email/UnsubscribeEmail.action").addParameter("unsubscribeToken", emailRecepient.getUnsubscribeToken());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getViewTicketUrl(Ticket ticket) {
@@ -126,12 +131,12 @@ public class LinkManager {
 
     public String getResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getSSOResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SSOPasswordReset.action").addParameter("token", token.getToken());
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getCitrusPaymentNetBankingGatewayUrl() {
@@ -232,7 +237,7 @@ public class LinkManager {
 
     public String getFeedbackPage() {
         RedirectResolution redirectResolution = new RedirectResolution("/feedback");
-        return AppConstants.healthkartMainSite + redirectResolution.getUrl(Locale.getDefault());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getTryOnImageURL(ProductVariant productVariant) {
