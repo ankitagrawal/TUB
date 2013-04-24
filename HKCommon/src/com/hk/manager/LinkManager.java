@@ -26,7 +26,7 @@ import com.hk.web.filter.WebContext;
 public class LinkManager {
 
     @Value("#{hkEnvProps['" + Keys.Env.userEmailLinksRedirected + "']}")
-    private Long userEmailLinksRedirected;
+    private String userEmailLinksRedirected;
 
     public String getAuthRedirectUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/auth/AuthRequired.action");
