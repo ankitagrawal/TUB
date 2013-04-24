@@ -104,6 +104,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     private String codConfirmationTime;
     private Long unsplitOrderCount;
 
+    private boolean b2bOrder = false;
     private boolean sortByPaymentDate = true;
     private boolean sortByLastEscDate = false;
     private boolean sortByScore = false;
@@ -228,6 +229,9 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
         if (containsJit != null){
             orderSearchCriteria.setContainsJit(containsJit);
+        }
+        if (b2bOrder){
+            orderSearchCriteria.setB2BOrder(b2bOrder);
         }
         Set<Category> basketCategoryList = new HashSet<Category>();
         for (String category : basketCategories) {
@@ -420,6 +424,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("sortByDispatchDate");
         params.add("dropShip");
         params.add("containsJit");
+        params.add("b2bOrder");
 
         params.add("bucketParameters");
 
@@ -578,5 +583,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     public void setBuckets(List<Bucket> buckets) {
         this.buckets = buckets;
+    }
+
+    public boolean isB2bOrder() {
+        return b2bOrder;
+    }
+
+    public void setB2bOrder(boolean b2bOrder) {
+        this.b2bOrder = b2bOrder;
     }
 }
