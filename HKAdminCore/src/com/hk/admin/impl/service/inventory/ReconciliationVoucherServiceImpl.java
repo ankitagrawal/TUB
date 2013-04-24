@@ -28,7 +28,6 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.pact.service.inventory.SkuService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,10 +119,10 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_BATCH_MISMATCH);
                         break;
                     case CustomerReturn:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_CUSTOMER_RETURN);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_CUSTOMER_RETURN);
                         break;
                     case PharmaReturn:
-                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_PHARMA_RETURN);
+                        invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_PHARMA_RETURN);
                         break;
                     case AddFreeVariant:
                         invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_ADD_FREE_VARIANT_RECONCILE);
@@ -264,11 +263,11 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
                 skuItemStatus = EnumSkuItemStatus.BatchMismatch.getSkuItemStatus();
                 break;
             case MrpMismatch:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_MRP_MISMATCH);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_MRP_MISMATCH);
                 skuItemStatus = EnumSkuItemStatus.MrpMismatch.getSkuItemStatus();
                 break;
             case NonMoving:
-                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_NON_MOVING);
+                invTxnType = inventoryService.getInventoryTxnType(EnumInvTxnType.RV_NON_MOVING);
                 skuItemStatus = EnumSkuItemStatus.NonMoving.getSkuItemStatus();
                 break;
             case SubtractFreeVariant:
@@ -322,7 +321,7 @@ public class ReconciliationVoucherServiceImpl implements ReconciliationVoucherSe
             SkuItem skuItem = inStockSkuItems.get(i);
             //Delete -1 entry in PVI
             adminInventoryService.inventoryCheckinCheckout(sku, skuItem, null, null, null, null, null,
-                    inventoryService.getInventoryTxnType(EnumInvTxnType.RV_SUBTRACT_VARIANT_AUDITED), -1L, loggedOnUser);
+                    inventoryService.getInventoryTxnType(EnumInvTxnType.PRODUCT_VARIANT_AUDITED), -1L, loggedOnUser);
 
             //set sku item status to Product_variant_ Audited
             skuItem.setSkuItemStatus(EnumSkuItemStatus.ProductVariantAudited.getSkuItemStatus());
