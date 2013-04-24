@@ -38,12 +38,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     @Autowired
     AdminInventoryService adminInventoryService;
 
-    @Value("#{hkEnvProps['" + Keys.Env.notifyConversionRate + "']}")
-    float notifyConversionRate;
-    @Value("#{hkEnvProps['" + Keys.Env.bufferRate + "']}")
-    int bufferRate;
-
-    public void sendNotifyMeEmail() {
+    public void sendNotifyMeEmail(final float notifyConversionRate, final int bufferRate) {
 
         Map<String, Integer> allowedUserPerVariantMap = new HashMap<String, Integer>();
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
@@ -64,7 +59,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
 
                 } else {
                     allowedUserNumber = allowedUserPerVariantMap.get(productVariantId);
-
                 }
                 if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
                     userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
@@ -81,18 +75,12 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     notifyMeListPerUser.add(notifyMe);
                     finalUserListForNotificationMap.put(email, notifyMeListPerUser);
                     userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
-
                 }
-
-
             }
             //send mails
             adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
         } catch (Exception ex) {
-            logger.error("Exception :: " + ex.getMessage());
-
+            logger.error("Unable to send bulk notify me emails " + ex.getMessage());
         }
     }
-
-
 }

@@ -204,7 +204,9 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     }
 
     public Resolution sendAllNotifyMails() {
-        productVariantNotifyMeEmailService.sendNotifyMeEmail();
+        double conversionRate = Double.parseDouble(getContext().getRequest().getParameter("conversionRate"));
+        int bufferRate = Integer.parseInt(getContext().getRequest().getParameter("bufferRate"));
+        productVariantNotifyMeEmailService.sendNotifyMeEmail((float)conversionRate, bufferRate);
         return new RedirectResolution(NotifyMeAction.class);
     }
 
