@@ -12385,4 +12385,9 @@
     <!--<changeSet author="Pratham (generated)" id="1366787798141-37">-->
         <!--<dropColumn columnName="secondary_classification" tableName="reason"/>-->
     <!--</changeSet>-->
+    <changeSet author="Rajesh" id="24-04-2013-01">
+    		<sql>
+              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing");
+            </sql>
+       </changeSet>
 </databaseChangeLog>
