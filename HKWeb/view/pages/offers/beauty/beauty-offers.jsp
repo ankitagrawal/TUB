@@ -66,6 +66,11 @@
          <p><a href="http://www.healthkart.com/product/vaadi-herbals-fair-skin-gift-pack/ARVDC33">FREE Auravedic Ritual Skin Lightening Mask Worth Rs 200/- With Purchase of Beauty Products Worth Rs 1000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/Vichy">FREE Vichy Bi-White Med Foam Cleanser Worth Rs 1290/- With Purchase of Vichy Products Worth Rs 2500/-</a></p>
 
+         <div class="cl"></div>
+
+         <span>*Offers valid till stocks last.</span>
+
+
 
 
 
