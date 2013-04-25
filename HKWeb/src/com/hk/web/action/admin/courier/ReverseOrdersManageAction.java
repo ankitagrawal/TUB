@@ -216,7 +216,8 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
         params.add("pickupStatusId");
         params.add("reconciliationStatusId");
 		params.add("shippingOrderId");
-		params.add("courierId"); 
+		params.add("courierId");
+		 params.add("warehouseId");
         return params;
     }
 
