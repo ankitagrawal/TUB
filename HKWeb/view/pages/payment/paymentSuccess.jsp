@@ -25,6 +25,9 @@
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <!--YAHOO marketing-->
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
+<!--OZONE marketing-->
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" />
+
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
