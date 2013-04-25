@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.courier.Zone;
 import com.hk.pact.service.core.WarehouseService;
@@ -87,56 +88,56 @@ import com.hk.util.io.HkXlsWriter;
 @Component
 public class ReportManager {
 
-    private static Logger      logger = LoggerFactory.getLogger(ReportManager.class);
+    private static Logger logger = LoggerFactory.getLogger(ReportManager.class);
 
-    SimpleDateFormat           sdf    = new SimpleDateFormat("MM/dd/yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     @Autowired
-    ShippingOrderService       shippingOrderService;
+    ShippingOrderService shippingOrderService;
 
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
 
     @Autowired
-    OrderStatusService         orderStatusService;
+    OrderStatusService orderStatusService;
 
     @Autowired
-    CartLineItemService        cartLineItemService;
+    CartLineItemService cartLineItemService;
 
     @Autowired
-    ReportOrderService         reportOrderService;
+    ReportOrderService reportOrderService;
 
     @Autowired
-    OrderService               orderService;
+    OrderService orderService;
 
     @Autowired
-    CategoryService            categoryService;
+    CategoryService categoryService;
 
     @Autowired
     ReportShippingOrderService reportShippingOrderService;
 
-    OrderManager               orderManagerProvider;
+    OrderManager orderManagerProvider;
 
-    PaymentModeDao             paymentModeDaoProvider;
+    PaymentModeDao paymentModeDaoProvider;
 
-    LineItemDao                lineItemDaoProvider;
+    LineItemDao lineItemDaoProvider;
 
-    OrderStatusDao             orderStatusDaoProvider;
+    OrderStatusDao orderStatusDaoProvider;
 
-    CategoryDaoImpl            categoryDaoProvider;
+    CategoryDaoImpl categoryDaoProvider;
 
-    OrderDao                   orderDaoProvider;
+    OrderDao orderDaoProvider;
 
     /*
      * LineItemStatusDao> lineItemStatusDaoProvider;
      */
 
     @Autowired
-    NotifyMeDao                notifyMeDao;
-	@Autowired
-	BarcodeGenerator	barcodeGenerator;
+    NotifyMeDao notifyMeDao;
+    @Autowired
+    BarcodeGenerator barcodeGenerator;
 
-    TaxDao                     taxDaoProvider;
+    TaxDao taxDaoProvider;
 
     ReportShippingOrderService shippingOrderReportingServiceProvider;
 
@@ -282,7 +283,7 @@ public class ReportManager {
      * The method returns an excel gfile for the courier report
      */
     public File generateCourierReportXsl(String xslFilePath, EnumShippingOrderStatus shippingOrderStatus, List<Courier> courierList, Date startDate, Date endDate,
-            Warehouse warehouse, Zone zone) throws Exception {
+                                         Warehouse warehouse, Zone zone) throws Exception {
 
         List<ShippingOrder> shippingOrderList = null;
         File file = new File(xslFilePath);
@@ -298,13 +299,13 @@ public class ReportManager {
         Sheet sheet1 = wb.createSheet("Courier");
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 30);
-		
-		// for adding barcode picture to excel
-		InputStream is = null;
+
+        // for adding barcode picture to excel
+        InputStream is = null;
         byte[] bytes = null;
         int pictureIdx = 0;
         CreationHelper helper = null;
-		Drawing drawing = sheet1.createDrawingPatriarch();
+        Drawing drawing = sheet1.createDrawingPatriarch();
         ClientAnchor anchor = null;
         Picture pict = null;
 
@@ -338,12 +339,12 @@ public class ReportManager {
         setCellValue(row, 20, ReportConstants.SHIPMENT_DATE);
         setCellValue(row, 21, ReportConstants.BOX_SIZE);
         setCellValue(row, 22, ReportConstants.BOX_WEIGHT);
-	    if(zone != null){
-	        setCellValue(row, 23, ReportConstants.ZONE);
+        if (zone != null) {
+            setCellValue(row, 23, ReportConstants.ZONE);
         }
-		if (courierList.contains(EnumCourier.Speedpost.asCourier())){
-			setCellValue(row, 24, ReportConstants.BARCODE);
-		}
+        if (courierList.contains(EnumCourier.Speedpost.asCourier())) {
+            setCellValue(row, 24, ReportConstants.BARCODE);
+        }
 
         int rowCounter = 1;
         if (startDate == null && endDate == null) {
@@ -363,7 +364,6 @@ public class ReportManager {
             for (ShippingOrder order : shippingOrderList) {
 
 
-
                 Set<LineItem> lineItems = order.getLineItems();
                 LineItem firstProductLineItem = lineItems.iterator().next();
                 rowCounter++;
@@ -371,22 +371,21 @@ public class ReportManager {
                 for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
                     cell = row.createCell(columnNo);
                 }
-	            if(zone != null){
-		            Zone shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
-		            if(shippingOrderZone != null && shippingOrderZone.equals(zone)){
-			            setCellValue(row, 23, shippingOrderZone.getName().toUpperCase());
-		            }
-		            else{
-			            sheet1.removeRow(row);
-						rowCounter--;			            
-			            continue;
-		            }
-	            }
+                if (zone != null) {
+                    Zone shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+                    if (shippingOrderZone != null && shippingOrderZone.equals(zone)) {
+                        setCellValue(row, 23, shippingOrderZone.getName().toUpperCase());
+                    } else {
+                        sheet1.removeRow(row);
+                        rowCounter--;
+                        continue;
+                    }
+                }
                 Shipment shipment = order.getShipment();
-				Awb awb = shipment.getAwb();
+                Awb awb = shipment.getAwb();
                 Address address = order.getBaseOrder().getAddress();
                 String trackingId = null;
-                if ( awb != null) {
+                if (awb != null) {
                     trackingId = awb.getAwbNumber();
                 }
                 setCellValue(row, 0, trackingId);
@@ -448,38 +447,38 @@ public class ReportManager {
                     setCellValue(row, 22, shipment.getBoxWeight());
                 }
 
-				if ( awb != null && awb.getCourier().equals((EnumCourier.Speedpost.asCourier()))) {
-					String barcodePath = barcodeGenerator.getBarcodePath(awb.getAwbNumber(), 1.0f, 150, false);
-					// add picture data to this workbook.
-					is = new FileInputStream(barcodePath);
-					bytes = IOUtils.toByteArray(is);
-					pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-					is.close();
-					helper = wb.getCreationHelper();
-					sheet1.autoSizeColumn(24);
-					//sheet1.addMergedRegion()
-					//sheet1.groupRow(rowCounter, rowCounter++);
-					row.setHeightInPoints(60);
+                if (awb != null && awb.getCourier().equals((EnumCourier.Speedpost.asCourier()))) {
+                    String barcodePath = barcodeGenerator.getBarcodePath(awb.getAwbNumber(), 1.0f, 150, false);
+                    // add picture data to this workbook.
+                    is = new FileInputStream(barcodePath);
+                    bytes = IOUtils.toByteArray(is);
+                    pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+                    is.close();
+                    helper = wb.getCreationHelper();
+                    sheet1.autoSizeColumn(24);
+                    //sheet1.addMergedRegion()
+                    //sheet1.groupRow(rowCounter, rowCounter++);
+                    row.setHeightInPoints(60);
 
-					// Create the drawing patriarch. This is the top level container for all shapes.
-					// add a picture shape
-					anchor = helper.createClientAnchor();
-					anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+                    // Create the drawing patriarch. This is the top level container for all shapes.
+                    // add a picture shape
+                    anchor = helper.createClientAnchor();
+                    anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
 
-					// set top-left corner of the picture,
-					pict = drawing.createPicture(anchor, pictureIdx);
-					pict.resize(8.0);
+                    // set top-left corner of the picture,
+                    pict = drawing.createPicture(anchor, pictureIdx);
+                    pict.resize(8.0);
 
-					//setCellValue(row, 24, awbNumber );
-					anchor.setDx1(10);
-					anchor.setDx2(1000);
-					anchor.setDy1(10);
-					anchor.setDy2(200);
-					anchor.setCol1(24);
-					anchor.setRow1(rowCounter);
-					anchor.setCol2(24);
-					anchor.setRow2(rowCounter);
-				}
+                    //setCellValue(row, 24, awbNumber );
+                    anchor.setDx1(10);
+                    anchor.setDx2(1000);
+                    anchor.setDy1(10);
+                    anchor.setDy2(200);
+                    anchor.setCol1(24);
+                    anchor.setRow1(rowCounter);
+                    anchor.setCol2(24);
+                    anchor.setRow2(rowCounter);
+                }
             }
         }
         wb.write(out);
@@ -524,20 +523,20 @@ public class ReportManager {
         setCellValue(row, 10, ReportConstants.MOBILE_NUMBER);
         setCellValue(row, 11, ReportConstants.PRODUCT);
         setCellValue(row, 12, ReportConstants.CONTENT);
-        setCellValue(row, 12, ReportConstants.WEIGHT);
-        setCellValue(row, 13, ReportConstants.DECLARED_VALUE);
-        setCellValue(row, 14, ReportConstants.COLLECTABLE_VALUES);
-        setCellValue(row, 15, ReportConstants.VENDOR_CODE);
-        setCellValue(row, 16, ReportConstants.SHIPPER_NAME);
-        setCellValue(row, 17, ReportConstants.RETURN_ADDRESS1);
-        setCellValue(row, 18, ReportConstants.RETURN_ADDRESS2);
-        setCellValue(row, 19, ReportConstants.RETURN_ADDRESS3);
-        setCellValue(row, 20, ReportConstants.RETURN_PIN);
-        setCellValue(row, 21, ReportConstants.LENGTH);
-        setCellValue(row, 22, ReportConstants.BREADTH);
-        setCellValue(row, 23, ReportConstants.HEIGHT);
-        setCellValue(row, 24, ReportConstants.PIECES);
-        setCellValue(row, 25, ReportConstants.AREA_CUSTOMER_CODE);
+        setCellValue(row, 13, ReportConstants.WEIGHT);
+        setCellValue(row, 14, ReportConstants.DECLARED_VALUE);
+        setCellValue(row, 15, ReportConstants.COLLECTABLE_VALUES);
+        setCellValue(row, 16, ReportConstants.VENDOR_CODE);
+        setCellValue(row, 17, ReportConstants.SHIPPER_NAME);
+        setCellValue(row, 18, ReportConstants.RETURN_ADDRESS1);
+        setCellValue(row, 19, ReportConstants.RETURN_ADDRESS2);
+        setCellValue(row, 20, ReportConstants.RETURN_ADDRESS3);
+        setCellValue(row, 21, ReportConstants.RETURN_PIN);
+        setCellValue(row, 22, ReportConstants.LENGTH);
+        setCellValue(row, 23, ReportConstants.BREADTH);
+        setCellValue(row, 24, ReportConstants.HEIGHT);
+        setCellValue(row, 25, ReportConstants.PIECES);
+        setCellValue(row, 26, ReportConstants.AREA_CUSTOMER_CODE);
 
 
         int rowCounter = 1;
@@ -571,19 +570,19 @@ public class ReportManager {
             }
             if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
                 setCellValue(row, 1, "COD");
-                setCellValue(row, 14, order.getAmount());
+                setCellValue(row, 15, order.getAmount());
                 if (warehouse.getId().equals(WarehouseService.DEFAULT_WAREHOUSE_ID)) {
-                    setCellValue(row, 15, ReportConstants.Ggn_Cod_Vendor_Code);
+                    setCellValue(row, 16, ReportConstants.Ggn_Cod_Vendor_Code);
                 } else if (warehouse.getId().equals(WarehouseService.MUMBAI_WAREHOUSE_ID)) {
-                    setCellValue(row, 15, ReportConstants.Mumbai_Cod_Vendor_Code);
+                    setCellValue(row, 16, ReportConstants.Mumbai_Cod_Vendor_Code);
                 }
             } else {
-                setCellValue(row, 14, 0.0);
+                setCellValue(row, 15, 0.0);
                 setCellValue(row, 1, "Non-COD");
                 if (warehouse.getId().equals(WarehouseService.DEFAULT_WAREHOUSE_ID)) {
-                    setCellValue(row, 15, ReportConstants.Ggn_Prepaid_Vendor_Code);
+                    setCellValue(row, 16, ReportConstants.Ggn_Prepaid_Vendor_Code);
                 } else if (warehouse.getId().equals(WarehouseService.MUMBAI_WAREHOUSE_ID)) {
-                    setCellValue(row, 15, ReportConstants.Mumbai_Prepaid_Vendor_Code);
+                    setCellValue(row, 16, ReportConstants.Mumbai_Prepaid_Vendor_Code);
                 }
 
             }
@@ -622,28 +621,37 @@ public class ReportManager {
             setCellValue(row, 11, contains);
             setCellValue(row, 12, contains);
             if (shipment.getBoxWeight() != null) {
-                setCellValue(row, 12, shipment.getBoxWeight());
+                setCellValue(row, 13, shipment.getBoxWeight());
             }
             Double declaredValue = order.getAmount();
             // for (LineItem lineItem : lineItems) {
             // declaredValue += lineItem.getQty() * lineItem.getMarkedPrice();
             // }
-            setCellValue(row, 13, declaredValue);
-            setCellValue(row, 16, "AQUAMARINE HEALTHCARE");
+            setCellValue(row, 14, declaredValue);
+            setCellValue(row, 17, "AQUAMARINE HEALTHCARE");
 
-            setCellValue(row, 17, warehouse.getLine1());
+            setCellValue(row, 18, warehouse.getLine1());
             if (warehouse.getLine2() != null) {
-                setCellValue(row, 18, warehouse.getLine2());
+                setCellValue(row, 19, warehouse.getLine2());
             }
             if (warehouse.getLine2() != null) {
-                setCellValue(row, 19, warehouse.getCity() + "/" + warehouse.getState());
+                setCellValue(row, 20, warehouse.getCity() + "/" + warehouse.getState());
             }
-            setCellValue(row, 20, warehouse.getPincode());
-            setCellValue(row, 21, "len");
-            setCellValue(row, 22, "bread");
-            setCellValue(row, 23, "hei  ");
-            setCellValue(row, 24, "1");
-            setCellValue(row, 25, "are code ");
+            setCellValue(row, 21, warehouse.getPincode());
+            Double boxWeight = shipment.getBoxWeight();
+            Double length;
+            Double breadth;
+            Double height;
+            String lengthBreadthHeightString = EnumBoxSize.getLengthBreadthHeight(boxWeight);
+            String[] dimensions = lengthBreadthHeightString.split(",");
+            length = Double.parseDouble(dimensions[0]);
+            breadth = Double.parseDouble(dimensions[1]);
+            height = Double.parseDouble(dimensions[2]);
+            setCellValue(row, 22, length);
+            setCellValue(row, 23, breadth);
+            setCellValue(row, 24, height);
+            setCellValue(row, 25, "1");
+            setCellValue(row, 26, "NA");
 
 
         }
@@ -815,7 +823,7 @@ public class ReportManager {
     }
 
     public File generateReconciliationReport(String xslFilePath, Date startDate, Date endDate, OrderStatus orderStatus, PaymentMode paymentMode, Courier codMode,
-            ReconciliationStatus reconciliationStatus) throws Exception {
+                                             ReconciliationStatus reconciliationStatus) throws Exception {
         /*
          * File file = new File(xslFilePath); FileOutputStream out = new FileOutputStream(file); Workbook wb = new
          * HSSFWorkbook(); CellStyle style = wb.createCellStyle(); Font font = wb.createFont();
@@ -1294,7 +1302,7 @@ public class ReportManager {
 
     }
 
-    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted) throws Exception {
+    public File generateNotifyMeList(String xlsFilePath, Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted) throws Exception {
 
         // return null;
         File file = new File(xlsFilePath);
@@ -1373,7 +1381,7 @@ public class ReportManager {
      * googleBannedWordDaoProvider.get().getGoogleBannedWordDtoList(); return googleBannedWordDtoList; }
      */
     public File generateSaleForProductsByTaxAndStatusInRegion(List<Tax> taxList, List<OrderStatus> orderStatusList, String inRegion, String xlsFilePath, Date startDate,
-            Date endDate) {
+                                                              Date endDate) {
 
         /*
          * List<DaySaleDto> result = orderDaoProvider.get().findSaleForProductsByTaxAndStatusInRegion(taxList,
@@ -1506,7 +1514,7 @@ public class ReportManager {
         xlsWriter.addHeader("BO_GATEWAY_ID", "BO_GATEWAY_ID");
         xlsWriter.addHeader("NAME", "NAME");
         xlsWriter.addHeader("ORDER_DATE", "ORDER_DATE");
-	    xlsWriter.addHeader("PAYMENT_STATUS", "PAYMENT_STATUS");
+        xlsWriter.addHeader("PAYMENT_STATUS", "PAYMENT_STATUS");
         xlsWriter.addHeader("CATEGORY", "CATEGORY");
         xlsWriter.addHeader("ITEM_NAME", "ITEM_NAME");
         xlsWriter.addHeader("BRAND", "BRAND");
@@ -1533,7 +1541,7 @@ public class ReportManager {
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getGatewayOrderId());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getAddress().getName());
                 xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentDate());
-	            xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentStatus().getName());
+                xlsWriter.addCell(rowCounter, cartLineItem.getOrder().getPayment().getPaymentStatus().getName());
 
                 productVariant = cartLineItem.getProductVariant();
                 xlsWriter.addCell(rowCounter, getCategoryService().getTopLevelCategory(productVariant.getProduct()).getDisplayName());
