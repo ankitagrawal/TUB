@@ -12385,6 +12385,12 @@
     <!--<changeSet author="Pratham (generated)" id="1366787798141-37">-->
         <!--<dropColumn columnName="secondary_classification" tableName="reason"/>-->
     <!--</changeSet>-->
+    <changeSet author="Rajesh" id="24-04-2013-01">
+    		<sql>
+              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing") on duplicate key update display_name = 'Dynamic Remarketing';
+            </sql>
+       </changeSet>
+
     <changeSet author="Seema (generated)" id="1365072411708-1">
         <addColumn tableName="cycle_count">
             <column name="brand" type="VARCHAR(100)"/>

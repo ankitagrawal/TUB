@@ -26,7 +26,7 @@ public class PoLineItemServiceImpl implements PoLineItemService {
 
 	public void updatePoLineItemFillRate(GoodsReceivedNote grn, GrnLineItem grnLineItem, Long grnLineItemQty) {
 
-		Long totalLineItemQtyInOtherGrns = getGrnLineItemService().getGrnLineItemQtyAlreadySet(grn, grnLineItem.getSku());
+		Long totalLineItemQtyInOtherGrns = getGrnLineItemService().getGrnLineItemCheckedInQty(grn, grnLineItem.getSku());
 		Long poLineItemQty = getGrnLineItemService().getPoLineItemQty(grnLineItem);
 		Double fillRate = 0D;
 
