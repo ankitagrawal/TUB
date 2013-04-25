@@ -14,7 +14,6 @@ import java.util.Map;
  * User: Pratham
  * Date: 10/04/13  Time: 15:54
 */
-@Service
 public interface BucketService {
 
     public List<Param> getParamsForBucket(List<Bucket> bucketList);
@@ -33,8 +32,11 @@ public interface BucketService {
 
     ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> buckets);
 
+    ActionItem changeBucket(ShippingOrder shippingOrder, Bucket bucket);
+
     List<Bucket> findBucket(List<String> name, Classification classification);
 
     ActionItem saveActionItem(ActionItem actionItem);
 
+    ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
 }

@@ -154,16 +154,14 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     public List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
         Set<String> categoryNames = new HashSet<String>();
-        if(!shippingOrder.isServiceOrder()){
-            for (LineItem lineItem : shippingOrder.getLineItems()) {
-                Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku());
-                ProductVariant productVariant = lineItem.getSku().getProductVariant();
-                if (availableUnbookedInv < 0) {
-                    categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-                }
-                if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
-                    categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-                }
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku());
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (availableUnbookedInv < 0) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
             }
         }
         actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
@@ -176,6 +174,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         List<Reason> reasons = new ArrayList<Reason>();
         if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+                if(shippingOrder.isServiceOrder()){
+                    return true;
+                }
                 if (shippingOrder.isDropShipping()) {
                     reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
@@ -301,33 +302,22 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Transactional
     public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-		shippingOrder.setLastEscDate(HKDateUtil.getNow());
-		if(shippingOrder.isDropShipping()){
-			shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-		} else{
-        	shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-		}
-        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-
-        if (isAutoEsc) {
-            User adminUser = getUserService().getAdminUser();
-            logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
-                    null, null);
-            bucketService.changeBucket(shippingOrder, Arrays.asList(EnumBucket.Warehouse.asBucket()));
-        } else {
-			if(shippingOrder.isDropShipping()){
-				logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
-				emailManager.sendEscalationToDropShipEmail(shippingOrder);
-                bucketService.changeBucket(shippingOrder, Arrays.asList(EnumBucket.Vendor.asBucket()));
-			} else{
-            	logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
-                bucketService.changeBucket(shippingOrder, Arrays.asList(EnumBucket.Warehouse.asBucket()));
-			}
+        User adminUser = getUserService().getAdminUser();
+        EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ? EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
+        EnumShippingOrderLifecycleActivity applicableActivity = isAutoEsc ? EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue : EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue;
+        shippingOrder.setLastEscDate(HKDateUtil.getNow());
+        shippingOrder.setOrderStatus(applicableStatus.asShippingOrderStatus());
+        User user = isAutoEsc ? adminUser : userService.getLoggedInUser();
+        logShippingOrderActivity(shippingOrder, user, applicableActivity.asShippingOrderLifecycleActivity(), null, null);
+        if (shippingOrder.isDropShipping()) {
+            emailManager.sendEscalationToDropShipEmail(shippingOrder);
         }
-
+        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
+        bucketService.escalateOrderFromActionQueue(shippingOrder);
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
+
     /**
      * Creates a shipping order with basic details
      * 

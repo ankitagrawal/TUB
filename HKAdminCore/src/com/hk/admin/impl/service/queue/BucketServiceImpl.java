@@ -100,10 +100,14 @@ public class BucketServiceImpl implements BucketService {
     public ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> bucketList) {
         ActionItem actionItem = existsActionItem(shippingOrder);
         if (actionItem != null) {
-            actionItem.setBuckets(bucketList);
-            actionItem = saveActionItem(actionItem);
+            actionItem = changeBucket(actionItem, bucketList);
         }
         return actionItem;
+    }
+
+    @Override
+    public ActionItem changeBucket(ShippingOrder shippingOrder, Bucket bucket) {
+        return changeBucket(shippingOrder, Arrays.asList(bucket));
     }
 
     @Override
@@ -114,6 +118,12 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public ActionItem saveActionItem(ActionItem actionItem) {
         return actionItemDao.save(actionItem);
+    }
+
+    @Override
+    public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
+        Bucket actionableBucket = shippingOrder.isDropShipping() ? EnumBucket.Vendor.asBucket() : EnumBucket.Warehouse.asBucket();
+        return changeBucket(shippingOrder, actionableBucket);
     }
 
 }

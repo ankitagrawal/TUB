@@ -737,12 +737,14 @@ public class OrderServiceImpl implements OrderService {
                     bucketService.allocateBuckets(shippingOrder);
                 }
             }
+
             for (ShippingOrder shippingOrder : shippingOrders) {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
             setTargetDatesOnBO(order);
+            shippingOrderAlreadyExists = true;
         }
 
 
