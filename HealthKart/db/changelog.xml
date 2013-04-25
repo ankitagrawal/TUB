@@ -12387,7 +12387,7 @@
     <!--</changeSet>-->
     <changeSet author="Rajesh" id="24-04-2013-01">
     		<sql>
-              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing");
+              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing") on duplicate key update display_name = 'Dynamic Remarketing';
             </sql>
        </changeSet>
 </databaseChangeLog>
