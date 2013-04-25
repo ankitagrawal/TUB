@@ -170,8 +170,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     private void updatePvPriceRecord(ProductVariant productVariant) {
-        Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-        boolean isAuditClosed = updatePvPriceDao.isAuditClosed(productVariant, warehouse);
+        //Warehouse warehouse = userService.getWarehouseForLoggedInUser();
+        boolean isAuditClosed = updatePvPriceDao.isAuditClosed(productVariant);
         if (isAuditClosed) {
             Long bookedInventory = this.getBookedQty(productVariant);
             SkuGroup leastMRPSkuGroup = skuGroupService.getMinMRPUnbookedSkuGroup(productVariant, bookedInventory);

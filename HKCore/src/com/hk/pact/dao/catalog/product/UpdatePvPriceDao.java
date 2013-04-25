@@ -2,9 +2,8 @@ package com.hk.pact.dao.catalog.product;
 
 import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.catalog.product.UpdatePvPrice;
 
 public interface UpdatePvPriceDao {
 
@@ -12,5 +11,5 @@ public interface UpdatePvPriceDao {
 
 	UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, Long status);
 
-	boolean isAuditClosed(ProductVariant productVariant , Warehouse warehouse);
+	boolean isAuditClosed(ProductVariant productVariant);
 }

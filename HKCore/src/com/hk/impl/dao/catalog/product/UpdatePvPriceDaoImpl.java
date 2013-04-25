@@ -6,15 +6,11 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.cycleCount.CycleCount;
-
-import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.UpdatePvPriceDao;
-import com.hk.constants.inventory.EnumAuditStatus;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,7 +44,7 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
     }
 
 
-    public boolean isAuditClosed(ProductVariant productVariant, Warehouse warehouse) {
+    public boolean isAuditClosed(ProductVariant productVariant) {
         List<Long> cycleCountOpenStatus = EnumCycleCountStatus.getListOfOpenCycleCountStatus();
 
         String brand = productVariant.getProduct().getBrand();
@@ -56,11 +52,11 @@ public class UpdatePvPriceDaoImpl extends BaseDaoImpl implements UpdatePvPriceDa
         String productId = productVariant.getProduct().getId();
 
         String sql = "select cc.brand as brand , cc.product.id as productId  , cc.productVariant.id as productVariantId  from CycleCount cc left join cc.product " +
-                "  left join cc.productVariant  where cc.warehouse.id = :warehouseId  " +
-                "and cc.cycleStatus in (:cycleStatusList) ";
+                "  left join cc.productVariant  where   " +
+                " cc.cycleStatus in (:cycleStatusList) ";
         sql = sql + " and (cc.productVariant.id = :productVariantId or cc.brand = :brand or cc.product.id = :productId) ";
 
-        Query query = getSession().createQuery(sql).setParameter("warehouseId", warehouse.getId()).setParameterList("cycleStatusList", cycleCountOpenStatus)
+        Query query = getSession().createQuery(sql).setParameterList("cycleStatusList", cycleCountOpenStatus)
                 .setParameter("productVariantId", variantId).setParameter("productId", productId).setParameter("brand", brand);
         List<CycleCount> cycleCountList = query.list();
         if (cycleCountList != null && cycleCountList.size() > 0) {
