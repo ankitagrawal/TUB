@@ -70,6 +70,7 @@ public class ShippingOrder implements java.io.Serializable {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
+    @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private ActionItem actionItem;
 

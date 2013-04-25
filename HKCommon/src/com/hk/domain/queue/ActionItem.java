@@ -30,6 +30,7 @@ public class ActionItem implements java.io.Serializable {
     private TrafficState trafficState;
 
     @JoinColumn(name = "shipping_order_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
     private ShippingOrder shippingOrder;
 
     @JsonSkip
