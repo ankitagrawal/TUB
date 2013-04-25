@@ -346,7 +346,6 @@ public class POSAction extends BaseAction {
 			shippingOrderService.save(shippingOrder);
 			reverseOrder.setReceivedDate(new Date());
 			reverseOrder.setReconciliationStatus(EnumReconciliationStatus.DONE.asReconciliationStatus());
-			reverseOrder.setReverseOrderType(ReverseOrderTypeConstants.POS_RETURN_ORDER);
 			reverseOrderService.save(reverseOrder);
 			addRedirectAlertMessage(new SimpleMessage("Reverse Order Created"));
 			return new RedirectResolution(POSAction.class);

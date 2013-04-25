@@ -25,30 +25,30 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 		return (ReverseOrder) super.save(reverseOrder);
 	}
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage){
-        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId), page, perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage){
+        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId), page, perPage);
     }
 
 //	 public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus) {
 //        return findByCriteria(getPickupSearchCriteria(pickupStatus, reconciliationStatusId));
 //    }
 
-	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId) {
-        DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
+	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId) {
+		DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
 		DetachedCriteria courierDetailCriteria = null;
-		orderCriteria.add(Restrictions.in("reverseOrderType", ReverseOrderTypeConstants.getReverseOrderTypes()));
+
 		if(shippingOrderId != null){
 			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
 			shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));
 		}
 
-        if (pickupStatusId != null){
+		if (pickupStatusId != null){
 			courierDetailCriteria = orderCriteria.createCriteria("courierPickupDetail");
 			DetachedCriteria pickupStatusCriteria = courierDetailCriteria.createCriteria("pickupStatus");
-            pickupStatusCriteria.add(Restrictions.eq("id", pickupStatusId));
+			pickupStatusCriteria.add(Restrictions.eq("id", pickupStatusId));
 		}
-		
-	    if (reconciliationStatusId != null) {
+
+		if (reconciliationStatusId != null) {
 			DetachedCriteria reconciliationCriteria = orderCriteria.createCriteria("reconciliationStatus");
 			reconciliationCriteria.add(Restrictions.eq("id", reconciliationStatusId));
 		}
@@ -61,8 +61,15 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 			courierCriteria.add((Restrictions.eq("id", courierId)));
 		}
 
-        return orderCriteria;
-    }
+		if(warehouseId != null){
+			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+			DetachedCriteria warehouseCriteria = shippingOrderCriteria.createCriteria("warehouse");
+			warehouseCriteria.add(Restrictions.eq("id", warehouseId));
+
+		}
+
+		return orderCriteria;
+	}
 
 	public ReverseOrder getReverseOrderById(Long id){
 		return (ReverseOrder) super.findUniqueByNamedQueryAndNamedParam("getReverseOrderById", new String[]{"reverseOrderId"}, new Object[]{id});
