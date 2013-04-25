@@ -38,6 +38,7 @@ public class ActionItem implements java.io.Serializable {
     @JoinTable(name = "action_item_buckets", uniqueConstraints = @UniqueConstraint(columnNames = {"action_item_id", "bucket_id"}), joinColumns = {@JoinColumn(name = "action_item_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)})
     private List<Bucket> buckets = new ArrayList<Bucket>(0);
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter", nullable = false)
     private User reporter;
 
@@ -58,7 +59,7 @@ public class ActionItem implements java.io.Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "watcher", uniqueConstraints = @UniqueConstraint(columnNames = {"action_item_id", "user_id"}), joinColumns = {@JoinColumn(name = "action_item_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)})
-    private Set<User> watchers = new HashSet<User>(0);
+    private List<User> watchers = new ArrayList<User>(0);
 
     public Long getId() {
         return this.id;
@@ -140,11 +141,11 @@ public class ActionItem implements java.io.Serializable {
         this.popDate = popDate;
     }
 
-    public Set<User> getWatchers() {
+    public List<User> getWatchers() {
         return watchers;
     }
 
-    public void setWatchers(Set<User> watchers) {
+    public void setWatchers(List<User> watchers) {
         this.watchers = watchers;
     }
 }
