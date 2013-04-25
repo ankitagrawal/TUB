@@ -12,7 +12,7 @@
 
 		<s:useActionBean
 			beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
-
+		<s:errors/>
 		<s:form
 			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
 			id="selectAddress">
@@ -31,14 +31,12 @@
 								<tr>
 									<td>
 										<address>
-											<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
-											        event="confirm" style="font-size:15px; text-decoration: none;">
+											<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" event="confirm" class= "blue">
 												<s:param name="selectedAddressId" value="${address.id}"/>
 												<strong>${address.name}</strong><br> ${address.line1},
 												${address.line2}<br> ${address.city}<br>
-												${address.state}, ${address.pincode.pincode}<br> <abbr
-													title="Phone">P:</abbr>
-												${address.phone}
+												${address.state}, ${address.pincode.pincode}<br> 
+												Ph: ${address.phone}
 											</s:link>
 										</address>
 									</td>
@@ -150,7 +148,7 @@
 				<div class="span9"></div>
 				<div class="span3">
 					<div class="pull-right">
-						<s:submit name="confirm" value="Confirm Shipping Address"
+						<s:submit name="confirm" value="Confirm Shipping Address" onclick="return confirm('Confirm your address?');"
 							class="btn btn-primary" />
 					</div>
 				</div>

@@ -7,6 +7,11 @@ import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidateNestedProperties;
+import net.sourceforge.stripes.validation.ValidationErrors;
+import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
@@ -22,6 +27,15 @@ import com.hk.pact.dao.courier.PincodeDao;
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	private List<Address> addressList = new ArrayList<Address>();
+	
+	@ValidateNestedProperties({
+		@Validate(field="name" , required=true, on="confirm"),
+		@Validate(field="line1" , required=true, on="confirm"),
+		@Validate(field="city" , required=true, on="confirm"),
+		@Validate(field="state" , required=true, on="confirm"),
+		@Validate(field="pincode" , required=true, on="confirm"),
+		@Validate(field="phone" , required=true, minlength=10, maxlength=16, on="confirm")		
+		})
 	private Address address;
 	private String pincode;
 	private Long selectedAddressId;
@@ -31,28 +45,37 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	@DefaultHandler
 	public Resolution viewAddressList() {
-		addressList = getProcessor().getUserAddresses(getPrincipal().getId());
+		this.addressList = this.getProcessor().getUserAddresses(this.getPrincipal().getId());
 		return new ForwardResolution("/pages/loyalty/address.jsp"); 
 	}
 	
 	
 	public Resolution confirm() {
-		if(address == null) {
-			address = addressDao.get(Address.class, selectedAddressId);
+		if(this.address != null) {
+			this.address = this.addressDao.get(Address.class, this.selectedAddressId);
 		} else {
-			Pincode pin = pincodeDao.getByPincode(pincode);
-			address.setPincode(pin);
-			Country country = addressDao.get(Country.class, 80l);
-			address.setCountry(country);
+			Pincode pin = this.pincodeDao.getByPincode(this.pincode);
+			this.address.setPincode(pin);
+			Country country = this.addressDao.get(Country.class, 80l);
+			this.address.setCountry(country);
 		}
-		Long orderId = getProcessor().getCart(getPrincipal().getId()).getId();
-		getProcessor().setShipmentAddress(orderId, address);
+		Long orderId = this.getProcessor().getCart(this.getPrincipal().getId()).getId();
+		this.getProcessor().setShipmentAddress(orderId, this.address);
 		
 		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	
+	@ValidationMethod(on="confirm" )
+	public void validatePincode(ValidationErrors errors) {
+		errors = this.getContext().getValidationErrors();
+		Pincode pin = this.pincodeDao.getByPincode(this.pincode);
+		if (pin == null ) {
+			errors.add(this.pincode, new SimpleError(" The pincode {1} is not supported for delivery." ));
+	}
+	}
+	
 	public List<Address> getAddressList() {
-		return addressList;
+		return this.addressList;
 	}
 
 	public void setAddressList(List<Address> addressList) {
@@ -60,7 +83,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 
 	public Address getAddress() {
-		return address;
+		return this.address;
 	}
 	
 	public void setAddress(Address address) {
@@ -68,7 +91,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 
 	public Long getSelectedAddressId() {
-		return selectedAddressId;
+		return this.selectedAddressId;
 	}
 
 	public void setSelectedAddressId(Long selectedAddressId) {
@@ -76,7 +99,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 	
 	public String getPincode() {
-		return pincode;
+		return this.pincode;
 	}
 	
 	public void setPincode(String pincode) {

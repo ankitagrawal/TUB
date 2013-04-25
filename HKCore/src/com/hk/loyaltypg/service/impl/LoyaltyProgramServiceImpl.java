@@ -73,7 +73,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		DetachedCriteria distinctCriteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		int fromIndex = searchCriteria.getStartRow();
 		int toIndex = searchCriteria.getStartRow() + searchCriteria.getMaxRows();
-		if (searchCriteria.getMaxRows() == 0 || toIndex > ids.size()) {
+		toIndex = ids.size() < toIndex ? ids.size() : toIndex;
+		if (searchCriteria.getMaxRows() == 0) {
 			distinctCriteria.add(Restrictions.in("id", ids));
 		} else {
 			distinctCriteria.add(Restrictions.in("id", ids.subList(fromIndex, toIndex)));
@@ -83,8 +84,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public int countProucts(SearchCriteria criteria) {
+
 		DetachedCriteria crit = this.prepareLoyaltyProductCriteria(criteria);
 		crit.setProjection(Projections.distinct(Projections.id()));
+	
 		@SuppressWarnings("unchecked")
 		List<Long> ids = this.loyaltyProductDao.findByCriteria(crit);
 		if (ids == null) {

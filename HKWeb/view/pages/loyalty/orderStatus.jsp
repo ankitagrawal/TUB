@@ -6,21 +6,31 @@
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
-		<div class="row">
-			<div class="span12">
-				Your order ID is <strong>${pla.order.gatewayOrderId}</strong>
-			</div>
-		</div>
+	<div class="mainContainer embedMarginTop50">
+      <div class="container_16 clearfix">
+        <div class="mainContent">
+			<c:if test="${empty pla.errorMessage}">
+			
 		
-		<c:if test="${empty pla.errorMessage}">
-			<div class="row">
-				<div class="span4"></div>
-				<div class="span4">
-					<h4>Order Processed Successfully</h4>
-				</div>
-				<div class="span4"></div>
-			</div>
-		</c:if>
+          <div class="congratsText">
+            Congratulations. Your order has been placed.
+          </div>
+
+          <div class="orderIdText">
+            Your order ID is ${pla.order.gatewayOrderId}.
+          </div>
+
+          <div class="confirmationEmailText" style="border-bottom: 1px solid #ddd;">
+                <p>You will shortly be getting a confirmation email. The Dispatch date for each product is mentioned below.
+                The delivery time would be above that and the delivery date will vary according to your location.</p>
+          </div>
+
+          <div class="queryText">
+                <p>For any query please call us: 0124-4502950 or you can drop us an email at info@healthkart.com with your Order ID.</p>
+          </div>
+
+          
+			</c:if>
 		<c:if test="${not empty pla.errorMessage}">
 			<div class="row">
 				<div class="span12">
@@ -31,7 +41,12 @@
 				</div>
 			</div>
 		</c:if>
-		<hr>
+
+        </div>
+
+      </div>
+    </div>
+		
 	</stripes:layout-component>
 </stripes:layout-render>
 

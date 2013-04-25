@@ -78,10 +78,10 @@
 								<td width="30%">
 
 									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}"
-								           style="width:25px;height:24px;"/>
+								           style="width:30px;height:24px;"/>
 									<br/>
 									<span class="error-message" style="font-size:12px; color:red; font-weight:200; margin-left: -30px; display:none">
-										Not enough karma points to increase the quantity.
+										Not enough stellar points to increase the quantity.
 									</span>
 								</td>
 								<td>${lp.points}</td>

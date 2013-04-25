@@ -45,6 +45,7 @@ import com.hk.domain.order.PrimaryReferrerForOrder;
 import com.hk.domain.order.SecondaryReferrerForOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
@@ -146,7 +147,7 @@ public class OrderManager {
 
     @Transactional
     public Order getOrCreateOrder(User user) {
-       Order order = this.getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+       Order order = this.getOrderService().findCart(user, EnumStore.HEALTHKART.asStore());
         if (order != null && !order.isSubscriptionOrder()) {
 			return order;
 		}
@@ -160,7 +161,7 @@ public class OrderManager {
         if (user.getRoleStrings().contains(EnumRole.B2B_USER.getRoleName())) {
             order.setB2bOrder(true);
         }
-        Order existingOrderNow = this.getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+        Order existingOrderNow = this.getOrderService().findCart(user, EnumStore.HEALTHKART.asStore());
         if (existingOrderNow != null) {
             return existingOrderNow;
         }

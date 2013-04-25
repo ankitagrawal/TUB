@@ -99,7 +99,7 @@ pageContext.setAttribute("isSecure", isSecure);
             success: function(resp) {
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
                 $("#" + form.context.id + ' input').attr('class', 'btn');
-                $("#" + form.context.id + ' input').attr('value', 'Added to Cart »');
+                $("#" + form.context.id + ' input').attr('value', 'Added to Cart');
                 $("#" + form.context.id + ' input').disabled = true;
 
                 $('#successToolTip').attr('style', '');
@@ -159,10 +159,11 @@ pageContext.setAttribute("isSecure", isSecure);
 				<div class="product clickable">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
+				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
-					<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+					<a href="${hk:getS3ImageUrl(imageMediumSize, imageId ,isSecure)}" class="jqzoom" rel='gal1'
 						title="${product.name}">
-					<img src="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" alt="${product.name}"
+					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId,isSecure)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" ></a>
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>

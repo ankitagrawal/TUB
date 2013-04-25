@@ -19,7 +19,8 @@
     <link href="/healthkart/pages/loyalty/resources/css/style.css" rel="stylesheet">
     <%-- <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet"> --%>
     <link href="/healthkart/pages/loyalty/resources/css/jquery.jscrollpane.css" rel="stylesheet">
-	<script src="<hk:vhostJs/>/pages/loyalty/resources/js/bootstrap.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js" > </script>
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootstrap.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jscrollpane.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery.jcarousel.min.js"></script>
