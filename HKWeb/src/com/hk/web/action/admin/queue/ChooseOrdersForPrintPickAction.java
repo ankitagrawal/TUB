@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.util.DateUtils;
 import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
@@ -67,6 +68,8 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     private Date                       endDate;
     private Date                       paymentStartDate;
     private Date                       paymentEndDate;
+    private Date                       endTargetDispatchDate;
+    private Date                       startTargetDispatchDate;
 
     private String                     brand;
 
@@ -84,11 +87,10 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
         StringBuilder messageString = new StringBuilder();
         if (shippingOrdersList != null && shippingOrdersList.size() > 0) {
             messageString.append(Integer.toString(shippingOrdersList.size()));
-            messageString.append(" Orders selected for " + getActionMessage(action));
+            messageString.append(" Orders selected for ").append(getActionMessage(action));
         } else {
-            messageString.append("No orders found for " + getActionMessage(action));
+            messageString.append("No orders found for ").append(getActionMessage(action));
         }
-
         return messageString.toString();
     }
 
@@ -96,6 +98,24 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     @DefaultHandler
     @Secure(hasAnyPermissions = { PermissionConstants.VIEW_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
+        List<ShippingOrder> existingOrdersInPickingQueue = getShippingOrdersForPicking();
+        if (existingOrdersInPickingQueue != null && !existingOrdersInPickingQueue.isEmpty()) {
+            shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_MarkedForPrinting);
+            shippingOrdersList = existingOrdersInPickingQueue;
+            addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PICKING)));
+        }else{
+            shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting(), true, false, false);
+            shippingOrdersList = getShippingOrdersForPrintingInCategory(shippingOrderSearchCriteria);
+            addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
+        }
+        if(shippingOrdersList == null || shippingOrdersList.isEmpty()){
+            shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting(), false, true, false);
+            shippingOrdersList = getShippingOrdersForPrintingInCategory(shippingOrderSearchCriteria);
+            addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
+        }
+
         return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
     }
 
@@ -108,57 +128,58 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PICKING)));
         } else {
             shippingOrderStatus = getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess);
-            shippingOrdersList = getShippingOrdersForPrintingInCategory();
+            ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting(), false, false, true);
+            shippingOrdersList = getShippingOrdersForPrintingInCategory(shippingOrderSearchCriteria);
             addRedirectAlertMessage(new SimpleMessage(getRedirectMessage(PRINTING)));
         }
-
         return new ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
     }
 
-    private ShippingOrderSearchCriteria getShippingOrderSearchCriteria(List<EnumShippingOrderStatus> shippingOrderStatuses) {
+    private ShippingOrderSearchCriteria getShippingOrderSearchCriteria(List<EnumShippingOrderStatus> shippingOrderStatuses, boolean dfault, boolean backup, boolean custom) {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setSearchForPrinting(true);
         shippingOrderSearchCriteria.setServiceOrder(false);
         shippingOrderSearchCriteria.setShippingOrderStatusList(getShippingOrderStatusService().getOrderStatuses(shippingOrderStatuses));
-
-        if (baseGatewayOrderId != null) {
-            shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
-        } else if (gatewayOrderId != null) {
-            shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
-        } else if (startDate != null && endDate != null) {
-            shippingOrderSearchCriteria.setLastEscStartDate(startDate);
-            shippingOrderSearchCriteria.setLastEscEndDate(endDate);
-        } else if (paymentStartDate != null && paymentEndDate != null) {
-            shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
-            shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
-        } else if(courier !=null){
-            List<Courier> couriers = new ArrayList<Courier>();
-            couriers.add(courier);
-            shippingOrderSearchCriteria.setCourierList(couriers);
+        if(!backup){
+            shippingOrderSearchCriteria.setSearchForPrinting(true);
+        }else{
+            shippingOrderSearchCriteria.setPaymentStartDate(DateUtils.getStartOfPreviousYear(new Date())).setPaymentEndDate(DateUtils.getStartOfThisDay(new Date()));
+            shippingOrderSearchCriteria.setSortByPaymentDate(true);
         }
-        else {
-            shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
+        if(dfault){
+            shippingOrderSearchCriteria.setStartTargetDispatchDate(DateUtils.getStartOfPreviousYear(new Date())).setEndTargetDispatchDate(DateUtils.getEndOfDay(new Date()));
         }
-
+        if(custom){
+            if (baseGatewayOrderId != null) {
+                shippingOrderSearchCriteria.setBaseGatewayOrderId(baseGatewayOrderId);
+            } else if (gatewayOrderId != null) {
+                shippingOrderSearchCriteria.setGatewayOrderId(gatewayOrderId);
+            } else if (startDate != null && endDate != null) {
+                shippingOrderSearchCriteria.setLastEscStartDate(startDate);
+                shippingOrderSearchCriteria.setLastEscEndDate(endDate);
+            } else if (paymentStartDate != null && paymentEndDate != null) {
+                shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate);
+                shippingOrderSearchCriteria.setPaymentEndDate(paymentEndDate);
+            } else if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
+                shippingOrderSearchCriteria.setStartTargetDispatchDate(startTargetDispatchDate);
+                shippingOrderSearchCriteria.setEndTargetDispatchDate(endTargetDispatchDate);
+            } else if (courier != null) {
+                List<Courier> couriers = new ArrayList<Courier>();
+                couriers.add(courier);
+                shippingOrderSearchCriteria.setCourierList(couriers);
+            } else if (category != null) {
+                shippingOrderSearchCriteria.setBasketCategory(category.getName()).setBaseGatewayOrderId(baseGatewayOrderId).setGatewayOrderId(gatewayOrderId);
+            }
+        }
         return shippingOrderSearchCriteria;
     }
 
-    /*
-     * private void updateShippingOrdersForPrinting() { ShippingOrderSearchCriteria shippingOrderSearchCriteria =
-     * getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting()); shippingOrdersPage =
-     * shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 10); //hard coding to get it working
-     * shippingOrdersList = shippingOrdersPage.getList(); }
-     */
-
     private List<ShippingOrder> getShippingOrdersForPicking() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPicking());
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPicking(), false, false, true);
 
         return getShippingOrderService().searchShippingOrders(shippingOrderSearchCriteria);
     }
 
-    private List<ShippingOrder> getShippingOrdersForPrintingInCategory() {
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria(EnumShippingOrderStatus.getStatusForPrinting());
-
+    private List<ShippingOrder> getShippingOrdersForPrintingInCategory( ShippingOrderSearchCriteria shippingOrderSearchCriteria) {
         shippingOrdersPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, 1, 60);
         // shippingOrdersList = shippingOrdersPage.getList();
         shippingOrdersList = filterShippingOrdersByBrand(shippingOrdersPage);
@@ -191,13 +212,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
                 getAdminShippingOrderService().moveShippingOrderBackToPackingQueue(shippingOrder);
             }
         }
-        /*
-         * addRedirectAlertMessage(new SimpleMessage("Selected orders are sent back to processing queue")); return new
-         * ForwardResolution("/pages/admin/chooseOrdersForPrintingPicking.jsp");
-         */
-
         return searchOrdersForPrinting();
-
     }
 
     public Resolution clearPickingQueue() {
@@ -207,12 +222,6 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
                 getAdminShippingOrderService().moveShippingOrderToPickingQueue(shippingOrder);
             }
         }
-
-        /*
-         * addRedirectAlertMessage(new SimpleMessage("Selected orders are cleared and marked for picking")); return new
-         * RedirectResolution(ChooseOrdersForPrintPickAction.class);
-         */
-
         return searchOrdersForPrinting();
     }
 
@@ -224,7 +233,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
             brandsToExclude = getBrandsToAuditDao().brandsToBeAudited(warehouse);
         }
         for (ShippingOrder shippingOrder : shippingOrdersTempList) {
-            if (shippingOrdersList.size() == 10) {
+            if (shippingOrdersList.size() == 20) {
                 break;
             }
             boolean shouldAdd = true;
@@ -247,7 +256,7 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     }
 
     public int getPerPageDefault() {
-        return 10;
+        return 20;
     }
 
     public int getPageCount() {
@@ -261,12 +270,6 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     public Set<String> getParamSet() {
         return null;
     }
-
-    /*
-     * public Set<ShippingOrder> getPrintingPickingQueueOrders() { return printingPickingQueueOrders; } public void
-     * setPrintingPickingQueueOrders(Set<ShippingOrder> printingPickingQueueOrders) { this.printingPickingQueueOrders =
-     * printingPickingQueueOrders; }
-     */
 
     public Page getShippingOrdersPage() {
         return shippingOrdersPage;
@@ -398,5 +401,23 @@ public class ChooseOrdersForPrintPickAction extends BasePaginatedAction {
     @Validate(converter = CustomDateTypeConvertor.class)
     public void setPaymentEndDate(Date paymentEndDate) {
         this.paymentEndDate = paymentEndDate;
+    }
+
+    public Date getEndTargetDispatchDate() {
+        return endTargetDispatchDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setEndTargetDispatchDate(Date endTargetDispatchDate) {
+        this.endTargetDispatchDate = endTargetDispatchDate;
+    }
+
+    public Date getStartTargetDispatchDate() {
+        return startTargetDispatchDate;
+    }
+
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setStartTargetDispatchDate(Date startTargetDispatchDate) {
+        this.startTargetDispatchDate = startTargetDispatchDate;
     }
 }

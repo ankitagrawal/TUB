@@ -191,6 +191,14 @@
             var google_remarketing_only = true;
             /* ]]> */
         </script>
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 988370835;
+            var google_conversion_label = "6HxaCN3_1wQQk6-l1wM";
+            var google_custom_params = window.google_tag_params;
+            var google_remarketing_only = true;
+            /* ]]> */
+        </script>
         <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
         </script>
         <noscript>
@@ -217,10 +225,10 @@
 			<div style="display:inline;">
 				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1011104799/?value=0&amp;label=LaMfCMGthAUQn_iQ4gM&amp;guid=ON&amp;script=0"/>
 			</div>
-			</noscript>
+	    </noscript>
         </c:if>
         
-        <c:if test = "${topLevelCategory == 'sports'}">
+        <c:if test = "${topLevelCategory == 'sports' || topLevelCategory == 'beauty'}">
         
         <!-- Google Code for Sports Master List -->
 		<!-- Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. For instructions on adding this tag and more information on the above requirements, read the setup guide: google.com/ads/remarketingsetup -->
@@ -237,6 +245,7 @@
 		<noscript>
 			<div style="display:inline;">
 				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1008616035/?value=0&amp;label=_t14CI361wQQ44T54AM&amp;guid=ON&amp;script=0"/></div>
+                <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/988370835/?value=0&amp;label=6HxaCN3_1wQQk6-l1wM&amp;guid=ON&amp;script=0"/>
 		</noscript>        
         
         </c:if>
