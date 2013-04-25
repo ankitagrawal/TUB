@@ -161,8 +161,9 @@
             <label>Select WareHouse</label>
             <s:select name="warehouse" id="warehouse">
                 <option value="">--Select--</option>
-                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse"
-                                           value="id" label="name"/>
+                <c:forEach items="${allWarehouse}" var="activeWarehouse">
+                  <option value="${activeWarehouse.id}">${activeWarehouse.identifier}</option>
+                </c:forEach>
             </s:select>
                 <br>
             <s:submit name="search" value="Search" id="search"/>

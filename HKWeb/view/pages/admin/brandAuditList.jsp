@@ -3,6 +3,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumCycleCountStatus" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Brand Audit List">
@@ -14,8 +15,8 @@
         <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     </s:layout-component>
     <%
-        WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-        pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+        WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
     %>
     <s:layout-component name="heading">
         Brands Audit List
@@ -42,7 +43,7 @@
                 <label>WH:</label><s:select name="warehouse">
                 <s:option value="">--Choose--</s:option>
                 <c:forEach items="${whList}" var="wh">
-                    <s:option value="${wh.id}">${wh.name}</s:option>
+                    <s:option value="${wh.id}">${wh.identifier}</s:option>
                 </c:forEach>
             </s:select>
                 <label>Audit Status</label><s:select name="auditStatus">
