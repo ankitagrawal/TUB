@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.UpdatePvPrice;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.warehouse.Warehouse;
 
 public interface UpdatePvPriceDao {
 
@@ -11,5 +12,5 @@ public interface UpdatePvPriceDao {
 
 	UpdatePvPrice getPVForPriceUpdate(ProductVariant productVariant, Long status);
 
-	boolean isBrandAudited(String brand);
+	boolean isAuditClosed(ProductVariant productVariant , Warehouse warehouse);
 }
