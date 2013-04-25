@@ -92,17 +92,23 @@ public enum EnumShippingOrderStatus {
 
 	public static List<EnumShippingOrderStatus> getStatusForPuttingOrderOnHold() {
 
-        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting,
-                EnumShippingOrderStatus.SO_ReadyForProcess,
-                EnumShippingOrderStatus.SO_MarkedForPrinting,
-                EnumShippingOrderStatus.SO_Picking,
-                EnumShippingOrderStatus.SO_CheckedOut,
-                EnumShippingOrderStatus.SO_Packed);
+        return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting
+//                ,
+//                EnumShippingOrderStatus.SO_ReadyForProcess,
+//                EnumShippingOrderStatus.SO_MarkedForPrinting,
+//                EnumShippingOrderStatus.SO_Picking,
+//                EnumShippingOrderStatus.SO_CheckedOut,
+//                EnumShippingOrderStatus.SO_Packed
+        );
     }
 
 
     public static List<EnumShippingOrderStatus> getStatusForActionQueue() {
         return Arrays.asList(EnumShippingOrderStatus.SO_ActionAwaiting, EnumShippingOrderStatus.SO_OnHold);//, EnumShippingOrderStatus.SO_EscalatedBack);
+    }
+
+    public static List<Long> getStatusIdsForActionQueue() {
+        return Arrays.asList(SO_ActionAwaiting.getId(), SO_OnHold.getId());
     }
 
     public static List<EnumShippingOrderStatus> getStatusForPicking() {

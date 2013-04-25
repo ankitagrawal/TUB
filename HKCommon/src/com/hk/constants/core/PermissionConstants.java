@@ -137,4 +137,7 @@ public class PermissionConstants {
 	public static final String STORE_MANAGER = "STORE_MANAGER";
 
     public static final String SPLIT_SO = "SPLIT_SO";
+    public static final String BULK_SPLIT_BO = "BULK_SPLIT_BO";
+    public static final String SPLIT_BO = "SPLIT_BO";
+    public static final String SAVE_SHIPPING_COST = "SAVE_SHIPPING_COST";
 }

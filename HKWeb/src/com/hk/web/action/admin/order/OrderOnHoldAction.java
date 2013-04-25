@@ -3,6 +3,9 @@ package com.hk.web.action.admin.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hk.constants.order.EnumOrderStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.pact.service.OrderStatusService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -31,15 +34,11 @@ import com.hk.web.action.error.AdminPermissionAction;
 @Component
 public class OrderOnHoldAction extends BaseAction {
 
-    /*
-     * OrderManager orderManager; OrderStatusDao orderStatusDao; OrderDao orderDao; UserDao userDao;
-     * OrderLifecycleActivityDao orderLifecycleActivityDao;
-     */
-    /*
-     * @Autowired private UserService userService;
-     */
     @Autowired
     private AdminOrderService         adminOrderService;
+
+    @Autowired
+    private OrderStatusService orderStatusService;
 
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
@@ -67,8 +66,14 @@ public class OrderOnHoldAction extends BaseAction {
 
     @JsonHandler
     public Resolution holdOrder() {
-        adminOrderService.putOrderOnHold(order);
-        return sendResponse(order.getOrderStatus());
+        if(order != null){
+            if(orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()).contains(order.getOrderStatus())){
+                adminOrderService.putOrderOnHold(order);
+                return sendResponse(order.getOrderStatus());
+            }
+        }
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "", null);
+        return new JsonResolution(healthkartResponse);
     }
 
     @JsonHandler
@@ -87,7 +92,12 @@ public class OrderOnHoldAction extends BaseAction {
     private Resolution sendResponse(ShippingOrderStatus shippingOrderStatus) {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrderStatus));
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
+        HealthkartResponse healthkartResponse;
+        if (EnumShippingOrderStatus.SO_OnHold.getId().equals(shippingOrderStatus.getId())) {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", data);
+        } else {
+            healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "", data);
+        }
         return new JsonResolution(healthkartResponse);
     }
 

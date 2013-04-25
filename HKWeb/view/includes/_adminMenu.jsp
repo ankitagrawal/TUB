@@ -14,12 +14,14 @@
                     <li class='lvl1 menuItem trimPadding' title="">
                         <s:link class="invert"
                                 beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Q</s:link></li>
+<%--
                     <li class='lvl1 menuItem trimPadding' title="">
                         <s:link class="invert"
                                 beanclass="com.hk.web.action.admin.queue.action.JITManagementQueueAction">JIT Action Q</s:link></li>
                     <li class='lvl1 menuItem trimPadding' title="">
                         <s:link class="invert"
                                 beanclass="com.hk.web.action.admin.queue.action.DropShipManagementQueueAction">Drop Action Q</s:link></li>
+--%>
                 </c:when>
                 <c:otherwise>
                     <li class='lvl1 menuItem trimPadding' title="">

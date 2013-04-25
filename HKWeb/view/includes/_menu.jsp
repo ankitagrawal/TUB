@@ -63,11 +63,11 @@
     <div class='menuBar' id="top">
 
         <ul id="menuUl" class='lvl1'>
-            <li class='lvl1' title='go to healthkart home' id='home_button'><s:link href='/'>
+            <%--<li class='lvl1' title='go to healthkart home' id='home_button'><s:link href='/'>
                 <div id='homeIcon'></div>
-            </s:link></li>
+            </s:link></li>--%>
             <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-                <c:if test="${topMenuNode.name != 'Baby'}">
+                <c:if test="${topMenuNode.url != '/home-living'}">
                     <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''}'>
                         <a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>
                     </li>
