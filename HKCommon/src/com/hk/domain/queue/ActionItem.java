@@ -131,6 +131,22 @@ public class ActionItem implements java.io.Serializable {
     public void setBuckets(List<Bucket> buckets) {
         this.buckets = buckets;
     }
+
+    public Date getPopDate() {
+        return popDate;
+    }
+
+    public void setPopDate(Date popDate) {
+        this.popDate = popDate;
+    }
+
+    public List<User> getWatchers() {
+        return watchers;
+    }
+
+    public void setWatchers(List<User> watchers) {
+        this.watchers = watchers;
+    }
 }
 
 
