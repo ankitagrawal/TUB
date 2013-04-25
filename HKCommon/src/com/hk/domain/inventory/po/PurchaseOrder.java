@@ -127,6 +127,9 @@ public class PurchaseOrder implements java.io.Serializable {
 
 	@Transient
 	private int noOfSku;
+	
+	@Transient
+	private Long extraInventoryId; 
 
 	public Long getId() {
 		return id;
@@ -355,6 +358,15 @@ public class PurchaseOrder implements java.io.Serializable {
   public void setExtraInventoryCreated(boolean extraInventoryCreated) {
     isExtraInventoryCreated = extraInventoryCreated;
   }
+
+  public Long getExtraInventoryId() {
+	return extraInventoryId;
+  }
+
+  public void setExtraInventoryId(Long extraInventoryId) {
+	 this.extraInventoryId = extraInventoryId;
+  }
+  
 }
 
 

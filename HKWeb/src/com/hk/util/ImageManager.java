@@ -2,8 +2,10 @@ package com.hk.util;
 
 import java.io.File;
 import java.util.Set;
+import java.awt.image.BufferedImage;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -210,6 +212,10 @@ public class ImageManager {
 
             ProductImage productImage = setImage(imageFile, productVariant, setDefault, false);
             if (productImage != null) {
+                BufferedImage image = ImageIO.read(imageFile);
+                productImage.setWidth((long) image.getWidth());
+                productImage.setHeight((long) image.getHeight());
+
                 resizeAndUpload(imageFile.getAbsolutePath(), productImage);
                 productImage.setUploaded(true);
                 getBaseDao().save(productImage);

@@ -46,7 +46,7 @@
             <tr style="border:1px">
 
               <td>
-                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
               </td>
               <td>
                 <s:checkbox name="categoryImages[${ctr.index}].hidden"/>
@@ -81,7 +81,7 @@
           <c:if test="${fn:toLowerCase(categoryImage.position) eq('center')}">
             <tr style="border:1px">
               <td>
-                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
               </td>
               <td>
                 <s:checkbox name="categoryImages[${ctr.index}].hidden"/>
@@ -116,7 +116,7 @@
           <c:if test="${fn:toLowerCase(categoryImage.position) eq('right')}">
             <tr style="border:1px">
               <td>
-                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
               </td>
               <td>
                 <s:checkbox name="categoryImages[${ctr.index}].hidden"/>
@@ -153,7 +153,7 @@
               test="${fn:toLowerCase(categoryImage.position) !='left' && fn:toLowerCase(categoryImage.position) !='center' && fn:toLowerCase(categoryImage.position) !='right'}">
             <tr style="border:1px">
               <td>
-                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.MediumSize%>"/>
+                <hk:categoryImage imageId="${categoryImage.id}" size="<%=EnumImageSize.SmallSize%>"/>
               </td>
               <td>
                 <s:checkbox name="categoryImages[${ctr.index}].hidden"/>

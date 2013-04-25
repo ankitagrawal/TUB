@@ -5,8 +5,10 @@ import java.util.Properties;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.ForwardResolution;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +86,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
             txn = com.citruspay.pg.model.Transaction.create(params);
         } catch (CitruspayException e) {
             logger.error("exception at creating  parameter" + e);
-            paymentManager.fail(merchantTxnId,null,"API Connection exception");
+            paymentManager.fail(merchantTxnId, null, "API Connection exception");
         }
 
         if (txn != null) {
@@ -94,7 +96,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
                 citrusPaymentGatewayWrapper.setGatewayUrl(strRedirectionURL);
             } else if (txn.getRespCode().equalsIgnoreCase(EnumCitrusResponseCodes.Bad_Request.getId()) || txn.getRespCode().equalsIgnoreCase(EnumCitrusResponseCodes.Unauthorized_User.getId())) {
                 logger.debug(txn.getRespMsg());
-                paymentManager.fail(merchantTxnId,txn.getTransactionId(),txn.getRespMsg());
+                paymentManager.fail(merchantTxnId, txn.getTransactionId(), txn.getRespMsg());
             }
         } else {
             paymentManager.fail(merchantTxnId);
@@ -117,20 +119,29 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
         String authIdCode = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.authIdCode);
         String amount = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.amount);
         String reqSignature = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.signature);
-        String merchantTxnId = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.transactionId);
+//        String merchantTxnId = getContext().getRequest().getParameter(CitrusPaymentGatewayWrapper.transactionId);
         String data = CitrusPaymentGatewayWrapper.getRequestSignatureText(getContext());
         com.citruspay.pg.net.RequestSignature sigGenerator = new com.citruspay.pg.net.RequestSignature();
         Resolution resolution = null;
         try {
             String signature = sigGenerator.generateHMAC(data, key);
+            if (gatewayOrderId == null || StringUtils.isEmpty(gatewayOrderId)) {
+                logger.info("Received Empty gateway Id  from Citrus credit debit Gateway, redirecting to failure page");
+                return new ForwardResolution("/pages/payment/paymentFail.jsp");
+            }
+            if (signature == null || StringUtils.isEmpty(signature) || reqSignature == null || StringUtils.isEmpty(reqSignature)) {
+                logger.info("Exception in generating either signature  -->" + signature + " or  Request Signature -->" + reqSignature);
+                paymentManager.fail(gatewayOrderId, ePGTxnID, "Signature Generation isssue for GatewayOrder Id -->" + gatewayOrderId);
+                return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+            }
             if (reqSignature != null && !reqSignature.equalsIgnoreCase("") && !signature.equalsIgnoreCase(reqSignature)) {
-                paymentManager.fail(merchantTxnId, ePGTxnID,TxMsg);
+                paymentManager.fail(gatewayOrderId, ePGTxnID, TxMsg);
                 return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
 
             }
         } catch (Exception e) {
             logger.info("exception at verifying request signature", e);
-            paymentManager.fail(merchantTxnId, ePGTxnID,TxMsg);
+            paymentManager.fail(gatewayOrderId, ePGTxnID, TxMsg);
             return new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
         }
 
@@ -147,7 +158,7 @@ public class CitrusNetbankingSendReceiveAction extends BasePaymentGatewaySendRec
                 paymentManager.success(gatewayOrderId, ePGTxnID, rrn, TxMsg, authIdCode);
                 resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else if (TxStatus.equals(EnumCitrusResponseCodes.TxStatusFAIL.getId()) && pgRespCode.equals(EnumCitrusResponseCodes.Rejected_By_Issuer.getId())) {
-                paymentManager.fail(gatewayOrderId, ePGTxnID,TxMsg);
+                paymentManager.fail(gatewayOrderId, ePGTxnID, TxMsg);
                 emailManager.sendPaymentFailMail(getPrincipalUser(), gatewayOrderId);
                 resolution = new RedirectResolution(PaymentFailAction.class).addParameter("gatewayOrderId", gatewayOrderId);
             } else {
