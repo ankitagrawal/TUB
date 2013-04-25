@@ -49,7 +49,6 @@
              </br> Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE Maybelline New York Watershine Liquid Diamonds Lip Gloss Worth Rs 210/- with Purchase of Maybelline Make Up Worth Rs 1200/-</a></p>
-         <p><a href="http://www.healthkart.com/product/maybelline-color-senstational-lip-color/MYBLN5">FREE Lipstick Holder with Purchase of Maybelline Color Sensational Lip Color</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">FREE Manufaktura Beer Shampoo worth Rs 960/- with purchase of Manufaktura products worth Rs 4500/-</a></p>
 
 
@@ -63,7 +62,7 @@
              </br> Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/beauty/make-up/eyes">FREE Basicare Syling Eyelash Worth Rs 200/- With Purchase  of Eye Makeup Worth Rs 1000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/Kent">FREE Herbal Essences Shampoo Worth Rs 190/- With Purchase  of Any Kent Hairbrush</a></p>
-         <p><a href="http://www.healthkart.com/product/vaadi-herbals-fair-skin-gift-pack/ARVDC33">FREE Auravedic Ritual Skin Lightening Mask Worth Rs 200/- With Purchase of Beauty Products Worth Rs 1000/-</a></p>
+
          <p><a href="http://www.healthkart.com/brand/beauty/Vichy">FREE Vichy Bi-White Med Foam Cleanser Worth Rs 1290/- With Purchase of Vichy Products Worth Rs 2500/-</a></p>
 
          <div class="cl"></div>
