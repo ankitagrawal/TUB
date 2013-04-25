@@ -138,7 +138,17 @@
                   <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                                         label="name"/>
                 </s:select>
-
+	            <br>
+	            <label>Warehouse:</label>
+	            <s:select name="warehouseId">
+		            <s:option value="">All Warehouses</s:option>
+		                              <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse" value="id"
+		                                                                    label="name"/>
+		                            </s:select>
+	                                    <%--<c:forEach items="${whList}" var="wh">
+	                                        <s:option value="${wh.id}">${wh.name}</s:option>
+	                                    </c:forEach>--%>
+	                                <%--</s:select>--%>
 
                 <s:submit name="pre" value="Search"/>
                 <br/>

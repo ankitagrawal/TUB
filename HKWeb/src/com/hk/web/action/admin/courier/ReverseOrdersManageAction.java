@@ -1,5 +1,6 @@
 package com.hk.web.action.admin.courier;
 
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.*;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
@@ -49,6 +50,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	private String trackingNo;
 	private String confirmationNo;
 	private File xlsFile;
+	private Long warehouseId;
 
 	@Autowired
 	ReverseOrderService reverseOrderService;
@@ -59,9 +61,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 	@Autowired
 	XslGenerator xslGenerator;
 
+	@Autowired
+	UserService userService;
+
 	@DefaultHandler
 	public Resolution pre() {
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());
+		warehouseId = userService.getWarehouseForLoggedInUser().getId();
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
 	}
@@ -164,7 +170,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
 	public Resolution generateExcelForReversePickup(){
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());
+		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
 		addRedirectAlertMessage(new SimpleMessage("Download complete"));
@@ -280,5 +286,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	public void setConfirmationNo(String confirmationNo) {
 		this.confirmationNo = confirmationNo;
+	}
+
+	public Long getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(Long warehouseId) {
+		this.warehouseId = warehouseId;
 	}
 }
