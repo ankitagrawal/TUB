@@ -3,6 +3,7 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.domain.accounting.PoLineItem;
@@ -36,6 +37,8 @@ public class GrnCloseAction extends BaseAction {
     private AdminEmailManager adminEmailManager;
     @Autowired 
     private ExtraInventoryService extraInventoryService;
+    @Autowired
+	PoLineItemDao poLineItemDao;
 
     public Resolution pre() {
         int dayAgo = 21;
@@ -45,15 +48,13 @@ public class GrnCloseAction extends BaseAction {
         Date startDate = cal.getTime();
         List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompletedGrns(startDate);
         if (checkedInGrns != null && checkedInGrns.size() > 0) {
+        	for(PoLineItem poLineItem: checkedInGrns.get(0).getPurchaseOrder().getPoLineItems()){
+				if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+					poLineItem.setFirstTimePurchased(true);
+				}
+            }
             for (GoodsReceivedNote grn : checkedInGrns) {
                 grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
-                for(GrnLineItem grnLineItem : grn.getGrnLineItems()){
-    				for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
-    					if(grnLineItem.getSku().getId().equals(poLineItem.getSku().getId())){
-    						grnLineItem.setFillRate(poLineItem.getFillRate());
-    					}
-    				}
-    			}
                 if(grn.getPurchaseOrder().isExtraInventoryCreated()){
                 	PurchaseOrder po = grn.getPurchaseOrder();
                 	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
