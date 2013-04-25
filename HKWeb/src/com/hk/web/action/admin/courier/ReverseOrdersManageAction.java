@@ -66,7 +66,11 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@DefaultHandler
 	public Resolution pre() {
-		warehouseId = userService.getWarehouseForLoggedInUser().getId();
+		if(warehouseId == null) {
+			if(userService.getWarehouseForLoggedInUser() != null){
+				warehouseId = userService.getWarehouseForLoggedInUser().getId();
+			}
+		}
 		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, getPageNo(), getPerPage());
 		orderRequestsList = orderRequestsPage.getList();
 		return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
