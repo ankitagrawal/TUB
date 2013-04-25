@@ -42,13 +42,11 @@
 
      <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Color Riche Vernis Nail Paint Worth Rs 225/- With Purchase of L'oreal Skin and Make Up Worth  Rs 1200/-</a></p>
 
-     <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Superliner Worth Rs 625/- With Purchase of L’oreal Skin and Make Up Worth Rs 1500/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Infallible Lipstick Worth Rs 990/- With Purchase of Loreal Skin and Make Up Worth Rs 1800/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Manicure Kit With Purchase Of L'oreal Paris Skin Care and Make Up Worth Rs 2200/-</a></p>
+           <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Manicure Kit With Purchase Of L'oreal Paris Skin Care and Make Up Worth Rs 2200/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth
              </br> Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/maybelline">FREE Maybelline New York Watershine Liquid Diamonds Lip Gloss Worth Rs 210/- with Purchase of Maybelline Make Up Worth Rs 1200/-</a></p>
+
          <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">FREE Manufaktura Beer Shampoo worth Rs 960/- with purchase of Manufaktura products worth Rs 4500/-</a></p>
 
 
