@@ -7,6 +7,9 @@ import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.accounting.PaymentHistoryService;
 import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
+import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPILineItemType;
@@ -16,6 +19,10 @@ import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
+import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -58,10 +65,15 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private ProductVariantService productVariantService;
 	@Autowired
 	private ProcurementService procurementService;
+	@Autowired
+	ExtraInventoryService extraInventoryService;
+	@Autowired
+	RtvNoteService rtvNoteService;
 
 	@Autowired
 	private PurchaseInvoiceService purchaseInvoiceService;
-
+	@Autowired
+	ExtraInventoryLineItemService extraInventoryLineItemService;
 	@Autowired
 	private PaymentHistoryService paymentHistoryService;
 
@@ -71,9 +83,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	Page purchaseInvoicePage;
 
 	private List<PurchaseInvoice> purchaseInvoiceList = new ArrayList<PurchaseInvoice>();
+	private List<RtvNote> rtvList = new ArrayList<RtvNote>();
+	private List<Long> rtvId = new ArrayList<Long>();
 	private PurchaseInvoice purchaseInvoice;
+	private boolean piHasRtv;
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems;
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceShortLineItems;
+	private List<ExtraInventoryLineItem> extraInventoryLineItems;
 	private Date startDate;
 	private Date endDate;
 	private String tinNumber;
@@ -140,13 +156,71 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 				else
 					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
-					
 			}
+			
+			if(purchaseInvoice.getRtvNotes()!=null && purchaseInvoice.getRtvNotes().size()>0){
+				piHasRtv = true;
+			}
+			else{
+				piHasRtv = false;
+			}
+			Set<RtvNote> rtvSet = new HashSet<RtvNote>();
+			for(GoodsReceivedNote grn : purchaseInvoice.getGoodsReceivedNotes()){
+				PurchaseOrder po = grn.getPurchaseOrder();
+				ExtraInventory ei = extraInventoryService.getExtraInventoryByPoId(po.getId());
+				RtvNote rtv = rtvNoteService.getRtvNoteByExtraInventory(ei.getId());
+				if(rtv!=null){
+					rtvSet.add(rtv);
+				}
+			}
+			rtvList.addAll(rtvSet);
+			
 			return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Incorrect purchase Invoice Id."));
 			return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
 		}
+	}
+	
+	public Resolution importRtv(){
+		extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
+		Set<RtvNote> rtvSet = new HashSet<RtvNote>();
+		for(GoodsReceivedNote grn : purchaseInvoice.getGoodsReceivedNotes()){
+			PurchaseOrder po = grn.getPurchaseOrder();
+			ExtraInventory ei = extraInventoryService.getExtraInventoryByPoId(po.getId());
+			RtvNote rtv = rtvNoteService.getRtvNoteByExtraInventory(ei.getId());
+			if(rtv!=null){
+				rtvSet.add(rtv);
+			}
+		}
+		rtvList.addAll(rtvSet);
+		
+		List<RtvNote> piHasRtvList = new ArrayList<RtvNote>();
+		if(rtvId!=null && !rtvId.isEmpty()){
+			for(Long id : rtvId){
+				for(RtvNote rtv:rtvList){
+					if(rtv.getId().equals(id)){
+						piHasRtvList.add(rtv);
+					}
+				}
+			}
+		}
+		for (RtvNote rtvNote : piHasRtvList) {
+			ExtraInventory extraInventory = rtvNote.getExtraInventory();
+			List<ExtraInventoryLineItem> eiLineItems = extraInventoryLineItemService
+					.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+			if (eiLineItems != null) {
+				for (ExtraInventoryLineItem eiLineItem : eiLineItems) {
+					if (eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
+						extraInventoryLineItems.add(eiLineItem);
+					}
+				}
+			}
+		}
+		purchaseInvoice.setRtvNotes(piHasRtvList);
+		purchaseInvoiceDao.save(purchaseInvoice);
+		
+		return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
 	}
 
 	public Resolution paymentDetails() {
@@ -260,7 +334,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(PurchaseInvoiceAction.class);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public Resolution getPVDetails() {
 		Map dataMap = new HashMap();
@@ -509,6 +583,38 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setPurchaseInvoiceShortLineItems(List<PurchaseInvoiceLineItem> purchaseInvoiceShortLineItems) {
 		this.purchaseInvoiceShortLineItems = purchaseInvoiceShortLineItems;
+	}
+	
+	public List<ExtraInventoryLineItem> getExtraInventoryLineItems() {
+		return extraInventoryLineItems;
+	}
+
+	public void setExtraInventoryLineItems(List<ExtraInventoryLineItem> extraInventoryLineItems) {
+		this.extraInventoryLineItems = extraInventoryLineItems;
+	}
+	
+	public List<RtvNote> getRtvList() {
+		return rtvList;
+	}
+
+	public void setRtvList(List<RtvNote> rtvList) {
+		this.rtvList = rtvList;
+	}
+	
+	public List<Long> getRtvId() {
+		return rtvId;
+	}
+
+	public void setRtvId(List<Long> rtvId) {
+		this.rtvId = rtvId;
+	}
+
+	public boolean isPiHasRtv() {
+		return piHasRtv;
+	}
+
+	public void setPiHasRtv(boolean piHasRtv) {
+		this.piHasRtv = piHasRtv;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)
