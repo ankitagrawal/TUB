@@ -37,6 +37,7 @@
                 <th>Address</th>
                 <th>Contact Person</th>
                 <th>Contact Number</th>
+	              <th>Email</th>
                 <th>Credit Days</th>
                 <th>Target Credit Days</th>
                 <th>Lead Time (Days)</th>
@@ -55,6 +56,7 @@
                     </td>
                     <td>${supplier.contactPerson}</td>
                     <td>${supplier.contactNumber}</td>
+	                  <td>${supplier.email_id}</td>
                     <td>${supplier.creditDays}</td>
                     <td>${supplier.targetCreditDays}</td>
                     <td>${supplier.leadTime}</td>

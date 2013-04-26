@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.admin.dto.inventory.CycleCountDto;
+import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.admin.util.CycleCountDtoUtil;
+import com.hk.domain.warehouse.Warehouse;
+import com.hk.util.HKCollectionUtils;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.JsonResolution;
@@ -23,7 +28,6 @@ import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.admin.manager.BinManager;
 import com.hk.admin.pact.dao.inventory.AdminProductVariantInventoryDao;
 import com.hk.admin.pact.dao.inventory.AdminSkuItemDao;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.core.PermissionConstants;
@@ -99,7 +103,8 @@ public class InventoryCheckoutAction extends BaseAction {
     @Autowired
     BinManager binManager;
     @Autowired
-    BrandsToAuditDao brandsToAuditDao;
+    CycleCountService cycleCountService;
+
 
     private ShippingOrder shippingOrder;
 
@@ -129,12 +134,54 @@ public class InventoryCheckoutAction extends BaseAction {
         } else {
             logger.debug("gatewayId: " + shippingOrder.getGatewayOrderId());
             Set<LineItem> pickingLIs = shippingOrder.getLineItems();
+
             if (pickingLIs != null && !shippingOrder.getLineItems().isEmpty()) {
                 Boolean checkedOut = getAdminInventoryService().areAllUnitsOfOrderCheckedOut(shippingOrder);
                 if (checkedOut) {
                     shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_CheckedOut));
                     getShippingOrderService().save(shippingOrder);
+                } else {
+
+                    //Audit of Any Variant,product and brand in shipping order should not be in progress
+                    Warehouse warehouse = shippingOrder.getWarehouse();
+                    List<CycleCountDto> cycleCountDtoList = cycleCountService.inProgressCycleCounts(warehouse);
+                    if (cycleCountDtoList.size() > 0) {
+                        List<String> brandsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForBrand(cycleCountDtoList);
+                        List<String> productsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForProduct(cycleCountDtoList);
+                        List<String> variantsToExcludeList = CycleCountDtoUtil.getCycleCountInProgressForVariant(cycleCountDtoList);
+                        StringBuilder cycleCountNeedTobeClose = new StringBuilder(" Cycle Count In Progress For  :").append("<br/>");
+                        boolean cycleCountInProgress = false;
+                        for (LineItem lineItem : pickingLIs) {
+                            String brand = lineItem.getSku().getProductVariant().getProduct().getBrand();
+                            String productId = lineItem.getSku().getProductVariant().getProduct().getId();
+                            String variantId = lineItem.getSku().getProductVariant().getId();
+
+                            if (StringUtils.isNotBlank(brand)) {
+                                if (HKCollectionUtils.listContainsKey(brandsToExcludeList, brand)) {
+                                    cycleCountNeedTobeClose.append(brand).append("<br/>");
+                                    cycleCountInProgress = true;
+                                }
+                            }
+
+                            if (StringUtils.isNotBlank(productId) && productsToExcludeList.contains(productId)) {
+                                cycleCountNeedTobeClose.append(productId).append("<br/>");
+                                cycleCountInProgress = true;
+                            }
+
+                            if (StringUtils.isNotBlank(variantId) && variantsToExcludeList.contains(variantId)) {
+                                cycleCountNeedTobeClose.append(variantId).append("<br/>");
+                                cycleCountInProgress = true;
+                            }
+
+                        }
+                        if (cycleCountInProgress) {
+                            addRedirectAlertMessage(new SimpleMessage(cycleCountNeedTobeClose.toString()));
+                            return new RedirectResolution(InventoryCheckoutAction.class);
+                        }
+                    }
                 }
+
+
                 return new ForwardResolution("/pages/admin/inventoryCheckout.jsp");
             }
         }
@@ -182,21 +229,13 @@ public class InventoryCheckoutAction extends BaseAction {
                 if (pvList != null && !pvList.isEmpty()) {
                     productVariant = pvList.get(0);
                 } else {
-                    productVariant = productVariantDao.getVariantById(upc);// UPC not available must have entered
-                    // Variant Id
+                    productVariant = productVariantDao.getVariantById(upc);// UPC not available must have entered Variant Id
                 }
+
                 logger.debug("productVariant: " + productVariant);
                 if (productVariant != null) {
-                    boolean isBrandAudited = brandsToAuditDao.isBrandAudited(productVariant.getProduct().getBrand(), userService.getWarehouseForLoggedInUser());
-                    if (isBrandAudited) {
-                        addRedirectAlertMessage(new SimpleMessage("HKBarcoded Variant. Please scan HK Barcode to Checkout."));
-                        upc = null;
-                    } else {
-                        addRedirectAlertMessage(new SimpleMessage("Please do checkout with HK Barcode "));
-                        upc = null;
-//                        skuGroups = adminInventoryService.getInStockSkuGroups(upc);
-//                        logger.debug("skuGroups: " + skuGroups.size());
-                    }
+                    addRedirectAlertMessage(new SimpleMessage("Please do checkout with HK Barcode "));
+                    upc = null;
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Invalid UPC or VariantID"));
                     upc = null;
