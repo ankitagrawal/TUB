@@ -12385,4 +12385,79 @@
     <!--<changeSet author="Pratham (generated)" id="1366787798141-37">-->
         <!--<dropColumn columnName="secondary_classification" tableName="reason"/>-->
     <!--</changeSet>-->
+    <changeSet author="Rajesh" id="24-04-2013-01">
+    		<sql>
+              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing") on duplicate key update display_name = 'Dynamic Remarketing';
+            </sql>
+       </changeSet>
+
+    <changeSet author="Seema (generated)" id="1365072411708-1">
+        <addColumn tableName="cycle_count">
+            <column name="brand" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-2">
+        <sql>
+            update cycle_count cc inner join brands_to_audit bd on cc.brands_to_audit_id = bd.id
+            set cc.brand = bd.brand where cc.brands_to_audit_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-3">
+        <sql>
+            insert into cycle_count (user_id,create_dt,end_date,cycle_status,warehouse_id,brand)
+            select bd.auditor_user_id,bd.audit_date,bd.update_dt,400,bd.warehouse_id,bd.brand
+            from brands_to_audit bd left  join cycle_count cc on cc.brands_to_audit_id = bd.id where cc.id is null ;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-4">
+        <dropForeignKeyConstraint baseTableName="cycle_count"  constraintName="fk_cycle_count_brands_to_audit1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-5">
+        <dropColumn columnName="brands_to_audit_id" tableName="cycle_count"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-1">
+        <dropForeignKeyConstraint baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_user1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-2">
+        <dropForeignKeyConstraint baseTableName="brands_to_audit"   constraintName="fk_brands_to_audit_warehouse1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-5">
+        <dropTable tableName="brands_to_audit"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1366805815392-2">
+        <modifyDataType columnName="name" newDataType="VARCHAR(100)" tableName="inv_txn_type"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-6">
+        <sql>
+
+            insert into reconciliation_type(id, name) values (150, 'Damage-Add') on duplicate key update name = 'Damage-Add';
+            insert into reconciliation_type(id, name) values (160, 'Expired-Add') on duplicate key update name = 'Expired-Add';
+            insert into reconciliation_type(id, name) values (170, 'Batch Mismatch-Add') on duplicate key update name = 'Batch Mismatch-Add';
+            insert into reconciliation_type(id, name) values (180, 'Free Variant-Add') on duplicate key update name = 'Free Variant-Add';
+
+
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 150 where rv.reconciliation_type_id  = 30 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 160 where rv.reconciliation_type_id  = 40 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 170 where rv.reconciliation_type_id  = 60 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 180 where rv.reconciliation_type_id  = 90 and rc.reconciliation_type_id = 10;
+
+            insert into inv_txn_type(id,name) values(220,'Damaged Stock against Reconciliation Voucher-Add') on duplicate key update name = 'Damaged Stock against Reconciliation Voucher-Add';
+            insert into inv_txn_type(id,name) values(230,'Expired against Reconciliation Voucher-Add')  on duplicate key update name = 'Expired against Reconciliation Voucher-Add';
+            insert into inv_txn_type(id,name) values(240,'Inventory Checkin for Free Variant-RV Add')   on duplicate key update name = 'Inventory Checkin for Free Variant-RV Add';
+            insert into inv_txn_type(id,name) values(250,'Inventory Checkin for Batch Mismatch-RV Add') on duplicate key update name = 'Inventory Checkin for Batch Mismatch-RV Add';
+
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 220 where rv.reconciliation_type_id = 150;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 230 where rv.reconciliation_type_id = 160;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 250 where rv.reconciliation_type_id = 170;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 240 where rv.reconciliation_type_id = 180;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

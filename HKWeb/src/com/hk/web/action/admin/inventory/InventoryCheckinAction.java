@@ -2,14 +2,18 @@ package com.hk.web.action.admin.inventory;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.util.BarcodeUtil;
+import com.hk.admin.util.CycleCountDtoUtil;
 import com.hk.admin.util.XslParser;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
@@ -84,16 +88,20 @@ public class InventoryCheckinAction extends BaseAction {
     private StockTransferDao stockTransferDao;
     @Autowired
     private ProductVariantSupplierInfoService productVariantSupplierInfoService;
+    @Autowired
+    PoLineItemDao poLineItemDao;
 
     @Autowired
     private SkuGroupService skuGroupService;
     @Autowired
     BaseDao baseDao;
     @Autowired
-    private AdminEmailManager                 adminEmailManager;
+    private AdminEmailManager adminEmailManager;
     @Autowired
     private ExtraInventoryService extraInventoryService;
     private List<SkuGroup> skuGroupList;
+    @Autowired
+    CycleCountService cycleCountService;
 
     // SkuGroupDao skuGroupDao;
 
@@ -205,6 +213,15 @@ public class InventoryCheckinAction extends BaseAction {
             }
             if (productVariant != null) {
                 Sku sku = getSkuService().findSKU(productVariant, grn.getWarehouse());
+                // Check for In Progress Audit  for Variant.
+                List<CycleCountDto> cycleCountInProgressForVariantList = cycleCountService.inProgressCycleCountForVariant(productVariant, grn.getWarehouse());
+                if (cycleCountInProgressForVariantList != null && cycleCountInProgressForVariantList.size() > 0) {
+                    String closeAuditMsg = CycleCountDtoUtil.getCycleCountInProgress(cycleCountInProgressForVariantList);
+                    closeAuditMsg = closeAuditMsg + "  For  :  " + grn.getWarehouse().getCity();
+                    addRedirectAlertMessage(new SimpleMessage(closeAuditMsg));
+                    return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
+                }
+
                 Long askedQty = 0L;
                 GrnLineItem grnLineItem = getGrnLineItemDao().getGrnLineItem(grn, productVariant);
                 if (grnLineItem != null && sku != null) {
@@ -230,17 +247,15 @@ public class InventoryCheckinAction extends BaseAction {
                     getInventoryService().checkInventoryHealth(productVariant);
 
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
-                    	for(GrnLineItem grnLItem : grn.getGrnLineItems()){
-        					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
-        						if(grnLItem.getSku().getId().equals(poLineItem.getSku().getId())){
-        							grnLItem.setFillRate(poLineItem.getFillRate());
-        						}
-        					}
-        				}
-                    	if(grn.getPurchaseOrder().isExtraInventoryCreated()){
-                        	PurchaseOrder po = grn.getPurchaseOrder();
-                        	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
-                        	po.setExtraInventoryId(id);
+                        for (PoLineItem poLineItem : grn.getPurchaseOrder().getPoLineItems()) {
+                            if (poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+                                poLineItem.setFirstTimePurchased(true);
+                            }
+                        }
+                        if (grn.getPurchaseOrder().isExtraInventoryCreated()) {
+                            PurchaseOrder po = grn.getPurchaseOrder();
+                            Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                            po.setExtraInventoryId(id);
                         }
                         grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
@@ -249,6 +264,7 @@ public class InventoryCheckinAction extends BaseAction {
                     } else {
                         grn.setGrnStatus(EnumGrnStatus.InventoryCheckinInProcess.asGrnStatus());
                         getGoodsReceivedNoteDao().save(grn);
+                        editPVFillRate(grn);
                     }
                 } else {
                     addRedirectAlertMessage(new SimpleMessage("Error with either GrnLineItem->" + grnLineItem + " or Sku ->" + sku));
@@ -326,7 +342,7 @@ public class InventoryCheckinAction extends BaseAction {
         Warehouse toWarehouse = stockTransfer.getToWarehouse();
         sku = skuService.findSKU(productVariant, toWarehouse);
         if (sku == null) {
-            addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-"+ (productVariant == null ? "" : productVariant.getId())));
+            addRedirectAlertMessage(new SimpleMessage("No SKU Found for ProductVariantId:-" + (productVariant == null ? "" : productVariant.getId())));
             return new RedirectResolution(StockTransferAction.class, "checkinInventoryAgainstStockTransfer").addParameter("stockTransfer", stockTransfer.getId());
         }
 
@@ -490,7 +506,7 @@ public class InventoryCheckinAction extends BaseAction {
 
 
     public Resolution downloadBarcode() {
-        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem,null, 1L);
+        List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null, 1L);
         if (checkedInSkuItems == null || checkedInSkuItems.size() < 1) {
             addRedirectAlertMessage(new SimpleMessage(" Please do checkin some items for Downlaoding Barcode "));
             return new RedirectResolution(InventoryCheckinAction.class).addParameter("grn", grn.getId());
@@ -533,7 +549,7 @@ public class InventoryCheckinAction extends BaseAction {
         List<GrnLineItem> grnLineItems = grn.getGrnLineItems();
 
         for (GrnLineItem grnLineItem : grnLineItems) {
-            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null,1L);
+            List<SkuItem> checkedInSkuItems = adminInventoryService.getCheckedInOrOutSkuItems(null, null, grnLineItem, null, 1L);
             if (checkedInSkuItems != null && checkedInSkuItems.size() > 0) {
 //                SkuGroup skuGroup = checkedInSkuItems.get(0).getSkuGroup();
                 Map<Long, String> skuItemBarcodeMap = adminInventoryService.skuItemBarcodeMap(checkedInSkuItems);
@@ -774,20 +790,20 @@ public class InventoryCheckinAction extends BaseAction {
         this.grnLineItem = grnLineItem;
     }
 
-	public AdminEmailManager getAdminEmailManager() {
-		return adminEmailManager;
-	}
+    public AdminEmailManager getAdminEmailManager() {
+        return adminEmailManager;
+    }
 
-	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
-		this.adminEmailManager = adminEmailManager;
-	}
+    public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+        this.adminEmailManager = adminEmailManager;
+    }
 
-	public ExtraInventoryService getExtraInventoryService() {
-		return extraInventoryService;
-	}
+    public ExtraInventoryService getExtraInventoryService() {
+        return extraInventoryService;
+    }
 
-	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
-		this.extraInventoryService = extraInventoryService;
-	}
+    public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+        this.extraInventoryService = extraInventoryService;
+    }
 
 }

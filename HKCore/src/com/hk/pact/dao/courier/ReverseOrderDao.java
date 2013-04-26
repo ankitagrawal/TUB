@@ -23,7 +23,7 @@ public interface ReverseOrderDao {
 
 	public ReverseOrder save(ReverseOrder reverseOrder);
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage);
 
 	public ReverseOrder getReverseOrderById(Long id);
 

@@ -81,7 +81,7 @@
 			<c:if test="${printPickBean.category != null}">
 				Showing Orders for Category: <strong>${printPickBean.category.displayName}</strong>
 			</c:if>
-			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" style="float:right;">Brands to Exclude/Audit</s:link>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="createCycleCount" style="float:right;">Brands to Exclude/Audit</s:link>
 		</div>
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" >
 		<div align="center">
