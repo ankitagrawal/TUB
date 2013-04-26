@@ -12,7 +12,8 @@ public enum EnumSkuItemTransferMode {
     STOCK_TRANSFER_OUT(10L, "Stock Transfer Out"),
     STOCK_TRANSFER_IN(20L, "Stock Transfer In"),
     RV_LINEITEM_OUT(30L, "RVLineItem"),
-    CYCLE_COUNT(40L, "CycleCount");
+    CYCLE_COUNT(40L, "CycleCount"),
+    CYCLE_COUNT_SKU_ITEM_MISSED(50L, "CCSkuItemMissed");
 
     private String name;
     private Long id;
