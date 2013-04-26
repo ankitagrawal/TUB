@@ -262,8 +262,8 @@ public class GRNAction extends BasePaginatedAction {
 			goodsReceivedNoteDao.save(grn);
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
-			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
+				getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
 					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
 							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
 								poLineItem.setFirstTimePurchased(true);

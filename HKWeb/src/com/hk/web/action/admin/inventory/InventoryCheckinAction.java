@@ -9,6 +9,8 @@ import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.StockTransferDao;
 import com.hk.admin.pact.service.catalog.product.ProductVariantSupplierInfoService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
+import com.hk.admin.pact.service.inventory.PoLineItemService;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.util.BarcodeUtil;
 import com.hk.admin.util.XslParser;
@@ -87,6 +89,8 @@ public class InventoryCheckinAction extends BaseAction {
     private ProductVariantSupplierInfoService productVariantSupplierInfoService;
     @Autowired
 	PoLineItemDao poLineItemDao;
+    @Autowired
+    PurchaseOrderService purchaseOrderService;
 
     @Autowired
     private SkuGroupService skuGroupService;
@@ -96,6 +100,8 @@ public class InventoryCheckinAction extends BaseAction {
     private AdminEmailManager                 adminEmailManager;
     @Autowired
     private ExtraInventoryService extraInventoryService;
+    @Autowired
+    PoLineItemService poLineItemService;
     private List<SkuGroup> skuGroupList;
 
     // SkuGroupDao skuGroupDao;
@@ -232,7 +238,9 @@ public class InventoryCheckinAction extends BaseAction {
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
 
+                    getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
+                    	 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
                     	for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
 							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
 								poLineItem.setFirstTimePurchased(true);
@@ -792,4 +800,20 @@ public class InventoryCheckinAction extends BaseAction {
 		this.extraInventoryService = extraInventoryService;
 	}
 
+	public PoLineItemService getPoLineItemService() {
+		return poLineItemService;
+	}
+
+	public void setPoLineItemService(PoLineItemService poLineItemService) {
+		this.poLineItemService = poLineItemService;
+	}
+
+	public PurchaseOrderService getPurchaseOrderService() {
+		return purchaseOrderService;
+	}
+
+	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
+		this.purchaseOrderService = purchaseOrderService;
+	}
+	
 }

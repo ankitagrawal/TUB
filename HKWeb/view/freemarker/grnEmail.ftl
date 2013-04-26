@@ -19,7 +19,7 @@ background: #ff0;
 <p style="margin-bottom:1.2em">Attention!!</p>
 
 <p style="margin-bottom:1em">
-  Goods are received for <a href="admin.healthkart.com/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${grn.purchaseOrder.id}">Purchase Order # ${grn.purchaseOrder.id}.</a><br/>
+  Goods are received for <a href="admin.healthkart.com/admin/inventory/EditPurchaseOrder.action?purchaseOrder=${grn.purchaseOrder.id?c}">Purchase Order # ${grn.purchaseOrder.id}.</a><br/>
   <#if grn.purchaseOrder.supplier.name??>
   <#if grn.purchaseOrder.supplier.creditDays??&&grn.purchaseOrder.supplier.creditDays==-1>
   Supplier = ${grn.purchaseOrder.supplier.name}; Credit Days = <label style="background:#ff0;">${grn.purchaseOrder.supplier.creditDays}</label><br/>
