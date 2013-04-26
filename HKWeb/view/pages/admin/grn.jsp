@@ -30,7 +30,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-            function checkvariantWeight(){
+/*            function checkvariantWeight(){
                     var variantRegex=/^-?[0-9]+$/;
                     varWeightLength = $("#variantWeight").val().length;
                     varWeightValue = $("#variantWeight").val();
@@ -50,7 +50,7 @@
                     return true;
                 }
 
-            $('#variantWeight').blur(checkvariantWeight);
+            $('#variantWeight').blur(checkvariantWeight);*/
 			$('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
 
 			$('.hkProductLightbox').each(function(){
@@ -206,7 +206,7 @@
 				} else {
 					$(toTotalClass).val(total.toFixed(2));
 				}
-			};
+			};/*
             $('.validateWeight').click(function() {
 
                 if(!checkvariantWeight()){
@@ -214,7 +214,7 @@
                 }
                $('.requiredFieldValidator').click();
 
-            });
+            });*/
 			$('.requiredFieldValidator').click(function() {
                 var invoice = $('.invoiceNumber').val();
 				if(invoice == "-"){
@@ -545,8 +545,9 @@
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
-	<s:hidden name="save" value="Save" class="requiredFieldValidator" style="display:none;"/>
-    <s:button name="validateWeight" value="Save" class="validateWeight" />
+	<s:button name="save" value="Save" class="requiredFieldValidator"/>
+              <%--style="display:none;"/>--%>
+    <%--<s:button name="validateWeight" value="Save" class="validateWeight" />--%>
 
     <c:if test='${itemCheckedin && pa.grn.grnStatus.id == GrnCloseId}' >
      <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
