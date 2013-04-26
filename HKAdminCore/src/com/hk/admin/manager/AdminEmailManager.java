@@ -908,7 +908,7 @@ public class AdminEmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
         String feedbackPageUrl = getLinkManager().getFeedbackPage();
-        feedbackPageUrl = convertToWww(feedbackPageUrl);
+        //feedbackPageUrl = convertToWww(feedbackPageUrl);  Handled on Link manager Page
 
         valuesMap.put(EmailMapKeyConstants.feedbackPage, feedbackPageUrl);
         Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderDeliveredEmail);
