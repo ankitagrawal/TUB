@@ -9,6 +9,8 @@
 <%@ include file="/layouts/_userData.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+<c:set var="product" value="${pa.product}"/>
 <%
   boolean isSecure = pageContext.getRequest().isSecure();
   pageContext.setAttribute("isSecure", isSecure);
@@ -423,8 +425,7 @@
 
       <%--HTML code for dispatch date--%>
       <div class="dispatchedDateNew">
-          <div>8 April 2013</div>
-          <div style="font-size: 10px;">3 days from today</div>
+          <div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div>
       </div>
 
 
@@ -529,7 +530,7 @@
         <br/>
       </c:forEach>
     </div>
-      <div class="dispatchedDateNew"><div>8 April 2013</div><div style="font-size: 10px;">3 days from today</div></div>
+      <div class="dispatchedDateNew"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
     <div class="quantity" style="width: 80px;left: 35px;">
       <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty" style="width: 20px; height: 18px;"/>
       <a style="position: relative;float:left;" class='remove removeComboLink' href='#'>
