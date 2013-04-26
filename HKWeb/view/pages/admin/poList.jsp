@@ -1,7 +1,7 @@
 <%@ page import="com.hk.constants.inventory.EnumPurchaseOrderStatus" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="approved" value="<%=EnumPurchaseOrderStatus.Approved.getId()%>"/>
@@ -9,8 +9,8 @@
 <c:set var="received" value="<%=EnumPurchaseOrderStatus.Received.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
  <%
-    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
   %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Order List">
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.POAction" var="poa"/>
@@ -50,13 +50,13 @@
           <c:choose>
             <c:when test="${whAction.setWarehouse != null}">
               <s:hidden name="warehouse" value="${whAction.setWarehouse}"/>
-              ${whAction.setWarehouse.city}
+              ${whAction.setWarehouse.identifier}
             </c:when>
             <c:otherwise>
               <s:select name="warehouse">
                 <s:option value="0">-All-</s:option>
                 <c:forEach items="${whList}" var="wh">
-                  <s:option value="${wh.id}">${wh.name}</s:option>
+                  <s:option value="${wh.id}">${wh.identifier}</s:option>
                 </c:forEach>
               </s:select>
             </c:otherwise>
@@ -106,7 +106,7 @@
           <td>${purchaseOrder.approvedBy.name}</td>
           <td>${purchaseOrder.supplier.name}</td>
           <td>${purchaseOrder.supplier.tinNumber}</td>
-          <td>${purchaseOrder.warehouse.city}</td>
+          <td>${purchaseOrder.warehouse.identifier}</td>
           <td>${purchaseOrder.purchaseOrderStatus.name}</td>
           <td><fmt:formatDate value="${purchaseOrder.updateDate}" type="both" timeStyle="short"/></td>
 	      <td>
