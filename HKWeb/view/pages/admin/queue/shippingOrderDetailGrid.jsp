@@ -177,9 +177,9 @@
     <c:if test="${! empty shippingOrder.shippingOrderLifecycles || shippingOrder.shippingOrderStatus.id eq shippingOrderStatusCancelled }">
 
         <label style="font-weight:bold;">Last Activity:</label><br>
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name}
-        ${shippingOrder.reason.name}
-        <%--(${soCancelReason.primaryClassification} - ${soCancelReason.secondaryClassification} - ${cancellationRemark})--%>
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} Reason:
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.primaryClassification}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].comments}
         on
         <br>
         <fmt:formatDate
