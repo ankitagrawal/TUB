@@ -38,7 +38,7 @@ background: #ff0;
   </#if>
   Approx. payable amount = ${grn.purchaseOrder.payable}; <br/>
   <#if grn.purchaseOrder.extraInventoryId??>
-  Extra Inventory ID=  <a href="admin.healthkart.com/admin/rtv/ExtraInventory.action?purchaseOrderId=${grn.purchaseOrder.extraInventoryId}">${grn.purchaseOrder.extraInventoryId}</a>
+  Extra Inventory ID=  <a href="admin.healthkart.com/admin/rtv/ExtraInventory.action?purchaseOrderId=${grn.purchaseOrder.extraInventoryId?c}">${grn.purchaseOrder.extraInventoryId}</a>
   <#else>
   Extra Inventory ID = N/A; <br/>
   </#if>
