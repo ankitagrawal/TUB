@@ -44,13 +44,13 @@
 						//Normal Partial Invoice
 						document.getElementById("orderInvoice").src = invoiceLinks[i].href;
 						if (document.getElementById("orderInvoice").src != "") {
-//							alert("Sending copy 1 to printer of " + j + " of  " + len + " orders");
+							alert("Sending copy 1 to printer of " + j + " of  " + len + " orders");
 							printInvoice('orderInvoice');
 						}
 						//Personal Care Partial Invoice
 						document.getElementById("orderInvoice").src = personalCareInvoiceLinks[i].href;
 						if (document.getElementById("orderInvoice").src != "") {
-//							alert("Sending copy 2 to printer of " + j + " of  " + len + " orders");
+							alert("Sending copy 2 to printer of " + j + " of  " + len + " orders");
 							printInvoice('orderInvoice');
 						}
 					}
@@ -81,7 +81,7 @@
 			<c:if test="${printPickBean.category != null}">
 				Showing Orders for Category: <strong>${printPickBean.category.displayName}</strong>
 			</c:if>
-			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" style="float:right;">Brands to Exclude/Audit</s:link>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="createCycleCount" style="float:right;">Brands to Exclude/Audit</s:link>
 		</div>
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" >
 		<div align="center">

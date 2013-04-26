@@ -41,7 +41,7 @@
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice
