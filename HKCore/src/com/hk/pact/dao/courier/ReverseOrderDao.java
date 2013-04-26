@@ -25,6 +25,8 @@ public interface ReverseOrderDao {
 
 	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage);
 
+	 public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId);
+
 	public ReverseOrder getReverseOrderById(Long id);
 
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);

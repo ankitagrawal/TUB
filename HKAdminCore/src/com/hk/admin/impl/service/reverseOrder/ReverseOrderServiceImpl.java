@@ -99,6 +99,10 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, page, perPage);
     }
 
+	public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId){
+			return getReverseOrderDao().getPickupRequestsForExcel(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId);
+	}
+
 	public ReverseOrder save(ReverseOrder reverseOrder){
 		 return getReverseOrderDao().save(reverseOrder);
 	}
@@ -113,6 +117,13 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
 
 	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){
 		return getReverseOrderDao().getReverseOrderByShippingOrderId(shippingOrderId);
+	}
+
+	public void deleteReverseOrder(ReverseOrder reverseOrder){
+		Set<ReverseLineItem> reverseLineItems = reverseOrder.getReverseLineItems();
+		reverseOrder.setReverseLineItems(null);
+		getBaseDao().deleteAll(reverseLineItems);
+		getBaseDao().delete(reverseOrder);
 	}
 
 	public BaseDao getBaseDao() {

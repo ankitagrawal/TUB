@@ -725,6 +725,7 @@ public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
 		xlsWriter.addHeader("Customer City", "Customer City");
 		xlsWriter.addHeader("Customer State", "Customer State");
 		xlsWriter.addHeader("Pincode", "Pincode");
+		xlsWriter.addHeader("SO Order Id", "SO Order Id");
 		xlsWriter.addHeader("Declared Value", "Declared Value");
 		xlsWriter.addHeader("Piece", "Piece");
 		xlsWriter.addHeader("Courier", "Courier");
@@ -745,6 +746,7 @@ public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
 					xlsWriter.addCell(xlsRow, customerDetails.getCity());
 					xlsWriter.addCell(xlsRow, customerDetails.getState());
 					xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());
+					xlsWriter.addCell(xlsRow, order.getShippingOrder().getGatewayOrderId());
 					xlsWriter.addCell(xlsRow, order.getAmount());
 
 					Long qty = 0L;

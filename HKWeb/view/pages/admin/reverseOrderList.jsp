@@ -36,7 +36,6 @@
             });
 
             $('.markReconciled').click(function() {
-
                 if($(this).parent().find('.markPicked').is(':visible')  || $(this).parent().find('.markReceived').is(':visible')){
                     alert("Please mark the order picked/ received first");
                     return false;
@@ -57,7 +56,6 @@
             });
 
              $('.markReceived').click(function() {
-
                  if($(this).parent().find('.markPicked').is(':visible')){
                     alert("Please mark the order picked first");
                     return false;
@@ -103,6 +101,21 @@
                     alert("Order has been reconciled, cannot change advice");
                       return false;
                   }
+              });
+
+              $('.cancelOrder').click(function(){
+                 if(!confirm("Are you sure you want to cancel order ?")){
+                   return false;
+                }
+
+                var clickedLink = $(this);
+                $.getJSON(clickedLink.attr('href'), function(res) {
+                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                        alert(res.message);
+                        window.location.reload();
+                    }
+                });                  
+                  return false;
               });
          });
 
@@ -249,12 +262,12 @@
                                 <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                          </s:link>
                         </c:if>
-                        <%--<c:if test="${reverseOrderRequest.receivedDate == null}">--%>
-                           <%--<s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="cancelReverseOrder" class="cancelRPO">Cancel Order--%>
-			                    <%--<s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>--%>
-                                <%--<s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>--%>
-                         <%--</s:link> --%>
-                        <%--</c:if>--%>
+                        <c:if test="${reverseOrderRequest.receivedDate == null}">
+                           <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="cancelReverseOrder" class="cancelOrder">Cancel Order
+			                    <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                                <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                         </s:link>
+                        </c:if>
 
                     </td>
                     <td>

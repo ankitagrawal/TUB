@@ -11,8 +11,11 @@ import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.core.PermissionConstants;
 
 import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.reverseOrder.ReverseLineItem;
 import com.hk.domain.courier.Courier;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
+import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.XslGenerator;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -58,6 +61,9 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 
 	@Autowired
 	XslGenerator xslGenerator;
+
+	@Autowired
+	ReplacementOrderService replacementOrderService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -153,19 +159,22 @@ public class ReverseOrdersManageAction extends BasePaginatedAction{
 		return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
 	}
 
-//	public Resolution cancelReverseOrder(){
-//		if(orderRequestId != null){
-//			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
-//			reverseOrderService.
-//		}
-//		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order marked reconciled");//, data);
-//		return new JsonResolution(healthkartResponse);
-//	}
+	public Resolution cancelReverseOrder(){
+		if(orderRequestId != null){
+			ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(orderRequestId);
+			if(shippingOrderService.shippingOrderHasReplacementOrder(reverseOrder.getShippingOrder())){
+				addRedirectAlertMessage(new SimpleMessage("Cannot cancel this order as a replacement has already been created for it."));
+			} else{				
+				reverseOrderService.deleteReverseOrder(reverseOrder);
+			}
+		}
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Order cancelled");//, data);
+		return new JsonResolution(healthkartResponse);
+	}
 
 	@Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
-	public Resolution generateExcelForReversePickup(){
-		orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage());
-		orderRequestsList = orderRequestsPage.getList();
+	public Resolution generateExcelForReversePickup(){		
+		orderRequestsList = reverseOrderService.getPickupRequestsForExcel(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId);
 		xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
 		addRedirectAlertMessage(new SimpleMessage("Download complete"));
         return new HTTPResponseResolution();

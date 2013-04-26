@@ -28,9 +28,9 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
         return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId), page, perPage);
     }
 
-//	 public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus) {
-//        return findByCriteria(getPickupSearchCriteria(pickupStatus, reconciliationStatusId));
-//    }
+	 public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId) {
+        return (List<ReverseOrder>) findByCriteria(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId));
+    }
 
 	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId) {
         DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);

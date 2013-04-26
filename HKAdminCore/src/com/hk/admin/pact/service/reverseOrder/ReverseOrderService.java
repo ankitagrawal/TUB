@@ -25,6 +25,8 @@ public interface ReverseOrderService {
 
 	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage);
 
+	public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId);
+
 	public ReverseOrder getReverseOrderById(Long id);
 
 	public void setCourierDetails(ReverseOrder reverseOrder, CourierPickupDetail courierPickupDetail);
@@ -34,4 +36,6 @@ public interface ReverseOrderService {
 	public ReverseOrder save(ReverseOrder reverseOrder);
 
 	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage);
+
+	public void deleteReverseOrder(ReverseOrder reverseOrder);
 }
