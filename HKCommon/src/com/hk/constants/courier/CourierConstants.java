@@ -16,6 +16,8 @@ public class CourierConstants {
     public static final String EXCEPTION = "Sorry.Database updation failed.Exception encountered for Tracking Id :";
     public static final String PARSE_EXCEPTION = "Sorry.Database updation failed.ParseException occurred for Tracking Id :";
     public static final String HEALTHKART_CHECKED_EXCEPTION = "Sorry,some problem occurred.Please contact the administrator.";
+	public static final String ERROR = "Error";
+
 
 	//Constants for shipment
 	public static final String SHIPMENT_DETAILS = "Shipment Details: ";
@@ -26,6 +28,7 @@ public class CourierConstants {
 	public static final String COURIER_SERVICE_INFO_NOT_FOUND = "Courier service not available here";
 	public static final String DROP_SHIPPED_ORDER = "No shipment for drop shipped orders";
 	public static final String AWB_NOT_ASSIGNED = "Could not assign Awb: ";
+	public static final String SUCCESS = "Success";
 	
 
 

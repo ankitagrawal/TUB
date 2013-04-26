@@ -17,6 +17,7 @@ public class CategoryConstants {
   public static final String EYE = "eye";
   public static final String HOME = "home";
   public static final String HEALTH_DEVICES = "health-devices";
+  public static final String DYNAMIC_REMARKETING="dynamic-remarketing";
 
 	//TODO remove nutrition after sometime
   public static final String NUTRITION = "nutrition";
@@ -26,6 +27,7 @@ public class CategoryConstants {
   public static final String HK_BRAND = "hk-brand";
   public static final String HEALTH_NUTRITION = "health-nutrition";
   public static final String SPORTS_NUTRITION = "sports-nutrition";
+  public static final String HOME_LIVING = "home-living";
 
 
   public static final Long BABY_TARGET_SALES = 272827L;

@@ -154,7 +154,7 @@
         <mapping class="com.hk.domain.courier.CourierGroup"/>
         <mapping class="com.hk.domain.order.PrimaryReferrerForOrder"/>
         <mapping class="com.hk.domain.order.SecondaryReferrerForOrder"/>
-        <mapping class="com.hk.domain.inventory.BrandsToAudit"/>
+        <!--<mapping class="com.hk.domain.inventory.BrandsToAudit"/>-->
         <mapping class="com.hk.domain.catalog.product.combo.SuperSaverImage"/>
         <mapping class="com.hk.domain.hkDelivery.Consignment"/>
         <mapping class="com.hk.domain.hkDelivery.ConsignmentStatus"/>
@@ -209,9 +209,13 @@
         <mapping class="com.hk.domain.inventory.rtv.ExtraInventoryStatus" />
         <mapping class="com.hk.domain.courier.CourierPickupDetail" />
         <mapping class="com.hk.domain.courier.PickupStatus" />
+        <mapping class="com.hk.domain.reverseOrder.ReverseOrder" />
+        <mapping class="com.hk.domain.reverseOrder.ReverseLineItem" />
 	    <mapping class="com.hk.domain.inventory.StockTransferStatus" />
 	    <mapping class="com.hk.domain.review.ProductReviewMail"/>
 	    <mapping class="com.hk.domain.review.Mail"/>
 	    <mapping class="com.hk.domain.review.UserReviewMail"/>
+        <mapping class="com.hk.domain.cycleCount.CycleCount"/>
+        <mapping class="com.hk.domain.cycleCount.CycleCountItem"/>
     </session-factory>
 </hibernate-configuration>

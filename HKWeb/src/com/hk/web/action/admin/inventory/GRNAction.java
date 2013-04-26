@@ -3,21 +3,26 @@ package com.hk.web.action.admin.inventory;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.inventory.GRNDto;
+import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.manager.GRNManager;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.GrnLineItemDao;
+import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
+import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
+import com.hk.constants.inventory.EnumGrnStatus;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -26,6 +31,7 @@ import com.hk.domain.inventory.GrnStatus;
 import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
+import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -84,6 +90,11 @@ public class GRNAction extends BasePaginatedAction {
     AdminInventoryService adminInventoryService;
     @Autowired
     InventoryService inventoryService;
+    @Autowired 
+    private ExtraInventoryService extraInventoryService;
+    @Autowired
+	PoLineItemDao poLineItemDao;
+
 
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
@@ -91,6 +102,8 @@ public class GRNAction extends BasePaginatedAction {
 
 	@Autowired
 	XslGenerator xslGenerator;
+	@Autowired
+	private AdminEmailManager                 adminEmailManager;
 
 	private File xlsFile;
 	Page grnPage;
@@ -224,7 +237,7 @@ public class GRNAction extends BasePaginatedAction {
 					}
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
-					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getQty());
+					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);
@@ -250,6 +263,19 @@ public class GRNAction extends BasePaginatedAction {
 			grn.getPurchaseOrder().setPurchaseOrderStatus(EnumPurchaseOrderStatus.Received.getPurchaseOrderStatus());
 			getGrnManager().getPurchaseOrderDao().save(grn.getPurchaseOrder());
 			getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+			if(grn.getGrnStatus().getId().equals(EnumGrnStatus.Closed.getId())){
+					for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){
+							if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+								poLineItem.setFirstTimePurchased(true);
+							}
+					}
+				if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                	PurchaseOrder po = grn.getPurchaseOrder();
+                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                	po.setExtraInventoryId(id);
+                }
+				getAdminEmailManager().sendGRNEmail(grn);
+			}
 
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -695,7 +721,15 @@ public class GRNAction extends BasePaginatedAction {
 		this.purchaseOrderService = purchaseOrderService;
 	}
 
-  public Set<String> getParamSet() {
+	public ExtraInventoryService getExtraInventoryService() {
+		return extraInventoryService;
+	}
+
+	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
+		this.extraInventoryService = extraInventoryService;
+	}
+
+public Set<String> getParamSet() {
 		HashSet<String> params = new HashSet<String>();
 		params.add("productVariant");
 		params.add("invoiceNumber");
@@ -715,4 +749,13 @@ public class GRNAction extends BasePaginatedAction {
     public void setGrnLineItem(GrnLineItem grnLineItem) {
         this.grnLineItem = grnLineItem;
     }
+
+	public AdminEmailManager getAdminEmailManager() {
+		return adminEmailManager;
+	}
+
+	public void setAdminEmailManager(AdminEmailManager adminEmailManager) {
+		this.adminEmailManager = adminEmailManager;
+	}
+    
 }

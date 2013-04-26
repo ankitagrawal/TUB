@@ -12,6 +12,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="GRN">
 <c:set var="GrnCloseId" value="<%=EnumGrnStatus.Closed.getId()%>"/>
+<c:set var="PIForGrnCreatedId" value="<%=EnumGrnStatus.PICreated.getId()%>"/>
 <%
 	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
 	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
@@ -396,7 +397,7 @@
 			</div>
 		</td>
 		<td>
-            <c:if test="${grnLineItemDto.grnLineItem.checkedInQty > 0 && pa.grn.grnStatus.id != GrnCloseId}">
+            <c:if test="${grnLineItemDto.grnLineItem.checkedInQty > 0 && pa.grn.grnStatus.id <  PIForGrnCreatedId}">
                 <c:set var="itemCheckedin" value="true" />
                 <ul>
                       <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
@@ -514,7 +515,7 @@
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
 	<s:submit name="save" value="Save" class="requiredFieldValidator"/>
 
-    <c:if test='${itemCheckedin && pa.grn.grnStatus.id != GrnCloseId}' >
+    <c:if test='${itemCheckedin && pa.grn.grnStatus.id == GrnCloseId}' >
      <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes
              <s:param name="grn" value="${pa.grn.id}"/>
     </s:link>

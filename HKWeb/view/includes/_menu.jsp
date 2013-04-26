@@ -67,7 +67,7 @@
                 <div id='homeIcon'></div>
             </s:link></li>--%>
             <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-                <c:if test="${topMenuNode.name != 'Baby'}">
+                <c:if test="${topMenuNode.url != '/home-living'}">
                     <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''}'>
                         <a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>
                     </li>

@@ -1,5 +1,26 @@
 package com.hk.web.action.admin.catalog.product;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.hk.pact.service.catalog.ProductService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import net.sourceforge.stripes.validation.ValidationMethod;
+
+import org.apache.commons.lang.StringUtils;
+import org.omg.CORBA.PUBLIC_MEMBER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.google.gson.Gson;
@@ -16,22 +37,9 @@ import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.combo.ComboDao;
 import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.CategoryService;
-import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.lang.reflect.Type;
-import java.util.*;
 
 @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
 @Component
@@ -45,19 +53,16 @@ public class BulkEditProductAction extends BasePaginatedAction {
   List<String> supplierTin;
   String brand;
   String productVariantId = "";
-  // List<String> options;
-  // List<String> extraOptions;
-  Map<String, Boolean> toBeEditedOptions = new HashMap<String, Boolean>();
-  Object toBeEditedOptionsObject;
+  Map<String, Boolean> optionToEdit = new HashMap<String, Boolean>();
+  BulkEditOptions toBeEditedOptions;
+  Object optionObject;
   private Integer defaultPerPage = 20;
   Page productPage;
 
   @Autowired
   ProductService productService;
-
   @Autowired
   private ProductVariantService productVariantService;
-
   @Autowired
   private CategoryService categoryService;
   @Autowired
@@ -93,27 +98,32 @@ public class BulkEditProductAction extends BasePaginatedAction {
 
   @SuppressWarnings("unchecked")
   public Resolution defineOptionsMap() {
-    if (getContext().getRequest().getParameter("toBeEditedOptions") != null) {
-      String[] options = getContext().getRequest().getParameterValues("toBeEditedOptions");
+    if (getContext().getRequest().getParameter("optionToEdit") != null) {
+      String[] options = getContext().getRequest().getParameterValues("optionToEdit");
       for (String option : options) {
-        toBeEditedOptions.put(option, Boolean.TRUE);
+        optionToEdit.put(option, Boolean.TRUE);
       }
     }
-    toBeEditedOptionsObject = new HashMap(toBeEditedOptions);
     return new ForwardResolution(BulkEditProductAction.class, "bulkEdit");
   }
 
   @SuppressWarnings("unchecked")
   public Resolution bulkEdit() {
+    toBeEditedOptions = new BulkEditOptions();
     productPage = productService.getAllProductsByCategoryAndBrand(category, brand, getPageNo(), getPerPage());
     products = new ArrayList<Product>();
     if (productPage != null) {
       products.addAll(productPage.getList());
     }
-    // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed
-    // cannot be rendered.
+    // During pagination,the param set again passes the map as a string. So,the values of variables to be displayed cannot be rendered.
     // Therefore, the object again needs to be converted to a map.
-    toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
+    if (optionToEdit != null && optionToEdit.size() != 0) {
+      toBeEditedOptions.setOptions(optionToEdit);
+      optionObject = optionToEdit.toString();
+      optionToEdit = null;
+    } else if(optionObject != null && !optionObject.equals("{}")) {
+      toBeEditedOptions.setOptions(getMapFromString(optionObject.toString()));
+    }
     return new ForwardResolution("/pages/bulkEditProductDetails.jsp");
   }
 
@@ -121,11 +131,8 @@ public class BulkEditProductAction extends BasePaginatedAction {
     if (products != null) {
       int ctr = 0;
 
-      // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden
-      // parameter for the bean.
+      // bulkEditProductDetails.jsp converts toBeEditedOptionsObject to a string when it is passed on as a hidden parameter for the bean.
       // So for further use,the string needs to be converted again into a map
-      toBeEditedOptions = getMapFromString(toBeEditedOptionsObject.toString());
-
       for (Product product : products) {
         logger.debug("productId: " + product.getId());
         Combo combo = comboDao.get(Combo.class, product.getId());
@@ -135,13 +142,13 @@ public class BulkEditProductAction extends BasePaginatedAction {
           if (productVariant.getClearanceSale() == null || productVariant.getClearanceSale().equals(Boolean.FALSE)) {
             if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
               addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
-              return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+              return sendResponse();
             }
           }
 
           if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
             addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+            return sendResponse();
           }
           productVariant = getProductVariantService().save(productVariant);
         }
@@ -153,8 +160,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
           category = getCategoryService().save(category);
           newCatList.add(category);
         }
-        // to avoid duplicate primary key in the many to many mapping.. converting to set and then back to
-        // list.. eliminating duplicate category names
+        // to avoid duplicate primary key in the many to many mapping.. converting to set and then back to list.. eliminating duplicate category names
         product.setCategories(new ArrayList<Category>(newCatList));
 
         if (product.isDeleted().equals(Boolean.FALSE)) {
@@ -169,7 +175,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
           Category secondaryCat = categoryDao.getCategoryByName(Category.getNameFromDisplayName(secondaryCategory.get(ctr)));
           if (secondaryCat == null) {
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid Category in Secondary Category for product: " + product.getId()));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+            return sendResponse();
           }
           product.setSecondaryCategory(secondaryCat);
         }
@@ -178,7 +184,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
           Supplier supplier = supplierDao.findByTIN(supplierTin.get(ctr));
           if (combo == null && supplier == null) {
             addRedirectAlertMessage(new SimpleMessage("Supplier corresponding to given tin does not exist for product: " + product.getId()));
-            return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+            return sendResponse();
           }
           product.setSupplier(supplier);
         }
@@ -188,8 +194,14 @@ public class BulkEditProductAction extends BasePaginatedAction {
       }
     }
     addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-    return new RedirectResolution(BulkEditProductAction.class, "bulkEdit").addParameter("brand", this.brand).addParameter("toBeEditedOptionsObject", this.toBeEditedOptionsObject).addParameter("category",this.category);
+    return sendResponse();
+  }
 
+  public Resolution sendResponse() {
+    return new RedirectResolution(BulkEditProductAction.class, "bulkEdit")
+        .addParameter("brand", brand)
+        .addParameter("category", category)
+        .addParameter("optionObject", optionObject);
   }
 
   @SuppressWarnings("unchecked")
@@ -306,20 +318,12 @@ public class BulkEditProductAction extends BasePaginatedAction {
     this.secondaryCategory = secondaryCategory;
   }
 
-  public Map<String, Boolean> getToBeEditedOptions() {
+  public BulkEditOptions getToBeEditedOptions() {
     return toBeEditedOptions;
   }
 
-  public void setToBeEditedOptions(Map<String, Boolean> toBeEditedOptions) {
-    this.toBeEditedOptions = toBeEditedOptions;
-  }
-
-  public Object getToBeEditedOptionsObject() {
-    return toBeEditedOptionsObject;
-  }
-
-  public void setToBeEditedOptionsObject(Object toBeEditedOptionsObject) {
-    this.toBeEditedOptionsObject = toBeEditedOptionsObject;
+  public void setToBeEditedOptions(BulkEditOptions toBeEditedOptionsObject) {
+    this.toBeEditedOptions = toBeEditedOptionsObject;
   }
 
   private Map<String, Boolean> getMapFromString(String str) {
@@ -348,8 +352,7 @@ public class BulkEditProductAction extends BasePaginatedAction {
     HashSet<String> params = new HashSet<String>();
     params.add("category");
     params.add("brand");
-    params.add("toBeEditedOptions");
-    params.add("toBeEditedOptionsObject");
+    params.add("optionObject");
     return params;
   }
 
@@ -385,19 +388,19 @@ public class BulkEditProductAction extends BasePaginatedAction {
     this.productVariantId = productVariantId;
   }
 
-  // public List<String> getOptions() {
-  // return options;
-  // }
-  //
-  // public void setOptions(List<String> options) {
-  // this.options = options;
-  // }
-  //
-  // public List<String> getExtraOptions() {
-  // return extraOptions;
-  // }
-  //
-  // public void setExtraOptions(List<String> extraOptions) {
-  // this.extraOptions = extraOptions;
-  // }
+  public Map<String, Boolean> getOptionToEdit() {
+    return optionToEdit;
+  }
+
+  public void setOptionToEdit(Map<String, Boolean> optionToEdit) {
+    this.optionToEdit = optionToEdit;
+  }
+
+  public Object getOptionObject() {
+    return optionObject;
+  }
+
+  public void setOptionObject(Object optionObject) {
+    this.optionObject = optionObject;
+  }
 }
