@@ -12304,6 +12304,9 @@
             </column>
         </addColumn>
     </changeSet>
+     <changeSet author="Ajeet (generated)" id="1366967291560-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="classification_id" tableName="reason"/>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1366787798141-12">
         <modifyDataType columnName="name" newDataType="VARCHAR(100)" tableName="bucket"/>
     </changeSet>
@@ -12521,9 +12524,6 @@
     </changeSet> -->    
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1366967291560-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="classification_id" tableName="reason"/>
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
