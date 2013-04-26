@@ -38,7 +38,6 @@ public class GoogleCatalogAction extends BaseAction {
         categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
 
         List<Product> categoryProducts = getProductService().getProductByCategories(categories);
-
         List<Product> individualProducts = marketingFeedService.getProducts(EnumMarketingFeed.Google_DR.getName());
         categoryProducts.addAll(individualProducts);
 
