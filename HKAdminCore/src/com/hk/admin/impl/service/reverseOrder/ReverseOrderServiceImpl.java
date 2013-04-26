@@ -95,8 +95,8 @@ public class ReverseOrderServiceImpl implements ReverseOrderService {
         return rvoBaseAmt;
     }
 	
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage){
-        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, page, perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage){
+        return getReverseOrderDao().getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, page, perPage);
     }
 
 	public ReverseOrder save(ReverseOrder reverseOrder){
