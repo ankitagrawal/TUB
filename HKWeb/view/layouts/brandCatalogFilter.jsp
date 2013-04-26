@@ -27,7 +27,7 @@
       <h5 class='heading1' style="background-color:#DDD;padding:5px;">
 				<a href="${pageContext.request.contextPath}/brand/all/${ca.brand}"
 						   style="font-size:.9em;color:#444444;">
-								All ${hk:ca.brand} Products
+								All ${ca.brand} Products
 						</a>
 			</h5>
 			<%--<ul style="padding-left:10px;">
