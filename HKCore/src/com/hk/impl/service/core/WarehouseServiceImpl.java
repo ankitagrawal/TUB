@@ -55,14 +55,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     // Default is B2C
     public List<Warehouse> getServiceableWarehouses() {
       User user = userService.getLoggedInUser();
-      if (user.getRoleStrings().contains(RoleConstants.B2B_USER.toString())) {
+      if (user != null && user.getRoleStrings() != null && user.getRoleStrings().contains(RoleConstants.B2B_USER.toString())) {
         return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
       return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
     }
 
   public List<Warehouse> getServiceableWarehouses(Order order) {
-      if (order.isB2bOrder() != null && order.isB2bOrder()) {
+      if (order != null && order.isB2bOrder() != null && order.isB2bOrder()) {
         return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), null, Boolean.TRUE);
       }
       return getWarehouseDao().getAllWarehouses(EnumWarehouseType.Online_B2B.getId(), Boolean.TRUE, Boolean.TRUE);
