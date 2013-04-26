@@ -215,9 +215,7 @@
 
             });
 			$('.requiredFieldValidator').click(function() {
-                alert('hi i am clicked');
-
-				var invoice = $('.invoiceNumber').val();
+                var invoice = $('.invoiceNumber').val();
 				if(invoice == "-"){
 					alert("Enter Invoice Number");
 					return false;
