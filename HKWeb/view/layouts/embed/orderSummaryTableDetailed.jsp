@@ -24,14 +24,13 @@ Pass an attribute called pricingDto to render a table with pricing details
     <div class="productGrid">Product</div>
     <div class="prodQuantityGrid">Qty</div>
     <div class='name' style="width: 20%;left: 19px;position: relative;float: left;margin-top: 5px;">
-        <span class="dispatchDateText2">Dispatch Date</span>
+        <span class="dispatchDateText2">Dispatch Days</span>
         <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
         <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
             <span id="learnMore" class="learnMore">learn more</span>
             <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
             <span class="arrowNew"></span>
         </div>
-        <span class="deliveryDateText">Delivery Date would be extra</span>
     </div>
     <div class="prodPriceGrid">Price</div>
 </div>
