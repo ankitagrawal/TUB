@@ -460,6 +460,7 @@ public class ProductServiceImpl implements ProductService {
                         this.addBrandSynonyms(brands, cpBrand);
                     }
                 }
+              brands.add(product.getBrand());
             } else {
                 String pBrand = product.getBrand();
                 brands.add(pBrand);

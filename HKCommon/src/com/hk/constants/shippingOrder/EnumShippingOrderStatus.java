@@ -158,7 +158,11 @@ public enum EnumShippingOrderStatus {
                 EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
                 EnumShippingOrderStatus.SO_Lost.asShippingOrderStatus(),
-	            EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus());
+	            EnumShippingOrderStatus.RTO_Initiated.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Appeasement.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus());
     }
 
     public static List<EnumShippingOrderStatus> getStatusForShipmentResolution() {

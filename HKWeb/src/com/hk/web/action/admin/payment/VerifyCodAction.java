@@ -31,30 +31,30 @@ import com.hk.web.action.error.AdminPermissionAction;
 /**
  * User: rahul Time: 12 Feb, 2010 6:04:16 PM
  */
-@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_ORDER }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ORDER}, authActionBean = AdminPermissionAction.class)
 @Component
 public class VerifyCodAction extends BaseAction {
     @Autowired
-    private PaymentManager      paymentManager;
+    private PaymentManager paymentManager;
     @Autowired
-    private OrderService        orderService;
+    private OrderService orderService;
     @Autowired
     private OrderLoggingService orderLoggingService;
     @Autowired
-    AdminOrderService   adminOrderService;
+    AdminOrderService adminOrderService;
 
     @Validate(required = true)
-    private Order               order;
-	@Autowired
-	SMSManager smsManager;
+    private Order order;
+    @Autowired
+    SMSManager smsManager;
 
     @JsonHandler
     public Resolution pre() {
         User loggedOnUser = getUserService().getLoggedInUser();
         Map<String, Object> data = new HashMap<String, Object>(2);
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
-            String comment = "Confirmed By : "+ loggedOnUser +" , through Clicking link Confirm COD" ;
-            Payment payment = adminOrderService.confirmCodOrder(order, comment);
+            String comment = "Confirmed by Clicking link Confirm COD";
+            Payment payment = adminOrderService.confirmCodOrder(order, comment, loggedOnUser);
             if (payment != null) {
                 data.put("paymentStatus", JsonUtils.hydrateHibernateObject(payment.getPaymentStatus()));
                 data.put("orderStatus", JsonUtils.hydrateHibernateObject(order.getOrderStatus()));
@@ -99,5 +99,5 @@ public class VerifyCodAction extends BaseAction {
         this.orderLoggingService = orderLoggingService;
     }
 
-    
+
 }

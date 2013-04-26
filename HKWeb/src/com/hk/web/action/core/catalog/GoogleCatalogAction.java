@@ -31,13 +31,13 @@ public class GoogleCatalogAction extends BaseAction {
 
     String category;
 
-    private List<Product> products;
+    private List<Product> products = new ArrayList<Product>();
 
     public Resolution pre() {
         List<String> categories = new ArrayList<String>();
         categories = Arrays.asList(getContext().getRequest().getParameterValues("category"));
-        List<Product> categoryProducts = getProductService().getProductByCategories(categories);
 
+        List<Product> categoryProducts = getProductService().getProductByCategories(categories);
         List<Product> individualProducts = marketingFeedService.getProducts(EnumMarketingFeed.Google_DR.getName());
         categoryProducts.addAll(individualProducts);
 
