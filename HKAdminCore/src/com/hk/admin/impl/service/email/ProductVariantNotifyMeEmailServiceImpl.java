@@ -52,7 +52,6 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
         List<NotifyMe> notifyMeList = notifyMeDao.getNotifyMeListForProductVariantInStock();
-        Map<String, List<NotifyMe>> subscribedUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         try {
 
             for (NotifyMe notifyMe : notifyMeList) {
@@ -63,7 +62,10 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
                     // get inventory in warehouse
                     int availableInventory = adminInventoryService.getNetInventory(notifyMe.getProductVariant()).intValue();
-                    allowedUserNumber = (int) (availableInventory / (notifyConversionRate * bufferRate));
+                    allowedUserNumber = availableInventory;
+                    if(bufferRate != 0 || notifyConversionRate != 0){
+                        allowedUserNumber = (int) (availableInventory / (notifyConversionRate * bufferRate));
+                    }
                     allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
 
                 } else {
@@ -76,39 +78,40 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 if (alreadyNotified < allowedUserNumber) {
                     // get List of user to be informed
                     List<NotifyMe> notifyMeListPerUser = null;
+                    boolean isEligible = false;
                     if ((finalUserListForNotificationMap.containsKey(email))) {
                         notifyMeListPerUser = finalUserListForNotificationMap.get(email);
                     } else {
                         notifyMeListPerUser = new ArrayList<NotifyMe>();
                     }
-                    notifyMeListPerUser.add(notifyMe);
-                    finalUserListForNotificationMap.put(email, notifyMeListPerUser);
-                    userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
-                }
-            }
 
-            //Send mails to subscriber only
-            for (String emailId : finalUserListForNotificationMap.keySet()) {
-                User user = userService.findByLogin(emailId);
-                if (user != null) {
-                    if (user.isSubscribedForNotify()) {
-                        subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
-                    }
-                } else {
-                    // find existing recipients and check for subscribed
-                    EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(emailId);
-                    if (emailRecepient != null) {
-                        if (emailRecepient.isSubscribed()) {
-                            subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
+                    User user = userService.findByLogin(email);
+                    if (user != null) {
+                        if (user.isSubscribedForNotify()) {
+                            isEligible = true;
                         }
                     } else {
-                        subscribedUserListForNotificationMap.put(emailId, finalUserListForNotificationMap.get(emailId));
+                        // find existing recipients and check for subscribed
+                        EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(email);
+                        if (emailRecepient != null) {
+                            if (emailRecepient.isSubscribed()) {
+                                isEligible = true;
+                            }
+                        } else {
+                            isEligible = true;
+                        }
+
                     }
+                    if (isEligible) {
+                        notifyMeListPerUser.add(notifyMe);
+                        finalUserListForNotificationMap.put(email, notifyMeListPerUser);
+                        userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                    }
+
                 }
             }
-
             //send mails
-            adminEmailManager.sendNotifyUsersMails(subscribedUserListForNotificationMap);
+            adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
 
 
         } catch (Exception ex) {
