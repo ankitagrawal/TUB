@@ -179,6 +179,7 @@
         <label style="font-weight:bold;">Last Activity:</label><br>
         ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} Reason:
         ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.primaryClassification}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.secondaryClassification}-
         ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].comments}
         on
         <br>
@@ -289,7 +290,7 @@
     <%--</s:link>)--%>
     <%--</c:if>--%>
 
-    <c:if test="${isActionQueue == true || isSearchShippingOrder == true }">
+    <c:if test="${isActionQueue == false || isSearchShippingOrder == true }">
     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
             <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
