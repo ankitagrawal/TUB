@@ -126,9 +126,10 @@
         </s:form>
     </fieldset>
 
-    <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
-        <fieldset>
-            <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+
+    <fieldset>
+        <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+            <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
                 <ol>
                     <li>
                         <label>Conversion Rate</label>
@@ -139,11 +140,12 @@
                         <s:text name="bufferRate"/>
                     </li>
                 </ol>
-                <s:submit name="sendAllNotifyMails" value="send all mails"/>
-            </s:form>
+            </shiro:hasPermission>
+            <s:submit name="sendAllNotifyMails" value="send all mails"/>
+        </s:form>
 
-        </fieldset>
-    </shiro:hasPermission>
+    </fieldset>
+
 
     <c:choose>
         <c:when test="${notifyMeBean.notifyMeList!=null}">
