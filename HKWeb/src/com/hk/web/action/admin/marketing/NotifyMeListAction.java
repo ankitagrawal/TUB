@@ -207,6 +207,10 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     }
 
     public Resolution sendAllNotifyMails() {
+        if (conversionRate > 1) {
+            addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
+            return new RedirectResolution(NotifyMeListAction.class);
+        }
         productVariantNotifyMeEmailService.sendNotifyMeEmail(conversionRate, bufferRate);
         return new RedirectResolution(NotifyMeListAction.class);
     }
