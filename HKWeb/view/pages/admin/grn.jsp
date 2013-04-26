@@ -1,12 +1,12 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.inventory.EnumGrnStatus" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.core.EnumPermission" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.GRNAction" var="pa"/>
@@ -14,8 +14,8 @@
 <c:set var="GrnCloseId" value="<%=EnumGrnStatus.Closed.getId()%>"/>
 <c:set var="PIForGrnCreatedId" value="<%=EnumGrnStatus.PICreated.getId()%>"/>
 <%
-	WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-	pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+	 WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+   pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 %>
 <c:set var="inCheckedIn" value="<%=EnumGrnStatus.InventoryCheckedIn.getId()%>"/>
 <s:layout-component name="htmlHead">
@@ -272,7 +272,7 @@
 		<td>For Warehouse</td>
 		<td>
 			<s:hidden name="grn.warehouse" value="${pa.grn.warehouse}"/>
-				${pa.grn.warehouse.city}
+				${pa.grn.warehouse.identifier}
 		</td>
 		<td>Credit Days</td>
 		<td>${pa.grn.purchaseOrder.supplier.creditDays}</td>
