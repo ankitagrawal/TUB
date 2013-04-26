@@ -21,8 +21,11 @@
                 <priceMin marked="${product.minimumMRPProducVariant.markedPrice}" hk="${product.minimumMRPProducVariant.hkPrice}"/>
                 <priceMax marked="${product.maximumMRPProducVariant.markedPrice}" hk="${product.maximumMRPProducVariant.hkPrice}"/>
                 <categories>
-                    <c:set var="node" value="${hk:getMenuNodeForProduct(product)}"/>
-                    <c:if test="${node != null}"> ${node.slug} <c:if test="${node.parentNode != null}"> , ${node.parentNode.slug} <c:if test="${node.parentNode.parentNode != null}"> , ${node.parentNode.parentNode.slug} <c:if test="${node.parentNode.parentNode.parentNode != null}"> , ${node.parentNode.parentNode.parentNode.slug} </c:if> </c:if> </c:if> </c:if>
+                    <c:forEach items="${product.categories}" var="category">
+                        <category>
+                            ${category.name}
+                        </category>
+                    </c:forEach>
                 </categories>
                 <images>
                     <c:choose>
