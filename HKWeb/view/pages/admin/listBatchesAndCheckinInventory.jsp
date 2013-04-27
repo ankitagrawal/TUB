@@ -67,7 +67,7 @@
                   </c:if>
 
                 </td>
-                <td>${skuGroup.sku.warehouse.city}</td>
+                <td>${skuGroup.sku.warehouse.identifier}</td>
                 <td>${skuGroup.batchNumber}</td>
                 <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
                 <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
@@ -144,7 +144,7 @@
                     </s:link>
                   </c:if> 
                 </td>
-                <td>${skuGroup.sku.warehouse.city}</td>
+                <td>${skuGroup.sku.warehouse.identifier}</td>
                 <td>${skuGroup.batchNumber}</td>
                 <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
                 <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>

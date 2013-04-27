@@ -12,7 +12,10 @@ import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.order.B2BOrderService;
-import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -118,64 +121,6 @@ public class AccountingInvoiceAction extends BaseAction {
       return new ForwardResolution("pages/admin/adminHome.jsp");
     }
   }
-
-  @DontValidate
-  public Resolution oldAccountingInvoice() {
-    // TODO: # warehouse fix this
-
-    /* pricingDto = new PricingDto(order.getLineItems(), order.getAddress()); */
-    return new ForwardResolution("/pages/oldAccountingInvoice.jsp");
-  }
-
-  public Resolution retailInvoice() {
-    // TODO: # warehouse fix this
-    /*
-    * order = accountingInvoice.getShippingOrder(); // Partial invoice/Re-ship logic will come here for line items
-    * List<LineItem> lineItems = new ArrayList<LineItem>(); for (InvoiceLineItem invoiceLineItem :
-    * accountingInvoice.getInvoiceLineItems()) { lineItems.add(invoiceLineItem.getLineItem()); } if
-    * (lineItems.isEmpty()) { lineItems = order.getLineItems(); } if (lineItems.get(0).getCourier() != null) {
-    * defaultCourier = lineItems.get(0).getCourier().getName(); } partialPricingDto = new PricingDto(lineItems,
-    * order.getAddress()); pricingDto = new PricingDto(order.getLineItems(), order.getAddress());
-    */
-    return new ForwardResolution("/pages/retailInvoice.jsp");
-  }
-
-  public Resolution b2bInvoice() {
-    // TODO: # warehouse fix this
-
-    /*
-    * order = accountingInvoice.getShippingOrder(); b2bUserDetails
-    * =b2bUserDetailsDao.getB2bUserDetails(order.getUser()); // Partial invoice/Re-ship logic will come here for
-    * line items List<LineItem> lineItems = new ArrayList<LineItem>(); for (InvoiceLineItem invoiceLineItem :
-    * accountingInvoice.getInvoiceLineItems()) { lineItems.add(invoiceLineItem.getLineItem()); } if
-    * (lineItems.isEmpty()) { lineItems = order.getLineItems(); } if (lineItems.get(0).getCourier() != null) {
-    * defaultCourier = lineItems.get(0).getCourier().getName(); } partialPricingDto = new PricingDto(lineItems,
-    * order.getAddress()); pricingDto = new PricingDto(order.getLineItems(), order.getAddress());
-    */
-    return new ForwardResolution("/pages/b2bInvoice.jsp");
-  }
-
-  public Resolution serviceInvoice() {
-    // TODO: # warehouse fix this
-    /*
-    * order = accountingInvoice.getShippingOrder(); // Partial invoice/Re-ship logic will come here for line items
-    * List<LineItem> lineItems = new ArrayList<LineItem>(); for (InvoiceLineItem invoiceLineItem :
-    * accountingInvoice.getInvoiceLineItems()) { lineItems.add(invoiceLineItem.getLineItem()); } if
-    * (lineItems.isEmpty()) { lineItems = order.getLineItems(); } partialPricingDto = new PricingDto(lineItems,
-    * order.getAddress()); pricingDto = new PricingDto(order.getLineItems(), order.getAddress());
-    */
-    return new ForwardResolution("/pages/serviceInvoice.jsp");
-  }
-
-  /*
-  * public PricingDto getPricingDto() { return pricingDto; } public PricingDto getPartialPricingDto() { return
-  * partialPricingDto; }
-  */
-
-  /*
-  * public AccountingInvoice getAccountingInvoice() { return accountingInvoice; } public void
-  * setAccountingInvoice(AccountingInvoice accountingInvoice) { this.accountingInvoice = accountingInvoice; }
-  */
 
   public String getDefaultCourier() {
     return defaultCourier;

@@ -138,9 +138,15 @@
                   <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                                         label="name"/>
                 </s:select>
+	            <br>
+	            <label>Warehouse:</label>
+	            <s:select name="warehouseId">
+		            <%--<s:option value="">All Warehouses</s:option>--%>
+		            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse" value="id"
+		                                       label="name"/>
+	            </s:select>
 
-
-                <s:submit name="pre" value="Search"/>
+	            <s:submit name="pre" value="Search"/>
                 <br/>
                 <s:submit name="searchUnscheduled" value="Search Unscheduled cases" class="format-button"  />
                 <s:submit name="generateExcelForReversePickup" value="Download to Excel" class="format-button"/>
