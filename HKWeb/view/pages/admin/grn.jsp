@@ -29,8 +29,8 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    function checkvariantWeight(){
-        var variantRegex=/^-?[0-9]+$/;
+    function checkvariantWeightonBlur(){
+        var variantRegex=/^[0-9]+$/;
         varWeightLength = $(this).val().length;
         varWeightValue = $(this).val();
         if (varWeightLength == 0){
@@ -38,7 +38,7 @@ $(document).ready(function() {
             return false;
 
         }else if (isNaN(varWeightValue)) {
-            alert(varWeightValue);
+            //alert(varWeightValue);
             alert("Please enter variant weight in correct format!");
             return false;
         }
@@ -46,9 +46,35 @@ $(document).ready(function() {
             alert(" Weight should be in grams!");
             return false;
         }
-        return true;
+        else{
+            return true;
+        }
+
     }
-    $('.weight').blur(checkvariantWeight);
+    function checkvariantWeightonSubmit(){
+        var variantRegex=/^[0-9]+$/;
+        var success = true;
+            $(".weight").each(function() {
+                    varWeightLength = $(this).val().length;
+                    varWeightValue = $(this).val();
+                    if (varWeightLength == 0){
+                        alert("Variant weight cannot be empty!");
+                        success = false;
+
+                    }else if (isNaN(varWeightValue)) {
+                        //alert(varWeightValue);
+                        alert("Please enter variant weight in correct format!");
+                        success = false;
+                    }
+                    else if((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
+                        alert(" Weight should be in grams!");
+                        success = false;
+                    }
+            });
+
+            return success;
+        }
+    $('.weight').blur(checkvariantWeightonBlur);
     $('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
 
     $('.hkProductLightbox').each(function(){
@@ -207,10 +233,12 @@ $(document).ready(function() {
     };
 
     $('.validateWeight').click(function() {
-       if(!checkvariantWeight()){
-           return;
-       }
-      $('.requiredFieldValidator').click();
+       // console.log(checkvariantWeightonSubmit());
+        if(checkvariantWeightonSubmit()){
+            $('.requiredFieldValidator').click();
+        }else{
+            return false;
+        }
 
    });
     $('.requiredFieldValidator').click(function() {
