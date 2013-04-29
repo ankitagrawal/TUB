@@ -353,8 +353,8 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 		List<Hub> hubList = hubService.getAllHubs();
 		List<Warehouse> warehouseList = warehouseService.getServiceableWarehouses();
 		for (Warehouse warehouse : warehouseList){
-			if(warehouse != null && warehouse.getName() != null){
-				validSourceAndDestinations.add(warehouse.getName());
+			if(warehouse != null && warehouse.getIdentifier() != null){
+				validSourceAndDestinations.add(warehouse.getIdentifier());
 			}
 		}
 

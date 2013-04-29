@@ -206,6 +206,7 @@
 				var grandTotal = $('.grandTotal').val();
 				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
 			});
+
 		});
 	</script>
 </s:layout-component>
@@ -241,9 +242,13 @@
 				<td><b>Welcome, <shiro:principal property="firstName"/></b></td>
 			</tr>
 		</table>
-		<table cellpadding="1" width="100%">
+		<table cellpadding="1" >
 			<tr class="applyBorder" style="background:#EEE">
 				<td align="right"><input type="button" value="Reset / New Order" id="reset"/></td>
+				<td><s:label name="Shipping Gateway Order Id"/> </td>
+				<td><s:text name="shippingGatewayOrderId"/></td>
+				<td><s:submit name="createReverseOrderForPOS" value="Return Order" id="reverseOrder"/></td>
+				<td><s:link beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction" target="_blank">Checkin Return Inventory</s:link> </td>
 				<%--<td>Search a Product</td>
 				<td><input type="text" style="width:300px;float: left;padding-top: 0;padding-bottom: 0;font: inherit;" id="productselect"/></td>--%>
 			</tr>

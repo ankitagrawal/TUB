@@ -135,10 +135,11 @@
 </c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
-    Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
-                <span
-                        style="margin-left:10px;">Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
- </span>
+  IsB2B?: <strong>${shippingOrder.baseOrder.b2bOrder}</strong>
+  <br/>
+  Warehouse: <strong>${shippingOrder.warehouse.identifier}</strong>
+  <br/>
+  Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
 </div>
 <div class="clear" style=""></div>
 <div class="floatleft">
@@ -245,8 +246,7 @@
             </s:link>)
             </shiro:hasPermission>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
-                                     class="flipWarehouse">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="pre">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)
