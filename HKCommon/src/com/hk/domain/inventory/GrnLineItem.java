@@ -195,6 +195,7 @@ public class GrnLineItem implements java.io.Serializable {
 	public void setFillRate(Double fillRate) {
 		this.fillRate = fillRate;
 	}
+	
 
 	@Override
     public boolean equals(Object o) {

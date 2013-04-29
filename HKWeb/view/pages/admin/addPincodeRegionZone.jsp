@@ -139,7 +139,7 @@
 								<td>${prz.pincode.pincode}</td>
 
 								<td>
-									${prz.warehouse.name}
+									${prz.warehouse.identifier}
 									<s:hidden name="pincodeRegionZoneList[${ctr.index}].warehouse" value="${prz.warehouse.id}"/>
 
 									<%--<s:select name="pincodeRegionZoneList[${ctr.index}].warehouse" id="warehouse"--%>

@@ -12304,6 +12304,9 @@
             </column>
         </addColumn>
     </changeSet>
+     <changeSet author="Ajeet (generated)" id="1366967291560-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="classification_id" tableName="reason"/>
+    </changeSet>
     <changeSet author="Pratham (generated)" id="1366787798141-12">
         <modifyDataType columnName="name" newDataType="VARCHAR(100)" tableName="bucket"/>
     </changeSet>
@@ -12355,15 +12358,7 @@
     <changeSet author="Pratham (generated)" id="1366787798141-28">
         <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_task" constraintName="fk_action_task_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
     </changeSet>
-    <!--<changeSet author="Pratham (generated)" id="1366787798141-29">-->
-        <!--<addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>-->
-    <!--</changeSet>-->
-    <changeSet author="Pratham (generated)" id="1366790406145-1">
-        <addNotNullConstraint columnDataType="INT" columnName="classification_id" tableName="reason"/>
-    </changeSet>
-    <!--<changeSet author="Pratham (generated)" id="1366787798141-30">-->
-        <!--<addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>-->
-    <!--</changeSet>-->
+    
     <changeSet author="Pratham (generated)" id="1366787798141-31">
         <addForeignKeyConstraint baseColumnNames="bucket_id" baseTableName="reason_has_bucket" constraintName="fk_reason_has_bucket_bucket1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bucket" referencesUniqueColumn="false"/>
     </changeSet>
@@ -12376,13 +12371,161 @@
     <changeSet author="Pratham (generated)" id="1366787798141-34">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="watcher" constraintName="fk_action_item_has_user_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <!--<changeSet author="Pratham (generated)" id="1366787798141-35">-->
-        <!--<dropColumn columnName="description" tableName="bucket"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Pratham (generated)" id="1366787798141-36">-->
-        <!--<dropColumn columnName="primary_classification" tableName="reason"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="Pratham (generated)" id="1366787798141-37">-->
-        <!--<dropColumn columnName="secondary_classification" tableName="reason"/>-->
-    <!--</changeSet>-->
+   
+    <changeSet author="Rajesh" id="24-04-2013-01">
+    		<sql>
+              INSERT INTO category(name,display_name) VALUES("dynamic-remarketing", "Dynamic Remarketing") on duplicate key update display_name = 'Dynamic Remarketing';
+            </sql>
+       </changeSet>
+
+    <changeSet author="Seema (generated)" id="1365072411708-1">
+        <addColumn tableName="cycle_count">
+            <column name="brand" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-2">
+        <sql>
+            update cycle_count cc inner join brands_to_audit bd on cc.brands_to_audit_id = bd.id
+            set cc.brand = bd.brand where cc.brands_to_audit_id is not null;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-3">
+        <sql>
+            insert into cycle_count (user_id,create_dt,end_date,cycle_status,warehouse_id,brand)
+            select bd.auditor_user_id,bd.audit_date,bd.update_dt,400,bd.warehouse_id,bd.brand
+            from brands_to_audit bd left  join cycle_count cc on cc.brands_to_audit_id = bd.id where cc.id is null ;
+        </sql>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-4">
+        <dropForeignKeyConstraint baseTableName="cycle_count"  constraintName="fk_cycle_count_brands_to_audit1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365072411708-5">
+        <dropColumn columnName="brands_to_audit_id" tableName="cycle_count"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-1">
+        <dropForeignKeyConstraint baseTableName="brands_to_audit" constraintName="fk_brands_to_audit_user1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-2">
+        <dropForeignKeyConstraint baseTableName="brands_to_audit"   constraintName="fk_brands_to_audit_warehouse1"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-5">
+        <dropTable tableName="brands_to_audit"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1366805815392-2">
+        <modifyDataType columnName="name" newDataType="VARCHAR(100)" tableName="inv_txn_type"/>
+    </changeSet>
+    <changeSet author="Seema (generated)" id="1365102303090-6">
+        <sql>
+
+            insert into reconciliation_type(id, name) values (150, 'Damage-Add') on duplicate key update name = 'Damage-Add';
+            insert into reconciliation_type(id, name) values (160, 'Expired-Add') on duplicate key update name = 'Expired-Add';
+            insert into reconciliation_type(id, name) values (170, 'Batch Mismatch-Add') on duplicate key update name = 'Batch Mismatch-Add';
+            insert into reconciliation_type(id, name) values (180, 'Free Variant-Add') on duplicate key update name = 'Free Variant-Add';
+
+
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 150 where rv.reconciliation_type_id  = 30 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 160 where rv.reconciliation_type_id  = 40 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 170 where rv.reconciliation_type_id  = 60 and rc.reconciliation_type_id = 10;
+            update rv_line_item rv inner join reconciliation_voucher rc on rv.reconciliation_voucher_id = rc.id
+            set rv.reconciliation_type_id = 180 where rv.reconciliation_type_id  = 90 and rc.reconciliation_type_id = 10;
+
+            insert into inv_txn_type(id,name) values(220,'Damaged Stock against Reconciliation Voucher-Add') on duplicate key update name = 'Damaged Stock against Reconciliation Voucher-Add';
+            insert into inv_txn_type(id,name) values(230,'Expired against Reconciliation Voucher-Add')  on duplicate key update name = 'Expired against Reconciliation Voucher-Add';
+            insert into inv_txn_type(id,name) values(240,'Inventory Checkin for Free Variant-RV Add')   on duplicate key update name = 'Inventory Checkin for Free Variant-RV Add';
+            insert into inv_txn_type(id,name) values(250,'Inventory Checkin for Batch Mismatch-RV Add') on duplicate key update name = 'Inventory Checkin for Batch Mismatch-RV Add';
+
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 220 where rv.reconciliation_type_id = 150;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 230 where rv.reconciliation_type_id = 160;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 250 where rv.reconciliation_type_id = 170;
+            update product_variant_inventory pvi inner join rv_line_item rv on pvi.rv_line_item_id = rv.id
+            set pvi.inv_txn_type_id = 240 where rv.reconciliation_type_id = 180;
+        </sql>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1366281640164-1">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="honoring_b2c_orders" remarks="1 = Serving B2B+B2C the way we are doing right now, 0 = Exclusive to B2B" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366281640164-2">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="warehouse_type" remarks="1 =  Online B2B, 2 =  Online B2C, 3 =  Offline B2C, 4=Pharma, 5=Corporate" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="Ajeet (generated)" id="1366286805259-1">
+        <dropNotNullConstraint columnDataType="VARCHAR(45)" columnName="wh_phone" tableName="warehouse"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366288560740-1">
+        <addColumn tableName="warehouse">
+            <column defaultValue="1" name="active" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366279888165-2">
+        <addColumn tableName="warehouse">
+            <column defaultValue="Warehouse" name="identifier" type="VARCHAR(100)">
+	     <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20130423-01">
+        <sql>
+            set foreign_key_checks = 0;
+            truncate table warehouse;
+            set foreign_key_checks = 1;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20130423-02">
+        <sql>
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (1,'06101832036','GGN Bright Warehouse','Bright Lifecare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Gurgaon','HARYANA','122101','1234567890',NULL,1,1,1);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (2,'27210893736V','MUM Bright Warehouse','Bright Lifecare Pvt Ltd','Mouje Walshind Village','Mumbai Nashik Highway NH 3, Walsind, Lonad','Mumbai','MAHARASHTRA','400101','1234567890',NULL,1,1,1);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (10,'06101832327','GGN Aqua Warehouse','Aquamarine Healthcare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur ','Gurgaon','Haryana','122101','1234567890',NULL,1,2,0);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (20,'27800897340V','MUM Aqua Warehouse','Aquamarine Healthcare Pvt Ltd','Mouje Walshind Village','Mumbai Nashik Highway NH 3, Walsind, Lonad','Mumbai','Maharrashtra','400101','1234567890',NULL,1,2,0);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (101,'06101832036','GGN Bright Pharma Warehouse','Bright Lifecare Pvt Ltd','Khasra No. 146/25/2/1','Jail Road, Dhumaspur, Badshahpur\n			','Gurgaon','HARYANA','122101','1234567890',NULL,0,4,0);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (301,'07840464349','DEL Punjabi Bagh Store','Aquamarine Healthcare Pvt Ltd','Shop No 15, Ground Floor, North west Avenue, Club road,','Punjabi bagh Extn','Delhi','Delhi','110026','1234567890',101,1,3,1);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (401,'07320452122','DEL Kapashera Bright Warehouse','Bright Lifecare Pvt Ltd','2nd Floor, Safexpress Cargo Complex , 971/1 ','Opposite Fun and Food Village, Kapashera, New Delhi','Delhi','Delhi','110037','1234567890',NULL,0,1,1);
+            insert into warehouse (id,tin,identifier,name,line1,line2,city,state,pincode,wh_phone,store_id,honoring_b2c_orders,warehouse_type,active) values (999,'06101832327','GGN Corporate Office','Corporate Office','Parsvnath Arcadia','Sector-14','Gurgaon','HARYANA','122101','1234567890',NULL,0,5,0);
+           </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366426068617-2">
+        <createIndex indexName="identifier_UNIQUE" tableName="warehouse" unique="true">
+            <column name="identifier"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Ajeet (written)" id="20130418-01">
+        <sql>
+            ALTER TABLE warehouse MODIFY COLUMN tin VARCHAR(45) NOT NULL AFTER id;
+            ALTER TABLE warehouse MODIFY COLUMN identifier VARCHAR(100) NOT NULL AFTER tin;
+            ALTER TABLE warehouse MODIFY COLUMN name VARCHAR(100) NOT NULL AFTER identifier;
+            ALTER TABLE warehouse MODIFY COLUMN line1 VARCHAR(100) AFTER name;
+            ALTER TABLE warehouse MODIFY COLUMN line2 VARCHAR(100) AFTER line1;
+            ALTER TABLE warehouse MODIFY COLUMN wh_phone VARCHAR(45) AFTER pincode;
+        </sql>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366966901739-1">
+        <addColumn tableName="product_variant">
+            <column name="commission" type="DECIMAL(8,2)"/>
+        </addColumn>
+    </changeSet>
+    <!--<changeSet author="Ajeet (generated)" id="1366966901739-2">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
+    </changeSet> -->    
+    <changeSet author="Ajeet (generated)" id="1366966901739-4">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1366966901739-5">
+        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

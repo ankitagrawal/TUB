@@ -85,7 +85,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
                     stockReportDtoStore.setLineItemCheckout(stockReportDto.getInventoryQty() * -1L);
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RETURN_CHECKIN_GOOD.getId().longValue()) {
                     stockReportDtoStore.setRtoCheckin(stockReportDto.getInventoryQty());
-                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_DAMAGED.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_SUBTRACT_DAMAGED.getId().longValue()) {
                     stockReportDtoStore.setReconcileCheckout(stockReportDto.getInventoryQty() * -1L);
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_CHECKIN.getId().longValue()) {
                     stockReportDtoStore.setReconcileCheckin(stockReportDto.getInventoryQty());
@@ -93,7 +93,7 @@ public class ReportProductVariantServiceImpl implements ReportProductVariantServ
                     stockReportDtoStore.setCancelCheckin(stockReportDto.getInventoryQty());
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.INV_REPEAT_CHECKOUT.getId().longValue()) {
                     stockReportDtoStore.setInventoryRepeatCheckout(stockReportDto.getInventoryQty() * -1L);
-                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_EXPIRED.getId().longValue()) {
+                } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_SUBTRACT_EXPIRED.getId().longValue()) {
                     stockReportDtoStore.setRvExpired(stockReportDto.getInventoryQty() * -1L);
                 } else if (stockReportDto.getInventoryTxnType().longValue() == EnumInvTxnType.RV_LOST_PILFERAGE.getId().longValue()) {
                     stockReportDtoStore.setRvLostPilferage(stockReportDto.getInventoryQty() * -1L);

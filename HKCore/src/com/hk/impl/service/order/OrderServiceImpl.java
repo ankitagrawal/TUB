@@ -661,6 +661,8 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+  
+
     public boolean isShippingOrderExists(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         for (CartLineItem cartLineItem : productCartLineItems) {

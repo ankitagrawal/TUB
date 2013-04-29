@@ -471,7 +471,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Warehouse> getAllWarehouse() {
-        return warehouseService.getAllWarehouses();
+        //return warehouseService.getAllWarehouses();
+        return warehouseService.getAllActiveWarehouses();
     }
 
     public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {

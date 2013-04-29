@@ -61,6 +61,23 @@ public class GrnLineItemServiceImpl implements GrnLineItemService {
         }
         return grnLineItemQtyAlreadySet;
     }
+    
+    public Long getGrnLineItemCheckedInQty(GoodsReceivedNote grn ,Sku sku){
+    	long grnLineItemQtyAlreadySet = 0;
+        if (grn != null && sku != null) {
+            List<GoodsReceivedNote> allGrnForThisPO = grn.getPurchaseOrder().getGoodsReceivedNotes();
+            for (GoodsReceivedNote goodsReceivedNote : allGrnForThisPO) {
+                if (!goodsReceivedNote.getId().equals(grn.getId())) {
+                    for (GrnLineItem grnLineItemForOtherGrn : goodsReceivedNote.getGrnLineItems()) {
+                        if (sku.getId().equals(grnLineItemForOtherGrn.getSku().getId())) {
+                            grnLineItemQtyAlreadySet += grnLineItemForOtherGrn.getCheckedInQty().longValue();
+                        }
+                    }
+                }
+            }
+        }
+        return grnLineItemQtyAlreadySet;
+    }
 
     public boolean isAllSkuItemInCheckedInStatus(GrnLineItem grnLineItem) {
         List<SkuGroup> skuGroupList = skuGroupService.getSkuGroupByGrnLineItem(grnLineItem);

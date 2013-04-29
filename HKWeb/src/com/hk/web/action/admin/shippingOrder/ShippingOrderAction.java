@@ -20,10 +20,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +33,7 @@ import java.util.Map;
 public class ShippingOrderAction extends BaseAction {
 
 	private ShippingOrder shippingOrder;
+	private Warehouse warehouseToUpdate;
 	@Autowired
 	WarehouseService warehouseService;
 
@@ -52,22 +50,23 @@ public class ShippingOrderAction extends BaseAction {
 
   private String customerSatisfyReason;
 
-	public Resolution flipWarehouse() {
-		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
+  @DefaultHandler
+  public Resolution pre(){
+     return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
+  }
 
-		boolean isWarehouseUpdated = adminShippingOrderService.updateWarehouseForShippingOrder(shippingOrder, warehouseToUpdate);
+  public Resolution flipWarehouse() {
+    boolean isWarehouseUpdated = adminShippingOrderService.updateWarehouseForShippingOrder(shippingOrder, warehouseToUpdate);
 
-		String responseMsg = "";
-		if (isWarehouseUpdated) {
-			responseMsg = "warehouse flipped";
-		} else {
-			responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot update.";
-		}
-
-		Map<String, Object> data = new HashMap<String, Object>(1);
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, responseMsg, data);
-		return new JsonResolution(healthkartResponse);
-	}
+    String responseMsg = "";
+    if (isWarehouseUpdated) {
+      responseMsg = "Warehouse Flipped";
+    } else {
+      responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot be updated.";
+    }
+    addRedirectAlertMessage(new SimpleMessage(responseMsg));
+    return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
+  }
 
 	@JsonHandler
 	public Resolution initiateRTO() {
@@ -198,4 +197,12 @@ public class ShippingOrderAction extends BaseAction {
 	public String getCustomerSatisfyReason() {
 		return customerSatisfyReason;
 	}
+
+  public Warehouse getWarehouseToUpdate() {
+    return warehouseToUpdate;
+  }
+
+  public void setWarehouseToUpdate(Warehouse warehouseToUpdate) {
+    this.warehouseToUpdate = warehouseToUpdate;
+  }
 }

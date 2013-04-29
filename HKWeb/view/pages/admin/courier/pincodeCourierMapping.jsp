@@ -215,7 +215,7 @@
                                   ${pincodeDefaultCourier.courier.name}
                               </td>
                               <td>
-                                  ${pincodeDefaultCourier.warehouse.name}
+                                  ${pincodeDefaultCourier.warehouse.identifier}
                               </td>
                               <td>
                                   ${pincodeDefaultCourier.pincode.pincode}
