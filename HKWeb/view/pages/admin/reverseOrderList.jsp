@@ -3,11 +3,15 @@
 <%@ page import="com.hk.constants.courier.AdviceProposedConstants" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
 <%
     pageContext.setAttribute("pickupStatusList", EnumPickupStatus.getPickupStatusList());
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 %>
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
@@ -141,9 +145,9 @@
 	            <br>
 	            <label>Warehouse:</label>
 	            <s:select name="warehouseId">
-		            <%--<s:option value="">All Warehouses</s:option>--%>
-		            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allWarehouse" value="id"
-		                                       label="name"/>
+		           <c:forEach items="${whList}" var="warehouse">
+                 <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
+		           </c:forEach>
 	            </s:select>
 
 	            <s:submit name="pre" value="Search"/>
