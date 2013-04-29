@@ -22,13 +22,13 @@ public class MarketingFeed {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @Column(name = "feed_name")
+    @Column(name = "feed_name", nullable = false)
     String feedName;
 
     /**
      * Not creating any foreign key constraint
      */
-    @Column(name = "product_id")
+    @Column(name = "product_id", nullable = false)
     String productId;
 
     public String getFeedName() {
