@@ -1,4 +1,4 @@
-You requested to be notified when ${product.name} was back in stock
+You requested to be notified when some products were back in stock
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -53,25 +53,34 @@ You requested to be notified when ${product.name} was back in stock
                 <tr>
                     <td width="579" valign="top">Hi ${notifiedUser.name}!<br/>
                         <br/>
-
-
                         On your last visit, you clicked notify me for the following product(s):<br/>
-                        <strong> ${product.name} </strong>
-                        <br/>
-                        <br/>
-
-
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         The products are back in stock. Yay!
+                        <br/>
+                        <table>
+                        <#list notifyList as notify>
+                            <tr>
+                                <td>
+                                    <strong>
+                                    ${notify.productVariant.product.name}
+                                    </strong>
+                                </td>
+                                <td height="15">
+                                    <a href="www.healthkart.com/product/${notify.productVariant.product.slug}/${notify.productVariant.product.id}?utm_source=notifyme&utm_medium=email"><img
+                                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg"
+                                            alt="Click here to shop now" width="157" height="26" border="0"/></a>
+                                </td>
+                            </tr>
+                            <br/>
+                        </#list>
+                        </table>
                     </td>
                 </tr>
                 <tr>
                     <td height="15"></td>
-                </tr>
-                <tr>
-                    <td height="15"><a
-                            href="www.healthkart.com/product/${product.slug}/${product.id}?utm_source=notifyme&utm_medium=email"><img
-                            src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg"
-                            alt="Click here to shop now" width="157" height="26" border="0"/></a></td>
                 </tr>
                 <tr>
                     <td height="15"></td>
@@ -123,12 +132,14 @@ You requested to be notified when ${product.name} was back in stock
             </table>
         </td>
     </tr>
+
     <tr>
         <td align="center" valign="middle"
             style="border-top: solid #97b8ca 1px; font-size:11px; text-align:center; color:#666666; padding:10px">
             If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to
             Unsubscribe</a><br/>
         </td>
+
     </tr>
     <tr>
         <td align="center" valign="middle"
