@@ -164,3 +164,42 @@ FROM sku_item si
   inner join product_variant pv on  s.product_variant_id = pv.id
   inner join product p on p.id = pv.product_id
 GROUP BY s.id;
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+delimiter |
+ALTER EVENT healthkart_prod.insert_product_variant_inventory_history
+
+ON SCHEDULE
+
+EVERY '1' DAY
+STARTS '2013-04-05 01:30:01'
+DO
+BEGIN
+	drop table if exists healthkart_prod.temp_pvi_history;
+
+	create table healthkart_prod.temp_pvi_history
+	SELECT s.id as sku_id,
+	ifnull(COUNT( si.id ),0) as current_qty,
+	pv.marked_price,
+	pv.cost_price,
+	pv.hk_price,
+	s.tax_id,
+	pv.deleted,
+	now() create_date
+	FROM sku_item si
+	  inner join sku_group sg on si.sku_group_id = sg.id and si.sku_item_status_id =10
+	  right outer join sku s on sg.sku_id = s.id
+	  inner join product_variant pv on  s.product_variant_id = pv.id
+	  inner join product p on p.id = pv.product_id
+	GROUP BY s.id;
+
+	insert into `healthkart_report`.`product_variant_inventory_history`
+	(sku_id, current_qty, marked_price, cost_price, hk_price, tax_id, deleted,
+	create_date)
+	select sku_id, current_qty, marked_price, cost_price, hk_price, tax_id, deleted,
+	create_date from temp_pvi_history;
+
+
+END|
+delimiter ;

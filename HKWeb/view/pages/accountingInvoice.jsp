@@ -12,16 +12,17 @@
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre" var="orderSummary"/>
 <c:set var="shippingOrder" value="${orderSummary.shippingOrder}"/>
+<c:set var="cFormAvailable" value="${orderSummary.CFormAvailable}"/>
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
-<c:set var="warehouse" value="${shippingOrder.warehouse}"/>
+<c:set var="warehouse" value="${hk:getShippingWarehouse(shippingOrder)}"/>
 <c:set var="isB2BOrder" value="${baseOrder.b2bOrder}"/>
 <c:set var="b2bUserDetails" value="${orderSummary.b2bUserDetails}"/>
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${isB2BOrder}">
+      <c:when test="${isB2BOrder&&orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
            TAX INVOICE            
       </c:when>
       <c:otherwise>
@@ -36,33 +37,14 @@
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
 		<div class="column">			
-			<c:choose>
-				<c:when test="${isB2BOrder}">
-					<p>Bright Lifecare Pvt. Ltd.</p>
-				</c:when>
-				<c:otherwise>
-					<p>Aquamarine HealthCare Pvt. Ltd.</p>
-				</c:otherwise>
-			</c:choose>
+      <p>${warehouse.name}</p>
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
-			<c:choose>
-				<c:when test="${isB2BOrder}">
-					<c:choose>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
-							<p> TIN# 06101832036</p>
-						</c:when>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
-							<p> TIN# 27210893736</p>
-						</c:when>
-					</c:choose>
-					<p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>
-				</c:when>
-				<c:otherwise>
-					TIN# ${warehouse.tin}
-				</c:otherwise>
-			</c:choose>
+      <p>TIN: ${warehouse.tin}</p>
+      <c:if test="${isB2BOrder && warehouse.state == 'HARYANA'}">
+        <p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>
+      </c:if>
 		</div>
 	</div>
 
@@ -129,7 +111,16 @@
       <th>Item</th>
       <th>Qty</th>
       <th>Rate (per unit)</th>
-      <th>Tax Rate</th>
+      <th>
+      <c:choose>
+      <c:when test="${isB2BOrder&&cFormAvailable}">
+        Tax Rate (CST)
+        </c:when>
+        <c:otherwise>
+        Tax Rate
+        </c:otherwise>
+      </c:choose>
+    </th>
       <th>Taxable</th>
       <th>Tax</th>
       <th>Surcharge</th>
@@ -201,7 +192,8 @@
     </tr>
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td>
+      <%-- <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td> --%>
+      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
     </tr>
   </table>
 
@@ -218,7 +210,16 @@
       </td>
     </tr>
     <tr>
-      <th width="17%">VAT Percent</th>
+      <th width="17%">
+      <c:choose>
+      <c:when test="${isB2BOrder&&cFormAvailable}">
+        CST
+        </c:when>
+        <c:otherwise>
+        VAT
+        </c:otherwise>
+      </c:choose>
+    </th>
       <th width="5%">Qty</th>
       <th width="10%">Amount</th>
       <th width="16%">Tax on Amount</th>

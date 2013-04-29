@@ -3,10 +3,9 @@ package com.hk.admin.util;
 import static com.akube.framework.util.BaseUtils.newline;
 import com.hk.admin.dto.inventory.PoLineItemDto;
 import com.hk.admin.dto.inventory.PurchaseOrderDto;
-import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
-import com.hk.constants.core.EnumState;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.core.WarehouseService;
 import com.itextpdf.text.*;
@@ -15,8 +14,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
 import java.text.NumberFormat;
@@ -44,18 +43,15 @@ public class PurchaseOrderPDFGenerator {
             if(purchaseOrder != null) {
                 Paragraph addressParagraph = new Paragraph();
                 Font font = new Font(Font.FontFamily.TIMES_ROMAN, 8,Font.NORMAL);
-                addressParagraph.add(new Paragraph(brightLifeCarePvtLtd, font));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine1(), font));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getLine2(), font));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getCity() + " -" + purchaseOrder.getWarehouse().getPincode(), font));
-                addressParagraph.add(new Paragraph(purchaseOrder.getWarehouse().getState(), font));
-                if (purchaseOrder.getWarehouse().equals(getWarehouseService().getMumbaiWarehouse())) {
-                  addressParagraph.add(new Paragraph("TIN: 27210893736", font));
-                } else {
-                  addressParagraph.add(new Paragraph("TIN: 06101832036", font));
-                }
+                Warehouse warehouse = purchaseOrder.getWarehouse();
+                addressParagraph.add(new Paragraph(warehouse.getName(), font));
+                addressParagraph.add(new Paragraph(warehouse.getLine1(), font));
+                addressParagraph.add(new Paragraph(warehouse.getLine2(), font));
+                addressParagraph.add(new Paragraph(warehouse.getCity() + " -" + warehouse.getPincode(), font));
+                addressParagraph.add(new Paragraph(warehouse.getState(), font));
+                addressParagraph.add(new Paragraph("TIN:"+warehouse.getTin(), font));
 
-                Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
+              Paragraph header = new Paragraph("PURCHASE ORDER " + newline + newline , new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD));
                 header.setAlignment(Element.ALIGN_CENTER);
 
                 Image image = Image.getInstance(logoImagePath);

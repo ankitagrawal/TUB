@@ -72,7 +72,7 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
     public List<ProductOptionDto> getProductOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice) {
         if (categoryNames != null && categoryNames.size() > 0) {
             List<String> productIds = getSession().createQuery(
-                    "select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 group by p.id having count(*) = :tagCount").setParameterList(
+                    "select p.id from Product p inner join p.categories c where c.name in (:categories) and p.deleted <> 1 and p.hidden <> 1 group by p.id having count(*) = :tagCount").setParameterList(
                     "categories", categoryNames).setInteger("tagCount", categoryNames.size()).list();
             if (productIds != null && !productIds.isEmpty()) {
                 List<String> pvIds = getSession().createQuery(

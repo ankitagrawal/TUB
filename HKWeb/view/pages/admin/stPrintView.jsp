@@ -53,23 +53,18 @@
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="stockTransferBean"/>
 <c:set var="totalAmount" value="${0}" />
+<c:set var="fromWH" value="${stockTransferBean.stockTransfer.fromWarehouse}"/>
+<c:set var="toWH" value="${stockTransferBean.stockTransfer.toWarehouse}"/>
 <table class="header">
 	<tr>
 		<td>
-			Bright Lifecare Pvt. Ltd.<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.line1}<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.line2}<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.city} &nbsp;
-			-${stockTransferBean.stockTransfer.fromWarehouse.pincode} <br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.state}<br/>
-            <c:choose>
-                <c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'HARYANA'}">
-                    <p> TIN# 06101832036</p>
-                </c:when>
-                <c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'MAHARASHTRA'}">
-                    <p> TIN# 27210893736</p>
-                </c:when>
-            </c:choose>
+		${fromWH.name}<br/>
+			${fromWH.line1}<br/>
+			${fromWH.line2}<br/>
+			${fromWH.city} &nbsp;
+			-${fromWH.pincode} <br/>
+			${fromWH.state}<br/>
+      TIN# ${fromWH.tin}
 		</td>
 	</tr>
 </table>
@@ -86,37 +81,23 @@
 	<tr>
 		<td><b>From Warehouse:</b></td>
 		<td>
-			Bright Lifecare Pvt. Ltd.<br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.name} <br/>
-			${stockTransferBean.stockTransfer.fromWarehouse.line1},
-			${stockTransferBean.stockTransfer.fromWarehouse.line2}<br>
-			${stockTransferBean.stockTransfer.fromWarehouse.city},
-			${stockTransferBean.stockTransfer.fromWarehouse.state}<br>
-				<c:choose>
-					<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'HARYANA'}">
-						<p> TIN# 06101832036</p>
-					</c:when>
-					<c:when test="${stockTransferBean.stockTransfer.fromWarehouse.state == 'MAHARASHTRA'}">
-						<p> TIN# 27210893736</p>
-					</c:when>
-				</c:choose>
+			${fromWH.name}<br/>
+			${fromWH.line1}<br/>
+			${fromWH.line2}<br/>
+			${fromWH.city} &nbsp;
+			-${fromWH.pincode} <br/>
+			${fromWH.state}<br/>
+      TIN# ${fromWH.tin}
 		</td>
 		<td><b>To Warehouse</b></td>
 		<td>
-			Bright Lifecare Pvt. Ltd.<br/>
-			${stockTransferBean.stockTransfer.toWarehouse.name} <br/>
-			${stockTransferBean.stockTransfer.toWarehouse.line1},
-			${stockTransferBean.stockTransfer.toWarehouse.line2}<br>
-			${stockTransferBean.stockTransfer.toWarehouse.city},
-			${stockTransferBean.stockTransfer.toWarehouse.state}<br>
-			<c:choose>
-				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'HARYANA'}">
-					<p> TIN# 06101832036</p>
-				</c:when>
-				<c:when test="${stockTransferBean.stockTransfer.toWarehouse.state == 'MAHARASHTRA'}">
-					<p> TIN# 27210893736</p>
-				</c:when>
-			</c:choose>
+			${toWH.name}<br/>
+			${toWH.line1}<br/>
+			${toWH.line2}<br/>
+			${toWH.city} &nbsp;
+			-${toWH.pincode} <br/>
+			${toWH.state}<br/>
+      TIN# ${toWH.tin}
 		</td>
 	</tr>
 	<tr valign="top">

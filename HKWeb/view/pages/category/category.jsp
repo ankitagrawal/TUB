@@ -48,7 +48,7 @@
   <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <!-- YAHOO marketing -->
   <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
-  <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
+  <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}" />
 
     <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">

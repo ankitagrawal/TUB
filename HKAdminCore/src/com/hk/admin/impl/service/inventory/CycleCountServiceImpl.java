@@ -1,18 +1,21 @@
 package com.hk.admin.impl.service.inventory;
 
+import com.hk.admin.dto.inventory.CycleCountDto;
 import com.hk.admin.pact.service.inventory.CycleCountService;
 import com.hk.admin.pact.dao.inventory.CycleCountDao;
-import com.hk.admin.pact.dao.inventory.BrandsToAuditDao;
+
+import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.cycleCount.CycleCountItem;
 import com.hk.domain.cycleCount.CycleCount;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
-import com.hk.domain.inventory.BrandsToAudit;
+
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.akube.framework.dao.Page;
@@ -35,61 +38,54 @@ import java.util.Date;
 @Service
 public class CycleCountServiceImpl implements CycleCountService {
 
-	@Autowired
-	private BaseDao baseDao;
-	@Autowired
-	private CycleCountDao cycleCountDao;
-	@Autowired
-	ProductService productService;
-	@Autowired
-	BrandsToAuditDao brandsToAuditDao;
-	@Autowired
-	ProductVariantService productVariantService;
+
+    @Autowired
+    private CycleCountDao cycleCountDao;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    ProductVariantService productVariantService;
+    @Autowired
+    UserService userService;
 
 
-	public CycleCount save(CycleCount cycleCount) {
-		return (CycleCount) getBaseDao().save(cycleCount);
-	}
+    public CycleCount save(CycleCount cycleCount) {
+        return (CycleCount) cycleCountDao.save(cycleCount);
+    }
 
-	public CycleCountItem save(CycleCountItem cycleCountItem) {
-		return (CycleCountItem) getBaseDao().save(cycleCountItem);
-	}
+    public CycleCountItem save(CycleCountItem cycleCountItem) {
+        return (CycleCountItem) cycleCountDao.save(cycleCountItem);
+    }
 
-	public BaseDao getBaseDao() {
-		return baseDao;
-	}
+    public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup, SkuItem skuItem) {
+        return cycleCountDao.getCycleCountItem(cycleCount, skuGroup, skuItem);
+    }
 
-	public void setBaseDao(BaseDao baseDao) {
-		this.baseDao = baseDao;
-	}
+    public Page searchCycleList(String auditBy, Long cycleCountStatus, Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
+        String brand = null;
+        Product product = null;
+        ProductVariant productVariant = null;
 
-	public CycleCountItem getCycleCountItem(CycleCount cycleCount, SkuGroup skuGroup,SkuItem skuItem) {
-		return cycleCountDao.getCycleCountItem(cycleCount, skuGroup,skuItem);
-	}
+        if (auditBy != null) {
+            product = productService.getProductById(auditBy);
+            if (product == null) {
+                productVariant = productVariantService.getVariantById(auditBy);
+                if (productVariant == null) {
+                    brand = auditBy;
+                }
+            }
 
-	public Page searchCycleList(String auditBy, Long cycleCountStatus ,Warehouse warehouse, User auditor, Date startDate, Date endDate, int pageNo, int perPage) {
-		List<BrandsToAudit> brandsToAuditList = null;
-		Product product = null;
-		ProductVariant productVariant = null;
-		if (auditBy != null) {
-			brandsToAuditList = brandsToAuditDao.getBrandsToAudit(auditBy, null,null);
-			if (brandsToAuditList.isEmpty()) {
-				product = productService.getProductById(auditBy);
-				if (product == null) {
-					productVariant = productVariantService.getVariantById(auditBy);
-				}
-			}
-		}
+        }
 
-		return cycleCountDao.searchCycleList(auditBy,cycleCountStatus, brandsToAuditList, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
-	}
+        return cycleCountDao.searchCycleList(cycleCountStatus, brand, product, productVariant, warehouse, auditor, startDate, endDate, pageNo, perPage);
+    }
 
-	public List<CycleCount> getCycleCountInProgress(List<BrandsToAudit> brandsToAuditList ,Product product , ProductVariant productVariant, Warehouse warehouse){
-		return cycleCountDao. cycleCountInProgress(brandsToAuditList ,product , productVariant,  warehouse);
-	}
+    public List<CycleCount> getCycleCountInProgress(String brand, Product product, ProductVariant productVariant, Warehouse warehouse) {
+        return cycleCountDao.cycleCountInProgress(brand, product, productVariant, warehouse);
+    }
 
-    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem ,CycleCount cycleCount, Integer qty) {
-        CycleCountItem cycleCountItem = new CycleCountItem();        
+    public CycleCountItem createCycleCountItem(SkuGroup validSkuGroup, SkuItem skuItem, CycleCount cycleCount, Integer qty) {
+        CycleCountItem cycleCountItem = new CycleCountItem();
         cycleCountItem.setSkuGroup(validSkuGroup);
         cycleCountItem.setSkuItem(skuItem);
         cycleCountItem.setCycleCount(cycleCount);
@@ -98,12 +94,12 @@ public class CycleCountServiceImpl implements CycleCountService {
     }
 
 
-     public List<SkuItem> getScannedSkuItems (Long skuGroupId , Long cycleCountId){
-           return cycleCountDao.getScannedSkuItems(skuGroupId,cycleCountId);
-     }
+    public List<SkuItem> getScannedSkuItems(Long skuGroupId, Long cycleCountId) {
+        return cycleCountDao.getScannedSkuItems(skuGroupId, cycleCountId);
+    }
 
-    public void removeScannedSkuItemFromCycleCountItem (CycleCount cycleCount, SkuItem skuItem) {
-        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount,skuItem);
+    public void removeScannedSkuItemFromCycleCountItem(CycleCount cycleCount, SkuItem skuItem) {
+        cycleCountDao.removeScannedSkuItemFromCycleCountItem(cycleCount, skuItem);
     }
 
     @Transactional
@@ -122,6 +118,35 @@ public class CycleCountServiceImpl implements CycleCountService {
             cycleCountDao.deleteCycleCountItem(cycleCountItem);
         }
 
+    }
+
+    public CycleCount createAndSaveNewCycleCount(CycleCount cycleCount) {
+        cycleCount.setCreateDate(new Date());
+        cycleCount.setUser(userService.getLoggedInUser());
+        cycleCount.setCycleStatus(EnumCycleCountStatus.InProgress.getId());
+        cycleCount.setWarehouse(userService.getWarehouseForLoggedInUser());
+        cycleCount = save(cycleCount);
+        return cycleCount;
+    }
+
+
+    public List<CycleCountDto> inProgressCycleCountForVariant(ProductVariant productVariant, Warehouse warehouse) {
+        List<CycleCountDto> cycleCountDtoList = new ArrayList<CycleCountDto>();
+        List<CycleCountDto> cycleCountDtoFromDb = cycleCountDao.inProgressCycleCountForVariant(productVariant, warehouse);
+        if (cycleCountDtoFromDb != null && cycleCountDtoFromDb.size() > 0) {
+            cycleCountDtoList = cycleCountDtoFromDb;
+        }
+        return cycleCountDtoList;
+    }
+
+
+    public List<CycleCountDto> inProgressCycleCounts(Warehouse warehouse) {
+        List<CycleCountDto> cycleCountDtoList = new ArrayList<CycleCountDto>();
+        List<CycleCountDto> cycleCountDtoFromDb = cycleCountDao.inProgressCycleCounts(warehouse);
+        if (cycleCountDtoFromDb != null && cycleCountDtoFromDb.size() > 0) {
+            cycleCountDtoList = cycleCountDtoFromDb;
+        }
+        return cycleCountDtoList;
     }
 
 }

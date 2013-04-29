@@ -65,7 +65,7 @@
                         <s:select name="srcWarehouse">
                             <s:option value="">-Select-</s:option>
                             <c:forEach items="${whList}" var="wh">
-                                <s:option value="${wh.id}">${wh.name}</s:option>
+                                <s:option value="${wh.id}">${wh.identifier}</s:option>
                             </c:forEach>
                         </s:select>
 
