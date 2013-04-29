@@ -4,6 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <c:set var="shippingOrderStatusCustomerReturn" value="<%=EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()%>"/>
+<c:set var="shippingOrderStatusCustomerAppease" value="<%=EnumShippingOrderStatus.SO_Customer_Appeasement.getId()%>"/>
 <c:set var="shippingOrderStatusRTO_instantiated" value="<%=EnumShippingOrderStatus.RTO_Initiated.getId()%>"/>
 <c:set var="shippingOrderStatusSO_returned" value="<%=EnumShippingOrderStatus.SO_RTO.getId()%>"/>
 
@@ -113,9 +114,21 @@
                             ${replacementOrderBean.shippingOrder.orderStatus.name}
                         </td>
                         <td>
+
                             <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerReturn}">
                                 <a href="#" id="is-replacement-radio">
                                     <h5>Create RO<br />for Customer Return</h5>
+                                </a>
+                                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="reverseOrderInvoice" target="_blank">
+                                    <s:param name="reverseOrder" value="${replacementOrderBean.reverseOrder}"/>
+                                     <s:param name="shippingOrder" value="${replacementOrderBean.shippingOrder}"/>
+                                    View Reverse Order
+                                </s:link>)
+                            </c:if>
+
+                            <c:if test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">
+                                <a href="#" id="is-replacement-radio">
+                                    <h5>Create RO<br />for Customer Satisfaction</h5>
                                 </a>
                             </c:if>
                         </td>
@@ -187,7 +200,7 @@
             </fieldset>
 
             <fieldset style="display:none;" id="is-replacement">
-                <h4>Replacement</h4>
+                <h4>Replacement for Customer Return</h4>
                 <s:form beanclass="com.hk.web.action.admin.replacementOrder.ReplacementOrderAction" id="createReplacementOrderForRepForm">
                     <s:hidden name="shippingOrder" value="${replacementOrderBean.shippingOrder.id}"/>
                     <table border="1">
@@ -198,31 +211,49 @@
                         <th>Replacement Qty</th>
                         </thead>
                         <s:hidden name="isRto" value="0"/>
-                        <c:forEach items="${replacementOrderBean.lineItems}" var="lineItem" varStatus="lineItemCtr">
-                            <s:hidden name="lineItems[${lineItemCtr.index}].sku" value="${lineItem.sku}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].cartLineItem"
-                                      value="${lineItem.cartLineItem.id}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].costPrice" value="${lineItem.costPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].markedPrice"
-                                      value="${lineItem.markedPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice" value="${lineItem.hkPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
-                                      value="${lineItem.discountOnHkPrice}"/>
-                            <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
-	                        <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints" value="${lineItem.rewardPoints}"/>
-	                         <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount" value="${lineItem.orderLevelDiscount}"/>
-	                         <s:hidden name="lineItems[${lineItemCtr.index}].codCharges" value="${lineItem.codCharges}"/>
-	                         <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges" value="${lineItem.shippingCharges}"/>
-                            <tr>
-                                <td>${lineItemCtr.count}</td>
-                                <td>
-                                        ${lineItem.cartLineItem.productVariant.product.name}  <br/>
-	                                Variant: ${lineItem.cartLineItem.productVariant.id}
-                                </td>
-                                <td>${lineItem.qty}</td>
-                                <td><s:text name="lineItems[${lineItemCtr.index}].qty" /></td>
-                            </tr>
-                        </c:forEach>
+                        <%--<c:choose>--%>
+                            <%--<c:when test="${replacementOrderBean.shippingOrder.orderStatus.id == shippingOrderStatusCustomerAppease}">--%>
+                                <c:forEach items="${replacementOrderBean.lineItems}" var="lineItem"
+                                           varStatus="lineItemCtr">
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].sku" value="${lineItem.sku}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].cartLineItem"
+                                              value="${lineItem.cartLineItem.id}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].costPrice"
+                                              value="${lineItem.costPrice}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].markedPrice"
+                                              value="${lineItem.markedPrice}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].hkPrice"
+                                              value="${lineItem.hkPrice}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].discountOnHkPrice"
+                                              value="${lineItem.discountOnHkPrice}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].tax" value="${lineItem.tax}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].rewardPoints"
+                                              value="${lineItem.rewardPoints}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].orderLevelDiscount"
+                                              value="${lineItem.orderLevelDiscount}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].codCharges"
+                                              value="${lineItem.codCharges}"/>
+                                    <s:hidden name="lineItems[${lineItemCtr.index}].shippingCharges"
+                                              value="${lineItem.shippingCharges}"/>
+                                    <tr>
+                                        <td>${lineItemCtr.count}</td>
+                                        <td>
+                                                ${lineItem.cartLineItem.productVariant.product.name} <br/>
+                                            Variant: ${lineItem.cartLineItem.productVariant.id}
+                                        </td>
+                                        <td>${lineItem.qty}</td>
+                                        <td><s:text name="lineItems[${lineItemCtr.index}].qty" class="qty"/>
+                                            <script type="text/javascript">
+                                                $('.qty').val(0);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            <%--</c:when>--%>
+                            <%--<c:otherwise>--%>
+
+                            <%--</c:otherwise>--%>
+                        <%--</c:choose>--%>
                     </table>
 	                <s:label name="Reason for Replacement:" style="margin-left:7px;"/>
 	                <s:select name="replacementOrderReason">

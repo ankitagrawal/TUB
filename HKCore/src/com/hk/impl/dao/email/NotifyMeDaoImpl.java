@@ -24,7 +24,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     @Transactional
     public NotifyMe save(NotifyMe notifyMe) {
-      Date currentDate = new Date();
+        Date currentDate = new Date();
         if (notifyMe.getCreatedDate() == null) {
             notifyMe.setCreatedDate(currentDate);
         }
@@ -34,7 +34,7 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,
                                Boolean productInStock, Boolean productDeleted) {
         DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                               productInStock, productDeleted);
+                productInStock, productDeleted);
         if (pageNo == 0 && perPage == 0) {
             return list(notifyMeCriteria, 1, 1000);
         }
@@ -42,16 +42,16 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     }
 
-	public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                               Boolean productInStock, Boolean productDeleted) {
-		DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
-                               productInStock, productDeleted);
-		return findByCriteria(notifyMeCriteria);
-	}
+    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
+                                         Boolean productInStock, Boolean productDeleted) {
+        DetachedCriteria notifyMeCriteria = getNotifyMeListSearchCriteria(startDate, endDate, product, productVariant, primaryCategory,
+                productInStock, productDeleted);
+        return findByCriteria(notifyMeCriteria);
+    }
 
-	private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
-                               Boolean productInStock, Boolean productDeleted){
-		DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
+    private DetachedCriteria getNotifyMeListSearchCriteria(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,
+                                                           Boolean productInStock, Boolean productDeleted) {
+        DetachedCriteria notifyMeCriteria = DetachedCriteria.forClass(NotifyMe.class);
         if (startDate != null) {
             notifyMeCriteria.add(Restrictions.gt("createdDate", startDate));
         }
@@ -63,9 +63,9 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
             notifyMeCriteria.add(Restrictions.eq("productVariant", productVariant));
         }
         DetachedCriteria productVariantCriteria = null;
-	    if( product != null || primaryCategory != null || productDeleted != null || productInStock != null){
-		    productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
-	    }
+        if (product != null || primaryCategory != null || productDeleted != null || productInStock != null) {
+            productVariantCriteria = notifyMeCriteria.createCriteria("productVariant");
+        }
 
         if (product != null) {
             productVariantCriteria.add(Restrictions.eq("product", product));
@@ -74,19 +74,19 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
             DetachedCriteria productCriteria = productVariantCriteria.createCriteria("product");
             productCriteria.add(Restrictions.eq("primaryCategory", primaryCategory));
         }
-	    if(productDeleted != null){
-		    productVariantCriteria.add(Restrictions.eq("deleted",productDeleted));
-	    }
-	    if(productInStock != null){
-		    productVariantCriteria.add(Restrictions.eq("outOfStock", productInStock));
-	    }
+        if (productDeleted != null) {
+            productVariantCriteria.add(Restrictions.eq("deleted", productDeleted));
+        }
+        if (productInStock != null) {
+            productVariantCriteria.add(Restrictions.eq("outOfStock", productInStock));
+        }
 
         notifyMeCriteria.add(Restrictions.isNull("notifiedDate"));
         notifyMeCriteria.add(Restrictions.isNull("notifiedByUser"));
         notifyMeCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
 
-		return notifyMeCriteria;
-	}
+        return notifyMeCriteria;
+    }
 
     public List<String> getPendingNotifyMeProductVariant() {
 
@@ -97,8 +97,8 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
 
     public List<NotifyMe> getNotifyMeListForProductVariantInStock() {
         return (List<NotifyMe>) getSession().createQuery(
-                "Select nm from NotifyMe nm, ProductVariant pv where pv =nm.productVariant and nm.notifiedByUser is null"
-                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
+                "Select nm from NotifyMe nm, ProductVariant pv where pv =nm.productVariant and nm.notifiedByUser is null "
+                        + " and pv.deleted != :deleted and pv.outOfStock != :outOfStock  order by nm.id asc").setBoolean("deleted", true).setBoolean("outOfStock", true).list();
     }
 
     public Page getNotifyMeListForProductVariantInStock(int pageNo, int perPage) {
@@ -124,6 +124,11 @@ public class NotifyMeDaoImpl extends BaseDaoImpl implements NotifyMeDao {
     public List<NotifyMe> getPendingNotifyMeList(String notifyMeEmail, ProductVariant productVariant) {
         String query = "select nm from NotifyMe nm  where nm.notifiedDate is null and nm.productVariant = :productVariant and nm.email =:notifyMeEmail";
         return getSession().createQuery(query).setParameter("productVariant", productVariant).setParameter("notifyMeEmail", notifyMeEmail).list();
+    }
+
+    public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList) {
+        String query = "select nm from NotifyMe nm  where nm.notifiedDate is null and nm.productVariant in (:productVariantList) and nm.email =:notifyMeEmail";
+        return getSession().createQuery(query).setParameterList("productVariantList", productVariantList).setParameter("notifyMeEmail", notifyMeEmail).list();
     }
 
 }
