@@ -31,14 +31,14 @@
 $(document).ready(function() {
     function checkvariantWeight(){
         var variantRegex=/^-?[0-9]+$/;
-        varWeightLength = $("#variantWeight").val().length;
-        varWeightValue = $("#variantWeight").val();
+        varWeightLength = $(this).val().length;
+        varWeightValue = $(this).val();
         if (varWeightLength == 0){
             alert("Variant weight cannot be empty!");
             return false;
 
         }else if (isNaN(varWeightValue)) {
-
+            alert(varWeightValue);
             alert("Please enter variant weight in correct format!");
             return false;
         }
@@ -48,7 +48,7 @@ $(document).ready(function() {
         }
         return true;
     }
-    $('#variantWeight').blur(checkvariantWeight);
+    $('.weight').blur(checkvariantWeight);
     $('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
 
     $('.hkProductLightbox').each(function(){
