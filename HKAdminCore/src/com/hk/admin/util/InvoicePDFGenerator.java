@@ -4,20 +4,18 @@ import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.InvoiceLineItemDto;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.cache.CategoryCache;
-import com.hk.constants.core.EnumRole;
-import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
 import com.hk.constants.core.Keys;
-import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.Address;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.service.catalog.CategoryService;
+import com.hk.pact.service.core.WarehouseService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -55,6 +53,8 @@ public class InvoicePDFGenerator {
     AddressDao              addressDao;
     @Autowired
     BaseDao baseDao;
+    @Autowired
+    WarehouseService warehouseService;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String                  adminDownloadsPath;
@@ -170,15 +170,12 @@ public class InvoicePDFGenerator {
         copyrightsParagraph.add(new Paragraph("Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.", new Font(
                 Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD)));
         // addEmptyLine(copyrightsParagraph,1);
-        
-        if (shippingOrder.getBaseOrder().getUser().getRoles().contains(EnumRole.B2B_USER.getRoleName())) {
-            copyrightsParagraph.add(new Paragraph(brightLifeCarePvtLtd + " | Khasra No. 146/25/2/1, Jail Road, Dhumaspur, Badshahpur |"
-                    + " Gurgaon, Haryana- 122101 | TIN:06101832036", new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
-        } else {
-            copyrightsParagraph.add(new Paragraph("Aquamarine Healthcare Pvt. Ltd." + "|" + shippingOrder.getWarehouse().getLine1() + "|" + shippingOrder.getWarehouse().getLine2()
-                    + "|" + shippingOrder.getWarehouse().getCity() + "," + shippingOrder.getWarehouse().getState() + "-" + shippingOrder.getWarehouse().getPincode() + "|" + ""
-                    + "TIN :" + shippingOrder.getWarehouse().getTin(), new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
-        }
+      Warehouse shippingWarehouse = warehouseService.findShippingWarehouse(shippingOrder);
+      String warehouseAddress = shippingWarehouse.getName() + " | " + shippingWarehouse.getLine1() + " | " + shippingWarehouse.getLine2() + " | "
+          + shippingWarehouse.getCity() + " | " + shippingWarehouse.getState() + " - " + shippingWarehouse.getPincode()
+          + " TIN:" + shippingWarehouse.getTin();
+      copyrightsParagraph.add(new Paragraph(warehouseAddress, new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL)));
+
         document.add(copyrightsParagraph);
     }
 

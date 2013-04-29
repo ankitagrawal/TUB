@@ -31,7 +31,7 @@
             <tr>
                 <td>For Warehouse</td>
                 <td>
-                        ${pa.reconciliationVoucher.warehouse.name}
+                        ${pa.reconciliationVoucher.warehouse.identifier}
                 </td>
             </tr>
         </table>

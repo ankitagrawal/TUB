@@ -4,35 +4,35 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.user.RequestCallbackAction" var="sdcActionBean" event="pre"/>
 <s:layout-render name="/layouts/modal.jsp">
-	<s:layout-component name="modal">
-		<script type="text/javascript">
-				$(document).ready(function() {
-				$('.notifyMeValidate').click(function() {
-					var emailRegEx=/^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})$/;
-					var nameRegEx=/^[a-zA-Z'.\s]{3,45}$/;
-					//var mobileRegEx=/^((\+)?(\d{2}[-]))?(\d{10}){1}?$/;
-          var mobileRegEx=/^([+]?(\d)+[-]?(\d)+)$/;          
-					var notifyMeEmail = $('.emailId').val();
-					var notifyMeName = $('.userName').val();
-					var notifyMeMobile = $('.phoneNo').val();
-					if(!emailRegEx.test(notifyMeEmail)){
-						alert("Please enter correct email address.");
-						return false;
-					}
-					if(!nameRegEx.test(notifyMeName)){
-						alert("Please enter correct User Name.");
-						return false;
-					}
-					if(notifyMeMobile != ''){
-						if(notifyMeMobile.length > 15 || !mobileRegEx.test(notifyMeMobile)){
-							alert("Please enter correct Mobile No.");
-							return false;
-						}
-					}
-				} );
-				});
-		</script>
-	</s:layout-component>
+    <s:layout-component name="modal">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.notifyMeValidate').click(function () {
+                    var emailRegEx = /^[a-z0-9_\+-]+(\.[a-z0-9_\+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,4})$/;
+                    var nameRegEx = /^[a-zA-Z'.\s]{3,45}$/;
+                    //var mobileRegEx=/^((\+)?(\d{2}[-]))?(\d{10}){1}?$/;
+                    var mobileRegEx = /^([+]?(\d)+[-]?(\d)+)$/;
+                    var notifyMeEmail = $('.emailId').val();
+                    var notifyMeName = $('.userName').val();
+                    var notifyMeMobile = $('.phoneNo').val();
+                    if (!emailRegEx.test(notifyMeEmail)) {
+                        alert("Please enter correct email address.");
+                        return false;
+                    }
+                    if (!nameRegEx.test(notifyMeName)) {
+                        alert("Please enter correct User Name.");
+                        return false;
+                    }
+                    if (notifyMeMobile != '') {
+                        if (notifyMeMobile.length > 15 || !mobileRegEx.test(notifyMeMobile)) {
+                            alert("Please enter correct Mobile No.");
+                            return false;
+                        }
+                    }
+                });
+            });
+        </script>
+    </s:layout-component>
     <s:layout-component name="heading">
         Notify Me
     </s:layout-component>
@@ -57,7 +57,7 @@
                                 Enter your email address:<span class='aster' title="this field is required">*</span>
                             </td>
                             <td>
-                                <s:text class="emailId" id="notifyMeEmail" name="notifyMe.email"/>  <br/><br/>
+                                <s:text class="emailId" id="notifyMeEmail" name="notifyMe.email"/> <br/><br/>
                             </td>
                         </tr>
                         <tr>
@@ -81,11 +81,16 @@
                 if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                     $('#notifyMeWindow .msg').html(res.message);
                     $('#notifyMeWindow .notifyForm').hide();
-                } else  if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
+                } else if (res.code == '<%=HealthkartResponse.STATUS_ERROR%>') {
                     $('#notifyMeWindow .msg').html(res.message);
                 }
+                else if (res.code == '<%=HealthkartResponse.STATUS_ACCESS_DENIED%>') {
+                    $('#notifyMeWindow .msg').html(res.message);
+                    $('#notifyMeWindow .notifyForm').hide();
+                }
+
             }
-            $('#notifyMeForm').ajaxForm({dataType: 'json', success: _registerNotifyMe});
+            $('#notifyMeForm').ajaxForm({dataType:'json', success:_registerNotifyMe});
         </script>
     </s:layout-component>
 

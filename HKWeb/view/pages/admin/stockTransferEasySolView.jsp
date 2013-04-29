@@ -53,16 +53,17 @@
 
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="easySolBean"/>
 <c:set var="totalAmount" value="${0}" />
+<c:set var="fromWH" value="${easySolBean.stockTransfer.fromWarehouse}"/>
 <table class="header">
 	<tr>
 		<td>
-			Bright Lifecare Pvt. Ltd.<br/>
-			${easySolBean.stockTransfer.fromWarehouse.line1}<br/>
-			${easySolBean.stockTransfer.fromWarehouse.line2}<br/>
-			${easySolBean.stockTransfer.fromWarehouse.city} &nbsp;
-			-${easySolBean.stockTransfer.fromWarehouse.pincode} <br/>
-			${easySolBean.stockTransfer.fromWarehouse.state}<br/>
-			TIN: ${easySolBean.stockTransfer.fromWarehouse.tin}
+		  ${fromWH.name}<br/>
+			${fromWH.line1}<br/>
+			${fromWH.line2}<br/>
+			${fromWH.city} &nbsp;
+			-${fromWH.pincode} <br/>
+			${fromWH.state}<br/>
+      TIN# ${fromWH.tin}
 		</td>
 		<td align="right">
 			<img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>

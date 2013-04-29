@@ -157,7 +157,7 @@
             <td>${sku.id}</td>
             <td>${sku.productVariant}</td>
             <td>${sku.productVariant.product.name}<br/>${sku.productVariant.optionsCommaSeparated}</td>
-            <td>${sku.warehouse.city}</td>
+            <td>${sku.warehouse.identifier}</td>
             <td><s:text name="skuList[${ctr.index}].cutOffInventory" value="${sku.cutOffInventory}"
                         class="cutOffInventory"/></td>
             <td><s:text name="skuList[${ctr.index}].forecastedQuantity" value="${sku.forecastedQuantity}"
