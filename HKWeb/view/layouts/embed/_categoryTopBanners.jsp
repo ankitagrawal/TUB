@@ -110,14 +110,14 @@
       <jsp:include page="/categoryBanners/sportsDiscount.jsp"/>
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'home-devices')}">
-      <jsp:include page="/categoryBanners/hhdStripBanner.jsp"/>
+      <%--<jsp:include page="/categoryBanners/hhdStripBanner.jsp"/>--%>
       <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>                       
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
  		<jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'diabetes')}">
-     <jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>
+     <%--<jsp:include page="/categoryBanners/diabetesStripBanner.jsp"/>--%>
       <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
     </c:if>
     <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
