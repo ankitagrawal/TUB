@@ -12535,7 +12535,7 @@
             <column name="feed_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="VARCHAR(155)">
+            <column name="product_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
