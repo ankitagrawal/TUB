@@ -215,7 +215,7 @@
 
             });
 			$('.requiredFieldValidator').click(function() {
-                var invoice = $('.invoiceNumber').val();
+				var invoice = $('.invoiceNumber').val();
 				if(invoice == "-"){
 					alert("Enter Invoice Number");
 					return false;
@@ -544,7 +544,7 @@
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
-	<s:hidden name="save" value="Save" class="requiredFieldValidator" style="display:none;"/>
+	<s:submit name="save" value="Save" class="requiredFieldValidator" style="display:none;"/>
     <s:button name="validateWeight" value="Save" class="validateWeight" />
 
     <c:if test='${itemCheckedin && pa.grn.grnStatus.id != GrnCloseId}' >
