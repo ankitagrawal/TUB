@@ -329,6 +329,8 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 

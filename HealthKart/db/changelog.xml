@@ -12447,7 +12447,6 @@
             set pvi.inv_txn_type_id = 240 where rv.reconciliation_type_id = 180;
         </sql>
     </changeSet>
-
     <changeSet author="Ajeet (generated)" id="1366281640164-1">
         <addColumn tableName="warehouse">
             <column defaultValue="1" name="honoring_b2c_orders" remarks="1 = Serving B2B+B2C the way we are doing right now, 0 = Exclusive to B2B" type="TINYINT">
@@ -12527,5 +12526,18 @@
     </changeSet>
     <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="marut (generated)" id="1366356450756-01">
+        <createTable tableName="marketing_feed">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="feed_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>
