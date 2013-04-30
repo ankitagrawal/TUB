@@ -66,7 +66,7 @@
 				var eachRowValue = eachRow.val().trim();
 				total += parseFloat(eachRowValue);
 			});
-			
+			total = total.toFixed(2);
 			if (toHtml == 1) {
 				table.parent().find(toTotalClass).html(total);
 			} else {
@@ -243,9 +243,10 @@
 			return false;
 		});
 
-		if(${!piHasRtv}){
+		if(${pia.piHasRtv}){
 			$('#rtvTable').hide();
 		}
+		
 		$('.variant').live("change", function() {
 			var variantRow = $(this).parents('.lineItemRow');
 			var productVariantId = variantRow.find('.variant').val();
@@ -292,7 +293,13 @@
 				taxCategory = parseFloat(valueChangeRow.find('.taxCategory').val().trim());
 			}
 			var taxable = costPrice * qty;
-			var discountPercentage = valueChangeRow.find('.discountPercentage').val();
+			var discountPercentage;
+			if(valueChangeRow.find('.discountPercentage').length!=0){
+			discountPercentage = valueChangeRow.find('.discountPercentage').val();
+			}
+			else{
+				discountPercentage=0;
+			}
 			var discountedAmount;
 			if (isNaN(discountPercentage)) {
 				alert("Enter valid discount");
@@ -379,16 +386,22 @@
 
 	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piTable"));
 	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piShortTable"));
+	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piRtvTable"));
 	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piTable"));
 	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piTable"));
 	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piTable"));
 	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piShortTable"));
 	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piShortTable"));
 	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piShortTable"));
+	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piRtvTable"));
+	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piRtvTable"));
+	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piRtvTable"));
 	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piTable"));
 	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piShortTable"));
+	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piRtvTable"));
 	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));
 	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
+	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
 	
 	});
 </script>
@@ -509,21 +522,20 @@
 
 <br/>
 <s:form beanclass="com.hk.web.action.admin.inventory.GRNAction">
-<c:choose>
-	<c:when test="${!piHasRtv && fn:length(pia.rtvList) gt 0}">
-	There are rtvs attached with the PI.<br/>
+<c:set var="hasRtv" scope="page" value="${pia.piHasRtv}"/>
+	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
+	There are rtvs attached with the PI. Select to import them.<br/>
 	<table>
-	<c:forEach items="${pia.rtvList}" var="rtv" varStatus="ctr">
+	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
 	<td>${ctr.index+1}. Purchase Order No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
 	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</c:forEach>
 	<tr><td colspan="2"><s:submit name="importRtv" value="Import Rtv"></s:submit></td></tr>
 	</table>
-	</c:when>
-	<c:otherwise>
-		There are no rtvs attached with the PI
-	</c:otherwise>
-</c:choose>
+	</c:if>
+	<c:if test="${fn:length(pia.toImportRtvList) eq 0 && !pia.piHasRtv}">
+		There are no rtvs attached with the PI.
+	</c:if>
 </s:form>
 
 <table border="1">
@@ -874,7 +886,7 @@
 	</tr>
 	<tr>
 		<td colspan="12"></td><td>Final Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable" name="purchaseInvoice.finalPayableAmount"
+		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.finalPayableAmount"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>
@@ -904,7 +916,10 @@
 		<th>Received Qty</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
-		<th>Total</th>
+		<th>Taxable</th>
+		<th>Tax</th>
+		<th>Surcharge</th>
+		<th>Payable</th>
 		<th>Comment</th>
 	</tr>
 	</thead>
@@ -988,7 +1003,7 @@
 				</shiro:lacksPermission>
 			</td>
 			<td>
-				<s:text name="extraInventoryLineItems[${ctr.index}].qty" value="${extraInventoryLineItem.receivedQty}"
+				<s:text readonly="true" name="extraInventoryLineItems[${ctr.index}].qty" value="${extraInventoryLineItem.receivedQty}"
 				        class="receivedQuantity valueChange"/>
 			</td>
 			<td>
@@ -997,12 +1012,28 @@
 				        class="costPrice valueChange"/>
 			</td>
 			<td>
-				<s:text class="mrp" name="extraInventoryLineItems[${ctr.index}].mrp"
+				<s:text class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
 				        value="${extraInventoryLineItem.mrp}"/>
 			</td>
 			<td>
-				<s:text class="total" name="total"
-				        value="${extraInventoryLineItem.costPrice*extraInventoryLineItem.receivedQty}"/>
+				<s:text readonly="readonly" class="taxableAmount"
+				        name="extraInventoryLineItems[${ctr.index}].taxableAmount"
+				        value="${extraInventoryLineItem.taxableAmount}"/>
+			</td>
+			<td>
+				<s:text readonly="readonly" class="taxAmount" name="extraInventoryLineItems[${ctr.index}].taxAmount"
+				        value="${extraInventoryLineItem.taxAmount}"/>
+			</td>
+			<td>
+				<s:text readonly="readonly" class="surchargeAmount"
+				        name="extraInventoryLineItems[${ctr.index}].surchargeAmount"
+				        value="${extraInventoryLineItem.surchargeAmount}"/>
+			</td>
+			<td>
+
+				<s:text readonly="readonly" class="payableAmount"
+				        name="extraInventoryLineItems[${ctr.index}].payableAmount"
+				        value="${extraInventoryLineItem.payableAmount}"/>
 			</td>
 			
 			<c:choose>
@@ -1016,28 +1047,40 @@
 	</c:forEach>
 	</tbody>
 	<tfoot id="piShortTableFoot">
-	<tr>
-		<td colspan="7">Totals</td>
-		<td colspan="2" class="totalQuantity"></td>
-		<td><s:text readonly="readonly" class="totalPayable" name="purchaseInvoice.payableAmount"/></td>
-		<td></td>
-	</tr>
-	
-	<tr>
-	<tr>
-		<td colspan="8"></td><td>Freight and Forwarding<br/>Charges(In Rupees)</td>
-		<td><s:text class="freightCharges footerChanges" name="purchaseInvoice.freightForwardingCharges"
-		            value="${pia.purchaseInvoice.freightForwardingCharges}"/></td>
-		            <td></td>
+		<tr>
+		<td colspan="5">Totals</td>
+		<td colspan="3" class="totalQuantity"></td>
+		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseInvoice.taxableAmount"
+		            value="${pia.purchaseInvoice.taxableAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalTax" name="purchaseInvoice.taxAmount"
+		            value="${pia.purchaseInvoice.taxAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseInvoice.surchargeAmount"
+		            value="${pia.purchaseInvoice.surchargeAmount}"/></td>
+		<td><s:text readonly="readonly" class="totalPayable" name="purchaseInvoice.payableAmount"
+		            value="${pia.purchaseInvoice.payableAmount}"/></td>
 	</tr>
 	<tr>
-		<td colspan="8"></td><td>RTV Final Total</td>
-		<td><s:text readonly="readonly" class="finalPayable" name="purchaseInvoice.finalPayableAmount"
+		<td colspan="11"></td><td>RTV Final Total</td>
+		<td><s:text readonly="readonly" class="finalPayable rtvFinal" name="purchaseInvoice.finalPayableAmount"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 		            <td></td>
 	</tr>
 	</tfoot>
 </table>
+<s:submit name="saveRtv" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
+
+<table id = "finalPayableDiv">
+<tr>
+<th></th>
+<th>PI+RTV TOTAL</th>
+<th>SHORT TOTAL</th>
+</tr>
+<tr>
+<td><label>Final Payable Amounts</label></td>
+<td><input id= "" readonly="readonly" /></td>
+</tr>
+</table>
+
 </s:layout-component>
 </s:layout-render>

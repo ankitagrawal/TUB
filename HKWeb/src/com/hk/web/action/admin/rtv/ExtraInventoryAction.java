@@ -9,12 +9,14 @@ import com.hk.admin.pact.service.rtv.ExtraInventoryLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteLineItemService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.courier.EnumPickupStatus;
+import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.inventory.rtv.ExtraInventoryStatus;
 import com.hk.manager.EmailManager;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
@@ -23,10 +25,13 @@ import com.hk.constants.rtv.EnumRtvNoteStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+import com.hk.admin.util.TaxUtil;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.ExtraInventory;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.TaxConstants;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.domain.sku.Sku;
@@ -34,8 +39,11 @@ import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteLineItem;
 import com.hk.web.HealthkartResponse;
 import com.hk.domain.core.Tax;
+import com.hk.dto.TaxComponent;
+import com.hk.web.action.admin.inventory.InventoryCheckinAction;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -76,6 +84,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   EmailManager emailManager;
   @Autowired
   CourierPickupService courierPickupService;
+  @Autowired
+  UserService userService;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -129,6 +139,19 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   
   public Resolution save(){
 
+	  User user = null;
+      Warehouse userWarehouse = null;
+      if (getPrincipal() != null) {
+          user = getUserService().getUserById(getPrincipal().getId());
+      }
+      if (getUserService().getWarehouseForLoggedInUser() != null) {
+          userWarehouse = userService.getWarehouseForLoggedInUser();
+      }
+      else {
+          addRedirectAlertMessage(new SimpleMessage("There is no warehouse attached with the logged in user. Please check with the admin."));
+          return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+      }
+	  
     extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);
     purchaseOrder = getPurchaseOrderService().getPurchaseOrderById(purchaseOrderId);
     List<Long> skus = new ArrayList<Long>();
@@ -190,6 +213,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
       extraInventory = getExtraInventoryService().save(extraInventory);
     }
     //creating Extra Inventory Line Items
+    //Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems){
       if(extraInventoryLineItem.getId()==null && extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setExtraInventory(extraInventory);
