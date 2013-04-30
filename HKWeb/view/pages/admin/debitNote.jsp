@@ -21,7 +21,7 @@
                     lastIndex = -1;
                 }
                 $('.lastRow').removeClass('lastRow');
-                var debitNoteId = $('.debitNotes').val();
+                var debitNoteId = $('#debitNoteId').val();
                 var nextIndex = eval(lastIndex + "+1");
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
@@ -90,7 +90,7 @@
     </div>
 
     <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
-        <s:hidden name="debitNote" value="${pa.debitNote.id}"/>
+        <s:hidden name="debitNote" value="${pa.debitNote.id}" id="debitNoteId"  />
         <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}"/>
         <table>
             <tr>
@@ -165,7 +165,7 @@
 
                     <td>
                             ${productVariant.id}
-                            <s:hidden class="debitNotes" name="debitNoteLineItems[${ctr.index}].debitNote" value="${debitNote.id}" />
+                            <s:hidden name="debitNoteLineItems[${ctr.index}].debitNote" value="${debitNote.id}" />
                             <s:hidden name="debitNoteLineItems[${ctr.index}].sku" value="${sku.id}" />
                         <s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].productVariant"
                                   value="${productVariant.id}"/>
