@@ -23,7 +23,11 @@ public class ActionItem implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_action_task_id", nullable = false)
-    private ActionTask actionTask;
+    private ActionTask currentActionTask;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_action_task_id", nullable = false)
+    private ActionTask previousActionTask;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "traffic_state_id")
@@ -69,12 +73,20 @@ public class ActionItem implements java.io.Serializable {
         this.id = id;
     }
 
-    public ActionTask getActionTask() {
-        return this.actionTask;
+    public ActionTask getCurrentActionTask() {
+        return currentActionTask;
     }
 
-    public void setActionTask(ActionTask actionTask) {
-        this.actionTask = actionTask;
+    public void setCurrentActionTask(ActionTask currentActionTask) {
+        this.currentActionTask = currentActionTask;
+    }
+
+    public ActionTask getPreviousActionTask() {
+        return previousActionTask;
+    }
+
+    public void setPreviousActionTask(ActionTask previousActionTask) {
+        this.previousActionTask = previousActionTask;
     }
 
     public TrafficState getTrafficState() {

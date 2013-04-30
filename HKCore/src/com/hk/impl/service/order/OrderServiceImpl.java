@@ -727,28 +727,29 @@ public class OrderServiceImpl implements OrderService {
                 } else {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
+                    getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                             EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
                 }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
-                    //auto allocate buckets, based on business use case
-                    bucketService.allocateBuckets(shippingOrder);
+                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
                 }
             }
 
             for (ShippingOrder shippingOrder : shippingOrders) {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
+
+                //auto allocate buckets, based on business use case
+                bucketService.allocateBuckets(shippingOrder);
+
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
-
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {

@@ -2,9 +2,13 @@ package com.hk.util;
 
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.ActionTask;
+import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 
 import java.util.ArrayList;
@@ -67,6 +71,24 @@ public class BucketAllocator {
         }
 
         return actionableBuckets;
+    }
+
+    public static ActionTask listCurrentActionTask(List<Bucket> buckets){
+
+        if(buckets.contains(EnumBucket.Cod_Confirmation.asBucket()) || buckets.contains(EnumBucket.Cheque_Cash_Neft.asBucket())){
+            return EnumActionTask.Payment_Confirmation.asActionTask();
+        }
+        if(buckets.contains(EnumBucket.Online_Payment_Disputes.asBucket())){
+            return EnumActionTask.Online_Authorization.asActionTask();
+        }
+        if(buckets.contains(EnumBucket.Dispatch_Issues.asBucket())){
+            return EnumActionTask.Create_Shipment.asActionTask();
+        }
+        if(buckets.contains(EnumBucket.Jit.asBucket()) || buckets.contains(EnumBucket.DropShip.asBucket())){
+            return EnumActionTask.Create_PO.asActionTask();
+        }
+
+        return null;
     }
 
 }

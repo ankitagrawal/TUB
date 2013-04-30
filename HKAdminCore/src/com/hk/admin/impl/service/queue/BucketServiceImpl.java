@@ -1,15 +1,12 @@
 package com.hk.admin.impl.service.queue;
 
+import com.hk.domain.queue.*;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.queue.ActionItem;
-import com.hk.domain.queue.Classification;
 import com.hk.impl.service.queue.BucketService;
-import com.hk.domain.queue.Bucket;
-import com.hk.domain.queue.Param;
 import com.hk.pact.service.UserService;
 import com.hk.util.BucketAllocator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +49,18 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public ActionItem allocateBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
-        ActionItem actionItem;
-        actionItem = existsActionItem(shippingOrder);
-        if(actionItem == null){
-            actionItem = new ActionItem();
-            actionItem.setFirstPushDate(new Date());
-        }
-        if (enumBuckets != null && !enumBuckets.isEmpty()) {
-            actionItem.setBuckets(EnumBucket.getBuckets(enumBuckets));
+        if (!enumBuckets.isEmpty()) {
+            List<Bucket> buckets = EnumBucket.getBuckets(enumBuckets);
+            ActionTask currentActionTask = BucketAllocator.listCurrentActionTask(buckets);
+            ActionItem actionItem;
+            actionItem = existsActionItem(shippingOrder);
+            if (actionItem == null) {
+                actionItem = new ActionItem();
+                actionItem.setFirstPushDate(new Date());
+            }
+            actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+            actionItem.setCurrentActionTask(currentActionTask);
+            actionItem.setBuckets(buckets);
             actionItem.setShippingOrder(shippingOrder);
             pushToActionQueue(actionItem);
         }
