@@ -22,11 +22,11 @@ public class ActionItem implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "current_action_task_id", nullable = false)
+    @JoinColumn(name = "current_action_task_id")
     private ActionTask currentActionTask;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "previous_action_task_id", nullable = false)
+    @JoinColumn(name = "previous_action_task_id")
     private ActionTask previousActionTask;
 
     @ManyToOne(fetch = FetchType.LAZY)
