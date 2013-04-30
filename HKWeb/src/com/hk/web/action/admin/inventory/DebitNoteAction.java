@@ -102,9 +102,9 @@ public class DebitNoteAction extends BasePaginatedAction {
             if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty()== 0 ) {
                 getBaseDao().delete(debitNoteLineItem);
             } else {
-                Sku sku = skuService.getSKU(debitNoteLineItem.getProductVariant(), debitNote.getWarehouse());
-                debitNoteLineItem.setSku(sku);
-                debitNoteLineItem.setDebitNote(debitNote);
+//                Sku sku = skuService.getSKU(debitNoteLineItem.getProductVariant(), debitNote.getWarehouse());
+//                debitNoteLineItem.setSku(sku);
+//                debitNoteLineItem.setDebitNote(debitNote);
                 getDebitNoteDao().save(debitNoteLineItem);
             }
         }
