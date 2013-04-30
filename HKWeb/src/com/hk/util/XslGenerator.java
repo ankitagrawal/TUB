@@ -732,9 +732,10 @@ public class XslGenerator {
         xlsWriter.addHeader("Pickup Confirmation No", "Pickup Confirmation No");
         xlsWriter.addHeader("AWB No", "AWB No");
         xlsWriter.addHeader("Pickup DateTime", "Pickup DateTime");
+        xlsWriter.addHeader("Booking Date", "Booking Date");
         xlsWriter.addHeader("Box Size", "Box Size");
         xlsWriter.addHeader("Box Weight", "Box Weight");
-        xlsWriter.addHeader("Booking Date", "Booking Date");
+
 
         if (reverseOrderList != null) {
             for (ReverseOrder order : reverseOrderList) {
