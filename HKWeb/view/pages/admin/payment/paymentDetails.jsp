@@ -4,7 +4,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Payment Seeker">
     <s:layout-component name="content">
         <fieldset>
-            Payment Seeker (Currently works for ICICI/Citrus/Icici via Citrus (Credit debit cards only)
+            Payment Seeker (Currently works for ICICI/Citrus/EBS/Icici via Citrus (Credit debit cards only)
         </fieldset>
         <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
             <fieldset>
@@ -16,7 +16,7 @@
                 <s:text name="txnEndDate" id = "txnEndDate" style="width:180px;height:25px;"/>
                 <label>Enter Merchant Id</label>
                 <s:text name="merchantId" id = "merchantId" style="width:180px;height:25px;"/>
-                <br>
+                <br> <br>
                 <label>Enter Payment Id (EBS)</label>
                 <s:text name="paymentId" id = "paymentId" style="width:180px;height:25px;"/>
                 <label>Enter Amount</label>
@@ -26,8 +26,7 @@
                 <s:submit name="searchTransactionByDate" value="Historical List" id="searchTransactionByDate"/>
                 <s:submit name="refundPayment" value="Refund  (beta)" id="refund"/>
                 <s:submit name="capturePayment" value="Capture  (EBS)" id="capture"/>
-                <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>
-                <s:submit name="searchByPaymentID" value="Search By PaymentId (EBS)" id="searchByPaymentID"/>
+                <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>                  
             </fieldset>
         </s:form>
 

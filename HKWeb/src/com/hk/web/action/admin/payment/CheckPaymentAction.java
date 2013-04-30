@@ -124,7 +124,7 @@ public class CheckPaymentAction extends BaseAction {
 
 
     @DontValidate
-//    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         payment = paymentService.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
@@ -148,22 +148,10 @@ public class CheckPaymentAction extends BaseAction {
     }
 
 
-    @DontValidate
-//    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
-    public Resolution searchByPaymentID() {
-            if (paymentId == null || StringUtils.isEmpty(paymentId)) {
-                addRedirectAlertMessage(new SimpleMessage("Payment Id cannot be null"));
-                return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
-            }
-            paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID);
-        transactionList.add(paymentResultMap);
-        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
-    }
-
 
 
     @DontValidate
-//     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
        public Resolution cancelPayment() {
            payment = paymentService.findByGatewayOrderId(gatewayOrderId);
            if (payment != null) {
@@ -180,7 +168,7 @@ public class CheckPaymentAction extends BaseAction {
 
 
      @DontValidate
-//     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
        public Resolution capturePayment() {
            payment = paymentService.findByGatewayOrderId(gatewayOrderId);
            if (payment != null) {

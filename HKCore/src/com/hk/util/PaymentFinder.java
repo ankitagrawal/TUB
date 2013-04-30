@@ -125,7 +125,6 @@ public class PaymentFinder {
     }
 
 
-
     public static Map<String, Object> findEbsTransaction(String gatewayOrderId, String txnPaymentId, String txnAmount, String action) {
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
         //Instantiate an HttpClient
@@ -143,17 +142,15 @@ public class PaymentFinder {
         NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_REF_NO, gatewayOrderId);
         NameValuePair nvp5 = new NameValuePair(EbsPaymentGatewayWrapper.PaymentID, txnPaymentId);
         NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.Amount, txnAmount);
-   //   Account id should be the last parameter       
+        //   Account id should be the last parameter
         NameValuePair nvp6 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
 
         try {
-              String res= null;
+            String res = null;
             if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS)) {
                 method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp4, nvp6});
             } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_REFUND) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CAPTURE) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CANCEL)) {
                 method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp5, nvp6});
-            } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID)){
-                 method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp5, nvp6});
             }
 
             client.executeMethod(method);
@@ -204,122 +201,6 @@ public class PaymentFinder {
             method.releaseConnection();
         }
         return paymentResultMap;
-    }
-
-
-
-/*
-    public static Map<String, Object> findEbsTransaction(String gatewayOrderId, String txnPaymentId, String txnAmount, String action) {
-        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
-
-        try {
-            String res = null;
-            if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS)) {
-                res = sendEbsTransactionRequest(action, gatewayOrderId);
-            } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_REFUND)) {
-                res = sendEbsRefundCaptureCancelRequest(action, txnPaymentId, txnAmount);
-            }
-
-            Document doc = new SAXBuilder().build(new StringReader(res));
-
-            XPath xPath = XPath.newInstance("/output");
-            List<Element> xmlElementList = xPath.selectNodes(doc);
-            Iterator elementListIterator = xmlElementList.listIterator();
-            while (elementListIterator.hasNext()) {
-                Element ele = (Element) elementListIterator.next();
-                String trnsid = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID);
-                String paymentId = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID);
-                String amount = ele.getAttributeValue(EbsPaymentGatewayWrapper.amount);
-                String dateTime = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_DATETIME);
-                String mode = ele.getAttributeValue(EbsPaymentGatewayWrapper.mode);
-                String referenceNo = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO);
-                String transactionType = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE);
-                String status = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_STATUS);
-                String isFlagged = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED);
-                String errorCode = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_CODE);
-                String errorMessage = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_MSG);
-                if (paymentId != null) {
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID, trnsid);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID, paymentId);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.amount, amount);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_DATETIME, dateTime);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.mode, mode);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO, referenceNo);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE, transactionType);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_STATUS, status);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED, isFlagged);
-                } else {
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_CODE, errorCode);
-                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_MSG, errorMessage);
-                }
-
-            }
-
-        } catch (Exception e) {
-           logger.debug(" Exception at parsing xml for  " + gatewayOrderId, e);
-        }
-
-        return paymentResultMap;
-    }
-
-*/
-
-    public static String sendEbsTransactionRequest(String action, String gatewayOrderId) {
-        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
-        //Instantiate an HttpClient
-        HttpClient client = new HttpClient();
-        String url = EbsPaymentGatewayWrapper.EBS_TXN_URL;
-
-        //Instantiate a GET HTTP method
-        PostMethod method = new PostMethod(url);
-        method.setRequestHeader("Content-type", "text/xml; charset=ISO-8859-1");
-        String res = null;
-
-
-        //Define name-value pairs to set into the QueryString
-        NameValuePair nvp1 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_SECRET_KEY, "5b436e8c7edd4411eecd21cad20539b4");
-        NameValuePair nvp2 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACTION, action);
-        NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_REF_NO, gatewayOrderId);
-        // very imp AccountId should be the last parameter
-        NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
-        try {
-            method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp4});
-            client.executeMethod(method);
-            res = method.getResponseBodyAsString();
-        } catch (IOException e) {
-            logger.debug(" IO Exception  while sending the request to Ebs Gateway " + gatewayOrderId, e);
-        }
-        return res;
-    }
-
-
-    public static String sendEbsRefundCaptureCancelRequest(String action, String txnPaymentId, String txnAmount) {
-
-        //Instantiate an HttpClient
-        HttpClient client = new HttpClient();
-        String url = EbsPaymentGatewayWrapper.EBS_TXN_URL;
-
-        //Instantiate a GET HTTP method
-        PostMethod method = new PostMethod(url);
-        method.setRequestHeader("Content-type", "text/xml; charset=ISO-8859-1");
-        String res = null;
-
-
-        //Define name-value pairs to set into the QueryString
-        NameValuePair nvp1 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_SECRET_KEY, "5b436e8c7edd4411eecd21cad20539b4");
-        NameValuePair nvp2 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACTION, action);
-        NameValuePair nvp5 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
-        NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.PaymentID, txnPaymentId);
-        NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.Amount, txnAmount);
-
-        try {
-            method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp4, nvp5});
-            client.executeMethod(method);
-            res = method.getResponseBodyAsString();
-        } catch (IOException e) {
-            logger.debug(" IO Exception  while sending the request to Ebs Gateway for Payment Id: " + txnPaymentId, e);
-        }
-        return res;
     }
 
 
