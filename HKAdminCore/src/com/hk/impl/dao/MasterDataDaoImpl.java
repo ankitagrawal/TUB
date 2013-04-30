@@ -15,6 +15,7 @@ import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.review.Mail;
@@ -471,7 +472,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Warehouse> getAllWarehouse() {
-        return warehouseService.getAllWarehouses();
+        //return warehouseService.getAllWarehouses();
+        return warehouseService.getAllActiveWarehouses();
     }
 
     public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {
@@ -512,6 +514,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<ReconciliationType> getProductAuditedReconVoucherType() {
         return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    }
+
+    public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList() {
+      return getBaseDao().getAll(ConsignmentLifecycleStatus.class);
     }
 
 }

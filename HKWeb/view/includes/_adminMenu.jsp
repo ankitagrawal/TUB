@@ -62,7 +62,7 @@
     </div>
     <c:if test="${whAction.setWarehouse != null}">
         <div align="center" class="prom yellow help" style="height:16px; font-size:16px; color:red; font-weight:bold;">
-            ATTENTION: Selected Warehouse -> ${whAction.setWarehouse.name}
+            ${whAction.setWarehouse.identifier}
         </div>
     </c:if>
     <div class="right">

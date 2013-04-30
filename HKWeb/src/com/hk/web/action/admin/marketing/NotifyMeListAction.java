@@ -15,6 +15,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
+import com.hk.web.action.core.user.NotifyMeAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -55,35 +57,41 @@ import com.hk.web.action.error.AdminPermissionAction;
  * File Templates.
  */
 
-@Secure(hasAnyPermissions = { PermissionConstants.VIEW_NOTIFY_LIST }, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.VIEW_NOTIFY_LIST}, authActionBean = AdminPermissionAction.class)
 @Component
 public class NotifyMeListAction extends BasePaginatedAction implements ValidationErrorHandler {
 
     @Autowired
-    private NotifyMeDao       notifyMeDao;
+    private NotifyMeDao notifyMeDao;
     @Autowired
-    private ReportManager     reportManager;
+    private ReportManager reportManager;
     @Autowired
     private AdminEmailManager adminEmailManager;
     @Autowired
-    private EmailCampaignDao  emailCampaignDao;
+    private EmailCampaignDao emailCampaignDao;
+    @Autowired
+    ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService;
 
-    File                      xlsFile;
+
+    File xlsFile;
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String                    adminDownloads;
+    String adminDownloads;
 
-    private Date              startDate;
-    private Date              endDate;
-    Page                      notifyMePage;
-    private Integer           defaultPerPage                       = 30;
-    private List<NotifyMe>    notifyMeList                         = new ArrayList<NotifyMe>();
-    private List<NotifyMe>    notifyMeListForProductVariantInStock = new ArrayList<NotifyMe>();
-    private ProductVariant    productVariant;
-    private Product           product;
-    private Category          primaryCategory;
-	private Boolean           productInStock;
-	private Boolean           productDeleted;
+    private Date startDate;
+    private Date endDate;
+    Page notifyMePage;
+    private Integer defaultPerPage = 30;
+    private List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
+    private List<NotifyMe> notifyMeListForProductVariantInStock = new ArrayList<NotifyMe>();
+    private ProductVariant productVariant;
+    private Product product;
+    private Category primaryCategory;
+    private Boolean productInStock;
+    private Boolean productDeleted;
+    private Float conversionRate = 0.01f;
+    private int bufferRate = 2;
+
 
     @DefaultHandler
     @DontValidate
@@ -120,7 +128,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             xlsFile = new File(adminDownloads + "/reports/notify-me-list" + sdf.format(new Date()) + ".xls");
-            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate,  product, productVariant, primaryCategory, productInStock, productDeleted);
+            xlsFile = reportManager.generateNotifyMeList(xlsFile.getPath(), startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted);
             addRedirectAlertMessage(new SimpleMessage("Notify me list successfully generated."));
         } catch (Exception e) {
             e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
@@ -198,6 +206,15 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         return new RedirectResolution(NotifyMeListAction.class);
     }
 
+    public Resolution sendAllNotifyMails() {
+        if (conversionRate > 1) {
+            addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
+            return new RedirectResolution(NotifyMeListAction.class);
+        }
+        productVariantNotifyMeEmailService.sendNotifyMeEmail(conversionRate, bufferRate);
+        return new RedirectResolution(NotifyMeListAction.class);
+    }
+
     public List<NotifyMe> getNotifyMeList() {
         return notifyMeList;
     }
@@ -246,8 +263,8 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         params.add("startDate");
         params.add("endDate");
         params.add("primaryCategory");
-		params.add("productInStock");
-	    params.add("productDeleted");
+        params.add("productInStock");
+        params.add("productDeleted");
         return params;
     }
 
@@ -311,19 +328,35 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         this.emailCampaignDao = emailCampaignDao;
     }
 
-	public Boolean getProductInStock() {
-		return productInStock;
-	}
+    public Boolean getProductInStock() {
+        return productInStock;
+    }
 
-	public void setProductInStock(Boolean productInStock) {
-		this.productInStock = productInStock;
-	}
+    public void setProductInStock(Boolean productInStock) {
+        this.productInStock = productInStock;
+    }
 
-	public Boolean getProductDeleted() {
-		return productDeleted;
-	}
+    public Boolean getProductDeleted() {
+        return productDeleted;
+    }
 
-	public void setProductDeleted(Boolean productDeleted) {
-		this.productDeleted = productDeleted;
-	}
+    public void setProductDeleted(Boolean productDeleted) {
+        this.productDeleted = productDeleted;
+    }
+
+    public Float getConversionRate() {
+        return conversionRate;
+    }
+
+    public void setConversionRate(Float conversionRate) {
+        this.conversionRate = conversionRate;
+    }
+
+    public int getBufferRate() {
+        return bufferRate;
+    }
+
+    public void setBufferRate(int bufferRate) {
+        this.bufferRate = bufferRate;
+    }
 }
