@@ -21,14 +21,15 @@
                     lastIndex = -1;
                 }
                 $('.lastRow').removeClass('lastRow');
-
+                var debitNoteId = $('.debitNotes').val();
                 var nextIndex = eval(lastIndex + "+1");
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-                                '<td>' + Math.round(nextIndex + 1) + '.</td>' +
+                                '<td class="sNo">' + Math.round(nextIndex + 1) + '.</td>' +
                                 '<td>' +
                                 '    <input type="hidden" name="debitNoteLineItems[' + nextIndex + '].id" />' +
                                 '    <input type="text" class="variant" name="debitNoteLineItems[' + nextIndex + '].productVariant"/>' +
+                                '    <input type="hidden" class="debitNotes" name="debitNoteLineItems[' + nextIndex + '].debitNote" value="' + debitNoteId + '" ' +
                                 '  </td>' +
                                 '<td></td>' +
                                 '  <td class="pvDetails"></td>' +
@@ -53,6 +54,10 @@
                 var variantRow = $(this).parents('.lineItemRow');
                 var productVariantId = variantRow.find('.variant').val();
                 var productVariantDetails = variantRow.find('.pvDetails');
+                var obj = $(this);
+                var index = $(this).parents("tr").children(".sNo").html();
+                index = index.replace(".","");
+                index = parseInt(index) - 1;
                 $.getJSON(
                         $('#pvInfoLink').attr('href'), {productVariantId: productVariantId, warehouse: ${whAction.setWarehouse.id}},
                         function(res) {
@@ -63,9 +68,11 @@
                                         res.data.product + '<br/>' +
                                                 res.data.options
                                 );
+                                obj.parent().append('<input type="hidden" name="debitNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
+
                         }
                 );
             });
@@ -151,14 +158,15 @@
             <c:forEach var="debitNoteLineItemDto" items="${pa.debitNoteDto.debitNoteLineItemDtoList}" varStatus="ctr">
                 <c:set var="sku" value="${debitNoteLineItemDto.debitNoteLineItem.sku}"/>
                 <c:set var="productVariant" value="${debitNoteLineItemDto.debitNoteLineItem.sku.productVariant}"/>
+                <c:set var="debitNote" value="${debitNoteLineItemDto.debitNoteLineItem.debitNote}" />
                 <s:hidden name="debitNoteLineItems[${ctr.index}].id" value="${debitNoteLineItemDto.debitNoteLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-                    <td>${ctr.index+1}.</td>
+                    <td class="sNo">${ctr.index+1}.</td>
 
                     <td>
                             ${productVariant.id}
-                            <%--<s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].sku"
-                            value="${sku.id}"/>--%>
+                            <s:hidden class="debitNotes" name="debitNoteLineItems[${ctr.index}].debitNote" value="${debitNote.id}" />
+                            <s:hidden name="debitNoteLineItems[${ctr.index}].sku" value="${sku.id}" />
                         <s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].productVariant"
                                   value="${productVariant.id}"/>
                     </td>

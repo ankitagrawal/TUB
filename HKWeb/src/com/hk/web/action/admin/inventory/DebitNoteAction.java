@@ -98,12 +98,13 @@ public class DebitNoteAction extends BasePaginatedAction {
         }
         debitNote = (DebitNote) getDebitNoteDao().save(debitNote);
         for (DebitNoteLineItem debitNoteLineItem : debitNoteLineItems) {
-            Sku sku = skuService.getSKU(debitNoteLineItem.getProductVariant(), debitNote.getWarehouse());
-            debitNoteLineItem.setSku(sku);
-            debitNoteLineItem.setDebitNote(debitNote);
-            if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty()<= 0 ) {
+
+            if (debitNoteLineItem.getQty() != null && debitNoteLineItem.getQty()== 0 ) {
                 getBaseDao().delete(debitNoteLineItem);
             } else {
+                Sku sku = skuService.getSKU(debitNoteLineItem.getProductVariant(), debitNote.getWarehouse());
+                debitNoteLineItem.setSku(sku);
+                debitNoteLineItem.setDebitNote(debitNote);
                 getDebitNoteDao().save(debitNoteLineItem);
             }
         }
