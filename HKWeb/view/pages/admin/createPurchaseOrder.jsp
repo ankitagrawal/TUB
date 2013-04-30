@@ -1,14 +1,14 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction" var="pa"/>
 <s:layout-render name="/layouts/defaultAdmin.jsp">
    <%
-    WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-    pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
   %>
   <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -113,7 +113,7 @@
             <td>
             <s:select name="purchaseOrder.warehouse">
               <c:forEach items="${whList}" var="wh">
-                <s:option value="${wh.id}">${wh.name}</s:option>
+                <s:option value="${wh.id}">${wh.identifier}</s:option>
               </c:forEach>
             </s:select>
           </td></tr>

@@ -210,7 +210,9 @@ public class ShipmentServiceImpl implements ShipmentService {
             newShipment = createShipment(shippingOrder, true);
             shippingOrder.setShipment(newShipment);
             shippingOrder = shippingOrderService.save(shippingOrder);
-            String newShipmentAwbDetails = newShipment.getAwb().toString();
+            String newShipmentAwbDetails = "";
+            if (newShipment != null && newShipment.getAwb() != null)
+              newShipmentAwbDetails = newShipment.getAwb().toString();
             shippingOrderService.logShippingOrderActivity(shippingOrder, userService.getLoggedInUser(), EnumShippingOrderLifecycleActivity.SO_Shipment_Re_Created.asShippingOrderLifecycleActivity(),
                     null, oldShipmentAwbDetails + " to --> " + newShipmentAwbDetails);
         }
