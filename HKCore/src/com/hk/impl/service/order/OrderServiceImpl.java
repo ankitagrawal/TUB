@@ -742,7 +742,9 @@ public class OrderServiceImpl implements OrderService {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
 
                 //auto allocate buckets, based on business use case
-                bucketService.allocateBuckets(shippingOrder);
+                if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                    bucketService.allocateBuckets(shippingOrder);
+                }
 
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
