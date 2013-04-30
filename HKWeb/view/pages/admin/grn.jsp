@@ -30,45 +30,56 @@
 <script type="text/javascript">
 $(document).ready(function() {
     function checkvariantWeightonBlur(){
+        var receivedQuantity = $(this).parents('.lineItemRow');
+        var receivedQuantityValue   = receivedQuantity.find(".receivedQuantity").val();
         var variantRegex=/^[0-9]+$/;
         varWeightLength = $(this).val().length;
         varWeightValue = $(this).val();
-        if (varWeightLength == 0){
-            alert("Variant weight cannot be empty!");
-            return false;
+        if(receivedQuantityValue!='0'){
+            alert(receivedQuantityValue);
+                if (varWeightLength == 0){
+                    alert("Variant weight cannot be empty!");
+                    return false;
 
-        }else if (isNaN(varWeightValue)) {
-            //alert(varWeightValue);
-            alert("Please enter variant weight in correct format!");
-            return false;
+                }else if (isNaN(varWeightValue)) {
+                    //alert(varWeightValue);
+                    alert("Please enter variant weight in correct format!");
+                    return false;
+                }
+                else if ((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
+                    alert(" Weight should be in grams!");
+                    return false;
+                }
+                else{
+                    return true;
+                }
         }
-        else if ((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
-            alert(" Weight should be in grams!");
-            return false;
-        }
-        else{
-            return true;
-        }
-
     }
     function checkvariantWeightonSubmit(){
+
         var variantRegex=/^[0-9]+$/;
         var success = true;
             $(".weight").each(function() {
+                    var receivedQuantity = $(this).parents('.lineItemRow');
+                    var receivedQuantityValue   = receivedQuantity.find(".receivedQuantity").val();
+                alert(receivedQuantityValue);
                     varWeightLength = $(this).val().length;
                     varWeightValue = $(this).val();
-                    if (varWeightLength == 0){
-                        alert("Variant weight cannot be empty!");
-                        success = false;
+                    if(receivedQuantityValue!='0'){
+                        if (varWeightLength == 0){
+                            alert("Variant weight cannot be empty!");
+                            success = false;
 
-                    }else if (isNaN(varWeightValue)) {
-                        //alert(varWeightValue);
-                        alert("Please enter variant weight in correct format!");
-                        success = false;
-                    }
-                    else if((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
-                        alert(" Weight should be in grams!");
-                        success = false;
+                        }else if (isNaN(varWeightValue)) {
+                            //alert(varWeightValue);
+                            alert("Please enter variant weight in correct format!");
+                            success = false;
+                        }
+                        else if((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
+                            alert(" Weight should be in grams!");
+                            success = false;
+                        }
+                        return success;
                     }
             });
 
