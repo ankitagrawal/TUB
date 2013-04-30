@@ -1,6 +1,7 @@
 package com.hk.web.action.admin.courier;
 
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.pact.service.UserService;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
 import com.akube.framework.dao.Page;
@@ -57,6 +58,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
     private File xlsFile;
     private Date endDate;
     private Date startDate;
+    private Long warehouseId;
 
     @Autowired
     ReverseOrderService reverseOrderService;
@@ -69,10 +71,17 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
 
     @Autowired
     ReplacementOrderService replacementOrderService;
+    @Autowired
+    UserService userService;
 
     @DefaultHandler
     public Resolution pre() {
-        orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, getPageNo(), getPerPage(), startDate, endDate);
+        if (warehouseId == null) {
+            if (userService.getWarehouseForLoggedInUser() != null) {
+                warehouseId = userService.getWarehouseForLoggedInUser().getId();
+            }
+        }
+        orderRequestsPage = reverseOrderService.getPickupRequestsByStatuses(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, getPageNo(), getPerPage(), startDate, endDate);
         orderRequestsList = orderRequestsPage.getList();
         return new ForwardResolution("/pages/admin/reverseOrderList.jsp");
     }
@@ -144,7 +153,6 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
         return new RedirectResolution(ReverseOrdersManageAction.class).addParameter("shippingOrderId", shippingOrderId);
     }
 
-
     @Secure(hasAnyPermissions = {PermissionConstants.EDIT_AWB_NO}, authActionBean = AdminPermissionAction.class)
     public Resolution editTrack() {
         if (orderRequestId != null) {
@@ -171,9 +179,6 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
             if (shippingOrderService.shippingOrderHasReplacementOrder(reverseOrder.getShippingOrder())) {
                 addRedirectAlertMessage(new SimpleMessage("Cannot cancel this order as a replacement has already been created for it."));
             } else {
-                ShippingOrder shippingOrder = reverseOrder.getShippingOrder();
-                shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
-                shippingOrderService.save(shippingOrder);
                 reverseOrderService.deleteReverseOrder(reverseOrder);
             }
         }
@@ -183,7 +188,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.GENERATE_EXCEL_FOR_REVERSE_PICKUP}, authActionBean = AdminPermissionAction.class)
     public Resolution generateExcelForReversePickup() {
-        orderRequestsList = reverseOrderService.getPickupRequestsForExcel(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId);
+        orderRequestsList = reverseOrderService.getPickupRequestsForExcel(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, startDate, endDate);
         xlsFile = xslGenerator.generateExcelForReversePickup(orderRequestsList);
         addRedirectAlertMessage(new SimpleMessage("Download complete"));
         return new HTTPResponseResolution();
@@ -225,6 +230,7 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
         params.add("reconciliationStatusId");
         params.add("shippingOrderId");
         params.add("courierId");
+        params.add("warehouseId");
         return params;
     }
 
@@ -316,5 +322,13 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
     @Validate(converter = CustomDateTypeConvertor.class)
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
     }
 }

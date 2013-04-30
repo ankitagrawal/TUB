@@ -20,23 +20,23 @@ import java.util.List;
  */
 public interface ReverseOrderService {
 
-	public ReverseOrder createReverseOrder (ShippingOrder shippingOrder, String returnOrderReason, String reverseOrderType);
+    public ReverseOrder createReverseOrder(ShippingOrder shippingOrder, String returnOrderReason, String reverseOrderType);
 
-	public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap); 	
+    public void createReverseLineItems(ReverseOrder reverseOrder, Map<LineItem, Long> itemMap);
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage , Date startDate , Date endDate);
+    public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage, Date startDate, Date endDate);
 
-	public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId);
+    public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, Date startDate, Date endDate);
 
-	public ReverseOrder getReverseOrderById(Long id);
+    public ReverseOrder getReverseOrderById(Long id);
 
-	public void setCourierDetails(ReverseOrder reverseOrder, CourierPickupDetail courierPickupDetail);
+    public void setCourierDetails(ReverseOrder reverseOrder, CourierPickupDetail courierPickupDetail);
 
-	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
+    public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId);
 
-	public ReverseOrder save(ReverseOrder reverseOrder);
+    public ReverseOrder save(ReverseOrder reverseOrder);
 
-	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage);
+    public Page getReverseOrderWithNoPickupSchedule(int page, int perPage);
 
-	public void deleteReverseOrder(ReverseOrder reverseOrder);
+    public void deleteReverseOrder(ReverseOrder reverseOrder);
 }

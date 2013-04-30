@@ -133,7 +133,7 @@ public class PermissionConstants {
     public static final String OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE = "OPS_MANAGER_SRS_CHANGE_SERVICE_TYPE";
     public static final String OPS_MANAGER_SRS_CHANGE_AWB = "OPS_MANAGER_SRS_CHANGE_AWB";
     public static final String OPS_MANAGER_SRS_CHANGE_SOSTATUS = "OPS_MANAGER_SRS_CHANGE_SOSTATUS";
-
+    public static final String NOTIFY_ME_BULK_EMAIL            ="NOTIFY_ME_BULK_EMAIL";
 	public static final String STORE_MANAGER = "STORE_MANAGER";
 
 	public static final String CREATE_REVERSE_PICKUP_ORDER          = "CREATE_REVERSE_PICKUP_ORDER";

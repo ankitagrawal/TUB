@@ -3,12 +3,16 @@
 <%@ page import="com.hk.constants.courier.AdviceProposedConstants" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" var="pickupManage"/>
 <%
     pageContext.setAttribute("pickupStatusList", EnumPickupStatus.getPickupStatusList());
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 %>
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
@@ -21,6 +25,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
     <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -41,6 +46,7 @@
             });
 
             $('.markReconciled').click(function () {
+
                 if ($(this).parent().find('.markPicked').is(':visible') || $(this).parent().find('.markReceived').is(':visible')) {
                     alert("Please mark the order picked/ received first");
                     return false;
@@ -61,6 +67,7 @@
             });
 
             $('.markReceived').click(function () {
+
                 if ($(this).parent().find('.markPicked').is(':visible')) {
                     alert("Please mark the order picked first");
                     return false;
@@ -108,6 +115,7 @@
                 }
             });
 
+
             $('.cancelOrder').click(function () {
                 if (!confirm("Are you sure you want to cancel order ?")) {
                     return false;
@@ -122,6 +130,8 @@
                 });
                 return false;
             });
+
+
         });
 
     </script>
@@ -154,9 +164,15 @@
         <label>Courier:</label>
         <s:select name="courierId" class="courierService">
             <s:option value="">All Couriers</s:option>
-            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers"
-                                       value="id"
+            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
                                        label="name"/>
+        </s:select>
+        <br>
+        <label>Warehouse:</label>
+        <s:select name="warehouseId">
+            <c:forEach items="${whList}" var="warehouse">
+                <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
+            </c:forEach>
         </s:select>
         &nbsp;
         <label>Booking Start Date:</label>
@@ -211,8 +227,7 @@
             <td>
                 <s:link beanclass="com.hk.web.action.admin.order.search.SearchShippingOrderAction"
                         event="searchShippingOrder" target="_blank">
-                    <s:param name="shippingOrderGatewayId"
-                             value="${reverseOrderRequest.shippingOrder.gatewayOrderId}"/>
+                    <s:param name="shippingOrderGatewayId" value="${reverseOrderRequest.shippingOrder.gatewayOrderId}"/>
                     ${reverseOrderRequest.shippingOrder.gatewayOrderId}
                 </s:link>
             </td>
@@ -260,8 +275,8 @@
                 </c:if>
 
                 <c:if test="${reverseOrderRequest.receivedDate == null}">
-                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
-                            event="markReceived" class="markReceived">Mark Received
+                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markReceived"
+                            class="markReceived">Mark Received
                         <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                         <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                     </s:link>
@@ -269,20 +284,14 @@
                 </c:if>
 
                 <c:if test="${reverseOrderRequest.reconciliationStatus.id == reconPending}">
-                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
-                            event="markReconciled" class="markReconciled">Mark Reconciled
+                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="markReconciled"
+                            class="markReconciled">Mark Reconciled
                         <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
                         <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                     </s:link>
                     <br/>
                 </c:if>
-                <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen || reverseOrderRequest.courierPickupDetail == null}">
-                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
-                            event="reschedulePickup" target="_blank">Reschedule Pickup
-                        <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
-                        <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
-                    </s:link>
-                </c:if>
+
                 <c:if test="${reverseOrderRequest.receivedDate == null}">
                     <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
                             event="cancelReverseOrder" class="cancelOrder">Cancel Order
@@ -290,6 +299,20 @@
                         <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
                     </s:link>
                 </c:if>
+
+                <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickupOpen || reverseOrderRequest.courierPickupDetail == null}">
+                    <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
+                            event="reschedulePickup" target="_blank">Reschedule Pickup
+                        <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
+                        <s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>
+                    </s:link>
+                </c:if>
+                    <%--<c:if test="${reverseOrderRequest.receivedDate == null}">--%>
+                    <%--<s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction" event="cancelReverseOrder" class="cancelRPO">Cancel Order--%>
+                    <%--<s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>--%>
+                    <%--<s:param name="shippingOrderId" value="${pickupManage.shippingOrderId}"/>--%>
+                    <%--</s:link> --%>
+                    <%--</c:if>--%>
 
             </td>
             <td>

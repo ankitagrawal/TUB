@@ -140,13 +140,14 @@ public class PreferredWarehouseDecider {
                 } else {
                     weight += wt;
                 }
-                Sku sku;
+                Sku sku = null;
                 try {
                     sku = skuService.getSKU(productVariant, warehouse);
                 } catch (NoSkuException e) {
-                    sku = skuService.getSKU(productVariant, warehouseService.getWarehoueForFlipping(warehouse));
+                  List<Sku> skuList = skuService.getSkus(productVariant, warehouseService.getWarehoueForFlipping(warehouse));
+                  if (skuList != null && !skuList.isEmpty())
+                    sku = skuList.get(0);
                 } catch (Exception e) {
-                    sku = null;
                 }
                 if (sku != null) {
                     taxIncurred += productVariant.getCostPrice() * sku.getTax().getValue();

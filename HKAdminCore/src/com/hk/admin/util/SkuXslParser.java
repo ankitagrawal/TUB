@@ -113,7 +113,7 @@ public class SkuXslParser {
                 try {
                     variantId = getCellValue(PRODUCT_VARIANT_ID, rowMap, headerMap);
                     // warehouseId = getLong(getCellValue(WAREHOUSE_ID, rowMap, headerMap));
-                    warehouseId = getWarehouseService().findByName(getCellValue(WAREHOUSE_ID, rowMap, headerMap)).getId();
+                    warehouseId = getWarehouseService().findByIdentifier(getCellValue(WAREHOUSE_ID, rowMap, headerMap)).getId();
                     taxName = getCellValue(TAX_ID, rowMap, headerMap);
                     // costPrice = getDouble(getCellValue(COST_PRICE, rowMap, headerMap));
                     cutOffInventory = getLong(getCellValue(CUT_OFF_INVENTORY, rowMap, headerMap));

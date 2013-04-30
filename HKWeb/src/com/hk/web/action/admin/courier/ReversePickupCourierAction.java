@@ -119,9 +119,6 @@ public class ReversePickupCourierAction extends BaseAction {
     //Cancel Reverse Order if created by mistake
     public Resolution cancel() {
         ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
-        ShippingOrder shippingOrder = reverseOrder.getShippingOrder();
-        shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
-        shippingOrderService.save(shippingOrder);
         reverseOrderService.deleteReverseOrder(reverseOrder);
         return new RedirectResolution(ReverseOrdersManageAction.class);
     }

@@ -3,10 +3,12 @@ package com.hk.manager;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.product.ProductVariant;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.util.ssl.SslUtil;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.hk.domain.TempToken;
@@ -23,6 +25,9 @@ import com.hk.web.filter.WebContext;
 @Component
 public class LinkManager {
 
+    @Value("#{hkEnvProps['" + Keys.Env.userEmailLinksRedirected + "']}")
+    private String userEmailLinksRedirected;
+
     public String getAuthRedirectUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/auth/AuthRequired.action");
         return getUrlFromResolution(redirectResolution);
@@ -30,7 +35,7 @@ public class LinkManager {
 
     /**
      * This method generated a full URL from the redirect resolution
-     * 
+     *
      * @param redirectResolution
      * @return
      */
@@ -66,7 +71,7 @@ public class LinkManager {
     public String getOrderTrackLink(String trackingId, Long courierId, ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/order/TrackCourier.action").addParameter("trackingId", trackingId).addParameter("courierId",
                 courierId).addParameter("shippingOrder", shippingOrder);
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getOrderInvoiceLink(Order order) {
@@ -76,7 +81,7 @@ public class LinkManager {
 
     public String getShippingOrderInvoiceLink(ShippingOrder shippingOrder) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/accounting/SOInvoice.action").addParameter("shippingOrder", shippingOrder.getId());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getRetailInvoiceLink(AccountingInvoice accountingInvoice) {
@@ -89,34 +94,34 @@ public class LinkManager {
         return getUrlFromResolution(redirectResolution);
     }
 
-    public String getReviewPageLink(HashMap params){
+    public String getReviewPageLink(HashMap params) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/ProductReview.action").addParameters(params);
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
-    public String getUnsubscribeLink(User user){
-        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken",user.getUnsubscribeToken());
-        return getUrlFromResolution(redirectResolution);
+    public String getUnsubscribeLink(User user) {
+        RedirectResolution redirectResolution = new RedirectResolution("/core/email/HKUnsubscribeEmail.action").addParameter("unsubscribeToken", user.getUnsubscribeToken());
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getUserActivationLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/VerifyUser.action").addParameter("token", token.getToken());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getReferralSignupLink(User user) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/referral/ReferralSignup.action").addParameter("userHash", user.getUserHash());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getReferralProgramUrl() {
         RedirectResolution redirectResolution = new RedirectResolution("/core/referral/ReferralProgram.action");
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getEmailUnsubscribeLink(EmailRecepient emailRecepient) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/email/UnsubscribeEmail.action").addParameter("unsubscribeToken", emailRecepient.getUnsubscribeToken());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getViewTicketUrl(Ticket ticket) {
@@ -126,12 +131,12 @@ public class LinkManager {
 
     public String getResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/PasswordReset.action").addParameter("token", token.getToken());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
-    public String getSSOResetPasswordLink(TempToken token){
+    public String getSSOResetPasswordLink(TempToken token) {
         RedirectResolution redirectResolution = new RedirectResolution("/core/user/SSOPasswordReset.action").addParameter("token", token.getToken());
-        return getUrlFromResolution(redirectResolution);
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
     }
 
     public String getCitrusPaymentNetBankingGatewayUrl() {
@@ -171,41 +176,41 @@ public class LinkManager {
 
 
     public String getPayPalPaymentGatewayCancelUrl() {
-          RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
-          return getUrlFromResolution(redirectResolution);
-      }
+        RedirectResolution redirectResolution = new RedirectResolution("/core/payment/PaymentMode.action");
+        return getUrlFromResolution(redirectResolution);
+    }
 
 
     public String getRelativeProductURL(Product product, Long productReferrerId) {
-       /* String productURL = null;
-        String productSlug = product.getSlug();
-        String productId = product.getId();
-        // commented to stop internal product tagging
-        // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
-        //productURL = "/product/" + productSlug + "/" + productId;
-        
-         * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
-         * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
-         * getUrlFromResolution(redirectResolution);
-         
+        /* String productURL = null;
+                String productSlug = product.getSlug();
+                String productId = product.getId();
+                // commented to stop internal product tagging
+                // productURL = "/product/" + productSlug + "/" + productId + "?productReferrerId=" + productReferrerId;
+                //productURL = "/product/" + productSlug + "/" + productId;
 
-        RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").addParameter("productId", productId).addParameter("productSlug",
-                productSlug);
-        return getUrlFromResolution(redirectResolution);
+                 * RedirectResolution redirectResolution = new RedirectResolution(ProductAction.class). addParameter("referrer",
+                 * referrerId). addParameter("productId", productId).addParameter("productSlug", productSlug); return
+                 * getUrlFromResolution(redirectResolution);
 
-        //return productURL;
-*/    
+
+                RedirectResolution redirectResolution = new RedirectResolution("/core/catalog/product/Product.action").addParameter("productId", productId).addParameter("productSlug",
+                        productSlug);
+                return getUrlFromResolution(redirectResolution);
+
+                //return productURL;
+        */
         String productURL = null;
         String productSlug = product.getSlug();
         String productId = product.getId();
         productURL = "/product/" + productSlug + "/" + productId;
-        
+
         if (productReferrerId != null && productReferrerId != 0) {
             productURL = productURL.concat("?productReferrerId=" + productReferrerId);
         }
-        
+
         return productURL;
-         
+
     }
 
     public String getProductURL(Product product, Long productReferrerId) {
@@ -229,10 +234,11 @@ public class LinkManager {
          */
 
     }
-	public String getFeedbackPage() {
-		RedirectResolution redirectResolution = new RedirectResolution("/feedback");
-		return getUrlFromResolution(redirectResolution);
-	}
+
+    public String getFeedbackPage() {
+        RedirectResolution redirectResolution = new RedirectResolution("/feedback");
+        return userEmailLinksRedirected + redirectResolution.getUrl(Locale.getDefault());
+    }
 
     public String getTryOnImageURL(ProductVariant productVariant) {
 

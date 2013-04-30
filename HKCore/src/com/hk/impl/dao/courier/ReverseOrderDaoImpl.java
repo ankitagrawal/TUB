@@ -25,15 +25,15 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
         return (ReverseOrder) super.save(reverseOrder);
     }
 
-    public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, int page, int perPage, Date startDate, Date endDate) {
-        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, startDate, endDate), page, perPage);
+    public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage, Date startDate, Date endDate) {
+        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, startDate, endDate), page, perPage);
     }
 
-    public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId) {
-        return (List<ReverseOrder>) findByCriteria(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, null, null));
+    public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, Date startDate, Date endDate) {
+        return (List<ReverseOrder>) findByCriteria(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, startDate, endDate));
     }
 
-    private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Date startDate, Date endDate) {
+    private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, Date startDate, Date endDate) {
         DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
         DetachedCriteria courierDetailCriteria = null;
 
@@ -63,6 +63,12 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 
         if (startDate != null && endDate != null) {
             orderCriteria.add(Restrictions.between("createDate", startDate, endDate));
+
+        }
+        if (warehouseId != null) {
+            DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            DetachedCriteria warehouseCriteria = shippingOrderCriteria.createCriteria("warehouse");
+            warehouseCriteria.add(Restrictions.eq("id", warehouseId));
 
         }
         orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));

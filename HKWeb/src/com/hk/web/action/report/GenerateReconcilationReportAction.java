@@ -198,7 +198,7 @@ public class GenerateReconcilationReportAction extends BaseAction {
             xlsWriter.addCell(row, rtoInitiatedComments);
             xlsWriter.addCell(row, reconcilationReportDto.getBoxWeight());
             xlsWriter.addCell(row, reconcilationReportDto.getBoxSize());
-            xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getName());
+            xlsWriter.addCell(row, reconcilationReportDto.getWarehouse().getIdentifier());
             xlsWriter.addCell(row, shippingOrder.isDropShipping() ? 'Y' : 'N');
             xlsWriter.addCell(row, shippingOrder.getBasketCategory());
             xlsWriter.addCell(row, custAddress);

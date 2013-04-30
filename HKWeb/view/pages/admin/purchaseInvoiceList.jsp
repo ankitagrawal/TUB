@@ -7,7 +7,7 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Purchase Invoice List">
 <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-    pageContext.setAttribute("warehouseList", warehouseService.getAllWarehouses());
+    pageContext.setAttribute("warehouseList", warehouseService.getAllActiveWarehouses());
   %>
   <s:useActionBean beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" var="pia"/>
   <s:layout-component name="htmlHead">
@@ -33,7 +33,7 @@
 			  <s:select name="warehouse">
 				  <s:option value="">-All-</s:option>
 				  <c:forEach items="${warehouseList}" var="warehouse">
-					  <s:option value="${warehouse.id}">${warehouse.city}</s:option>
+					  <s:option value="${warehouse.id}">${warehouse.identifier}</s:option>
 				  </c:forEach>
 			  </s:select>
 			  <label>CreatedBy:</label><s:select name="createdBy">
@@ -113,7 +113,7 @@
 		        <c:set var="advPayment" value="${purchaseInvoice.goodsReceivedNotes[0].purchaseOrder.advPayment }"/>
 	        </td>
 	        <td><fmt:formatDate value="${purchaseInvoice.goodsReceivedNotes[0].grnDate}" type="both" timeStyle="short"/></td>
-	        <td>${purchaseInvoice.warehouse.city}</td>
+	        <td>${purchaseInvoice.warehouse.identifier}</td>
 
 	        <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
 	        <td>

@@ -46,7 +46,7 @@
                         <td>${skuItem.skuGroup.id} </td>
                         <td> ${skuItem.skuGroup.barcode}</td>
                         <td> ${skuItem.skuItemStatus.name} </td>
-                        <td> ${skuItem.skuGroup.sku.warehouse.name}</td>
+                        <td> ${skuItem.skuGroup.sku.warehouse.identifier}</td>
                         <td>
                             <c:if test="${viewItem.stockTransferLineItem != null && skuItem.skuItemStatus.id == stockTransferOutId && viewItem.stockTransferLineItem.checkedOutSkuGroup.sku.warehouse.id == warehouse.id && viewItem.stockTransferLineItem.stockTransfer.stockTransferStatus.id == stockTransferOutInProcess}">
                                 <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction"
