@@ -383,7 +383,7 @@
                                            varStatus="rctr1">
                                     <div class="newBoxItem">
                                     <label><s:checkbox name="reasons[${rctr1.index}]"
-                                                       value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                                       value="${reason.id}"/> ${reason.classification.primary}  ${reason.classification.secondary}</label>
                                         </div>
                                 </c:forEach>
                                     </div>
