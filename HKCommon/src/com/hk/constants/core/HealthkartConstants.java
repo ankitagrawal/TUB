@@ -30,9 +30,5 @@ public class HealthkartConstants {
   public static class BreadcrumbContext {
     public static final String admin = "admin";
   }
-
-	public static class CompanyName {
-		public static final String brightLifeCarePvtLtd = "Bright Life Care Pvt. Ltd.";
-	}
   
 }

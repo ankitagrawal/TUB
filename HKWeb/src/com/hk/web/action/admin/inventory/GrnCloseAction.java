@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
+import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.web.action.admin.AdminHomeAction;
 import com.hk.domain.accounting.PoLineItem;
@@ -39,6 +40,8 @@ public class GrnCloseAction extends BaseAction {
     private ExtraInventoryService extraInventoryService;
     @Autowired
 	PoLineItemDao poLineItemDao;
+    @Autowired
+    PurchaseOrderService purchaseOrderService;
 
     public Resolution pre() {
         int dayAgo = 21;
@@ -55,6 +58,7 @@ public class GrnCloseAction extends BaseAction {
             }
             for (GoodsReceivedNote grn : checkedInGrns) {
                 grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+                getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
                 if(grn.getPurchaseOrder().isExtraInventoryCreated()){
                 	PurchaseOrder po = grn.getPurchaseOrder();
                 	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
@@ -87,6 +91,13 @@ public class GrnCloseAction extends BaseAction {
 	public void setExtraInventoryService(ExtraInventoryService extraInventoryService) {
 		this.extraInventoryService = extraInventoryService;
 	}
+
+	public PurchaseOrderService getPurchaseOrderService() {
+		return purchaseOrderService;
+	}
+
+	public void setPurchaseOrderService(PurchaseOrderService purchaseOrderService) {
+		this.purchaseOrderService = purchaseOrderService;
+	}
 	
-    
 }

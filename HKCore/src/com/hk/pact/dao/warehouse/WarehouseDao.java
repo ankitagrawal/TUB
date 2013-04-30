@@ -9,6 +9,8 @@ public interface WarehouseDao extends BaseDao {
 
     public List<Warehouse> getAllWarehouses();
 
+    public List<Warehouse> getAllWarehouses(Long warehouseType, Boolean honoringB2COrders, Boolean active);
+
     public Warehouse getWarehouseById(Long warehouseId);
 
     /**
@@ -18,8 +20,8 @@ public interface WarehouseDao extends BaseDao {
      * @param currentWarehouseForSO
      * @return
      */
-    public Warehouse getWarehoueForFlipping(Warehouse currentWarehouseForSO);
+    public List<Warehouse> getWarehoueForFlipping(Warehouse currentWarehouseForSO);
 
-    public Warehouse findByName(String name);
+    public Warehouse findByIdentifier(String identifier);
 
 }
