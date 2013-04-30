@@ -60,7 +60,7 @@ public enum EnumReason {
     public Reason asReason() {
         Reason reason = new Reason();
         reason.setId(id);
-        reason.setClassification(enumClassification.asClassification());
+//        reason.setClassification(enumClassification.asClassification());
         reason.setType(reasonType);
         return reason;
     }
