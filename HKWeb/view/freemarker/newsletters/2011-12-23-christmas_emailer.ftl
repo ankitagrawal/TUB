@@ -383,7 +383,7 @@ Merry Christmas from HealthKart. Reminder to grab your discount codes, only till
   <tr>
         <td bgcolor="#363636" height="70" align="center" ><p><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
 
-          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">Website: <a href="www.healthkart.com"  style="color:#FFFFFF;">www.healthkart.com</a>  &nbsp;|  &nbsp;E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>&nbsp;  |&nbsp;  Telephone: +91 124 4502930</span></p>          </td>
+          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">Website: <a href="www.healthkart.com"  style="color:#FFFFFF;">www.healthkart.com</a>  &nbsp;|  &nbsp;E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>&nbsp;  |&nbsp;  Telephone: +91 124 4616444</span></p>          </td>
       </tr>
 
 
@@ -391,7 +391,7 @@ Merry Christmas from HealthKart. Reminder to grab your discount codes, only till
     <td style="font-size:11px; text-align:center; color:#929292; padding:8px"> If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to Unsubscribe</a><br />
 
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-      © 2011 HealthKart.com. All Rights Reserved. </td>
+      ï¿½ 2011 HealthKart.com. All Rights Reserved. </td>
   </tr>
 </table>
 </body>

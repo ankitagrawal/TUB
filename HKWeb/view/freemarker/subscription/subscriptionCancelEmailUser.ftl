@@ -122,7 +122,7 @@ Subscription Cancellation for Subscription ID ${subscription.id}
                                                                       alt="twitter" width="32" height="32" border="0"/></a></td>
                     <td align="right" valign="middle" style="border-top: solid #929292 1px; color:#606060; font-size:13px;">e: <a
                             href="mailto:info@healthkart.com" style="color:#606060">info@healthkart.com</a> &nbsp;| &nbsp;t: +91
-                        124-4502930
+                        124-4616444
                     </td>
                 </tr>
             </table>
