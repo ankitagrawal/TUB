@@ -24,7 +24,8 @@ public class Bucket implements java.io.Serializable {
     @Column(name = "name", length = 45)
     private String name;
 
-    @Column(name = "classification")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classification_id")
     private Classification classification;
 
     @Transient

@@ -23,7 +23,8 @@ public class Reason {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "classification")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classification_id")
     private Classification classification;
 
     @Transient
