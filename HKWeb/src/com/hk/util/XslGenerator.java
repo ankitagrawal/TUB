@@ -56,9 +56,9 @@ public class XslGenerator {
     @Autowired
     private AdminInventoryService adminInventoryService;
 
-	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
-    String                                         adminDownloads;
-	File											xlsFile;
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String adminDownloads;
+    File xlsFile;
 
     private Map<String, Integer> headerMap = new HashMap<String, Integer>();
 
@@ -712,63 +712,65 @@ public class XslGenerator {
     }
 
 
-public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
+    public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		xlsFile = new File(adminDownloads + "/reports/ReversePickup -" + sdf.format(new Date()) + ".xls");
-		HkXlsWriter xlsWriter = new HkXlsWriter();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        xlsFile = new File(adminDownloads + "/reports/ReversePickup -" + sdf.format(new Date()) + ".xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
 
-		int xlsRow = 1;
-		xlsWriter.addHeader("Customer Name", "Customer Name");
-		xlsWriter.addHeader("Customer Contact", "Customer Contact");
-		xlsWriter.addHeader("Customer Address", "Customer Address");
-		xlsWriter.addHeader("Customer City", "Customer City");
-		xlsWriter.addHeader("Customer State", "Customer State");
-		xlsWriter.addHeader("Pincode", "Pincode");
-		xlsWriter.addHeader("SO Order Id", "SO Order Id");
-		xlsWriter.addHeader("Declared Value", "Declared Value");
-		xlsWriter.addHeader("Piece", "Piece");
-		xlsWriter.addHeader("Courier", "Courier");
-		xlsWriter.addHeader("Pickup Confirmation No", "Pickup Confirmation No");
-		xlsWriter.addHeader("AWB No", "AWB No");
-		xlsWriter.addHeader("Pickup DateTime", "Pickup DateTime");
-		xlsWriter.addHeader("Box Size", "Box Size");
-		xlsWriter.addHeader("Box Weight", "Box Weight");
+        int xlsRow = 1;
+        xlsWriter.addHeader("Customer Name", "Customer Name");
+        xlsWriter.addHeader("Customer Contact", "Customer Contact");
+        xlsWriter.addHeader("Customer Address", "Customer Address");
+        xlsWriter.addHeader("Customer City", "Customer City");
+        xlsWriter.addHeader("Customer State", "Customer State");
+        xlsWriter.addHeader("Pincode", "Pincode");
+        xlsWriter.addHeader("SO Order Id", "SO Order Id");
+        xlsWriter.addHeader("Declared Value", "Declared Value");
+        xlsWriter.addHeader("Piece", "Piece");
+        xlsWriter.addHeader("Courier", "Courier");
+        xlsWriter.addHeader("Pickup Confirmation No", "Pickup Confirmation No");
+        xlsWriter.addHeader("AWB No", "AWB No");
+        xlsWriter.addHeader("Pickup DateTime", "Pickup DateTime");
+        xlsWriter.addHeader("Box Size", "Box Size");
+        xlsWriter.addHeader("Box Weight", "Box Weight");
+        xlsWriter.addHeader("Booking Date", "Booking Date");
 
-		if (reverseOrderList != null) {
-			for (ReverseOrder order : reverseOrderList) {
-				if (order != null && order.getReverseOrderType().equals(ReverseOrderTypeConstants.Healthkart_Managed_Courier)) {
-					Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
-					xlsWriter.addCell(xlsRow, customerDetails.getName());
-					xlsWriter.addCell(xlsRow, customerDetails.getPhone());
-					String line2 = customerDetails.getLine2();
-					xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + ((line2 != null) ? line2 : ""));
-					xlsWriter.addCell(xlsRow, customerDetails.getCity());
-					xlsWriter.addCell(xlsRow, customerDetails.getState());
-					xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());
-					xlsWriter.addCell(xlsRow, order.getShippingOrder().getGatewayOrderId());
-					xlsWriter.addCell(xlsRow, order.getAmount());
+        if (reverseOrderList != null) {
+            for (ReverseOrder order : reverseOrderList) {
+                if (order != null && order.getReverseOrderType().equals(ReverseOrderTypeConstants.Healthkart_Managed_Courier)) {
+                    Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
+                    xlsWriter.addCell(xlsRow, customerDetails.getName());
+                    xlsWriter.addCell(xlsRow, customerDetails.getPhone());
+                    String line2 = customerDetails.getLine2();
+                    xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + ((line2 != null) ? line2 : ""));
+                    xlsWriter.addCell(xlsRow, customerDetails.getCity());
+                    xlsWriter.addCell(xlsRow, customerDetails.getState());
+                    xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());
+                    xlsWriter.addCell(xlsRow, order.getShippingOrder().getGatewayOrderId());
+                    xlsWriter.addCell(xlsRow, order.getAmount());
 
-					Long qty = 0L;
-					for (ReverseLineItem lineItem : order.getReverseLineItems()) {
-                    	qty += lineItem.getReturnQty();
-                	}
-					xlsWriter.addCell(xlsRow, qty);
+                    Long qty = 0L;
+                    for (ReverseLineItem lineItem : order.getReverseLineItems()) {
+                        qty += lineItem.getReturnQty();
+                    }
+                    xlsWriter.addCell(xlsRow, qty);
 
-					if (order.getCourierPickupDetail() != null) {
-						CourierPickupDetail courierPickupDetail = order.getCourierPickupDetail();
-						xlsWriter.addCell(xlsRow, courierPickupDetail.getCourier().getName());
-						xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupConfirmationNo());
-						xlsWriter.addCell(xlsRow, courierPickupDetail.getTrackingNo());
-						xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupDate().toString());
-					}
-					xlsRow++;
-				}
-			}
-		}
-		xlsWriter.writeData(xlsFile, "Reverse_Pickup");
-		return xlsFile;
-	}
+                    if (order.getCourierPickupDetail() != null) {
+                        CourierPickupDetail courierPickupDetail = order.getCourierPickupDetail();
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getCourier().getName());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupConfirmationNo());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getTrackingNo());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupDate().toString());
+                    }
+                    xlsWriter.addCell(xlsRow, order.getCreateDate() != null ? sdf.format(order.getCreateDate()) : "");
+                    xlsRow++;
+                }
+            }
+        }
+        xlsWriter.writeData(xlsFile, "Reverse_Pickup");
+        return xlsFile;
+    }
 
     private void setCellValue(Row row, int column, Double cellValue) {
         if (cellValue != null) {

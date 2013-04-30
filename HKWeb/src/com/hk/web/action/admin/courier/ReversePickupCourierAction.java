@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.courier.CourierPickupService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPickupDetail;
@@ -114,6 +115,16 @@ public class ReversePickupCourierAction extends BaseAction {
 		addRedirectAlertMessage(new SimpleMessage("Please fill all values."));
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 	}
+
+    //Cancel Reverse Order if created by mistake
+    public Resolution cancel() {
+        ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
+        ShippingOrder shippingOrder = reverseOrder.getShippingOrder();
+        shippingOrder.setOrderStatus(EnumShippingOrderStatus.SO_Delivered.asShippingOrderStatus());
+        shippingOrderService.save(shippingOrder);
+        reverseOrderService.deleteReverseOrder(reverseOrder);
+        return new RedirectResolution(ReverseOrdersManageAction.class);
+    }
 
 	public Date getPickupDate() {
 		return pickupDate;
