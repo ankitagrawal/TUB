@@ -643,7 +643,7 @@ public class ReportManager {
             Double breadth;
             Double height;
             String lengthBreadthHeightString = EnumBoxSize.getLengthBreadthHeight(boxWeight);
-            String[] dimensions = lengthBreadthHeightString.split(",");
+            String[] dimensions = lengthBreadthHeightString.split("-");
             length = Double.parseDouble(dimensions[0]);
             breadth = Double.parseDouble(dimensions[1]);
             height = Double.parseDouble(dimensions[2]);
