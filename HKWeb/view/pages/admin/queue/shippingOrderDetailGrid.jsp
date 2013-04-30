@@ -206,23 +206,17 @@
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Invoice
     </s:link>)
-    <%--<c:if test="${isProcessingQueue == true || isSearchShippingOrder == true}">--%>
         &nbsp;&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre"
                                    target="_blank" class="personalCareInvoiceLink">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         <s:param name="printable" value="true"/>
         PC Invoice
     </s:link>)
-    <%--</c:if>--%>
-    <c:if test="${isSearchShippingOrder == true}">
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
-                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
-                         target="_blank">
-                <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Accounting Invoice
-            </s:link>)
-            </shiro:hasAnyRoles>
-        </c:if>
+          (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
+                   target="_blank">
+          <s:param name="shippingOrder" value="${shippingOrder}"/>
+          Accounting Invoice
+      </s:link>)
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"

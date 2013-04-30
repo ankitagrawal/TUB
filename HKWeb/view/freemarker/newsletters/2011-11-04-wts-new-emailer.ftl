@@ -213,7 +213,7 @@ New brands this November: Exclusive partnership with Abott and many more
                       <td height="10"></td>
                     </tr>
                     <tr>
-                      <td style="color:#363636; font-size:12px;">Acne – that dreaded word. No matter how clear your skin is now, chances are you’ve suffered from an acne problem in your younger years. And then there are those of us who are still suffering – no matter how well we take care of our skin, how many treatments we undergo or how many doctors we visit.</td>
+                      <td style="color:#363636; font-size:12px;">Acne ï¿½ that dreaded word. No matter how clear your skin is now, chances are youï¿½ve suffered from an acne problem in your younger years. And then there are those of us who are still suffering ï¿½ no matter how well we take care of our skin, how many treatments we undergo or how many doctors we visit.</td>
                     </tr>
                     <tr>
                       <td height="25" align="right" style="color:#363636; font-size:12px; text-decoration:underline;"><a href="http://www.healthviva.com/5-simple-ways-to-banish-that-ugly-acne-forever/?utm_source=enewsletter&utm_medium=email&utm_campaign=2011-11-04-wts-new-emailer" style="color:#363636">Read more >></a></td>
@@ -346,7 +346,7 @@ New brands this November: Exclusive partnership with Abott and many more
   <tr>
         <td bgcolor="#363636" height="70" align="center" ><p><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
 
-          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4502930</span></p>          </td>
+          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4616444</span></p>          </td>
       </tr>
 
 
@@ -354,7 +354,7 @@ New brands this November: Exclusive partnership with Abott and many more
     <td style="font-size:11px; text-align:center; color:#929292; padding:8px"> If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to Unsubscribe</a><br />
 
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-      © 2011 HealthKart.com. All Rights Reserved. </td>
+      ï¿½ 2011 HealthKart.com. All Rights Reserved. </td>
   </tr>
 </table>
 </body>
