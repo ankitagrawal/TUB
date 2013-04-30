@@ -133,10 +133,10 @@ public class ShipmentCostCalculatorAction extends BaseAction {
             Shipment shipment = shippingOrder.getShipment();
             Double weight = 0D;
             if (shippingOrder.getShipment() != null) {
-                weight = shipment.getBoxWeight();
+                weight = shipment.getBoxWeight() * 1000;
             } else {
                 for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    weight = lineItem.getSku().getProductVariant().getWeight();
+                    weight += lineItem.getSku().getProductVariant().getWeight();
                 }
             }
             ShipmentServiceType shipmentServiceType = pincodeCourierService.getShipmentServiceType(shippingOrder);

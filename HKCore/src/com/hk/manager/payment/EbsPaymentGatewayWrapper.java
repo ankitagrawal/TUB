@@ -40,6 +40,7 @@ public class EbsPaymentGatewayWrapper extends BasePaymentGatewayWrapper<EbsPayme
     public static final String secure_hash_decrypted = "secure_hash_decrypted";
     public static final String amount = "amount";
     public static final String country = "country";
+    public static final String payment_option = "payment_option";
 
 
     // response paramters
@@ -69,9 +70,6 @@ public class EbsPaymentGatewayWrapper extends BasePaymentGatewayWrapper<EbsPayme
     public static String description = "description";
 
     public static String authStatus_Success = "0";
-
-
-//  Declaring variables for transacion enquiry
 
     //  Request Parameter for transactiomn enquiry
     public static String TXN_SECRET_KEY = "SecretKey";

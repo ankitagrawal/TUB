@@ -4,6 +4,7 @@ import com.akube.framework.gson.JsonSkip;
 import com.hk.constants.clm.CLMConstants;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.RoleConstants;
+import com.hk.constants.user.EnumEmailSubscriptions;
 import com.hk.domain.clm.KarmaProfile;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.hkDelivery.Hub;
@@ -15,6 +16,7 @@ import com.hk.domain.queue.Bucket;
 import com.hk.domain.store.Store;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.pact.service.UserService;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -27,11 +29,11 @@ import java.util.*;
  * Author: Kani Date: Aug 29, 2008
  */
 @Entity
-@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "login", "store_id" }))
-@NamedQueries( {
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"login", "store_id"}))
+@NamedQueries({
         @NamedQuery(name = "user.findByEmail", query = "from User u where u.email = :email"),
         @NamedQuery(name = "user.findByLogin", query = "from User u where u.login = :login"),
-        @NamedQuery(name = "user.findByEmailAndPassword", query = "from User u where u.email = :email and u.passwordChecksum = :passwordEncrypted") })
+        @NamedQuery(name = "user.findByEmailAndPassword", query = "from User u where u.email = :email and u.passwordChecksum = :passwordEncrypted")})
 @Inheritance(strategy = InheritanceType.JOINED)
 /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
 public class User {
@@ -39,31 +41,31 @@ public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long                  id;
+    private Long id;
 
     @Column(name = "login", nullable = false, length = 80)
-    private String                login;
+    private String login;
 
     @Column(name = "email", nullable = true, length = 80)
-    private String                email;
+    private String email;
 
     @Column(name = "name", nullable = true, length = 80)
-    private String                name;
+    private String name;
 
     @Column(name = "password_checksum", nullable = false)
-    private String                passwordChecksum;
+    private String passwordChecksum;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "birth_date", nullable = true, length = 19)
-    private Date                  birthDate;
+    private Date birthDate;
 
     @Column(name = "gender", nullable = true, length = 6)
-    private String                gender;
+    private String gender;
 
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_dt", nullable = false, length = 19)
-    private Date                  createDate = new Date();
+    private Date createDate = new Date();
 
 
     @Column(name = "subscribed_mask", nullable = false)
@@ -81,77 +83,77 @@ public class User {
     @JsonSkip
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date", nullable = false, length = 19)
-    private Date                  lastLoginDate;
+    private Date lastLoginDate;
 
     @Transient
-    private String                password;
+    private String password;
 
     @Transient
-    private String                confirmPassword;
+    private String confirmPassword;
 
     @JsonSkip
     @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
     @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
     /* @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
-    private Set<Role>             roles              = new HashSet<Role>();
+    private Set<Role> roles = new HashSet<Role>();
 
 
     @JsonSkip
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<UserDetail>   userDetails = new HashSet<UserDetail>();
+    private Set<UserDetail> userDetails = new HashSet<UserDetail>();
 
     @Column(name = "user_hash", nullable = false, length = 32, unique = true)
-    private String                userHash;
+    private String userHash;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referred_by", nullable = true)
-    private User                  referredBy;
+    private User referredBy;
 
     @JsonSkip
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "affiliate_to", nullable = true)
-    private User                  affiliateTo;
+    private User affiliateTo;
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "referrerUser")
-    private List<Coupon>          referrerCoupons    = new ArrayList<Coupon>(1);
+    private List<Coupon> referrerCoupons = new ArrayList<Coupon>(1);
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("createDate desc")
-    private List<RewardPoint>     rewardPointList    = new ArrayList<RewardPoint>();
+    private List<RewardPoint> rewardPointList = new ArrayList<RewardPoint>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<RewardPointTxn>  rewardPointTxnList = new ArrayList<RewardPointTxn>();
+    private List<RewardPointTxn> rewardPointTxnList = new ArrayList<RewardPointTxn>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<UserAccountInfo> userAccountInfos   = new ArrayList<UserAccountInfo>(1);
+    private List<UserAccountInfo> userAccountInfos = new ArrayList<UserAccountInfo>(1);
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @Where(clause = "deleted = 0")
-    private List<Address>         addresses          = new ArrayList<Address>();
+    private List<Address> addresses = new ArrayList<Address>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OfferInstance>   offerInstances     = new ArrayList<OfferInstance>();
+    private List<OfferInstance> offerInstances = new ArrayList<OfferInstance>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Order>           orders             = new ArrayList<Order>();
+    private List<Order> orders = new ArrayList<Order>();
 
     @JsonSkip
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Subscription>    subscriptions;
+    private List<Subscription> subscriptions;
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "warehouse_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "warehouse_id", nullable = false, updatable = false) })
-    private Set<Warehouse>        warehouses         = new HashSet<Warehouse>(0);
+    @JoinTable(name = "warehouse_has_user", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "warehouse_id"}), joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "warehouse_id", nullable = false, updatable = false)})
+    private Set<Warehouse> warehouses = new HashSet<Warehouse>(0);
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -160,16 +162,16 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
-    private Store                 store;
+    private Store store;
 
     @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private KarmaProfile          karmaProfile;
+    private KarmaProfile karmaProfile;
 
     @JsonSkip
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "hub_id" }), joinColumns = { @JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "hub_id", updatable = false) })
-    private Hub                   hub;
+    @JoinTable(name = "hub_has_user", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "hub_id"}), joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "hub_id", updatable = false)})
+    private Hub hub;
 
     public KarmaProfile getKarmaProfile() {
         return karmaProfile;
@@ -341,6 +343,10 @@ public class User {
             e.printStackTrace();
         }
         return firstName;
+    }
+
+    public boolean isSubscribedForNotify() {
+        return EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.NOTIFY_ME, getSubscribedMask());
     }
 
     public void setCreateDate(Timestamp createDate) {
