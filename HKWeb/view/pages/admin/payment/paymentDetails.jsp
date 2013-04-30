@@ -16,9 +16,18 @@
                 <s:text name="txnEndDate" id = "txnEndDate" style="width:180px;height:25px;"/>
                 <label>Enter Merchant Id</label>
                 <s:text name="merchantId" id = "merchantId" style="width:180px;height:25px;"/>
+                <br>
+                <label>Enter Payment Id (EBS)</label>
+                <s:text name="paymentId" id = "paymentId" style="width:180px;height:25px;"/>
+                <label>Enter Amount</label>
+                <s:text name="amount" id = "amount" style="width:180px;height:25px;"/>
+                <br>
                 <s:submit name="seekPayment" value="Seek" id="save"/>
                 <s:submit name="searchTransactionByDate" value="Historical List" id="searchTransactionByDate"/>
                 <s:submit name="refundPayment" value="Refund  (beta)" id="refund"/>
+                <s:submit name="capturePayment" value="Capture  (EBS)" id="capture"/>
+                <s:submit name="cancelPayment" value="Cancel (EBS)" id="cancel"/>
+                <s:submit name="searchByPaymentID" value="Search By PaymentId (EBS)" id="searchByPaymentID"/>
             </fieldset>
         </s:form>
 

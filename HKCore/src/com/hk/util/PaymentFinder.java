@@ -6,11 +6,27 @@ import com.citruspay.pg.model.Enquiry;
 import com.citruspay.pg.model.EnquiryCollection;
 import com.hk.domain.payment.Payment;
 import com.hk.manager.payment.CitrusPaymentGatewayWrapper;
+import com.hk.manager.payment.EbsPaymentGatewayWrapper;
 import com.opus.epg.sfa.java.PGResponse;
 import com.opus.epg.sfa.java.PGSearchResponse;
 import com.opus.epg.sfa.java.PostLib;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
+
 
 import java.util.*;
 
@@ -108,6 +124,205 @@ public class PaymentFinder {
 
     }
 
+
+
+    public static Map<String, Object> findEbsTransaction(String gatewayOrderId, String txnPaymentId, String txnAmount, String action) {
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+        //Instantiate an HttpClient
+        HttpClient client = new HttpClient();
+        String url = EbsPaymentGatewayWrapper.EBS_TXN_URL;
+
+        //Instantiate a GET HTTP method
+        PostMethod method = new PostMethod(url);
+        method.setRequestHeader("Content-type", "text/xml; charset=ISO-8859-1");
+
+
+        //Define name-value pairs to set into the QueryString
+        NameValuePair nvp1 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_SECRET_KEY, "5b436e8c7edd4411eecd21cad20539b4");
+        NameValuePair nvp2 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACTION, action);
+        NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_REF_NO, gatewayOrderId);
+        NameValuePair nvp5 = new NameValuePair(EbsPaymentGatewayWrapper.PaymentID, txnPaymentId);
+        NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.Amount, txnAmount);
+   //   Account id should be the last parameter       
+        NameValuePair nvp6 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
+
+        try {
+              String res= null;
+            if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS)) {
+                method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp4, nvp6});
+            } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_REFUND) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CAPTURE) || action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_CANCEL)) {
+                method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp5, nvp6});
+            } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS_PAYMENT_ID)){
+                 method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp5, nvp6});
+            }
+
+            client.executeMethod(method);
+            res = method.getResponseBodyAsString();
+            Document doc = new SAXBuilder().build(new StringReader(res));
+
+            XPath xPath = XPath.newInstance("/output");
+            List<Element> xmlElementList = xPath.selectNodes(doc);
+            Iterator elementListIterator = xmlElementList.listIterator();
+            while (elementListIterator.hasNext()) {
+                Element ele = (Element) elementListIterator.next();
+                String trnsid = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID);
+                String paymentId = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID);
+                String amount = ele.getAttributeValue(EbsPaymentGatewayWrapper.amount);
+                String dateTime = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_DATETIME);
+                String mode = ele.getAttributeValue(EbsPaymentGatewayWrapper.mode);
+                String referenceNo = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO);
+                String transactionType = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE);
+                String status = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_STATUS);
+                String isFlagged = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED);
+                String errorCode = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_CODE);
+                String errorMessage = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_MSG);
+                if (paymentId != null) {
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID, trnsid);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID, paymentId);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.amount, amount);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_DATETIME, dateTime);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.mode, mode);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO, referenceNo);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE, transactionType);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_STATUS, status);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED, isFlagged);
+                } else {
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_CODE, errorCode);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_MSG, errorMessage);
+                }
+
+            }
+        } catch (IOException e) {
+            logger.debug(" Exception  while sending the request to Ebs Gateway " + gatewayOrderId, e);
+        }
+        catch (Exception e) {
+            logger.debug(" Exception  while trying to search for payment details for EBS  payment " + gatewayOrderId, e);
+        }
+
+        finally {
+            //release connection
+            method.releaseConnection();
+        }
+        return paymentResultMap;
+    }
+
+
+
+/*
+    public static Map<String, Object> findEbsTransaction(String gatewayOrderId, String txnPaymentId, String txnAmount, String action) {
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+
+        try {
+            String res = null;
+            if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_STATUS)) {
+                res = sendEbsTransactionRequest(action, gatewayOrderId);
+            } else if (action.equals(EbsPaymentGatewayWrapper.TXN_ACTION_REFUND)) {
+                res = sendEbsRefundCaptureCancelRequest(action, txnPaymentId, txnAmount);
+            }
+
+            Document doc = new SAXBuilder().build(new StringReader(res));
+
+            XPath xPath = XPath.newInstance("/output");
+            List<Element> xmlElementList = xPath.selectNodes(doc);
+            Iterator elementListIterator = xmlElementList.listIterator();
+            while (elementListIterator.hasNext()) {
+                Element ele = (Element) elementListIterator.next();
+                String trnsid = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID);
+                String paymentId = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID);
+                String amount = ele.getAttributeValue(EbsPaymentGatewayWrapper.amount);
+                String dateTime = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_DATETIME);
+                String mode = ele.getAttributeValue(EbsPaymentGatewayWrapper.mode);
+                String referenceNo = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO);
+                String transactionType = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE);
+                String status = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_STATUS);
+                String isFlagged = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED);
+                String errorCode = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_CODE);
+                String errorMessage = ele.getAttributeValue(EbsPaymentGatewayWrapper.TXN_ERROR_MSG);
+                if (paymentId != null) {
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_ID, trnsid);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_PAYMENT_ID, paymentId);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.amount, amount);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_DATETIME, dateTime);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.mode, mode);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_REFERENCE_NO, referenceNo);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_TRANSACTION_TYPE, transactionType);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_STATUS, status);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_IS_FLAGGED, isFlagged);
+                } else {
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_CODE, errorCode);
+                    paymentResultMap.put(EbsPaymentGatewayWrapper.TXN_ERROR_MSG, errorMessage);
+                }
+
+            }
+
+        } catch (Exception e) {
+           logger.debug(" Exception at parsing xml for  " + gatewayOrderId, e);
+        }
+
+        return paymentResultMap;
+    }
+
+*/
+
+    public static String sendEbsTransactionRequest(String action, String gatewayOrderId) {
+        Map<String, Object> paymentResultMap = new HashMap<String, Object>();
+        //Instantiate an HttpClient
+        HttpClient client = new HttpClient();
+        String url = EbsPaymentGatewayWrapper.EBS_TXN_URL;
+
+        //Instantiate a GET HTTP method
+        PostMethod method = new PostMethod(url);
+        method.setRequestHeader("Content-type", "text/xml; charset=ISO-8859-1");
+        String res = null;
+
+
+        //Define name-value pairs to set into the QueryString
+        NameValuePair nvp1 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_SECRET_KEY, "5b436e8c7edd4411eecd21cad20539b4");
+        NameValuePair nvp2 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACTION, action);
+        NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_REF_NO, gatewayOrderId);
+        // very imp AccountId should be the last parameter
+        NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
+        try {
+            method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp4});
+            client.executeMethod(method);
+            res = method.getResponseBodyAsString();
+        } catch (IOException e) {
+            logger.debug(" IO Exception  while sending the request to Ebs Gateway " + gatewayOrderId, e);
+        }
+        return res;
+    }
+
+
+    public static String sendEbsRefundCaptureCancelRequest(String action, String txnPaymentId, String txnAmount) {
+
+        //Instantiate an HttpClient
+        HttpClient client = new HttpClient();
+        String url = EbsPaymentGatewayWrapper.EBS_TXN_URL;
+
+        //Instantiate a GET HTTP method
+        PostMethod method = new PostMethod(url);
+        method.setRequestHeader("Content-type", "text/xml; charset=ISO-8859-1");
+        String res = null;
+
+
+        //Define name-value pairs to set into the QueryString
+        NameValuePair nvp1 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_SECRET_KEY, "5b436e8c7edd4411eecd21cad20539b4");
+        NameValuePair nvp2 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACTION, action);
+        NameValuePair nvp5 = new NameValuePair(EbsPaymentGatewayWrapper.TXN_ACCOUNT_ID, "10258");
+        NameValuePair nvp4 = new NameValuePair(EbsPaymentGatewayWrapper.PaymentID, txnPaymentId);
+        NameValuePair nvp3 = new NameValuePair(EbsPaymentGatewayWrapper.Amount, txnAmount);
+
+        try {
+            method.setQueryString(new NameValuePair[]{nvp1, nvp2, nvp3, nvp4, nvp5});
+            client.executeMethod(method);
+            res = method.getResponseBodyAsString();
+        } catch (IOException e) {
+            logger.debug(" IO Exception  while sending the request to Ebs Gateway for Payment Id: " + txnPaymentId, e);
+        }
+        return res;
+    }
+
+
     public static Map<String, Object> refundCitrusPayment(Payment payment) {
 
         Map<String, Object> paymentResultMap = new HashMap<String, Object>();
@@ -130,17 +345,17 @@ public class PaymentFinder {
             if (refund != null) {
                 logger.info("PGSearchResponse received from payment gateway " + refund.getRespMessage());
                 System.out.println("PGSearchResponse received from payment gateway  " + refund.getRespMessage());
-                    paymentResultMap.put("Response Code", refund.getRespCode());
-                    paymentResultMap.put("Response Message", refund.getRespMessage());
-                    paymentResultMap.put("Txn Id", refund.getMerTxnId() == null ? "" : refund
-                            .getMerTxnId());
-                    paymentResultMap.put("Epg Txn Id", refund.getPgTxnId() == null ? "" : refund
-                            .getPgTxnId());
-                    paymentResultMap.put("AuthIdCode", refund.getAuthIdCode() == null ? "" : refund
-                            .getAuthIdCode());
-                    paymentResultMap.put("Issuer Ref. No.", refund.getRRN() == null ? "" : refund.getRRN());
-                    paymentResultMap.put("Refund Amount", refund.getAmount() == null ? "" : refund
-                            .getAmount());
+                paymentResultMap.put("Response Code", refund.getRespCode());
+                paymentResultMap.put("Response Message", refund.getRespMessage());
+                paymentResultMap.put("Txn Id", refund.getMerTxnId() == null ? "" : refund
+                        .getMerTxnId());
+                paymentResultMap.put("Epg Txn Id", refund.getPgTxnId() == null ? "" : refund
+                        .getPgTxnId());
+                paymentResultMap.put("AuthIdCode", refund.getAuthIdCode() == null ? "" : refund
+                        .getAuthIdCode());
+                paymentResultMap.put("Issuer Ref. No.", refund.getRRN() == null ? "" : refund.getRRN());
+                paymentResultMap.put("Refund Amount", refund.getAmount() == null ? "" : refund
+                        .getAmount());
             }
 
         } catch (CitruspayException e) {
@@ -160,15 +375,15 @@ public class PaymentFinder {
         List<Map<String, Object>> paymentResultMapList = new ArrayList<Map<String, Object>>();
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
 
-        com.opus.epg.sfa.java.Merchant oMerchant 	= new com.opus.epg.sfa.java.Merchant();
+        com.opus.epg.sfa.java.Merchant oMerchant = new com.opus.epg.sfa.java.Merchant();
 
         try {
-            com.opus.epg.sfa.java.PostLib oPostLib	= new PostLib();
-            oMerchant.setMerchantTxnSearch(merchantId,startDate,endDate);
-            PGSearchResponse    oPgSearchResp=oPostLib.postTxnSearch(oMerchant);
+            com.opus.epg.sfa.java.PostLib oPostLib = new PostLib();
+            oMerchant.setMerchantTxnSearch(merchantId, startDate, endDate);
+            PGSearchResponse oPgSearchResp = oPostLib.postTxnSearch(oMerchant);
             ArrayList oPgRespArr = oPgSearchResp.getPGResponseObjects();
-            System.out.println("PGSearchResponse received from payment gateway:"+ oPgSearchResp.toString());
-            logger.error("PGSearchResponse received from payment gateway:"+ oPgSearchResp.toString());
+            System.out.println("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
+            logger.error("PGSearchResponse received from payment gateway:" + oPgSearchResp.toString());
             int index = 0;
             if (oPgRespArr != null) {
                 for (index = 0; index < oPgRespArr.size(); index++) {
@@ -188,7 +403,7 @@ public class PaymentFinder {
             }
             return paymentResultMapList;
         } catch (Exception e) {
-                logger.debug("There was an exception while trying to search for payment details ", e);
+            logger.debug("There was an exception while trying to search for payment details ", e);
         }
         return null;
     }
@@ -213,7 +428,7 @@ public class PaymentFinder {
                 for (int index = 0; index < transactionSearchCollection.getTransaction().size(); index++) {
                     com.citruspay.pg.model.TransactionSearch transaction = (com.citruspay.pg.model.TransactionSearch) transactionSearchCollection.getTransaction().get(index);
                     paymentResultMap.put("Response Code", transaction.getRespCode());
-                    paymentResultMap.put("Response Message", transaction.getRespMessage()== null ? "" : transaction.getRespMessage());
+                    paymentResultMap.put("Response Message", transaction.getRespMessage() == null ? "" : transaction.getRespMessage());
                     paymentResultMap.put("Merchant Txn Id", transaction.getMerchantTxnId() == null ? "" : transaction.getMerchantTxnId());
                     paymentResultMap.put("Txn Id", transaction.getTxnId() == null ? "" : transaction.getTxnId());
                     paymentResultMap.put("Epg Txn Id", transaction.getPgTxnId() == null ? "" : transaction.getPgTxnId());
@@ -224,7 +439,7 @@ public class PaymentFinder {
                     paymentResultMap.put("Date", transaction.getTxnDateTime() == null ? "" : transaction.getTxnDateTime().substring(0, 10));
                     paymentResultMapList.add(paymentResultMap);
                 }
-            } else{
+            } else {
                 System.out.println("Seems, an Empty collection was returned");
             }
             return paymentResultMapList;
@@ -247,7 +462,7 @@ public class PaymentFinder {
 
         for (Map<String, Object> paymentResultMap : transactionList) {
             for (Map.Entry<String, Object> stringObjectEntry : paymentResultMap.entrySet()) {
-                System.out.println(stringObjectEntry.getKey()  +  "-->"  +  stringObjectEntry.getValue());
+                System.out.println(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
                 logger.error(stringObjectEntry.getKey() + "-->" + stringObjectEntry.getValue());
             }
 
