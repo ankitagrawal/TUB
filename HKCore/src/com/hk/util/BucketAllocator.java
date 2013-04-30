@@ -6,7 +6,6 @@ import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
