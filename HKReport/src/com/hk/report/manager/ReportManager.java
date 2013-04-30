@@ -571,17 +571,17 @@ public class ReportManager {
             if (order.getBaseOrder().getPayment().getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
                 setCellValue(row, 1, "COD");
                 setCellValue(row, 15, order.getAmount());
-                if (warehouse.getId().equals(WarehouseService.DEFAULT_WAREHOUSE_ID)) {
+                if (warehouse.getId().equals(WarehouseService.GGN_AQUA_WH_ID)) {
                     setCellValue(row, 16, ReportConstants.Ggn_Cod_Vendor_Code);
-                } else if (warehouse.getId().equals(WarehouseService.MUMBAI_WAREHOUSE_ID)) {
+                } else if (warehouse.getId().equals(WarehouseService.MUM_AQUA_WH_ID)) {
                     setCellValue(row, 16, ReportConstants.Mumbai_Cod_Vendor_Code);
                 }
             } else {
                 setCellValue(row, 15, 0.0);
                 setCellValue(row, 1, "Non-COD");
-                if (warehouse.getId().equals(WarehouseService.DEFAULT_WAREHOUSE_ID)) {
+                if (warehouse.getId().equals(WarehouseService.GGN_AQUA_WH_ID)) {
                     setCellValue(row, 16, ReportConstants.Ggn_Prepaid_Vendor_Code);
-                } else if (warehouse.getId().equals(WarehouseService.MUMBAI_WAREHOUSE_ID)) {
+                } else if (warehouse.getId().equals(WarehouseService.MUM_AQUA_WH_ID)) {
                     setCellValue(row, 16, ReportConstants.Mumbai_Prepaid_Vendor_Code);
                 }
 
