@@ -36,7 +36,7 @@ $(document).ready(function() {
         varWeightLength = $(this).val().length;
         varWeightValue = $(this).val();
         if(receivedQuantityValue!='0'){
-            alert(receivedQuantityValue);
+            //alert(receivedQuantityValue);
                 if (varWeightLength == 0){
                     alert("Variant weight cannot be empty!");
                     return false;
@@ -62,7 +62,7 @@ $(document).ready(function() {
             $(".weight").each(function() {
                     var receivedQuantity = $(this).parents('.lineItemRow');
                     var receivedQuantityValue   = receivedQuantity.find(".receivedQuantity").val();
-                alert(receivedQuantityValue);
+                    //alert(receivedQuantityValue);
                     varWeightLength = $(this).val().length;
                     varWeightValue = $(this).val();
                     if(receivedQuantityValue!='0'){
