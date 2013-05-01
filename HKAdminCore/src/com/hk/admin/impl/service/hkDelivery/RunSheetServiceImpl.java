@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.hkDelivery;
 
 import java.util.*;
 
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,10 +135,11 @@ public class RunSheetServiceImpl implements RunSheetService {
                 consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
                 ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
 	            String consignmentTrackingRemark = null;
-	            if(consignmentOnHoldReason != null && consignmentOnHoldReason.get(consignmentObj) != null &&
-			           !consignmentOnHoldReason.get(consignmentObj).equals("")
-			            && consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId()) ){
-		            consignmentTrackingRemark = consignmentOnHoldReason.get(consignmentObj);
+                if (consignmentOnHoldReason != null && consignmentOnHoldReason.get(consignmentObj) != null &&
+                        !consignmentOnHoldReason.get(consignmentObj).equals("")
+                        && consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId())) {
+                    consignmentTrackingRemark = consignmentOnHoldReason.get(consignmentObj);
+                   consignmentService.setOwnerForConsignment(consignmentObj,RoleConstants.CUSTOMER_SUPPORT);
 	            }
                 if (consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
                     sourceHub = consignmentObj.getHub();
@@ -152,6 +154,16 @@ public class RunSheetServiceImpl implements RunSheetService {
                 consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus, consignmentTrackingRemark, runsheet));
             }
         }
+/*
+
+        //updating consignments of runsheet for consignments for the onHoldByCustomer status
+
+        Set<Consignment> orgConsignments = runsheet.getConsignments();
+        Set<Consignment> updatedConsignments = new TreeSet<Consignment>(changedConsignmentsList);
+        updatedConsignments.addAll(orgConsignments);
+        runsheet.setConsignments(updatedConsignments);
+*/
+
         if (consignmentTrackingList.size() > 0) {
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
         }

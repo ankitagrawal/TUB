@@ -325,7 +325,18 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
-        return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, pageNo, perPage);
+    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, Long consignmentId, int pageNo, int perPage) {
+        return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, consignmentId, pageNo, perPage);
+    }
+
+    @Override
+    public List<Consignment> getConsignmentByStatusAndOwner(Long consignmentStatus, String owner) {
+        return consignmentDao.getConsignmentsByStatusAndOwner(consignmentStatus, owner);
+    }
+
+    @Override
+    public Consignment setOwnerForConsignment(Consignment consignment, String owner) {
+        consignment.setOwner(owner);
+        return (Consignment)consignmentDao.save(consignment);
     }
 }

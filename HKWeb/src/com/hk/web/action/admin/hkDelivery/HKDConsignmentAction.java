@@ -1,11 +1,9 @@
 package com.hk.web.action.admin.hkDelivery;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -53,8 +51,10 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private              Courier                     hkDelivery                = EnumCourier.HK_Delivery.asCourier();
     private              String                      consignmentNumber;
     private              Boolean                     doTracking;
-    private              List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
 
+    private              List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
+    private              List<List<ConsignmentTracking>> consignmentTrackingListCRM = new ArrayList<List<ConsignmentTracking>>();
+    private              List<ConsignmentTracking>   consignmentTrackingListHubManager   = new ArrayList<ConsignmentTracking>();
 
     private             Consignment           consignment;
     private             Page                  consignmentPage;
@@ -81,13 +81,18 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloadsPath;
 
-
+    Date currentDate = new Date();
+    private List<Integer> crmAttempts;
+    private List<Integer> hubManagerAttempts;
+    private List<Consignment> consignmentsForCRM = new ArrayList<Consignment>();
+    private List<Consignment> consignmentsForHubManager = new ArrayList<Consignment>();
+    List<String> latestRemarkForCRM =  new ArrayList<String>();
 
 
     @DefaultHandler
     public Resolution pre(){
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");        
+        return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");
     }
 
     @SuppressWarnings("unchecked")
@@ -128,35 +133,35 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             awbNumberSet = new HashSet<String>(newAwbNumbers);
 
             if(awbNumberSet.size()>0) {
-            // Creating consignments.
-            for (String awbNumber : awbNumberSet) {
-            try {
-                shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
-                amount = shipmentObj.getShippingOrder().getAmount();
-                cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
-                address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
-                        shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
-                paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
-                // Creating consignment object and adding to consignmentList.
-                consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));
-            } catch (Exception ex) {
-                logger.info("Exception occurred"+ex.getMessage());
-                continue;
-            }
-        }
-            try{
-            //saving consignmentList and consignmentTrackingList.
-            consignmentService.saveConsignments(consignmentList);
-            //fetching the consignments just created above.
-            consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
-            //creating consignmentTrackingList
-            consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
-            //saving it.
-            consignmentService.saveConsignmentTracking(consignmentTrackingList);
-            addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
-            } catch (Exception ex){
-              addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMENT_FAILURE));
-            }
+                // Creating consignments.
+                for (String awbNumber : awbNumberSet) {
+                    try {
+                        shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
+                        amount = shipmentObj.getShippingOrder().getAmount();
+                        cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
+                        address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
+                                shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
+                        paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
+                        // Creating consignment object and adding to consignmentList.
+                        consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));
+                    } catch (Exception ex) {
+                        logger.info("Exception occurred"+ex.getMessage());
+                        continue;
+                    }
+                }
+                try{
+                    //saving consignmentList and consignmentTrackingList.
+                    consignmentService.saveConsignments(consignmentList);
+                    //fetching the consignments just created above.
+                    consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
+                    //creating consignmentTrackingList
+                    consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
+                    //saving it.
+                    consignmentService.saveConsignmentTracking(consignmentTrackingList);
+                    addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
+                } catch (Exception ex){
+                    addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMENT_FAILURE));
+                }
 
             } else {
                 addRedirectAlertMessage(new SimpleMessage(duplicateAwbString));
@@ -181,22 +186,57 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
+    public Resolution viewNDR() {
+        consignmentsForCRM = consignmentService.getConsignmentByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), RoleConstants.CUSTOMER_SUPPORT);
+        consignmentsForHubManager = consignmentService.getConsignmentByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), RoleConstants.HK_DELIVERY_HUB_MANAGER);
+
+        crmAttempts = new ArrayList<Integer>();
+        hubManagerAttempts = new ArrayList<Integer>();
+        consignmentTrackingListCRM = new ArrayList<List<ConsignmentTracking>>();
+        List<ConsignmentTracking> tempTrackingList = new ArrayList<ConsignmentTracking>();
+
+        for(Consignment consignmentObj  :consignmentsForCRM){
+            crmAttempts.add(getAttempts(consignmentObj));
+            tempTrackingList  = consignmentService.getConsignmentTracking(consignmentObj);
+            consignmentTrackingListCRM.add(tempTrackingList);
+
+            Collections.sort(tempTrackingList, new Comparator<ConsignmentTracking>() {
+                public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
+                    return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
+                }
+            });
+            //getting the latest reason for onHoldByCustomer
+            String remark = tempTrackingList.get(tempTrackingList.size() -1).getRemarks();
+            latestRemarkForCRM.add(remark);
+        }
+
+        for(Consignment consignmentObj  :consignmentsForHubManager){
+            hubManagerAttempts.add(getAttempts(consignmentObj));
+        }
+        return new RedirectResolution("/pages/admin/ndrReport.jsp");
+    }
+
+    public Integer getAttempts(Consignment consignment){
+        Page consignmentPage = consignmentService.searchConsignmentTracking( null,null,EnumConsignmentLifecycleStatus.Dispatched.getId(),null,consignment.getId(),0,0);
+        return consignmentPage.getTotalResults();
+    }
+
     public Resolution trackConsignment(){
 
         if(doTracking){
             consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
             if(consignment != null) {
-            consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
-            logger.info(consignment + "" + consignmentTrackingList.size());
+                consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
+                logger.info(consignment + "" + consignmentTrackingList.size());
             } else {
                 addRedirectAlertMessage(new SimpleMessage("Consignment doesn't exist."));
             }
 
-            return new ForwardResolution("/pages/admin/trackConsignment.jsp"); 
+            return new ForwardResolution("/pages/admin/trackConsignment.jsp");
         }
         return new ForwardResolution("/pages/admin/trackConsignment.jsp");
     }
-    
+
     public Hub getHub() {
         return hub;
     }
@@ -275,7 +315,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     public void setConsignmentList(List<Consignment> consignmentList) {
         this.consignmentList = consignmentList;
-    }  
+    }
 
     public String getConsignmentNumber() {
         return consignmentNumber;
@@ -324,4 +364,69 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     public void setLoggedOnUser(User loggedOnUser) {
         this.loggedOnUser = loggedOnUser;
     }
+
+    public List<Consignment> getConsignmentsForCRM() {
+        return consignmentsForCRM;
+    }
+
+    public void setConsignmentsForCRM(List<Consignment> consignmentsForCRM) {
+        this.consignmentsForCRM = consignmentsForCRM;
+    }
+
+    public List<Consignment> getConsignmentsForHubManager() {
+        return consignmentsForHubManager;
+    }
+
+    public void setConsignmentsForHubManager(List<Consignment> consignmentsForHubManager) {
+        this.consignmentsForHubManager = consignmentsForHubManager;
+    }
+
+    public Date getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
+    }
+
+    public List<Integer> getCrmAttempts() {
+        return crmAttempts;
+    }
+
+    public void setCrmAttempts(List<Integer> crmAttempts) {
+        this.crmAttempts = crmAttempts;
+    }
+
+    public List<Integer> getHubManagerAttempts() {
+        return hubManagerAttempts;
+    }
+
+    public void setHubManagerAttempts(List<Integer> hubManagerAttempts) {
+        this.hubManagerAttempts = hubManagerAttempts;
+    }
+
+    public List<List<ConsignmentTracking>> getConsignmentTrackingListCRM() {
+        return consignmentTrackingListCRM;
+    }
+
+    public void setConsignmentTrackingListCRM(List<List<ConsignmentTracking>> consignmentTrackingListCRM) {
+        this.consignmentTrackingListCRM = consignmentTrackingListCRM;
+    }
+
+    public List<ConsignmentTracking> getConsignmentTrackingListHubManager() {
+        return consignmentTrackingListHubManager;
+    }
+
+    public void setConsignmentTrackingListHubManager(List<ConsignmentTracking> consignmentTrackingListHubManager) {
+        this.consignmentTrackingListHubManager = consignmentTrackingListHubManager;
+    }
+
+    public List<String> getLatestRemarkForCRM() {
+        return latestRemarkForCRM;
+    }
+
+    public void setLatestRemarkForCRM(List<String> latestRemarkForCRM) {
+        this.latestRemarkForCRM = latestRemarkForCRM;
+    }
+
 }
