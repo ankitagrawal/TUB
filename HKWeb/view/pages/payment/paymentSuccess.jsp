@@ -25,42 +25,77 @@
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <!--YAHOO marketing-->
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
-<s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
-<%--<s:layout-component name="htmlHead">
+<s:layout-render name="/layouts/paymentSuccess.jsp" pageTitle="Payment Successful">
+<s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#publishOnFBWindow').jqm({trigger: '#publishOnFBLink', ajax: '@href'});
-    <c:if test="${!hk:alreadyPublishedDeal(actionBean.payment.order) && hk:getTopDealVariant(actionBean.payment.order) != null && actionBean.payment.amount >= 500}">
-      $('#publishOnFBLink').click();   // For amount greater than 500 only.
-    </c:if>
+
+        $("#dispatchDateQuesMark").click(function(){
+            $("#popUpDDate").toggle();
+        });
+
+        $("#crossNew").click(function(){
+            $("#popUpDDate").hide();
+        });
+        $(".learnMore").click(function(){
+            $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
+        });
     });
   </script>
 </s:layout-component>
-<s:layout-component name="modal">
-  <div class="jqmWindow" id="publishOnFBWindow" style="display: none; width:auto;padding:10px;">
-    <s:link beanclass="com.hk.web.action.core.user.PublishOnFBAction" id="publishOnFBLink" style="visibility:hidden;">
-      <s:param name="order" value="${actionBean.payment.order.id}"/>
-      Publish on facebook
-    </s:link>
-  </div>
-</s:layout-component>--%>
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
+<s:layout-component name="steps">
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
+    <div class='steps' style="margin-bottom: 20px;left:175px;">
+        <hr noshade class="stepLine">
+        <div class='newStep'>
+            <div class="newStepCount">1</div>
+
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
+        </div>
+
+        <div class='newStep '>
+            <div class="newStepCount">2</div>
+
+            <div class='newStepText'>
+                Confirm your order
+            </div>
+        </div>
+        <div class='newStep'>
+            <div class="newStepCount">3</div>
+
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount current_step">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
+        </div>
+    </div>
+</s:layout-component>
 <s:layout-component name="heading">
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+    <%--<c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
                 <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner.png"/>
             </a>
         </div>
-    </c:if>
-    <div style="margin-top: 25px;">
-        <h1 class="green" style="font-size: 1.2em;">
-            Payment Successful
-        </h1>
-    </div>
+    </c:if>--%>
+
+
 </s:layout-component>
 
 <s:layout-component name="left_col">
@@ -190,15 +225,15 @@
 	<script type="text/javascript">
 		var blade_co_account_id='4184';
 		var blade_group_id='convtrack14344';
-		
+
 		(function() {
 		var host = (location.protocol == 'https:') ? 'https://d-cache.microadinc.com' : 'http://d-cache.microadinc.com';
 		var path = '/js/bl_track_others.js';
-		
+
 		var bs = document.createElement('script');
 		bs.type = 'text/javascript'; bs.async = true;
 		bs.charset = 'utf-8'; bs.src = host + path;
-		
+
 		var s = document.getElementsByTagName('script')[0];
 		s.parentNode.insertBefore(bs, s);
 		})();
@@ -230,7 +265,7 @@
 		f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
 	</script>
 	<!-- End Visual Website Optimizer Asynchronous Code -->
-	
+
 
   <%
     }
@@ -241,7 +276,7 @@
 </c:if>
 
     <c:choose>
-        <c:when test="${actionBean.payment != null}">         
+        <c:when test="${actionBean.payment != null}">
             <%--<c:if test="${actionBean.payment.paymentMode.id == codPaymentModeId && actionBean.payment.amount < 1500}">
                 <div>
                     <s:link beanclass="com.hk.web.action.core.payment.RegisterOnlinePaymentAction">
@@ -256,7 +291,8 @@
                 </s:link>
             </div>--%>
 
-            <h2 style="font-size: 1em; padding-left: 15px;margin-top: 20px;">
+            <div class="congratsText">Congratulations. Your order has been placed.</div>
+            <h2 class="orderIdText">
                 Your order ID is <strong>${actionBean.payment.order.gatewayOrderId}</strong>.</h2>
             <br/>
 
@@ -315,13 +351,15 @@
             </c:if>--%>
             <br/>
 
-            <h2 class="paymentH2">Shipping & Delivery</h2>
+            <div class="confirmationEmailText" style="border-bottom: 1px solid #ddd;">
+                <p>You will shortly be getting a confirmation email. The Dispatch date for each product is mentioned below.
+                The delivery time would be above that and the delivery date will vary according to your location.</p>
+                <p id="learnMore" class="learnMore" style="margin: 0px;float: right;" >learn more</p>
+            </div>
 
-            <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
-
-            <h2 class="paymentH2">Customer Support</h2>
-
-            <p><s:link beanclass="com.hk.web.action.pages.ContactAction">Write to us</s:link> with your Order ID if you have any questions or call us on 0124-4616444</p>
+            <div class="confirmationEmailText">
+                <p>For any query please call us: 0124-4502950 or you can drop us an email at info@healthkart.com with your Order ID.</p>
+            </div>
 
             <c:if test="${actionBean.payment.order.offerInstance != null && actionBean.payment.order.offerInstance.coupon != null && hk:isNotBlank(actionBean.payment.order.offerInstance.coupon.complimentaryCoupon)}">
                 <div style="background-color: lightgoldenrodyellow;">
@@ -352,27 +390,28 @@
 
                 <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
-                <div class="floatfix"></div>
+                <div class="orderShippedTo">
+                    <h2 class="paymentH2" style="border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
 
+                    <p>
+                        <c:set var="address" value="${actionBean.payment.order.address}"/>
+                        <strong>${address.name}</strong> <br/>
+                            ${address.line1},
+                        <c:if test="${not empty address.line2}">
+                            ${address.line2},
+                        </c:if>
+                            ${address.city} - ${address.pincode.pincode}<br/>
+                            ${address.state}, <span class="upc">INDIA</span><br/>
+                        <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+                    </p>
+                </div>
             </div>
           
           <div style="clear:both;"></div>
-             <div style="margin-top: 10px; float: left; margin-right: 5px;">
-                <h2 class="paymentH2">Shipping address${actionBean.pricingDto.shippingLineCount > 1 ? 'es' : ''}</h2>
 
-                <p>
-                    <c:set var="address" value="${actionBean.payment.order.address}"/>
-                    <strong>${address.name}</strong> <br/>
-                        ${address.line1},
-                    <c:if test="${not empty address.line2}">
-                        ${address.line2},
-                    </c:if>
-                        ${address.city} - ${address.pincode.pincode}<br/>
-                        ${address.state}, <span class="upc">INDIA</span><br/>
-                    <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
-                </p>
-            </div>
-              <div class="floatfix"></div>
+            <a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
+
+              <div class="floatfix" style="margin-bottom: 40px;"></div>
         </c:when>
         <c:otherwise>
             Invalid request!

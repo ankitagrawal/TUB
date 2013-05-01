@@ -3073,6 +3073,30 @@ color: #e62580;
     top: 60px;
     padding: 15px 0 30px 30px;
 }
+.banner_raj{
+    position: absolute;
+    float: left;
+    top: 200px;
+}
+
+.banner_raj_modal{
+    position: absolute;
+    float: left;
+    width: auto;
+    left: 10%;
+    z-index: 100;
+    display: none;
+    border: 1px solid #ddd;
+    top: -50px;
+    height: auto;
+    padding: 20px 0 15px 15px;
+}
+
+.raj_modal{
+    position: absolute;
+    width: 100%;
+    background: transparent;
+}
 
 /*
 slider pager end
