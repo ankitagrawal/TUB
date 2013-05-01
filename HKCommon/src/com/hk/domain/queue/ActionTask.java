@@ -19,7 +19,7 @@ public class ActionTask implements java.io.Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_action_item_id")
+    @JoinColumn(name = "next_action_task_id")
     private ActionTask nextActionTask;
 
     @Column(name = "name", nullable = false, length = 90)
