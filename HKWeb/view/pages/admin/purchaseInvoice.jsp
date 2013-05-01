@@ -347,7 +347,7 @@
 			}
 			finalPayable -= overallDiscount;
 			finalPayable += freightCharges;
-			$('.finalPayable').val(finalPayable.toFixed(2));
+			table.find('.finalPayable').val(finalPayable.toFixed(2));
 		});
 
 		$('.footerChanges').live("change", function overallDiscount() {
@@ -364,7 +364,7 @@
 			}
 			finalPayable -= overallDiscount;
 			finalPayable += freightCharges;
-			$('.finalPayable').val(finalPayable.toFixed(2));
+			table.find('.finalPayable').val(finalPayable.toFixed(2));
 		});
 
 		$('.requiredFieldValidator').click(function() {
