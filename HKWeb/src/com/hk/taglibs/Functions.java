@@ -689,18 +689,13 @@ public class Functions {
         List<String> secondChildList = Arrays.asList("dietary-supplements","shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
 		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
-		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
-			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
-			if (attributeList.contains(attribute.toLowerCase())) {
-				return true;
-			}
 		} else if (secondChild.equalsIgnoreCase("protein")){
             List<String> attributeListProtein = Arrays.asList("age");
             if (attributeListProtein.contains(attribute.toLowerCase())) {
                 return true;
             }
         } else if(secondChildList.contains(secondChild)){
-            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size");
+            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size","type");
             if(attributesHealthNutrition.contains(attribute.toLowerCase())){
                 return true;
             }
