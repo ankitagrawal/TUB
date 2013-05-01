@@ -249,7 +249,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			}
 		}
 		purchaseInvoice.setRtvNotes(piHasRtvList);
-		purchaseInvoiceDao.save(purchaseInvoice);
+		getPurchaseInvoiceService().save(purchaseInvoice);
 		
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
@@ -265,7 +265,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		}
 		Double piRtvAmount = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable;
 		purchaseInvoice.setPiRtvAmount(piRtvAmount);
-		
+		getPurchaseInvoiceService().save(purchaseInvoice);
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 	public Resolution paymentDetails() {

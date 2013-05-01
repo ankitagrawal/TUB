@@ -421,6 +421,23 @@
 </div>
 
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<c:set var="hasRtv" scope="page" value="${pia.piHasRtv}"/>
+	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
+	There are rtvs attached with the PI. Select to import them.<br/>
+	<table>
+	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
+	<td>${ctr.index+1}. Purchase Order No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
+	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
+	</c:forEach>
+	<tr><td colspan="2"><s:submit name="importRtv" value="Import Rtv"></s:submit></td></tr>
+	</table>
+	</c:if>
+	<c:if test="${fn:length(pia.toImportRtvList) eq 0 && !pia.piHasRtv}">
+		There are no rtvs attached with the PI.
+	</c:if>
+</s:form>
+
+<s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <table>
 	<tr><td>Warehouse :</td>
@@ -526,22 +543,6 @@
 </table>
 
 <br/>
-<s:form beanclass="com.hk.web.action.admin.inventory.GRNAction">
-<c:set var="hasRtv" scope="page" value="${pia.piHasRtv}"/>
-	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
-	There are rtvs attached with the PI. Select to import them.<br/>
-	<table>
-	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
-	<td>${ctr.index+1}. Purchase Order No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
-	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
-	</c:forEach>
-	<tr><td colspan="2"><s:submit name="importRtv" value="Import Rtv"></s:submit></td></tr>
-	</table>
-	</c:if>
-	<c:if test="${fn:length(pia.toImportRtvList) eq 0 && !pia.piHasRtv}">
-		There are no rtvs attached with the PI.
-	</c:if>
-</s:form>
 
 <table border="1">
 	<thead>
@@ -902,6 +903,7 @@
 </s:form>
 
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <table id="rtvTable" class="rtvTable">
 <thead>
 	<tr>
@@ -931,20 +933,24 @@
 	<tbody id="piRtvTable">
 	<c:forEach var="extraInventoryLineItem" items="${pia.extraInventoryLineItems}" varStatus="ctr">
 	<tr count="${ctr.index}" class="${ctr.last ? 'lastRtvRow lineItemRow':'lineItemRow'}">
+	    <s:hidden name="extraInventoryLineItems[${ctr.index}].id" value="${extraInventoryLineItem.id}"/>
+		<s:hidden name="extraInventoryId" value="${extraInventoryLineItem.extraInventory.id}" />
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${extraInventoryLineItem.grnCreated}"/>
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${extraInventoryLineItem.rtvCreated}"/>
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].poLineItem" value="${extraInventoryLineItem.poLineItem}"/>
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].updateDate" value="${extraInventoryLineItem.updateDate}"/>
 		<c:choose>
 						<c:when test="${extraInventoryLineItem.sku != null}">
 		<c:set value="${extraInventoryLineItem.sku}" var="sku"/>
 		<c:set value="${sku.productVariant}" var="productVariant"/>
 		<c:set value="${productVariant.product}" var="product"/>
-		<s:hidden name="extraInventoryLineItems[${ctr.index}]" value="${extraInventoryLineItem.id}"/>
-		<s:hidden name="extraInventoryId" value="${extraInventoryLineItem.extraInventory.id}" />
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].productVariant"
 		          value="${extraInventoryLineItem.sku.productVariant.id}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
 		          value="${extraInventoryLineItem.sku}"/>
 		          
 		
-			<td>${ctr.index+1}</td>
+			<td>${ctr.index+1}.${extraInventoryLineItem.extraInventory.id}	</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>
@@ -962,7 +968,7 @@
 			</td>
 			<td>${productVariant.id}</td>
 			<td>${productVariant.upc}</td>
-			<td class="proName">
+			<td>
                             <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
                                       value="${product.name}"/>
                             ${product.name}
@@ -974,7 +980,11 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td></td>
+				<td>
+				 <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
+                                      value="${extraInventoryLineItem.productName}"/>
+                            ${extraInventoryLineItem.productName}
+				</td>
 			</c:otherwise>
 			</c:choose>
 			
@@ -985,7 +995,7 @@
 					       class="taxIdentifier"/>
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
-							<s:select name="purchaseInvoiceShortLineItems[${ctr.index}].tax" id="taxValues"
+							<s:select name="extraInventoryLineItems[${ctr.index}].tax" id="taxValues"
 							          value="${extraInventoryLineItem.tax.id}" class="valueChange">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
@@ -1016,8 +1026,10 @@
 				</shiro:lacksPermission>
 			</td>
 			<td>
-				<s:text readonly="true" name="extraInventoryLineItems[${ctr.index}].qty" value="${extraInventoryLineItem.receivedQty}"
-				        class="receivedQuantity valueChange"/>
+				 ${extraInventoryLineItem.receivedQty}
+                            <s:hidden class="receivedQuantity valueChange"
+                                      name="extraInventoryLineItems[${ctr.index}].receivedQty"
+                                      value="${extraInventoryLineItem.receivedQty}"/>
 			</td>
 			<td>
 				<s:text name="extraInventoryLineItems[${ctr.index}].costPrice"
