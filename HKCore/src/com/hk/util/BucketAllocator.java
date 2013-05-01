@@ -38,7 +38,7 @@ public class BucketAllocator {
             }
             //for online error cases
             if (EnumPaymentMode.ONLINE_PAYMENT.getId().equals(payment.getPaymentMode().getId())) {
-                if (EnumPaymentStatus.getOnlinePaymentErrorStatuses().contains(payment.getPaymentStatus())) {
+                if (EnumPaymentStatus.getOnlinePaymentErrorStatusIds().contains(payment.getPaymentStatus().getId())) {
                     actionableBuckets.add(EnumBucket.Online_Payment_Disputes);
                 }
             }
