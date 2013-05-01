@@ -94,7 +94,13 @@ public class PurchaseInvoice implements java.io.Serializable {
 
 	@Column(name = "final_payable_amount")
 	private Double finalPayableAmount;
-
+	
+	@Column(name = "short_amount")
+	private Double shortAmount;
+	
+	@Column(name = "pi_rtv_amount")
+	private Double piRtvAmount;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseInvoice")
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>(0);
   
@@ -359,6 +365,22 @@ public class PurchaseInvoice implements java.io.Serializable {
   public void setRtvNotes(List<RtvNote> rtvNotes) {
 	this.rtvNotes = rtvNotes;
   }
+  
+  public Double getShortAmount() {
+	return shortAmount;
+  }
+
+  public void setShortAmount(Double shortAmount) {
+	this.shortAmount = shortAmount;
+  }
+
+  public Double getPiRtvAmount() {
+	return piRtvAmount;
+  }
+
+public void setPiRtvAmount(Double piRtvAmount) {
+	this.piRtvAmount = piRtvAmount;
+}
 
 @Override
   public String toString() {

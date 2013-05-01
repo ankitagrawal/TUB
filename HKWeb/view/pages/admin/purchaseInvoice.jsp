@@ -331,9 +331,14 @@
 			updateTotalPI('.payableAmount', '.totalPayable', 0, table);
 			updateTotalPI('.payableAmount', '.finalPayable', 0, table);
 			updateTotalPI('.receivedQuantity', '.totalQuantity', 1, table);
-			var finalPayable = parseFloat(table.parent.find('.finalPayable').val().replace(/,/g, ''));
-			var overallDiscount = parseFloat(table.parent.find('.overallDiscount').val().replace(/,/g, ''));
-			var freightCharges = parseFloat(table.parent.find('.freightCharges').val().replace(/,/g, ''));
+			var finalPayable = parseFloat(table.parent().find('.finalPayable').val().replace(/,/g, ''));
+			if(valueChangeRow.find('.overallDiscount').length!=0){
+			var overallDiscount = parseFloat(table.parent().find('.overallDiscount').val().replace(/,/g, ''));
+			}
+			if(valueChangeRow.find('.freightCharges').length!=0){
+				var freightCharges = parseFloat(table.parent().find('.freightCharges').val().replace(/,/g, ''));	
+			}
+			
 			if (isNaN(overallDiscount)) {
 				overallDiscount = 0;
 			}
@@ -352,8 +357,8 @@
 				overallDiscount = 0;
 			}
 			updateTotalPI('.payableAmount', '.finalPayable', 0, table);
-			var finalPayable = parseFloat(table.parent.find('.finalPayable').val().replace(/,/g, ''));
-			var freightCharges = parseFloat(table.parent.find('.freightCharges').val().replace(/,/g, ''));
+			var finalPayable = parseFloat(table.parent().find('.finalPayable').val().replace(/,/g, ''));
+			var freightCharges = parseFloat(table.parent().find('.freightCharges').val().replace(/,/g, ''));
 			if (isNaN(freightCharges)) {
 				freightCharges = 0;
 			}
@@ -885,8 +890,8 @@
 		            value="${pia.purchaseInvoice.freightForwardingCharges}"/></td>
 	</tr>
 	<tr>
-		<td colspan="12"></td><td>Final Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.finalPayableAmount"
+		<td colspan="12"></td><td>Short Payable</td>
+		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortAmount"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>
@@ -896,7 +901,7 @@
 	<s:submit name="saveShortLineItems" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
-<s:form partial="true" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <table id="rtvTable" class="rtvTable">
 <thead>
 	<tr>
@@ -932,8 +937,12 @@
 		<c:set value="${sku.productVariant}" var="productVariant"/>
 		<c:set value="${productVariant.product}" var="product"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}]" value="${extraInventoryLineItem.id}"/>
+		<s:hidden name="extraInventoryId" value="${extraInventoryLineItem.extraInventory.id}" />
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].productVariant"
 		          value="${extraInventoryLineItem.sku.productVariant.id}"/>
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
+		          value="${extraInventoryLineItem.sku}"/>
+		          
 		
 			<td>${ctr.index+1}</td>
 			<td>
@@ -953,8 +962,12 @@
 			</td>
 			<td>${productVariant.id}</td>
 			<td>${productVariant.upc}</td>
-			<td>${product.name}<br/>${productVariant.optionsCommaSeparated}
-			</td>
+			<td class="proName">
+                            <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
+                                      value="${product.name}"/>
+                            ${product.name}
+                                   <br/>${productVariant.optionsCommaSeparated}
+                </td>
 			</c:when>
 			<c:otherwise>
 				<td>${ctr.index+1}</td>
@@ -1046,9 +1059,9 @@
 		</tr>
 	</c:forEach>
 	</tbody>
-	<tfoot id="piShortTableFoot">
+	<tfoot id="piRtvTableFoot">
 		<tr>
-		<td colspan="5">Totals</td>
+		<td colspan="6">Totals</td>
 		<td colspan="3" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseInvoice.taxableAmount"
 		            value="${pia.purchaseInvoice.taxableAmount}"/></td>
@@ -1061,7 +1074,7 @@
 	</tr>
 	<tr>
 		<td colspan="11"></td><td>RTV Final Total</td>
-		<td><s:text readonly="readonly" class="finalPayable rtvFinal" name="purchaseInvoice.finalPayableAmount"
+		<td><s:text readonly="readonly" class="finalPayable rtvFinal" name="rtvTotalPayable"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 		            <td></td>
 	</tr>
