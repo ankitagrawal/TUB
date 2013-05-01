@@ -13,21 +13,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
-import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.api.models.user.APIUserDetail;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.report.ReportConstants;
 import com.hk.domain.user.UserCodCall;
-import com.hk.dto.user.UserLoginDto;
-import com.hk.exception.HealthkartLoginException;
-import com.hk.manager.UserManager;
 import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
-import org.jboss.resteasy.spi.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +50,19 @@ import com.hk.pact.service.user.UserDetailService;
 @Component
 public class UserOrderResource {
 
-    private static Logger     logger = LoggerFactory.getLogger(UserOrderResource.class);
+    private static Logger logger = LoggerFactory.getLogger(UserOrderResource.class);
 
     @Value("#{hkEnvProps['" + Keys.Env.hkApiAccessKey + "']}")
-    private String            API_KEY;
+    private String API_KEY;
 
     @Autowired
-    UserService               userService;
+    UserService userService;
 
     @Autowired
-    KarmaProfileService       karmaProfileService;
+    KarmaProfileService karmaProfileService;
 
     @Autowired
-    private UserOrderService  userOrderService;
+    private UserOrderService userOrderService;
 
     @Autowired
     private UserDetailService userDetailService;
@@ -81,7 +77,7 @@ public class UserOrderResource {
     @Path("/email/{email}/phone/{phone}")
     @Produces("application/json")
     public Response updateUser(@PathParam("email")
-    String email, @PathParam("phone")
+                               String email, @PathParam("phone")
     long phone) {
         email = email.toLowerCase().trim();
         User user = userService.findByLogin(email);
@@ -108,7 +104,7 @@ public class UserOrderResource {
     @Path("/priority/{priority}")
     @Produces("application/json")
     public Response getUserListByPriority(@PathParam("priority")
-    long priority) {
+                                          long priority) {
 
         Response response = null;
         try {
@@ -128,7 +124,7 @@ public class UserOrderResource {
     @Produces("application/json")
     @Encoded
     public Response getUserDetails(@PathParam("phone")
-    String phone, @QueryParam("key")
+                                   String phone, @QueryParam("key")
     String key) {
 
         long phoneNo = 0L;
@@ -160,11 +156,10 @@ public class UserOrderResource {
             } else {
                 response = Response.status(Response.Status.NOT_FOUND).build();
             }
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Wrong input passed from Drishti ");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             logger.error("Unable to get User Details ", ex);
         }
@@ -193,7 +188,7 @@ public class UserOrderResource {
         }
         try {
             userCodCall = order.getUserCodCall();
-            userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_THIRD_PARTY.getId());
+            userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_KNOWLARITY.getId());
             userCodCall.setRemark(source);
 
             if (!(order.isCOD())) {
@@ -201,22 +196,25 @@ public class UserOrderResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            if (action.equalsIgnoreCase("CANCELLED")) {
+            if (action.equalsIgnoreCase(ReportConstants.CANCELLED)) {
                 if (order.getOrderStatus().getId().equals(EnumOrderStatus.Cancelled.getId())) {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
-            } else if (action.equalsIgnoreCase("CONFIRMED")) {
+                userCodCall.setRemark("Cancelled By " + source);
+            } else if (action.equalsIgnoreCase(ReportConstants.CONFIRMED)) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
                 if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
                     logger.debug("Order Payment Already Confirmed" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
-                adminOrderService.confirmCodOrder(order, source,null);
+                adminOrderService.confirmCodOrder(order, source, null);
+                userCodCall.setRemark("Confirmed By " + source);
+            } else if (action.equalsIgnoreCase(ReportConstants.NON_CONTACTABLE)) {
+                userCodCall.setRemark(EnumUserCodCalling.NON_CONTACTABLE.getName());
             }
             userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
-            userCodCall.setRemark(action + " Request Successful");
             orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
         } catch (DataIntegrityViolationException dataInt) {
@@ -240,7 +238,7 @@ public class UserOrderResource {
      * internal class just for helping with JSON Marshalling
      */
     class APIOrderDetail {
-        public Long   id;
+        public Long id;
         public String status;
         public String gatewayOrderId;
         public String createDate;
@@ -250,7 +248,7 @@ public class UserOrderResource {
     @Path("/orders/phone/{phone}")
     @Produces("application/json")
     public Response getUserOrders(@PathParam("phone")
-    long phone) {
+                                  long phone) {
 
         Response response = null;
         try {
@@ -274,7 +272,7 @@ public class UserOrderResource {
     @Path("/orders/email/{email}")
     @Produces("application/json")
     public Response getUserOrders(@PathParam("email")
-    String email) {
+                                  String email) {
 
         Response response = null;
         try {

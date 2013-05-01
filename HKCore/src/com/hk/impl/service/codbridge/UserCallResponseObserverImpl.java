@@ -62,7 +62,7 @@ public class UserCallResponseObserverImpl extends OrderObserver implements com.h
         try {
 
             Long orderId = Long.parseLong(orderResponse.getOrderId());
-            String sourceOfMessage = orderResponse.getSource() + "CodCall";
+            String sourceOfMessage = orderResponse.getSource();
             order = orderService.find(orderId);
             if (order != null) {
                 String urlStr = String.format(healthkartRestUrl + "user/order/source/%s/order/%d/action/%s", sourceOfMessage, orderId, orderResponse.getOrderStatus().name());
