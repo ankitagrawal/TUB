@@ -72,18 +72,18 @@ public class BucketAllocator {
         return actionableBuckets;
     }
 
-    public static EnumActionTask listCurrentActionTask(List<Bucket> buckets){
+    public static EnumActionTask listCurrentActionTask(List<EnumBucket> buckets){
 
-        if(buckets.contains(EnumBucket.Cod_Confirmation.asBucket()) || buckets.contains(EnumBucket.Cheque_Cash_Neft.asBucket())){
+        if(buckets.contains(EnumBucket.Cod_Confirmation) || buckets.contains(EnumBucket.Cheque_Cash_Neft)){
             return EnumActionTask.Payment_Confirmation;
         }
-        if(buckets.contains(EnumBucket.Online_Payment_Disputes.asBucket())){
+        if(buckets.contains(EnumBucket.Online_Payment_Disputes)){
             return EnumActionTask.Online_Authorization;
         }
-        if(buckets.contains(EnumBucket.Dispatch_Issues.asBucket())){
+        if(buckets.contains(EnumBucket.Dispatch_Issues)){
             return EnumActionTask.Create_Shipment;
         }
-        if(buckets.contains(EnumBucket.Jit.asBucket()) || buckets.contains(EnumBucket.DropShip.asBucket())){
+        if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
             return EnumActionTask.Create_PO;
         }
 

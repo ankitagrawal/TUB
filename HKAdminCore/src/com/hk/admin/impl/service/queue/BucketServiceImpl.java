@@ -53,7 +53,7 @@ public class BucketServiceImpl implements BucketService {
         List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
         if (!enumBuckets.isEmpty()) {
             List<Bucket> buckets = getBuckets(enumBuckets);
-            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(buckets);
+            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(enumBuckets);
             actionItem = existsActionItem(shippingOrder);
             if (actionItem == null) {
                 actionItem = new ActionItem();

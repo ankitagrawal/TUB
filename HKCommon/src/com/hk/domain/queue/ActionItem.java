@@ -160,6 +160,23 @@ public class ActionItem implements java.io.Serializable {
     public void setWatchers(List<User> watchers) {
         this.watchers = watchers;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActionItem that = (ActionItem) o;
+
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
 
 
