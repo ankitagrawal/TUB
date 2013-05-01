@@ -699,8 +699,11 @@ public class Functions {
             if (attributeListProtein.contains(attribute.toLowerCase())) {
                 return true;
             }
-        } else if(secondChildList.contains(secondChild) && attribute.equalsIgnoreCase("size")){
-            return true;
+        } else if(secondChildList.contains(secondChild)){
+            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size");
+            if(attributesHealthNutrition.contains(attribute.toLowerCase())){
+                return true;
+            }
         }
 		return false;
 	}
