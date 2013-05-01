@@ -29,7 +29,7 @@ public class ActionTask implements java.io.Serializable {
     private Long priority;
 
     @Column(name = "acknowledged")
-    private Byte acknowledged;
+    private boolean acknowledged;
 
     @Column(name = "range")
     private Long range;
@@ -65,11 +65,11 @@ public class ActionTask implements java.io.Serializable {
         this.priority = priority;
     }
 
-    public Byte getAcknowledged() {
-        return this.acknowledged;
+    public boolean isAcknowledged() {
+        return acknowledged;
     }
 
-    public void setAcknowledged(Byte acknowledged) {
+    public void setAcknowledged(boolean acknowledged) {
         this.acknowledged = acknowledged;
     }
 
