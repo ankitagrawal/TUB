@@ -74,8 +74,7 @@ public class MenuNode {
     }
     MenuNode parentMenuNode = this.getParentNode();
     while (parentMenuNode != null) {
-      //if (!doesMenuHaveAnyCategory(product.getCategories(), parentMenuNode)) {
-      if (!doesMenuHavePrimaryCategory(product.getPrimaryCategory(), parentMenuNode)) {
+      if (!doesMenuHaveAnyCategory(product.getCategories(), parentMenuNode)) {
         hasProduct = false;
       }
       parentMenuNode = parentMenuNode.getParentNode();
@@ -87,12 +86,6 @@ public class MenuNode {
     for (Category category : categories) {
       if (menuNode.getSlug().equals(category.getName())) return true;
     }
-    return false;
-  }
-
-  private boolean doesMenuHavePrimaryCategory(Category category, MenuNode menuNode) {
-    if (menuNode.getSlug().equals(category.getName()))
-      return true;
     return false;
   }
 
