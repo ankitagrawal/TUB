@@ -75,6 +75,38 @@ public class GrnCloseAction extends BaseAction {
 
         return new RedirectResolution(AdminHomeAction.class);
     }
+    
+    public Resolution closeGrn() {
+        int dayAgo = 60;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, -dayAgo);
+        Date startDate = cal.getTime();
+        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompletedGrns(startDate);
+        if (checkedInGrns != null && checkedInGrns.size() > 0) {
+        	for(PoLineItem poLineItem: checkedInGrns.get(0).getPurchaseOrder().getPoLineItems()){
+				if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
+					poLineItem.setFirstTimePurchased(true);
+				}
+            }
+            for (GoodsReceivedNote grn : checkedInGrns) {
+                grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+                getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
+                if(grn.getPurchaseOrder().isExtraInventoryCreated()){
+                	PurchaseOrder po = grn.getPurchaseOrder();
+                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
+                	po.setExtraInventoryId(id);
+                }
+            }
+            getBaseDao().saveOrUpdate(checkedInGrns);
+            
+            addRedirectAlertMessage(new SimpleMessage(checkedInGrns.size() + " Grns created : " + dayAgo + " days ago are closed now."));
+        } else {
+            addRedirectAlertMessage(new SimpleMessage("No Grn has been found in Checkin Completed State"));
+        }
+
+        return new RedirectResolution(AdminHomeAction.class);
+    }
 
 	public AdminEmailManager getAdminEmailManager() {
 		return adminEmailManager;
