@@ -1,5 +1,6 @@
 package com.hk.admin.impl.service.queue;
 
+import com.hk.constants.queue.EnumActionTask;
 import com.hk.domain.queue.*;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.queue.ActionItemDao;
@@ -48,23 +49,23 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public ActionItem allocateBuckets(ShippingOrder shippingOrder) {
+        ActionItem actionItem = null;
         List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
         if (!enumBuckets.isEmpty()) {
             List<Bucket> buckets = getBuckets(enumBuckets);
-            ActionTask currentActionTask = BucketAllocator.listCurrentActionTask(buckets);
-            ActionItem actionItem;
+            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(buckets);
             actionItem = existsActionItem(shippingOrder);
             if (actionItem == null) {
                 actionItem = new ActionItem();
                 actionItem.setFirstPushDate(new Date());
             }
             actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-            actionItem.setCurrentActionTask(currentActionTask);
+            actionItem.setCurrentActionTask(find(currentActionTask));
             actionItem.setBuckets(buckets);
             actionItem.setShippingOrder(shippingOrder);
-            pushToActionQueue(actionItem);
+            actionItem = pushToActionQueue(actionItem);
         }
-        return null;
+        return actionItem;
     }
 
     @Override
@@ -123,7 +124,12 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public Bucket find(EnumBucket enumBucket) {
-        return this.find(enumBucket.getId());
+        return actionItemDao.get(Bucket.class, enumBucket.getId());
+    }
+
+    @Override
+    public ActionTask find(EnumActionTask enumActionTask) {
+        return actionItemDao.get(ActionTask.class, enumActionTask.getId());
     }
 
     @Override
@@ -131,15 +137,9 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.getBuckets(enumBuckets);
     }
 
-    public Bucket find(Long bucketId) {
-        return actionItemDao.get(Bucket.class, bucketId);
-    }
-
-
-
     @Override
     public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
-        Bucket actionableBucket = shippingOrder.isDropShipping() ? EnumBucket.Vendor.asBucket() : EnumBucket.Warehouse.asBucket();
+        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) :  find(EnumBucket.Warehouse);
         return changeBucket(shippingOrder, actionableBucket);
     }
 

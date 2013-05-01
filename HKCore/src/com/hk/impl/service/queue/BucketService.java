@@ -1,11 +1,9 @@
 package com.hk.impl.service.queue;
 
+import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.queue.ActionItem;
-import com.hk.domain.queue.Bucket;
-import com.hk.domain.queue.Classification;
-import com.hk.domain.queue.Param;
+import com.hk.domain.queue.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +38,8 @@ public interface BucketService {
     ActionItem saveActionItem(ActionItem actionItem);
 
     public Bucket find(EnumBucket enumBucket);
+
+    public ActionTask find(EnumActionTask enumActionTask);
 
     public List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
