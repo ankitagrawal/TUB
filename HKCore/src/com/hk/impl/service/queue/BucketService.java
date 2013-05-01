@@ -23,7 +23,7 @@ public interface BucketService {
 
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 
-    ActionItem pushToActionQueue(ActionItem actionItem);
+    ActionItem pushToActionQueue(ActionItem actionItem, boolean isAuto);
 
     ActionItem popFromActionQueue(ActionItem actionItem);
 

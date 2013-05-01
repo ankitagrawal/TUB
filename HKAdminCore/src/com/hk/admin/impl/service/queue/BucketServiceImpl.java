@@ -63,7 +63,7 @@ public class BucketServiceImpl implements BucketService {
             actionItem.setCurrentActionTask(find(currentActionTask));
             actionItem.setBuckets(buckets);
             actionItem.setShippingOrder(shippingOrder);
-            actionItem = pushToActionQueue(actionItem);
+            actionItem = pushToActionQueue(actionItem, true);
         }
         return actionItem;
     }
@@ -75,12 +75,9 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public ActionItem pushToActionQueue(ActionItem actionItem) {
+    public ActionItem pushToActionQueue(ActionItem actionItem,  boolean isAuto) {
         actionItem.setFlagged(false);
-        User reporter = userService.getLoggedInUser();
-        if(reporter == null){
-          reporter = userService.getAdminUser();
-        }
+        User reporter = isAuto ? userService.getAdminUser() : userService.getLoggedInUser();
         actionItem.setReporter(reporter);
         actionItem.setLastPushDate(new Date());
         actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());

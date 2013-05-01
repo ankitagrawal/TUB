@@ -25,6 +25,7 @@ public class ActionItem implements java.io.Serializable {
     @JoinColumn(name = "current_action_task_id")
     private ActionTask currentActionTask;
 
+    //todo bucket, make this field null-able
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "previous_action_task_id")
     private ActionTask previousActionTask;
