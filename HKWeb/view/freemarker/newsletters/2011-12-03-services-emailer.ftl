@@ -102,7 +102,7 @@ to view a web version.
       </tr>
       <tr>
         <td bgcolor="#363636" height="70" align="center" ><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
-              <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4502930</span></td>
+              <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4616444</span></td>
       </tr>
     </table></td>
   </tr>
@@ -111,7 +111,7 @@ to view a web version.
   <tr>
     <td style="font-size:11px; text-align:center; color:#929292; padding:8px"> If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to Unsubscribe</a><br />
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-      © 2011 HealthKart.com. All Rights Reserved. </td>
+      ï¿½ 2011 HealthKart.com. All Rights Reserved. </td>
   </tr>
 
 
