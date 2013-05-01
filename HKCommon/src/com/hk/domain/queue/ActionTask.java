@@ -28,7 +28,7 @@ public class ActionTask implements java.io.Serializable {
     @Column(name = "priority")
     private Long priority;
 
-    @Column(name = "acknowledged")
+    @Column(name = "acknowledged", scale = 0)
     private boolean acknowledged;
 
     @Column(name = "range")
