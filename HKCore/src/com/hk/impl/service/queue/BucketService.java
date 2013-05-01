@@ -1,5 +1,6 @@
 package com.hk.impl.service.queue;
 
+import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.Bucket;
@@ -37,6 +38,11 @@ public interface BucketService {
     List<Bucket> findBucket(List<String> name, Classification classification);
 
     ActionItem saveActionItem(ActionItem actionItem);
+
+    public Bucket find(EnumBucket enumBucket);
+
+    public List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
+
 
     ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
 }

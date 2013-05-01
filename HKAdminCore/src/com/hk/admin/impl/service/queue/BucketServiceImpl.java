@@ -50,7 +50,7 @@ public class BucketServiceImpl implements BucketService {
     public ActionItem allocateBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
         if (!enumBuckets.isEmpty()) {
-            List<Bucket> buckets = EnumBucket.getBuckets(enumBuckets);
+            List<Bucket> buckets = getBuckets(enumBuckets);
             ActionTask currentActionTask = BucketAllocator.listCurrentActionTask(buckets);
             ActionItem actionItem;
             actionItem = existsActionItem(shippingOrder);
@@ -120,6 +120,22 @@ public class BucketServiceImpl implements BucketService {
     public ActionItem saveActionItem(ActionItem actionItem) {
         return actionItemDao.save(actionItem);
     }
+
+    @Override
+    public Bucket find(EnumBucket enumBucket) {
+        return this.find(enumBucket.getId());
+    }
+
+    @Override
+    public List<Bucket> getBuckets(List<EnumBucket> enumBuckets) {
+        return actionItemDao.getBuckets(enumBuckets);
+    }
+
+    public Bucket find(Long bucketId) {
+        return actionItemDao.get(Bucket.class, bucketId);
+    }
+
+
 
     @Override
     public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {

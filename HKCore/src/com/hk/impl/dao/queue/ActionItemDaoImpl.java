@@ -1,5 +1,6 @@
 package com.hk.impl.dao.queue;
 
+import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.Bucket;
@@ -8,6 +9,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,15 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         detachedCriteria.addOrder(org.hibernate.criterion.Order.asc("id"));
 
         return (List<ActionItem>) findByCriteria(detachedCriteria);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Bucket> getBuckets(List<EnumBucket> enumBuckets) {
+        List<Long> bucketIds = EnumBucket.getBucketIDs(enumBuckets);
+        Criteria criteria = getSession().createCriteria(Bucket.class);
+        criteria.add(Restrictions.in("id", bucketIds));
+        return criteria.list();
     }
 
 }
