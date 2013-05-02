@@ -45,11 +45,7 @@ public class BucketAllocator {
         } else {
 
             // now that its decided that its category call, decide which category buckets is the order applicable
-            Set<String> categoryNames = new HashSet<String>();
-            for (ShippingOrderCategory shippingOrderCategory : shippingOrder.getShippingOrderCategories()) {
-                categoryNames.add(shippingOrderCategory.getCategory().getName());
-            }
-            actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
+            actionableBuckets.addAll(getBucketsFromSOC(shippingOrder));
 
             //assign buckets on the basis of shipping_order_properties
             if (shippingOrder.containsJitProducts()) {
@@ -59,7 +55,7 @@ public class BucketAllocator {
                 actionableBuckets.add(EnumBucket.DropShip);
             }
             if (shippingOrder.isServiceOrder()) {
-                actionableBuckets.add(EnumBucket.Services);
+                actionableBuckets.add(EnumBucket.ServiceOrder);
             }
 
             //assign buckets based on different issues
@@ -72,6 +68,16 @@ public class BucketAllocator {
         return actionableBuckets;
     }
 
+    public static List<EnumBucket> getBucketsFromSOC(ShippingOrder shippingOrder) {
+        List<EnumBucket> categoryBuckets = new ArrayList<EnumBucket>();
+        Set<String> categoryNames = new HashSet<String>();
+        for (ShippingOrderCategory shippingOrderCategory : shippingOrder.getShippingOrderCategories()) {
+            categoryNames.add(shippingOrderCategory.getCategory().getName());
+        }
+        categoryBuckets.addAll(EnumBucket.findByName(categoryNames));
+        return categoryBuckets;
+    }
+
     public static EnumActionTask listCurrentActionTask(List<EnumBucket> buckets){
 
         if(buckets.contains(EnumBucket.Cod_Confirmation) || buckets.contains(EnumBucket.Cheque_Cash_Neft)){
@@ -82,6 +88,12 @@ public class BucketAllocator {
         }
         if(buckets.contains(EnumBucket.Dispatch_Issues)){
             return EnumActionTask.Create_Shipment;
+        }
+        if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
+            return EnumActionTask.Create_PO;
+        }
+        if(buckets.contains(EnumBucket.AD_HOC) || buckets.contains(EnumBucket.CM)){
+            return EnumActionTask.AD_HOC;
         }
         if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
             return EnumActionTask.Create_PO;

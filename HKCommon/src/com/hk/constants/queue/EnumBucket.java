@@ -32,7 +32,8 @@ public enum EnumBucket {
     ServiceOrder(230l, "Service-Order", EnumClassification.Services),
     Dispatch_Issues(310L, "Dispatch_Issues", EnumClassification.Dispatch_Issues),
     Warehouse(410L, "Warehouse_Processing", EnumClassification.Warehouse),
-    AD_HOC(460L, "AD_HOC Cases", EnumClassification.Warehouse),
+    AD_HOC(460L, "AD_HOC Cases", EnumClassification.AD_HOC),
+    CM(470L, "CM Ad-Hoc", EnumClassification.AD_HOC),
     Vendor(510L, "Vendor", EnumClassification.Vendor);
 
     private Long id;
