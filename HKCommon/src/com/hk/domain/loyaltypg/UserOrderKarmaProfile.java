@@ -102,7 +102,7 @@ public class UserOrderKarmaProfile {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.creationTime);
 		cal.add(Calendar.YEAR, 2);
-		if (TransactionType.DEBIT.equals(this.transactionType)) {
+		if (TransactionType.DEBIT.equals(this.transactionType) || KarmaPointStatus.CONVERTED.equals(this.status)) {
 			return " ";
 		} 
 		return "Expiry on: " + new SimpleDateFormat("MMM dd,yyyy").format(cal.getTime());

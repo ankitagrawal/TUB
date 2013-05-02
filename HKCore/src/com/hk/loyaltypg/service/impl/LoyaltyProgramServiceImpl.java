@@ -144,11 +144,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		Long normalId = (long) 1;
 		Badge normalBadge =  this.baseDao.load(Badge.class, normalId);
 		
-		DetachedCriteria criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
-		criteria.add(Restrictions.eq("user.id", user.getId()));
-		
-		@SuppressWarnings("unchecked")
-		List<UserBadgeInfo> infos = this.baseDao.findByCriteria(criteria);
+		List<UserBadgeInfo> infos = null;
+		if(user != null) {
+			DetachedCriteria criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			
+			infos = this.baseDao.findByCriteria(criteria);
+		}
 		UserBadgeInfo info = null;
 		if(infos == null || infos.isEmpty()) {
 			info  = new UserBadgeInfo();
@@ -420,12 +422,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				loyaltyPoints = loyaltyPoints - currentProfile.getKarmaPoints();
 				totalPointsConverted+= currentProfile.getKarmaPoints();
 				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
-				
+				counter++;		
 			} else {
 				// No processing to be done 
+				counter++;
 				continue;
 			}
-			counter++;
+		
 		}
 		
 		return totalPointsConverted;
