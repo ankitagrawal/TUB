@@ -113,6 +113,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   private String destinationAddress;
   private CourierPickupDetail courierPickupDetail;
   private Long pickupStatusId;
+  private Boolean sameState;
+  private String supplierState;
+  private String warehouseState;
 
   @DefaultHandler
   public Resolution pre(){
@@ -124,6 +127,18 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(purchaseOrder!=null){
       newPurchaseOrderId = purchaseOrder.getId();
     }
+    
+    if(purchaseOrderService.getPurchaseOrderById(purchaseOrderId)!=null){
+    	supplierState = purchaseOrderService.getPurchaseOrderById(purchaseOrderId).getSupplier().getState().toString(); 
+    	warehouseState = purchaseOrderService.getPurchaseOrderById(purchaseOrderId).getWarehouse().getState().toString();
+    	if(supplierState!=null && warehouseState!=null && supplierState.equalsIgnoreCase(warehouseState)){
+    		sameState = Boolean.TRUE;
+    	}
+    	else{
+    		sameState = Boolean.FALSE;
+    	}
+    }
+    
     if(extraInventory != null){
       rtvNote = getRtvNoteService().getRtvNoteByExtraInventory(extraInventory.getId());
       if(rtvNote!=null){
@@ -790,4 +805,30 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public CourierPickupService getCourierPickupService() {
     return courierPickupService;
   }
+
+  public Boolean getSameState() {
+	return sameState;
+  }
+
+  public void setSameState(Boolean sameState) {
+	this.sameState = sameState;
+  }
+
+
+  public String getSupplierState() {
+	return supplierState;
+  }
+
+  public void setSupplierState(String supplierState) {
+	this.supplierState = supplierState;
+  }
+
+  public String getWarehouseState() {
+	return warehouseState;
+  }
+
+  public void setWarehouseState(String warehouseState) {
+	this.warehouseState = warehouseState;
+  }
+  
 }

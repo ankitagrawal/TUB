@@ -107,6 +107,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private Double shortTotalPayable;
 	private Double rtvTotalPayable;
 	private Long extraInventoryId;
+	private Double piFinalPayable;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -161,7 +162,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
 			}
 			
-			//fetch all existing 
+			//fetch all existing
+			piHasRtv = Boolean.FALSE;
 			if (purchaseInvoice.getRtvNotes() != null && purchaseInvoice.getRtvNotes().size() > 0) {
 				piHasRtv = Boolean.TRUE;
 				for (RtvNote rtvNote : purchaseInvoice.getRtvNotes()) {
@@ -170,7 +172,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 							.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
 					if (eiLineItems != null) {
 						for (ExtraInventoryLineItem eiLineItem : eiLineItems) {
-							if (eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
+							if (eiLineItem.isRtvCreated()!=null && eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
 								extraInventoryLineItems.add(eiLineItem);
 							}
 						}
@@ -179,14 +181,15 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			}
 			
 			//fetch all rtv list existing for the pi
-			piHasRtv = Boolean.FALSE;
 			Set<RtvNote> rtvSet = new HashSet<RtvNote>();
 			for (GoodsReceivedNote grn : purchaseInvoice.getGoodsReceivedNotes()) {
 				PurchaseOrder po = grn.getPurchaseOrder();
 				ExtraInventory ei = extraInventoryService.getExtraInventoryByPoId(po.getId());
+				if(ei!=null){
 				RtvNote rtv = rtvNoteService.getRtvNoteByExtraInventory(ei.getId());
 				if (rtv != null) {
 					rtvSet.add(rtv);
+					}
 				}
 			}
 			rtvList.addAll(rtvSet);
@@ -236,19 +239,22 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if(purchaseInvoice.getRtvNotes()!=null && purchaseInvoice.getRtvNotes().size()>0){
 			piHasRtvList.addAll(purchaseInvoice.getRtvNotes());
 		}
+		Double piRtvAmount  =0.0;
 		for (RtvNote rtvNote : piHasRtvList) {
 			ExtraInventory extraInventory = rtvNote.getExtraInventory();
 			List<ExtraInventoryLineItem> eiLineItems = extraInventoryLineItemService
 					.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
 			if (eiLineItems != null) {
 				for (ExtraInventoryLineItem eiLineItem : eiLineItems) {
-					if (eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
+					if (eiLineItem.isRtvCreated()!=null && eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
 						extraInventoryLineItems.add(eiLineItem);
+						piRtvAmount+=eiLineItem.getPayableAmount();
 					}
 				}
 			}
 		}
 		purchaseInvoice.setRtvNotes(piHasRtvList);
+		purchaseInvoice.setPiRtvAmount(piRtvAmount);
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
@@ -322,6 +328,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 			}
 
+			if(purchaseInvoice.getPiRtvAmount()!=null){
+				Double piRtvDiff = purchaseInvoice.getFinalPayableAmount()-piFinalPayable;
+				Double piRtv = purchaseInvoice.getPiRtvAmount();
+				piRtv+=piRtvDiff;
+				purchaseInvoice.setPiRtvAmount(piRtv);
+			}
+			
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -693,6 +706,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setExtraInventoryId(Long extraInventoryId) {
 		this.extraInventoryId = extraInventoryId;
+	}
+
+	public Double getPiFinalPayable() {
+		return piFinalPayable;
+	}
+
+	public void setPiFinalPayable(Double piFinalPayable) {
+		this.piFinalPayable = piFinalPayable;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

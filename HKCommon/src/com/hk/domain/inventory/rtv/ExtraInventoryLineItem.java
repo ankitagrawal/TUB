@@ -46,7 +46,7 @@ public class ExtraInventoryLineItem implements Serializable{
 	private Sku sku;
 
   @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "tax_id", nullable = false)
+  @JoinColumn (name = "tax_id")
   private Tax tax;
 
   @Column (name = "product_name")

@@ -23,7 +23,9 @@
 
 	MasterDataDao masterDataDao = (MasterDataDao) ServiceLocatorFactory.getService(MasterDataDao.class);
 	List<PurchaseFormType> purchaseFormTypes = masterDataDao.getPurchaseInvoiceFormTypes();
+	List<Surcharge> surchargeList = masterDataDao.getSurchargeList();
 	pageContext.setAttribute("purchaseFormTypes", purchaseFormTypes);
+	pageContext.setAttribute("surchargeList", surchargeList);
 %>
 
 
@@ -80,6 +82,8 @@
 			var rowAtIndex = $($('#piShortTable').find("tr")[indexValue+1]);
 			var selectedTax = $(rowValues).find(".taxCategory :selected").val();
 			rowAtIndex.find('.variant').val($(rowValues).find(".variant").val());
+			var text = ($(rowValues).find(".variantName").text());
+			rowAtIndex.find('.pvDetails').append(text); 
 			rowAtIndex.find('.taxCategory').val(selectedTax);
 			rowAtIndex.find('.costPrice').val($(rowValues).find(".costPrice").val());
 			rowAtIndex.find('.mrp').val($(rowValues).find(".mrp").val());
@@ -243,8 +247,8 @@
 			return false;
 		});
 
-		if(${pia.piHasRtv}){
-			$('#rtvTable').hide();
+		if(${!pia.piHasRtv}){
+			$('#rtvForm').hide();
 		}
 		
 		$('.variant').live("change", function() {
@@ -389,24 +393,24 @@
 			}
 		});
 
-	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piTable"));
-	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piShortTable"));
-	updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piRtvTable"));
-	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piTable"));
-	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piTable"));
-	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piTable"));
-	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piShortTable"));
-	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piShortTable"));
-	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piShortTable"));
-	updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piRtvTable"));
-	updateTotalPI('.taxAmount', '.totalTax', 0, $("#piRtvTable"));
-	updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piRtvTable"));
-	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piTable"));
-	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piShortTable"));
-	updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piRtvTable"));
-	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));
-	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
-	updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
+		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piTable"));
+		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piShortTable"));
+		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piRtvTable"));
+		updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piTable"));
+		updateTotalPI('.taxAmount', '.totalTax', 0, $("#piTable"));
+		updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piTable"));
+		updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piShortTable"));
+		updateTotalPI('.taxAmount', '.totalTax', 0, $("#piShortTable"));
+		updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piShortTable"));
+		updateTotalPI('.taxableAmount', '.totalTaxable', 0, $("#piRtvTable"));
+		updateTotalPI('.taxAmount', '.totalTax', 0, $("#piRtvTable"));
+		updateTotalPI('.surchargeAmount', '.totalSurcharge', 0, $("#piRtvTable"));
+		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piTable"));
+		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piShortTable"));
+		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piRtvTable"));
+		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));
+		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
+		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
 	
 	});
 </script>
@@ -421,7 +425,6 @@
 </div>
 
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
-<c:set var="hasRtv" scope="page" value="${pia.piHasRtv}"/>
 	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
 	There are rtvs attached with the PI. Select to import them.<br/>
 	<table>
@@ -432,7 +435,7 @@
 	<tr><td colspan="2"><s:submit name="importRtv" value="Import Rtv"></s:submit></td></tr>
 	</table>
 	</c:if>
-	<c:if test="${fn:length(pia.toImportRtvList) eq 0 && !pia.piHasRtv}">
+	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
 		There are no rtvs attached with the PI.
 	</c:if>
 </s:form>
@@ -572,6 +575,8 @@
 	</tr>
 	</thead>
 	<tbody id="piTable">
+	<s:hidden name="piFinalPayable"
+		          value="${pia.purchaseInvoice.finalPayableAmount}"/>
 	<c:forEach var="purchaseInvoiceLineItem" items="${pia.purchaseInvoiceLineItems}" varStatus="ctr">
 		<c:set value="${purchaseInvoiceLineItem.sku}" var="sku"/>
 		<c:set value="${sku.productVariant}" var="productVariant"/>
@@ -579,6 +584,7 @@
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}]" value="${purchaseInvoiceLineItem.id}"/>
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].productVariant"
 		          value="${purchaseInvoiceLineItem.sku.productVariant.id}"/>
+		
 		<%--<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].sku" value="${purchaseInvoiceLineItem.sku.id}"/>--%>
 		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 			<td>${ctr.index+1}.</td>
@@ -604,7 +610,7 @@
 				          value="${productVariant.id}"/>
 			</td>
 			<td>${productVariant.upc}</td>
-			<td>${product.name}<br/>${productVariant.optionsCommaSeparated}
+			<td class="variantName">${product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
 			<td class="taxCategory">
 
@@ -786,7 +792,7 @@
 			</td>
 			<td class="variant">${productVariant.id}</td>
 			<td>${productVariant.upc}</td>
-			<td>${product.name}<br/>${productVariant.optionsCommaSeparated}
+			<td class="variantName ">${product.name}<br/>${productVariant.optionsCommaSeparated}
 			</td>
 			<td class="taxCategory">
 
@@ -902,7 +908,7 @@
 	<s:submit name="saveShortLineItems" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
-<s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<s:form id="rtvForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <table id="rtvTable" class="rtvTable">
 <thead>
