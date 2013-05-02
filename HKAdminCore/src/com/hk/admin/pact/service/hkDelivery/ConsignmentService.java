@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.akube.framework.dao.Page;
 import com.hk.admin.dto.ConsignmentDto;
+import com.hk.admin.dto.NdrDto;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
@@ -76,7 +77,9 @@ public interface ConsignmentService {
 
     public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, Long consignmentId, int pageNo, int perPage);
 
-    public List<Consignment> getConsignmentByStatusAndOwner(Long consignmentStatus, String owner);
-
     public Consignment setOwnerForConsignment(Consignment consignment, String owner);
+
+    public List<NdrDto> getNdrByOwner(User user);
+
+    public Integer getAttempts(Consignment consignment);
 }

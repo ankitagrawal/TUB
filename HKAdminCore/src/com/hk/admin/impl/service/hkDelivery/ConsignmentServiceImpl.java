@@ -1,14 +1,10 @@
 package com.hk.admin.impl.service.hkDelivery;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.hk.admin.dto.NdrDto;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -330,13 +326,60 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public List<Consignment> getConsignmentByStatusAndOwner(Long consignmentStatus, String owner) {
-        return consignmentDao.getConsignmentsByStatusAndOwner(consignmentStatus, owner);
-    }
-
-    @Override
     public Consignment setOwnerForConsignment(Consignment consignment, String owner) {
         consignment.setOwner(owner);
         return (Consignment)consignmentDao.save(consignment);
+    }
+
+    @Override
+    public Integer getAttempts(Consignment consignment){
+        Page consignmentPage = searchConsignmentTracking(null, null, EnumConsignmentLifecycleStatus.Dispatched.getId(), null, consignment.getId(), 0, 0);
+        return consignmentPage.getTotalResults();
+    }
+
+    @Override
+    public List<NdrDto> getNdrByOwner(User user) {
+        String owner = "";
+        if(user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)){
+            owner = RoleConstants.CUSTOMER_SUPPORT;
+        }else if(user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)){
+            owner = RoleConstants.HK_DELIVERY_HUB_MANAGER;
+        }
+
+        List<Consignment> consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
+        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+        List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
+        Date currentDate = new Date();
+
+        for (Consignment consignmentObj : consignments) {
+            NdrDto ndrDto = new NdrDto();
+            ndrDto.setNumberOfAttempts(getAttempts(consignmentObj));
+            ndrDto.setAging((int) ((currentDate.getTime() - consignmentObj.getCreateDate().getTime()) / (1000 * 60 * 60 * 24)));
+            ndrDto.setAwbNumber(consignmentObj.getAwbNumber());
+            ndrDto.setConsignmentId(consignmentObj.getId());
+            ndrDto.setCreateDate(consignmentObj.getCreateDate());
+            ndrDto.setHubName(consignmentObj.getHub().getName());
+            ndrDto.setOwner(owner);
+            ndrDto.setStatus(consignmentObj.getConsignmentStatus().getStatus());
+
+            consignmentTrackingList = getConsignmentTracking(consignmentObj);
+
+            Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
+                public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
+                    return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
+                }
+            });
+
+            //getting the latest consignment tracking object for onHoldByCustomer
+
+            ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
+
+            if (consignmentTracking.getConsignmentLifecycleStatus().equals(EnumConsignmentLifecycleStatus.OnHoldByCustomer)) {
+                ndrDto.setNonDeliveryReason(consignmentTracking.getRemarks());
+                ndrDto.setConsignmentTrackingId(consignmentTracking.getId());
+            }
+            ndrDtoList.add(ndrDto);
+        }
+        return ndrDtoList;
     }
 }

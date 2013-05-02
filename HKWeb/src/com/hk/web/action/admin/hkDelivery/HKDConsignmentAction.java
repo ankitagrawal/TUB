@@ -2,6 +2,7 @@ package com.hk.web.action.admin.hkDelivery;
 
 import java.util.*;
 
+import com.hk.admin.dto.NdrDto;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -45,28 +46,24 @@ import com.hk.util.CustomDateTypeConvertor;
 @Component
 public class HKDConsignmentAction extends BasePaginatedAction {
 
-    private static       Logger                      logger                    = LoggerFactory.getLogger(HKDConsignmentAction.class);
-    private              Hub                         hub;
-    private              List<String>                trackingIdList            = new ArrayList<String>();
-    private              Courier                     hkDelivery                = EnumCourier.HK_Delivery.asCourier();
-    private              String                      consignmentNumber;
-    private              Boolean                     doTracking;
-
-    private              List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
-    private              List<List<ConsignmentTracking>> consignmentTrackingListCRM = new ArrayList<List<ConsignmentTracking>>();
-    private              List<ConsignmentTracking>   consignmentTrackingListHubManager   = new ArrayList<ConsignmentTracking>();
-
-    private             Consignment           consignment;
-    private             Page                  consignmentPage;
-    private             Date                  startDate;
-    private             Date                  endDate;
-    private             ConsignmentStatus     consignmentStatus;
-    private             Integer               defaultPerPage           = 20;
-    private             List<Consignment>     consignmentList          = new ArrayList<Consignment>();
-    private             Boolean               reconciled;
-    private             Runsheet              runsheet;
-    private             User                loggedOnUser;
-
+    private static      Logger                      logger                    = LoggerFactory.getLogger(HKDConsignmentAction.class);
+    private             Hub                         hub;
+    private             List<String>                trackingIdList            = new ArrayList<String>();
+    private             Courier                     hkDelivery                = EnumCourier.HK_Delivery.asCourier();
+    private             String                      consignmentNumber;
+    private             Boolean                     doTracking;
+    private             List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
+    private             Consignment                 consignment;
+    private             Page                        consignmentPage;
+    private             Date                        startDate;
+    private             Date                        endDate;
+    private             ConsignmentStatus           consignmentStatus;
+    private             Integer                     defaultPerPage            = 20;
+    private             List<Consignment>           consignmentList           = new ArrayList<Consignment>();
+    private             Boolean                     reconciled;
+    private             Runsheet                    runsheet;
+    private             User                        loggedOnUser;
+    private             List<NdrDto>                ndrDtoList                 = new ArrayList<NdrDto>();
 
     @Autowired
     private              ConsignmentService          consignmentService;
@@ -80,14 +77,6 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloadsPath;
-
-    Date currentDate = new Date();
-    private List<Integer> crmAttempts;
-    private List<Integer> hubManagerAttempts;
-    private List<Consignment> consignmentsForCRM = new ArrayList<Consignment>();
-    private List<Consignment> consignmentsForHubManager = new ArrayList<Consignment>();
-    List<String> latestRemarkForCRM =  new ArrayList<String>();
-
 
     @DefaultHandler
     public Resolution pre(){
@@ -186,39 +175,14 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
-    public Resolution viewNDR() {
-        consignmentsForCRM = consignmentService.getConsignmentByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), RoleConstants.CUSTOMER_SUPPORT);
-        consignmentsForHubManager = consignmentService.getConsignmentByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), RoleConstants.HK_DELIVERY_HUB_MANAGER);
-
-        crmAttempts = new ArrayList<Integer>();
-        hubManagerAttempts = new ArrayList<Integer>();
-        consignmentTrackingListCRM = new ArrayList<List<ConsignmentTracking>>();
-        List<ConsignmentTracking> tempTrackingList = new ArrayList<ConsignmentTracking>();
-
-        for(Consignment consignmentObj  :consignmentsForCRM){
-            crmAttempts.add(getAttempts(consignmentObj));
-            tempTrackingList  = consignmentService.getConsignmentTracking(consignmentObj);
-            consignmentTrackingListCRM.add(tempTrackingList);
-
-            Collections.sort(tempTrackingList, new Comparator<ConsignmentTracking>() {
-                public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
-                    return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
-                }
-            });
-            //getting the latest reason for onHoldByCustomer
-            String remark = tempTrackingList.get(tempTrackingList.size() -1).getRemarks();
-            latestRemarkForCRM.add(remark);
-        }
-
-        for(Consignment consignmentObj  :consignmentsForHubManager){
-            hubManagerAttempts.add(getAttempts(consignmentObj));
-        }
-        return new RedirectResolution("/pages/admin/ndrReport.jsp");
+    public Resolution viewNdr() {
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
+        return new RedirectResolution("/pages/admin/ndrReport.jsp").addParameter("ndrDtoList", ndrDtoList);
     }
 
-    public Integer getAttempts(Consignment consignment){
-        Page consignmentPage = consignmentService.searchConsignmentTracking( null,null,EnumConsignmentLifecycleStatus.Dispatched.getId(),null,consignment.getId(),0,0);
-        return consignmentPage.getTotalResults();
+    public Resolution saveNdr() {
+        return new RedirectResolution("/pages/admin/ndrReport.jsp").addParameter("ndDtoList", ndrDtoList);
     }
 
     public Resolution trackConsignment(){
@@ -365,68 +329,12 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         this.loggedOnUser = loggedOnUser;
     }
 
-    public List<Consignment> getConsignmentsForCRM() {
-        return consignmentsForCRM;
+    public List<NdrDto> getNdrDtoList() {
+        return ndrDtoList;
     }
 
-    public void setConsignmentsForCRM(List<Consignment> consignmentsForCRM) {
-        this.consignmentsForCRM = consignmentsForCRM;
-    }
-
-    public List<Consignment> getConsignmentsForHubManager() {
-        return consignmentsForHubManager;
-    }
-
-    public void setConsignmentsForHubManager(List<Consignment> consignmentsForHubManager) {
-        this.consignmentsForHubManager = consignmentsForHubManager;
-    }
-
-    public Date getCurrentDate() {
-        return currentDate;
-    }
-
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
-
-    public List<Integer> getCrmAttempts() {
-        return crmAttempts;
-    }
-
-    public void setCrmAttempts(List<Integer> crmAttempts) {
-        this.crmAttempts = crmAttempts;
-    }
-
-    public List<Integer> getHubManagerAttempts() {
-        return hubManagerAttempts;
-    }
-
-    public void setHubManagerAttempts(List<Integer> hubManagerAttempts) {
-        this.hubManagerAttempts = hubManagerAttempts;
-    }
-
-    public List<List<ConsignmentTracking>> getConsignmentTrackingListCRM() {
-        return consignmentTrackingListCRM;
-    }
-
-    public void setConsignmentTrackingListCRM(List<List<ConsignmentTracking>> consignmentTrackingListCRM) {
-        this.consignmentTrackingListCRM = consignmentTrackingListCRM;
-    }
-
-    public List<ConsignmentTracking> getConsignmentTrackingListHubManager() {
-        return consignmentTrackingListHubManager;
-    }
-
-    public void setConsignmentTrackingListHubManager(List<ConsignmentTracking> consignmentTrackingListHubManager) {
-        this.consignmentTrackingListHubManager = consignmentTrackingListHubManager;
-    }
-
-    public List<String> getLatestRemarkForCRM() {
-        return latestRemarkForCRM;
-    }
-
-    public void setLatestRemarkForCRM(List<String> latestRemarkForCRM) {
-        this.latestRemarkForCRM = latestRemarkForCRM;
+    public void setNdrDtoList(List<NdrDto> ndrDtoList) {
+        this.ndrDtoList = ndrDtoList;
     }
 
 }
