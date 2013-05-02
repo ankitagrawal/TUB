@@ -386,7 +386,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	
-	public void convertLoyaltyToRewardPoints(User user, double loyaltyPoints) {
+	@Override
+	public double convertLoyaltyToRewardPoints(User user) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
 		criteria.add(Restrictions.eq("userOrderKey.user", user));
 		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
@@ -399,11 +400,14 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		@SuppressWarnings("unchecked")
 		List<UserOrderKarmaProfile> profileList = this.userOrderKarmaProfileDao.findByCriteria(criteria);
 		
+		double loyaltyPoints = this.calculateLoyaltyPoints(user);
+		double totalPointsConverted = 0;
 		// To iterate over profile list without using another loop.
 		int counter = 0;
+		int size = profileList.size();
 		UserOrderKarmaProfile currentProfile;
 		String comment = "Reward Points converted from Loyalty points";
-		while (loyaltyPoints > 0) {
+		while (loyaltyPoints > 0 && counter < size) {
 			currentProfile = profileList.get(counter); 
 		
 			// when karma points for an order are less than total points for conversion
@@ -411,24 +415,20 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				this.rewardPointService.addRewardPoints(user, null, currentProfile.getUserOrderKey().getOrder(),
 						currentProfile.getKarmaPoints(), comment, EnumRewardPointStatus.APPROVED, 
 						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
-				currentProfile.setTransactionType(TransactionType.DEBIT);
-				currentProfile.setKarmaPoints(-currentProfile.getKarmaPoints());
+				currentProfile.setStatus(KarmaPointStatus.CONVERTED);
 				currentProfile.setUpdateTime(Calendar.getInstance().getTime());
-				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
 				loyaltyPoints = loyaltyPoints - currentProfile.getKarmaPoints();
+				totalPointsConverted+= currentProfile.getKarmaPoints();
+				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
 				
 			} else {
-				this.rewardPointService.addRewardPoints(user, null, currentProfile.getUserOrderKey().getOrder(),
-						loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
-						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
-				
-				currentProfile.setKarmaPoints(currentProfile.getKarmaPoints() - loyaltyPoints);
-				currentProfile.setUpdateTime(Calendar.getInstance().getTime());
-				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
-				loyaltyPoints = 0;
+				// No processing to be done 
+				continue;
 			}
 			counter++;
 		}
+		
+		return totalPointsConverted;
 		
 	}
 	

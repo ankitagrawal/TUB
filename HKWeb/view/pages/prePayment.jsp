@@ -61,7 +61,7 @@
                     value="${order.amount}" type="currency"
                     currencySymbol="Rs "/> </strong> for Order Id <strong>${order.gatewayOrderId}</strong></h4>
             <h6>If you have any trouble during the payment process, call our
-                helpline number <strong class='red'> 0124 - 4502930 </strong></h6>
+                helpline number <strong class='red'> 0124 - 4616444 </strong></h6>
         </div>
 
         <div class="alert messages" style="font-size: 14px; color: red">

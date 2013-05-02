@@ -86,7 +86,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public static enum KarmaPointStatus {
-		APPROVED, PENDING, EXPIRED, CANCELED;
+		APPROVED, PENDING, EXPIRED, CANCELED, CONVERTED;
 	}
 	
 	public static enum TransactionType {
@@ -127,6 +127,9 @@ public class UserOrderKarmaProfile {
 				break;
 			case APPROVED:
 				statusForHistory = "Valid";
+				break;
+			case CONVERTED:
+				statusForHistory = "Converted";
 				break;
 			default: 
 				statusForHistory = "Expired";

@@ -46,4 +46,6 @@ public interface LoyaltyProgramService {
 	double calculateAnualSpend(User user);
 	
 	NextLevelInfo fetchNextLevelInfo(User user);
+	
+	public double convertLoyaltyToRewardPoints(User user);
 }

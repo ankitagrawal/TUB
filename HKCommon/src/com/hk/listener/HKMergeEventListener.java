@@ -15,6 +15,7 @@ import sun.reflect.Reflection;
 
 import com.akube.framework.gson.JsonUtils;
 import com.hk.domain.catalog.product.EntityAuditTrail;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.user.User;
@@ -42,12 +43,10 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
 
         Class entityClass = event.getOriginal().getClass();
 
-        /*
-         * if (Product.class.equals(entityClass)) { Product newProduct = (Product) event.getOriginal();
-         * audit(newProduct.getId(), newProduct); } else
-         */
-
-        if (ProductVariant.class.equals(entityClass)) {
+        if (Product.class.equals(entityClass)) {
+            Product newProduct = (Product) event.getOriginal();
+            audit(newProduct.getId(), newProduct);
+        } else if (ProductVariant.class.equals(entityClass)) {
             ProductVariant newProductVariant = (ProductVariant) event.getOriginal();
             audit(newProductVariant.getId(), newProductVariant);
         }
@@ -62,11 +61,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
 
         newJsonBuilder.addField("id", savedProductVariant.getId());
-       // newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());
-        //newJsonBuilder.addField("b2b_price", savedProductVariant.getB2bPrice());
-        //newJsonBuilder.addField("marked_price", savedProductVariant.getMarkedPrice());
-        //newJsonBuilder.addField("discount_percent", savedProductVariant.getDiscountPercent());
-        //newJsonBuilder.addField("cost_price", savedProductVariant.getCostPrice());
+        newJsonBuilder.addField("hk_price", savedProductVariant.getHkPrice());
+        newJsonBuilder.addField("b2b_price", savedProductVariant.getB2bPrice());
+        newJsonBuilder.addField("marked_price", savedProductVariant.getMarkedPrice());
+        newJsonBuilder.addField("discount_percent", savedProductVariant.getDiscountPercent());
+        newJsonBuilder.addField("cost_price", savedProductVariant.getCostPrice());
         newJsonBuilder.addField("out_of_stock", savedProductVariant.isOutOfStock() ? 1 : 0);
         newJsonBuilder.addField("deleted", savedProductVariant.isDeleted() ? 1 : 0);
 
@@ -117,11 +116,11 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                 Object[] productVariant = pvProperties.get(0);
 
                 oldProductVariantJsonBuilder.addField("id", productVariant[0]);
-                //oldProductVariantJsonBuilder.addField("hk_price", productVariant[1]);
-                //oldProductVariantJsonBuilder.addField("b2b_price", productVariant[2]);
-                //oldProductVariantJsonBuilder.addField("marked_price", productVariant[3]);
-                //oldProductVariantJsonBuilder.addField("discount_percent", productVariant[4]);
-                //oldProductVariantJsonBuilder.addField("cost_price", productVariant[5]);
+                oldProductVariantJsonBuilder.addField("hk_price", productVariant[1]);
+                oldProductVariantJsonBuilder.addField("b2b_price", productVariant[2]);
+                oldProductVariantJsonBuilder.addField("marked_price", productVariant[3]);
+                oldProductVariantJsonBuilder.addField("discount_percent", productVariant[4]);
+                oldProductVariantJsonBuilder.addField("cost_price", productVariant[5]);
                 oldProductVariantJsonBuilder.addField("out_of_stock", productVariant[6]);
                 oldProductVariantJsonBuilder.addField("deleted", productVariant[7]);
 
@@ -134,8 +133,8 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
                     oldProductVariantJsonBuilder.addField("options", optionsMap);
                 }
 
-            }else{
-              oldProductVariantJsonBuilder.addField("id", "NEW_VARIANT");
+            } else {
+                oldProductVariantJsonBuilder.addField("id", "NEW_VARIANT");
             }
         } catch (Exception e) {
             logger.error("Error getting old pv :" + productVariantId);
@@ -144,31 +143,74 @@ public class HKMergeEventListener extends DefaultMergeEventListener {
         return oldProductVariantJsonBuilder.build();
     }
 
-    /*
-     * public Product getOriginalProductById(String productId, Session session) { Product product = (Product)
-     * session.createQuery("select p from Product p where p.id=:productId").setString("productId",
-     * productId).uniqueResult(); if (product != null) {
-     * product.setCategoriesPipeSeparated(product.getPipeSeparatedCategories()); } return product; }
-     */
+    @SuppressWarnings("unchecked")
+    public String getOriginalProductById(String productId) {
 
-    /*
-     * private void audit(String productId, Product savedProduct) { SessionFactory sessionFactory = (SessionFactory)
-     * ServiceLocatorFactory.getService("newSessionFactory"); Session session = sessionFactory.openSession(); // Product
-     * oldProduct = getOriginalProductById(productId, session); User loggedUser = getUserService().getLoggedInUser();
-     * try { EntityAuditTrail eat = new EntityAuditTrail(); eat.setEntityId(productId); Gson gson = (new
-     * GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create(); String oldJson = ""; if (oldProduct != null)
-     * oldJson = gson.toJson(oldProduct); eat.setOldJson(oldJson);
-     * savedProduct.setCategoriesPipeSeparated(savedProduct.getPipeSeparatedCategories()); String newJson =
-     * gson.toJson(savedProduct); eat.setNewJson(newJson); // if
-     * (!BaseUtils.getMD5Checksum(oldJson).equals(BaseUtils.getMD5Checksum(newJson))) // { eat.setUserEmail(loggedUser !=
-     * null ? loggedUser.getEmail() : "system"); eat.setCallingClass(Reflection.getCallerClass(2).getName());
-     * eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace())); eat.setCreateDt(new
-     * Date()); try { session.save(eat); } catch (Exception e) { logger.error("Error while entering audit trail for
-     * product->" + productId, e); } finally { if (session != null) { logger.info("Closing connection 1"); //
-     * session.flush(); // session.clear(); session.close(); // session.connection().close(); logger.info("Closed
-     * connection 1"); } } // } } catch (Exception e) { logger.error("Error while entering audit trail for product->" +
-     * productId, e); } }
-     */
+        JSONResponseBuilder oldProductJsonBuilder = new JSONResponseBuilder();
+        try {
+            List<Object[]> productProperties = getBaseDao().createSqlQuery(
+                    "select p.id, p.name, p.is_google_ad_disallowed, p.is_jit,p.hidden,"
+                            + " p.drop_shipping,p.cod_allowed, p.out_of_stock, p.deleted from product p where p.id = '" + productId + "'").list();
+
+            if (productProperties != null && productProperties.size() > 0) {
+                Object[] product = productProperties.get(0);
+
+                oldProductJsonBuilder.addField("id", product[0]);
+                oldProductJsonBuilder.addField("name", product[1]);
+                oldProductJsonBuilder.addField("is_google_ad_disallowed", product[2]);
+                oldProductJsonBuilder.addField("is_jit", product[3]);
+                oldProductJsonBuilder.addField("hidden", product[4]);
+                oldProductJsonBuilder.addField("drop_shipping", product[5]);
+                oldProductJsonBuilder.addField("cod_allowed", product[6]);
+                oldProductJsonBuilder.addField("out_of_stock", product[7]);
+                oldProductJsonBuilder.addField("deleted", product[7]);
+
+            } else {
+                oldProductJsonBuilder.addField("id", "NEW_PRODUCT");
+            }
+        } catch (Exception e) {
+            logger.error("Error getting old product :" + productId);
+        }
+
+        return oldProductJsonBuilder.build();
+    }
+
+    private void audit(String productId, Product savedProduct) {
+        String oldProductJson = getOriginalProductById(productId);
+        User loggedUser = getUserService().getLoggedInUser();
+
+        JSONResponseBuilder newJsonBuilder = new JSONResponseBuilder();
+
+        newJsonBuilder.addField("id", savedProduct.getId());
+        newJsonBuilder.addField("name", savedProduct.getName());
+        newJsonBuilder.addField("is_google_ad_disallowed", savedProduct.isGoogleAdDisallowed() ? 1 : 0);
+        newJsonBuilder.addField("is_jit", savedProduct.isJit() ? 1 : 0);
+        newJsonBuilder.addField("hidden", savedProduct.isHidden() ? 1 : 0);
+        newJsonBuilder.addField("drop_shipping", savedProduct.isDropShipping() ? 1 : 0);
+        newJsonBuilder.addField("cod_allowed", savedProduct.isCodAllowed() ? 1 : 0);
+        newJsonBuilder.addField("out_of_stock", savedProduct.isOutOfStock() ? 1 : 0);
+        newJsonBuilder.addField("deleted", savedProduct.isDeleted() ? 1 : 0);
+
+        String newProductJson = newJsonBuilder.build();
+
+        if (!oldProductJson.equals(newProductJson)) {
+            try {
+                EntityAuditTrail eat = new EntityAuditTrail();
+                eat.setEntityId(productId);
+                eat.setOldJson(oldProductJson);
+                eat.setNewJson(newProductJson);
+                eat.setUserEmail(loggedUser != null ? loggedUser.getEmail() : "system");
+                eat.setCallingClass(Reflection.getCallerClass(2).getName());
+                eat.setStackTrace(JsonUtils.getGsonDefault().toJson(Thread.currentThread().getStackTrace()));
+                eat.setCreateDt(new Date());
+
+                getBaseDao().save(eat);
+            } catch (Exception e) {
+                logger.error("Error while entering audit trail for product->" + productId, e);
+            }
+        }
+
+    }
 
     public UserService getUserService() {
         if (userService == null) {

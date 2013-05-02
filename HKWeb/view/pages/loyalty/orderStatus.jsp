@@ -23,7 +23,7 @@ pageContext.setAttribute("isSecure", isSecure);
 		
           <div class="congratsText">
             Congratulations. Your order has been placed.
-            <div class="floatRight blue"><a title="Redeem more points" href="/healthkart/loyaltypg">
+            <div class="floatRight"><a title="Redeem more points" href="/healthkart/loyaltypg" class="blue">
              Shop more from stellar store. 
             </a></div>
           </div>
@@ -128,7 +128,7 @@ pageContext.setAttribute("isSecure", isSecure);
                             ${pla.shipmentAddress.line1},
                             ${pla.shipmentAddress.line2},
                             ${pla.shipmentAddress.city} - ${pla.shipmentAddress.pincode}<br>
-                            ${pla.shipmentAddress.state}, <span class="upc">${pla.shipmentAddress.country}</span><br>
+                            ${pla.shipmentAddress.state}, <span class="upc">${pla.shipmentAddress.country.name}</span><br>
                         <span class="sml lgry upc">Phone </span> ${pla.shipmentAddress.phone}<br>
                     </p>
                 </div>

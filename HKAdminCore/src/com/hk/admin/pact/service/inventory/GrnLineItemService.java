@@ -20,6 +20,7 @@ public interface GrnLineItemService {
     public boolean isAllSkuItemInCheckedInStatus(GrnLineItem grnLineItem);
 
     public void delete(GrnLineItem grnLineItem);
-
+    
+    public Long getGrnLineItemCheckedInQty(GoodsReceivedNote grn ,Sku sku);
 
 }

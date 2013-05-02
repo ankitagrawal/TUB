@@ -97,7 +97,7 @@ Celebrating Diabetes Day: 15% Cash Back This Month
                       <td align="left" valign="middle" height="30" style="color:#d70012; font-weight:bold; font-size:13px;">Get 10% Off</td>
                     </tr>
                     <tr>
-                      <td style="color:#363636; font-size:12px;">Don’t let Diabetes stop you from enjoying your share of tasty jams and chocolates. Healthkart offers you its Diabetic Nutrition Combo containing various healthy eatables available with a discount of 10% only at Rs 1,155.</td>
+                      <td style="color:#363636; font-size:12px;">Donï¿½t let Diabetes stop you from enjoying your share of tasty jams and chocolates. Healthkart offers you its Diabetic Nutrition Combo containing various healthy eatables available with a discount of 10% only at Rs 1,155.</td>
                     </tr>
                     <tr>
                       <td height="25" align="right" style="color:#363636; font-size:12px; text-decoration:underline;"><a href="http://www.healthkart.com/product/diabetic-nutrition-combo/DC012?utm_source=enewsletter&utm_medium=email&utm_campaign=2011-11-10-diabetes-day-emailer" style="color:#363636">Read more >></a></td>
@@ -347,7 +347,7 @@ Celebrating Diabetes Day: 15% Cash Back This Month
   <tr>
         <td bgcolor="#363636" height="70" align="center" ><p><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
 
-          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4502930</span></p>          </td>
+          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>  |  Tel.: +91 124 4616444</span></p>          </td>
       </tr>
 
 
@@ -355,7 +355,7 @@ Celebrating Diabetes Day: 15% Cash Back This Month
     <td style="font-size:11px; text-align:center; color:#929292; padding:8px"> If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to Unsubscribe</a><br />
 
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-      © 2011 HealthKart.com. All Rights Reserved. </td>
+      ï¿½ 2011 HealthKart.com. All Rights Reserved. </td>
   </tr>
 </table>
 </body>

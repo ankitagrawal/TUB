@@ -56,10 +56,14 @@
 <table class="header">
   <tr>
     <td>
-      Bright Lifecare Pvt. Ltd.<br/>
-      3th Floor, Parsvnath Arcadia,<br/>
-      1 MG Road, Gurgaon - 122001<br/>
-      TIN: 06101832036
+      <c:set var="warehouse" value="${orderSummary.grn.warehouse}"/>
+      ${warehouse.name}<br/>
+      ${warehouse.line1}<br/>
+      ${warehouse.line2}<br/>
+      ${warehouse.city} &nbsp;
+      -${warehouse.pincode} <br/>
+      ${warehouse.state}<br/>
+      <p> TIN# ${warehouse.tin}</p>
     </td>
     <td align="right">
       <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>

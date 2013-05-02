@@ -11,6 +11,7 @@ import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	
 	private double validPoints;
 	private String upgradeString;
+	private double pointsConverted;
 	
 	@DefaultHandler
 	public Resolution pre() {
@@ -68,6 +70,16 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 
 		return new ForwardResolution("/pages/loyalty/userKarmaPointsHistory.jsp");
 	}
+	
+	public Resolution convertPoints() {
+		if (this.getPrincipal() != null) {
+			this.user = this.getUserService().getUserById(this.getPrincipal().getId());
+			this.pointsConverted = this.loyaltyProgramService.convertLoyaltyToRewardPoints(this.user);
+		}
+
+		return new RedirectResolution(UserKarmaProfileHistoryAction.class).addParameter("pointsConverted", this.pointsConverted);
+	}
+	
 
 	public User getUser() {
 		return this.user;
@@ -163,6 +175,20 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 */
 	public void setValidPoints(double validPoints) {
 		this.validPoints = validPoints;
+	}
+
+	/**
+	 * @return the pointsConverted
+	 */
+	public double getPointsConverted() {
+		return this.pointsConverted;
+	}
+
+	/**
+	 * @param pointsConverted the pointsConverted to set
+	 */
+	public void setPointsConverted(double pointsConverted) {
+		this.pointsConverted = pointsConverted;
 	}
 
 }
