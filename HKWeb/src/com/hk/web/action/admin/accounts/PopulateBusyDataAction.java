@@ -5,10 +5,7 @@ import com.hk.admin.util.finance.busy.*;
 import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +31,7 @@ public class PopulateBusyDataAction extends BaseAction {
 	@Value("#{hkEnvProps['" + Keys.Env.dbPassword + "']}")
 	private String dbPassword;
 
+	@DefaultHandler
 	@Secure(hasAnyPermissions = {PermissionConstants.POPULATE_BUSY_DATA}, authActionBean = AdminPermissionAction.class)
 	public Resolution pre() {
 
