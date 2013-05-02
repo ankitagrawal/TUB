@@ -50,8 +50,8 @@ public enum EnumBucket {
     public Bucket asBucket(){
         Bucket bucket = new Bucket();
         bucket.setId(id);
-        bucket.setName(name);
-        bucket.setClassification(enumClassification.asClassification());
+//        bucket.setName(name);
+//        bucket.setClassification(enumClassification.asClassification());
         return bucket;
     }
 

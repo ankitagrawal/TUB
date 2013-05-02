@@ -28,8 +28,8 @@ public enum EnumClassification {
     Services(240L, "JIT", "Services"),
     Dispatch_Issues(310L, "Dispatch Issue", "Shipment Not Created"),
     Warehouse(410L, "Warehouse Processing" , "In Process"),
-    AD_HOC(410L, "AD_HOC" , "Pending with CC"),
-    Vendor(460L, "Vendor", "Procurement");
+    AD_HOC(460L, "AD_HOC" , "Pending with CC"),
+    Vendor(510L, "Vendor", "Procurement");
 
     private Long id;
     private String primary;

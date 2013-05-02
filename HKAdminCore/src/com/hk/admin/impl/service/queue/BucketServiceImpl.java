@@ -87,7 +87,7 @@ public class BucketServiceImpl implements BucketService {
     public ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder) {
         Reason reason = shippingOrder.getReason();
         List<Bucket> actionableBuckets = reason != null ? reason.getBuckets() : Arrays.asList(find(EnumBucket.AD_HOC));
-        if (actionableBuckets.contains(EnumBucket.CM.asBucket())){
+        if (actionableBuckets.contains(find(EnumBucket.CM))){
             actionableBuckets.addAll(EnumBucket.getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
         }
         ActionItem actionItem = createUpdateActionItem(shippingOrder, actionableBuckets, false);
