@@ -21,14 +21,15 @@
     </div>
     
     <s:form beanclass="com.hk.web.action.core.search.SearchAction" method="get" renderFieldsPresent="false" renderSourcePage="false" autocomplete="off" style="float:left">
-      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height:22px; font-size: 15px; width: 500px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
+      <s:text name="query" id="searchbox" class="input_tip" title='Search for products, categories or brands...' style="height:22px; font-size: 15px; width: 400px;" value="${param['query']}" placeholder='Search for products, categories or brands...'/>
       <s:image title="Search" name="search" src="/images/icons/search2.png" style="left:50px; width:20px; vertical-align:middle;"/>
     </s:form>
 
     <div class="offerAndBrands">
       <div style="float:left"><s:link href='/resources'>HealthMag&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/resources'><img src="<hk:vhostImage/>/images/resources_16.png"></s:link></div>
       <div style="float:left"><s:link href='/brands'>Brands&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/brands'><img src="<hk:vhostImage/>/images/brand_16.png"></s:link></div>
-      <div style="float:left"><s:link href='/super-savers' style="color: #990000;">Offers&nbsp;</s:link></div><div style="float:left"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>
+      <div style="float:left"><s:link href='/super-savers'>Offers&nbsp;</s:link></div><div style="float:left; margin-right: 15px;"><s:link href='/super-savers'><img src="<hk:vhostImage/>/images/offer_16.png"></s:link></div>
+      <div style="float:left"><a href='http://www.healthkartplus.com' target='_blank' style="color:#000">HealthKartPlus&nbsp;</a></div><div style="float:left;"><a href='http://www.healthkartplus.com' title="HealthKartPlus.com"><img src="<hk:vhostImage/>/images/hkp-favicon.jpg"></a></div>
     </div>
 
     <div style="clear:both;"></div>
@@ -67,15 +68,15 @@
                 <div id='homeIcon'></div>
             </s:link></li>--%>
             <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-                <c:if test="${topMenuNode.url != '/home-living'}">
-                    <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''}'>
+                <%--<c:if test="${topMenuNode.url != '/home-living'}">--%>
+                    <li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''} ${topMenuNode.url == '/home-living' ? 'new' : ''}'>
                         <a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a>
                     </li>
-                </c:if>
+                <%--</c:if>--%>
             </c:forEach>
-               <li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'>
+             <%--  <li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'>
                   <a href='http://www.healthkartplus.com' style='color: yellow; border-bottom: 0;' target='_blank'>HealthKartPlus &gt;</a>
-                </li>
+                </li>--%>
         </ul>
 
     </div>
