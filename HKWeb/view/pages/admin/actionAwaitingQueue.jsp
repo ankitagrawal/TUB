@@ -43,8 +43,6 @@
         ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
         ShippingOrderLifecycleService shippingOrderLifecycleService = ServiceLocatorFactory.getService(ShippingOrderLifecycleService.class);
         StoreService storeService = ServiceLocatorFactory.getService(StoreService.class);
-        MasterDataDao masterDataDao = ServiceLocatorFactory.getService(MasterDataDao.class);
-        List<EnumUserCodCalling> userCodCallingList = masterDataDao.getUserCodCallStatus();
         pageContext.setAttribute("paymentModeList", paymentService.listWorkingPaymentModes());
         pageContext.setAttribute("paymentStatusList", paymentService.listWorkingPaymentStatuses());
         pageContext.setAttribute("orderStatusList", orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForActionQueue()));
