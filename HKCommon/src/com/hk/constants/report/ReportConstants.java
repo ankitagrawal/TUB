@@ -1,7 +1,8 @@
+
 package com.hk.constants.report;
 
 public class ReportConstants {
-
+    
     public static final String INVOICE_ID = "INVOICE_ID";
     public static final String INVOICE_DATE = "INVOICE_DATE";
     public static final String ACCOUNTING_INVOICE_ID = "ACCOUNTING_INVOICE_ID";
@@ -129,7 +130,7 @@ public class ReportConstants {
     public static final String CN_NO = "CNNO";
     public static final String DELIVERED_DATE = "Delivered Date ";
     public static final String STATUS = "Status";
-
+    
     public static final String DEBTORS_BANK_DEPOSIT_CASH = "Debtors Bank Deposit Cash";   // cash deposit
     public static final String DEBTORS_BANK_DEPOSIT_OTHERS = "Debtors Bank Deposit Others";  //mapped to neft and cheque deposit
     public static final String DEBTORS_COD = "Debtors COD"; //mapped to COD
@@ -166,12 +167,8 @@ public class ReportConstants {
     public static final String PRODUCT_VARIANT_ID = "PRODUCT VARIANT ID";
     public static final String LOCATION = "LOCATION";
     public static final String HK_BARCODE = "HK BARCODE";
-    public static final String COURIER_ID_STR = "Courier Id";
+    public static final String COURIER_ID_STR = "Courier Id";                   
 
-    public static final String ZONE = "ZONE";
-    public static final String BARCODE = "BARCODE";
-    public static final String CANCELLED = "CANCELLED";
-    public static final String CONFIRMED = "CONFIRMED";
-    public static final String NON_CONTACTABLE = "NON_CONTACTABLE";
-
+	public static final String ZONE = "ZONE";
+	public static final String BARCODE = "BARCODE";
 }

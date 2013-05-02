@@ -14,6 +14,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
 import com.hk.admin.pact.service.order.AdminOrderService;
+import com.hk.api.constants.HKAPIConstants;
 import com.hk.api.models.user.APIUserDetail;
 import com.hk.constants.core.EnumCancellationType;
 import com.hk.constants.core.EnumUserCodCalling;
@@ -196,14 +197,15 @@ public class UserOrderResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            if (action.equalsIgnoreCase(ReportConstants.CANCELLED)) {
+            if (action.equalsIgnoreCase(HKAPIConstants.CANCELLED)) {
                 if (order.getOrderStatus().getId().equals(EnumOrderStatus.Cancelled.getId())) {
                     logger.debug("Order Already Cancelled" + order.getId());
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
                 adminOrderService.cancelOrder(order, EnumCancellationType.Customer_Not_Interested.asCancellationType(), source, loggedInUser);
                 userCodCall.setRemark("Cancelled By " + source);
-            } else if (action.equalsIgnoreCase(ReportConstants.CONFIRMED)) {
+                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            } else if (action.equalsIgnoreCase(HKAPIConstants.CONFIRMED)) {
                 List<Long> paymentStatusListForSuccessfulOrder = EnumPaymentStatus.getEscalablePaymentStatusIds();
                 if (order.getPayment() != null && (paymentStatusListForSuccessfulOrder.contains(order.getPayment().getPaymentStatus().getId()))) {
                     logger.debug("Order Payment Already Confirmed" + order.getId());
@@ -211,10 +213,12 @@ public class UserOrderResource {
                 }
                 adminOrderService.confirmCodOrder(order, source, null);
                 userCodCall.setRemark("Confirmed By " + source);
-            } else if (action.equalsIgnoreCase(ReportConstants.NON_CONTACTABLE)) {
-                userCodCall.setRemark(EnumUserCodCalling.NON_CONTACTABLE.getName());
+                userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+            } else if (action.equalsIgnoreCase(HKAPIConstants.NON_CONTACTABLE)) {
+                userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getName());
+                userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getId());
             }
-            userCodCall.setCallStatus(EnumUserCodCalling.valueOf(action).getId());
+
             orderService.saveUserCodCall(userCodCall);
             return Response.status(Response.Status.OK).build();
         } catch (DataIntegrityViolationException dataInt) {

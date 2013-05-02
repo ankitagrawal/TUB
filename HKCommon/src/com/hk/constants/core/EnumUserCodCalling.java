@@ -15,7 +15,7 @@ public enum EnumUserCodCalling {
     CONFIRMED(30, "Payment Successful"),
     CANCELLED(40, "Cancelled"),
     PAYMENT_FAILED(50, "Payment Failed"),
-    NON_CONTACTABLE(60, "Pending With Effort Bpo");
+    PENDING_WITH_EFFORT_BPO(60, "Pending With Effort Bpo");
 
     private int id;
     private String name;
