@@ -140,10 +140,11 @@ public class BucketServiceImpl implements BucketService {
             actionItem.setShippingOrder(shippingOrder);
             actionItem.setFirstPushDate(new Date());
             actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
-            actionItem = allocateBucketsAndTasks(actionItem); //called at 1st create, bucketAllocator.autoAllocateDefaultBuckets
+            actionItem.setLastPushDate(new Date());
+            return allocateBucketsAndTasks(actionItem); //called at 1st create, bucketAllocator.autoAllocateDefaultBuckets
         }
-        actionItem.setBuckets(buckets); //called for update
         actionItem.setLastPushDate(new Date());
+        actionItem.setBuckets(buckets); //called for update
         return actionItem;
     }
 
