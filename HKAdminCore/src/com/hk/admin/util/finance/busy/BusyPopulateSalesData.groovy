@@ -49,7 +49,7 @@ public class BusyPopulateSalesData {
       lastUpdateDate = "2009-01-01";
     }
 
-	  lastUpdateDate = "2012-04-01";
+	  lastUpdateDate = "2013-04-01";
 
     sql.eachRow("""
 
@@ -77,9 +77,10 @@ public class BusyPopulateSalesData {
 
 							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
-							and (ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
-							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
-							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) < '2013-04-01'
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36'
+							and (so.is_service_order <> 1 or so.is_service_order is null)
+							and (bo.is_b2b_order <> 1 bo.is_b2b_order is null)
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
@@ -246,7 +247,409 @@ public class BusyPopulateSalesData {
     }
   }
 
-    public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
+	public void transactionHeaderForServiceSalesGenerator() {
+    String lastUpdateDate;
+
+	  lastUpdateDate = "2013-04-01";
+
+    sql.eachRow("""
+
+							select so.id as shipping_order_id,
+							ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
+							so.accounting_invoice_number as vch_no,
+							u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+							pay_gate.name as payment_gateway_name,
+							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
+							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
+							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+							so.shipping_order_status_id , ship.return_date as return_date
+							from line_item li
+							inner join shipping_order so on li.shipping_order_id=so.id
+							inner join base_order bo on so.base_order_id = bo.id
+							left join payment p ON bo.payment_id = p.id
+							left join payment_mode pm ON pm.id = p.payment_mode_id
+							inner join user u on bo.user_id = u.id
+							inner join address a ON bo.address_id = a.id
+							left join shipment ship on ship.id = so.shipment_id
+							left join awb aw on ship.awb_id=aw.id
+							left join courier c on aw.courier_id = c.id
+							left join gateway pay_gate on p.gateway_id = pay_gate.id
+							inner join warehouse w on w.id = so.warehouse_id
+							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
+
+							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
+							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+							and so.is_service_order = 1
+							and th.hk_ref_no is null
+							GROUP BY so.id
+							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
+                 """) {
+      accountingInvoice ->
+
+      Long shippingOrderId;
+      String series;
+      Date date;
+      String vch_no;
+  //    String vch_prefix;
+      int vch_type;
+      String sale_type;
+      String account_name;
+      String debtors;
+      String address_1;
+      String address_2;
+      String city;
+      String state;
+      String tin_number;
+      String material_centre;
+      String narration;
+      byte out_of_state;
+      String against_form;
+      Double net_amount;
+      byte imported_flag;
+
+
+      shippingOrderId = accountingInvoice.shipping_order_id
+
+      if(accountingInvoice.warehouse_id == 1){
+        series = "HR";
+      }
+      else{
+        series = "MH";
+      }
+
+      date = accountingInvoice.order_date;
+/*
+      if(accountingInvoice.Order_type.equals("B2B")){
+        vch_prefix = "T";
+      }
+      else if(accountingInvoice.Order_type.equals("Services")){
+        vch_prefix = "S";
+      }
+      else{
+        vch_prefix = "R";
+      }
+
+      vch_no = vch_prefix+accountingInvoice.vch_no;
+ */
+	   vch_no = accountingInvoice.vch_no;
+      vch_type = 9;
+
+      //Following is for RTO. to be used when busy's RTO model goes live
+      /*if(accountingInvoice.shipping_order_status_id == 200){
+        vch_type = 3;
+        date =   accountingInvoice.return_date;
+      }
+      else{
+        vch_type = 9;
+      }*/
+
+      if(accountingInvoice.Order_type.equals("Services")){
+		    sale_type = "SERVICE TAX";
+	    }
+	    else{
+        sale_type = "VAT TAX INC";
+	    }
+      account_name = accountingInvoice.account_name;
+
+	  if(account_name.length() >=40){
+		  account_name = account_name.substring(0,39);
+	  }
+
+		if(accountingInvoice.payment_mode_id == 40){
+			debtors  = "COD_"+accountingInvoice.courier_name;
+		}
+		else if (accountingInvoice.payment_mode_id == 1000){
+			debtors = accountingInvoice.payment_gateway_name;
+		}
+		else {
+			debtors = accountingInvoice.debtors;
+		}
+
+      address_1 = accountingInvoice.address_1;
+      address_2 = accountingInvoice.address_2;
+      city = accountingInvoice.city;
+      state = accountingInvoice.state;
+
+      if (address_1 == null) {
+        address_1 = "";
+      } else if (address_1.length() > 40) {
+        address_1 = address_1.substring(0, 39);
+      }
+
+      if (address_2 == null) {
+        address_2 = "";
+      } else if (address_2.length() > 40) {
+        address_2 = address_2.substring(0, 39);
+      }
+      if (city == null) {
+        city = "";
+      } else if (city.length() > 40) {
+        city = city.substring(0, 39);
+      }
+      if (state == null) {
+        state = "";
+      } else if (state.length() > 40) {
+        state = state.substring(0, 39);
+      }
+
+      if ("haryana".equalsIgnoreCase(state)) {
+        out_of_state = 0;
+      } else {
+        out_of_state = 1;
+      }
+
+      material_centre = accountingInvoice.warehouse;
+      net_amount = accountingInvoice.net_amount;
+      imported_flag = 0;
+      tin_number = " ";
+      against_form  = " "
+      narration = " ";
+
+     try{
+      def keys= busySql.executeInsert("""
+    INSERT INTO transaction_header
+      (
+        series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no)
+
+        VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}
+      )
+      ON DUPLICATE KEY UPDATE
+      series = ${series},
+      date = ${date},
+      vch_no = ${vch_no},
+      vch_type = ${vch_type},
+      sale_type = ${sale_type},
+      account_name = ${account_name},
+      debtors = ${debtors},
+      address_1 =  ${address_1},
+      address_2 = ${address_2},
+      address_3 = ${city},
+      address_4 = ${state},
+      tin_number = ${tin_number},
+      material_centre = ${material_centre},
+      narration = ${narration},
+      out_of_state = ${out_of_state},
+      against_form = ${against_form},
+      net_amount = ${net_amount},
+      imported = ${imported_flag},
+      create_date = NOW(),
+      hk_ref_no = ${shippingOrderId}
+     """)
+       Long vch_code=keys[0][0];
+       transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+       transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+    }
+      catch (Exception e) {
+            logger.info("Unable to insert in  transaction header: ",e);
+          }
+    }
+  }
+
+	public void transactionHeaderForB2BSalesGenerator() {
+    String lastUpdateDate;
+
+	  lastUpdateDate = "2013-04-01";
+
+    sql.eachRow("""
+
+							select so.id as shipping_order_id,
+							ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
+							so.accounting_invoice_number as vch_no,
+							u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+							pay_gate.name as payment_gateway_name,
+							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
+							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
+							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+							so.shipping_order_status_id , ship.return_date as return_date
+							from line_item li
+							inner join shipping_order so on li.shipping_order_id=so.id
+							inner join base_order bo on so.base_order_id = bo.id
+							left join payment p ON bo.payment_id = p.id
+							left join payment_mode pm ON pm.id = p.payment_mode_id
+							inner join user u on bo.user_id = u.id
+							inner join address a ON bo.address_id = a.id
+							left join shipment ship on ship.id = so.shipment_id
+							left join awb aw on ship.awb_id=aw.id
+							left join courier c on aw.courier_id = c.id
+							left join gateway pay_gate on p.gateway_id = pay_gate.id
+							inner join warehouse w on w.id = so.warehouse_id
+							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
+
+							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
+							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
+							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
+							and bo.is_b2b_order = 1
+							and th.hk_ref_no is null
+							GROUP BY so.id
+							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
+                 """) {
+      accountingInvoice ->
+
+      Long shippingOrderId;
+      String series;
+      Date date;
+      String vch_no;
+  //    String vch_prefix;
+      int vch_type;
+      String sale_type;
+      String account_name;
+      String debtors;
+      String address_1;
+      String address_2;
+      String city;
+      String state;
+      String tin_number;
+      String material_centre;
+      String narration;
+      byte out_of_state;
+      String against_form;
+      Double net_amount;
+      byte imported_flag;
+
+
+      shippingOrderId = accountingInvoice.shipping_order_id
+
+      if(accountingInvoice.warehouse_id == 1){
+        series = "HR";
+      }
+      else{
+        series = "MH";
+      }
+
+      date = accountingInvoice.order_date;
+/*
+      if(accountingInvoice.Order_type.equals("B2B")){
+        vch_prefix = "T";
+      }
+      else if(accountingInvoice.Order_type.equals("Services")){
+        vch_prefix = "S";
+      }
+      else{
+        vch_prefix = "R";
+      }
+
+      vch_no = vch_prefix+accountingInvoice.vch_no;
+ */
+	   vch_no = accountingInvoice.vch_no;
+      vch_type = 9;
+
+      //Following is for RTO. to be used when busy's RTO model goes live
+      /*if(accountingInvoice.shipping_order_status_id == 200){
+        vch_type = 3;
+        date =   accountingInvoice.return_date;
+      }
+      else{
+        vch_type = 9;
+      }*/
+
+      if(accountingInvoice.Order_type.equals("Services")){
+		    sale_type = "SERVICE TAX";
+	    }
+	    else{
+        sale_type = "VAT TAX INC";
+	    }
+      account_name = accountingInvoice.account_name;
+
+	  if(account_name.length() >=40){
+		  account_name = account_name.substring(0,39);
+	  }
+
+		if(accountingInvoice.payment_mode_id == 40){
+			debtors  = "COD_"+accountingInvoice.courier_name;
+		}
+		else if (accountingInvoice.payment_mode_id == 1000){
+			debtors = accountingInvoice.payment_gateway_name;
+		}
+		else {
+			debtors = accountingInvoice.debtors;
+		}
+
+      address_1 = accountingInvoice.address_1;
+      address_2 = accountingInvoice.address_2;
+      city = accountingInvoice.city;
+      state = accountingInvoice.state;
+
+      if (address_1 == null) {
+        address_1 = "";
+      } else if (address_1.length() > 40) {
+        address_1 = address_1.substring(0, 39);
+      }
+
+      if (address_2 == null) {
+        address_2 = "";
+      } else if (address_2.length() > 40) {
+        address_2 = address_2.substring(0, 39);
+      }
+      if (city == null) {
+        city = "";
+      } else if (city.length() > 40) {
+        city = city.substring(0, 39);
+      }
+      if (state == null) {
+        state = "";
+      } else if (state.length() > 40) {
+        state = state.substring(0, 39);
+      }
+
+      if ("haryana".equalsIgnoreCase(state)) {
+        out_of_state = 0;
+      } else {
+        out_of_state = 1;
+      }
+
+      material_centre = accountingInvoice.warehouse;
+      net_amount = accountingInvoice.net_amount;
+      imported_flag = 0;
+      tin_number = " ";
+      against_form  = " "
+      narration = " ";
+
+     try{
+      def keys= busySql.executeInsert("""
+    INSERT INTO transaction_header
+      (
+        series, date, vch_no, vch_type, sale_type, account_name, debtors, address_1, address_2, address_3, address_4, tin_number, material_centre,
+        narration, out_of_state, against_form, net_amount, imported, create_date, hk_ref_no)
+
+        VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
+        ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}
+      )
+      ON DUPLICATE KEY UPDATE
+      series = ${series},
+      date = ${date},
+      vch_no = ${vch_no},
+      vch_type = ${vch_type},
+      sale_type = ${sale_type},
+      account_name = ${account_name},
+      debtors = ${debtors},
+      address_1 =  ${address_1},
+      address_2 = ${address_2},
+      address_3 = ${city},
+      address_4 = ${state},
+      tin_number = ${tin_number},
+      material_centre = ${material_centre},
+      narration = ${narration},
+      out_of_state = ${out_of_state},
+      against_form = ${against_form},
+      net_amount = ${net_amount},
+      imported = ${imported_flag},
+      create_date = NOW(),
+      hk_ref_no = ${shippingOrderId}
+     """)
+       Long vch_code=keys[0][0];
+       transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+       transactionFooterForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
+    }
+      catch (Exception e) {
+            logger.info("Unable to insert in  transaction header: ",e);
+          }
+    }
+  }
+
+  public void transactionBodyForSalesGenerator(Long vch_code, Long shipping_order_id) {
       int s_no = 0;
       sql.eachRow("""
                       select li.id, li.sku_id, li.qty, li.marked_price, li.hk_price, li.discount_on_hk_price, li.reward_point_discount,
