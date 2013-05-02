@@ -116,6 +116,7 @@ right: 20px;
 .search{
 position: relative;
 float: right;
+
 left: 0%;
 margin-top: 20px;
 }
@@ -163,8 +164,9 @@ height: auto;
 
 .mainContent{
 position: relative;
-float: left;
+float: right;
 height: auto;
+width: 100%;
 }
 
 .product{
@@ -214,9 +216,8 @@ text-align: center;
 .embedMarginTop50{
 	margin-top: 50px;
 }
-
-.embedMarginTop119{
-	margin-top: 119px;
+.embedMarginTop108{
+	margin-top: 108px;
 }
 
 .embedMarginBottom40{
@@ -318,8 +319,8 @@ cursor: pointer;
 .brandsContainer{
 	position: relative;
 	float: left;
-	width: 218px;
-	height: 220px;
+	width: 100%;
+	height: 168px;
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
@@ -379,7 +380,7 @@ cursor: pointer;
 .priceRange{
 	position: relative;
 	float: left;
-	width: 218px;
+	width: 100%;
 	margin-bottom: 10px;
 	margin-top: 10px;
 }
@@ -547,6 +548,7 @@ border-top: 5px solid #5c9dff;
 .productImage{
 	height: 165px;
 	width: 165px;
+
 }
 
 /*top drop down*/
@@ -713,6 +715,7 @@ border-top: 5px solid #5c9dff;
 	position: relative;
 	float: left;
 	width: 20%;
+	font-size: 12px;
 }
 
 .headRowEmptyValue{
@@ -753,6 +756,7 @@ border-top: 5px solid #5c9dff;
 .links{
 	position: relative;
 	float: right;
+
 }
 
 .pagi_link{
@@ -996,7 +1000,7 @@ font-family: whitneybookSC;
 .blue {
 	color: #0000A0 !important;
 }
-.imgContainer{width:200px;height:200px;border:1px solid #ddd; padding:5px;}
+.imgContainer{width:200px;height:200px;border:1px solid #ddd; padding:5px; text-align:center;}
 
 /*Payment Success page css*/
 
@@ -1261,4 +1265,111 @@ ul {
 	float: left;
 	width: 100%;
 	margin-bottom: 10px;
+}
+
+.error-message {
+	font-size: 12px !important; color: red !important; font-weight: 200 !important;
+}
+
+.errorMessage {
+	font-size: 12px !important; color: red !important; font-weight: 200 !important;
+}
+
+.errorContainer {
+	font-size: 12px !important; color: red !important; font-weight: 200 !important;
+}
+
+.expiryRow {
+	font-size: 12px !important; color: red !important; line-height: 1 !important;
+}
+
+
+.rowValue{
+	position: relative;
+	float: left;
+	width: 70%;
+}
+
+.removeBorderBottom{
+	border-bottom: none !important;
+}
+
+.normalRowWithBorderBottom{
+	position: relative;
+	margin-left: 5px;
+	float: left;
+	width: 97%;
+	padding-bottom: 10px;
+	margin-right: 5px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+}
+
+.faq{
+	position: relative;
+	float: left;
+	margin-top: 50px;
+	border-bottom: 1px solid #ddd;
+	width: 100%;
+	padding-bottom: 15px;
+}
+
+.faq span{
+	font-size: 14px;
+}
+
+.genQues{
+	font-size: 18px;
+	margin-top: 15px;
+	position: relative;
+	float: left;
+	margin-bottom: 30px;
+}
+
+.qAndA{
+	position: relative;
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 20px;
+	margin-top: 20px
+}
+
+.qAndA p{
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.bottomText{
+	border-bottom: none;
+	border-top: 1px dotted;
+	width: 84%;
+	font-size: 12px;
+	padding: 15px;
+	margin-top: 15px;
+	position: relative;
+	float: left;
+}
+
+.priceRange:hover{
+	cursor: pointer;
+	background: #ddd;
+}
+
+.makeCursor{
+	cursor: pointer;
+}
+
+.removeLink {
+	cursor: pointer;
+	line-height:0;
+	font-size: 12px !important; 
+	color: red !important;
+}
+
+.edit{
+	cursor: pointer;
+	color: green !important;
 }

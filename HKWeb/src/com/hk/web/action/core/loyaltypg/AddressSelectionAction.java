@@ -1,17 +1,11 @@
 package com.hk.web.action.core.loyaltypg;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.validation.SimpleError;
-import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidateNestedProperties;
-import net.sourceforge.stripes.validation.ValidationErrors;
-import net.sourceforge.stripes.validation.ValidationMethod;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
@@ -26,17 +20,10 @@ import com.hk.pact.dao.courier.PincodeDao;
 @Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
-	private List<Address> addressList = new ArrayList<Address>();
+	private List<Address> addressList;
 	
-	@ValidateNestedProperties({
-		@Validate(field="name" , required=true, on="confirm"),
-		@Validate(field="line1" , required=true, on="confirm"),
-		@Validate(field="city" , required=true, on="confirm"),
-		@Validate(field="state" , required=true, on="confirm"),
-		@Validate(field="pincode" , required=true, on="confirm"),
-		@Validate(field="phone" , required=true, minlength=10, maxlength=16, on="confirm")		
-		})
 	private Address address;
+	private Address deleteAddress;
 	private String pincode;
 	private Long selectedAddressId;
 	
@@ -51,7 +38,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	
 	public Resolution confirm() {
-		if(this.address != null) {
+		if(this.address == null) {
 			this.address = this.addressDao.get(Address.class, this.selectedAddressId);
 		} else {
 			Pincode pin = this.pincodeDao.getByPincode(this.pincode);
@@ -65,14 +52,12 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	
-	@ValidationMethod(on="confirm" )
-	public void validatePincode(ValidationErrors errors) {
-		errors = this.getContext().getValidationErrors();
-		Pincode pin = this.pincodeDao.getByPincode(this.pincode);
-		if (pin == null ) {
-			errors.add(this.pincode, new SimpleError(" The pincode {1} is not supported for delivery." ));
-	}
-	}
+	
+    public Resolution remove() {
+        this.deleteAddress.setDeleted(true);
+        this.addressDao.save(this.deleteAddress);
+        return new RedirectResolution(AddressSelectionAction.class);
+    }
 	
 	public List<Address> getAddressList() {
 		return this.addressList;
@@ -104,5 +89,21 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
+	}
+
+
+	/**
+	 * @return the deleteAddress
+	 */
+	public Address getDeleteAddress() {
+		return this.deleteAddress;
+	}
+
+
+	/**
+	 * @param deleteAddress the deleteAddress to set
+	 */
+	public void setDeleteAddress(Address deleteAddress) {
+		this.deleteAddress = deleteAddress;
 	}
 }

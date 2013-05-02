@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.discount.EnumRewardPointMode;
+import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -37,6 +39,7 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.loyaltypg.service.NextLevelInfo;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.order.RewardPointService;
 import com.hk.store.CategoryDto;
 import com.hk.store.SearchCriteria;
 
@@ -51,6 +54,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	private UserOrderKarmaProfileDao userOrderKarmaProfileDao;
 	@Autowired
 	private BaseDao baseDao;
+	
+	@Autowired
+	private RewardPointService rewardPointService;
 	
 	private enum LoyaltyProductAlias {
 		VARIANT("pv"), PRODUCT("p"), CATEGORY("c");
@@ -379,6 +385,53 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return profile;
 	}
 
+	
+	public void convertLoyaltyToRewardPoints(User user, double loyaltyPoints) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		criteria.add(Restrictions.eq("userOrderKey.user", user));
+		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
+		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
+		criteria.addOrder(org.hibernate.criterion.Order.asc("creationTime"));
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -2);
+		criteria.add(Restrictions.ge("creationTime", cal.getTime()));
+		
+		@SuppressWarnings("unchecked")
+		List<UserOrderKarmaProfile> profileList = this.userOrderKarmaProfileDao.findByCriteria(criteria);
+		
+		// To iterate over profile list without using another loop.
+		int counter = 0;
+		UserOrderKarmaProfile currentProfile;
+		String comment = "Reward Points converted from Loyalty points";
+		while (loyaltyPoints > 0) {
+			currentProfile = profileList.get(counter); 
+		
+			// when karma points for an order are less than total points for conversion
+			if (currentProfile.getKarmaPoints() <= loyaltyPoints) {
+				this.rewardPointService.addRewardPoints(user, null, currentProfile.getUserOrderKey().getOrder(),
+						currentProfile.getKarmaPoints(), comment, EnumRewardPointStatus.APPROVED, 
+						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+				currentProfile.setTransactionType(TransactionType.DEBIT);
+				currentProfile.setKarmaPoints(-currentProfile.getKarmaPoints());
+				currentProfile.setUpdateTime(Calendar.getInstance().getTime());
+				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
+				loyaltyPoints = loyaltyPoints - currentProfile.getKarmaPoints();
+				
+			} else {
+				this.rewardPointService.addRewardPoints(user, null, currentProfile.getUserOrderKey().getOrder(),
+						loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
+						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+				
+				currentProfile.setKarmaPoints(currentProfile.getKarmaPoints() - loyaltyPoints);
+				currentProfile.setUpdateTime(Calendar.getInstance().getTime());
+				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
+				loyaltyPoints = 0;
+			}
+			counter++;
+		}
+		
+	}
+	
 	/**
 	 * 
 	 * Setters and getters start from here.

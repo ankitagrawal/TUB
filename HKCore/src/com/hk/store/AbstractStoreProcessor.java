@@ -110,6 +110,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		for (CartLineItem cartLineItem : cartItemMap.values()) {
 			this.cartLineItemService.save(cartLineItem);
 		}
+		this.orderManager.trimEmptyLineItems(order);
 	}
 
 	@Override

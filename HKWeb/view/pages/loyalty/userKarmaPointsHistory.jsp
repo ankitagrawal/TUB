@@ -36,8 +36,8 @@
               <div class="headRowEmptyValue"></div>
 			  <div class="headRowValue">Order Date</div>
               <div class="headRowValue">Order Details</div>
-              <div class="headRowValue">Points Earned</div>
-              <div class="headRowValue">Points Expiry</div>
+              <div class="headRowValue">Points </div>
+              <div class="headRowValue">Points Status</div>
             </div>
 			
 			<% int count = 0;%>
@@ -45,14 +45,26 @@
             
             <div class="normalRow">
               <div class="headRowEmptyValue"><%= ++count %></div>
-              <div class="headRowValue"><fmt:formatDate value="${karmaProfile.creationTime}" /></div>
+              <div class="headRowValue"><fmt:formatDate value="${karmaProfile.creationTime}" /> 
+              <p class="expiryRow"> ${karmaProfile.expiryDate}
+              </p></div>
               <div class="headRowValue">
 				<c:forEach items="${karmaProfile.userOrderKey.order.cartLineItems}" var="items">
    					${items.productVariant.product.name} 
                 </c:forEach>
 			  </div>
-              <div class="headRowValue">${karmaProfile.karmaPoints}</div>
-              <div class="headRowValue">${karmaProfile.expiryDate}</div>
+              <div class="headRowValue">
+              <c:choose>
+                    <c:when test="${karmaProfile.karmaPoints >= 0.0}">
+                        ${karmaProfile.karmaPoints}
+                    </c:when>
+                    <c:otherwise>
+                       ${0-karmaProfile.karmaPoints}
+                    </c:otherwise>
+                </c:choose>
+              
+              </div>
+              <div class="headRowValue">${karmaProfile.statusForHistory}</div>
             </div>
            </c:forEach>
             <div class="headingRow"></div>
@@ -80,9 +92,6 @@
     </div>
 
 
-  
-  
-  
   <!-- The page ends here -->
                
   </s:layout-component>

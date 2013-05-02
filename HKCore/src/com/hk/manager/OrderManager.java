@@ -1,5 +1,6 @@
 package com.hk.manager;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -375,7 +376,11 @@ public class OrderManager {
                         this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), "Auto confirmation as valid user based on history.");
             }
 
-            // order.setAmount(pricingDto.getGrandTotalPayable());
+            if (EnumPaymentStatus.getEscalablePaymentStatuses().contains(payment.getPaymentStatus())) {
+                order.setConfirmationDate(new Date());
+            }
+
+                // order.setAmount(pricingDto.getGrandTotalPayable());
             order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
             order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
@@ -405,8 +410,8 @@ public class OrderManager {
              * HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH,
              * Integer.parseInt(dispatchDays[0].toString())); order.setTargetDispatchDate(targetDelDate);
              */
-
-            this.getOrderService().setTargetDispatchDelDatesOnBO(order);
+             //this is now being being called in splitBOEscalateSO method
+//            getOrderService().setTargetDispatchDelDatesOnBO(order);
             order = this.getOrderService().save(order);
 
             // Order lifecycle activity logging - Order Placed

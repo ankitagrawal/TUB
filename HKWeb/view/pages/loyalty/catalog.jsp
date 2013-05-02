@@ -60,6 +60,9 @@ pageContext.setAttribute("isSecure", isSecure);
                   <s:param name="maxPoints" value="10000"/>
                   301 and above</s:link></span></div>
 				  </div>
+			</div>
+			
+		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
               <div class="brandsContainer ">
                
@@ -72,7 +75,8 @@ pageContext.setAttribute("isSecure", isSecure);
 			     </div>
 			 </c:forEach>
 			</div>
-			</div></div>
+			</div>
+			</div>
             
         
 	</stripes:layout-component>
@@ -161,7 +165,7 @@ pageContext.setAttribute("isSecure", isSecure);
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
-					<a href="${hk:getS3ImageUrl(imageMediumSize, imageId ,isSecure)}" class="jqzoom" rel='gal1'
+					<a href="${hk:getS3ImageUrl(imageLargeSize, imageId ,isSecure)}" class="jqzoom" rel='gal1'
 						title="${product.name}">
 					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId,isSecure)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" ></a>

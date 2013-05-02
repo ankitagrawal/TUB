@@ -1,3 +1,4 @@
+<%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
@@ -25,17 +26,37 @@
 						success: function(resp) {
 							if(resp.code == "error"){
 								qty_box.val(qty-1);
-								error_message.slideDown().delay(5000).slideUp();
+								error_message.addClass('errorMessage').slideDown().delay(8000).slideUp();
 							}
 							else{
-								$('.total-shopping-points').html(resp.data.totalShoppingPoints);
+								$('.total-shopping-points').html(resp.data.totalShoppingPoints + " Points");
 							}
 						}
 					});
 				});
-				$('.lineItemQty').jqStepper(1);
+				
+				$('.removeLink').click(function() {
+			    	  var lineItemQty =  $(this).parent().find('.lineItemQty');
+			    	  lineItemQty.val(0);
+			    	  $(this).parent().parent().hide();
+			          lineItemQty.trigger('blur');
+			    	  return false;
+			        });	
 			});
+			
+			 
+			
+		     
 		</script>
+ <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+ <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+ <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+ <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
+<%
+boolean isSecure = pageContext.getRequest().isSecure();
+pageContext.setAttribute("isSecure", isSecure);
+%>
+
 		<div style="display: none;">
 			<s:link beanclass="com.hk.web.action.core.loyaltypg.CartAction" id="update-qty-url" event="updateQuantity" />
 		</div>
@@ -56,9 +77,9 @@
 								<td width="50%">
 									<table>
 										<tr>
-											<td width="20%"><img
-													src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
-													alt="${lp.variant.product.name}"/>
+											<td width="20%">
+											<c:set var="imageId" value = "${lp.variant.product.mainImageId }" />
+											<img src="${hk:getS3ImageUrl(imageSmallSize, imageId,isSecure)}" alt="${lp.variant.product.name}"/>
 											</td>
 											<td width="80%">
 												<h8>${lp.variant.product.name}</h8>
@@ -77,10 +98,11 @@
 								</td>
 								<td width="30%">
 
-									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}"
+									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}" maxlength="3"
 								           style="width:30px;height:24px;"/>
+								        <p class="removeLink">(Remove)</p>
 									<br/>
-									<span class="error-message" style="font-size:12px; color:red; font-weight:200; margin-left: -30px; display:none">
+									<span class="error-message" style="display:none">
 										Not enough stellar points to increase the quantity.
 									</span>
 								</td>
@@ -112,7 +134,7 @@
 			<c:otherwise>
 				<div class="row">
 					<div class="span12">
-						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="/healthkart/loyaltypg"> Click here</a> to go back to home page.
+						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="/healthkart/loyaltypg"> Click here</a> to go back to shop something.
 					</div>
 				</div>
 			</c:otherwise>

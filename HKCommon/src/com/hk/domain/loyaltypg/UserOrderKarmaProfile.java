@@ -93,14 +93,45 @@ public class UserOrderKarmaProfile {
 		DEBIT, CREDIT;
 	}
 	
+	
+	/**
+	 * This method is used only for the displaying points expiry on history page.
+	 * @return expiryDate
+	 */
 	public String getExpiryDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.creationTime);
 		cal.add(Calendar.YEAR, 2);
 		if (TransactionType.DEBIT.equals(this.transactionType)) {
-			return "Expired";
+			return " ";
 		} 
-		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
+		return "Expiry on: " + new SimpleDateFormat("MMM dd,yyyy").format(cal.getTime());
 	}
 
+	/**
+	 * This method is used only for the displaying points status on history page.
+	 * @return 
+	 */
+	public String getStatusForHistory() {
+		
+		String statusForHistory = null;
+		if (TransactionType.DEBIT.equals(this.transactionType)) {
+			statusForHistory = "Redeemed";
+		} else if (TransactionType.CREDIT.equals(this.transactionType)) {
+			switch (this.status) {
+			case PENDING:
+				statusForHistory = "Awaited";
+				break;
+			case CANCELED:
+				statusForHistory = "Cancelled";
+				break;
+			case APPROVED:
+				statusForHistory = "Valid";
+				break;
+			default: 
+				statusForHistory = "Expired";
+			}
+		}
+		return statusForHistory;
+	}
 }
