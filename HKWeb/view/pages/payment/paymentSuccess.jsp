@@ -29,7 +29,14 @@
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" />
 
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
-
+<script type="text/javascript">
+    $(document).ready(function() {
+    
+    if (confirm("Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?")) {
+    	window.open("");
+ 	   }
+    });
+  </script>
 <%--<s:layout-component name="htmlHead">
   <script type="text/javascript">
     $(document).ready(function() {

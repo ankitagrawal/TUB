@@ -16,9 +16,9 @@
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
 		  
           <div class="topText">
-            <span class="blue" id="rewardLink"><s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" 
-            	event="convertPoints" class="buttons" >
-            Click here</s:link></span>< to convert your points to Reward points!
+            <span><s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" 
+            	event="convertPoints" class="blue"  id="rewardLink">
+            Click here</s:link></span> to convert your points to Reward points!
           </div>
 		 
 		</div>
@@ -123,7 +123,8 @@
     });
     
     // Reward points conversion
-  	$("#rewardLink").click(function(){
+  	$("#rewardLink").click(function(e){
+  		e.preventDefault();
   		var convert = false;
   		if (confirm("If you click OK then your loyalty points will be converted to maximum possible reward points. Do you want to covert your loyalty points ?")) {
   			convert = true;
@@ -135,3 +136,4 @@
   
  
 </script>
+`
