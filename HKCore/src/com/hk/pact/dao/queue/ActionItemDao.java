@@ -25,4 +25,6 @@ public interface ActionItemDao extends BaseDao
     List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter);
 
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
+
+    List<Bucket> findByName(List<String> bucketNames);
 }

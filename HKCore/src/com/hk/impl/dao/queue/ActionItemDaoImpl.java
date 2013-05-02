@@ -64,4 +64,9 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         return criteria.list();
     }
 
+    @Override
+    public List<Bucket> findByName(List<String> bucketNames) {
+        String queryString = "from Bucket b where b.name in (:bucketNames)";
+        return findByNamedParams(queryString, new String[]{"bucketNames"}, new Object[]{bucketNames});
+    }
 }

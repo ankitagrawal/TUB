@@ -62,6 +62,11 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
+    public List<Bucket> findByName(List<String> bucketNames) {
+        return actionItemDao.findByName(bucketNames);
+    }
+
+    @Override
     public ActionTask find(EnumActionTask enumActionTask) {
         return actionItemDao.get(ActionTask.class, enumActionTask.getId());
     }

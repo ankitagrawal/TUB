@@ -27,6 +27,8 @@ public interface BucketService {
 
     ActionTask find(EnumActionTask enumActionTask);
 
+    public List<Bucket> findByName(List<String> bucketNames);
+
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
     /*

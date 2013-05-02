@@ -75,8 +75,9 @@ public enum EnumBucket {
         List<EnumBucket> applicableBuckets = new ArrayList<EnumBucket>();
         for (String bucketName : bucketNames) {
             for (EnumBucket enumBucket : EnumBucket.values()) {
-                if (bucketName.equalsIgnoreCase(enumBucket.name)) {
+                if (bucketName.equalsIgnoreCase(enumBucket.getName())) {
                     applicableBuckets.add(enumBucket);
+                    break;
                 }
             }
         }
