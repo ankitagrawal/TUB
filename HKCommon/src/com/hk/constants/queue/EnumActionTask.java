@@ -14,7 +14,8 @@ public enum EnumActionTask {
     Online_Authorization(20L, "Online_Authorization"),
     Create_Shipment(30L, "Create_Shipment"),
     Create_PO(110L, "Create_PO"),
-    AD_HOC(210L, "AD_HOC");
+    AD_HOC(210L, "AD_HOC"),
+    WH_Processing(310L, "WH_Processing");
 
     private Long id;
     private String name;

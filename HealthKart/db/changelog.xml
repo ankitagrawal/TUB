@@ -12554,4 +12554,10 @@
             ALTER TABLE action_task MODIFY COLUMN id INT;
         </sql>
     </changeSet>
+    <changeSet author="Pratham (written)" id="20130502-02">
+        <sql>
+            UPDATE `action_task` SET acknowledged =0;
+            ALTER TABLE `action_task` CHANGE `acknowledged` `acknowledged` TINYINT( 4 ) NULL DEFAULT '0
+        </sql>
+    </changeSet>
 </databaseChangeLog>

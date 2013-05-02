@@ -82,6 +82,8 @@ public class BucketServiceImpl implements BucketService {
         actionItem.setPopDate(new Date());
         actionItem.setFlagged(false);
         actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(find(EnumActionTask.WH_Processing));
         return saveActionItem(actionItem);
     }
 
