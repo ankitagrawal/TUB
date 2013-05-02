@@ -18,7 +18,7 @@ import com.hk.domain.user.Address;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.courier.PincodeDao;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	private List<Address> addressList = new ArrayList<Address>();

@@ -10,7 +10,7 @@ import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.store.StoreProcessor;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public abstract class AbstractLoyaltyAction extends BasePaginatedAction {
 	
 	@Qualifier("loyaltyStoreProcessor")

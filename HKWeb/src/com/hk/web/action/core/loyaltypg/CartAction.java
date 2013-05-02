@@ -1,6 +1,7 @@
 package com.hk.web.action.core.loyaltypg;
 
 import com.akube.framework.stripes.controller.JsonHandler;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -10,9 +11,11 @@ import com.hk.store.ProductVariantInfo;
 import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.*;
 
+@Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class CartAction extends AbstractLoyaltyAction {
 
 	private String productVariantId;

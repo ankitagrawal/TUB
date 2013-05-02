@@ -19,6 +19,7 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.user.User;
@@ -28,8 +29,9 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
  *
  */
 
-@Secure
+
 @Component
+@Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 
 

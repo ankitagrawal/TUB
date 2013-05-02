@@ -27,7 +27,7 @@ import com.hk.store.SearchCriteria;
 
 @Component
 @UrlBinding("/loyaltypg")
-@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 	private int defaultPerPage = 12;

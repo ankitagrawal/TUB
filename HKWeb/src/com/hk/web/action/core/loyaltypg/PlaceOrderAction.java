@@ -11,7 +11,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
 import com.hk.store.InvalidOrderException;
 
-@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=SignInAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	private Address selectedAddress;
