@@ -333,52 +333,54 @@
                                            value="${store.id}"/> ${store.prefix}</label>
                     </c:forEach>
                 </li>
-                <li>
-                    <label style="float:left;width:50px;">Payment Modes</label>
+                <shiro:hasAnyRoles name="<%=RoleConstants.ACTION_QUEUE_MANAGER%>">
+                    <li>
+                        <label style="float:left;width:50px;">Payment Modes</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${paymentModeList}" var="paymentMode" varStatus="ctr">
-                            <label><s:checkbox name="paymentModes[${ctr.index}]"
-                                               value="${paymentMode.id}"/> ${paymentMode.name}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
+                        <div class="checkBoxList">
+                            <c:forEach items="${paymentModeList}" var="paymentMode" varStatus="ctr">
+                                <label><s:checkbox name="paymentModes[${ctr.index}]"
+                                                   value="${paymentMode.id}"/> ${paymentMode.name}</label>
+                                <br/>
+                            </c:forEach>
+                        </div>
+                    </li>
 
-                <li><label style="float:left;width: 60px;">Payment Status</label>
+                    <li><label style="float:left;width: 60px;">Payment Status</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
-                            <label><s:checkbox name="paymentStatuses[${ctr.index}]"
-                                               value="${paymentStatus.id}"/> ${paymentStatus.name}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
+                        <div class="checkBoxList">
+                            <c:forEach items="${paymentStatusList}" var="paymentStatus" varStatus="ctr">
+                                <label><s:checkbox name="paymentStatuses[${ctr.index}]"
+                                                   value="${paymentStatus.id}"/> ${paymentStatus.name}</label>
+                                <br/>
+                            </c:forEach>
+                        </div>
+                    </li>
 
-<%--
-                <li><label style="float:left;width: 60px;">BO Category</label>
+                    <%--
+                                    <li><label style="float:left;width: 60px;">BO Category</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="categories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
---%>
+                                        <div class="checkBoxList">
+                                            <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                                                <label><s:checkbox name="categories[${ctr.index}]"
+                                                                   value="${category.name}"/> ${category.displayName}</label>
+                                                <br/>
+                                            </c:forEach>
+                                        </div>
+                                    </li>
+                    --%>
 
-                <li><label style="float:left;width: 60px;">SO Category</label>
+                    <li><label style="float:left;width: 60px;">SO Category</label>
 
-                    <div class="checkBoxList">
-                        <c:forEach items="${categoryList}" var="category" varStatus="ctr">
-                            <label><s:checkbox name="basketCategories[${ctr.index}]"
-                                               value="${category.name}"/> ${category.displayName}</label>
-                            <br/>
-                        </c:forEach>
-                    </div>
-                </li>
+                        <div class="checkBoxList">
+                            <c:forEach items="${categoryList}" var="category" varStatus="ctr">
+                                <label><s:checkbox name="basketCategories[${ctr.index}]"
+                                                   value="${category.name}"/> ${category.displayName}</label>
+                                <br/>
+                            </c:forEach>
+                        </div>
+                    </li>
+                </shiro:hasAnyRoles>
 
                 <li>
                     <label style="float:left;width: 60px;">Drop Ship </label>
@@ -402,10 +404,13 @@
                         </s:select>
                     </div>
                     <div style="float:left;">Sort by
-                        <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        <shiro:hasAnyRoles name="<%=RoleConstants.ACTION_QUEUE_MANAGER%>">
+                            <div><s:checkbox name="sortByScore"/>Order Score</div>
+                            <div><s:checkbox name="sortByPaymentDate"/>Payment Date</div>
+                        </shiro:hasAnyRoles>
                         <%--<div><s:checkbox name="sortByLastEscDate"/>Escalation Date</div>--%>
                         <div><s:checkbox name="sortByDispatchDate"/>Dispatch Date</div>
-                        <div><s:checkbox name="sortByScore"/>Order Score</div>
+                        <div><s:checkbox name="b2bOrder"/>B2B Order</div>
                     </div>
 
 
@@ -440,8 +445,8 @@
 
                 <div class="buttons">
                     <s:submit name="pre" value="Search"/>
-                    <label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>
-                    <s:submit name="searchUnsplitOrders" value="Search Unsplit Orders"/>
+                    <%--<label style="color:red; font-weight:bold;font-size:15px;">${actionQueueBean.unsplitOrderCount} orders to split</label>--%>
+                    <s:submit name="search" value="Search (No Default)"/>
                 </div>
             </s:form>
         </div>

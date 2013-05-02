@@ -24,6 +24,7 @@ public class Keys {
         public static final String personalCareAdminEmails         = "personalCareAdminEmails";
         public static final String servicesAdminEmails             = "servicesAdminEmails";
         public static final String sportsAdminEmails               = "sportsAdminEmails";
+        public static final String homeLivingAdminEmails           = "homeLivingAdminEmails";
 
         public static final String logisticsOpsEmails              = "logisticsOpsEmails";
         public static final String hkReportAdminEmails             = "hkReportAdminEmails";
@@ -120,8 +121,15 @@ public class Keys {
         /*To be removed later on. just a safety mehchanism to route calls to outside hk*/
         public static final String maxCODCallCount                  = "maxCODCallCount";
 
-        public static final String hkApiAccessKey                  = "healthkartAPIAccessKey";
+        public static final String hkApiAccessKey = "healthkartAPIAccessKey";
         public static final String eyeTryOnXmls = "eyeTryOnXmls";
+
+		public static final String maxReturnPolicyDays = "maxReturnPolicyDays";
+
+        public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
+        public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
+
+
     }
 
     /*

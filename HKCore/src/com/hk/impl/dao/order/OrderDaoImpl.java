@@ -80,6 +80,7 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
             //passing the same to get the whole BO Object
             DetachedCriteria uniqueCriteria = DetachedCriteria.forClass(Order.class);
             uniqueCriteria.add(Restrictions.in("id", baseOrderIds));
+            uniqueCriteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
             return list(uniqueCriteria, baseOrderIds.size(), pageNo, perPage);
         }
     }

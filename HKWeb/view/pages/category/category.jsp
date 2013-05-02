@@ -48,7 +48,9 @@
   <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <!-- YAHOO marketing -->
   <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
-  <c:if test="${categoryBean.category.name == 'services'}">
+  <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}" />
+
+    <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
 
@@ -75,7 +77,7 @@
   <div class='crumb_outer'>
     <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
     &gt;
-    <span class="crumb last" style="font-size: 12px;">${categoryBean.category}</span>
+    <span class="crumb last" style="font-size: 12px;">${categoryBean.category.displayName}</span>
 
     <h1 class="title"> ${categoryBean.seoData.h1} </h1>
 

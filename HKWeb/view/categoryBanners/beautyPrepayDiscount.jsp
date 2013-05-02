@@ -1,6 +1,3 @@
-
-
-
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.taglibs.Functions" %>
@@ -22,7 +19,9 @@
 %>--%>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
     <%--<img src="${pageContext.request.contextPath}/images/banners/top/beauty-promotional-strip-banner.jpg" alt="Beauty Discount">--%>
-    <a href="https://www.healthkart.com/pages/offers/beauty/beauty-offers.jsp"> <img src="${pageContext.request.contextPath}/images/banners/top/Beauty-strip_banner_offer.jpg" alt="Beauty Offers">  </a>
+    <a href="https://www.healthkart.com/pages/offers/beauty/beauty-offers.jsp"> <img
+            src="${pageContext.request.contextPath}/images/banners/top/Beauty-strip_banner_offer.jpg"
+            alt="Beauty Offers"> </a>
 </div>
 
 

@@ -10,7 +10,7 @@
 <s:layout-render name="/layouts/genericG.jsp" pageTitle="Write a Review for ${pa.product.name}">
 
 	<s:layout-component name="htmlHead">
-		<link href="<hk:vhostCss/>/css/new.css" rel="stylesheet" type="text/css"/>
+		<link href="<hk:vhostCss/>/css/new.css?v=1.1" rel="stylesheet" type="text/css"/>
 		<meta name="keywords" content="${pa.seoData.metaKeyword}"/>
 		<meta name="description" content="${pa.seoData.metaDescription}"/>
 

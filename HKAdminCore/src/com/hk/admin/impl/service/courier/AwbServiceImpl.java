@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.admin.dto.courier.thirdParty.ThirdPartyAwbDetails;
-import com.hk.admin.factory.courier.thirdParty.ThirdPartyAwbServiceFactory;
+import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
 import com.hk.admin.pact.dao.courier.AwbDao;
 import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.thirdParty.ThirdPartyAwbService;
@@ -43,7 +43,7 @@ public class AwbServiceImpl implements AwbService {
     public Awb getAwbForThirdPartyCourier(Courier courier, ShippingOrder shippingOrder, Double weightInKg) {
         Long courierId = courier.getId();
 
-        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyCourierServiceFactory.getThirdPartyAwbService(courierId);
         ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyAwbDetails(shippingOrder, weightInKg);
         if (thirdPartyAwbDetails != null) {
             Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
@@ -61,8 +61,7 @@ public class AwbServiceImpl implements AwbService {
 
     public boolean deleteAwbForThirdPartyCourier(Awb awb) {
         Long courierId = awb.getCourier().getId();
-
-        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyAwbServiceFactory.getThirdPartyAwbService(courierId);
+        ThirdPartyAwbService thirdPartyAwbService = ThirdPartyCourierServiceFactory.getThirdPartyAwbService(courierId);
         return thirdPartyAwbService.deleteThirdPartyAwb(awb.getAwbNumber());
     }
 

@@ -28,4 +28,6 @@ public interface NotifyMeDao extends BaseDao {
 
     public List<NotifyMe> getPendingNotifyMeList(String notifyMeEmail, ProductVariant productVariant);
 
+    public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList);
+
 }

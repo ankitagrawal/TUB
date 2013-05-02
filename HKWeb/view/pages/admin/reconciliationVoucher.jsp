@@ -135,7 +135,7 @@
                 <td>For Warehouse</td>
                 <td>
                     <s:hidden name="reconciliationVoucher.warehouse" value="${whAction.setWarehouse.id}"/>
-                        ${whAction.setWarehouse.city}
+                        ${whAction.setWarehouse.identifier}
                 </td></tr>
         </table>
 

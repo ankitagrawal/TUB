@@ -316,7 +316,7 @@
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
 	            ${product.brand}
 	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
-	            <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
+	            <s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>
             </s:link>
           </span>
 		</c:if>
@@ -1106,6 +1106,10 @@
     <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}" categories="${product.pipeSeparatedCategories}"/>
     <!--google remarketing-->
     <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="product" topLevelCategory="${product.primaryCategory.name}"/>
+    <!--Ozone remarketing-->
+    <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="product" googleProduct="${product}" topLevelCategory="${product.primaryCategory.name}"
+                     secondaryLevelCategory ="${product.secondaryCategory.name}"/>
+
 
 </s:layout-component>
 </s:layout-render>

@@ -691,6 +691,7 @@ public class ReportAction extends BaseAction {
         }
     }
 
+	//TODO: The report generated here is incorrect, as it should be generated from skuItem status instead of summing the quantity from PVI table.
     public Resolution generateStockReport() {
         StockReportDto stockReportDto = null;
         xlsFile = new File(adminDownloads + "/reports/StockReport.xls");
@@ -947,8 +948,9 @@ public class ReportAction extends BaseAction {
         xlsFile = new File(adminDownloads + "/reports/SOreportByStatus.xls");
         HkXlsWriter xlsWriter = new HkXlsWriter();
         int xlsRow = 1;
-        xlsWriter.addHeader("SHIPPING ORDER NUMBER", "SHIPPING ORDER NUMBER");
+        xlsWriter.addHeader("SO GATEWAY ORDER ID", "SO GATEWAY ORDER ID");
         xlsWriter.addHeader("BASE ORDER NUMBER", "BASE ORDER NUMBER");
+	      xlsWriter.addHeader("CATEGORY", "CATEGORY");
         xlsWriter.addHeader("PRODUCT NAME", "PRODUCT NAME");
         xlsWriter.addHeader("VARIANT ID", "VARIANT ID");
         xlsWriter.addHeader("BABY WEIGHT","BABY WEIGHT");
@@ -963,7 +965,7 @@ public class ReportAction extends BaseAction {
         xlsWriter.addHeader("WEIGHT","WEIGHT");
         xlsWriter.addHeader("QTY", "QTY");
         xlsWriter.addHeader("AMOUNT", "AMOUNT");
-        xlsWriter.addHeader("ORDER DATE", "ORDER DATE");
+        xlsWriter.addHeader("ESCALATION DATE", "ESCALATION DATE");
         xlsWriter.writeData(xlsFile, "SO_StatusReport");
 
         for (ShippingOrder shippingOrder : shippingOrderList) {
@@ -974,8 +976,9 @@ public class ReportAction extends BaseAction {
                 for(ProductOption productOption : productVariant.getProductOptions()){
                   productOptions.put(productOption.getName(), productOption.getValue());
                 }
-                xlsWriter.addCell(xlsRow, shippingOrder.getId());
+                xlsWriter.addCell(xlsRow, shippingOrder.getGatewayOrderId());
                 xlsWriter.addCell(xlsRow, order.getId());
+	              xlsWriter.addCell(xlsRow, productVariant.getProduct().getPrimaryCategory().getName());
                 xlsWriter.addCell(xlsRow, productVariant.getProduct().getName());
                 xlsWriter.addCell(xlsRow, productVariant.getId());
                 xlsWriter.addCell(xlsRow, productOptions.get("BABY WEIGHT"));
@@ -990,8 +993,8 @@ public class ReportAction extends BaseAction {
                 xlsWriter.addCell(xlsRow, productOptions.get("WEIGHT"));
                 xlsWriter.addCell(xlsRow, lineItem.getQty());
                 xlsWriter.addCell(xlsRow, lineItem.getHkPrice());
-                if (order.getPayment() != null && order.getPayment().getPaymentDate() != null) {
-                    xlsWriter.addCell(xlsRow, sdf.format(order.getPayment().getPaymentDate()));
+                if (shippingOrder.getLastEscDate() != null) {
+                    xlsWriter.addCell(xlsRow, sdf.format(shippingOrder.getLastEscDate()));
                 }
                 xlsRow++;
             }
