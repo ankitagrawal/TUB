@@ -29,7 +29,7 @@ public class ActionTask implements java.io.Serializable {
     private Long priority;
 
     //todo bucket need to drop it here, and move it to actionItem
-    @Column(name = "acknowledged", scale = 0)
+    @Column(name = "acknowledged", columnDefinition="boolean default false")
     private boolean acknowledged = false;
 
     @Column(name = "range")
