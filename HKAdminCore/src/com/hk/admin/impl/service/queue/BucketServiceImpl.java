@@ -76,7 +76,11 @@ public class BucketServiceImpl implements BucketService {
         ActionItem actionItem = actionItemDao.searchActionItem(shippingOrder);
         if(actionItem == null) return null;
         Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
-        return createUpdateActionItem(shippingOrder, Arrays.asList(actionableBucket), false);
+        actionItem = createUpdateActionItem(shippingOrder, Arrays.asList(actionableBucket), false);
+        actionItem.setPopDate(new Date());
+        actionItem.setFlagged(false);
+        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+        return saveActionItem(actionItem);
     }
 
     @Override
@@ -86,7 +90,10 @@ public class BucketServiceImpl implements BucketService {
         if (actionableBuckets.contains(EnumBucket.CM.asBucket())){
             actionableBuckets.addAll(EnumBucket.getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
         }
-        return createUpdateActionItem(shippingOrder, actionableBuckets, false);
+        ActionItem actionItem = createUpdateActionItem(shippingOrder, actionableBuckets, false);
+        actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
+        actionItem.setFlagged(true);
+        return saveActionItem(actionItem);
     }
 
     @Override
@@ -106,12 +113,13 @@ public class BucketServiceImpl implements BucketService {
         ActionItem actionItem = getOrCreateActionItem(shippingOrder, buckets);
         User reporter = isAuto ? userService.getAdminUser() : userService.getLoggedInUser();
         actionItem.setReporter(reporter);
-        return saveActionItem(actionItem);
+        return actionItem;
     }
 
     @Override
     public ActionItem autoAllocateBuckets(ShippingOrder shippingOrder) {
-        return createUpdateActionItem(shippingOrder, null, true);
+        ActionItem actionItem = createUpdateActionItem(shippingOrder, null, true);
+        return saveActionItem(actionItem);
     }
 
     @Override

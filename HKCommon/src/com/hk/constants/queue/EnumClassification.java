@@ -9,6 +9,7 @@ import com.hk.domain.queue.Classification;
 public enum EnumClassification {
 
     BASKET_CATEGORY_HOME_LIVING(1L, "Basket Category", "HOME_LIVING"),
+    BASKET_CATEGORY_NUTRITION(5L, "Basket Category", "Nutrition"),
     BASKET_CATEGORY_PARENTING(10L, "Basket Category", "BABY"),
     BASKET_CATEGORY_BEAUTY(20L, "Basket Category", "BEAUTY"),
     BASKET_CATEGORY_DIABETES(30L, "Basket Category", "DIABETES"),

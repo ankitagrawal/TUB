@@ -7,7 +7,8 @@ import com.hk.domain.queue.TrafficState;
  * Date: 15/04/13  Time: 20:06
 */
 public enum EnumTrafficState {
-    NORMAL(10L, "Chill");
+    NORMAL(10L, "Chill"),
+    RED(20L, "Red");
 
     private Long id;
     private String trafficState;
