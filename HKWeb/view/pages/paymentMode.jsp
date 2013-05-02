@@ -681,12 +681,12 @@
    </style>
 
 <script type="text/javascript">
-
+  /*
   $(document).ready(function(){
      $('.contactMobile').blur(function validateMobile(){
        var mobile = this.value;
        if()
      });
-  });
+  });*/
   
 </script>
