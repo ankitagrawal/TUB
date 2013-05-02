@@ -82,21 +82,10 @@ public class GrnCloseAction extends BaseAction {
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, -dayAgo);
         Date startDate = cal.getTime();
-        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompletedGrns(startDate);
+        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompleteAndClosedGrns(startDate);
         if (checkedInGrns != null && checkedInGrns.size() > 0) {
-        	for(PoLineItem poLineItem: checkedInGrns.get(0).getPurchaseOrder().getPoLineItems()){
-				if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
-					poLineItem.setFirstTimePurchased(true);
-				}
-            }
             for (GoodsReceivedNote grn : checkedInGrns) {
-                grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
                 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
-                if(grn.getPurchaseOrder().isExtraInventoryCreated()){
-                	PurchaseOrder po = grn.getPurchaseOrder();
-                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
-                	po.setExtraInventoryId(id);
-                }
             }
             getBaseDao().saveOrUpdate(checkedInGrns);
             

@@ -1,5 +1,6 @@
 package com.hk.admin.impl.dao.inventory;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,15 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
     public List<GoodsReceivedNote> checkinCompletedGrns(Date startDate) {
         String sql = "select o from GoodsReceivedNote o where o.createDate <= (:startDate) and o.grnStatus.id = :grnStatusValue";
         Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatusValue", EnumGrnStatus.InventoryCheckedIn.getId());
+        return query.list();
+    }
+    
+    public List<GoodsReceivedNote> checkinCompleteAndClosedGrns(Date startDate) {
+    	//List<Long> grnStatus = new ArrayList<Long>();
+    	//grnStatus.add(EnumGrnStatus.InventoryCheckedIn.getId());
+    	//grnStatus.add(EnumGrnStatus.Closed.getId());
+        String sql = "select o from GoodsReceivedNote o where o.createDate <= (:startDate) and o.grnStatus.id in (:grnStatus1, :grnStatus2) ";
+        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatus1", EnumGrnStatus.InventoryCheckedIn.getId()).setParameter("grnStatus2", EnumGrnStatus.Closed.getId());
         return query.list();
     }
 
