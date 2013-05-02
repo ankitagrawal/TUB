@@ -1,6 +1,5 @@
 package com.hk.web.action.core.loyaltypg;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -21,8 +20,10 @@ import com.hk.pact.dao.courier.PincodeDao;
 @Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
-	private List<Address> addressList = new ArrayList<Address>();
+	private List<Address> addressList;
+	
 	private Address address;
+	private Address deleteAddress;
 	private String pincode;
 	private Long selectedAddressId;
 	
@@ -31,28 +32,35 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	
 	@DefaultHandler
 	public Resolution viewAddressList() {
-		addressList = getProcessor().getUserAddresses(getPrincipal().getId());
+		this.addressList = this.getProcessor().getUserAddresses(this.getPrincipal().getId());
 		return new ForwardResolution("/pages/loyalty/address.jsp"); 
 	}
 	
 	
 	public Resolution confirm() {
-		if(address == null) {
-			address = addressDao.get(Address.class, selectedAddressId);
+		if(this.address == null) {
+			this.address = this.addressDao.get(Address.class, this.selectedAddressId);
 		} else {
-			Pincode pin = pincodeDao.getByPincode(pincode);
-			address.setPincode(pin);
-			Country country = addressDao.get(Country.class, 80l);
-			address.setCountry(country);
+			Pincode pin = this.pincodeDao.getByPincode(this.pincode);
+			this.address.setPincode(pin);
+			Country country = this.addressDao.get(Country.class, 80l);
+			this.address.setCountry(country);
 		}
-		Long orderId = getProcessor().getCart(getPrincipal().getId()).getId();
-		getProcessor().setShipmentAddress(orderId, address);
+		Long orderId = this.getProcessor().getCart(this.getPrincipal().getId()).getId();
+		this.getProcessor().setShipmentAddress(orderId, this.address);
 		
 		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	
+	
+    public Resolution remove() {
+        this.deleteAddress.setDeleted(true);
+        this.addressDao.save(this.deleteAddress);
+        return new RedirectResolution(AddressSelectionAction.class);
+    }
+	
 	public List<Address> getAddressList() {
-		return addressList;
+		return this.addressList;
 	}
 
 	public void setAddressList(List<Address> addressList) {
@@ -60,7 +68,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 
 	public Address getAddress() {
-		return address;
+		return this.address;
 	}
 	
 	public void setAddress(Address address) {
@@ -68,7 +76,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 
 	public Long getSelectedAddressId() {
-		return selectedAddressId;
+		return this.selectedAddressId;
 	}
 
 	public void setSelectedAddressId(Long selectedAddressId) {
@@ -76,10 +84,26 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	}
 	
 	public String getPincode() {
-		return pincode;
+		return this.pincode;
 	}
 	
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
+	}
+
+
+	/**
+	 * @return the deleteAddress
+	 */
+	public Address getDeleteAddress() {
+		return this.deleteAddress;
+	}
+
+
+	/**
+	 * @param deleteAddress the deleteAddress to set
+	 */
+	public void setDeleteAddress(Address deleteAddress) {
+		this.deleteAddress = deleteAddress;
 	}
 }

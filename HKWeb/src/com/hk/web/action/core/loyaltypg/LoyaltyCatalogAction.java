@@ -30,7 +30,7 @@ import com.hk.store.SearchCriteria;
 @Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
-	private int defaultPerPage = 12;
+	private int defaultPerPage = 9;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
 	private Collection<Badge> badgeList;
@@ -51,7 +51,8 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
-		
+		//this.productPage = this.loyaltyProgramService.getUserLoyaltyProfileHistory(this.user, this.getPageNo(), this.getPerPage());
+
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);
 		this.productList = new ArrayList<LoyaltyProduct>();
@@ -61,7 +62,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	
 		this.setCategories(this.loyaltyProgramService.listCategories());
 		
-		this.productPage = new Page(this.productList, this.getPerPage(), this.getPerPageDefault(), count);
+		this.productPage = new Page(this.productList, this.getPerPageDefault(), this.pageNo, count);
 		return new ForwardResolution("/pages/loyalty/catalog.jsp");
 	}
 

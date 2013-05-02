@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.order;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -458,16 +459,19 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return codFailureMap;
     }
 
-    @Override
+      @Override
 	@Transactional
-    public Payment confirmCodOrder(Order order, String source) {
+    public Payment confirmCodOrder(Order order, String source, User user) {
         Payment payment = null;
+        if (user == null) {
+            user = this.userService.getAdminUser();
+        }
         if (EnumPaymentStatus.AUTHORIZATION_PENDING.getId().equals(order.getPayment().getPaymentStatus().getId())) {
             payment = this.paymentManager.verifyCodPayment(order.getPayment());
+            order.setConfirmationDate(new Date());
+            this.orderService.save(order);
             this.orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
-            this.orderService.setTargetDispatchDelDatesOnBO(order);
-            this.getOrderLoggingService().logOrderActivity(order, this.userService.getAdminUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
-
+            this.getOrderLoggingService().logOrderActivity(order, user, this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         }
         return payment;
     }

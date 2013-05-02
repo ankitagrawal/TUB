@@ -83,6 +83,7 @@ footer, header, hgroup, menu, nav, section {
 
 /* line 97, ../sass/_base.scss */
 body {
+
     color: #444;
 }
 
@@ -1059,7 +1060,7 @@ span.error {
     width: 958px;
     display: none;
     position: absolute;
-    top: 28px;
+    top: 46px;
     left: 0px;
     border: 1px solid #aaa;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1533,7 +1534,6 @@ span.error {
     margin-left: auto;
     margin-right: auto;
     font-family:"Helvetica Neue",Helvetica, Arial, sans-serif;
-    padding-bottom: 250px;
     /*border-left: 1px solid #f0f0f0;
  border-right: 1px solid #f0f0f0;*/
     border: 1px solid #ddd;
@@ -1793,11 +1793,14 @@ h3 a.prod_link {
     background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
     background-image: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-    height: 250px;
-    margin-top: -250px;
+    height: 310px;
+   /* margin-top: -250px;
     position: absolute;
     left: 0px; right: 0px;
-    bottom: 0px;
+    bottom: 0px;*/
+    position:relative;
+    clear:both;
+
 }
 
 .footer-bottom {
@@ -1836,6 +1839,7 @@ h3 a.prod_link {
 .footer .contents {
     width: 960px;
     margin: 15px auto;
+    margin-bottom: 35px;
 }
 
 /* line 626, ../sass/main.scss */
@@ -1844,7 +1848,7 @@ h3 a.prod_link {
     float: left;
     margin-left: 10px;
     margin-right: 10px;
-    width: 130px;
+    width: 150px;
 }
 
 /* line 628, ../sass/main.scss */
@@ -1877,7 +1881,7 @@ h3 a.prod_link {
 /* line 646, ../sass/main.scss */
 .footer .contents .column a {
     font-size: 10px;
-    line-height: 15px;
+    line-height: 18px;
     color: white;
     border-bottom-color: transparent;
 }

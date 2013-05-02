@@ -20,14 +20,7 @@
 <div class="container_12">
 <div class="grid_12" style="text-align: center;">
   <h4>
-    <c:choose>
-      <c:when test="${isB2BOrder}">
-           TAX INVOICE
-      </c:when>
-      <c:otherwise>
         RETAIL INVOICE
-      </c:otherwise>
-    </c:choose>
   </h4>
 </div>
 
@@ -36,41 +29,19 @@
 <div class="grid_12" style="border: 1px black solid;">
 	<div class="grid_4 alpha omega">
 		<div class="column">
-			<c:choose>
-				<c:when test="${isB2BOrder}">
-					<p>Bright Lifecare Pvt. Ltd.</p>
-				</c:when>
-				<c:otherwise>
-					<p>Aquamarine HealthCare Pvt. Ltd.</p>
-				</c:otherwise>
-			</c:choose>
+			<p>${warehouse.name}</p>
 			<p>${warehouse.line1}</p>
 			<p>${warehouse.line2}</p>
 			<p>${warehouse.city}, ${warehouse.state} - ${warehouse.pincode}</p>
 			<p>Phone - ${warehouse.whPhone}</p>
-			<c:choose>
-				<c:when test="${isB2BOrder}">
-					<c:choose>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
-							<p> TIN# 06101832036</p>
-						</c:when>
-						<c:when test="${orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
-							<p> TIN# 27210893736</p>
-						</c:when>
-					</c:choose>
-					<p>D.L.No. <br/>HR-6600-219-OW(H), HR-6600-219-W(H)</p>
-				</c:when>
-				<c:otherwise>
-					TIN# ${warehouse.tin}
-				</c:otherwise>
-			</c:choose>
+      <p>TIN# ${warehouse.tin}</p>
 		</div>
 	</div>
 
   <div class="grid_4 alpha omega">
     <div class="column" style="border-right: 1px black solid; border-left: 1px black solid;">
       <p>
-        <strong>Invoice#: </strong>${orderSummary.invoiceDto.invoiceType}-${shippingOrder.accountingInvoiceNumber}
+        <strong>Invoice#: </strong>${shippingOrder.accountingInvoiceNumber}
       </p>
 
       <p><strong>Invoice

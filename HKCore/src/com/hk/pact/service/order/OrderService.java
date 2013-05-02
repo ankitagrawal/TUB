@@ -82,9 +82,7 @@ public interface OrderService {
 
     public boolean isShippingOrderExists (Order order);
     
-    public void setTargetDispatchDelDatesOnBO(Order order);
-
-    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);	
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 

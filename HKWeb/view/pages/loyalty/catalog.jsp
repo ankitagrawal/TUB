@@ -60,6 +60,9 @@ pageContext.setAttribute("isSecure", isSecure);
                   <s:param name="maxPoints" value="10000"/>
                   301 and above</s:link></span></div>
 				  </div>
+			</div>
+			
+		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
               <div class="brandsContainer ">
                
@@ -72,7 +75,8 @@ pageContext.setAttribute("isSecure", isSecure);
 			     </div>
 			 </c:forEach>
 			</div>
-			</div></div>
+			</div>
+			</div>
             
         
 	</stripes:layout-component>
@@ -99,7 +103,7 @@ pageContext.setAttribute("isSecure", isSecure);
             success: function(resp) {
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
                 $("#" + form.context.id + ' input').attr('class', 'btn');
-                $("#" + form.context.id + ' input').attr('value', 'Added to Cart »');
+                $("#" + form.context.id + ' input').attr('value', 'Added to Cart');
                 $("#" + form.context.id + ' input').disabled = true;
 
                 $('#successToolTip').attr('style', '');
@@ -141,11 +145,14 @@ pageContext.setAttribute("isSecure", isSecure);
             <div class="grid_12 embedMarginBottom40" id="productCategory">
               <div class="dottedLine"></div>
               <div class="productCategoryText">
-                <img src="/healthkart/pages/loyalty/LoyaltyFiles/images/stellarLogo.png" class="stellarLogo" alt="1">
+                <img src="/healthkart/pages/loyalty/resources/images/stellarLogo.png" class="stellarLogo" alt="1">
               </div>
               <div class="dottedLine"></div>
-            </div>           
-
+            </div>        
+               
+        <c:choose>
+			<c:when test="${not empty lca.productList}">
+			
 			<% int rowCount=0; int colCount=0;%>
 			<c:forEach items="${lca.productList}" var="lp">
 			<% if (colCount %3==0) { colCount++; rowCount++; %>
@@ -156,10 +163,11 @@ pageContext.setAttribute("isSecure", isSecure);
 				<div class="product clickable">
 				<c:set var="variant" value="${lp.variant}"/>
 				<c:set var="product" value="${variant.product}"/>
+				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
-					<a href="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" class="jqzoom" rel='gal1'
+					<a href="${hk:getS3ImageUrl(imageLargeSize, imageId ,isSecure)}" class="jqzoom" rel='gal1'
 						title="${product.name}">
-					<img src="${hk:getS3ImageUrl(imageLargeSize, product.mainImageId,isSecure)}" alt="${product.name}"
+					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId,isSecure)}" alt="${product.name}"
 					     title="${product.name}" class="productImage" ></a>
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
@@ -175,6 +183,15 @@ pageContext.setAttribute("isSecure", isSecure);
 			<% } %>
 			
 			</c:forEach>
+            </c:when>
+		<c:otherwise>
+			<div class="row">
+				<div class="span12">
+					<h4>No products to display in this category. Please choose some other category. </h4>
+				</div>
+			</div>
+		</c:otherwise>
+	</c:choose>
               
     </div>
             <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}"/>

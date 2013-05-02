@@ -147,7 +147,7 @@ private void initMenuNodes() {
   public MenuNode getMenoNodeFromProduct(Product breadcrumbProduct) {
     MenuNode finalMenuNode = null;
     for (MenuNode menuNode : this.menuNodesFlat) {
-      if (menuNode.hasProduct(breadcrumbProduct)) {
+      if (menuNode.hasProduct(breadcrumbProduct) && this.getTopCategorySlug(menuNode).equals(breadcrumbProduct.getPrimaryCategory().getName())) {
         if (finalMenuNode == null) {
           finalMenuNode = menuNode;
         } else if (menuNode.getLevel() > finalMenuNode.getLevel()) {

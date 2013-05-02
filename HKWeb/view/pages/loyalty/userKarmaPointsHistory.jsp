@@ -14,11 +14,13 @@
 			| Current status : <c:set var="badgeInfo" value="${userKarmaHA.badgeInfo}" /> ${badgeInfo.badge.badgeName} MEMBER
           </div>
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
-		  <!--
+		  
           <div class="topText">
-            <a href="#" class="clickForPoints">Click here</a> to convert your points to cash!
+            <span class="blue" id="rewardLink"><s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" 
+            	event="convertPoints" class="buttons" >
+            Click here</s:link></span>< to convert your points to Reward points!
           </div>
-		  -->
+		 
 		</div>
         <div class="grid_14 embedMarginTop40 floatRight">
           <div class="history">
@@ -36,8 +38,8 @@
               <div class="headRowEmptyValue"></div>
 			  <div class="headRowValue">Order Date</div>
               <div class="headRowValue">Order Details</div>
-              <div class="headRowValue">Points Earned</div>
-              <div class="headRowValue">Points Expiry</div>
+              <div class="headRowValue">Points </div>
+              <div class="headRowValue">Points Status</div>
             </div>
 			
 			<% int count = 0;%>
@@ -45,14 +47,26 @@
             
             <div class="normalRow">
               <div class="headRowEmptyValue"><%= ++count %></div>
-              <div class="headRowValue"><fmt:formatDate value="${karmaProfile.creationTime}" /></div>
+              <div class="headRowValue"><fmt:formatDate value="${karmaProfile.creationTime}" /> 
+              <p class="expiryRow"> ${karmaProfile.expiryDate}
+              </p></div>
               <div class="headRowValue">
 				<c:forEach items="${karmaProfile.userOrderKey.order.cartLineItems}" var="items">
    					${items.productVariant.product.name} 
                 </c:forEach>
 			  </div>
-              <div class="headRowValue">${karmaProfile.karmaPoints}</div>
-              <div class="headRowValue">${karmaProfile.expiryDate}</div>
+              <div class="headRowValue">
+              <c:choose>
+                    <c:when test="${karmaProfile.karmaPoints >= 0.0}">
+                        ${karmaProfile.karmaPoints}
+                    </c:when>
+                    <c:otherwise>
+                       ${0-karmaProfile.karmaPoints}
+                    </c:otherwise>
+                </c:choose>
+              
+              </div>
+              <div class="headRowValue">${karmaProfile.statusForHistory}</div>
             </div>
            </c:forEach>
             <div class="headingRow"></div>
@@ -66,7 +80,7 @@
        <c:otherwise>
                 <br/>
                 <br/>
-                You haven't ordered anything from healthkart yet.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons" >
+                You haven't ordered anything from healthkart yet.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons blue" >
                 Continue Shopping
             </s:link>
             </c:otherwise>
@@ -80,9 +94,6 @@
     </div>
 
 
-  
-  
-  
   <!-- The page ends here -->
                
   </s:layout-component>
@@ -91,17 +102,36 @@
 <script type="text/javascript">
   window.onload = function() {
     document.getElementById("ohLink").style.fontWeight = "bold";
+    var rewardPoints = ${userKarmaHA.pointsConverted};
+    
+    if (rewardPoints > 0) {
+    	alert("Congratulations you have been awarded " + rewardPoints + " Reward points.");
+    } else if (rewardPoints === 0) {
+    	alert("Unfortunaetly your loyalty points can not be converted to reward points at this point of time.");
+    }
+    
+    
+    //Pagination click event
+    $(".pagi_link").click(function(){
+      if($(this).hasClass("grayedButton")){
+        $(this).removeClass("grayedButton");
+      }
+      else{
+        $(this).parent().find("li").removeClass("grayedButton");
+        $(this).addClass("grayedButton");
+      }
+    });
+    
+    // Reward points conversion
+  	$("#rewardLink").click(function(){
+  		var convert = false;
+  		if (confirm("If you click OK then your loyalty points will be converted to maximum possible reward points. Do you want to covert your loyalty points ?")) {
+  			convert = true;
+  		}
+  		return convert;
+  	});  
+
   };
   
-  //Pagination click event
-  $(".pagi_link").click(function(){
-    if($(this).hasClass("grayedButton")){
-      $(this).removeClass("grayedButton");
-    }
-    else{
-      $(this).parent().find("li").removeClass("grayedButton");
-      $(this).addClass("grayedButton");
-    }
-  });
-
+ 
 </script>

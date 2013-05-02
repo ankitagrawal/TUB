@@ -16,7 +16,7 @@
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-        pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+        pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
     %>
     <table>
         <tr>
@@ -25,7 +25,7 @@
                 <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
                     <s:option value="0">-None-</s:option>
                     <c:forEach items="${whList}" var="wh">
-                        <s:option value="${wh.id}">${wh.name}</s:option>
+                        <s:option value="${wh.id}">${wh.identifier}</s:option>
                     </c:forEach>
                 </s:select>
                 <s:submit class="button_orange" name="bindUserWithWarehouse" value="Save"/>
@@ -201,7 +201,7 @@
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
         <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+            <%--<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>--%>
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
@@ -329,6 +329,8 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 

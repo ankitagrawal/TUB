@@ -21,7 +21,7 @@ import com.hk.pact.service.UserService;
 import com.hk.web.action.core.auth.LoginAction;
 
 @Component
-@Secure(hasAnyRoles = {RoleConstants.HK_USER}, authActionBean=LoginAction.class)
+@Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, authActionBean=LoginAction.class)
 public class JoinLoyaltyProgramAction extends BaseAction {
 	
 	String gender;

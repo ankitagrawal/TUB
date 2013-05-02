@@ -136,6 +136,10 @@ public abstract class BasePaymentGatewayWrapper<T extends BasePaymentGatewayWrap
             orderId = Long.parseLong(tokenizer.nextToken());
             checksum = tokenizer.nextToken();
             paymentMethod = tokenizer.nextToken();
+            if (paymentMethod.equals("null")){
+               paymentMethod = null;
+            }
+            
             String billingAddress = tokenizer.nextToken();
             if (!billingAddress.equals("null"))
                 billingAddressId = Long.parseLong(billingAddress);

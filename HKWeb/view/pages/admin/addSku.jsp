@@ -1,11 +1,11 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.core.Tax" %>
 <%@ page import="com.hk.pact.dao.TaxDao" %>
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@page import="com.hk.domain.warehouse.Warehouse"%>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add SKUs">
 	<s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuAction" var="skuAction"/>
 	<s:layout-component name="htmlHead">
@@ -14,8 +14,8 @@
 					List<Tax> taxList = taxDao.getTaxList();
 					pageContext.setAttribute("taxList", taxList);
 
-					WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-					pageContext.setAttribute("whList", warehouseDao.getAll(Warehouse.class));
+					WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+					pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 		%>
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -58,7 +58,7 @@
 						<td><s:select name="sku.warehouse" class="warehouse">
 							<s:option value="">-Select-</s:option>
 							<c:forEach items="${whList}" var="wh">
-								<s:option value="${wh.id}">${wh.name}</s:option>
+								<s:option value="${wh.id}">${wh.identifier}</s:option>
 							</c:forEach>
 						</s:select></td>
 					</tr>
