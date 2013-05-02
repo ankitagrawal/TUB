@@ -15,7 +15,7 @@ public enum EnumBucket {
 
     BEAUTY(1l, CategoryConstants.BEAUTY, EnumClassification.BASKET_CATEGORY_BEAUTY),
     PERSONAL_CARE(10l, CategoryConstants.PERSONAL_CARE, EnumClassification.BASKET_CATEGORY_PERSONAL_CARE),
-    BABY(20l, CategoryConstants.BABY, EnumClassification.BASKET_CATEGORY_BABY),
+    PARENTING(20l, CategoryConstants.BABY, EnumClassification.BASKET_CATEGORY_PARENTING),
     DIABETES(30l, CategoryConstants.DIABETES, EnumClassification.BASKET_CATEGORY_DIABETES),
     HEALTH_DEVICES(40l, CategoryConstants.HEALTH_DEVICES, EnumClassification.BASKET_CATEGORY_HEALTH_DEVICES),
     SPORTS(50l, CategoryConstants.SPORTS, EnumClassification.BASKET_CATEGORY_SPORTS),
@@ -29,7 +29,7 @@ public enum EnumBucket {
     Online_Payment_Disputes(130l, "Online_Payment_Disputes", EnumClassification.Online_Payment_Disputes),
     Jit(210l, "Jit", EnumClassification.JIT),
     DropShip(220l, "DropShip", EnumClassification.DropShip),
-    Services(230l, "Services", EnumClassification.Services),
+    ServiceOrder(230l, "Service-Order", EnumClassification.Services),
     Dispatch_Issues(310L, "Dispatch_Issues", EnumClassification.Dispatch_Issues),
     Warehouse(410L, "Warehouse_Processing", EnumClassification.Warehouse),
     AD_HOC(460L, "AD_HOC Cases", EnumClassification.Warehouse),

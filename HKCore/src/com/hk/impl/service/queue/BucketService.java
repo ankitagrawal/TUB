@@ -3,8 +3,10 @@ package com.hk.impl.service.queue;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.queue.*;
-import org.springframework.stereotype.Service;
+import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.ActionTask;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.queue.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -15,34 +17,48 @@ import java.util.Map;
 */
 public interface BucketService {
 
-    public List<Param> getParamsForBucket(List<Bucket> bucketList);
+    List<Param> getParamsForBucket(List<Bucket> bucketList);
 
-    public Map<String, Object> getParamMap(List<Bucket> bucketList);
-
-    ActionItem allocateBuckets(ShippingOrder shippingOrder);
-
-    ActionItem existsActionItem(ShippingOrder shippingOrder);
-
-    ActionItem pushToActionQueue(ActionItem actionItem, boolean isAuto);
-
-    ActionItem popFromActionQueue(ActionItem actionItem);
-
-    ActionItem changeBucket(ActionItem actionItem, List<Bucket> bucketList);
-
-    ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> buckets);
-
-    ActionItem changeBucket(ShippingOrder shippingOrder, Bucket bucket);
-
-    List<Bucket> findBucket(List<String> name, Classification classification);
+    Map<String, Object> getParamMap(List<Bucket> bucketList);
 
     ActionItem saveActionItem(ActionItem actionItem);
 
-    public Bucket find(EnumBucket enumBucket);
+    Bucket find(EnumBucket enumBucket);
 
-    public ActionTask find(EnumActionTask enumActionTask);
+    ActionTask find(EnumActionTask enumActionTask);
 
-    public List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
+    List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
+    /*
+      createUpdateActionItem  --> inputs needed (SO, calledAuto/EscalatedBack/manual), (Reporter loggedIn/Admin)
+
+      for each actionItem, either pass the buckets (manually, or reason.getBucket(), or calculate the buckets (Auto) at order placement
+
+      can be passed explicitly by a user, or associated to a reason or calculated at order_placement
+
+      so my method may look like
+
+      updateActionItem(shippingOrder,List<Buckets>, boolean isAuto)  {
+
+      checkIfExists ? actionItem.setBuckets(buckets) for the loggedInUser
+
+       : createActionItem (SO/)
+
+     */
+
+    ActionItem createUpdateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, boolean isAuto);
+
+    ActionItem getOrCreateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets);
+
+    ActionItem existsActionItem(ShippingOrder shippingOrder);
+
+    ActionItem allocateBucketsAndTasks(ActionItem actionItem);
+
+    ActionItem autoAllocateBuckets(ShippingOrder shippingOrder);
 
     ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
+
+    ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder);
+
+    void popFromActionQueue(ShippingOrder shippingOrder);
 }

@@ -1,13 +1,17 @@
 package com.hk.admin.impl.service.queue;
 
 import com.hk.constants.queue.EnumActionTask;
-import com.hk.domain.queue.*;
-import com.hk.domain.user.User;
-import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.ActionTask;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.queue.Param;
+import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.util.BucketAllocator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,73 +52,6 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public ActionItem allocateBuckets(ShippingOrder shippingOrder) {
-        ActionItem actionItem = null;
-        List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(shippingOrder);
-        if (!enumBuckets.isEmpty()) {
-            List<Bucket> buckets = getBuckets(enumBuckets);
-            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(enumBuckets);
-            actionItem = existsActionItem(shippingOrder);
-            if (actionItem == null) {
-                actionItem = new ActionItem();
-                actionItem.setFirstPushDate(new Date());
-            }
-            actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-            actionItem.setCurrentActionTask(find(currentActionTask));
-            actionItem.setBuckets(buckets);
-            actionItem.setShippingOrder(shippingOrder);
-            actionItem = pushToActionQueue(actionItem, true);
-        }
-        return actionItem;
-    }
-
-    @Override
-    public ActionItem existsActionItem(ShippingOrder shippingOrder) {
-        List<ActionItem> actionItems = actionItemDao.searchActionItem(shippingOrder, null, null, null, null, null, null, null);
-        return actionItems != null && !actionItems.isEmpty() ? actionItems.get(0) : null;
-    }
-
-    @Override
-    public ActionItem pushToActionQueue(ActionItem actionItem,  boolean isAuto) {
-        actionItem.setFlagged(false);
-        User reporter = isAuto ? userService.getAdminUser() : userService.getLoggedInUser();
-        actionItem.setReporter(reporter);
-        actionItem.setLastPushDate(new Date());
-        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
-        return saveActionItem(actionItem);
-    }
-
-    @Override
-    public ActionItem popFromActionQueue(ActionItem actionItem) {
-        return null;
-    }
-
-    @Override
-    public ActionItem changeBucket(ActionItem actionItem, List<Bucket> bucketList) {
-        actionItem.setBuckets(bucketList);
-        return saveActionItem(actionItem);
-    }
-
-    @Override
-    public ActionItem changeBucket(ShippingOrder shippingOrder, List<Bucket> bucketList) {
-        ActionItem actionItem = existsActionItem(shippingOrder);
-        if (actionItem != null) {
-            actionItem = changeBucket(actionItem, bucketList);
-        }
-        return actionItem;
-    }
-
-    @Override
-    public ActionItem changeBucket(ShippingOrder shippingOrder, Bucket bucket) {
-        return changeBucket(shippingOrder, Arrays.asList(bucket));
-    }
-
-    @Override
-    public List<Bucket> findBucket(List<String> bucketNames, Classification classification) {
-        return null;
-    }
-
-    @Override
     public ActionItem saveActionItem(ActionItem actionItem) {
         return actionItemDao.save(actionItem);
     }
@@ -136,8 +73,78 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
-        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) :  find(EnumBucket.Warehouse);
-        return changeBucket(shippingOrder, actionableBucket);
+        ActionItem actionItem = actionItemDao.searchActionItem(shippingOrder);
+        if(actionItem == null) return null;
+        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
+        return createUpdateActionItem(shippingOrder, Arrays.asList(actionableBucket), false);
+    }
+
+    @Override
+    public ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder) {
+        Reason reason = shippingOrder.getReason();
+        ActionItem actionItem = createUpdateActionItem(shippingOrder, reason.getBuckets(), false);
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(EnumActionTask.AD_HOC.asActionTask());
+        return saveActionItem(actionItem);
+    }
+
+    @Override
+    public void popFromActionQueue(ShippingOrder shippingOrder) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        if (actionItem != null) {
+            //release all dependencies
+            actionItem.setBuckets(null);
+            actionItem.setWatchers(null);
+            actionItem = saveActionItem(actionItem);
+            actionItemDao.delete(actionItem);
+        }
+    }
+
+    @Override
+    public ActionItem createUpdateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, boolean isAuto) {
+        ActionItem actionItem = getOrCreateActionItem(shippingOrder, buckets);
+        User reporter = isAuto ? userService.getAdminUser() : userService.getLoggedInUser();
+        actionItem.setReporter(reporter);
+        return saveActionItem(actionItem);
+    }
+
+    @Override
+    public ActionItem autoAllocateBuckets(ShippingOrder shippingOrder) {
+        return createUpdateActionItem(shippingOrder, null, true);
+    }
+
+    @Override
+    public ActionItem getOrCreateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        if (actionItem == null) {
+            actionItem = new ActionItem();
+            //defaults while creating a new ActionItem
+            actionItem.setShippingOrder(shippingOrder);
+            actionItem.setFirstPushDate(new Date());
+            actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+            actionItem = allocateBucketsAndTasks(actionItem); //called at 1st create, bucketAllocator.autoAllocateDefaultBuckets
+        }
+        actionItem.setBuckets(buckets); //called for update
+        actionItem.setLastPushDate(new Date());
+        return actionItem;
+    }
+
+    @Override
+    public ActionItem existsActionItem(ShippingOrder shippingOrder) {
+       return actionItemDao.searchActionItem(shippingOrder);
+    }
+
+    @Override
+    public ActionItem allocateBucketsAndTasks(ActionItem actionItem) {
+        List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(actionItem.getShippingOrder());
+        if (!enumBuckets.isEmpty()) {
+            List<Bucket> buckets = getBuckets(enumBuckets);
+            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(enumBuckets);
+            actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+            actionItem.setCurrentActionTask(find(currentActionTask));
+            actionItem.setBuckets(buckets);
+        }
+        return actionItem;
     }
 
 }

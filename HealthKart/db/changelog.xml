@@ -12540,4 +12540,18 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1367471591738-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="previous_action_task_id" tableName="action_item"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1367471591738-3">
+        <dropNotNullConstraint columnDataType="INT" columnName="next_action_task_id" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (written)" id="20130502-01">
+        <sql>
+            ALTER TABLE bucket MODIFY COLUMN id INT;
+            ALTER TABLE reason MODIFY COLUMN id INT;
+            ALTER TABLE classification MODIFY COLUMN id INT;
+            ALTER TABLE action_task MODIFY COLUMN id INT;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

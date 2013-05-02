@@ -50,7 +50,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     private AdminInventoryService adminInventoryService;
     @Autowired
-    BucketService bucketService;
+    private BucketService bucketService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -70,8 +70,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     AwbService awbService;
     @Autowired
     UserService userService;
-//	@Autowired
-//	SMSManager smsManager;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -255,22 +253,17 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder markShippingOrderAsShipped(ShippingOrder shippingOrder) {
-
         Shipment shipment = shippingOrder.getShipment();
-
         if (shipment != null) {
             shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             shipment.setShipDate(new Date());
             getShipmentService().save(shipment);
         }
-
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
         getShippingOrderService().save(shippingOrder);
-
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
+        getBucketService().popFromActionQueue(shippingOrder);
         getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
-//	    smsManager.sendOrderShippedSMS(shippingOrder);
-
         return shippingOrder;
     }
 
@@ -301,7 +294,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         shippingOrder = getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-        bucketService.changeBucket(shippingOrder, shippingOrder.getReason().getBuckets());
+        getBucketService().escalateBackToActionQueue(shippingOrder);
         return shippingOrder;
     }
 
@@ -436,4 +429,12 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public UserService getUserService() {
 		return userService;
 	}
+
+    public BucketService getBucketService() {
+        return bucketService;
+    }
+
+    public void setBucketService(BucketService bucketService) {
+        this.bucketService = bucketService;
+    }
 }

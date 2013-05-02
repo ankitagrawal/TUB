@@ -13,7 +13,8 @@ public enum EnumActionTask {
     Payment_Confirmation(10L, "Payment_Confirmation"),
     Online_Authorization(20L, "Online_Authorization"),
     Create_Shipment(30L, "Create_Shipment"),
-    Create_PO(110L, "Create_PO");
+    Create_PO(110L, "Create_PO"),
+    AD_HOC(210L, "AD_HOC");
 
     private Long id;
     private String name;

@@ -743,7 +743,7 @@ public class OrderServiceImpl implements OrderService {
 
                 //auto allocate buckets, based on business use case
                 if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
-                    bucketService.allocateBuckets(shippingOrder);
+                    bucketService.autoAllocateBuckets(shippingOrder);
                 }
 
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);

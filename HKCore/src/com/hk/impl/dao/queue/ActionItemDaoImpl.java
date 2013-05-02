@@ -30,6 +30,12 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     }
 
     @Override
+    public ActionItem searchActionItem(ShippingOrder shippingOrder) {
+        String queryString = "from ActionItem aT where aT.shippingOrder =:shippingOrder";
+        return (ActionItem) findUniqueByNamedParams(queryString, new String[]{"shippingOrder"}, new Object[]{shippingOrder});
+    }
+
+    @Override
     public List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionItem.class);
 
