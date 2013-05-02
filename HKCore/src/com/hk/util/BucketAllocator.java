@@ -89,11 +89,11 @@ public class BucketAllocator {
         if(buckets.contains(EnumBucket.Dispatch_Issues)){
             return EnumActionTask.Create_Shipment;
         }
-        if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
-            return EnumActionTask.Create_PO;
-        }
         if(buckets.contains(EnumBucket.AD_HOC) || buckets.contains(EnumBucket.CM)){
             return EnumActionTask.AD_HOC;
+        }
+        if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
+            return EnumActionTask.Create_PO;
         }
         return EnumActionTask.AD_HOC;
     }

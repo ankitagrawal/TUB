@@ -73,10 +73,12 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
-        ActionItem actionItem = actionItemDao.searchActionItem(shippingOrder);
-        if(actionItem == null) return null;
+        ActionItem dbActionItem = actionItemDao.searchActionItem(shippingOrder);
+        if(dbActionItem == null) return null;
         Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
-        actionItem = createUpdateActionItem(shippingOrder, Arrays.asList(actionableBucket), false);
+        List<Bucket> actionableBuckets = new ArrayList<Bucket>();
+        actionableBuckets.add(actionableBucket);
+        ActionItem actionItem = createUpdateActionItem(shippingOrder, actionableBuckets, false);
         actionItem.setPopDate(new Date());
         actionItem.setFlagged(false);
         actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
