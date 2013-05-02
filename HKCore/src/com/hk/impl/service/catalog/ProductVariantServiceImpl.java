@@ -22,6 +22,7 @@ import java.util.Set;
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
 
+    private static final Long tryOnFilterId = 14166L;
 	@Autowired
 	private ProductVariantDao productVariantDao;
 	@Autowired
@@ -30,6 +31,19 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 	public ProductVariant getVariantById(String variantId) {
 		return getProductVariantDao().getVariantById(variantId);
 	}
+
+    public ProductVariant getVariantByTryOn(String variantId){
+        ProductVariant productVariant = getVariantById(variantId);
+        if(productVariant.getProductOptions()!=null && productVariant.getProductOptions().size() > 0 ){
+           for(ProductOption productOption : productVariant.getProductOptions()){
+              if(productOption.getId().equals(tryOnFilterId)){
+                  return null;
+              }
+           }
+            return productVariant;
+        }
+        return null;
+    }
 
 	public List<ProductVariant> getAllNonDeletedProductVariants(String category, String brand, boolean isPrimaryCategory) {
 		List<ProductVariant> allProductVariantList = new ArrayList<ProductVariant>();

@@ -27,6 +27,12 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
         return get(ProductVariant.class, variantId);
     }
 
+//    public ProductVariant getVariantByTryOn(String variantId){
+//        return getSession().createQuery(
+//                     "select pv from ProductVariant pv where pv.productOptions.id=14166").;
+//
+////                             "         product.deleted != 1 and pv.deleted != 1").list();
+//    }
     /*
      * public ProductVariantPaymentType getVariantPaymentType(EnumProductVariantPaymentType
      * enumProductVariantPaymentType){ return get(ProductVariantPaymentType.class,

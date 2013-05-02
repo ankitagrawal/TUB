@@ -17,6 +17,8 @@ import java.util.Set;
 public interface ProductVariantService {
 
     public ProductVariant getVariantById(String variantId);
+
+    public ProductVariant getVariantByTryOn(String variantId);
     
     public List<ProductVariant> getAllNonDeletedProductVariants(String category, String brand, boolean isPrimaryCategory) ;
     

@@ -27,24 +27,29 @@ public class AddVirtualTryOnAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-           return new ForwardResolution("/pages/admin/addVirtualTryOn.jsp");
+        return new ForwardResolution("/pages/admin/addVirtualTryOn.jsp");
 
     }
-    public Resolution save(){
+
+    public Resolution save() {
         String[] productVariantArray = productVariantList.split(",");
         ProductOption productOption = getProductVariantService().getProductOptionById(optionId);
         List<ProductOption> productOptionList = new ArrayList<ProductOption>();
         productOptionList.add(productOption);
-        for(String productVariantId : productVariantArray){
-            ProductVariant  productVariant = getProductVariantService().getVariantById(productVariantId);
+        for (String productVariantId : productVariantArray) {
+            ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
+            if (productVariant == null) {
+                addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is not available"));
+            } else {
+                ProductVariant productVariant1 = getProductVariantService().getVariantByTryOn(productVariantId);
+                if (productVariant1 == null) {
+                    addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is already have TryOn Filter"));
+                } else {
 
-            if(productVariant==null){
-            addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is not available"));
-            }
-            else{
-            productVariant.setProductOptions(productOptionList);
-            getProductVariantService().save(productVariant);
-            addRedirectAlertMessage(new SimpleMessage("Database updated"));
+                    productVariant.setProductOptions(productOptionList);
+                    getProductVariantService().save(productVariant);
+                    addRedirectAlertMessage(new SimpleMessage("Database updated"));
+                }
             }
         }
         return new RedirectResolution("/pages/admin/addVirtualTryOn.jsp");
