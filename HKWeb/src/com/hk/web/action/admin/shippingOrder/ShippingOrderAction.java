@@ -36,7 +36,7 @@ public class ShippingOrderAction extends BaseAction {
 	private ShippingOrder shippingOrder;
     private Reason soReason;
     private String cancellationRemark;
-
+	private Warehouse warehouseToUpdate;
 	@Autowired
 	WarehouseService warehouseService;
 
@@ -53,22 +53,23 @@ public class ShippingOrderAction extends BaseAction {
 
   private String customerSatisfyReason;
 
-	public Resolution flipWarehouse() {
-		Warehouse warehouseToUpdate = warehouseService.getWarehoueForFlipping(shippingOrder.getWarehouse());
+  @DefaultHandler
+  public Resolution pre(){
+     return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
+  }
 
-		boolean isWarehouseUpdated = adminShippingOrderService.updateWarehouseForShippingOrder(shippingOrder, warehouseToUpdate);
+  public Resolution flipWarehouse() {
+    boolean isWarehouseUpdated = adminShippingOrderService.updateWarehouseForShippingOrder(shippingOrder, warehouseToUpdate);
 
-		String responseMsg = "";
-		if (isWarehouseUpdated) {
-			responseMsg = "warehouse flipped";
-		} else {
-			responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot update.";
-		}
-
-		Map<String, Object> data = new HashMap<String, Object>(1);
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, responseMsg, data);
-		return new JsonResolution(healthkartResponse);
-	}
+    String responseMsg = "";
+    if (isWarehouseUpdated) {
+      responseMsg = "Warehouse Flipped";
+    } else {
+      responseMsg = " Either All products not avaialable in other warehouse or sku for all products are nor available , so cannot be updated.";
+    }
+    addRedirectAlertMessage(new SimpleMessage(responseMsg));
+    return new ForwardResolution("/pages/admin/order/flipShippingOrder.jsp");
+  }
 
 	@JsonHandler
 	public Resolution initiateRTO() {
@@ -205,7 +206,6 @@ public class ShippingOrderAction extends BaseAction {
 	public String getCustomerSatisfyReason() {
 		return customerSatisfyReason;
 	}
-
     public Reason getSoReason() {
         return soReason;
     }
@@ -221,4 +221,11 @@ public class ShippingOrderAction extends BaseAction {
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+  public Warehouse getWarehouseToUpdate() {
+    return warehouseToUpdate;
+  }
+
+  public void setWarehouseToUpdate(Warehouse warehouseToUpdate) {
+    this.warehouseToUpdate = warehouseToUpdate;
+  }
 }

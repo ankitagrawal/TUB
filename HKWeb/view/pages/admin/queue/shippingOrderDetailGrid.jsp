@@ -135,10 +135,11 @@
 </c:if>
 <div class="clear" style=""></div>
 <div class="floatleft">
-    Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
-                <span
-                        style="margin-left:10px;">Warehouse: <strong>${shippingOrder.warehouse.city}</strong>
- </span>
+  IsB2B?: <strong>${shippingOrder.baseOrder.b2bOrder}</strong>
+  <br/>
+  Warehouse: <strong>${shippingOrder.warehouse.identifier}</strong>
+  <br/>
+  Service Type: <strong>${shippingOrder.shipment.shipmentServiceType.name}</strong>
 </div>
 <div class="clear" style=""></div>
 <div class="floatleft">
@@ -210,23 +211,17 @@
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         Invoice
     </s:link>)
-    <%--<c:if test="${isProcessingQueue == true || isSearchShippingOrder == true}">--%>
         &nbsp;&nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre"
                                    target="_blank" class="personalCareInvoiceLink">
         <s:param name="shippingOrder" value="${shippingOrder}"/>
         <s:param name="printable" value="true"/>
         PC Invoice
     </s:link>)
-    <%--</c:if>--%>
-    <c:if test="${isSearchShippingOrder == true}">
-            <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_ACCOUNTING_INVOICE%>">
-                (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
-                         target="_blank">
-                <s:param name="shippingOrder" value="${shippingOrder}"/>
-                Accounting Invoice
-            </s:link>)
-            </shiro:hasAnyRoles>
-        </c:if>
+          (<s:link beanclass="com.hk.web.action.core.accounting.AccountingInvoiceAction" event="pre"
+                   target="_blank">
+          <s:param name="shippingOrder" value="${shippingOrder}"/>
+          Accounting Invoice
+      </s:link>)
         <shiro:hasPermission name="<%=PermissionConstants.OPS_MANAGER_SRS_VIEW%>">
             <c:if test="${shippingOrderStatusDropShippingAwaiting == shippingOrder.orderStatus.id}">
                 (<s:link beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" event="createAutoShipment"
@@ -250,8 +245,7 @@
             </s:link>)
             </shiro:hasPermission>
             <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_CATMAN_ADMIN%>">
-                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="flipWarehouse"
-                                     class="flipWarehouse">
+                &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction" event="pre">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Flip Warehouse
             </s:link>)

@@ -35,7 +35,7 @@
  <div id="wrapper">
      <a class="banners" href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris"><img src="${pageContext.request.contextPath}/images/bty-offers/banner01.jpg"/></a>
      <a class="banners" href="http://www.healthkart.com/brand/beauty/maybelline"><img src="${pageContext.request.contextPath}/images/bty-offers/banner02.jpg"/></a>
-     <a class="banners04" href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa"><img src="${pageContext.request.contextPath}/images/bty-offers/banner3.jpg"/></a>
+     <a class="banners04" href="http://www.healthkart.com/brand/beauty/NYX"><img src="${pageContext.request.contextPath}/images/bty-offers/banner3.jpg"/></a>
 
      <div class="cl"></div>
      <div class="offers">
@@ -46,9 +46,6 @@
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth
              </br> Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
-
-         <p><a href="http://www.healthkart.com/brand/beauty/Manufaktura+Home+Spa">FREE Manufaktura Beer Shampoo worth Rs 960/- with purchase of Manufaktura products worth Rs 4500/-</a></p>
-
 
          <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Auto Eye Pencil Worth  Rs 225/- With Purchase of NYX Products Worth Rs 1000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Diamond Sparkle Lip Gloss  Worth Rs 600/- With Purchase  of NYX Products Worth Rs 2000/-</a></p>
