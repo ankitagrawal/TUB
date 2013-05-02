@@ -240,9 +240,9 @@
                         <div class="label">Contact Name</div>
                         <s:text name="codContactName"
                                 value="${orderSummary.order.address.name}"/>
-                        <div class="label">Contact Phone</div>
+                        <div class="label">Contact Mobile</div>
                         <s:text name="codContactPhone"
-                                value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                                value="${orderSummary.order.address.phone}" id="phoneNo" class="contactMobile"/>
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
                             <s:submit name="pre" value="Place Order"
@@ -679,3 +679,14 @@
    }
 
    </style>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+     $('.contactMobile').blur(function validateMobile(){
+       var mobile = this.value;
+       if()
+     });
+  });
+  
+</script>
