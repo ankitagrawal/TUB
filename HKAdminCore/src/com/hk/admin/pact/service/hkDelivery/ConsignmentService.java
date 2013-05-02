@@ -75,11 +75,13 @@ public interface ConsignmentService {
 
 	ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
-    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, Long consignmentId, int pageNo, int perPage);
+    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage);
 
     public Consignment setOwnerForConsignment(Consignment consignment, String owner);
 
     public List<NdrDto> getNdrByOwner(User user);
 
     public Integer getAttempts(Consignment consignment);
+
+    public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId);
 }

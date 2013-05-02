@@ -321,8 +321,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, Long consignmentId, int pageNo, int perPage) {
-        return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, consignmentId, pageNo, perPage);
+    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
+        return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, pageNo, perPage);
     }
 
     @Override
@@ -335,6 +335,11 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     public Integer getAttempts(Consignment consignment){
         Page consignmentPage = searchConsignmentTracking(null, null, EnumConsignmentLifecycleStatus.Dispatched.getId(), null, consignment.getId(), 0, 0);
         return consignmentPage.getTotalResults();
+    }
+
+    @Override
+    public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId) {
+        return consignmentDao.getConsignmentTrackingById(consignmentTrackingId);
     }
 
     @Override
@@ -377,6 +382,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             if (consignmentTracking.getConsignmentLifecycleStatus().equals(EnumConsignmentLifecycleStatus.OnHoldByCustomer)) {
                 ndrDto.setNonDeliveryReason(consignmentTracking.getRemarks());
                 ndrDto.setConsignmentTrackingId(consignmentTracking.getId());
+                ndrDto.setRunsheetId(consignmentTracking.getRunsheet().getId());
             }
             ndrDtoList.add(ndrDto);
         }

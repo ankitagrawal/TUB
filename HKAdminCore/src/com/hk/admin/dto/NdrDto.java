@@ -17,6 +17,7 @@ public class NdrDto{
     String remarks;
     Long consignmentId;
     Long consignmentTrackingId;
+    Long runsheetId;
 
     public String getHubName() {
         return hubName;
@@ -121,4 +122,13 @@ public class NdrDto{
     public void setConsignmentTrackingId(Long consignmentTrackingId) {
         this.consignmentTrackingId = consignmentTrackingId;
     }
+
+    public Long getRunsheetId() {
+        return runsheetId;
+    }
+
+    public void setRunsheetId(Long runsheetId) {
+        this.runsheetId = runsheetId;
+    }
+
 }

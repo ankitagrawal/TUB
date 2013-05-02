@@ -5,6 +5,7 @@ import java.util.*;
 import com.hk.admin.dto.NdrDto;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumNDRAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -13,6 +14,7 @@ import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +184,29 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     public Resolution saveNdr() {
+        List<Consignment> consignmentList1 = new ArrayList<Consignment>();
+        List<ConsignmentTracking> consignmentTrackingList1 = new ArrayList<ConsignmentTracking>();
+
+        for (NdrDto ndrDto : ndrDtoList) {
+            Consignment consignment1 = consignmentService.getConsignmentByAwbNumber(ndrDto.getAwbNumber());
+            ConsignmentTracking consignmentTracking1 = consignmentService.getConsignmentTrackingById(ndrDto.getConsignmentTrackingId());
+            if (ndrDto.getNonDeliveryReason().equals(EnumNDRAction.FutureDeliveryDate.getNdrAction())) {
+                consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
+            }
+            if (!ndrDto.getNonDeliveryReason().equals(EnumNDRAction.CustomerNotContactable.getNdrAction())) {
+                consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
+            }
+            if (StringUtils.isBlank(ndrDto.getRemarks())) {
+                String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : " + ndrDto.getRemarks();
+                consignmentTracking1.setNdrResolution(ndrDto.getNdrResolution());
+                consignmentTracking1.setRemarks(remark);
+            }
+            consignmentList1.add(consignment1);
+            consignmentTrackingList1.add(consignmentTracking1);
+        }
+
+        consignmentService.saveConsignmentTracking(consignmentTrackingList1);
+        consignmentService.saveConsignments(consignmentList1);
         return new RedirectResolution("/pages/admin/ndrReport.jsp").addParameter("ndDtoList", ndrDtoList);
     }
 

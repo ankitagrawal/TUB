@@ -184,8 +184,14 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
 
     @Override
     public List<Consignment> getConsignmentsByStatusAndOwner(Long consignmentStatus, String owner) {
-        String query = "from Consignment c where c.consignmentStatus = :consignmentStatus and c.owner = :owner";
-        return (List<Consignment>) findUniqueByNamedParams(query, new String[]{"consignmentStatus", "owner"}, new Object[]{consignmentStatus, owner});
+        String query = "from Consignment c where c.consignmentStatus.id = :consignmentStatus and c.owner = :owner";
+        return (List<Consignment>) findByNamedParams(query, new String[]{"consignmentStatus", "owner"}, new Object[]{consignmentStatus, owner});
+    }
+
+    @Override
+    public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId) {
+        String query = "from ConsignmentTracking ct where ct.id = :consignmentTrackingId";
+        return (ConsignmentTracking) findUniqueByNamedParams(query, new String[]{"consignmentTrackingId"}, new Object[]{consignmentTrackingId});
     }
 }
 

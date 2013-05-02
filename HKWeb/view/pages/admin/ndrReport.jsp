@@ -36,7 +36,7 @@
                     <th>NDR Action</th>
                     <th>Future Delivery Date</th>
                     <th>Remarks</th>
-                    <th> Save Button !</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <c:forEach items="${consignmentAction.ndrDtoList}" var="ndrDto">
