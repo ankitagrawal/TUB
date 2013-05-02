@@ -33,7 +33,7 @@
   %>
   <s:layout-component name="breadcrumb">
     <div class='crumb_outer'>
-    <a href="http://www.healthkart.com" class="crumb">Home</a>
+    <a href="${pageContext.request.contextPath}/" class="crumb">Home</a>
       <%
         while (!menuNodeStack.isEmpty()) {
         MenuNode menuNode = menuNodeStack.pop();
