@@ -80,7 +80,7 @@ public class BusyPopulateSalesData {
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36'
 							and (so.is_service_order <> 1 or so.is_service_order is null)
-							and (bo.is_b2b_order <> 1 bo.is_b2b_order is null)
+							and (bo.is_b2b_order <> 1 or bo.is_b2b_order is null)
 							GROUP BY so.id
 							ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
