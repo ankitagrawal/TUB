@@ -32,7 +32,7 @@ public class Reason {
 
     @JsonSkip
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "reason_has_buckets", uniqueConstraints = @UniqueConstraint(columnNames = {"reason_id", "bucket_id"}), joinColumns = {@JoinColumn(name = "reason_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)})
+    @JoinTable(name = "reason_has_bucket", uniqueConstraints = @UniqueConstraint(columnNames = {"reason_id", "bucket_id"}), joinColumns = {@JoinColumn(name = "reason_id", nullable = false, updatable = false)}, inverseJoinColumns = {@JoinColumn(name = "bucket_id", nullable = false, updatable = false)})
     private List<Bucket> buckets = new ArrayList<Bucket>(0);
 
     @Column(name = "type", nullable = false, length = 45)
