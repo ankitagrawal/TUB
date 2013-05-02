@@ -2,6 +2,8 @@ package com.hk.constants.queue;
 
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.domain.queue.Bucket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,9 @@ public enum EnumBucket {
     AD_HOC(460L, "AD_HOC Cases", EnumClassification.Warehouse),
     CM(470L,"CM",EnumClassification.AD_HOC),
     Vendor(510L, "Vendor", EnumClassification.Vendor);
+
+    private static Logger logger        = LoggerFactory.getLogger(EnumBucket.class);
+
 
     private Long id;
     private String name;
@@ -74,8 +79,11 @@ public enum EnumBucket {
     public static List<EnumBucket> findByName(Set<String> bucketNames) {
         List<EnumBucket> applicableBuckets = new ArrayList<EnumBucket>();
         for (String bucketName : bucketNames) {
+            logger.debug("categoryName " + bucketName);
             for (EnumBucket enumBucket : EnumBucket.values()) {
+                logger.debug("bucketName " + enumBucket.getName());
                 if (bucketName.equalsIgnoreCase(enumBucket.getName())) {
+                    logger.debug("bucketName matches categoryName");
                     applicableBuckets.add(enumBucket);
                     break;
                 }
