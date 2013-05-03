@@ -283,21 +283,30 @@ function temp() {
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
 <table>
 	<tr>
-
-    <shiro:hasPermission name="<%=PermissionConstants.PO%>">
-	<c:if test="${pa.purchaseOrder.purchaseOrderStatus.id < poApproved}">
         <td>Supplier Name</td>
-        <s:select name="supplierList"
-        value="${pa.purchaseOrder.supplier.name}">
-                </s:select>
-            </c:if>
-        </shiro:hasPermission>
+        <td>${pa.purchaseOrder.supplier.name}</td>
+
+    <%--<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">--%>
+
+    <%--<c:when test="pa.purchaseOrder.purchaseOrderStatus.id < = poReceived">--%>
+        <td>New Supplier Name</td>
+        <td>
+        <s:select name="supplier" id ="supplier" >
+            <c:forEach items="${pa.suppliers}" var ="supplierName" >
+             <s:option value="${supplierName.id}">${supplierName.name}</s:option>
+            </c:forEach>
+         </s:select>
+        </td>
+        <td><s:submit name="saveSupplier" value="Save" id="saveSupplier"/></td>
+    <%--</c:when>--%>
+
+        <%--</shiro:hasPermission>--%>
 
 
-        <td>Supplier Name</td>
-		<td>${pa.purchaseOrder.supplier.name}</td>
+        </tr>
 
-		<td>Supplier State</td>
+		<tr>
+            <td>Supplier State</td>
 		<td>${pa.purchaseOrder.supplier.state}</td>
 		<td>Tax</td>
 		<td>
