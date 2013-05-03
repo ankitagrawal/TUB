@@ -138,5 +138,11 @@ public class GoodsReceivedNoteDaoImpl extends BaseDaoImpl implements GoodsReceiv
         Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatusValue", EnumGrnStatus.InventoryCheckedIn.getId());
         return query.list();
     }
+    
+    public List<GoodsReceivedNote> checkinCompleteAndClosedGrns(Date startDate) {
+        String sql = "select o from GoodsReceivedNote o where o.createDate >= (:startDate) and o.grnStatus.id in (:grnStatus1, :grnStatus2) ";
+        Query query = getSession().createQuery(sql).setParameter("startDate", startDate).setParameter("grnStatus1", EnumGrnStatus.InventoryCheckedIn.getId()).setParameter("grnStatus2", EnumGrnStatus.Closed.getId());
+        return query.list();
+    }
 
 }

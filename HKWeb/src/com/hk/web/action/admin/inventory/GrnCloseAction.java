@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class GrnCloseAction extends BaseAction {
 
+	private static Logger logger = Logger.getLogger(GrnCloseAction.class);
     @Autowired
     private GoodsReceivedNoteDao goodsReceivedNoteDao;
     @Autowired
@@ -77,32 +79,25 @@ public class GrnCloseAction extends BaseAction {
     }
     
     public Resolution closeGrn() {
-        int dayAgo = 60;
+        int dayAgo = 40;
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, -dayAgo);
         Date startDate = cal.getTime();
-        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompletedGrns(startDate);
+        List<GoodsReceivedNote> checkedInGrns = goodsReceivedNoteDao.checkinCompleteAndClosedGrns(startDate);
+        logger.info("Size of Checked In Grns - "+checkedInGrns.size());
         if (checkedInGrns != null && checkedInGrns.size() > 0) {
-        	for(PoLineItem poLineItem: checkedInGrns.get(0).getPurchaseOrder().getPoLineItems()){
-				if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
-					poLineItem.setFirstTimePurchased(true);
-				}
-            }
             for (GoodsReceivedNote grn : checkedInGrns) {
-                grn.setGrnStatus(EnumGrnStatus.Closed.asGrnStatus());
+            	if(grn.getPurchaseOrder().getFillRate()!=null && grn.getPurchaseOrder().getFillRate()!=100){
                 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
-                if(grn.getPurchaseOrder().isExtraInventoryCreated()){
-                	PurchaseOrder po = grn.getPurchaseOrder();
-                	Long id = getExtraInventoryService().getExtraInventoryByPoId(po.getId()).getId();
-                	po.setExtraInventoryId(id);
-                }
+                logger.info("Updating Fill Rate for GRN - "+grn.getId()+", purchase Order - "+grn.getPurchaseOrder().getId());
+            	}
             }
             getBaseDao().saveOrUpdate(checkedInGrns);
             
             addRedirectAlertMessage(new SimpleMessage(checkedInGrns.size() + " Grns created : " + dayAgo + " days ago are closed now."));
         } else {
-            addRedirectAlertMessage(new SimpleMessage("No Grn has been found in Checkin Completed State"));
+            addRedirectAlertMessage(new SimpleMessage("No Grn has been found in Checkin/Closed Completed State"));
         }
 
         return new RedirectResolution(AdminHomeAction.class);
