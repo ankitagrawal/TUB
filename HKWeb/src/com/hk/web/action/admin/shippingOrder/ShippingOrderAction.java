@@ -120,35 +120,6 @@ public class ShippingOrderAction extends BaseAction {
 		return new JsonResolution(healthkartResponse);
 	}
 
-	@JsonHandler
-	public Resolution delieverDropShippingOrder() {
-		String message = "";
-		boolean orderHasOnlyDropShipProduct = true;
-
-		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			CartLineItem cartLineItem = lineItem.getCartLineItem();
-
-			if (EnumCartLineItemType.Product.getId().equals(cartLineItem.getLineItemType().getId())) {
-				orderHasOnlyDropShipProduct &= cartLineItem.getProductVariant().getProduct().isDropShipping();
-			}
-			if (!orderHasOnlyDropShipProduct) {
-				break;
-			}
-		}
-
-		if (orderHasOnlyDropShipProduct) {
-			adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-			message = "shipping order marked as delieverd";
-		} else {
-			message = "shipping order cannot be marked delievered, since it has non drop ship products";
-		}
-
-		Map<String, Object> data = new HashMap<String, Object>(1);
-		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
-		return new JsonResolution(healthkartResponse);
-	}
-
     public Resolution bulkEscalateShippingOrder() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria =  new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_ActionAwaiting)));
