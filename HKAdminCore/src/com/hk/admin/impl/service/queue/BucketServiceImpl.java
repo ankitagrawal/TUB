@@ -129,6 +129,13 @@ public class BucketServiceImpl implements BucketService {
         return actionableBuckets;
     }
 
+    protected List<Bucket> computeEscalateForwardBuckets(ShippingOrder shippingOrder) {
+        List<Bucket> actionableBuckets = new ArrayList<Bucket>();
+        Bucket decidedBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
+        actionableBuckets.add(decidedBucket);
+        return actionableBuckets;
+    }
+
     protected EnumActionTask assignActionTask(List<Bucket> buckets) {
         return BucketAllocator.listCurrentActionTask(buckets);
     }
@@ -141,8 +148,7 @@ public class BucketServiceImpl implements BucketService {
             actionItem = autoCreateActionItem(shippingOrder);
         }
         //pretty much all is preDecided here, since its no longer a hot action task
-        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
-        actionItem.setBuckets(Arrays.asList(actionableBucket));
+        actionItem.setBuckets(computeEscalateForwardBuckets(shippingOrder));
         actionItem.setPopDate(new Date());
         actionItem.setFlagged(false);
         actionItem.setReporter(userService.getLoggedInUser());
