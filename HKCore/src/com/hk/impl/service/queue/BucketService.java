@@ -48,15 +48,10 @@ public interface BucketService {
 
      */
 
-    ActionItem createUpdateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, boolean isAuto);
-
-    ActionItem getOrCreateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets);
 
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 
-    ActionItem allocateBucketsAndTasks(ActionItem actionItem);
-
-    ActionItem autoAllocateBuckets(ShippingOrder shippingOrder);
+    ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder);
 
     ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
 

@@ -78,21 +78,21 @@ public class BucketAllocator {
         return categoryBuckets;
     }
 
-    public static EnumActionTask listCurrentActionTask(List<EnumBucket> buckets){
+    public static EnumActionTask listCurrentActionTask(List<Bucket> buckets){
 
-        if(buckets.contains(EnumBucket.Cod_Confirmation) || buckets.contains(EnumBucket.Cheque_Cash_Neft)){
+        if(buckets.contains(EnumBucket.Cod_Confirmation.asBucket()) || buckets.contains(EnumBucket.Cheque_Cash_Neft.asBucket())){
             return EnumActionTask.Payment_Confirmation;
         }
-        if(buckets.contains(EnumBucket.Online_Payment_Disputes)){
+        if(buckets.contains(EnumBucket.Online_Payment_Disputes.asBucket())){
             return EnumActionTask.Online_Authorization;
         }
-        if(buckets.contains(EnumBucket.Dispatch_Issues)){
+        if(buckets.contains(EnumBucket.Dispatch_Issues.asBucket())){
             return EnumActionTask.Create_Shipment;
         }
-        if(buckets.contains(EnumBucket.AD_HOC) || buckets.contains(EnumBucket.CM)){
+        if(buckets.contains(EnumBucket.AD_HOC.asBucket()) || buckets.contains(EnumBucket.CM.asBucket())){
             return EnumActionTask.AD_HOC;
         }
-        if(buckets.contains(EnumBucket.Jit) || buckets.contains(EnumBucket.DropShip)){
+        if(buckets.contains(EnumBucket.Jit.asBucket()) || buckets.contains(EnumBucket.DropShip.asBucket())){
             return EnumActionTask.Create_PO;
         }
         return EnumActionTask.AD_HOC;

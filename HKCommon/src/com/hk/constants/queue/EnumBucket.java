@@ -61,11 +61,12 @@ public enum EnumBucket {
     }
 
     public static List<Long> getBucketIDs(List<EnumBucket> enumBuckets) {
-        List<Long> shippingOrderStatusIds = new ArrayList<Long>();
+        List<Long> bucketIDs = new ArrayList<Long>();
+        if (enumBuckets == null || enumBuckets.isEmpty()) return bucketIDs;
         for (EnumBucket enumBucket : enumBuckets) {
-            shippingOrderStatusIds.add(enumBucket.getId());
+            bucketIDs.add(enumBucket.getId());
         }
-        return shippingOrderStatusIds;
+        return bucketIDs;
     }
 
     public static List<Bucket> getBuckets(List<EnumBucket> enumBuckets){

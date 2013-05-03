@@ -9,7 +9,6 @@ import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
-import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
@@ -77,23 +76,46 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
-        ActionItem dbActionItem = actionItemDao.searchActionItem(shippingOrder);
-        if(dbActionItem == null) return null;
-        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
-        List<Bucket> actionableBuckets = new ArrayList<Bucket>();
-        actionableBuckets.add(actionableBucket);
-        ActionItem actionItem = createUpdateActionItem(shippingOrder, actionableBuckets, false);
-        actionItem.setPopDate(new Date());
-        actionItem.setFlagged(false);
-        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
-        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-        actionItem.setCurrentActionTask(find(EnumActionTask.WH_Processing));
+    public ActionItem existsActionItem(ShippingOrder shippingOrder) {
+        return actionItemDao.searchActionItem(shippingOrder);
+    }
+
+    public ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        if (actionItem == null) {
+            actionItem = autoCreateActionItem(shippingOrder);
+        } else {
+            actionItem = autoUpdateActionItem(actionItem); //normally would be called afterCodConfirmation/payment-authorization/manual-split
+        }
+        actionItem.setReporter(userService.getAdminUser());
         return saveActionItem(actionItem);
     }
 
-    @Override
-    public ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder) {
+    protected ActionItem autoUpdateActionItem(ActionItem actionItem) {
+        List<Bucket> actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+        actionItem.setBuckets(actionableBuckets);
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(find(assignActionTask(actionableBuckets)));
+        return actionItem;
+    }
+
+    protected ActionItem autoCreateActionItem(ShippingOrder shippingOrder) {
+        ActionItem actionItem = new ActionItem();
+        actionItem.setShippingOrder(shippingOrder);
+        actionItem.setFirstPushDate(new Date());
+        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+        List<Bucket> actionableBuckets = getBuckets(autoCreateDefaultBuckets(shippingOrder));
+        actionItem.setBuckets(actionableBuckets);
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(find(assignActionTask(actionableBuckets)));
+        return actionItem;
+    }
+
+    protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
+        return BucketAllocator.allocateBuckets(shippingOrder);
+    }
+
+    protected List<Bucket> computeEscalateBackBuckets(ShippingOrder shippingOrder) {
         Reason reason = shippingOrder.getReason();
         List<Bucket> actionableBuckets = new ArrayList<Bucket>();
         if (reason != null) {
@@ -104,9 +126,44 @@ public class BucketServiceImpl implements BucketService {
         if (actionableBuckets.contains(find(EnumBucket.CM))) {
             actionableBuckets.addAll(EnumBucket.getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
         }
-        ActionItem actionItem = createUpdateActionItem(shippingOrder, actionableBuckets, false);
-        actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
+        return actionableBuckets;
+    }
+
+    protected EnumActionTask assignActionTask(List<Bucket> buckets) {
+        return BucketAllocator.listCurrentActionTask(buckets);
+    }
+
+    //called just after SO is escalated
+    public ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        //in long term, this shouldn't be the case as all SO will already have their actionItem
+        if (actionItem == null) {
+            actionItem = autoCreateActionItem(shippingOrder);
+        }
+        //pretty much all is preDecided here, since its no longer a hot action task
+        Bucket actionableBucket = shippingOrder.isDropShipping() ? find(EnumBucket.Vendor) : shippingOrder.isServiceOrder() ? find(EnumBucket.ServiceOrder) : find(EnumBucket.Warehouse);
+        actionItem.setBuckets(Arrays.asList(actionableBucket));
+        actionItem.setPopDate(new Date());
+        actionItem.setFlagged(false);
+        actionItem.setReporter(userService.getLoggedInUser());
+        actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(find(EnumActionTask.WH_Processing));
+        return saveActionItem(actionItem);
+    }
+
+    public ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder) {
+        ActionItem actionItem = existsActionItem(shippingOrder);
+        if (actionItem == null) {
+            actionItem = autoCreateActionItem(shippingOrder);
+        }
+        actionItem.setReporter(userService.getLoggedInUser());
+        actionItem.setBuckets(computeEscalateBackBuckets(shippingOrder));
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(find(assignActionTask(actionItem.getBuckets())));
+        actionItem.setLastPushDate(new Date());
         actionItem.setFlagged(true);
+        actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
         return saveActionItem(actionItem);
     }
 
@@ -120,55 +177,6 @@ public class BucketServiceImpl implements BucketService {
             actionItem = saveActionItem(actionItem);
             actionItemDao.delete(actionItem);
         }
-    }
-
-    @Override
-    public ActionItem createUpdateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, boolean isAuto) {
-        ActionItem actionItem = getOrCreateActionItem(shippingOrder, buckets);
-        User reporter = isAuto ? userService.getAdminUser() : userService.getLoggedInUser();
-        actionItem.setReporter(reporter);
-        return actionItem;
-    }
-
-    @Override
-    public ActionItem autoAllocateBuckets(ShippingOrder shippingOrder) {
-        ActionItem actionItem = createUpdateActionItem(shippingOrder, null, true);
-        return saveActionItem(actionItem);
-    }
-
-    @Override
-    public ActionItem getOrCreateActionItem(ShippingOrder shippingOrder, List<Bucket> buckets) {
-        ActionItem actionItem = existsActionItem(shippingOrder);
-        if (actionItem == null) {
-            actionItem = new ActionItem();
-            //defaults while creating a new ActionItem
-            actionItem.setShippingOrder(shippingOrder);
-            actionItem.setFirstPushDate(new Date());
-            actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
-            actionItem.setLastPushDate(new Date());
-            return allocateBucketsAndTasks(actionItem); //called at 1st create, bucketAllocator.autoAllocateDefaultBuckets
-        }
-        actionItem.setLastPushDate(new Date());
-        actionItem.setBuckets(buckets); //called for update
-        return actionItem;
-    }
-
-    @Override
-    public ActionItem existsActionItem(ShippingOrder shippingOrder) {
-       return actionItemDao.searchActionItem(shippingOrder);
-    }
-
-    @Override
-    public ActionItem allocateBucketsAndTasks(ActionItem actionItem) {
-        List<EnumBucket> enumBuckets = BucketAllocator.allocateBuckets(actionItem.getShippingOrder());
-        if (!enumBuckets.isEmpty()) {
-            List<Bucket> buckets = getBuckets(enumBuckets);
-            EnumActionTask currentActionTask = BucketAllocator.listCurrentActionTask(enumBuckets);
-            actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-            actionItem.setCurrentActionTask(find(currentActionTask));
-            actionItem.setBuckets(buckets);
-        }
-        return actionItem;
     }
 
 }
