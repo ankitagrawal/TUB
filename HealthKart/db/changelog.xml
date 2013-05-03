@@ -12560,4 +12560,12 @@
             ALTER TABLE `action_task` CHANGE `acknowledged` `acknowledged` TINYINT( 4 ) NULL DEFAULT '0';
         </sql>
     </changeSet>
+	<changeSet author="Rahul (written)" id="2013-05-03-01">
+		<sql>
+			INSERT INTO  `seek_invoice_num` (`id` ,`warehouse_id`,`invoice_num`,`prefix`,`description`)
+			VALUES ( NULL ,  '401',  '1',  'R',  'Retail Invoice 2013'),
+			(NULL,'401','1','T','B2B Invoice 2013');
+
+		</sql>
+	</changeSet>
 </databaseChangeLog>
