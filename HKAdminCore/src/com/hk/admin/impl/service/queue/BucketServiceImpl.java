@@ -124,7 +124,7 @@ public class BucketServiceImpl implements BucketService {
             actionableBuckets.add(find(EnumBucket.AD_HOC));
         }
         if (actionableBuckets.contains(find(EnumBucket.CM))) {
-            actionableBuckets.addAll(EnumBucket.getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
+            actionableBuckets.addAll(getBuckets(BucketAllocator.getBucketsFromSOC(shippingOrder)));
         }
         return actionableBuckets;
     }
