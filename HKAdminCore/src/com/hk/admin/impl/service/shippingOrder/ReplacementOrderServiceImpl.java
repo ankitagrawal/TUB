@@ -113,7 +113,7 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
                 null, "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
 
 
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(replacementOrder.getBaseOrder());
 
         return replacementOrder;
     }
