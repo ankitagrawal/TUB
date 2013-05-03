@@ -23,7 +23,7 @@ public class Classification implements java.io.Serializable {
     private String secondary;
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -31,7 +31,7 @@ public class Classification implements java.io.Serializable {
     }
 
     public String getPrimary() {
-        return this.primary;
+        return primary;
     }
 
     public void setPrimary(String primary) {
@@ -39,7 +39,7 @@ public class Classification implements java.io.Serializable {
     }
 
     public String getSecondary() {
-        return this.secondary;
+        return secondary;
     }
 
     public void setSecondary(String secondary) {
