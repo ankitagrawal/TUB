@@ -946,7 +946,7 @@ span.error {
 /* line 138, ../sass/main.scss */
 .menuBar ul.lvl1 li.lvl1 {
     max-width:80px;
-    min-width:50px;
+    min-width:65px;
     word-wrap:normal;
     text-align:center;
     height: 38px;
@@ -1796,7 +1796,7 @@ h3 a.prod_link {
     background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
     background-image: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.1) 100%);
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-    height: 250px;
+    height: 300px;
     /*margin-top: -250px;*/
     position: relative;
     left: 0px; right: 0px;
@@ -1822,7 +1822,7 @@ h3 a.prod_link {
 /* line 623, ../sass/main.scss */
 .footer .contents {
     margin: 15px auto;
-    margin-bottom: 0;
+    margin-bottom: 35px;
 }
 
 /* line 626, ../sass/main.scss */

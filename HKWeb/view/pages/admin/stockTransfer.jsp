@@ -1,8 +1,8 @@
-<%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
 <%@ page import="com.hk.admin.util.BarcodeUtil" %>
 <%@ page import="com.hk.constants.sku.EnumSkuItemTransferMode" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <c:set var="StockTransferOut" value="<%=EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId()%>"/>
@@ -16,8 +16,8 @@
 	<c:set var="STOutInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_In_Process.getId()%>" />
 	<c:set var="STGenerated" value="<%=EnumStockTransferStatus.Generated.getId()%>" />
 	<%
-		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+		WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+		pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 		String messageColor = request.getParameter("messageColor");
 		pageContext.setAttribute("messageColor", messageColor);
 	%>
@@ -117,7 +117,7 @@
 				<td>From Warehouse :</td>
 				<td>
 					<s:hidden name="fromWarehouse" value="${whAction.setWarehouse}"/>
-						${whAction.setWarehouse.name}
+						${whAction.setWarehouse.identifier}
 				</td>
 				<td>
 					To Warehouse :
@@ -126,7 +126,7 @@
 					<s:select name="toWarehouse" value="${sta.stockTransfer.toWarehouse}" class="toWarehouse">
 						<s:option> </s:option>
 						<c:forEach items="${whList}" var="wh">
-							<s:option value="${wh}">${wh.name}</s:option>
+							<s:option value="${wh}">${wh.identifier}</s:option>
 						</c:forEach>
 					</s:select>
 				</c:if>

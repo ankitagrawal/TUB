@@ -79,8 +79,8 @@
 				<li>CYCLE COUNT # ${cycle.cycleCount.id}</li>
 		<c:set value="" var="auditOn"/>
 		<c:set value="" var="cycleCountTypeV"/>
-		<c:if test="${cycle.cycleCount.brandsToAudit != null}">
-			<c:set value="${cycle.cycleCount.brandsToAudit.brand}" var="auditOn"/>
+		<c:if test="${cycle.cycleCount.brand != null}">
+			<c:set value="${cycle.cycleCount.brand}" var="auditOn"/>
 			<c:set value="1" var="cycleCountTypeV"/>
 			<li>BRAND : ${auditOn} </li>
 		</c:if>

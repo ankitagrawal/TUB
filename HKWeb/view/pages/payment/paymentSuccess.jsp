@@ -26,6 +26,10 @@
 <!--YAHOO marketing-->
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
 
+<!--OZONE marketing-->
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" />
+
+
 <s:layout-render name="/layouts/paymentSuccess.jsp" pageTitle="Payment Successful">
 <s:layout-component name="htmlHead">
   <script type="text/javascript">
@@ -90,7 +94,7 @@
     <%--<c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
-                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner.png"/>
+                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner-15discount.png"/>
             </a>
         </div>
     </c:if>--%>

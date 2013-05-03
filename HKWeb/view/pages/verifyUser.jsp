@@ -48,21 +48,17 @@
 
       <br/>
 
-      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.cart.CartAction">PROCEED TO CART</s:link></div>
+      <div class="button" align="left"><s:link beanclass="com.hk.web.action.core.cart.CartAction">PROCEED TO CART</s:link></div>
     </c:if>
 
-    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
+    <div class="button" align="left"><s:link beanclass="com.hk.web.action.HomeAction" event="pre">
      START SHOPPING
-    </s:link></div>
-
-    <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
-      REFER YOUR FRIENDS
     </s:link></div>
 
 
     <shiro:notAuthenticated>
 
-      <div class="buttons" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
+      <div class="button" align="left"><s:link beanclass="com.hk.web.action.core.auth.LoginAction" event="pre">
         Login
       </s:link></div>
     </shiro:notAuthenticated>

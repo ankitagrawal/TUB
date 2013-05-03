@@ -16,7 +16,7 @@
 <shiro:hasAnyRoles name="<%=RoleConstants.ROLE_GROUP_MULTIPLE_WAREHOUSE%>">
     <%
         WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-        pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
+        pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
     %>
     <table>
         <tr>
@@ -25,7 +25,7 @@
                 <s:select name="setWarehouse" style="height:30px;font-size:1.2em;padding:1px;">
                     <s:option value="0">-None-</s:option>
                     <c:forEach items="${whList}" var="wh">
-                        <s:option value="${wh.id}">${wh.name}</s:option>
+                        <s:option value="${wh.id}">${wh.identifier}</s:option>
                     </c:forEach>
                 </s:select>
                 <s:submit class="button_orange" name="bindUserWithWarehouse" value="Save"/>
@@ -64,7 +64,9 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.subscription.SearchSubscriptionAction">Search Subscriptions</s:link></h3>
 
-    <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
+	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchUserAction">Search Users</s:link></h3>
+	
+	  <h3><s:link beanclass="com.hk.web.action.admin.user.SearchB2BUserAction">Search B2B Users</s:link></h3>
 
     <h3>
         <s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" event="seekPayment">
@@ -130,8 +132,8 @@
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction">Shipment Awaiting Queue</s:link></h3>
 
-    <h3><s:link
-            beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinRTOInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
+	<h3><s:link
+			beanclass="com.hk.web.action.admin.inventory.SearchOrderAndReCheckinReturnInventoryAction">Search Shipping Order & Checkin RTO</s:link></h3>
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.queue.DeliveryAwaitingQueueAction">Delivery Awaiting Queue</s:link></h3>
@@ -195,16 +197,18 @@
     </h3>
     <c:if test="${whAction.setWarehouse != null}">
 
-
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
         <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>
+            <%--<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>--%>
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
+	<h3><s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
+
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>--%>
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
@@ -212,6 +216,11 @@
 
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
+
+    <%--<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"--%>
+	            <%--event="generateCourierReport">Download Courier Excel--%>
+		<%--<s:param name="courierDownloadFunctionality" value="false"/>--%>
+	<%--</s:link></h3>--%>
 
     </c:if>
     <h3>
@@ -257,6 +266,11 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction">Close Grns</s:link>
         </h3>
+<%--
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction" event="closeGrn">Close Grns(2 Months)</s:link>
+        </h3>
+--%>
     </shiro:hasRole>
 
 </div>
@@ -320,6 +334,8 @@
 
     <h3><s:link
             beanclass="com.hk.web.action.admin.marketing.MarketingExpenseAction"> Marketing Expense List</s:link></h3>
+    <h3><s:link
+            beanclass="com.hk.web.action.admin.marketing.MarketingProductFeedAction"> Add/Remove Products To Feeds </s:link></h3>
 
     <h3><s:link beanclass="com.hk.web.action.admin.clm.CustomerScoreAction">Upload CLM Score</s:link></h3>
 

@@ -69,6 +69,9 @@ public class PoLineItem implements java.io.Serializable {
   @OneToOne
   @JoinColumn (name = "extra_inventory_line_item_id")
   private ExtraInventoryLineItem extraInventoryLineItem;
+  
+  @Transient
+  private boolean firstTimePurchased;
 
 	public Long getId() {
 		return this.id;
@@ -197,8 +200,16 @@ public class PoLineItem implements java.io.Serializable {
   public void setExtraInventoryLineItem(ExtraInventoryLineItem extraInventoryLineItem) {
     this.extraInventoryLineItem = extraInventoryLineItem;
   }
+  
+  public boolean isFirstTimePurchased() {
+	return firstTimePurchased;
+  }
 
-  @Override
+  public void setFirstTimePurchased(boolean firstTimePurchased) {
+	this.firstTimePurchased = firstTimePurchased;
+  }
+
+@Override
 	public String toString() {
 		return this.id != null ? this.id.toString() : "";
 	}

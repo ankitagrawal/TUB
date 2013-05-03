@@ -1,7 +1,6 @@
 package com.hk.impl.service.analytics;
 
 import com.hk.constants.HttpRequestAndSessionConstants;
-import com.hk.constants.core.HealthkartConstants;
 import com.hk.domain.analytics.TrafficTracking;
 import com.hk.domain.analytics.UserBrowsingHistory;
 import com.hk.domain.catalog.category.Category;
@@ -12,7 +11,6 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.analytics.UserBrowsingHistoryDao;
 import com.hk.pact.service.analytics.TrafficAndUserBrowsingService;
 import com.hk.util.TrafficSourceFinder;
-import com.hk.web.filter.WebContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
@@ -37,10 +33,8 @@ import java.util.Map;
 public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements TrafficAndUserBrowsingService {
 
 	private static Logger logger = LoggerFactory.getLogger(TrafficAndUserBrowsingServiceImpl.class);
-
 	@Autowired
 	BaseDao baseDao;
-
 	@Autowired
 	UserBrowsingHistoryDao userBrowsingHistoryDao;
 
@@ -73,7 +67,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		trafficTracking.setTrafficSrcPaid(Boolean.valueOf(trafficInfoMap.get(TrafficSourceFinder.TRAFFIC_SRC_PAID)));
 
 		trafficTracking.setLandingUrl(pageUrl);
-		
+
 		Category category = null;
 		String categoryName = trafficInfoMap.get(TrafficSourceFinder.CATEGORY);
 		if (StringUtils.isNotBlank(categoryName))
@@ -95,17 +89,16 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 			trafficTracking.setUserId(user.getId());
 			trafficTracking.setReturningUser(1L);
 		}
-		trafficTracking.setIp(httpRequest.getRemoteAddr());
+		trafficTracking.setIp(getClientIPAddress(httpRequest));
 		trafficTracking.setSessionId(httpRequest.getSession().getId());
 		trafficTracking.setCreateDt(new Date());
 		trafficTracking.setUpdateDt(new Date());
 
 		trafficTracking = (TrafficTracking) getBaseDao().save(trafficTracking);
-		
+
 
 		return trafficTracking;
 	}
-
 
 	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
 		if (product != null) {
@@ -126,7 +119,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 					try {
 						getBaseDao().save(userBrowsingHistory);
 					} catch (Exception e) {
-						logger.error("Exception while saving browsing history - " + e.getMessage() + " stringified object -> "+ userBrowsingHistory);
+						logger.error("Exception while saving browsing history - " + e.getMessage() + " stringified object -> " + userBrowsingHistory);
 					}
 				} else {
 					//Do nothing					
@@ -134,6 +127,18 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 				}
 			}
 		}
+	}
+
+	public String getClientIPAddress(HttpServletRequest request) {
+		// Apache redirection
+		String ipAddress = request.getHeader("X-FORWARDED-FOR");
+		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getRemoteAddr();
+		}
+		if (ipAddress.contains(",")) {
+			ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+		}
+		return ipAddress;
 	}
 
 	public BaseDao getBaseDao() {

@@ -316,7 +316,7 @@
             <s:link beanclass="com.hk.web.action.core.catalog.BrandCatalogAction" class="bl">
 	            ${product.brand}
 	            <s:param name="brand" value="${fn:toLowerCase(product.brand)}"/>
-	            <s:param name="topLevelCategory" value="${pa.topCategoryUrlSlug}"/>
+	            <s:param name="topLevelCategory" value="${product.primaryCategory.name}"/>
             </s:link>
           </span>
 		</c:if>

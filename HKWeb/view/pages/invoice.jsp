@@ -365,7 +365,7 @@
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>
 
-<div class="grid_12">
+<%--<div class="grid_12">
   <div style="font-size:.8em">Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
   </div>
   <hr/>
@@ -382,7 +382,7 @@
         06101832327 </p>
     </c:otherwise>
   </c:choose>
-</div>
+</div>--%>
 
 <div class="clear"></div>
 <div style="margin-top: 5px;"></div>

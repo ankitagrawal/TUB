@@ -55,24 +55,15 @@
 <table class="header">
   <tr>
     <td>
-      <%--Bright Lifecare Pvt. Ltd.<br/>--%>
-      <%--3th Floor, Parsvnath Arcadia,<br/>--%>
-      <%--1 MG Road, Gurgaon - 122001<br/>--%>
-      <%--TIN: 06101832036--%>
-      Bright Lifecare Pvt. Ltd.<br/>
-      ${orderSummary.purchaseOrder.warehouse.line1}<br/>
-      ${orderSummary.purchaseOrder.warehouse.line2}<br/>
-      ${orderSummary.purchaseOrder.warehouse.city} &nbsp;
-      -${orderSummary.purchaseOrder.warehouse.pincode} <br/>
-      ${orderSummary.purchaseOrder.warehouse.state}<br/>
-      <c:choose>
-        <c:when test="${orderSummary.purchaseOrder.warehouse.state == 'HARYANA'}">
-          <p> TIN# 06101832036</p>
-        </c:when>
-        <c:when test="${orderSummary.purchaseOrder.warehouse.state  == 'MAHARASHTRA'}">
-          <p> TIN# 27210893736</p>
-        </c:when>
-      </c:choose>
+      <c:set var="warehouse" value="${orderSummary.purchaseOrder.warehouse}"/>
+      ${warehouse.name}<br/>
+      ${warehouse.line1}<br/>
+      ${warehouse.line2}<br/>
+      ${warehouse.city} &nbsp;
+      -${warehouse.pincode} <br/>
+      ${warehouse.state}<br/>
+
+      <p> TIN# ${warehouse.tin}</p>
     </td>
     <td align="right">
       <img src="${pageContext.request.contextPath}/images/logo.png" alt=""/>

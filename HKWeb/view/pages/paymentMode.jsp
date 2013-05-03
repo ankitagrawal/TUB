@@ -92,7 +92,7 @@
             value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
             currencySymbol="Rs "/> </strong></h4>
     <h6>If you have any trouble during the payment process, call our
-        helpline number <strong class='red'> 0124 - 4502930 </strong></h6>
+        helpline number <strong class='red'> 0124 - 4616444 </strong></h6>
 </div>
 
 <div class="alert messages" style="font-size: 14px; color: red">
@@ -257,6 +257,7 @@
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
                         <s:hidden name="order" value="${orderSummary.order}"/>
+
                         <div style="margin-bottom: 15px;">
                             <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
                             <s:text class="signUpInputNew2" name="codContactName"
@@ -267,6 +268,7 @@
                             <s:text class="signUpInputNew2" name="codContactPhone"
                                     value="${orderSummary.order.address.phone}" id="phoneNo"/>
                         </div>
+
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
                             <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="Place Order"
@@ -709,3 +711,14 @@
    }
 
    </style>
+
+<script type="text/javascript">
+  /*
+  $(document).ready(function(){
+     $('.contactMobile').blur(function validateMobile(){
+       var mobile = this.value;
+       if()
+     });
+  });*/
+  
+</script>

@@ -81,13 +81,14 @@
 			<c:if test="${printPickBean.category != null}">
 				Showing Orders for Category: <strong>${printPickBean.category.displayName}</strong>
 			</c:if>
-			<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction" style="float:right;">Brands to Exclude/Audit</s:link>
+			<s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction" event="createCycleCount" style="float:right;">Brands to Exclude/Audit</s:link>
 		</div>
 		<s:form beanclass="com.hk.web.action.admin.queue.ChooseOrdersForPrintPickAction" method="get" >
 		<div align="center">
 			<%--<label width="5" style="font-weight:bold;color:red;font-size:1.2em">Brand To Restrict:</label><s:text name="brand" class="brand" />--%>
 			Category
 			<s:select name="category" value="${printPickBean.category.name}">
+                <s:option value="">Any Category</s:option>
 				<c:forEach items="${categoryList}" var="category">
 					<s:option value="${category.name}">${category.displayName} </s:option>
 				</c:forEach>
@@ -135,6 +136,19 @@
                                          formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="paymentEndDate"/>
 
                 <s:submit name="searchOrdersForPrinting" value="Search By Payment Date"
+                          style="font-size:0.9em"/>
+
+            </div>
+            <div align="center">
+                <label>Target Start
+                    Date </label><s:text class="date_input startDate" style="width:150px"
+                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startTargetDispatchDate"/>
+
+                <label>Target End
+                    Date </label><s:text class="date_input endDate" style="width:150px"
+                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endTargetDispatchDate"/>
+
+                <s:submit name="searchOrdersForPrinting" value="Search By Target Date"
                           style="font-size:0.9em"/>
 
             </div>
