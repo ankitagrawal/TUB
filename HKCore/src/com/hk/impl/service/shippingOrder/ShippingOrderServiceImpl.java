@@ -313,7 +313,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
             emailManager.sendEscalationToDropShipEmail(shippingOrder);
         }
         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-        bucketService.escalateOrderFromActionQueue(shippingOrder);
+        if (!isAutoEsc) {
+            bucketService.escalateOrderFromActionQueue(shippingOrder);
+        }
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
