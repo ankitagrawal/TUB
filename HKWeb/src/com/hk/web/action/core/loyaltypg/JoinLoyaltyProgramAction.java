@@ -24,8 +24,8 @@ import com.hk.web.action.core.auth.LoginAction;
 @Secure(hasAnyRoles = {RoleConstants.HK_USER, RoleConstants.HK_UNVERIFIED}, authActionBean=LoginAction.class)
 public class JoinLoyaltyProgramAction extends BaseAction {
 	
-	String gender;
-	Date dob;
+	private String gender;
+	private Date dob;
 	
 	@Autowired UserService userService;
 	@Autowired RoleService roleService;
@@ -37,26 +37,40 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	}
 
 	public Resolution continueProgram() {
-		User user = userService.getLoggedInUser();
-		if(gender != null && gender.length() > 0) {
-			user.setGender(gender);
+		User user = this.userService.getLoggedInUser();
+		if(this.gender != null && this.gender.length() > 0) {
+			user.setGender(this.gender);
 		}
 		
-		if(dob != null) {
-			user.setBirthDate(dob);
+		if(this.dob != null) {
+			user.setBirthDate(this.dob);
 		}
 		
-		user.getRoles().add(roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
-		userService.save(user);
+		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
+		this.userService.save(user);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}
 	
 	public String getGender() {
-		return gender;
+		return this.gender;
 	}
 	
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	/**
+	 * @return the dob
+	 */
+	public Date getDob() {
+		return this.dob;
+	}
+
+	/**
+	 * @param dob the dob to set
+	 */
+	public void setDob(Date dob) {
+		this.dob = dob;
 	}
 
 }

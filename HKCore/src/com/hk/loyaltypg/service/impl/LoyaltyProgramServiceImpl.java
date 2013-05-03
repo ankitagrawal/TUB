@@ -164,6 +164,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		Period period = new Period(new Date().getTime(), info.getUpdationTime().getTime());
 		if (period.getDays() > 365) {
 			info.setBadge(normalBadge);
+			info.setUpdationTime(Calendar.getInstance().getTime());
 			this.baseDao.save(info);
 		}
 		return info;
@@ -218,6 +219,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
 		if (calculatedBadge.compareTo(userBadgeInfo.getBadge()) > 0) {
 			userBadgeInfo.setBadge(calculatedBadge);
+			userBadgeInfo.setUpdationTime(Calendar.getInstance().getTime());
 			this.baseDao.save(userBadgeInfo);
 		}
 	}

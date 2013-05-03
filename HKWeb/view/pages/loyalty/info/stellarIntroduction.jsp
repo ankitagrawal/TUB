@@ -25,7 +25,7 @@ $(document).ready(function(){
 				style="width: 100%; font-size: 38px; padding-bottom: 15px; margin-left: 100px;"
 				class="embedMargin119">Welcome to healthkart stellar !!</div>
 			<div class="topText" id="message1"
-				style="float: left; margin-left: 100px; width: 550px;">
+				style="float: left; margin-left: 100px; width: 680px;">
 				Hi! <br> Stellar is healthkart’s own loyalty program <br>
 				Shop with us, get rewarded with points that you can later redeem
 				here. <br> What more, you can convert these points into store
@@ -38,7 +38,7 @@ $(document).ready(function(){
 			</div>
 			
 			<div class="topText" id="message2"
-				style="float: left; margin-left: 100px; width: 550px; display:none;">
+				style="float: left; margin-left: 100px; width: 680px; display:none;">
 				So how does this work? <br>Once you have registered on healthkart.com or on healthkartplus.com ,
 				<br>you automatically join stellar. The more you spend henceforth, the more <br> 
 				points you gather. To understand our slab structure better, may we suggest <br>you take a look at our 
@@ -51,10 +51,10 @@ $(document).ready(function(){
 			</div>
 			
 			<div class="topText" id="message3"
-				style="float: left; margin-left: 100px; width: 550px; display:none;">
+				style="float: left; margin-left: 100px; width: 680px; display:none;">
 				And there is the redemption of points on healthkart.com and healthkart.com<br>
 				If you find something not on our catalog and on these two, that you’d like to buy<br>
-				<br>you can convert your loyalty points to store credits.<br>X loyalty points gets converted to Y store credits. Once you do that, feel free
+				<br>you can convert your loyalty points to store credits.<br>1 loyalty points gets converted to 1 store credits. Once you do that, feel free
 				<br>to buy straight from our store.<br>
 				<br>
 				<br>

@@ -7,25 +7,13 @@
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.PlaceOrderAction" var="pla" />
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
-<script type="text/javascript" >
-$(document).ready(function() {
-    $('#confirm').click(function () {
-    	  if (confirm('Confirm your Order ?')) {
-			return true;
-    	  } else {
-    		  return false;
-    		  }
-    	  }
-    });
 
-
-</script>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
 					<th style="width: 150px;">Product</th>
 					<th>Quantity</th>
-					<th>Loyalty Points/Item</th>
+					<th>Loyalty Points / Item</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -76,5 +64,17 @@ $(document).ready(function() {
 				</div>
 			</div>
 		</div>
+<script type="text/javascript" >
+$(document).ready(function() {
+    $("#confirm").click(function () {
+    	  if (confirm('Confirm your Order ?')) {
+			return true;
+    	  } else {
+    		  return false;
+    		  }
+    	  }
+    });
+
+</script>
 	</stripes:layout-component>
 </stripes:layout-render>
