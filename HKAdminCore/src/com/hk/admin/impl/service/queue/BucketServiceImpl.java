@@ -178,9 +178,9 @@ public class BucketServiceImpl implements BucketService {
         ActionItem actionItem = existsActionItem(shippingOrder);
         if (actionItem != null) {
             //release all dependencies
-            actionItem.getBuckets().clear();
-            actionItem.getWatchers().clear();
-            actionItem = saveActionItem(actionItem);
+           // actionItem.getBuckets().clear();
+           // actionItem.getWatchers().clear();
+           // actionItem = saveActionItem(actionItem);
             actionItemDao.delete(actionItem);
         }
     }
