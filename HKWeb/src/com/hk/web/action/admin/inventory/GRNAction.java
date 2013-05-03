@@ -237,7 +237,6 @@ public class GRNAction extends BasePaginatedAction {
 					}
 					grnLineItem.setGoodsReceivedNote(grn);
 					grnLineItemDao.save(grnLineItem);
-					getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
 				}
 				sku = grnLineItem.getSku();
 				skuService.saveSku(sku);

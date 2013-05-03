@@ -1,8 +1,5 @@
 package com.hk.constants.core;
 
-import java.util.List;
-import java.util.Arrays;
-
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,35 +10,37 @@ import java.util.Arrays;
  */
 public enum EnumUserCodCalling {
 
-	PENDING_WITH_THIRD_PARTY(10, "Pending With Third Party"),
-    THIRD_PARTY_FAILED(20,"Third Party Failed"),
-	CONFIRMED(30, "Payment Successful"),
-	CANCELLED(40,"Cancelled"),
-    PAYMENT_FAILED(50,"Payment Failed");
+    PENDING_WITH_KNOWLARITY(10, "Pending With Knowlarity"),
+    THIRD_PARTY_FAILED(20, "Third Party Failed"),
+    CONFIRMED(30, "Payment Successful"),
+    CANCELLED(40, "Cancelled"),
+    PAYMENT_FAILED(50, "Payment Failed"),
+    PENDING_WITH_EFFORT_BPO(60, "Pending With Effort Bpo");
 
-	private int id;
-	private String name;
+    private int id;
+    private String name;
 
-	EnumUserCodCalling(int id, String name) {
-		this.id = id;
-		this.name = name;
 
-	}
+    EnumUserCodCalling(int id, String name) {
+        this.id = id;
+        this.name = name;
 
-	public String getName() {
-		return name;
-	}
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }
