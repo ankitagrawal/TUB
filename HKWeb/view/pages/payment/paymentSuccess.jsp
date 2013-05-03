@@ -91,13 +91,13 @@
 </s:layout-component>
 <s:layout-component name="heading">
    <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
-    <%--<c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
+    <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
                 <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner-15discount.png"/>
             </a>
         </div>
-    </c:if>--%>
+    </c:if>
 
 
 </s:layout-component>
