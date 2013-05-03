@@ -65,6 +65,8 @@ public interface ShippingOrderService {
 
 	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason, String comments);
 
+	public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason);
+
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
 	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);

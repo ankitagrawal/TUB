@@ -403,6 +403,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return shippingOrderLifecycle;
     }
 
+    public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason) {
+        ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
+        return logShippingOrderActivity(shippingOrder, userService.getAdminUser(), orderLifecycleActivity, reason, null);
+    }
+
     private void logReason(ShippingOrderLifecycle shippingOrderLifecycle, Reason reason){
         if(reason != null){
             LifecycleReason lifecycleReason = new LifecycleReason();
