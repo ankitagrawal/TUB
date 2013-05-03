@@ -69,10 +69,12 @@ public class ShippingOrder implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
+/*
 
     @JsonSkip
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     private ActionItem actionItem;
+*/
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     @Where(clause = "deleted = 0")
@@ -323,11 +325,4 @@ public class ShippingOrder implements java.io.Serializable {
         this.shippingOrderCategories = categories;
     }
 
-    public ActionItem getActionItem() {
-        return actionItem;
-    }
-
-    public void setActionItem(ActionItem actionItem) {
-        this.actionItem = actionItem;
-    }
 }
