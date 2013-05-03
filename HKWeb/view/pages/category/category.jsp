@@ -75,7 +75,7 @@
 <s:layout-component name="breadcrumbs">
 
   <div class='crumb_outer'>
-    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
+    <a href="${pageContext.request.contextPath}/" class="crumb">Home</a>
     &gt;
     <span class="crumb last" style="font-size: 12px;">${categoryBean.category.displayName}</span>
 
