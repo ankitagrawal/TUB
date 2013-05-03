@@ -38,8 +38,6 @@ public interface OrderService {
 
     public Set<ShippingOrder> createShippingOrders(Order order);
 
-    public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order);
-
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);

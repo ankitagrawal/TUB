@@ -355,11 +355,6 @@ public class OrderServiceImpl implements OrderService {
         return shouldUpdate;
     }
 
-    public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
-        subscriptionService.placeSubscriptions(order);
-        splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-    }
-
     @Transactional
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId) {
         User loggedOnUser = getUserService().getLoggedInUser();
@@ -749,6 +744,7 @@ public class OrderServiceImpl implements OrderService {
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
+            subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }

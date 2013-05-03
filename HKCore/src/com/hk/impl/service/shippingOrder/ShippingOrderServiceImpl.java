@@ -151,7 +151,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrder);
     }
 
-    public List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder) {
+    private List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder) {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
         Set<String> categoryNames = new HashSet<String>();
         for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -168,7 +168,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return actionableBuckets;
     }
 
-    public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         Payment payment = shippingOrder.getBaseOrder().getPayment();
         User adminUser = getUserService().getAdminUser();
         List<Reason> reasons = new ArrayList<Reason>();
@@ -202,7 +202,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false;
     }
 
-    public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 if(!(shippingOrder.isServiceOrder())){
@@ -237,8 +237,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false;
     }
 
-    @Override
-    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to autoEscalate order#" + shippingOrder.getId());
         Payment payment = shippingOrder.getBaseOrder().getPayment();
         User adminUser = getUserService().getAdminUser();
@@ -294,28 +293,46 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Transactional
     public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
-        if (isShippingOrderAutoEscalable(shippingOrder)) {
-            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder, true);
+        if(isShippingOrderAutoEscalable(shippingOrder)){
+            User activityUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
         }
         return shippingOrder;
     }
 
     @Transactional
-    public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-        User adminUser = getUserService().getAdminUser();
+    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder) {
+        if(isShippingOrderManuallyEscalable(shippingOrder)){
+            User activityUser = userService.getLoggedInUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            bucketService.escalateOrderFromActionQueue(shippingOrder);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
+        }
+        return shippingOrder;
+    }
+
+    @Transactional
+    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder) {
+        if(isShippingOrderAutomaticallyManuallyEscalable(shippingOrder)){
+            User activityUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            bucketService.escalateOrderFromActionQueue(shippingOrder);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
+        }
+        return shippingOrder;
+    }
+
+    @Transactional
+    private ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder) {
         EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ? EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
-        EnumShippingOrderLifecycleActivity applicableActivity = isAutoEsc ? EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue : EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue;
         shippingOrder.setLastEscDate(HKDateUtil.getNow());
         shippingOrder.setOrderStatus(applicableStatus.asShippingOrderStatus());
-        User user = isAutoEsc ? adminUser : userService.getLoggedInUser();
-        logShippingOrderActivity(shippingOrder, user, applicableActivity.asShippingOrderLifecycleActivity(), null, null);
+        shippingOrder.setLastEscDate(HKDateUtil.getNow());
         if (shippingOrder.isDropShipping()) {
             emailManager.sendEscalationToDropShipEmail(shippingOrder);
         }
         shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-        if (!isAutoEsc) {
-            bucketService.escalateOrderFromActionQueue(shippingOrder);
-        }
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }

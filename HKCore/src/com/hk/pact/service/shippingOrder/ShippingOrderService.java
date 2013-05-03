@@ -32,6 +32,7 @@ public interface ShippingOrderService {
 
 	public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
 
+
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria);
 
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse, int pageNo, int perPage);
@@ -40,25 +41,15 @@ public interface ShippingOrderService {
 
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
 
-	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
 
-    public List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder);
+    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 
-	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
+    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder);
 
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
+    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder);
 
-    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder);
 
-	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
-
-	/**
-	 * Creates a shipping order with basic details
-	 *
-	 * @param baseOrder
-	 * @param warehouse
-	 * @return
-	 */
+    //Creates a shipping order with basic details
 	public ShippingOrder createSOWithBasicDetails(Order baseOrder, Warehouse warehouse);
 
 	public void nullifyCodCharges(ShippingOrder shippingOrder);
