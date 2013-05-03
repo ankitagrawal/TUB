@@ -681,7 +681,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
+        boolean shippingOrderAlreadyExists = false;
+        if(!order.getShippingOrders().isEmpty()) {
+            shippingOrderAlreadyExists = true;
+        }
 
         logger.debug("Trying to split order " + order.getId());
 
