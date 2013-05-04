@@ -302,8 +302,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			if (sourceResolution != null) {
 				return sourceResolution;
 			}
-
-
 			for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceLineItems) {
 				if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
 					purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
@@ -338,7 +336,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(PurchaseInvoiceAction.class);
+		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 
 	public Resolution delete() {
@@ -378,8 +376,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Short.asPiLineItemType());
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
 				}
-				productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
-				productVariant = productVariantDao.save(productVariant);
+				//productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
+				//productVariant = productVariantDao.save(productVariant);
 			}
 			if (purchaseInvoice.getReconciled() != null) {
 				if (purchaseInvoice.getReconciled() && purchaseInvoice.getReconcilationDate() == null) {
@@ -391,8 +389,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
+		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+	}
+	
+	public Resolution close(){
 		return new RedirectResolution(PurchaseInvoiceAction.class);
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public Resolution getPVDetails() {

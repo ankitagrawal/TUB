@@ -50,6 +50,23 @@
     position: relative;
 	width: 100%;
 }
+
+.rtvListForm{
+	float: right;
+	position: relative;
+}
+
+#finalPayableDiv{
+	float: right;
+	position: relative;
+}
+
+#closeButtonDiv{
+	float: left;
+	position: relative;
+	left: 40%;
+}
+
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -412,6 +429,11 @@
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
 	
+		var shortTotal = $(".shortFinal").val();
+		$("#shortTotal").val(shortTotal);
+		var rtvTotal = parseFloat($('.rtvFinal').length!=0?($(".rtvFinal").val()!=null?$(".rtvFinal").val():0):0);
+		$("#piRtvTotal").val(parseFloat($('.piTotal').val())+rtvTotal);
+		
 	});
 </script>
 </s:layout-component>
@@ -424,7 +446,11 @@
 	        event="getPVDetails"></s:link>
 </div>
 
-<s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<div class="rtvListForm">
+<fieldset style="height:200px"><legend><em>RTV Info</em></legend>
+<br/>
+<s:form  beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
 	There are rtvs attached with the PI. Select to import them.<br/>
 	<table>
@@ -439,6 +465,9 @@
 		There are no rtvs attached with the PI.
 	</c:if>
 </s:form>
+</fieldset>
+</div>
+
 
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
@@ -716,7 +745,7 @@
 	</tr>
 	<tr>
 		<td colspan="12"></td><td>Final Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable" name="purchaseInvoice.finalPayableAmount"
+		<td><s:text readonly="readonly" class="finalPayable piTotal" name="purchaseInvoice.finalPayableAmount"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>
@@ -735,7 +764,7 @@
 
 <br>
 <br>
-
+<p style="font-weight: bold;font-size: medium;">Short Line Items</p>
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <table border="1" class="purchaseInvoiceShortTable">
@@ -898,18 +927,21 @@
 	</tr>
 	<tr>
 		<td colspan="12"></td><td>Short Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortAmount"
+		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortTotalPayable"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 	</tr>
 	</tfoot>
 </table>
 <div class="variantDetails info"></div>
-<br/>
 	<s:submit name="saveShortLineItems" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
+<br/>
+<br/>
 <s:form id="rtvForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
+<p style="font-weight: bold;font-size: medium;">RTV Line Items</p>
+
 <table id="rtvTable" class="rtvTable">
 <thead>
 	<tr>
@@ -1069,7 +1101,7 @@
 			
 			<c:choose>
 			<c:when test="${extraInventoryLineItem.remarks!=null}">
-			<td><s:text name="extraInventoryLineItems[${ctr.index}].remarks" value="${extraInventoryLineItem.remarks}"/></td>
+			<td><s:text style="height:60px; width:210px;" name="extraInventoryLineItems[${ctr.index}].remarks" value="${extraInventoryLineItem.remarks}"/></td>
 			</c:when>
 			<c:otherwise><td><s:text name="extraInventoryLineItems[${ctr.index}].remarks" value=""/></td></c:otherwise>
 			</c:choose>
@@ -1087,7 +1119,7 @@
 		            value="${pia.purchaseInvoice.taxAmount}"/></td>
 		<td><s:text readonly="readonly" class="totalSurcharge" name="purchaseInvoice.surchargeAmount"
 		            value="${pia.purchaseInvoice.surchargeAmount}"/></td>
-		<td><s:text readonly="readonly" class="totalPayable" name="purchaseInvoice.payableAmount"
+		<td colspan="2" ><s:text readonly="readonly" class="totalPayable" name="purchaseInvoice.payableAmount"
 		            value="${pia.purchaseInvoice.payableAmount}"/></td>
 	</tr>
 	<tr>
@@ -1101,7 +1133,10 @@
 <s:submit name="saveRtv" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
-<table id = "finalPayableDiv">
+<div id = "finalPayableDiv">
+<fieldset>
+<legend><br/><em>Final Payable Amounts</em></legend>
+<table >
 <tr>
 <th></th>
 <th>PI+RTV TOTAL</th>
@@ -1109,9 +1144,16 @@
 </tr>
 <tr>
 <td><label>Final Payable Amounts</label></td>
-<td><input id= "" readonly="readonly" /></td>
+<td><input id= "piRtvTotal" readonly="readonly" /></td>
+<td><input id= "shortTotal" readonly="readonly" /></td>
 </tr>
 </table>
+</fieldset>
+</div>
 
+
+<div id="closeButtonDiv">
+<s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>
+</div>
 </s:layout-component>
 </s:layout-render>
