@@ -37,32 +37,39 @@
 
     <img class="main-banner" src="${pageContext.request.contextPath}/images/clearance/banner.jpg"/>
 <div class="cl"></div>
-
+  
+  
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2103'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2281'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE864'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1333'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE402'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE291'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE442'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE292'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE411'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE720'/>
+  
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT517'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1855'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='ALVDA14'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA002'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BIOMRCA001'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='DM018'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE1333'/>
+  
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP014'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1206'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HV002'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PRS004'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT376'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='LIVPRF09'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE402'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE291'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1837'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT667'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NYX30'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE442'/>
+  
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='HB012'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OMRN014'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE292'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE411'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='EYE720'/>
+  
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='BAB1932'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1327'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1359'/>
@@ -92,7 +99,7 @@
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1034'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT1732'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='VLCCFRT9'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PW017'/>
+  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT940'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON006'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON002'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='AMRON001'/>
@@ -102,18 +109,9 @@
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='PP009'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT3121'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='NUT970'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2103'/>
-  <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT2281'/>
+  
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='SPT3120'/>
   <s:layout-render name="/layouts/embed/_productThumb200ny2013.jsp" productId='OH014'/>
-
-
-
-
-
-
-
-
 
   <div class="cl"></div>
 <div class="footer-ny">
