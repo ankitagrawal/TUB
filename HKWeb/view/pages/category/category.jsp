@@ -173,7 +173,7 @@
                 <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                      class="small_banner"/>
             </a>
-            <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_300.jpg" alt="Free shipping and COD"
+            <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
                  class="small_banner"/>
         </c:otherwise>
     </c:choose>

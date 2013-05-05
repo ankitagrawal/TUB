@@ -12548,4 +12548,20 @@
 
 		</sql>
 	</changeSet>
+    <changeSet author="Ajeet (generated)" id="1367657291705-1">
+        <createTable tableName="clearance_sale_product">
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="1000000" name="sorting" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1367657291705-4">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

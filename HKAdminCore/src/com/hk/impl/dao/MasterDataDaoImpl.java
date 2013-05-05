@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
@@ -517,7 +518,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList() {
-      return getBaseDao().getAll(ConsignmentLifecycleStatus.class);
+        return getBaseDao().getAll(ConsignmentLifecycleStatus.class);
+    }
+
+    public List<EnumUserCodCalling> getUserCodCallStatus() {
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO);
     }
 
 }
