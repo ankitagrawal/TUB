@@ -45,10 +45,14 @@ public class AddVirtualTryOnAction extends BaseAction {
                 if (productVariant1 == null) {
                     addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is already have TryOn Filter"));
                 } else {
-
+                boolean productVariantBool=getProductVariantService().isImageType(productVariantId);
+                    if(productVariantBool==false)  {
+                    addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " do not have image type 7"));
+                } else {
                     productVariant.setProductOptions(productOptionList);
                     getProductVariantService().save(productVariant);
                     addRedirectAlertMessage(new SimpleMessage("Database updated"));
+                }
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.hk.impl.service.catalog;
 import com.hk.constants.catalog.product.EnumProductVariantServiceType;
 import com.hk.domain.affiliate.AffiliateCategory;
 import com.hk.domain.catalog.product.Product;
+import com.hk.domain.catalog.product.ProductImage;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.ProductVariantServiceType;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class ProductVariantServiceImpl implements ProductVariantService {
 
     private static final Long tryOnFilterId = 14166L;
+    private static final Long imageTypeId=7L;
 	@Autowired
 	private ProductVariantDao productVariantDao;
 	@Autowired
@@ -95,6 +97,15 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     public ProductOption getProductOptionById(Long productOptionId){
         return (ProductOption) productVariantDao.get(ProductOption.class, productOptionId);
+    }
+    public boolean isImageType(String variantId){
+        ProductVariant productVariant=getVariantById(variantId);
+
+        for (ProductImage productImage : productVariant.getProductImages())
+          if(productImage.getImageType()==imageTypeId){
+        return true;
+          }
+        return false;
     }
 
 	public ProductVariantServiceType getVariantServiceType(EnumProductVariantServiceType enumProductVariantServiceType) {

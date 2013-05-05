@@ -68,4 +68,6 @@ public interface ProductVariantService {
 
     public ProductOption getProductOptionById(Long productOptionId);
 
+    public boolean isImageType(String variantId);
+
 }
