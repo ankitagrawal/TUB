@@ -11295,91 +11295,6 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-	<changeSet author="DeepakC" id="20133001-01">
-		<createTable tableName="loyalty_product">
-			<column autoIncrement="true" name="id" type="INT">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="variant_id" type="VARCHAR(32)">
-				<constraints nullable="false" />
-			</column>
-			<column name="points" type="DOUBLE">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-02">
-		<addForeignKeyConstraint constraintName="fk_loyalty_product_variant"
-			baseTableName="loyalty_product" baseColumnNames="variant_id"
-			referencedTableName="product_variant" referencedColumnNames="id" />
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-03">
-		<createTable tableName="user_order_karma_profile">
-			<column name="order_id" type="INT">
-				<constraints nullable="false" />
-			</column>
-			<column name="user_id" type="INT">
-				<constraints nullable="false" />
-			</column>
-			<column name="creation_time" type="DATETIME">
-				<constraints nullable="false" />
-			</column>
-			<column name="update_time" type="DATETIME">
-				<constraints nullable="false" />
-			</column>
-			<column name="transaction_type" type="VARCHAR(32)">
-				<constraints nullable="false" />
-			</column>
-			<column name="status" type="VARCHAR(32)">
-				<constraints nullable="false" />
-			</column>
-			<column name="points" type="DOUBLE">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-04">
-		<addForeignKeyConstraint constraintName="fk_ukarma_order"
-			baseTableName="user_order_karma_profile" baseColumnNames="order_id"
-			referencedTableName="base_order" referencedColumnNames="id" />
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-05">
-		<addForeignKeyConstraint constraintName="fk_ukarma_user"
-			baseTableName="user_order_karma_profile" baseColumnNames="user_id"
-			referencedTableName="user" referencedColumnNames="id" />
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-06">
-		<addUniqueConstraint tableName="user_order_karma_profile"
-			constraintName="fk_ukarma_uo" columnNames="user_id,order_id" />
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-07">
-		<insert tableName="store">
-			<column name="id" value="4"/>
-			<column name="name" value="LOYALTYPG"/>
-			<column name="prefix" value="LP"/>
-		</insert>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-08">
-		<addColumn tableName="badge">
-			<column name="loyalty_percentage" type="DOUBLE">
-				<constraints nullable="false" />
-			</column>
-			<column name="icon_rel_url" type="VARCHAR(32)">
-				<constraints nullable="true" />
-			</column>
-		</addColumn>
-		<modifyDataType tableName="badge" columnName="min_score" newDataType="DOUBLE"/>
-		<modifyDataType tableName="badge" columnName="max_score" newDataType="DOUBLE"/>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-09">
-		<sql>
-			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
-			('NORMAL', 0, 1500, 0),
-			('SILVER', 1501, 3000, 1),
-			('GOLD', 3001, 6000, 2),
-			('PLATINUM', 6001, 100000, 3);
-		</sql>
-	</changeSet>
      <changeSet author="Shrey (generated)" id="29-01-2013-01">
         <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
             <column name="shipping_order_id"/>
@@ -12604,14 +12519,14 @@
         </addColumn>
     </changeSet>
     <!--<changeSet author="Ajeet (generated)" id="1366966901739-2">
-        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>`
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
     </changeSet> -->    
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-    <!-- <changeSet author="Ajeet (generated)" id="1366966901739-5">
+    <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
-    </changeSet> -->
+    </changeSet>
     <changeSet author="marut (generated)" id="1366356450756-01">
         <createTable tableName="marketing_feed">
             <column autoIncrement="true" name="id" type="INT">
@@ -12632,5 +12547,138 @@
 			(NULL,'401','1','T','B2B Invoice 2013');
 
 		</sql>
+	</changeSet>
+    <changeSet author="Ajeet (generated)" id="1367657291705-1">
+        <createTable tableName="clearance_sale_product">
+            <column name="product_id" type="VARCHAR(20)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueNumeric="1000000" name="sorting" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="deleted" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1367657291705-4">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
+    </changeSet>
+    
+    <changeSet author="DeepakC" id="20133001-01">
+		<createTable tableName="loyalty_product">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="variant_id" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-02">
+		<addForeignKeyConstraint constraintName="fk_loyalty_product_variant"
+			baseTableName="loyalty_product" baseColumnNames="variant_id"
+			referencedTableName="product_variant" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-03">
+		<createTable tableName="user_order_karma_profile">
+			<column name="order_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="creation_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="update_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="transaction_type" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-04">
+		<addForeignKeyConstraint constraintName="fk_ukarma_order"
+			baseTableName="user_order_karma_profile" baseColumnNames="order_id"
+			referencedTableName="base_order" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-05">
+		<addForeignKeyConstraint constraintName="fk_ukarma_user"
+			baseTableName="user_order_karma_profile" baseColumnNames="user_id"
+			referencedTableName="user" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-06">
+		<addUniqueConstraint tableName="user_order_karma_profile"
+			constraintName="fk_ukarma_uo" columnNames="user_id,order_id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-07">
+		<insert tableName="store">
+			<column name="id" value="4"/>
+			<column name="name" value="LOYALTYPG"/>
+			<column name="prefix" value="LP"/>
+		</insert>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-08">
+		<addColumn tableName="badge">
+			<column name="loyalty_multiplier" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+			<column name="icon_rel_url" type="VARCHAR(32)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<modifyDataType tableName="badge" columnName="min_score" newDataType="DOUBLE"/>
+		<modifyDataType tableName="badge" columnName="max_score" newDataType="DOUBLE"/>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-09">
+		<sql>
+			insert into badge (badge_name,min_score,max_score,loyalty_multiplier) values 
+			('NORMAL', 0, 1500, 0),
+			('BRONZE', 1501, 3000, 0.01),
+			('SILVER', 3001, 6000, 0.015),
+			('GOLD', 6001, 12000, 0.0175),
+			('PLATINUM', 12001, -1, 0.02);
+		</sql>
+	</changeSet>
+    <changeSet author="DeepakC" id="20133001-10">
+		<insert tableName="reward_point_mode">
+			<column name="id" value="80"/>
+			<column name="name" value="HK Loyalty Points"/>
+		</insert>
+	</changeSet>
+	 <changeSet author="DeepakC" id="20133001-11">
+		<insert tableName="role">
+			<column name="name" value="HK_LOYALTY_USER"/>
+		</insert>
+	</changeSet>
+	    <changeSet author="DeepakC" id="20133001-12">
+		<createTable tableName="user_badge_info">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="user_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="badge_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="creation_time" type="DATETIME">
+				<constraints nullable="true" />
+			</column>
+			<column name="updation_time" type="DATETIME">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
 	</changeSet>
 </databaseChangeLog>
