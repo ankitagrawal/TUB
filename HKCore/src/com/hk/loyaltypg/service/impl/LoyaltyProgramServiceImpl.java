@@ -417,7 +417,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		double totalPointsConverted = 0;	
 		if (loyaltyPoints > 0) {
 			String comment = "Reward Points converted from Loyalty points";
-			Order orderReward = this.orderDao.get(Order.class, -1);
+			Order orderReward = this.orderDao.get(Order.class, -1l);
 			UserOrderKarmaProfile rewardProfile = new UserOrderKarmaProfile();
 			rewardProfile.setUser(user);
 			rewardProfile.setKarmaPoints(-loyaltyPoints);
