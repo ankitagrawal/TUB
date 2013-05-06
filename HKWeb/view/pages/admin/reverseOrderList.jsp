@@ -12,7 +12,9 @@
 <%
     pageContext.setAttribute("pickupStatusList", EnumPickupStatus.getPickupStatusList());
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    Long pickUpStatus = EnumPickupStatus.OPEN.getId();
     pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
+    pageContext.setAttribute("pickUpStatus", pickUpStatus);
 %>
 <c:set var="reconDone" value="<%=EnumReconciliationStatus.DONE.getId()%>"/>
 <c:set var="reconPending" value="<%=EnumReconciliationStatus.PENDING.getId()%>"/>
@@ -292,7 +294,7 @@
                     <br/>
                 </c:if>
 
-                <c:if test="${reverseOrderRequest.receivedDate == null}">
+                <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus == pickUpStatus}">
                     <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
                             event="cancelReverseOrder" class="cancelOrder">Cancel Order
                         <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
