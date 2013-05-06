@@ -503,7 +503,7 @@ public class ReportManager {
         Row row = sheet1.createRow(0);
         row.setHeightInPoints((short) 30);
 
-        int totalColumnNo = 25;
+        int totalColumnNo = 27;
 
         Cell cell;
         for (int columnNo = 0; columnNo < totalColumnNo; columnNo++) {
