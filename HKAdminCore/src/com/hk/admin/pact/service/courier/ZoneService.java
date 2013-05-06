@@ -6,6 +6,7 @@ import com.hk.domain.courier.CourierGroup;
 import com.hk.domain.courier.PincodeRegionZone;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.warehouse.Warehouse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 

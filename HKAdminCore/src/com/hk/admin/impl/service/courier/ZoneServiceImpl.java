@@ -4,6 +4,7 @@ import com.hk.admin.pact.service.courier.ZoneService;
 import com.hk.domain.courier.Zone;
 import com.hk.pact.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * Time: 2:18:36 PM
  * To change this template use File | Settings | File Templates.
  */
+@Service
 public class ZoneServiceImpl implements ZoneService{
 	@Autowired
 	BaseDao baseDao;

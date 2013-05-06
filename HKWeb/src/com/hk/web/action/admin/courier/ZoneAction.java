@@ -29,17 +29,17 @@ public class ZoneAction extends BaseAction{
 	@DefaultHandler
 	public Resolution pre() {
 		zoneList = getZoneService().getAllZones();
-		return new ForwardResolution("/pages/zoneList.jsp");
+		return new ForwardResolution("/pages/admin/courier/zoneList.jsp");
 	}
 
 
 	public Resolution saveZone() {
 		if(zone != null){
 			zone = getZoneService().saveZone(zone);
-			addRedirectAlertMessage(new SimpleMessage("Unable to save zone !"));
+			addRedirectAlertMessage(new SimpleMessage("Zone saved !"));
 		}
 		else{
-			addRedirectAlertMessage(new SimpleMessage("Zone saved !"));
+			addRedirectAlertMessage(new SimpleMessage(" Unable to save zone !!"));
 		}
 		return new RedirectResolution(ZoneAction.class);
 	}
