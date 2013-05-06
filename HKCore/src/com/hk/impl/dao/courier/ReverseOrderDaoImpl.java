@@ -1,7 +1,6 @@
 package com.hk.impl.dao.courier;
 
 
-import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.impl.dao.BaseDaoImpl;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,70 +19,77 @@ import java.util.List;
  */
 @Repository
 public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao {
-    
-	@Override
-	public ReverseOrder save(ReverseOrder reverseOrder){
-		return (ReverseOrder) super.save(reverseOrder);
-	}
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage){
-        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId), page, perPage);
+    @Override
+    public ReverseOrder save(ReverseOrder reverseOrder) {
+        return (ReverseOrder) super.save(reverseOrder);
     }
 
-//	 public List<ReverseOrder> getPickupRequestsByStatuses(Boolean pickupStatus, String reconciliationStatus) {
-//        return findByCriteria(getPickupSearchCriteria(pickupStatus, reconciliationStatusId));
-//    }
+    public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage, Date startDate, Date endDate) {
+        return list(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, startDate, endDate), page, perPage);
+    }
 
-	private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId) {
-		DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
-		DetachedCriteria courierDetailCriteria = null;
+    public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, Date startDate, Date endDate) {
+        return (List<ReverseOrder>) findByCriteria(getPickupSearchCriteria(shippingOrderId, pickupStatusId, reconciliationStatusId, courierId, warehouseId, startDate, endDate));
+    }
 
-		if(shippingOrderId != null){
-			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
-			shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));
-		}
+    private DetachedCriteria getPickupSearchCriteria(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, Date startDate, Date endDate) {
+        DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
+        DetachedCriteria courierDetailCriteria = null;
 
-		if (pickupStatusId != null){
-			courierDetailCriteria = orderCriteria.createCriteria("courierPickupDetail");
-			DetachedCriteria pickupStatusCriteria = courierDetailCriteria.createCriteria("pickupStatus");
-			pickupStatusCriteria.add(Restrictions.eq("id", pickupStatusId));
-		}
+        DetachedCriteria shippingOrderCriteria = null;
+        if (shippingOrderId != null) {
+            shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));
+        }
 
-		if (reconciliationStatusId != null) {
-			DetachedCriteria reconciliationCriteria = orderCriteria.createCriteria("reconciliationStatus");
-			reconciliationCriteria.add(Restrictions.eq("id", reconciliationStatusId));
-		}
+        if (pickupStatusId != null) {
+            courierDetailCriteria = orderCriteria.createCriteria("courierPickupDetail");
+            DetachedCriteria pickupStatusCriteria = courierDetailCriteria.createCriteria("pickupStatus");
+            pickupStatusCriteria.add(Restrictions.eq("id", pickupStatusId));
+        }
 
-		if(courierId != null){
-			if(courierDetailCriteria == null){
-				courierDetailCriteria = orderCriteria.createCriteria("courierPickupDetail");
-			}
-			DetachedCriteria courierCriteria = courierDetailCriteria.createCriteria("courier");
-			courierCriteria.add((Restrictions.eq("id", courierId)));
-		}
+        if (reconciliationStatusId != null) {
+            DetachedCriteria reconciliationCriteria = orderCriteria.createCriteria("reconciliationStatus");
+            reconciliationCriteria.add(Restrictions.eq("id", reconciliationStatusId));
+        }
 
-		if(warehouseId != null){
-			DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
-			DetachedCriteria warehouseCriteria = shippingOrderCriteria.createCriteria("warehouse");
-			warehouseCriteria.add(Restrictions.eq("id", warehouseId));
+        if (courierId != null) {
+            if (courierDetailCriteria == null) {
+                courierDetailCriteria = orderCriteria.createCriteria("courierPickupDetail");
+            }
+            DetachedCriteria courierCriteria = courierDetailCriteria.createCriteria("courier");
+            courierCriteria.add((Restrictions.eq("id", courierId)));
+        }
 
-		}
+        if (startDate != null && endDate != null) {
+            orderCriteria.add(Restrictions.between("createDate", startDate, endDate));
 
-		return orderCriteria;
-	}
+        }
+        if (warehouseId != null) {
+            if (shippingOrderCriteria == null) {
+                shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            }
+            DetachedCriteria warehouseCriteria = shippingOrderCriteria.createCriteria("warehouse");
+            warehouseCriteria.add(Restrictions.eq("id", warehouseId));
 
-	public ReverseOrder getReverseOrderById(Long id){
-		return (ReverseOrder) super.findUniqueByNamedQueryAndNamedParam("getReverseOrderById", new String[]{"reverseOrderId"}, new Object[]{id});
-	}
+        }
+        orderCriteria.addOrder(org.hibernate.criterion.Order.desc("createDate"));
+        return orderCriteria;
+    }
 
-	public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId){
-		return (ReverseOrder) super.findUniqueByNamedParams("from ReverseOrder rvo where rvo.shippingOrder.id = :shippingOrderId", new String []{"shippingOrderId"},
-				new Object[]{shippingOrderId});
-	}
+    public ReverseOrder getReverseOrderById(Long id) {
+        return (ReverseOrder) super.findUniqueByNamedQueryAndNamedParam("getReverseOrderById", new String[]{"reverseOrderId"}, new Object[]{id});
+    }
 
-	public Page getReverseOrderWithNoPickupSchedule( int page, int perPage){
-		DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
-		orderCriteria.add(Restrictions.isNull("courierPickupDetail"));
-		return list(orderCriteria, page, perPage);
-	}
+    public ReverseOrder getReverseOrderByShippingOrderId(Long shippingOrderId) {
+        return (ReverseOrder) super.findUniqueByNamedParams("from ReverseOrder rvo where rvo.shippingOrder.id = :shippingOrderId", new String[]{"shippingOrderId"},
+                new Object[]{shippingOrderId});
+    }
+
+    public Page getReverseOrderWithNoPickupSchedule(int page, int perPage) {
+        DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
+        orderCriteria.add(Restrictions.isNull("courierPickupDetail"));
+        return list(orderCriteria, page, perPage);
+    }
 }
