@@ -147,7 +147,7 @@
                         <c:if test="${product.maximumDiscountProducVariant.discountPercent > 0}">
                             <c:choose>
                                 <c:when
-                                        test="${product.maximumDiscountProducVariant.discountPercent > product.minimumMRPProducVariant.discountPercent}">
+                                        test="${product.maximumDiscountProducVariant.discountPercent > product.maximumDiscountProducVariant.discountPercent}">
                                     
 
                                     <p class="bid"
@@ -169,9 +169,6 @@
                                     </p>
                                 </c:when>
                                 <c:otherwise>
-
-                                   
-
 
                                     <p class="bid">
                                         <c:if test="${product.maximumDiscountProducVariant.discountPercent >= .33}">
