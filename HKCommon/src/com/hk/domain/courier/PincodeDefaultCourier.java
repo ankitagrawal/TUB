@@ -128,7 +128,7 @@ public class PincodeDefaultCourier implements java.io.Serializable {
     }
 
     public Integer getEstimatedDeliveryDays() {
-        return estimatedDeliveryDays;
+        return estimatedDeliveryDays != null ? estimatedDeliveryDays : 3;
     }
 
     public void setEstimatedDeliveryDays(Integer estimatedDeliveryDays) {
