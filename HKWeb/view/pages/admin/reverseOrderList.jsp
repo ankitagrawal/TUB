@@ -294,7 +294,7 @@
                     <br/>
                 </c:if>
 
-                <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus == pickUpStatus}">
+                <c:if test="${reverseOrderRequest.courierPickupDetail.pickupStatus.id == pickUpStatus}">
                     <s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction"
                             event="cancelReverseOrder" class="cancelOrder">Cancel Order
                         <s:param name="orderRequestId" value="${reverseOrderRequest.id}"/>
