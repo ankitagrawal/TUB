@@ -58,7 +58,7 @@ $(document).ready(function(){
 				<br>to buy straight from our store.<br>
 				<br>
 				<br>
-				<div class="addToCompare font-caps embedMargin5" id="button3"><a href="${pageContext.request.contextPath}/loyaltypg">Continue</a></div>
+				<a href="${pageContext.request.contextPath}/loyaltypg"><div class="addToCompare font-caps embedMargin5" id="button3">Continue</div></a>
 			</div>
 			
 		</div>

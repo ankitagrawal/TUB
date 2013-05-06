@@ -1,5 +1,6 @@
 package com.hk.loyaltypg.service.impl;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
+import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
@@ -414,7 +417,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public double convertLoyaltyToRewardPoints(User user) {
 	
 		double loyaltyPoints = this.calculateLoyaltyPoints(user);
-		double totalPointsConverted = 0;	
+		double totalPointsConverted = -1;	
 		if (loyaltyPoints > 0) {
 			String comment = "Reward Points converted from Loyalty points";
 			Order orderReward = this.orderDao.get(Order.class, -1l);
@@ -428,10 +431,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			rewardProfile.setStatus(KarmaPointStatus.REWARDED);
 			
 			// add reward points
-			this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
-					EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment,
+					EnumRewardPointStatus.PENDING, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+			 
+	        this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusYears(1).toDate());
 
-			// save reward profile
+	        // save reward profile
 			this.userOrderKarmaProfileDao.saveOrUpdate(rewardProfile);
 			totalPointsConverted = loyaltyPoints;
  		} 

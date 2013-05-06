@@ -107,14 +107,18 @@
                 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
                   <c:choose>
                     <c:when test="${badge.badgeName == 'PLATINUM'}">
-                      <span style="font-size:1.1em;color:plum;">"Pt"</span>
+                      <span style="font-size:1.1em;color:plum;">"Platinum"</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'GOLD'}">
-                      <span style="font-size:1.1em;color:gold;">"Au"</span>
+                      <span style="font-size:1.1em;color:gold;">"Gold"</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'SILVER'}">
-                      <span style="font-size:1.1em;color:silver;">"Ag"</span>
+                      <span style="font-size:1.1em;color:silver;">"Silver"</span>
                     </c:when>
+                    <c:when test="${badge.badgeName == 'BRONZE'}">
+                      <span style="font-size:1.1em;color:#9C6963 ;">"Platinum"</span>
+                    </c:when>
+                    
                   </c:choose>
             </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">

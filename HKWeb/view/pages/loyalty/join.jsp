@@ -13,15 +13,16 @@
 							<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
 							<div class="joinNow">Join Now!</div>
 							<div class="signUp">
+							<div>Gender: </div>
 								<select class="name" name="gender" placeholder="Gender">
 									<option value="MALE">MALE</option>
 									<option value="FEMALE">FEMALE</option>
-								</select> 
+								</select>
+								<div style="width: 40%;">Date of Birth</div> 
 								<s:text class="name" placeholder="Date Of Birth"  name="dob" id="datepicker">
 								</s:text>
-								<div class="continueButton">
-									<s:submit name="continueProgram" value="Join"
-										 style= "background: none; font-size:14px; border:none;"/>
+								<div >
+									<s:submit name="continueProgram" value="Join" class="btn"/>
 								</div>
 							</div>
 							</s:form>

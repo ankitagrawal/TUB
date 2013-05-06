@@ -101,13 +101,12 @@
 </s:layout-render>
 
 <script type="text/javascript">
-  window.onload = function() {
-    document.getElementById("ohLink").style.fontWeight = "bold";
+$(document).ready(function(){
     var rewardPoints = ${userKarmaHA.pointsConverted};
     
     if (rewardPoints > 0) {
     	alert("Congratulations you have been awarded " + rewardPoints + " Reward points.");
-    } else if (rewardPoints === 0) {
+    } else if (rewardPoints === -1) {
     	alert("Unfortunaetly you don't have sufficient loyaty points to be converted into reward points at this point of time.");
     }
     
@@ -132,7 +131,7 @@
   		return convert;
   	});  
 
-  };
+  });
   
  
 </script>

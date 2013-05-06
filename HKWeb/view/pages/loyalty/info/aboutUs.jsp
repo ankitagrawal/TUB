@@ -91,21 +91,21 @@
           <div class="aboutContent">
             <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
             <p>Here’s how it works- you’ll earn ‘A’ Lumens every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
-            <p class="embedMargin5">-Altair ${badge_1.badgeName}</p>
-            <p class="embedMargin5">-Capella</p>
-            <p class="embedMargin5">-Procyon</p>
-            <p class="embedMargin5">-Sirius</p>
+            <p class="embedMargin5">-Bronze ${badge_1.badgeName}</p>
+            <p class="embedMargin5">-Silver</p>
+            <p class="embedMargin5">-Gold</p>
+            <p class="embedMargin5">-Platinum</p>
 
             <p>It is easy to opt-in. Register. Log in. Shop! Stack up Lumens and unlock some very exciting rewards, indeed.</p>
 
             <h1 id="howItWorks" class="embedMarginTop50">HOW IT WORKS</h1>
 
-            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Altair or Capella or Procyon or Sirius, and will be credited with 0 Lumens.</p>
+            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 0 Lumens.</p>
             <p>On every purchase,</p>
-            <p class="embedMargin5">For Altair level, you get 1 Lumen for every rupee you spend.</p>
-            <p class="embedMargin5">For Capella level, you are awarded 2 Lumens for every rupee you spend.</p>
-            <p class="embedMargin5">For Procyon level, you are awarded 5 Lumens for every rupee you spend.</p>
-            <p class="embedMargin5">For Sirius level, you are awarded 15 Lumens for every rupee you spend.</p>
+            <p class="embedMargin5">For Bronze level, you get 0.01 Lumen for every rupee you spend.</p>
+            <p class="embedMargin5">For Silver level, you are awarded 0.015 Lumens for every rupee you spend.</p>
+            <p class="embedMargin5">For Gold level, you are awarded 0.0175 Lumens for every rupee you spend.</p>
+            <p class="embedMargin5">For Platinum level, you are awarded 0.02 Lumens for every rupee you spend.</p>
 
             <h1 id="benefits" class="embedMarginTop50">BENEFIT LEVELS</h1>
 
@@ -121,10 +121,10 @@
 
               <div class="normalRowWithBorderBottom">
                 <div class="headRowValue"><div class="rowValue">POINTS EARNED PER RUPEE SPENT</div></div>
-                <div class="headRowValue"><div class="rowValue">1</div></div>
-                <div class="headRowValue"><div class="rowValue">2</div></div>
-                <div class="headRowValue"><div class="rowValue">2</div></div>
-                <div class="headRowValue"><div class="rowValue">15</div></div>
+    	        <div class="headRowValue"><div class="rowValue">0.0100</div></div>
+                <div class="headRowValue"><div class="rowValue">0.0150</div></div>
+                <div class="headRowValue"><div class="rowValue">0.0175</div></div>
+                <div class="headRowValue"><div class="rowValue">0.0200</div></div>
               </div>
 
               <div class="normalRowWithBorderBottom">

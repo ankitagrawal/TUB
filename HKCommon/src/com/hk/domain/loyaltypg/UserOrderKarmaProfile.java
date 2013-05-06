@@ -137,7 +137,7 @@ public class UserOrderKarmaProfile {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.creationTime);
 		cal.add(Calendar.YEAR, 2);
-		if (TransactionType.DEBIT.equals(this.transactionType) || KarmaPointStatus.REWARDED.equals(this.status)) {
+		if (TransactionType.DEBIT.equals(this.transactionType) ) {
 			return " ";
 		} 
 		return "Expiry on: " + new SimpleDateFormat("MMM dd,yyyy").format(cal.getTime());
@@ -151,7 +151,12 @@ public class UserOrderKarmaProfile {
 		
 		String statusForHistory = null;
 		if (TransactionType.DEBIT.equals(this.transactionType)) {
-			statusForHistory = "Redeemed";
+	
+			if (KarmaPointStatus.REWARDED.equals(this.status)) {
+				statusForHistory = "Rewarded";
+			} else {
+				statusForHistory = "Redeemed";
+			}
 		} else if (TransactionType.CREDIT.equals(this.transactionType)) {
 			switch (this.status) {
 			case PENDING:
@@ -162,9 +167,6 @@ public class UserOrderKarmaProfile {
 				break;
 			case APPROVED:
 				statusForHistory = "Valid";
-				break;
-			case REWARDED:
-				statusForHistory = "Rewarded";
 				break;
 			default: 
 				statusForHistory = "Expired";
