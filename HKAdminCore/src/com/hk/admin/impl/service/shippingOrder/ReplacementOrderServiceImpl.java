@@ -112,13 +112,9 @@ public class ReplacementOrderServiceImpl implements ReplacementOrderService {
 			    EnumShippingOrderLifecycleActivity.RO_Created.asShippingOrderLifecycleActivity(),
                 null, "Replacement order created. Gateway order Id of replacement order: "+replacementOrder.getGatewayOrderId());
 
-	    shipmentService.createShipment(replacementOrder, true);
-	    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
 
-	    //updating inventory health
-	    for(LineItem lineItem : replacementOrder.getLineItems()){
-		    inventoryService.checkInventoryHealth(lineItem.getSku().getProductVariant());
-	    }
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(replacementOrder.getBaseOrder());
+
         return replacementOrder;
     }
 

@@ -649,8 +649,7 @@
                     <option value="">Choose Reason</option>
                     <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
                     <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
-                        <option value="${reason.id}">${reason.primaryClassification}
-                            - ${reason.secondaryClassification}</option>
+                        <option value="${reason.id}">${reason.classification.primary}- ${reason.classification.secondary}</option>
                     </c:forEach>
                 </select>
             </c:if>

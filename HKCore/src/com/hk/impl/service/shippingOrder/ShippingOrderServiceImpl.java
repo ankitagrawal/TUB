@@ -1,17 +1,16 @@
 package com.hk.impl.service.shippingOrder;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.hk.constants.analytics.EnumReason;
+import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
+import com.hk.impl.service.queue.BucketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +68,8 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
     private ReplacementOrderDao        replacementOrderDao;
     @Autowired
 	private EmailManager        emailManager;
-
+    @Autowired
+    BucketService bucketService;
     private OrderService               orderService;
 	private ShipmentService 				shipmentService;
 
@@ -151,81 +151,58 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrder);
     }
 
-    /**
-     * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
-     * orders from action queue to processing queue accordingly.
-     * 
-     * @param shippingOrder
-     * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
-     * @description shipping order
-     */
-    public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
-        logger.debug("Trying to autoescalate order#" + shippingOrder.getId());
+    private List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder) {
+        List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
+        Set<String> categoryNames = new HashSet<String>();
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku());
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (availableUnbookedInv < 0) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+        }
+        actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
+        return actionableBuckets;
+    }
+
+    private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         Payment payment = shippingOrder.getBaseOrder().getPayment();
+        User adminUser = getUserService().getAdminUser();
+        List<Reason> reasons = new ArrayList<Reason>();
         if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
-                User adminUser = getUserService().getAdminUser();
-/*
-                if (order.isReferredOrder() && order.getPayment().getAmount() < 1000) {
-                    String comments = "Please do a manual approval";
-                    logShippingOrderActivity(shippingOrder, adminUser,
-                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.BO_Referred_Order.asReason(), comments);
-                    return false;
+                if(shippingOrder.isServiceOrder()){
+                    return true;
                 }
-*/
                 if (shippingOrder.isDropShipping()) {
-                    logShippingOrderActivity(shippingOrder, adminUser,
-                            getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
+                    reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
+                }
+                List<EnumBucket> enumBuckets = getActionableBuckets(shippingOrder);
+                if (!enumBuckets.isEmpty()) {
+                    reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
+                }
+                if (shippingOrder.getShipment() == null) {
+                    reasons.add(EnumReason.ShipmentNotCreated.asReason());
+                }
+                if (!reasons.isEmpty()) {
+                    for (Reason reason : reasons) {
+                        logShippingOrderActivity(shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), reason, null);
+                    }
                     return false;
                 }
-                for (LineItem lineItem : shippingOrder.getLineItems()) {
-                    Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku()); // This
-                    // is after including placed order qty
-
-                    logger.debug("availableUnbookedInv of[" + lineItem.getSku().getId() + "] = " + availableUnbookedInv);
-                    ProductVariant productVariant = lineItem.getSku().getProductVariant();
-                    logger.debug("jit: " + productVariant.getProduct().isJit());
-                    if (productVariant.getProduct().isService() != null && productVariant.getProduct().isService()) {
-                        continue;
-                    }
-
-                    if (productVariant.getProduct().isJit() != null && productVariant.getProduct().isJit()) {
-                        String comments = lineItem.getSku().getProductVariant().getProduct().getName();
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Jit_Products.asReason(), comments);
-                        return false;
-                    } else if (lineItem.getCartLineItem().getCartLineItemConfig() != null) {
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.Contains_Prescription_Glasses.asReason(), null);
-                        return false;
-                    } else if (availableUnbookedInv < 0) {
-                        String comments = lineItem.getSku().getProductVariant().getProduct().getName() + " at this instant was = "
-                                + availableUnbookedInv;
-                        logShippingOrderActivity(shippingOrder, adminUser,
-                                getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.InsufficientUnbookedInventory.asReason(), comments);
-                        return false;
-                    }
-				}
-					if (shippingOrder.getShipment() == null) {
-						logShippingOrderActivity(shippingOrder, adminUser,
-							getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.ShipmentNotCreated.asReason(), null);
-						return false;
-					}
-
                 return true;
             }
         } else {
-            User adminUser = getUserService().getAdminUser();
-            logShippingOrderActivity
-                    (shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue),
-                    EnumReason.InvalidPaymentStatus.asReason(), null);
+            logShippingOrderActivity(shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.InvalidPaymentStatus.asReason(), null);
             return false;
         }
-
         return false;
     }
 
-    public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder) {
         if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 if(!(shippingOrder.isServiceOrder())){
@@ -260,8 +237,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return false;
     }
 
-    @Override
-    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
+    private boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder) {
         logger.debug("Trying to autoEscalate order#" + shippingOrder.getId());
         Payment payment = shippingOrder.getBaseOrder().getPayment();
         User adminUser = getUserService().getAdminUser();
@@ -317,37 +293,50 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 
     @Transactional
     public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder) {
-        if (isShippingOrderAutoEscalable(shippingOrder)) {
-            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder, true);
+        if(isShippingOrderAutoEscalable(shippingOrder)){
+            User activityUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
         }
         return shippingOrder;
     }
 
     @Transactional
-    public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc) {
-		shippingOrder.setLastEscDate(HKDateUtil.getNow());
-		if(shippingOrder.isDropShipping()){
-			shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForDropShipping));
-		} else{
-        	shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
-		}
-        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
-
-        if (isAutoEsc) {
-            User adminUser = getUserService().getAdminUser();
-            logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(),
-                    null, null);
-        } else {
-			if(shippingOrder.isDropShipping()){
-				logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToDropShippingQueue);
-				emailManager.sendEscalationToDropShipEmail(shippingOrder);
-			} else{
-            	logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue);
-			}
+    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder) {
+        if(isShippingOrderManuallyEscalable(shippingOrder)){
+            User activityUser = userService.getLoggedInUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_EscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            bucketService.escalateOrderFromActionQueue(shippingOrder);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
         }
+        return shippingOrder;
+    }
+
+    @Transactional
+    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder) {
+        if(isShippingOrderAutomaticallyManuallyEscalable(shippingOrder)){
+            User activityUser = getUserService().getAdminUser();
+            logShippingOrderActivity(shippingOrder, activityUser, EnumShippingOrderLifecycleActivity.SO_AutoEscalatedToProcessingQueue.asShippingOrderLifecycleActivity(), null, null);
+            bucketService.escalateOrderFromActionQueue(shippingOrder);
+            shippingOrder = escalateShippingOrderFromActionQueue(shippingOrder);
+        }
+        return shippingOrder;
+    }
+
+    @Transactional
+    private ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder) {
+        EnumShippingOrderStatus applicableStatus = shippingOrder.isDropShipping() ? EnumShippingOrderStatus.SO_ReadyForDropShipping : EnumShippingOrderStatus.SO_ReadyForProcess;
+        shippingOrder.setLastEscDate(HKDateUtil.getNow());
+        shippingOrder.setOrderStatus(applicableStatus.asShippingOrderStatus());
+        shippingOrder.setLastEscDate(HKDateUtil.getNow());
+        if (shippingOrder.isDropShipping()) {
+            emailManager.sendEscalationToDropShipEmail(shippingOrder);
+        }
+        shippingOrder = (ShippingOrder) getShippingOrderDao().save(shippingOrder);
         getOrderService().escalateOrderFromActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
         return shippingOrder;
     }
+
     /**
      * Creates a shipping order with basic details
      * 
@@ -412,6 +401,11 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         shippingOrderLifecycle = (ShippingOrderLifecycle) getShippingOrderDao().save(shippingOrderLifecycle);
         logReason(shippingOrderLifecycle, reason);
         return shippingOrderLifecycle;
+    }
+
+    public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason) {
+        ShippingOrderLifeCycleActivity orderLifecycleActivity = getShippingOrderLifeCycleActivity(enumShippingOrderLifecycleActivity);
+        return logShippingOrderActivity(shippingOrder, userService.getAdminUser(), orderLifecycleActivity, reason, null);
     }
 
     private void logReason(ShippingOrderLifecycle shippingOrderLifecycle, Reason reason){

@@ -72,6 +72,15 @@ public enum EnumPaymentMode {
                 EnumPaymentMode.SUBSCRIPTION_PAYMENT);
 	}
 
+    public static List<Long> getAuthorizationPendingPaymentModes() {
+        return Arrays.asList(
+                EnumPaymentMode.CashDeposit.getId(),
+                EnumPaymentMode.ChequeDeposit.getId(),
+                EnumPaymentMode.COUNTER_CASH.getId(),
+                EnumPaymentMode.NEFT.getId()
+        );
+    }
+
 	public static List<Long> getPrePaidPaymentModes() {
 		return Arrays.asList(
                 EnumPaymentMode.SUBSCRIPTION_PAYMENT.getId(),
