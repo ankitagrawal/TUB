@@ -59,7 +59,11 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user);
 			double upgradeAmount =  this.loyaltyProgramService.fetchNextLevelInfo(this.user).getSpendRequired();
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(this.badgeInfo.getUpdationTime());
+			if (this.badgeInfo.getUpdationTime() != null) {
+				cal.setTime(this.badgeInfo.getUpdationTime());
+			} else {
+				cal.setTime(this.badgeInfo.getCreationTime());
+			}
 			cal.add(Calendar.YEAR, 1);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy");
 			if (upgradeAmount != 0) {

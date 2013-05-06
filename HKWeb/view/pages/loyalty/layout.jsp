@@ -86,7 +86,7 @@
 		<div id="logo" class="grid_6">
             <div class="logo-block">
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home'>healthKart</s:link></span>
-			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
+			  <span class="embedMarginleft"><s:link href="www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
 			  </p>
               <div class="logoSubblock">
 			  <a title="go to stellar home" href="/healthkart/loyaltypg">
@@ -123,10 +123,10 @@
 				</s:link>
 				</p> 
             </div>
-<!--             <div>
-              <p class="section2 font-caps"> signout</p>
+             <div>
+              <p class="section2 font-caps"> <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" rel="noFollow">signout</s:link></p>
             </div>
- -->
+
             <div>
               <p class="section2 font-caps"> <a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">cart</a></p>
             </div>
@@ -153,15 +153,10 @@
 </div></div>
     <div id="footer">
         <div class="container_16 clearfix embedMarginTop100">
-          <div class="grid_4">
-            <div class="footerLeft">
-              about | FAQs 
-            </div>
-          </div>
           <div class="grid_12">
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
-              info@healthkartplus.com | Established in India | Privacy Policy | Terms and Conditions | Connect with Us:
+              info@healthkartplus.com | Established in India | Terms and Conditions | Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

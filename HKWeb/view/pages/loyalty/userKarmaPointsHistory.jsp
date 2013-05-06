@@ -15,12 +15,12 @@
           </div>
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
 		  
-          <div class="topText">
+<!--           <div class="topText">
             <span><s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" 
             	event="convertPoints" class="blue"  id="rewardLink">
             Click here</s:link></span> to convert your points to Reward points!
           </div>
-		 
+ -->		 
 		</div>
         <div class="grid_14 embedMarginTop40 floatRight">
           <div class="history">

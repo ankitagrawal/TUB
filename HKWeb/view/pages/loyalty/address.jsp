@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.hk.constants.courier.StateList" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
@@ -20,7 +21,7 @@
 			beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 		<s:form
 			beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction"
-			id="selectAddress">
+			id="selectAddress" name="selectAddress">
 			<div class="row">
 				<div class="span6">
 					<table class="table table-bordered">
@@ -38,10 +39,12 @@
 										<address>
 											<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" event="confirm" class= "blue">
 												<s:param name="selectedAddressId" value="${address.id}"/>
-												<strong>${address.name}</strong><br> ${address.line1},
-												${address.line2}<br> ${address.city}<br>
-												${address.state}, ${address.pincode.pincode}<br> 
-												Ph: ${address.phone}
+												<strong><span id="name">${address.name} </span></strong>
+												<br><span id="line1">${address.line1}</span>,
+												<span id="line2">${address.line2}</span><br>
+												<span id="city">${address.city}</span><br>
+												<span id="state">${address.state}</span>, <span id="pinEdit">${address.pincode.pincode}</span><br> 
+												Ph: <span id="phone">${address.phone}</span>
 											</s:link>
 										</address>
 									</td>
@@ -172,29 +175,52 @@
 $(document).ready(function() {
  var bool = false;
 
- $('#confirmButton').click(validateAddressForm);
+ $("#confirmButton").click(validateAddressForm);
 
- $('#edit').click(function() {
-   form = $('#selectAddress');
-   addressBlock = $(this).parents('address');
-   name = addressBlock.find('.name').text();
-   street1 = addressBlock.find('.street1').text();
-   street2 = addressBlock.find('.street2').text();
-   city = addressBlock.find('.city').text();
-   state = addressBlock.find('.state').text();
-   countryId = addressBlock.find('.countryId').val();
-   pin = addressBlock.find('.pin').text();
-   phone = addressBlock.find('.phone').text();
-   id = addressBlock.find('.address_id').val();
+
+ $("#pin").blur(function(event) {
+ 	var pin = $("#pin").val();
+ 	_validatePincode(pin);
+ 	if (err) {
+ 		$("#error").show();
+ 	} else {
+ 		$.getJSON($("#populateaddress").attr('href'), {pincode:pin}, function(responseData) {
+ 			if (responseData.code == '<%=HealthkartResponse.STATUS_OK%>') {
+ 				$("#stateSelect").val(responseData.data.stateName);
+ 				$("#citySelect").val(responseData.data.cityName);
+ 			}
+ 			else {
+                 $("#pin").val("");
+ 				$("#stateSelect").val("");
+ 				$("#citySelect").val("");
+ 				$("#error").empty();
+                 alert("We don't Service to this pincode, please Enter a valid Pincode or Contact to Customer Care.");
+ 				$("#error").html("<br/>We do not service this pincode.<br/>Please enter a valid Pincode<br/>OR <br/>Contact customer care.<br/><br/>");
+ 				$("#error").show();
+ 			}
+ 		});
+ 	}
+ });
+ 
+ $("#edit").click(function() {
+   form = $("#selectAddress");
+   addressBlock = $(this).parent().parent().find('address');
+   name = addressBlock.find("#name").text();
+   street1 = addressBlock.find("#line1").text();
+   street2 = addressBlock.find("#line2").text();
+   city = addressBlock.find("#city").text();
+   state = addressBlock.find("#state").text();
+   pin = addressBlock.find("#pinEdit").text();
+   phone = addressBlock.find("#phone").text();
+   id = addressBlock.find("selectedAddressId").val();
    form.find("input[type='text'][name='address.name']").val(name);
    form.find("input[type='text'][name='address.line1']").val(street1);
    if (street2) {
      form.find("input[type='text'][name='address.line2']").val(street2);
    }
+   form.find("input[type='text'][name='pincode']").val(pin);
    form.find("input[type='text'][name='address.city']").val(city);
    form.find("[name='address.state']").val(state.toUpperCase());
-   $('select').val(countryId);
-   form.find("input[type='text'][name='pin']").val(pin);
    form.find("input[type='text'][name='address.phone']").val(phone);
    form.find("input[type='hidden'][name='address.id']").val(id);
  });
@@ -210,7 +236,7 @@ $(document).ready(function() {
     $('.address').hover(
 		        function() {
 			        $(this).children('.hidden').slideDown(100);
-			        $(this).children('#edit').click(function() {
+			        $(this).children("#edit").click(function() {
 				        return false;
 			        });
                  $(this).children('.delete').click(function() {

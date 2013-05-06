@@ -1,8 +1,11 @@
 package com.hk.admin.impl.service.inventory;
 
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
+import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.domain.accounting.PoLineItem;
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.inventory.rtv.ExtraInventory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Autowired
 	PurchaseOrderDao purchaseOrderDao;
+	@Autowired
+	PoLineItemService poLineItemService;
 
 	public void updatePOFillRate(PurchaseOrder purchaseOrder) {
 		long totalAskedQty = 0;
 		long totalReceivedQty = 0;
 		double fillRate = 0.0;
 
+		for(GoodsReceivedNote grn : purchaseOrder.getGoodsReceivedNotes()){
+			for(GrnLineItem grnLineItem:grn.getGrnLineItems()){
+			getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
+			}
+		}
+		
 		for(PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
 			totalAskedQty += poLineItem.getQty();
 			if(poLineItem.getReceivedQty() != null) {
@@ -67,4 +78,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public void setPurchaseOrderDao(PurchaseOrderDao purchaseOrderDao) {
 		this.purchaseOrderDao = purchaseOrderDao;
 	}
+
+	public PoLineItemService getPoLineItemService() {
+		return poLineItemService;
+	}
+
+	public void setPoLineItemService(PoLineItemService poLineItemService) {
+		this.poLineItemService = poLineItemService;
+	}
+	
 }
