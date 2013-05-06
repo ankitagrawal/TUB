@@ -75,7 +75,7 @@
 <s:layout-component name="breadcrumbs">
 
   <div class='crumb_outer'>
-    <s:link beanclass="com.hk.web.action.HomeAction" class="crumb">Home</s:link>
+    <a href="${pageContext.request.contextPath}/" class="crumb">Home</a>
     &gt;
     <span class="crumb last" style="font-size: 12px;">${categoryBean.category.displayName}</span>
 
@@ -156,12 +156,27 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-      <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-           class="small_banner"/>
-    </a>
-    <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_300.jpg" alt="Free shipping and COD"
-         class="small_banner"/>
+    <c:set var="sportsNutrition" value="sports-nutrition"/>
+    <c:choose>
+        <c:when test="${categoryBean.category.name eq sportsNutrition}">
+            <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">
+                <img src="${pageContext.request.contextPath}/images/banners/Gym-Breaking-Deals.jpg" alt="Gym breaking deals on Nutritional Supplements"
+                     class="small_banner"/>
+            </a>
+             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Allmax">
+            <img src="${pageContext.request.contextPath}/images/banners/BOW---Allmax.jpg" alt="Brand Of the Week - AllMax"
+                 class="small_banner"/>
+            </a>
+        </c:when>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+                     class="small_banner"/>
+            </a>
+            <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_300.jpg" alt="Free shipping and COD"
+                 class="small_banner"/>
+        </c:otherwise>
+    </c:choose>
   </div>
 
 </s:layout-component>
