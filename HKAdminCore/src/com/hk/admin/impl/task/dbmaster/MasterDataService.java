@@ -140,6 +140,8 @@ public class MasterDataService {
 	PickupStatusSeedData pickupStatusSeedData;
 	@Autowired
 	StockTransferStatusSeed stockTransferStatusSeed;
+	@Autowired
+	PiLineItemTypeSeedData piLineItemTypeSeedData;
 
 	public void insert() {
 
@@ -306,5 +308,8 @@ public class MasterDataService {
 
 		logger.debug("inserting Stock Transfer Status");
 		stockTransferStatusSeed.invokeInsert();
+		
+		logger.debug("inserting PI Line Item Type");
+		piLineItemTypeSeedData.invokeInsert();
 	}
 }
