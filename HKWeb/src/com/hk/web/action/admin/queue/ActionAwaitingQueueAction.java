@@ -2,7 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
-import com.hk.admin.pact.service.queue.BucketService;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
@@ -255,34 +255,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution escalate() {
-        StringBuilder falseMessage = new StringBuilder();
-        StringBuilder trueMessage = new StringBuilder();
-        trueMessage.append("Base order which escalated are ");
-        falseMessage.append("Base order which couldn't be escalated are ");
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
-                boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
-                if (isManualEscalable) {
-                    trueMessage.append(shippingOrder.getBaseOrder().getId());
-                    trueMessage.append(" ");
-                    shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                } else {
-                    if (getPrincipalUser().getRoles().contains(EnumRole.GOD.toRole())) {
-                        trueMessage.append(shippingOrder.getBaseOrder().getId());
-                        trueMessage.append(" ");
-                        shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-                    } else {
-                        falseMessage.append(shippingOrder.getBaseOrder().getId());
-                        falseMessage.append(" ");
-                    }
-                }
+                shippingOrderService.manualEscalateShippingOrder(shippingOrder);
             }
-            trueMessage.append("\n");
-            addRedirectAlertMessage(new SimpleMessage(trueMessage.toString() + " / " + falseMessage.toString()));
         } else {
             addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be escalated"));
         }
-
         return new RedirectResolution(ActionAwaitingQueueAction.class);
     }
 

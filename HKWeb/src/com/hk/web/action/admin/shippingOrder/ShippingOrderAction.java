@@ -113,50 +113,10 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution manualEscalateShippingOrder() {
-		boolean isManualEscalable = shippingOrderService.isShippingOrderManuallyEscalable(shippingOrder);
-		String message = "";
-		if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(shippingOrder.getBaseOrder().getPayment().getPaymentStatus().getId())) {
-			if (isManualEscalable) {
-				message = "shipping order manually escalated";
-				shippingOrderService.escalateShippingOrderFromActionQueue(shippingOrder, false);
-
-			} else {
-				message = "Shipping order cant be escalated";
-			}
-		}
+		shippingOrderService.manualEscalateShippingOrder(shippingOrder);
 		Map<String, Object> data = new HashMap<String, Object>(1);
 		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
-		return new JsonResolution(healthkartResponse);
-	}
-
-
-	@JsonHandler
-	public Resolution delieverDropShippingOrder() {
-		String message = "";
-		boolean orderHasOnlyDropShipProduct = true;
-
-		for (LineItem lineItem : shippingOrder.getLineItems()) {
-			CartLineItem cartLineItem = lineItem.getCartLineItem();
-
-			if (EnumCartLineItemType.Product.getId().equals(cartLineItem.getLineItemType().getId())) {
-				orderHasOnlyDropShipProduct &= cartLineItem.getProductVariant().getProduct().isDropShipping();
-			}
-			if (!orderHasOnlyDropShipProduct) {
-				break;
-			}
-		}
-
-		if (orderHasOnlyDropShipProduct) {
-			adminShippingOrderService.markShippingOrderAsDelivered(shippingOrder);
-			message = "shipping order marked as delieverd";
-		} else {
-			message = "shipping order cannot be marked delievered, since it has non drop ship products";
-		}
-
-		Map<String, Object> data = new HashMap<String, Object>(1);
-		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, message, data);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Check SO Status", data);
 		return new JsonResolution(healthkartResponse);
 	}
 
@@ -167,9 +127,7 @@ public class ShippingOrderAction extends BaseAction {
         shippingOrderSearchCriteria.setDropShipping(false);
         List<ShippingOrder> shippingOrders = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria,false);
         for (ShippingOrder toBeEscalateShippingOrder : shippingOrders) {
-            if(shippingOrderService.isShippingOrderAutomaticallyManuallyEscalable(toBeEscalateShippingOrder)){
-                shippingOrderService.escalateShippingOrderFromActionQueue(toBeEscalateShippingOrder, true);
-            }
+            shippingOrderService.automateManualEscalation(toBeEscalateShippingOrder);
         }
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }

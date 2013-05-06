@@ -338,7 +338,7 @@
                                                    varStatus="rctr1">
                                             <div class="newBoxItem">
                                                 <label><s:checkbox name="reasons[${rctr1.index}]"
-                                                                   value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                                                   value="${reason.id}"/> ${reason.classification.primary}  ${reason.classification.secondary}</label>
                                             </div>
                                         </c:forEach>
                                     </div>
@@ -583,8 +583,8 @@
 <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionQueueBean}"/>
 <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionQueueBean}"/>
 
-<div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton"
-                                                         value="Escalate to packing / DropShip queue"/></div>
+<%--<div class="buttons" style="margin-left: 80%;"><s:submit name="escalate" id="escalateButton"--%>
+                                                         <%--value="Escalate to packing / DropShip queue"/></div>--%>
 </s:form>
 <script type="text/javascript">
     $('#escalateButton').click(function() {

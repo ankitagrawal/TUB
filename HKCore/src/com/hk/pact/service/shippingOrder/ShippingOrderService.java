@@ -1,6 +1,7 @@
 package com.hk.pact.service.shippingOrder;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.domain.analytics.Reason;
@@ -31,6 +32,7 @@ public interface ShippingOrderService {
 
 	public List<ShippingOrder> getShippingOrdersToSendShipmentEmail();
 
+
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria);
 
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse, int pageNo, int perPage);
@@ -39,31 +41,15 @@ public interface ShippingOrderService {
 
 	public List<ShippingOrder> searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, boolean isSearchForWarehouse);
 
-	/**
-	 * Auto-escalation logic for all successful transactions This method will check inventory availability and escalate
-	 * orders from action queue to processing queue accordingly.
-	 *
-	 * @param shippingOrder
-	 * @return true if it passes all the use cases i.e jit or availableUnbookedInventory Ajeet - 15-Feb-2012
-	 * @description shipping order
-	 */
-	public boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder);
 
-	public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
+    public ShippingOrder autoEscalateShippingOrder(ShippingOrder shippingOrder);
 
-	public boolean isShippingOrderManuallyEscalable(ShippingOrder shippingOrder);
+    public ShippingOrder manualEscalateShippingOrder(ShippingOrder shippingOrder);
 
-    public boolean isShippingOrderAutomaticallyManuallyEscalable(ShippingOrder shippingOrder);
+    public ShippingOrder automateManualEscalation(ShippingOrder shippingOrder);
 
-	public ShippingOrder escalateShippingOrderFromActionQueue(ShippingOrder shippingOrder, boolean isAutoEsc);
 
-	/**
-	 * Creates a shipping order with basic details
-	 *
-	 * @param baseOrder
-	 * @param warehouse
-	 * @return
-	 */
+    //Creates a shipping order with basic details
 	public ShippingOrder createSOWithBasicDetails(Order baseOrder, Warehouse warehouse);
 
 	public void nullifyCodCharges(ShippingOrder shippingOrder);
@@ -78,6 +64,8 @@ public interface ShippingOrderService {
 	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason, String comments);
 
 	public ShippingOrderLifecycle logShippingOrderActivity(ShippingOrder shippingOrder, User user, ShippingOrderLifeCycleActivity shippingOrderLifeCycleActivity, Reason reason, String comments);
+
+	public ShippingOrderLifecycle logShippingOrderActivityByAdmin(ShippingOrder shippingOrder, EnumShippingOrderLifecycleActivity enumShippingOrderLifecycleActivity, Reason reason);
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 

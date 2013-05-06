@@ -482,7 +482,7 @@ public class PricingEngine {
      */
     private Set<CartLineItemWrapper> initProductLineItems(Set<CartLineItem> cartLineItems, Address address) {
 
-        Assert.assertTrue(address != null);
+        address = address != null ? address : new Address();
         Set<CartLineItemWrapper> cartLineItemWrappers = new HashSet<CartLineItemWrapper>();
 
         for (CartLineItem lineItem : cartLineItems) {
