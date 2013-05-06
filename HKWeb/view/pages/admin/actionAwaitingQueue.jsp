@@ -17,6 +17,7 @@
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -413,6 +414,14 @@
                         <div><s:checkbox name="b2bOrder"/>B2B Order</div>
                     </div>
 
+                    <div style="float:left;">
+                        COD Calling Status
+                       <s:select name="codCallStatus" >
+                           <s:option value="">------Select------</s:option>
+                           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="userCodCallStatus"
+                                                      value="id" label="name"/>
+                       </s:select>
+                        </div>
 
                 </li>
 

@@ -26,7 +26,7 @@
 
 <s:layout-component name="topBanner">
     <div class='crumb_outer'>
-        <a href="${pageContext.request.contextPath}" class="crumb">Home</a>
+        <a href="${pageContext.request.contextPath}/" class="crumb">Home</a>
         &gt;
         <a href="${pageContext.request.contextPath}/super-savers" class="crumb">Super Savers</a>
 

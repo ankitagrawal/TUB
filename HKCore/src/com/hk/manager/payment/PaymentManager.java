@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
-import java.util.List;
 
 /**
  * Author: Kani Date: Jan 3, 2009
@@ -289,7 +288,7 @@ public class PaymentManager {
     }
 
     @Transactional
-    public Order codSuccess(String gatewayOrderId, String codContactName, String codContactPhone) {
+    public Order codSuccess(String gatewayOrderId, String codContactName, String codContactPhone, boolean shouldCodCall) {
         Payment payment = paymentDao.findByGatewayOrderId(gatewayOrderId);
         Order order = null;
         if (payment != null) {
@@ -308,47 +307,48 @@ public class PaymentManager {
             }
             payment = paymentDao.save(payment);
             order = getOrderManager().orderPaymentReceieved(payment);
+            if (shouldCodCall) {
+                if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
+                    /* Make JMS Call For COD Confirmation Only Once*/
+                    Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
+                    if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
+                        try {
+                            boolean messagePublished = orderEventPublisher.publishCODEvent(order);
+                            UserCodCall userCodCall = null;
 
-            if ((payment.getPaymentStatus().getId()).equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
-                /* Make JMS Call For COD Confirmation Only Once*/
-                Integer PaymentFailedStatus = EnumUserCodCalling.PAYMENT_FAILED.getId();
-                if ((order.getUserCodCall() == null) || ((order.getUserCodCall().getCallStatus().equals(PaymentFailedStatus)))) {
-                    try {
-                        boolean messagePublished = orderEventPublisher.publishCODEvent(order);
-                        UserCodCall userCodCall = null;
-
-                        if (order.getUserCodCall() != null) {
-                            userCodCall = order.getUserCodCall();
-                        }
-
-                        if (messagePublished) {
-                            if (userCodCall != null) {
-                                EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_THIRD_PARTY;
-                                userCodCall.setRemark(thirdPartyPending.getName());
-                                userCodCall.setCallStatus(thirdPartyPending.getId());
-                            } else {
-                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_THIRD_PARTY);
+                            if (order.getUserCodCall() != null) {
+                                userCodCall = order.getUserCodCall();
                             }
 
-                        } else {
-                            if (userCodCall != null) {
-                                EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
-                                userCodCall.setRemark(thirdPartyFailed.getName());
-                                userCodCall.setCallStatus(thirdPartyFailed.getId());
+                            if (messagePublished) {
+                                if (userCodCall != null) {
+                                    EnumUserCodCalling thirdPartyPending = EnumUserCodCalling.PENDING_WITH_KNOWLARITY;
+                                    userCodCall.setRemark(thirdPartyPending.getName());
+                                    userCodCall.setCallStatus(thirdPartyPending.getId());
+                                } else {
+                                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.PENDING_WITH_KNOWLARITY);
+                                }
+
                             } else {
-                                userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                                if (userCodCall != null) {
+                                    EnumUserCodCalling thirdPartyFailed = EnumUserCodCalling.THIRD_PARTY_FAILED;
+                                    userCodCall.setRemark(thirdPartyFailed.getName());
+                                    userCodCall.setCallStatus(thirdPartyFailed.getId());
+                                } else {
+                                    userCodCall = orderService.createUserCodCall(order, EnumUserCodCalling.THIRD_PARTY_FAILED);
+                                }
                             }
+                            if (userCodCall != null) {
+                                orderService.saveUserCodCall(userCodCall);
+                            }
+                        } catch (DataIntegrityViolationException dataInt) {
+                            logger.error("Exception in  inserting  Duplicate UserCodCall by publishing COD : " + dataInt.getMessage());
+                        } catch (Exception ex) {
+                            logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                         }
-                        if (userCodCall != null) {
-                            orderService.saveUserCodCall(userCodCall);
-                        }
-                    } catch (DataIntegrityViolationException dataInt) {
-                        logger.error("Exception in  inserting  Duplicate UserCodCall by publishing COD : " + dataInt.getMessage());
-                    } catch (Exception ex) {
-                        logger.error("error occurred in calling JMS in Payment Manager  :::: " + ex.getMessage());
                     }
-                }
 
+                }
             }
         }
         /* Call CodPayment Success */
