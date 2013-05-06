@@ -1,12 +1,10 @@
 package com.hk.admin.util.courier.thirdParty;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.math.*;
 import org.apache.axis.types.Time;
 import org.apache.axis.types.PositiveInteger;
+import org.apache.axis.AxisFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,6 +124,7 @@ public class FedExPickup {
 	    //request.setOversizePackageCount(new PositiveInteger("1")); // Set this value if package is over sized
 	    request.setRemarks("Healthkart pickup"); // Courier Remarks
 	    //
+		String exceptionMessage = "Error occured: ";
 		try {
 			// Initialize the service
 			PickupServiceLocator service;
@@ -155,11 +154,16 @@ public class FedExPickup {
 
 			//printNotifications(reply.getNotifications());
 
-		} catch (Exception e) {
-			//e.printStackTrace();
-		    logger.error("error requesting pickup service for Fedex");
+		}catch (AxisFault af){
+			logger.error("Axis Fault message", af.getFaultString());
+			exceptionMessage = af.getFaultString();
 		}
-		return null;
+
+		catch (Exception e) {
+		    logger.error("error requesting pickup service for Fedex", e.getMessage());
+			exceptionMessage = e.getMessage();
+		}
+		return Arrays.asList(exceptionMessage);
 	}
 
 	public String getNotifications(com.fedex.pickup.stub.Notification[] notifications) {
