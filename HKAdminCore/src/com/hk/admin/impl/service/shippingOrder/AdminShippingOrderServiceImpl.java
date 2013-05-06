@@ -263,6 +263,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getShipmentService().save(shipment);
         }
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
+        getPincodeCourierService().setTargetDeliveryDate(shippingOrder);
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
         getBucketService().popFromActionQueue(shippingOrder);
@@ -439,5 +440,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     public void setBucketService(BucketService bucketService) {
         this.bucketService = bucketService;
+    }
+
+    public PincodeCourierService getPincodeCourierService() {
+        return pincodeCourierService;
+    }
+
+    public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
+        this.pincodeCourierService = pincodeCourierService;
     }
 }
