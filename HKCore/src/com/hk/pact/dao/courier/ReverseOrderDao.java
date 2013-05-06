@@ -23,7 +23,9 @@ public interface ReverseOrderDao {
 
 	public ReverseOrder save(ReverseOrder reverseOrder);
 
-	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId, Long warehouseId, int page, int perPage);
+	public Page getPickupRequestsByStatuses(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId,  Long warehouseId, int page, int perPage ,Date startDate , Date endDate);
+
+	 public List<ReverseOrder> getPickupRequestsForExcel(String shippingOrderId, Long pickupStatusId, Long reconciliationStatusId, Long courierId ,Long warehouseId  , Date startDate , Date endDate);
 
 	public ReverseOrder getReverseOrderById(Long id);
 

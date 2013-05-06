@@ -371,7 +371,7 @@ public class ReportManager {
                     cell = row.createCell(columnNo);
                 }
 	            if(zone != null){
-		            Zone shippingOrderZone = getShippingOrderService().getZoneForShippingOrder(order);
+		            Zone shippingOrderZone = order.getShipment().getZone();
 		            if(shippingOrderZone != null && shippingOrderZone.equals(zone)){
 			            setCellValue(row, 23, shippingOrderZone.getName().toUpperCase());
 		            }

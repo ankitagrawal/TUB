@@ -23,31 +23,32 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
     /**
      * order general fields
      */
-    private String                    login;
-    private String                    phone;
-    private String                    name;
-    private String                    email;
-    private Set<Category>             categories;
+    private String login;
+    private String phone;
+    private String name;
+    private String email;
+    private Set<Category> categories;
 
-    private List<OrderStatus>         orderStatusList;
+    private List<OrderStatus> orderStatusList;
 
     /**
      * payment fields
      */
-    private List<PaymentMode>         paymentModes;
-    private List<PaymentStatus>       paymentStatuses;
-    private Date                      paymentStartDate;
-    private Date                      paymentEndDate;
+    private List<PaymentMode> paymentModes;
+    private List<PaymentStatus> paymentStatuses;
+    private Date paymentStartDate;
+    private Date paymentEndDate;
 
-    private Boolean                  dropShip;
-    private Boolean                  containsJit;
-    private boolean                   isB2BOrder;
+    private Boolean dropShip;
+    private Boolean containsJit;
+    private boolean isB2BOrder;
+    private Integer userCodCallStatus;
 
     /**
      * shipping order fields
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
-    private Set<Category>               shippingOrderCategories;
+    private Set<Category> shippingOrderCategories;
     private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
     private Set<Reason> reasonList;
 
@@ -129,7 +130,6 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         DetachedCriteria criteria = super.buildSearchCriteriaFromBaseCriteria();
 
 
-
         if (orderStatusList != null && orderStatusList.size() > 0) {
             criteria.add(Restrictions.in("orderStatus", orderStatusList));
         }
@@ -191,16 +191,16 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
 
-        shippingOrderCriteria.add(Restrictions.or(Restrictions.in("shippingOrderStatus", shippingOrderStatusList), Restrictions.isNull("shippingOrderStatus")));
+            shippingOrderCriteria.add(Restrictions.or(Restrictions.in("shippingOrderStatus", shippingOrderStatusList), Restrictions.isNull("shippingOrderStatus")));
         }
 
         if (SOLifecycleActivityList != null && !SOLifecycleActivityList.isEmpty()) {
             DetachedCriteria shippingLifeCycleCriteria = null;
-            if (shippingOrderCriteria == null){
+            if (shippingOrderCriteria == null) {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
             }
-                shippingLifeCycleCriteria =  shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
-                shippingLifeCycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", SOLifecycleActivityList));
+            shippingLifeCycleCriteria = shippingOrderCriteria.createCriteria("shippingOrderLifecycles", CriteriaSpecification.INNER_JOIN);
+            shippingLifeCycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", SOLifecycleActivityList));
 
             DetachedCriteria lifecycleCriteria = null;
             if (reasonList != null && !reasonList.isEmpty()) {
@@ -223,8 +223,8 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             shippingOrderCategoryCriteria.add(Restrictions.in("category", shippingOrderCategories));
         }
 
-        if(sortByLastEscDate){
-            if(shippingOrderCriteria == null){
+        if (sortByLastEscDate) {
+            if (shippingOrderCriteria == null) {
                 shippingOrderCriteria = criteria.createCriteria("shippingOrders", CriteriaSpecification.LEFT_JOIN);
                 shippingOrderCriteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
             }
@@ -242,15 +242,15 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
             orderCategoryCriteria.add(Restrictions.in("category", categories));
         }
 
-        if(isB2BOrder){
-            criteria.add(Restrictions.eq("b2bOrder",isB2BOrder));
+        if (isB2BOrder) {
+            criteria.add(Restrictions.eq("b2bOrder", isB2BOrder));
         }
 
         // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
-        if(sortByDispatchDate){
-            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+        if (sortByDispatchDate) {
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
         }
         if (sortByPaymentDate) {
             paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
@@ -258,11 +258,15 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         if (sortByScore) {
             criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         }
-        if(dropShip != null  )  {
-             shippingOrderCriteria.add(Restrictions.eq("isDropShipping",dropShip));
-         }
-        if(containsJit != null  )  {
-            shippingOrderCriteria.add(Restrictions.eq("containsJitProducts",containsJit));
+        if (dropShip != null) {
+            shippingOrderCriteria.add(Restrictions.eq("isDropShipping", dropShip));
+        }
+        if (containsJit != null) {
+            shippingOrderCriteria.add(Restrictions.eq("containsJitProducts", containsJit));
+        }
+        if(userCodCallStatus != null){
+            DetachedCriteria  codCallCriteria  =   criteria.createCriteria("userCodCall");
+            codCallCriteria.add(Restrictions.eq("callStatus", userCodCallStatus));
         }
         return criteria;
     }
@@ -289,5 +293,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setB2BOrder(boolean b2BOrder) {
         isB2BOrder = b2BOrder;
+    }
+
+    public Integer getUserCodCallStatus() {
+        return userCodCallStatus;
+    }
+
+    public void setUserCodCallStatus(Integer userCodCallStatus) {
+        this.userCodCallStatus = userCodCallStatus;
     }
 }
