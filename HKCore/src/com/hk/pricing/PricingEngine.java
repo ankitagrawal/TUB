@@ -388,13 +388,13 @@ public class PricingEngine {
                             actualPrice = costPrice * lineItem.getQty() * (1 + vat_cst_percentage + surcharge_percentage);
                         }
 
+                        Double minPrice = lineItem.getMarkedPrice() * lineItem.getQty() * 0.5;
+                        actualPrice = actualPrice > minPrice ? actualPrice : minPrice;
+
                         Double lineItemDiscount = lineItem.getHkPrice() * lineItem.getQty() - actualPrice;
                         if (lineItemDiscount < 0) {
                             lineItemDiscount = 0D;
                         }
-                        Double maxDiscount = lineItem.getMarkedPrice() * 0.5 * lineItem.getQty();
-                        lineItemDiscount = lineItemDiscount > maxDiscount ? maxDiscount : lineItemDiscount; //no one can get more than 50% discount
-                        lineItemDiscount = lineItemDiscount - actualPrice;
                         lineItem.setDiscountOnHkPrice(lineItemDiscount);
                     }
                     if (lineItem.isType(EnumCartLineItemType.Shipping)) {
