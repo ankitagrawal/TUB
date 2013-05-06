@@ -10,7 +10,7 @@ import com.hk.domain.shippingOrder.LineItem;
 */
 public class ShippingCostCutOff {
 
-    private static final Double percentageOfSOAmount = 0.3D;
+    private static final Double percentageOfSOAmount = 0.5D;
     private static final Double maxShippingCharges = 5000D;
 
     public static Double calculateCutoffAmount(ShippingOrder shippingOrder) {
