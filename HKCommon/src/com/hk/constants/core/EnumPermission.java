@@ -4,7 +4,7 @@ package com.hk.constants.core;
 
 public enum EnumPermission {
 
-  SUPER_LOGIN                                    (PermissionConstants.SUPER_LOGIN),  
+  SUPER_LOGIN                                    (PermissionConstants.SUPER_LOGIN),
   VIEW_ACTION_QUEUE                              (PermissionConstants.VIEW_ACTION_QUEUE),
     OPS_MANAGER_CUSA_UPDATE(PermissionConstants.OPS_MANAGER_CUSA_UPDATE),
     OPS_MANAGER_CUSA_VIEW(PermissionConstants.OPS_MANAGER_CUSA_VIEW),
@@ -107,8 +107,18 @@ public enum EnumPermission {
   DISPATCH_LOT_OPERATIONS                        (PermissionConstants.DISPATCH_LOT_OPERATIONS),
   EDIT_GRN	                                     (PermissionConstants.EDIT_GRN),
   CREATE_REVERSE_PICKUP_ORDER	                 (PermissionConstants.CREATE_REVERSE_PICKUP_ORDER),
-  STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER);
-
+  STORE_MANAGER                                  (PermissionConstants.STORE_MANAGER),
+  ADD_EDIT_HUB                                   (PermissionConstants.ADD_EDIT_HUB),
+  RECEIVE_CONSIGNMENTS                           (PermissionConstants.RECEIVE_CONSIGNMENTS),
+  EDIT_RUNSHEET                                  (PermissionConstants.EDIT_RUNSHEET),
+  VIEW_CONSIGNMENTS                              (PermissionConstants.VIEW_CONSIGNMENTS),
+  VIEW_PAYMENT_HISTORY                           (PermissionConstants.VIEW_PAYMENT_HISTORY),
+  TRACK_CONSIGNMENTS                             (PermissionConstants.TRACK_CONSIGNMENTS),
+  CREATE_PAYMENT_RECONCILATION                   (PermissionConstants.CREATE_PAYMENT_RECONCILATION),
+  ADD_REMOVE_AGENT                               (PermissionConstants.ADD_REMOVE_AGENT),
+  VIEW_NDR                                       (PermissionConstants.VIEW_NDR),
+  CONSIGNMENT_TRACKING_REPORT                    (PermissionConstants.CONSIGNMENT_TRACKING_REPORT),
+  EDIT_NDR                                       (PermissionConstants.EDIT_NDR);
 
   String permissionName;
 

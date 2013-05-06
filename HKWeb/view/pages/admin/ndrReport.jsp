@@ -32,7 +32,7 @@
                     <th>Hub Receiving Date</th>
                     <th>Aging(in Days)</th>
                     <th>Non Delivery Reason</th>
-                    <th>Number of Attempts</th>
+                    <th>No. of Attempts</th>
                     <th>Pending With</th>
                     <th>Current Status</th>
                     <th>NDR Action</th>
@@ -48,7 +48,7 @@
                         <s:hidden name="ndrDtoList[${ctr.index}].awbNumber" value="${ndrDto.awbNumber}"/>
                         <td>${ndrDto.awbNumber}</td>
                         <s:hidden name="ndrDtoList[${ctr.index}].createDate" value="${ndrDto.createDate}"/>
-                        <td>${ndrDto.createDate}</td>
+                        <td><fmt:formatDate value="${ndrDto.createDate}" type="date" timeStyle="short"/></td>
                         <s:hidden name="ndrDtoList[${ctr.index}].aging" value="${ndrDto.aging}"/>
                         <td>${ndrDto.aging}</td>
                         <s:hidden name="ndrDtoList[${ctr.index}].nonDeliveryReason"
@@ -71,19 +71,20 @@
                             </s:select>
                         </td>
 
-                        <td>
+                        <td style="width: 90px;">
                             <div class="show_date" style="width: 135px;">
-                                <s:text formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="date_input" value="${ndrDto.futureDate}"
+                                <s:text formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="date_input"
+                                        value="${ndrDto.futureDate}"
                                         disabled="${ndrDto.owner == customerSupport ? 'false' : 'true'}"
                                         name="ndrDtoList[${ctr.index}].futureDate"/>
                             </div>
                             <c:if test="${ndrDto.owner == hubManager}">
-                                ${ndrDto.futureDate}
+                                <fmt:formatDate value="${ndrDto.futureDate}" type="date" timeStyle="short"/>
                             </c:if>
                         </td>
 
                         <td>
-                            <s:text name="ndrDtoList[${ctr.index}].remarks"  style="width: 150px;"
+                            <s:text name="ndrDtoList[${ctr.index}].remarks" style="width: 150px;" maxlength="100"
                                     disabled="${ndrDto.owner == customerSupport ? 'false' : 'true'}"/>
                         </td>
 
@@ -94,6 +95,7 @@
                                           value="${ndrDto.consignmentId}"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentTrackingId"
                                           value="${ndrDto.consignmentTrackingId}"/>
+                                <s:hidden name="ndrIndex" value="${ctr.index}"/>
                             </shiro:hasRole>
                         </td>
                     </tr>

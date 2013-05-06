@@ -6,6 +6,7 @@ import com.hk.admin.dto.NdrDto;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumNDRAction;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -44,35 +45,37 @@ import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.Runsheet;
 import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
+import org.stripesstuff.plugin.security.Secure;
 
 @Component
 public class HKDConsignmentAction extends BasePaginatedAction {
 
-    private static      Logger                      logger                    = LoggerFactory.getLogger(HKDConsignmentAction.class);
-    private             Hub                         hub;
-    private             List<String>                trackingIdList            = new ArrayList<String>();
-    private             Courier                     hkDelivery                = EnumCourier.HK_Delivery.asCourier();
-    private             String                      consignmentNumber;
-    private             Boolean                     doTracking;
-    private             List<ConsignmentTracking>   consignmentTrackingList   = new ArrayList<ConsignmentTracking>();
-    private             Consignment                 consignment;
-    private             Page                        consignmentPage;
-    private             Date                        startDate;
-    private             Date                        endDate;
-    private             ConsignmentStatus           consignmentStatus;
-    private             Integer                     defaultPerPage            = 20;
-    private             List<Consignment>           consignmentList           = new ArrayList<Consignment>();
-    private             Boolean                     reconciled;
-    private             Runsheet                    runsheet;
-    private             User                        loggedOnUser;
-    private             List<NdrDto>                ndrDtoList                 = new ArrayList<NdrDto>();
+    private static Logger logger = LoggerFactory.getLogger(HKDConsignmentAction.class);
+    private Hub hub;
+    private List<String> trackingIdList = new ArrayList<String>();
+    private Courier hkDelivery = EnumCourier.HK_Delivery.asCourier();
+    private String consignmentNumber;
+    private Boolean doTracking;
+    private List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
+    private Consignment consignment;
+    private Page consignmentPage;
+    private Date startDate;
+    private Date endDate;
+    private ConsignmentStatus consignmentStatus;
+    private Integer defaultPerPage = 20;
+    private List<Consignment> consignmentList = new ArrayList<Consignment>();
+    private Boolean reconciled;
+    private Runsheet runsheet;
+    private User loggedOnUser;
+    private Integer ndrIndex;
+    private List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
 
     @Autowired
-    private              ConsignmentService          consignmentService;
+    private ConsignmentService consignmentService;
     @Autowired
-    private              HubService                  hubService;
+    private HubService hubService;
     @Autowired
-    private              AwbService                  awbService;
+    private AwbService awbService;
     @Autowired
     private ShipmentService shipmentService;
 
@@ -81,7 +84,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     String adminDownloadsPath;
 
     @DefaultHandler
-    public Resolution pre(){
+    public Resolution pre() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         return new ForwardResolution("/pages/admin/hkDeliveryConsignment.jsp");
     }
@@ -89,18 +92,18 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     @SuppressWarnings("unchecked")
     @Transactional
     public Resolution markShipmentsReceived() {
-        Set<String>  awbNumberSet ;
+        Set<String> awbNumberSet;
         List<String> existingAwbNumbers;
-        Hub          healthkartHub;
-        String       duplicateAwbString               = "";
-        Shipment     shipmentObj                      = null;
-        String       cnnNumber                        = null;
-        String       paymentMode                      = null;
-        Double       amount                           = null;
-        String       address                          = null;
+        Hub healthkartHub;
+        String duplicateAwbString = "";
+        Shipment shipmentObj = null;
+        String cnnNumber = null;
+        String paymentMode = null;
+        Double amount = null;
+        String address = null;
         /*Consignment  consignment                      = null;*/
-        List<String> newAwbNumbers                    = null;
-        List<Consignment> consignmentList             = new ArrayList<Consignment>();
+        List<String> newAwbNumbers = null;
+        List<Consignment> consignmentList = new ArrayList<Consignment>();
         List<ConsignmentTracking> consignmentTrackingList = null;
         ConsignmentLifecycleStatus consignmentLifecycleStatus = getBaseDao().get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.ReceivedAtHub.getId());
 
@@ -114,43 +117,43 @@ public class HKDConsignmentAction extends BasePaginatedAction {
             if (existingAwbNumbers.size() > 0) {
                 // removing duplicated awbs from the list.
                 trackingIdList.removeAll(existingAwbNumbers);
-                newAwbNumbers = (List<String>) CollectionUtils.subtract(trackingIdList,existingAwbNumbers);
+                newAwbNumbers = (List<String>) CollectionUtils.subtract(trackingIdList, existingAwbNumbers);
                 // creating a string for user-display.
                 duplicateAwbString = HKDeliveryUtil.convertListToString(existingAwbNumbers);
-                duplicateAwbString =HKDeliveryConstants.CONSIGNMNT_DUPLICATION_MSG + duplicateAwbString;
+                duplicateAwbString = HKDeliveryConstants.CONSIGNMNT_DUPLICATION_MSG + duplicateAwbString;
             }
             // convertig list to set to delete/remove duplicate elements from the list.
             newAwbNumbers = trackingIdList;
             awbNumberSet = new HashSet<String>(newAwbNumbers);
 
-            if(awbNumberSet.size()>0) {
+            if (awbNumberSet.size() > 0) {
                 // Creating consignments.
                 for (String awbNumber : awbNumberSet) {
                     try {
-                        shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery,awbNumber));
+                        shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery, awbNumber));
                         amount = shipmentObj.getShippingOrder().getAmount();
                         cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
-                        address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1()+","+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2()+","+
-                                shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity()+"-"+shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
+                        address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1() + "," + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2() + "," +
+                                shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity() + "-" + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
                         paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                         // Creating consignment object and adding to consignmentList.
-                        consignmentList.add(consignmentService.createConsignment(awbNumber,cnnNumber,amount,paymentMode,address ,hub));
+                        consignmentList.add(consignmentService.createConsignment(awbNumber, cnnNumber, amount, paymentMode, address, hub));
                     } catch (Exception ex) {
-                        logger.info("Exception occurred"+ex.getMessage());
+                        logger.info("Exception occurred" + ex.getMessage());
                         continue;
                     }
                 }
-                try{
+                try {
                     //saving consignmentList and consignmentTrackingList.
                     consignmentService.saveConsignments(consignmentList);
                     //fetching the consignments just created above.
                     consignmentList = consignmentService.getConsignmentListByAwbNumbers(new ArrayList<String>(awbNumberSet));
                     //creating consignmentTrackingList
-                    consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub,hub,loggedOnUser,consignmentList ,consignmentLifecycleStatus, null);
+                    consignmentTrackingList = consignmentService.createConsignmentTracking(healthkartHub, hub, loggedOnUser, consignmentList, consignmentLifecycleStatus, null);
                     //saving it.
                     consignmentService.saveConsignmentTracking(consignmentTrackingList);
                     addRedirectAlertMessage(new SimpleMessage(consignmentTrackingList.size() + HKDeliveryConstants.CONSIGNMNT_CREATION_SUCCESS + duplicateAwbString));
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     addRedirectAlertMessage(new SimpleMessage(HKDeliveryConstants.CONSIGNMENT_FAILURE));
                 }
 
@@ -165,18 +168,19 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     }
 
     @SuppressWarnings("unchecked")
-    public Resolution searchConsignments(){
+    public Resolution searchConsignments() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
+        if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
             hub = hubService.getHubForUser(loggedOnUser);
         }
         consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
-        if(consignmentPage != null){
+        if (consignmentPage != null) {
             consignmentList = consignmentPage.getList();
         }
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
+    @Secure(hasAnyRoles = {RoleConstants.HK_DELIVERY_HUB_MANAGER, RoleConstants.CUSTOMER_SUPPORT}, authActionBean = AdminPermissionAction.class)
     public Resolution viewNdr() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
@@ -187,42 +191,48 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         List<Consignment> consignmentList1 = new ArrayList<Consignment>();
         List<ConsignmentTracking> consignmentTrackingList1 = new ArrayList<ConsignmentTracking>();
 
-        for (NdrDto ndrDto : ndrDtoList) {
-            Consignment consignment1 = consignmentService.getConsignmentByAwbNumber(ndrDto.getAwbNumber());
-            ConsignmentTracking consignmentTracking1 = consignmentService.getConsignmentTrackingById(ndrDto.getConsignmentTrackingId());
-            String ndrResolution = ndrDto.getNdrResolution();
-            if (ndrResolution != null) {
-                if (!ndrResolution.equals(EnumNDRAction.CustomerNotContactable.toString())) {
-                    if (ndrResolution.equals(EnumNDRAction.FutureDeliveryDate.toString())) {
-                        if (ndrDto.getFutureDate() != null && ndrDto.getFutureDate().after(ndrDto.getCreateDate())) {
-                            consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
-                        }else{
-                            addRedirectAlertMessage(new SimpleMessage("Kindly enter a valid date."));
+        for (int i = 0; i < ndrDtoList.size(); i++) {
+            if (i == ndrIndex) {
+                NdrDto ndrDto = ndrDtoList.get(i);
+                Consignment consignment1 = consignmentService.getConsignmentByAwbNumber(ndrDto.getAwbNumber());
+                ConsignmentTracking consignmentTracking1 = consignmentService.getConsignmentTrackingById(ndrDto.getConsignmentTrackingId());
+                String ndrResolution = ndrDto.getNdrResolution();
+                if (ndrResolution != null) {
+                    if (!ndrResolution.equals(EnumNDRAction.CustomerNotContactable.toString())) {
+                        if (ndrResolution.equals(EnumNDRAction.FutureDeliveryDate.toString())) {
+                            if (ndrDto.getFutureDate() != null && ndrDto.getFutureDate().after(ndrDto.getCreateDate())) {
+                                consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
+                            } else {
+                                addRedirectAlertMessage(new SimpleMessage("Kindly enter a valid date."));
+                                return new RedirectResolution(HKDConsignmentAction.class, "viewNdr");
+                            }
                         }
+                        consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
                     }
-                    consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
+                    String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : ";
+                    if (ndrDto.getRemarks() != null) {
+                        remark += ndrDto.getRemarks();
+                    }
+                    consignmentTracking1.setNdrResolution(ndrDto.getNdrResolution());
+                    consignmentTracking1.setRemarks(remark);
+                } else {
+                    addRedirectAlertMessage(new SimpleMessage("Choose at least one resolution."));
+                    return new RedirectResolution(HKDConsignmentAction.class, "viewNdr");
                 }
-                String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : ";
-                if (ndrDto.getRemarks() != null) {
-                    remark += ndrDto.getRemarks();
-                }
-                consignmentTracking1.setNdrResolution(ndrDto.getNdrResolution());
-                consignmentTracking1.setRemarks(remark);
+                consignmentList1.add(consignment1);
+                consignmentTrackingList1.add(consignmentTracking1);
             }
-            consignmentList1.add(consignment1);
-            consignmentTrackingList1.add(consignmentTracking1);
+            consignmentService.saveConsignmentTracking(consignmentTrackingList1);
+            consignmentService.saveConsignments(consignmentList1);
         }
-
-        consignmentService.saveConsignmentTracking(consignmentTrackingList1);
-        consignmentService.saveConsignments(consignmentList1);
         return new RedirectResolution(HKDConsignmentAction.class, "viewNdr");
     }
 
-    public Resolution trackConsignment(){
+    public Resolution trackConsignment() {
 
-        if(doTracking){
+        if (doTracking) {
             consignment = consignmentService.getConsignmentByAwbNumber(consignmentNumber);
-            if(consignment != null) {
+            if (consignment != null) {
                 consignmentTrackingList = consignmentService.getConsignmentTracking(consignment);
                 logger.info(consignment + "" + consignmentTrackingList.size());
             } else {
@@ -369,5 +379,14 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     public void setNdrDtoList(List<NdrDto> ndrDtoList) {
         this.ndrDtoList = ndrDtoList;
     }
+
+    public Integer getNdrIndex() {
+        return ndrIndex;
+    }
+
+    public void setNdrIndex(Integer ndrIndex) {
+        this.ndrIndex = ndrIndex;
+    }
+
 
 }

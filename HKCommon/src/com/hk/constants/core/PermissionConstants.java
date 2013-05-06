@@ -151,4 +151,15 @@ public class PermissionConstants {
     public static final String SPLIT_BO = "SPLIT_BO";
     public static final String SAVE_SHIPPING_COST = "SAVE_SHIPPING_COST";
 
+    public static final String RECEIVE_CONSIGNMENTS = "RECEIVE_CONSIGNMENTS";
+    public static final String EDIT_RUNSHEET = "EDIT_RUNSHEET";
+    public static final String VIEW_CONSIGNMENTS = "VIEW_CONSIGNMENTS";
+    public static final String VIEW_PAYMENT_HISTORY = "VIEW_PAYMENT_HISTORY";
+    public static final String TRACK_CONSIGNMENTS = "TRACK_CONSIGNMENTS";
+    public static final String CREATE_PAYMENT_RECONCILATION = "CREATE_PAYMENT_RECONCILATION";
+    public static final String ADD_EDIT_HUB = "ADD_EDIT_HUB";
+    public static final String ADD_REMOVE_AGENT = "ADD_REMOVE_AGENT";
+    public static final String CONSIGNMENT_TRACKING_REPORT = "CONSIGNMENT_TRACKING_REPORT";
+    public static final String VIEW_NDR = "VIEW_NDR";
+    public static final String EDIT_NDR = "EDIT_NDR";
 }

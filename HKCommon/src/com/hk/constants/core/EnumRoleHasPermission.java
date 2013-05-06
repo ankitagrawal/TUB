@@ -92,7 +92,6 @@ public enum EnumRoleHasPermission {
                     EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
                     EnumPermission.CREATE_REPLACEMENT_ORDER,
-                    EnumPermission.HK_DELIVERY_WORKSHEET_DOWNLOAD,
                     EnumPermission.VIEW_DELIVERY_QUEUE,
                     EnumPermission.DOWNLOAD_COURIER_EXCEL,
                     EnumPermission.UPDATE_DELIVERY_QUEUE,
@@ -102,7 +101,18 @@ public enum EnumRoleHasPermission {
 		            EnumPermission.ADD_HUB,
 		            EnumPermission.POPULATE_BUSY_DATA,
 		            EnumPermission.DISPATCH_LOT_OPERATIONS,
-		            EnumPermission.EDIT_GRN
+		            EnumPermission.EDIT_GRN,
+                    EnumPermission.RECEIVE_CONSIGNMENTS,
+                    EnumPermission.EDIT_RUNSHEET,
+                    EnumPermission.VIEW_CONSIGNMENTS,
+                    EnumPermission.VIEW_PAYMENT_HISTORY,
+                    EnumPermission.TRACK_CONSIGNMENTS,
+                    EnumPermission.CREATE_PAYMENT_RECONCILATION,
+                    EnumPermission.ADD_EDIT_HUB,
+                    EnumPermission.ADD_REMOVE_AGENT,
+                    EnumPermission.CONSIGNMENT_TRACKING_REPORT,
+                    EnumPermission.VIEW_NDR,
+                    EnumPermission.EDIT_NDR
             )
     ),
 
@@ -198,7 +208,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.HK_EMPLOYEE,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
                     EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
-                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE
+                    EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
+                    EnumPermission.VIEW_NDR,
+                    EnumPermission.EDIT_NDR
             )
     ),
 
@@ -226,7 +238,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_COUPON,
                     EnumPermission.EDIT_LINEITEM,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
+					EnumPermission.CREATE_REVERSE_PICKUP_ORDER,
+                    EnumPermission.VIEW_NDR,
+                    EnumPermission.EDIT_NDR
             )
     ),
 
@@ -242,7 +256,9 @@ public enum EnumRoleHasPermission {
                     EnumPermission.EDIT_LINEITEM,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
 		            EnumPermission.CREATE_REPLACEMENT_ORDER,
-					EnumPermission.CREATE_REVERSE_PICKUP_ORDER
+					EnumPermission.CREATE_REVERSE_PICKUP_ORDER,
+                    EnumPermission.VIEW_NDR,
+                    EnumPermission.EDIT_NDR
             )
     ),
 
@@ -448,7 +464,17 @@ public enum EnumRoleHasPermission {
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
 		            EnumPermission.ADD_HUB,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+		            EnumPermission.DISPATCH_LOT_OPERATIONS,
+                    EnumPermission.RECEIVE_CONSIGNMENTS,
+                    EnumPermission.EDIT_RUNSHEET,
+                    EnumPermission.VIEW_CONSIGNMENTS,
+                    EnumPermission.VIEW_PAYMENT_HISTORY,
+                    EnumPermission.TRACK_CONSIGNMENTS,
+                    EnumPermission.CREATE_PAYMENT_RECONCILATION,
+                    EnumPermission.ADD_EDIT_HUB,
+                    EnumPermission.ADD_REMOVE_AGENT,
+                    EnumPermission.CONSIGNMENT_TRACKING_REPORT,
+                    EnumPermission.VIEW_NDR
             )
     ),
     HK_DELIVERY_HUB_MANAGER(
@@ -462,7 +488,17 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_HUB,
                     EnumPermission.ADD_HK_DELIVERY_AGENT,
 		            EnumPermission.VIEW_CONSIGNMENT_TRACKING,
-		            EnumPermission.DISPATCH_LOT_OPERATIONS
+		            EnumPermission.DISPATCH_LOT_OPERATIONS,
+                    EnumPermission.RECEIVE_CONSIGNMENTS,
+                    EnumPermission.EDIT_RUNSHEET,
+                    EnumPermission.VIEW_CONSIGNMENTS,
+                    EnumPermission.VIEW_PAYMENT_HISTORY,
+                    EnumPermission.TRACK_CONSIGNMENTS,
+                    EnumPermission.CREATE_PAYMENT_RECONCILATION,
+                    EnumPermission.ADD_EDIT_HUB,
+                    EnumPermission.ADD_REMOVE_AGENT,
+                    EnumPermission.CONSIGNMENT_TRACKING_REPORT,
+                    EnumPermission.VIEW_NDR
             )
     ),
 
