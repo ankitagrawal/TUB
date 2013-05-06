@@ -117,7 +117,7 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
         ShipmentServiceType shipmentServiceType = getShipmentServiceType(shippingOrder);
         Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         PincodeDefaultCourier pincodeDefaultCourier = getPincodeDefaultCourier(pincode, shippingOrder.getWarehouse(), ShipmentServiceMapper.isCod(shipmentServiceType), ShipmentServiceMapper.isGround(shipmentServiceType));
-        Integer estimatedDeliveryDays = pincodeDefaultCourier.getEstimatedDeliveryDays();
+        Integer estimatedDeliveryDays = pincodeDefaultCourier != null ? pincodeDefaultCourier.getEstimatedDeliveryDays() : 3;
         shippingOrder.setTargetDelDate(HKDateUtil.addToDate(new Date(), Calendar.DAY_OF_MONTH, estimatedDeliveryDays));
         return shippingOrder;
     }
