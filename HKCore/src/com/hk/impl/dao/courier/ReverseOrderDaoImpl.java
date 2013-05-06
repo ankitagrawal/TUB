@@ -37,8 +37,9 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
         DetachedCriteria orderCriteria = DetachedCriteria.forClass(ReverseOrder.class);
         DetachedCriteria courierDetailCriteria = null;
 
+        DetachedCriteria shippingOrderCriteria = null;
         if (shippingOrderId != null) {
-            DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
             shippingOrderCriteria.add(Restrictions.eq("gatewayOrderId", shippingOrderId));
         }
 
@@ -66,7 +67,9 @@ public class ReverseOrderDaoImpl extends BaseDaoImpl implements ReverseOrderDao 
 
         }
         if (warehouseId != null) {
-            DetachedCriteria shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            if (shippingOrderCriteria == null) {
+                shippingOrderCriteria = orderCriteria.createCriteria("shippingOrder");
+            }
             DetachedCriteria warehouseCriteria = shippingOrderCriteria.createCriteria("warehouse");
             warehouseCriteria.add(Restrictions.eq("id", warehouseId));
 

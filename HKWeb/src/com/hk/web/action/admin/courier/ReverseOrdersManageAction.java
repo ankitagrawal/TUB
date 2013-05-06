@@ -231,6 +231,8 @@ public class ReverseOrdersManageAction extends BasePaginatedAction {
         params.add("shippingOrderId");
         params.add("courierId");
         params.add("warehouseId");
+        params.add("startDate");
+        params.add("endDate");
         return params;
     }
 
