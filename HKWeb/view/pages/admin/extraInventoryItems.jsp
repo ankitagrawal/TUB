@@ -1,5 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.pact.dao.TaxDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.domain.core.Surcharge" %>
+<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.hk.domain.core.Tax" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.rtv.EnumExtraInventoryStatus" %>
@@ -8,12 +14,20 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Extra Inventory">
 <s:useActionBean beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" var="extraInventory"/>
 
-<%
+	<%
+
+	TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
+	List<Tax> taxList = taxDao.getTaxList();
+	pageContext.setAttribute("taxList", taxList);
+
+	MasterDataDao masterDataDao = (MasterDataDao) ServiceLocatorFactory.getService(MasterDataDao.class);
     response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
     response.setHeader("pragma", "no-cache");
     response.setDateHeader("Expires", -1);
+    List<Surcharge> surchargeList = masterDataDao.getSurchargeList();
+	pageContext.setAttribute("surchargeList", surchargeList);
 %>
-<s:layout-component name="htmlHead">
+	<s:layout-component name="htmlHead">
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
@@ -90,7 +104,7 @@ $(document).ready(function () {
         $('.createRtv').remove();
     });
 
-    $("#save").click(function() {
+    $(".save").click(function() {
         var saveObj = $(this);
         $(this).hide();
         var bool = true;
@@ -107,6 +121,15 @@ $(document).ready(function () {
             var mrp = $(this).val();
             if (mrp == null || mrp.trim(mrp) == "" || isNaN(mrp)) {
                 alert("Enter MRP in correct format.");
+                bool = false;
+                saveObj.show();
+                return false;
+            }
+        });
+        $('.receivedQuantity').each(function() {
+            var receivedQuantity = $(this).val();
+            if (receivedQuantity == null || receivedQuantity.trim(receivedQuantity) == "" || isNaN(receivedQuantity)) {
+                alert("Enter Received Quantity in correct format.");
                 bool = false;
                 saveObj.show();
                 return false;
@@ -209,7 +232,25 @@ $(document).ready(function () {
         $('.lastRow').removeClass('lastRow');
 
         var nextIndex = eval(lastIndex + "+1");
-
+        var taxOptions = "";
+	<c:choose>
+	<c:when test="${extraInventory.sameState}">
+		taxOptions = '<select class="taxCategory valueChange" name="extraInventoryLineItems[' + nextIndex + '].tax">';
+	<c:forEach items="${taxList}" var="tax">
+		taxOptions += '<option value="'+${tax.id}+
+		'">'+${tax.value}+
+		'</option>';
+	</c:forEach>
+	</c:when>
+	<c:otherwise>
+		taxOptions = '<select class="taxCategory valueChange" name="extraInventoryLineItems[' + nextIndex + '].surcharge">';
+	<c:forEach items="${surchargeList}" var="surcharge">
+		taxOptions += '<option value="'+${surcharge.id}+
+		'">' + ${surcharge.value} + '</option>';
+	</c:forEach>
+	</c:otherwise>
+	</c:choose>
+	
         var newRowHtml =
                 '<tr class="lastRow lineItemRow" count="' + nextIndex + '" >' +
                 '<td>' + Math.round(nextIndex + 1) + '.</td>' +
@@ -232,15 +273,17 @@ $(document).ready(function () {
                 '    <input class="costPrice valueChange" type="text" name="extraInventoryLineItems[' + nextIndex + '].costPrice" />' +
                 '  </td>' +
                 '  <td>' +
-                '    <input type="text" class="receivedQty valueChange" name="extraInventoryLineItems[' + nextIndex + '].receivedQty"  />' +
+                '    <input type="text" class="receivedQuantity valueChange" name="extraInventoryLineItems[' + nextIndex + '].receivedQty"  />' +
                 '  </td>' +
-                '<td class="taxClass">' +
-                '<select class="taxValue" name="extraInventoryLineItems[' + nextIndex + '].tax"> ' +
-                        <c:forEach items="${extraInventory.taxList}" var="tax">
-                '<option value="' + ${tax.id} + '">' + "${tax.name}" + '</option>' +
-                        </c:forEach>
-                '</select>' +
-                '</td>' +
+                '<td>' +
+				taxOptions +
+				'</select>' +
+				'<input type="hidden" value="finance" class="taxIdentifier"/>' +
+				'</td>' +
+                '  <td ><input class="taxableAmount" type="text" readonly="readonly" name="extraInventoryLineItems[' + nextIndex + '].taxableAmount"/></td>' +
+				'  <td ><input class="taxAmount" type="text" readonly="readonly" name="extraInventoryLineItems[' + nextIndex + '].taxAmount"></td>' +
+				'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="extraInventoryLineItems[' + nextIndex + '].surchargeAmount"/></td>' +
+				'  <td ><input class="payableAmount" type="text" readonly="readonly" name="extraInventoryLineItems[' + nextIndex + '].payableAmount"/></td>' +
                 '<td>' +
                 '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
                 '</td>' +
@@ -252,18 +295,48 @@ $(document).ready(function () {
 
         return false;
     });
+    
+    $('.valueChange').live("blur", function() {
+		var table = $(this).parent().parent().parent();
+		var valueChangeRow = $(this).parents('.lineItemRow');
+		var costPrice = valueChangeRow.find('.costPrice').val();
+		var mrp = valueChangeRow.find('.mrp').val();
+		var qty = valueChangeRow.find('.receivedQuantity').val();
+		var taxIdentifier = valueChangeRow.find('.taxIdentifier').val();
+		var value = $(this).val();
+	       if (value.trim(value) == "" || value == null) {
+	            alert("All fields are compulsory.");
+	            return false;
+	       }
+	       if (isNaN(value)) {
+	           alert("Enter value in correct format.");
+	           return false;
+	        }
+		if (isNaN(qty) || isNaN(costPrice) || qty < 0 || costPrice < 0) {
+			alert("Enter values in correct format.");
+			return false;
+		}
+		var taxCategory;
+		if (taxIdentifier == 'finance') {
+			var taxCat = valueChangeRow.find('.taxCategory');
+			var selectedTax = $(taxCat).find('option:selected');
+			taxCategory = selectedTax.text();
+		} else {
+			taxCategory = parseFloat(valueChangeRow.find('.taxCategory').val().trim());
+		}
+		var taxable = costPrice * qty;
+		var surchargeCategory = 0.0;
+		var stateIdentifier = $('.state').html();
+		surchargeCategory = ${hk:getSurchargeValue(supplierState, warehouseState)};
+		var tax = taxable * taxCategory;
+		var surcharge = tax * surchargeCategory;
+		var payable = surcharge + taxable + tax;
 
-    $('.valueChange').live("change", function () {
-        var value = $(this).val();
-        if (value.trim(value) == "" || value == null) {
-            alert("All fields are compulsory.");
-            return false;
-        }
-        if (isNaN(value)) {
-            alert("Enter value in correct format.");
-            return false;
-        }
-    });
+		valueChangeRow.find('.taxableAmount').val(taxable.toFixed(2));
+		valueChangeRow.find('.taxAmount').val(tax.toFixed(2));
+		valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
+		valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
+	});
 
 });
 </script>
@@ -353,7 +426,7 @@ $(document).ready(function () {
 <table border="1">
     <thead>
     <tr>
-        <th>S.No</th>
+        <th>S.No.</th>
         <th>ID</th>
         <th>New PO ID</th>
         <th>SKU ID</th>
@@ -362,7 +435,18 @@ $(document).ready(function () {
         <th>MRP</th>
         <th>Cost Price</th>
         <th>Received QTY</th>
-        <th>TAX</th>
+        <c:choose>
+			<c:when test="${extraInventory.sameState}">
+				<th>Tax<br/>Category</th>
+			</c:when>
+			<c:otherwise>
+				<th>Surcharge<br/>Category</th>
+			</c:otherwise>
+		</c:choose>
+        <th>Taxable</th>
+        <th>Tax</th>
+        <th>Surcharge</th>
+		<th>Payable</th>
         <th>Remarks</th>
     </tr>
     </thead>
@@ -450,72 +534,81 @@ $(document).ready(function () {
                     </c:choose>
                 </td>
                 <td>
-                    <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                            ${eInLineItems.mrp}
-                            <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
-                                      value="${eInLineItems.mrp}"/>
-                        </c:when>
-                        <c:otherwise>
                             <input type="text" class="mrp valueChange"
                                    name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
-                        </c:otherwise>
-                    </c:choose>
+                            <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
+                                      value="${eInLineItems.mrp}"/>
                 </td>
                 <td>
-                    <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                            ${eInLineItems.costPrice}
-                            <s:hidden class="costPrice valueChange"
-                                      name="extraInventoryLineItems[${ctr.index}].costPrice"
-                                      value="${eInLineItems.costPrice}"/>
-                        </c:when>
-                        <c:otherwise>
                             <input type="text" class="costPrice valueChange"
                                    name="extraInventoryLineItems[${ctr.index}].costPrice"
                                    value="${eInLineItems.costPrice}"/>
-                        </c:otherwise>
-                    </c:choose>
+                            <s:hidden class="costPrice valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].costPrice"
+                                   value="${eInLineItems.costPrice}"/>
                 </td>
                 <td>
                     <c:choose>
                         <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
                             ${eInLineItems.receivedQty}
-                            <s:hidden class="receivedQty valueChange"
+                            <s:hidden class="receivedQuantity valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
                                       value="${eInLineItems.receivedQty}"/>
                         </c:when>
                         <c:otherwise>
-                            <input type="text" class="receivedQty valueChange"
+                            <input type="text" class="receivedQuantity valueChange"
                                    name="extraInventoryLineItems[${ctr.index}].receivedQty"
                                    value="${eInLineItems.receivedQty}"/>
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td class="taxClass">
+                <td class="taxClass taxCategory">
+                <input type="hidden" value="finance"
+					       class="taxIdentifier"/>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                            ${eInLineItems.tax.name}
-                            <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
-                                   readonly="readonly" value="${eInLineItems.tax.id}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <s:select name="extraInventoryLineItems[${ctr.index}].tax" class="taxValue">
-                                <hk:master-data-collection service="<%=MasterDataDao.class%>"
-                                                           serviceProperty="taxList" value="id" label="name"/>
-                            </s:select>
-                        </c:otherwise>
+                        
+						<c:when test="${extraInventory.sameState}">
+							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
+							          value="${eInLineItems.tax.id}" class="valueChange">
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
+								                           value="id"
+								                           label="name"/>
+							</s:select>
+						</c:when>
+						<c:otherwise>
+							<s:select name="extraInventoryLineItems[${ctr.index}].surcharge"
+							          value="${eInLineItems.surcharge.id}" class="valueChange">
+								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+								                           serviceProperty="surchargeList" value="id"
+								                           label="value"/>
+							</s:select>
+						</c:otherwise>
                     </c:choose>
                 </td>
+                
                 <td>
-                    <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
-                            ${eInLineItems.remarks}
-                        </c:when>
-                        <c:otherwise>
+				<s:text readonly="readonly" class="taxableAmount"
+				        name="extraInventoryLineItems[${ctr.index}].taxableAmount"
+				        value="${eInLineItems.taxableAmount}"/>
+			</td>
+			<td>
+				<s:text readonly="readonly" class="taxAmount" name="extraInventoryLineItems[${ctr.index}].taxAmount"
+				        value="${eInLineItems.taxAmount}"/>
+			</td>
+			<td>
+				<s:text readonly="readonly" class="surchargeAmount"
+				        name="extraInventoryLineItems[${ctr.index}].surchargeAmount"
+				        value="${eInLineItems.surchargeAmount}"/>
+			</td>
+			<td>
+
+				<s:text readonly="readonly" class="payableAmount"
+				        name="extraInventoryLineItems[${ctr.index}].payableAmount"
+				        value="${eInLineItems.payableAmount}"/>
+			</td>
+                
+                <td>
                             <s:textarea name="extraInventoryLineItems[${ctr.index}].remarks" rows="10" cols="10" style="height:60px; width:210px;"/>
-                        </c:otherwise>
-                    </c:choose>
                 </td>
             </tr>
         </c:forEach>
@@ -536,13 +629,13 @@ $(document).ready(function () {
 <br/>
 <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}"/>
 <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}"/>
-<s:submit name="save" value="SAVE" id="save"/>
+<s:submit name="save" class="save" value="SAVE"/>
 <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
-        <s:submit name="createRtv" value="Create RTV" class="createRtv"/>
+        <s:submit name="createRtv" value="Create RTV" class="requiredFieldValidator createRtv"/>
     </c:if>
-    <s:submit name="editRtv" value="Check RTV Status" id="checkRtvStatus"/>
-    <s:submit name="createPO" value="Create PO" class="createRtv"/>
+    <s:submit name="editRtv" class="save" value="Check RTV Status" id="checkRtvStatus"/>
+    <s:submit name="createPO" value="Create PO" class="save createRtv"/>
 </shiro:hasPermission>
 </s:form>
 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">

@@ -7,11 +7,14 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseFormType;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.rtv.RtvNote;
+import com.hk.domain.inventory.rtv.RtvNoteStatus;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +94,13 @@ public class PurchaseInvoice implements java.io.Serializable {
 
 	@Column(name = "final_payable_amount")
 	private Double finalPayableAmount;
-
+	
+	@Column(name = "short_amount")
+	private Double shortAmount;
+	
+	@Column(name = "pi_rtv_amount")
+	private Double piRtvAmount;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseInvoice")
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>(0);
   
@@ -107,6 +116,15 @@ public class PurchaseInvoice implements java.io.Serializable {
 	)
 	private List<GoodsReceivedNote> goodsReceivedNotes = new ArrayList<GoodsReceivedNote>();
 
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "purchase_invoice_has_rtv_note",
+	    joinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "rtv_note_id", nullable = false, updatable = false)}
+	)
+	private List<RtvNote> rtvNotes = new ArrayList<RtvNote>();
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "surcharge_id")
 	private Surcharge surcharge;
@@ -339,8 +357,32 @@ public class PurchaseInvoice implements java.io.Serializable {
   public void setPaymentHistories(List<PaymentHistory> paymentHistories) {
     this.paymentHistories = paymentHistories;
   }
+  
+  public List<RtvNote> getRtvNotes() {
+	return rtvNotes;
+  }
 
-  @Override
+  public void setRtvNotes(List<RtvNote> rtvNotes) {
+	this.rtvNotes = rtvNotes;
+  }
+  
+  public Double getShortAmount() {
+	return shortAmount;
+  }
+
+  public void setShortAmount(Double shortAmount) {
+	this.shortAmount = shortAmount;
+  }
+
+  public Double getPiRtvAmount() {
+	return piRtvAmount;
+  }
+
+public void setPiRtvAmount(Double piRtvAmount) {
+	this.piRtvAmount = piRtvAmount;
+}
+
+@Override
   public String toString() {
       return id == null ? "" : id.toString();
   }

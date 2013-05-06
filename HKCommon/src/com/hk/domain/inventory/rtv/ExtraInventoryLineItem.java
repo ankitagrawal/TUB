@@ -1,11 +1,13 @@
 package com.hk.domain.inventory.rtv;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.core.Surcharge;
 import com.hk.domain.core.Tax;
 
 /**
@@ -44,7 +46,7 @@ public class ExtraInventoryLineItem implements Serializable{
 	private Sku sku;
 
   @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "tax_id", nullable = false)
+  @JoinColumn (name = "tax_id")
   private Tax tax;
 
   @Column (name = "product_name")
@@ -56,11 +58,27 @@ public class ExtraInventoryLineItem implements Serializable{
   @Column (name = "cost_price", nullable = false)
   private Double costPrice;
 
-  @Column (name = "mrp" , nullable = false)
-  private Double mrp;
+	@Column(name = "mrp", nullable = false)
+	private Double mrp;
 
-  @Column (name = "remarks")
-  private String remarks;
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
+
+	@Column(name = "tax_amount")
+	private Double taxAmount;
+
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
+
+	@Column(name = "payable_amount")
+	private Double payableAmount;
+
+	@Column(name = "remarks")
+	private String remarks;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "surcharge_id")
+	private Surcharge surcharge;
 
   @Column (name = "is_rtv_created")
   private Boolean isRtvCreated;
@@ -195,4 +213,45 @@ public class ExtraInventoryLineItem implements Serializable{
   public void setRemarks(String remarks) {
     this.remarks = remarks;
   }
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public void setPayableAmount(Double payableAmount) {
+		this.payableAmount = payableAmount;
+	}
+
+	public Surcharge getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(Surcharge surcharge) {
+		this.surcharge = surcharge;
+	}
+  
 }
