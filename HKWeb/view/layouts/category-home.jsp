@@ -70,7 +70,7 @@
           <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" event="pre">
             <img src="<hk:vhostImage/>/images/banners/refer_earn.jpg" alt="refer a friend and earn" class="small_banner"/>
           </s:link>
-          <img src="<hk:vhostImage/>/images/banners/freeshipping_cod_250.jpg" alt="cash on delivery" class="small_banner"/>
+          <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="free shipping" class="small_banner"/>
         </div>
         <div class="floatfix"></div>
       </div>
