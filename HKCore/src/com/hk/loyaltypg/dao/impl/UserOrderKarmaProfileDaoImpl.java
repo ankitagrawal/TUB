@@ -19,8 +19,7 @@ public class UserOrderKarmaProfileDaoImpl extends BaseDaoImpl implements UserOrd
 	@Override
 	public Page listKarmaPointsForUser(User user, int page, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-        criteria.add(Restrictions.eq("userOrderKey.user.id", user.getId()));
-        //criteria.add(Restrictions.eq("userOrderKey", userOKey));
+        criteria.add(Restrictions.eq("user.id", user.getId()));
         criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
         return this.list(criteria, page, perPage);
     }

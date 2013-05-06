@@ -5,19 +5,37 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
 
 @Entity
 @Table(name = "user_order_karma_profile")
 public class UserOrderKarmaProfile {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", unique = true, nullable = false)
+	private Long id;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id", nullable=false)
+	private Order order;
 
-	@EmbeddedId
-	private UserOrderKey userOrderKey;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable=false)
+	private User user;
 
 	@Column(name = "creation_time", updatable = false)
 	private Date creationTime = new Date();
@@ -36,15 +54,15 @@ public class UserOrderKarmaProfile {
 
 	@Column(name = "points")
 	private Double karmaPoints;
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 		
-	public UserOrderKey getUserOrderKey() {
-		return this.userOrderKey;
-	}
-	
-	public void setUserOrderKey(UserOrderKey userOrderKey) {
-		this.userOrderKey = userOrderKey;
-	}
-	
 	public TransactionType getTransactionType() {
 		return this.transactionType;
 	}
@@ -84,6 +102,23 @@ public class UserOrderKarmaProfile {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 
 	public static enum KarmaPointStatus {
 		APPROVED, PENDING, EXPIRED, CANCELED, CONVERTED;
