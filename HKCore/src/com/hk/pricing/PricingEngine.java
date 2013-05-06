@@ -394,6 +394,7 @@ public class PricingEngine {
                         }
                         Double maxDiscount = lineItem.getMarkedPrice() * 0.5 * lineItem.getQty();
                         lineItemDiscount = lineItemDiscount > maxDiscount ? maxDiscount : lineItemDiscount; //no one can get more than 50% discount
+                        lineItemDiscount = lineItemDiscount - actualPrice;
                         lineItem.setDiscountOnHkPrice(lineItemDiscount);
                     }
                     if (lineItem.isType(EnumCartLineItemType.Shipping)) {
