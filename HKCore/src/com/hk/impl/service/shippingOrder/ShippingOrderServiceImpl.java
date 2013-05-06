@@ -427,12 +427,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0;
     }
 
-	@Override
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
-		return shippingOrder.getShipment().getZone();
-
-	}
-
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);
     }

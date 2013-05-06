@@ -2,6 +2,7 @@ package com.hk.util;
 
 
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.shippingOrder.LineItem;
 
 /*
  * User: Pratham
@@ -13,7 +14,10 @@ public class ShippingCostCutOff {
     private static final Double maxShippingCharges = 5000D;
 
     public static Double calculateCutoffAmount(ShippingOrder shippingOrder) {
-        Double shippingOrderAmount = shippingOrder.getAmount();
+        Double shippingOrderAmount = 0D;
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            shippingOrderAmount += lineItem.getHkPrice();
+        }
         Double cutOffShippingCharges = shippingOrderAmount * percentageOfSOAmount;
         cutOffShippingCharges = cutOffShippingCharges > maxShippingCharges ? maxShippingCharges : cutOffShippingCharges;
         return cutOffShippingCharges;
