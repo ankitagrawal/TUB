@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
@@ -7,6 +8,14 @@
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.PlaceOrderAction" var="pla" />
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 	<stripes:layout-component name="contents">
+ <c:set var="imageLargeSize" value="<%=EnumImageSize.LargeSize%>"/>
+ <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
+ <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
+ <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
+<%
+boolean isSecure = pageContext.getRequest().isSecure();
+pageContext.setAttribute("isSecure", isSecure);
+%>
 
 		<table class="table table-bordered">
 			<thead>
@@ -19,9 +28,10 @@
 			<tbody>
 				<c:forEach items="${ca.loyaltyProductList}" var="lp">
 					<tr>
-						<td><img
-							src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${lp.variant.product.id}.jpg'
-							alt="${lp.variant.product.name}" /> <h8>${lp.variant.product.name}</h8>
+						<td>
+						<c:set var="imageId" value = "${lp.variant.product.mainImageId }" />
+						<img src="${hk:getS3ImageUrl(imageSmallSize, imageId,isSecure)}" alt="${lp.variant.product.name}"/>
+						<h8>${lp.variant.product.name}</h8>
 						</td>
 						<td>${lp.qty}</td>
 						<td>${lp.points}</td>
