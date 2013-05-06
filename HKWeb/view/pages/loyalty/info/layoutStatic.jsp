@@ -12,10 +12,9 @@
     <meta name="description" content="">
     <meta name="author" content="Deepak Chauhan">
 
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/grid.css" rel="stylesheet">
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/style.css" rel="stylesheet">
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet"> 
-    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/pages/loyalty/resources/css/grid.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/pages/loyalty/resources/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/pages/loyalty/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-ui-1.9.2.custom.min.js"></script>
  </head>
@@ -28,12 +27,12 @@
         
 		<div id="logo" class="grid_6">
             <div class="logo-block">
-              <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home'>healthKart</s:link></span>
-			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
+              <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target="_blank">healthKart</s:link></span>
+			  <span class="embedMarginleft"><a href="http://www.healthkartplus.com" title='go to healthkartplus' target="_blank">healthkartplus</a></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="<hk:vhostJs/>/loyaltypg">
-                <img width="283" height="83" alt="healthkart logo" src="<hk:vhostJs/>/pages/loyalty/resources/images/hkStellar.png">
+			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
+                <img width="283" height="83" alt="healthkart logo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/hkStellar.png">
               </a>
               </div>
   
@@ -57,7 +56,7 @@
           <div class="grid_12">
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
-              info@healthkartplus.com | Established in India | Terms and Conditions | Connect with Us:
+              info@healthkart.com | Established in India | Terms and Conditions | Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

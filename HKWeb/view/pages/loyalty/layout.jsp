@@ -85,10 +85,11 @@
 		<div id="logo" class="grid_6">
             <div class="logo-block">
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home'>healthKart</s:link></span>
-			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com?src=hk" title='go to healthkartplus'>healthkartplus</s:link></span>
+			  <span class="embedMarginleft">
+			  <a href="http://www.healthkartplus.com?src=hk" target='_blank' title='go to healthkartplus'>healthkartplus</a></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="<hk:vhostJs/>/loyaltypg">
+			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
                 <img width="283" height="83" alt="healthkart logo" src="<hk:vhostJs/>/pages/loyalty/resources/images/hkStellar.png">
               </a>
               </div>
@@ -155,7 +156,7 @@
           <div class="grid_12">
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
-              info@healthkartplus.com | Established in India | Terms and Conditions | Connect with Us:
+              info@healthkart.com | Established in India | Terms and Conditions | Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

@@ -42,7 +42,7 @@ $(document).ready(function(){
 				So how does this work? <br>Once you have registered on healthkart.com or on healthkartplus.com ,
 				<br>you automatically join stellar. The more you spend henceforth, the more <br> 
 				points you gather. To understand our slab structure better, may we suggest <br>you take a look at our 
-				<a href="<hk:vhostJs/>/pages/loyalty/info/aboutUs.jsp" class="blue">about us</a> page
+				<a href="${pageContext.request.contextPath}/pages/loyalty/info/aboutUs.jsp" class="blue" target="_blank">about us</a> page
 				<br>There’s more. Our catalog on stellar is tailor-made to the way you’ve always<br>shopped with us <br>
 				<br>
 				<br>
@@ -58,7 +58,7 @@ $(document).ready(function(){
 				<br>to buy straight from our store.<br>
 				<br>
 				<br>
-				<div class="addToCompare font-caps embedMargin5" id="button3"><a href="<hk:vhostJs/>/loyaltypg">Continue</a></div>
+				<div class="addToCompare font-caps embedMargin5" id="button3"><a href="${pageContext.request.contextPath}/loyaltypg">Continue</a></div>
 			</div>
 			
 		</div>
