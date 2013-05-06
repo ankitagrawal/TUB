@@ -10,7 +10,8 @@
         <div class="mainContent">
         <div class="grid_14">
           <div class="topText">
-  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.user.createDate}" /> | Points available : ${userKarmaHA.validPoints} 
+          <c:set var = "userId" value ="${userKarmaHA.user.id}" />
+  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.badgeInfo.creationTime}" /> | Points available :  ${hk:getLoyaltyKarmaPointsForUser(userId)}
 			| Current status : <c:set var="badgeInfo" value="${userKarmaHA.badgeInfo}" /> ${badgeInfo.badge.badgeName} MEMBER
           </div>
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
@@ -51,7 +52,7 @@
               <p class="expiryRow"> ${karmaProfile.expiryDate}
               </p></div>
               <div class="headRowValue">
-				<c:forEach items="${karmaProfile.userOrderKey.order.cartLineItems}" var="items">
+				<c:forEach items="${karmaProfile.order.cartLineItems}" var="items">
    					${items.productVariant.product.name} 
                 </c:forEach>
 			  </div>
@@ -80,7 +81,7 @@
        <c:otherwise>
                 <br/>
                 <br/>
-                You haven't ordered anything from healthkart yet.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons blue" >
+                You haven't ordered anything from healthkart yet as a stellar member.   <s:link beanclass="com.hk.web.action.HomeAction" event="pre" class="buttons blue" >
                 Continue Shopping
             </s:link>
             </c:otherwise>

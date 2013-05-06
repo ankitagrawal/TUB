@@ -48,4 +48,6 @@ public interface LoyaltyProgramService {
 	NextLevelInfo fetchNextLevelInfo(User user);
 	
 	public double convertLoyaltyToRewardPoints(User user);
+
+	void updateUserBadgeInfo(User user);
 }

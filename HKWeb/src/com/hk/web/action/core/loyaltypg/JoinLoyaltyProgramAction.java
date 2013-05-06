@@ -16,6 +16,7 @@ import org.stripesstuff.plugin.security.Secure;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.user.User;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.RoleService;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.core.auth.LoginAction;
@@ -29,6 +30,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	
 	@Autowired UserService userService;
 	@Autowired RoleService roleService;
+	@Autowired LoyaltyProgramService loyaltyProgramService;
 	
 	@DefaultHandler
 	@DontValidate
@@ -48,6 +50,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 		
 		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
 		this.userService.save(user);
+		this.loyaltyProgramService.updateUserBadgeInfo(user);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}
 	

@@ -162,6 +162,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		if (infos == null || infos.isEmpty()) {
 			info = new UserBadgeInfo();
 			info.setBadge(normalBadge);
+			info.setUser(user);
 			return info;
 		}
 		info = infos.iterator().next();
@@ -212,8 +213,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		this.updateUserBadgeInfo(profile.getUser());
 	}
 
+	@Override
 	@Transactional
-	private void updateUserBadgeInfo(User user) {
+	public void updateUserBadgeInfo(User user) {
 		double anualSpend = this.calculateAnualSpend(user);
 
 		List<Badge> badges = this.baseDao.getAll(Badge.class);
@@ -410,50 +412,30 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double convertLoyaltyToRewardPoints(User user) {
-		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.add(Restrictions.eq("user", user));
-		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
-		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
-		criteria.addOrder(org.hibernate.criterion.Order.asc("creationTime"));
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -2);
-		criteria.add(Restrictions.ge("creationTime", cal.getTime()));
-
-		@SuppressWarnings("unchecked")
-		List<UserOrderKarmaProfile> profileList = this.userOrderKarmaProfileDao.findByCriteria(criteria);
-
+	
 		double loyaltyPoints = this.calculateLoyaltyPoints(user);
-		double totalPointsConverted = 0;
-		// To iterate over profile list without using another loop.
-		int counter = 0;
-		int size = profileList.size();
-		UserOrderKarmaProfile currentProfile;
-		String comment = "Reward Points converted from Loyalty points";
-		while (loyaltyPoints > 0 && counter < size) {
-			currentProfile = profileList.get(counter);
+		double totalPointsConverted = 0;	
+		if (loyaltyPoints > 0) {
+			String comment = "Reward Points converted from Loyalty points";
 
-			// when karma points for an order are less than total points for
-			// conversion
-			if (currentProfile.getKarmaPoints() <= loyaltyPoints) {
-				this.rewardPointService.addRewardPoints(user, null, currentProfile.getOrder(),
-						currentProfile.getKarmaPoints(), comment, EnumRewardPointStatus.APPROVED,
-						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
-				currentProfile.setStatus(KarmaPointStatus.CONVERTED);
-				currentProfile.setUpdateTime(Calendar.getInstance().getTime());
-				loyaltyPoints = loyaltyPoints - currentProfile.getKarmaPoints();
-				totalPointsConverted += currentProfile.getKarmaPoints();
-				this.userOrderKarmaProfileDao.saveOrUpdate(currentProfile);
-				counter++;
-			} else {
-				// No processing to be done
-				counter++;
-				continue;
-			}
+			UserOrderKarmaProfile rewardProfile = new UserOrderKarmaProfile();
+			rewardProfile.setUser(user);
+			rewardProfile.setKarmaPoints(-loyaltyPoints);
+			rewardProfile.setCreationTime(Calendar.getInstance().getTime());
+			rewardProfile.setUpdateTime(Calendar.getInstance().getTime());
+			rewardProfile.setOrder(new Order());
+			rewardProfile.setTransactionType(TransactionType.DEBIT);
+			rewardProfile.setStatus(KarmaPointStatus.CONVERTED);
+			
+			// add reward points
+			this.rewardPointService.addRewardPoints(user, null, new Order(), loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
+					EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 
-		}
-
+			// save reward profile
+			this.userOrderKarmaProfileDao.saveOrUpdate(rewardProfile);
+			totalPointsConverted = loyaltyPoints;
+ 		} 
 		return totalPointsConverted;
-
 	}
 
 	/**
