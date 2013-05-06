@@ -12642,9 +12642,6 @@
     <changeSet author="Nihal (generated)" id="1367824002963-11">
         <addPrimaryKey columnNames="purchase_invoice_id, rtv_note_id" tableName="purchase_invoice_has_rtv_note"/>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1367824002963-14">
-        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1367824002963-15">
         <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
     </changeSet>
