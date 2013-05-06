@@ -200,7 +200,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                 if (ndrResolution != null) {
                     if (!ndrResolution.equals(EnumNDRAction.CustomerNotContactable.toString())) {
                         if (ndrResolution.equals(EnumNDRAction.FutureDeliveryDate.toString())) {
-                            if (ndrDto.getFutureDate() != null && ndrDto.getFutureDate().after(ndrDto.getCreateDate())) {
+                            if ((ndrDto.getFutureDate() != null) && (ndrDto.getCreateDate() != null) && ndrDto.getFutureDate().after(ndrDto.getCreateDate())) {
                                 consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
                             } else {
                                 addRedirectAlertMessage(new SimpleMessage("Kindly enter a valid date."));

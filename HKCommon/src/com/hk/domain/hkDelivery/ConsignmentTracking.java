@@ -50,7 +50,7 @@ public class ConsignmentTracking implements java.io.Serializable {
     private Date createDate;
 
 
-    @Column(name = "remarks", length = 200)
+    @Column(name = "remarks", length = 150)
     private String remarks;
 
     @Column(name = "ndr_resolution", length = 100)

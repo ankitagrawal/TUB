@@ -2,6 +2,7 @@
 <%@ page import="com.hk.constants.hkDelivery.EnumNDRAction" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="NDR Report">
@@ -62,41 +63,51 @@
                         <td>${ndrDto.status}</td>
 
                         <td>
-                            <s:select class="future_date" name="ndrDtoList[${ctr.index}].ndrResolution"
-                                      value="${ndrDto.ndrResolution}"
-                                      disabled="${ndrDto.owner == customerSupport ? 'false' : 'true'}">
-                                <s:option value="" label="--NDR Action--"/>
-                                <s:options-enumeration enum="com.hk.constants.hkDelivery.EnumNDRAction"
-                                                       label="ndrAction"/>
-                            </s:select>
+                            <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
+                                <s:select class="future_date" name="ndrDtoList[${ctr.index}].ndrResolution"
+                                          value="${ndrDto.ndrResolution}">
+                                    <s:option value="" label="--NDR Action--"/>
+                                    <s:options-enumeration enum="com.hk.constants.hkDelivery.EnumNDRAction"
+                                                           label="ndrAction"/>
+                                </s:select>
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
+                                ${ndrDto.ndrResolution}
+                            </shiro:hasPermission>
                         </td>
 
                         <td style="width: 90px;">
                             <div class="show_date" style="width: 135px;">
+                                <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
                                 <s:text formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="date_input"
                                         value="${ndrDto.futureDate}"
-                                        disabled="${ndrDto.owner == customerSupport ? 'false' : 'true'}"
                                         name="ndrDtoList[${ctr.index}].futureDate"/>
+                                </shiro:hasPermission>
                             </div>
-                            <c:if test="${ndrDto.owner == hubManager}">
+
+                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
                                 <fmt:formatDate value="${ndrDto.futureDate}" type="date" timeStyle="short"/>
-                            </c:if>
+                            </shiro:hasPermission>
                         </td>
 
                         <td>
-                            <s:text name="ndrDtoList[${ctr.index}].remarks" style="width: 150px;" maxlength="100"
-                                    disabled="${ndrDto.owner == customerSupport ? 'false' : 'true'}"/>
+                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
+                                ${ndrDto.remarks}
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
+                                <s:text name="ndrDtoList[${ctr.index}].remarks" style="width: 150px;" maxlength="100"/>
+                            </shiro:hasPermission>
                         </td>
 
                         <td>
-                            <shiro:hasRole name="<%=RoleConstants.CUSTOMER_SUPPORT%>">
+                            <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
                                 <s:submit name="saveNdr" value="Save NDR"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentid"
                                           value="${ndrDto.consignmentId}"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentTrackingId"
                                           value="${ndrDto.consignmentTrackingId}"/>
                                 <s:hidden name="ndrIndex" value="${ctr.index}"/>
-                            </shiro:hasRole>
+                            </shiro:hasPermission>
                         </td>
                     </tr>
                 </c:forEach>

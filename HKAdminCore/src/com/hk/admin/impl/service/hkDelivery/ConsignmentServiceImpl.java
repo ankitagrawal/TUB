@@ -365,6 +365,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         for (Consignment consignmentObj : consignments) {
             NdrDto ndrDto = new NdrDto();
             ndrDto.setNumberOfAttempts(getAttempts(consignmentObj));
+            // Aging is the gap between current date and create date (in days)
             ndrDto.setAging((int) ((currentDate.getTime() - consignmentObj.getCreateDate().getTime()) / (1000 * 60 * 60 * 24)));
             ndrDto.setAwbNumber(consignmentObj.getAwbNumber());
             ndrDto.setConsignmentId(consignmentObj.getId());
@@ -375,15 +376,15 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
             consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignmentObj.getId());
 
+            //getting the latest consignment tracking object for onHoldByCustomer
             Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
                 public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
                     return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
                 }
             });
-
-            //getting the latest consignment tracking object for onHoldByCustomer
-
             ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
+
+            //ndrDto saves the remark when a ndr action takes place
             String nonDeliveryReason = consignmentTracking.getRemarks();
             if (nonDeliveryReason.contains("Ndr Comment")) {
                 nonDeliveryReason = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[0];
