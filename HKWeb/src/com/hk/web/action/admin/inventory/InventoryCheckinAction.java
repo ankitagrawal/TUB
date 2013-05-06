@@ -252,7 +252,7 @@ public class InventoryCheckinAction extends BaseAction {
                             getInventoryService().getInventoryTxnType(EnumInvTxnType.INV_CHECKIN), user);
                     getInventoryService().checkInventoryHealth(productVariant);
 
-                    getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
+                   // getPoLineItemService().updatePoLineItemFillRate(grn, grnLineItem, grnLineItem.getCheckedInQty());
                     if (getInventoryService().allInventoryCheckedIn(grn)) {
                     	 getPurchaseOrderService().updatePOFillRate(grn.getPurchaseOrder());
                     	for(PoLineItem poLineItem: grn.getPurchaseOrder().getPoLineItems()){

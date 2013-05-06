@@ -30,6 +30,8 @@ public interface GoodsReceivedNoteDao extends BaseDao {
     public List<GoodsReceivedNote> listGRNsExcludingStatusInTimeFrame(Long grnStatusValue, Date startDate, Date endDate, Warehouse warehouse, Boolean reconciled);
 
     public List<GoodsReceivedNote> checkinCompletedGrns(Date startDate);
+    
+    public List<GoodsReceivedNote> checkinCompleteAndClosedGrns(Date startDate);
 
 
 }

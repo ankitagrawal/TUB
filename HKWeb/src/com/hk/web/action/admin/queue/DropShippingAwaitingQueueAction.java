@@ -98,7 +98,6 @@ public class DropShippingAwaitingQueueAction extends BasePaginatedAction {
         } else {
             shippingOrderSearchCriteria.setShippingOrderStatusList(Arrays.asList(shippingOrderStatus));
         }
-        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForDropShippingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
 
          logger.debug("basketCategories : " + basketCategories.size());

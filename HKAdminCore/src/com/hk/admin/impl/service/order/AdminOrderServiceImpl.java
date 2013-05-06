@@ -442,7 +442,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             payment = paymentManager.verifyCodPayment(order.getPayment());
             order.setConfirmationDate(new Date());
             orderService.save(order);
-            orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
             getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         }
         return payment;

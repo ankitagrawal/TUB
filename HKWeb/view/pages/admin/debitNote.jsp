@@ -21,20 +21,21 @@
                     lastIndex = -1;
                 }
                 $('.lastRow').removeClass('lastRow');
-
+                var debitNoteId = $('#debitNoteId').val();
                 var nextIndex = eval(lastIndex + "+1");
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
-                                '<td>' + Math.round(nextIndex + 1) + '.</td>' +
+                                '<td class="sNo">' + Math.round(nextIndex + 1) + '.</td>' +
                                 '<td>' +
                                 '    <input type="hidden" name="debitNoteLineItems[' + nextIndex + '].id" />' +
                                 '    <input type="text" class="variant" name="debitNoteLineItems[' + nextIndex + '].productVariant"/>' +
+                                '    <input type="hidden" class="debitNotes" name="debitNoteLineItems[' + nextIndex + '].debitNote" value="' + debitNoteId + '" ' +
                                 '  </td>' +
                                 '<td></td>' +
                                 '  <td class="pvDetails"></td>' +
                                 '<td></td>' +
                                 '  <td>' +
-                                '    <input type="text" name="debitNoteLineItems[' + nextIndex + '].qty" />' +
+                                '    <input class="qty" type="text" name="debitNoteLineItems[' + nextIndex + '].qty" />' +
                                 '  </td>' +
                                 '  <td>' +
                                 '    <input class="costPrice" type="text" name="debitNoteLineItems[' + nextIndex + '].costPrice" />' +
@@ -49,10 +50,63 @@
                 return false;
             });
 
+            $('#save').click(function() {
+                var obj = $(this);
+                obj.hide();
+                var bool = true;
+                $('.pvDetails').each(function(){
+                   var pvDetails = $(this).html();
+                    if(pvDetails == null || pvDetails == ""){
+                        alert("Enter Valid Product Variant");
+                        bool = false;
+                        return false;
+                    }
+                });
+                if(bool){
+                $('.qty').each(function(){
+                  var qty = $(this).val();
+                    if(qty == null || qty == "" || isNaN(qty)){
+                        alert("Enter Valid Qty");
+                        bool = false;
+                        return false;
+                    }
+                });
+                }
+                if(bool){
+                $('.costPrice').each(function(){
+                    var costPrice=$(this).val();
+                    if(costPrice==null || costPrice=="" || isNaN(costPrice)) {
+                    alert("Cost Price is not valid");
+                    bool = false;
+                    return false;
+                    }
+                });
+                }
+                if(bool){
+                $('.mrp').each(function(){
+                   var mrp=$(this).val();
+                   if(mrp==null || mrp == "" || isNaN(mrp)) {
+                       alert("Mrp is not valid");
+                       bool=false;
+                       return false;
+                   }
+                });
+                }
+                if(!bool){
+                    obj.show();
+                   return false;
+                    }
+            });
+
+
             $('.variant').live("change", function() {
                 var variantRow = $(this).parents('.lineItemRow');
                 var productVariantId = variantRow.find('.variant').val();
                 var productVariantDetails = variantRow.find('.pvDetails');
+                var obj = $(this);
+                var index = $(this).parents("tr").children(".sNo").html();
+                index = index.replace(".","");
+                index = parseInt(index) - 1;
                 $.getJSON(
                         $('#pvInfoLink').attr('href'), {productVariantId: productVariantId, warehouse: ${whAction.setWarehouse.id}},
                         function(res) {
@@ -63,9 +117,11 @@
                                         res.data.product + '<br/>' +
                                                 res.data.options
                                 );
+                                obj.parent().append('<input type="hidden" name="debitNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
+
                         }
                 );
             });
@@ -83,8 +139,8 @@
     </div>
 
     <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
-        <s:hidden name="debitNote" value="${pa.debitNote.id}"/>
-        <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}"/>
+        <s:hidden name="debitNote" value="${pa.debitNote.id}" id="debitNoteId"  />
+        <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}" />
         <table>
             <tr>
                 <td>Supplier Name</td>
@@ -151,14 +207,15 @@
             <c:forEach var="debitNoteLineItemDto" items="${pa.debitNoteDto.debitNoteLineItemDtoList}" varStatus="ctr">
                 <c:set var="sku" value="${debitNoteLineItemDto.debitNoteLineItem.sku}"/>
                 <c:set var="productVariant" value="${debitNoteLineItemDto.debitNoteLineItem.sku.productVariant}"/>
+                <c:set var="debitNote" value="${debitNoteLineItemDto.debitNoteLineItem.debitNote}" />
                 <s:hidden name="debitNoteLineItems[${ctr.index}].id" value="${debitNoteLineItemDto.debitNoteLineItem.id}"/>
                 <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
-                    <td>${ctr.index+1}.</td>
+                    <td class="sNo">${ctr.index+1}.</td>
 
                     <td>
                             ${productVariant.id}
-                            <%--<s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].sku"
-                            value="${sku.id}"/>--%>
+                            <s:hidden name="debitNoteLineItems[${ctr.index}].debitNote" value="${debitNote.id}" />
+                            <s:hidden name="debitNoteLineItems[${ctr.index}].sku" value="${sku.id}" />
                         <s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].productVariant"
                                   value="${productVariant.id}"/>
                     </td>
@@ -170,12 +227,12 @@
                                           maxFractionDigits="2"/>
                     </td>
                     <td>
-                        <s:text name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
+                        <s:text class="qty" name="debitNoteLineItems[${ctr.index}].qty" value="${debitNoteLineItemDto.debitNoteLineItem.qty}"/>
                     </td>
                     <td>
                         <shiro:hasRole name="<%=RoleConstants.FINANCE%>">
                             <s:text name="debitNoteLineItems[${ctr.index}].costPrice"
-                                    value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
+                                   class="costPrice" value="${debitNoteLineItemDto.debitNoteLineItem.costPrice}"/>
                         </shiro:hasRole>
                         <shiro:lacksRole name="<%=RoleConstants.FINANCE%>">
                             ${debitNoteLineItemDto.debitNoteLineItem.costPrice}
@@ -223,7 +280,7 @@
         <br/>
         <a href="debitNote.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-        <s:submit name="save" value="Save"/>
+        <s:submit name="save" id="save" value="Save" />
     </s:form>
 
 </s:layout-component>

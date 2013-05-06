@@ -110,16 +110,20 @@ public class CodPaymentReceiveAction extends BaseAction {
 			} else if (order.getAmount() < codMinAmount || order.getAmount() > codMaxAmount) {
 				addRedirectAlertMessage(new SimpleMessage("Cod is only applicable when total item price is between " + codMinAmount + " and " + codMaxAmount));
 				return new RedirectResolution(PaymentModeAction.class);
-			}
+            }
 
-			try {
-				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone);
-				resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
-			} catch (HealthkartPaymentGatewayException e) {
-				getPaymentManager().error(gatewayOrderId, e);
-				resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
-			}
+            try {
+                getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
+                boolean shouldMakeCodCall = true;
+                if (getPrincipal() != null && getPrincipal().isAssumed()) {
+                    shouldMakeCodCall = false;
+                }
+                getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone, shouldMakeCodCall);
+                resolution = new RedirectResolution(PaymentSuccessAction.class).addParameter("gatewayOrderId", gatewayOrderId);
+            } catch (HealthkartPaymentGatewayException e) {
+                getPaymentManager().error(gatewayOrderId, e);
+                resolution = e.getRedirectResolution().addParameter("gatewayOrderId", gatewayOrderId);
+            }
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Please try again, else Payment for the order has already been recorded."));
 			resolution = new RedirectResolution(PaymentModeAction.class).addParameter("order", order);
