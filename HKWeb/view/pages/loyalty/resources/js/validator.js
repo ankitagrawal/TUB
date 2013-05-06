@@ -1,4 +1,6 @@
 function validateAddressForm() {
+	$("#error-row").hide();
+	$("#error").html("");
 	var form = document.forms["selectAddress"];
 	var billingAddressName = form["address.name"].value;
 	var billingAddressLine1 = form["address.line1"].value;
@@ -33,6 +35,10 @@ function validateAddressForm() {
 		return false;
 	} else {
 		_validatePincode(billingAddressPin);
+		if (err) {
+			$("#error-row").show();
+			return false;
+		}
 	}
 	
 	if (billingAddressPhone == null || billingAddressPhone == "") {
@@ -40,7 +46,12 @@ function validateAddressForm() {
 		return false;
 	} else {
 		_validateMobile(billingAddressPhone);
+		if (err) {
+			$("#error-row").show();
+			return false;
+		}
 	}
+	
 }
 
 function _validatePincode(pincode) {

@@ -59,14 +59,14 @@
 				<div class="pull-right">
 					<s:form
 						beanclass="com.hk.web.action.core.loyaltypg.PlaceOrderAction" >
-						<s:submit name="confirm" value="Confirm Order" class="btn btn-primary" id="confirm"/>
+						<s:submit name="confirm" value="Confirm Order" class="btn btn-primary" id="confirmBtn"/>
 					</s:form>
 				</div>
 			</div>
 		</div>
 <script type="text/javascript" >
 $(document).ready(function() {
-    $("#confirm").click(function () {
+    $("#confirmBtn").click(function () {
     	  if (confirm('Confirm your Order ?')) {
 			return true;
     	  } else {

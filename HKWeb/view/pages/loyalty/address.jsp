@@ -39,16 +39,16 @@
 										<address>
 											<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" event="confirm" class= "blue">
 												<s:param name="selectedAddressId" value="${address.id}"/>
-												<strong><span id="name">${address.name} </span></strong>
-												<br><span id="line1">${address.line1}</span>,
-												<span id="line2">${address.line2}</span><br>
-												<span id="city">${address.city}</span><br>
-												<span id="state">${address.state}</span>, <span id="pinEdit">${address.pincode.pincode}</span><br> 
-												Ph: <span id="phone">${address.phone}</span>
+												<strong><span class="nameEdit">${address.name} </span></strong>
+												<br><span class="line1">${address.line1}</span>,
+												<span class="line2">${address.line2}</span><br>
+												<span class="city">${address.city}</span><br>
+												<span class="state">${address.state}</span>, <span class="pinEdit">${address.pincode.pincode}</span><br> 
+												Ph: <span class="phone">${address.phone}</span>
 											</s:link>
 										</address>
 									</td>
-									<td><span id="edit" class="edit">Edit</span> |
+									<td><span class="edit">Edit</span> |
 									<s:link beanclass="com.hk.web.action.core.loyaltypg.AddressSelectionAction" event="remove" class="delete">
                             		<s:param name="deleteAddress" value="${address.id}"/> Delete </s:link> </td>
 								</tr>
@@ -66,9 +66,9 @@
 							</tr>
 						</thead>
 						<tbody>
-						<tr>
+						<tr  id="error-row" >
 						<td>
-						<div id="error" style="background-color:salmon; width:280px; margin-top: 10px; padding: 5px;"></div>
+						<div id="error" class="errorMessage" ></div>
 						</td>
 						<tr>	
 							<tr>
@@ -174,15 +174,16 @@
 <script type="text/javascript">
 $(document).ready(function() {
  var bool = false;
-
+ $("#error-row").hide();
  $("#confirmButton").click(validateAddressForm);
 
 
  $("#pin").blur(function(event) {
+	$("#error").html("");
  	var pin = $("#pin").val();
  	_validatePincode(pin);
  	if (err) {
- 		$("#error").show();
+ 		$("#error-row").show();
  	} else {
  		$.getJSON($("#populateaddress").attr('href'), {pincode:pin}, function(responseData) {
  			if (responseData.code == '<%=HealthkartResponse.STATUS_OK%>') {
@@ -196,22 +197,22 @@ $(document).ready(function() {
  				$("#error").empty();
                  alert("We don't Service to this pincode, please Enter a valid Pincode or Contact to Customer Care.");
  				$("#error").html("<br/>We do not service this pincode.<br/>Please enter a valid Pincode<br/>OR <br/>Contact customer care.<br/><br/>");
- 				$("#error").show();
+ 				 $("#error-row").show();
  			}
  		});
  	}
  });
  
- $("#edit").click(function() {
+ $('.edit').click(function() {
    form = $("#selectAddress");
    addressBlock = $(this).parent().parent().find('address');
-   name = addressBlock.find("#name").text();
-   street1 = addressBlock.find("#line1").text();
-   street2 = addressBlock.find("#line2").text();
-   city = addressBlock.find("#city").text();
-   state = addressBlock.find("#state").text();
-   pin = addressBlock.find("#pinEdit").text();
-   phone = addressBlock.find("#phone").text();
+   name = addressBlock.find('.nameEdit').text();
+   street1 = addressBlock.find('.line1').text();
+   street2 = addressBlock.find('.line2').text();
+   city = addressBlock.find('.city').text();
+   state = addressBlock.find('.state').text();
+   pin = addressBlock.find('.pinEdit').text();
+   phone = addressBlock.find('.phone').text();
    id = addressBlock.find("selectedAddressId").val();
    form.find("input[type='text'][name='address.name']").val(name);
    form.find("input[type='text'][name='address.line1']").val(street1);
