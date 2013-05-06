@@ -65,7 +65,7 @@
               <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
           </s:link>
       </div>
-    <div class='steps' style="left:175px;">
+    <div class='steps_new'>
         <hr noshade class="stepLine">
       <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="margin-top: 0; margin-bottom: 0;">
         <div class='newStep'>
@@ -107,14 +107,14 @@
 <%----%>
         <div class="leftHalf">
     <jsp:include page="/includes/checkoutNotice.jsp"/>
-      
+
     <c:if test="${orderSummary.availableCourierList == null}">
       <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
     </c:if>
     <h3>
       You selected
     </h3>
-    <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${orderSummary.pricingDto}" orderDate="${orderDate}"/>
+    <s:layout-render name="/layouts/embed/itemSummaryTable.jsp" pricingDto="${orderSummary.pricingDto}" orderDate="${orderDate}"/>
     <script type="text/javascript">
 
       $('.cartButton').html("<img class='icon' src='${pageContext.request.contextPath}/images/icons/cart.png'/><span class='num' id='productsInCart'>${orderSummary.pricingDto.productLineCount}</span> item in<br/>your shopping cart");
@@ -123,72 +123,90 @@
      </div>
     <div class="rightHalf">
 
-    <c:if test="${orderSummary.redeemableRewardPoints > 0}">
-      <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
-        <div class="title">
-          <h5 style="font-size: 12px;">
-            REDEEM REWARD POINTS
-          </h5>
-
-          <p>
-            <c:choose>
-              <c:when test="${orderSummary.useRewardPoints}">
-                You are using your reward points for payment.<br/>
-                You have
-                <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
-                Reward points left after this order =
-                <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints - orderSummary.pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=" "/></strong><br/>
-                <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
-                  <s:param name="useRewardPoints" value="false"/>
-                  <span>Don't Redeem Points</span>
-                </s:link>
-              </c:when>
-              <c:otherwise>
-                You have
-                <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
-                You can use these points to pay for your order.<br/>
-                <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
-                  <s:param name="useRewardPoints" value="true"/>
-                  <span>Redeem Points</span>
-                </s:link>
-              </c:otherwise>
-            </c:choose>
-          </p>
-        </div>
-      </div>
-    </c:if>
-    <div class="right_container" style="left: 15px;width: 230px;padding: 5px 10px;">
+    <div class="right_container" style="left: 15px;width: 245px;padding: 5px 10px;border: none;">
       <div class="title">
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
-          <div style="margin:10px; padding-top:0px">
-              <div class="buttons">
-                  <s:submit style="margin: 0px !important;margin-left: 50px !important;margin-bottom: 10px !important;" name="orderReviewed" value="Make Payment" class="requiredFieldValidator placeOrderButtonNew"/>
-              </div>
-          </div>
-            <h5 style="font-size: 13px;">
-                Instructions if any (e.g Preferred Delivery Time/Flavour Needed)
+
+            <h5 class = "newTextHeading">
+                SPECIAL INSTRUCTIONS
             </h5>
-        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" style="width:220px;height:54px"/>
+            <div class="comment_type">
+                <div class="commentTypeText"><s:radio value="1" name="order.commentType" class="commentType" style="width: 11px;"/> Packing</div>
+                <div class="commentTypeText"><s:radio value="2" name="order.commentType" class="commentType" style="width: 11px;"/> Delivery</div>
+                <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType" style="width: 11px;"/> Others</div>
+            </div>
+        <s:textarea name="order.userComments" id="userComments" rows="2" cols="20" class="newTextArea" placeholder="(e.g. preferred delivery time)"/>
           <%--<div class="title">
             <h5>
               Confirm order
             </h5>
           </div>--%>
-	      <div class="comment_type">
-              <div class="commentTypeText"><s:radio value="1" name="order.commentType" class="commentType"/> Packing</div>
-              <div class="commentTypeText"><s:radio value="2" name="order.commentType" class="commentType"/> Delivery</div>
-              <div class="commentTypeText"><s:radio value="3" name="order.commentType" class="commentType"/> Others</div>
-	      </div>
+
+            <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${orderSummary.pricingDto}" orderDate="${orderDate}"/>
+
+            <c:if test="${orderSummary.redeemableRewardPoints > 0}">
+                <div class="right_container rewardPointsRightContainer">
+                    <div class="title">
+                        <div class="rewardsPointsNew">
+                            <c:choose>
+                                <c:when test="${orderSummary.useRewardPoints}">
+                                    <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
+                                        <s:param name="useRewardPoints" value="false"/>
+                                        <span>Dont Redeem Rewards Points</span>
+                                    </s:link>    <br/>
+                                    You have
+                                    <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints - orderSummary.pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=" "/></strong> rewards points left.
+
+                                </c:when>
+                                <c:otherwise>
+                                    You have
+                                    <strong><fmt:formatNumber value="${orderSummary.redeemableRewardPoints}" type="currency" currencySymbol=" "/></strong> reward points.<br/>
+                                    You can use these points to pay for your order.<br/>
+                                    <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction" event="pre">
+                                        <s:param name="useRewardPoints" value="true"/>
+                                        <span>Redeem Points</span>
+                                    </s:link>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+
+        <h1 style="position: relative;float: left;width: 100%;padding: 0px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important">
+          <span class="youPay">
+            You pay:
+          </span>
+          <strong>
+            <span id="summaryGrandTotalPayable" class="youPayValue">
+              <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+            </span>
+          </strong>
+         </h1>
+
+        <div class='newShippingHandling'>
+            (inclusive of shipping, handling and taxes.)
+        </div>
+
+        <div style="margin:10px; padding-top:0px">
+            <div class="buttons">
+                <s:submit style="margin: 0px !important;margin-left: 11px !important;margin-bottom: 10px !important;" name="orderReviewed" value="PLACE ORDER" class="requiredFieldValidator placeOrderButtonNew"/>
+            </div>
+        </div>
 
       </div>
       </s:form>
 
     </div>
-      <div class='right_container address_box' style="width: 230px;padding: 5px 10px;left: 15px;">
+      <div class='right_container address_box' style="width: 245px;padding: 5px 10px;left: 15px;border: none;">
+          <span class="small">
+          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="addressChangeButtonNew">
+              CHANGE </s:link>
+        </span>
           <div class='title'>
-              <h5>
-                  To be shipped to
+              <h5 class="newTextHeading">
+                  SHIPPING DETAILS
               </h5>
           </div>
           <div class='detail'>
@@ -211,10 +229,7 @@
                       ${orderSummary.order.address.phone}
               </div>
           </div>
-        <span class="small">
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" style="color: #888; float: right;">
-              (change) </s:link>
-        </span>
+
       </div>
       </div>
       </div>
@@ -226,7 +241,7 @@
               e.preventDefault();
               $('.classClose').click(function (e)
           {
-             
+
               HideDialog();
               e.preventDefault();
           });
@@ -315,7 +330,7 @@
            <tr>
                <td>&nbsp;</td>
                <td>&nbsp;</td>
-           </tr>            
+           </tr>
 
                <c:forEach items="${orderSummary.pricingDto.productLineItems}" var="invoiceLineItem"
                               varStatus="ctr1">
@@ -350,7 +365,7 @@
                                    </tr>
                                </table>
                            </div>
-                         </td>                      
+                         </td>
 
                        </div>
                    </tr>
@@ -369,7 +384,7 @@
                <td colspan="2" style="text-align: center;">
                    <s:link beanclass="com.hk.web.action.core.cart.CartAction" event="removeGroundShippedItem" class=" button_green"
                                                            style="width: 220px; height: 16px; align_right ">Remove and Proceed
-                       <s:param name="order" value="${orderSummary.order}"/>                         
+                       <s:param name="order" value="${orderSummary.order}"/>
                    </s:link>
 
                </td>

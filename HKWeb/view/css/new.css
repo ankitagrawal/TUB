@@ -107,7 +107,6 @@ a {
 /* line 57, ../sass/_base.scss */
 a:hover {
     color: #006;
-    border-bottom: 1px solid #006;
 }
 
 /* line 61, ../sass/_base.scss */
@@ -2924,6 +2923,86 @@ h2.prod_title {
     color: #444;
 }
 
+/* line 1038, ../sass/main.scss */
+.steps_new .step {
+    display: inline;
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 230px;
+    background: #ddd;
+    color: #aaa;
+    margin-right: 0;
+    margin-left: 0;
+    text-shadow: 0 1px 0 #dddddd;
+    height: 50px;
+}
+
+/* line 1046, ../sass/main.scss */
+.steps_new .step:first-child {
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -o-border-top-left-radius: 5px;
+    -ms-border-top-left-radius: 5px;
+    -khtml-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -o-border-bottom-left-radius: 5px;
+    -ms-border-bottom-left-radius: 5px;
+    -khtml-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+/* line 1049, ../sass/main.scss */
+.steps_new .step:last-child {
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -o-border-top-right-radius: 5px;
+    -ms-border-top-right-radius: 5px;
+    -khtml-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -o-border-bottom-right-radius: 5px;
+    -ms-border-bottom-right-radius: 5px;
+    -khtml-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/* line 1052, ../sass/main.scss */
+.steps_new .step h2 {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+/* line 1056, ../sass/main.scss */
+.steps_new .step .small {
+    font-family: Geordia, Cambria, Serif;
+    font-style: italic;
+    margin: 5px 0;
+    font-size: 0.8em;
+}
+
+/* line 1062, ../sass/main.scss */
+.steps_new .current_step {
+    color: #fff;
+    background: #df6900;
+    text-shadow: 0 1px 0 #444444;
+}
+
+/* line 1067, ../sass/main.scss */
+.steps_new .prev_step {
+    cursor: pointer;
+}
+
+/* line 1069, ../sass/main.scss */
+.steps_new .prev_step:hover {
+    background: #b6d1eb;
+    color: #444;
+}
+
+
 /* line 1075, ../sass/main.scss */
 .current_step_content {
     display: inline;
@@ -3156,7 +3235,7 @@ h2.prod_title {
     float: left;
     width: 100px;
     margin: 0;
-    text-align: right;
+    text-align: left;
     line-height: 25px;
     position: relative;
     left: 50px;
@@ -3248,11 +3327,13 @@ h2.prod_title {
 /* line 1234, ../sass/main.scss */
 .step2 .right_container .detail .name {
     font-weight: bold;
+    color: rgb(68, 68, 68);
 }
 
 /* line 1235, ../sass/main.scss */
 .step2 .right_container .detail .address {
     font-style: italic;
+    color: rgb(68, 68, 68);
 }
 
 /* line 1240, ../sass/main.scss */
@@ -5845,6 +5926,7 @@ color: #e62580;
     float: left;
     left: 0px;
     margin-left: 0px;
+    font-weight: bold;
 }
 
 .youPayValue{
@@ -5859,9 +5941,10 @@ color: #e62580;
     float: left;
     text-align: left;
     margin-bottom: 15px;
-    font-family: Georgia, Cambria, serif;
+    font-family: Arial;
     font-size: 12px;
     line-height: 15px;
+    color: rgb(68, 68, 68);
 }
 
 .checkoutHead5{
@@ -6072,7 +6155,6 @@ color: #e62580;
     float: left;
     margin-right: 10px;
     margin-left: 10px;
-    left: 35px;
 }
 
 .newStepText{
@@ -6090,9 +6172,10 @@ color: #e62580;
 .stepLine{
     position: absolute;
     float: left;
-    width: 70%;
+    width: 100%;
     top: 5px;
-    left: 60px;
+    border-bottom: none;
+    border-color: #ddd;
 }
 
 .widthInitial{
@@ -6118,17 +6201,19 @@ color: #e62580;
 .newLabel{
     position: relative;
     float: left;
-    margin-top:0px !important;
+    margin-top: 5px !important;
     width: 78px !important;
     text-align: right;
+    margin-right: 5px;
 }
 
 .newLabel2{
     position: relative;
     float: left;
-    margin-top:0px !important;
+    margin-top:10px !important;
     width: 90px !important;
     text-align: right;
+    margin-right: 5px;
 }
 
 .signUpButtonNew{
@@ -6141,6 +6226,7 @@ color: #e62580;
     height: 32px;
     width: 95px;
     font-size: 13.5px !important;
+    text-shadow: none !important;
 }
 
 .placeOrderButtonNew{
@@ -6148,11 +6234,12 @@ color: #e62580;
     float: left;
     margin: 22px !important;
     border-radius: 0px !important;
-    background: rgb(255, 102, 0) !important;
+    background: #df6900 !important;
     left: -20px !important;
     height: 32px;
     width: 125px;
     font-size: 13.5px !important;
+    text-shadow: none !important;
 }
 
 .dispatchedDateNew{
@@ -6171,7 +6258,7 @@ color: #e62580;
 
 .signUpInputNew{
     border-radius: 0px !important;
-    box-shadow: 5px 9px 12px -15px;
+    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     margin-bottom: 20px;
     background: none !important;
     border: 1px solid rgb(214, 214, 214) !important;
@@ -6180,7 +6267,7 @@ color: #e62580;
 
 .signUpInputNew2{
     border-radius: 0px !important;
-    box-shadow: 5px 9px 12px -15px;
+    box-shadow: 1px 5px 14px -2px rgb(214, 214, 214);
     background: none !important;
     margin-bottom: 0px !important;
     border: 1px solid rgb(214, 214, 214) !important;
@@ -6248,6 +6335,17 @@ color: #e62580;
     border-right: 22px solid transparent;
 }
 
+.arrowNew2{
+    position: relative;
+    z-index: 1000;
+    float: left;
+    left: 85px;
+    top: 26px;
+    border-top: 15px solid #ddd;
+    border-top-color: #ddd;
+    border-right: 22px solid transparent;
+}
+
 .deliveryDateText{
     position: relative;
     float: left;
@@ -6297,13 +6395,23 @@ color: #e62580;
 }
 
 .newTotals{
-    top: -40px;
     padding: 0px !important;
-    width: 22% !important;
+    top: -35px;
+    width: 20% !important;
     left: 19px !important;
-    background: white !important;
+    background: transparent !important;
     border-bottom: 1px solid #ddd !important;
     border-top: 1px solid #ddd !important;
+}
+
+.newTotals2{
+    padding: 0px !important;
+    width: 107% !important;
+    margin: 0px !important;
+    background: transparent !important;
+    border-bottom: 0px !important;
+    border-top: 0px !important;
+    left: 0px !important;
 }
 
 .deliveryDetails{
@@ -6330,7 +6438,6 @@ color: #e62580;
 }
 
 .rightHalf{
-    top: 155px;
     position: relative;
     width: 30%;
     float: left;
@@ -6364,6 +6471,14 @@ color: #e62580;
 .commentTypeText{
     position: relative;
     float: left;
+    font-size: 13px;
+    color: rgb(53, 53, 53);
+}
+
+.commentType{
+    width: 11px;
+    top: 3px;
+    position: relative;
 }
 
 .raj_address{
@@ -6379,6 +6494,7 @@ color: #e62580;
     float: left;
     width: 100%;
     margin-bottom: 13px;
+    border-bottom: 0px;
 }
 
 .orderIdText{
@@ -6409,6 +6525,102 @@ color: #e62580;
     width: 65%;
 }
 
+.useAddressButton{
+    display: block;
+    background-color: #df6900 !important;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    font-size: 12.5px !important;
+    color: white;
+    font-family: Arial;
+    font-weight: bold;
+    position: relative;
+    float: left;
+    width: 240px;
+    padding: 5px;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 7px;
+}
+
+.steps_new{
+    display: inline;
+    float: right;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: auto;
+    position: relative;
+    right: 21px;
+    text-align: center;
+    margin: 0 0;
+    margin-top: 45px;
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.newTextArea{
+    width: 97%;
+    height: 40px;
+    font-size: 10px;
+    border-radius: 0px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding-top: 10px;
+    margin-bottom: 15px;
+}
+
+.newTextHeading{
+    font-size: 13px;
+    border-bottom: 1px solid rgb(53, 53, 53) !important;
+    color: rgb(53, 53, 53);
+    font-weight: bold;
+}
+
+.rewardsPointsNew{
+    position: relative;
+    float: left;
+    font-size: 11px;
+    border: 1px dotted #ddd;
+    font-size: 11px;
+    width: 227px;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+.rewardsPointsNew a{
+    font-size: 12px;
+    color: #228;
+    text-decoration: none;
+    border-bottom: 1px solid #228;
+}
+
+.lightBlue{
+    color: #0081bd !important;
+}
+
+.rewardPointsRightContainer{
+    left: 0px !important;
+    width: 245px !important;
+    border: none !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.addressChangeButtonNew{
+    color: rgb(68, 68, 68);
+    border: 1px solid #ddd;
+    padding: 5px;
+    background: #ddd;
+    width: 65px;
+    text-align: center;
+    position: relative;
+    float: right;
+    top: -1px;
+    height: 7px;
+    font-size: 10px;
+}
 /*
 slider pager end
 */

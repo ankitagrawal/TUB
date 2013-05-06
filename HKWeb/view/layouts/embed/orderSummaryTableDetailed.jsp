@@ -116,7 +116,7 @@ Pass an attribute called pricingDto to render a table with pricing details
       <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
         <div class="hk">
         </div>
-        <div class="num" style="left: 70px;position: relative;"> Rs
+        <div style="left: 70px;position: relative;font-size: 15px;"> Rs
           <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
               value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
               pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
@@ -197,7 +197,7 @@ Pass an attribute called pricingDto to render a table with pricing details
       </c:if>
       <c:if
           test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount > 0.00}">
-        <div class='discount special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+        <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
           You saved:
         </div>
       </c:if>
@@ -254,12 +254,12 @@ Pass an attribute called pricingDto to render a table with pricing details
       </c:if>
       <c:if
           test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount > 0.00}">
-        <div class='discount special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+        <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
           You saved:
         </div>
       </c:if>
       <c:if test="${pricingDto.totalCashback > 0.00}">
-        <div class='discount special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+        <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
           Cashback:
         </div>
       </c:if>
@@ -342,7 +342,7 @@ Pass an attribute called pricingDto to render a table with pricing details
   </c:forEach>
   <div class='totals newTotals'>
     <div class='left' style="width: 42%;left: 0px;">
-      <div class='discount special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+      <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
         You saved:
       </div>
       <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
@@ -365,7 +365,7 @@ Pass an attribute called pricingDto to render a table with pricing details
 </c:if>
 </div>
 
-<div class='orderSummaryHeading' style="margin-bottom: 50px;">
+<div class='orderSummaryHeading' style="margin-bottom: 50px;margin-top: 75px;">
     <div class="deliveryDetails"> DELIVERY DETAILS</div>
     <ul>
         <li>

@@ -59,7 +59,7 @@
             <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
         </s:link>
     </div>
-    <div class='steps' style="left:175px;">
+    <div class='steps_new'>
         <hr noshade class="stepLine">
         <div class='newStep '>
             <div class="newStepCount current_step">1</div>
@@ -123,9 +123,9 @@
 
                         <span style="left: 0px;top: -7px;border-radius: 0px;margin-bottom: 12px;" class="appliedButton edit">EDIT</span>
 
-                        <div class="hidden help yellow">
+                        <div class="useAddressButton">
                             Click to use this address
-                            and proceed &rarr;
+                            and proceed
 
                         </div>
                     </div>
@@ -205,7 +205,7 @@
                 <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;" >
                     <s:layout-render name="/layouts/addressLayout.jsp" />
                     <s:hidden name="countryId" value="${countryId}"/>
-                    <s:submit name="create" value="Use this address and continue" class="placeOrderButtonNew" style="width: 240px;"/>
+                    <s:submit name="create" value="Use this address and continue" class="placeOrderButtonNew" style="width: 240px;left: -10px !important;"/>
                 </s:form>
             </div>
 
