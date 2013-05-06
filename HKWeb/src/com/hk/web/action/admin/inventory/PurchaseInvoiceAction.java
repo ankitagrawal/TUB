@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.accounting.ProcurementService;
 import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.inventory.EnumPILineItemType;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -71,7 +72,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	private List<PurchaseInvoice> purchaseInvoiceList = new ArrayList<PurchaseInvoice>();
 	private PurchaseInvoice purchaseInvoice;
-	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>();
+	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems;
+	private List<PurchaseInvoiceLineItem> purchaseInvoiceShortLineItems;
 	private Date startDate;
 	private Date endDate;
 	private String tinNumber;
@@ -112,6 +114,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if (purchaseInvoice != null) {
 			List<GoodsReceivedNote> grnList = purchaseInvoice.getGoodsReceivedNotes();
 			List<Date> grnDateList = new ArrayList<Date>();
+			
 			boolean isLoggedInUserHasFinancePermission = userService.getLoggedInUser().hasPermission(EnumPermission.FINANCE_MANAGEMENT);
 
 			if (isLoggedInUserHasFinancePermission) {
@@ -128,6 +131,16 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			if (purchaseInvoice != null) {
 				// logger.debug("purchaseInvoice@view: " + purchaseInvoice.getId());
 				// grnDto = grnManager.generateGRNDto(grn);
+			}
+			purchaseInvoiceShortLineItems = new ArrayList<PurchaseInvoiceLineItem>();
+			purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>();
+			for(PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoice.getPurchaseInvoiceLineItems()){
+				if(purchaseInvoiceLineItem.getPiLineItemType().getId().equals(EnumPILineItemType.Short.getId())){
+					purchaseInvoiceShortLineItems.add(purchaseInvoiceLineItem);
+				}
+				else
+					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
+					
 			}
 			return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
 		} else {
@@ -172,11 +185,13 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				} else if (purchaseInvoiceLineItem.getQty() > 0) {
 					purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
 					Sku sku = purchaseInvoiceLineItem.getSku();
+					//Sku sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
 					if (sku == null) {
 						sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
 						purchaseInvoiceLineItem.setSku(sku);
 					}
 					skuService.saveSku(sku);
+					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Normal.asPiLineItemType());
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
 				}
 				productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
@@ -204,6 +219,45 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		} else {
 			addRedirectAlertMessage(new SimpleMessage("Purchase Invoice Deleted."));
 		}
+		return new RedirectResolution(PurchaseInvoiceAction.class);
+	}
+	
+	public Resolution saveShortLineItems() {
+		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
+			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceShortLineItems.size());
+
+			if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
+				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
+				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+			}
+
+			Resolution sourceResolution = performPISanityChecks("view", purchaseInvoice);
+			if (sourceResolution != null) {
+				return sourceResolution;
+			}
+			for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceShortLineItems) {
+				if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
+					purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
+				} else if (purchaseInvoiceLineItem.getQty() > 0) {
+					purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
+					Sku sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
+					purchaseInvoiceLineItem.setSku(sku);
+					skuService.saveSku(sku);
+					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Short.asPiLineItemType());
+					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
+				}
+				productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
+				productVariant = productVariantDao.save(productVariant);
+			}
+			if (purchaseInvoice.getReconciled() != null) {
+				if (purchaseInvoice.getReconciled() && purchaseInvoice.getReconcilationDate() == null) {
+					purchaseInvoice.setReconcilationDate(new Date());
+				}
+			}
+
+			getPurchaseInvoiceService().save(purchaseInvoice);
+		}
+		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
 		return new RedirectResolution(PurchaseInvoiceAction.class);
 	}
 
@@ -447,6 +501,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public PurchaseInvoiceService getPurchaseInvoiceService() {
 		return purchaseInvoiceService;
+	}
+	
+	public List<PurchaseInvoiceLineItem> getPurchaseInvoiceShortLineItems() {
+		return purchaseInvoiceShortLineItems;
+	}
+
+	public void setPurchaseInvoiceShortLineItems(List<PurchaseInvoiceLineItem> purchaseInvoiceShortLineItems) {
+		this.purchaseInvoiceShortLineItems = purchaseInvoiceShortLineItems;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

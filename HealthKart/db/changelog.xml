@@ -12564,4 +12564,84 @@
     <changeSet author="Ajeet (generated)" id="1367657291705-4">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-2">
+        <createTable tableName="pi_line_item_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-3">
+        <createTable tableName="purchase_invoice_has_rtv_note">
+            <column name="purchase_invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rtv_note_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-4">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-5">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-6">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-7">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-8">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-9">
+        <addColumn tableName="purchase_invoice_line_item">
+            <column name="pi_line_item_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-10">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-11">
+        <addPrimaryKey columnNames="purchase_invoice_id, rtv_note_id" tableName="purchase_invoice_has_rtv_note"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-14">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="extra_inventory_line_item" baseTableSchemaName="healthkart_workbench" constraintName="fk_extra_inventory_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-15">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_purchase_invoice1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-16">
+        <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824002963-17">
+        <addForeignKeyConstraint baseColumnNames="pi_line_item_type_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_pi_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pi_line_item_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824321755-10">
+        <addColumn tableName="purchase_invoice">
+            <column name="short_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367824321755-11">
+        <addColumn tableName="purchase_invoice">
+            <column name="pi_rtv_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

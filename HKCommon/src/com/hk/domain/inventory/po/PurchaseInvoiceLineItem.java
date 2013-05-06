@@ -74,6 +74,10 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 	@JoinColumn(name = "surcharge_id")
 	private Surcharge surcharge;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pi_line_item_type_id")
+	private PiLineItemType piLineItemType;
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -184,6 +188,14 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 
 	public void setSurcharge(Surcharge surcharge) {
 		this.surcharge = surcharge;
+	}
+
+	public PiLineItemType getPiLineItemType() {
+		return piLineItemType;
+	}
+
+	public void setPiLineItemType(PiLineItemType piLineItemType) {
+		this.piLineItemType = piLineItemType;
 	}
 
 	@Override
