@@ -149,7 +149,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order = getOrderService().save(order);
 
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-            if (shippingOrders != null) {
+            if (shippingOrders != null && !shippingOrders.isEmpty()) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
                     getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
                 }
