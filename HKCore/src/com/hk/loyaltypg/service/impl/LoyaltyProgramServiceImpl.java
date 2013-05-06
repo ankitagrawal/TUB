@@ -417,18 +417,18 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		double totalPointsConverted = 0;	
 		if (loyaltyPoints > 0) {
 			String comment = "Reward Points converted from Loyalty points";
-
+			Order orderReward = this.orderDao.get(Order.class, -1);
 			UserOrderKarmaProfile rewardProfile = new UserOrderKarmaProfile();
 			rewardProfile.setUser(user);
 			rewardProfile.setKarmaPoints(-loyaltyPoints);
 			rewardProfile.setCreationTime(Calendar.getInstance().getTime());
 			rewardProfile.setUpdateTime(Calendar.getInstance().getTime());
-			rewardProfile.setOrder(new Order());
+			rewardProfile.setOrder(orderReward);
 			rewardProfile.setTransactionType(TransactionType.DEBIT);
-			rewardProfile.setStatus(KarmaPointStatus.CONVERTED);
+			rewardProfile.setStatus(KarmaPointStatus.REWARDED);
 			
 			// add reward points
-			this.rewardPointService.addRewardPoints(user, null, new Order(), loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
+			this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
 					EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 
 			// save reward profile

@@ -56,7 +56,7 @@ public class UserOrderKarmaProfile {
 	private Double karmaPoints;
 	
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 	
 	public void setId(Long id) {
@@ -104,7 +104,7 @@ public class UserOrderKarmaProfile {
 	}
 	
 	public Order getOrder() {
-		return order;
+		return this.order;
 	}
 
 	public void setOrder(Order order) {
@@ -112,7 +112,7 @@ public class UserOrderKarmaProfile {
 	}
 
 	public User getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(User user) {
@@ -121,7 +121,7 @@ public class UserOrderKarmaProfile {
 
 
 	public static enum KarmaPointStatus {
-		APPROVED, PENDING, EXPIRED, CANCELED, CONVERTED;
+		APPROVED, PENDING, EXPIRED, CANCELED, REWARDED;
 	}
 	
 	public static enum TransactionType {
@@ -137,7 +137,7 @@ public class UserOrderKarmaProfile {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.creationTime);
 		cal.add(Calendar.YEAR, 2);
-		if (TransactionType.DEBIT.equals(this.transactionType) || KarmaPointStatus.CONVERTED.equals(this.status)) {
+		if (TransactionType.DEBIT.equals(this.transactionType) || KarmaPointStatus.REWARDED.equals(this.status)) {
 			return " ";
 		} 
 		return "Expiry on: " + new SimpleDateFormat("MMM dd,yyyy").format(cal.getTime());
@@ -163,8 +163,8 @@ public class UserOrderKarmaProfile {
 			case APPROVED:
 				statusForHistory = "Valid";
 				break;
-			case CONVERTED:
-				statusForHistory = "Converted";
+			case REWARDED:
+				statusForHistory = "Rewarded";
 				break;
 			default: 
 				statusForHistory = "Expired";

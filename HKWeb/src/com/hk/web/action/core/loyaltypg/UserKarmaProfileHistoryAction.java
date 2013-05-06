@@ -67,7 +67,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			cal.add(Calendar.YEAR, 1);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy");
 			if (upgradeAmount != 0) {
-				this.upgradeString = "To move up a level, you need to spend :  Rs. " + upgradeAmount + " before " + dateFormat.format(cal.getTime());
+				this.upgradeString = "To move up a level, you need to spend :  Rs. " + Math.ceil(upgradeAmount) + " before " + dateFormat.format(cal.getTime());
 				} else {
 					this.upgradeString = "Congratulations! You are at highest level till at least " +  dateFormat.format(cal.getTime());
 				}
