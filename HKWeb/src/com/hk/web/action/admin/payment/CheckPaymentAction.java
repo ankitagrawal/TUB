@@ -244,7 +244,7 @@ public class CheckPaymentAction extends BaseAction {
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentUpdatedAsSuccessful), null);
 
         orderService.sendEmailToServiceProvidersForOrder(order);
-        orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
