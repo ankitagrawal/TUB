@@ -2,6 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
@@ -185,4 +186,6 @@ public interface MasterDataDao {
     public List<ReconciliationType> getProductAuditedReconVoucherType();
 
     public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList();
+
+    public List<EnumUserCodCalling> getUserCodCallStatus();
 }
