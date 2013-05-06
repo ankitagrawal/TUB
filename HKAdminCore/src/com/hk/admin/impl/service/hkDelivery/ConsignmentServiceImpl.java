@@ -7,6 +7,7 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.util.ShipmentServiceMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -333,8 +334,8 @@ public class ConsignmentServiceImpl implements ConsignmentService {
 
     @Override
     public Integer getAttempts(Consignment consignment){
-        Page consignmentPage = searchConsignmentTracking(null, null, EnumConsignmentLifecycleStatus.Dispatched.getId(), null, consignment.getId(), 0, 0);
-        return consignmentPage.getTotalResults();
+      List<ConsignmentTracking> consignmentTrackingList =  getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(),consignment.getId());
+      return consignmentTrackingList.size();
     }
 
     @Override
@@ -343,11 +344,16 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
+    public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId) {
+        return consignmentDao.getConsignmentTrackingByStatusAndConsignment(consignmentLifecycleStatus, consignmentId);
+    }
+
+    @Override
     public List<NdrDto> getNdrByOwner(User user) {
         String owner = "";
-        if(user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)){
+        if (user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)) {
             owner = RoleConstants.CUSTOMER_SUPPORT;
-        }else if(user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)){
+        } else if (user.getRoleStrings().contains(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
             owner = RoleConstants.HK_DELIVERY_HUB_MANAGER;
         }
 
@@ -367,7 +373,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             ndrDto.setOwner(owner);
             ndrDto.setStatus(consignmentObj.getConsignmentStatus().getStatus());
 
-            consignmentTrackingList = getConsignmentTracking(consignmentObj);
+            consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignmentObj.getId());
 
             Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
                 public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
@@ -378,12 +384,26 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             //getting the latest consignment tracking object for onHoldByCustomer
 
             ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
-
-            if (consignmentTracking.getConsignmentLifecycleStatus().equals(EnumConsignmentLifecycleStatus.OnHoldByCustomer)) {
-                ndrDto.setNonDeliveryReason(consignmentTracking.getRemarks());
-                ndrDto.setConsignmentTrackingId(consignmentTracking.getId());
-                ndrDto.setRunsheetId(consignmentTracking.getRunsheet().getId());
+            String nonDeliveryReason = consignmentTracking.getRemarks();
+            if (nonDeliveryReason.contains("Ndr Comment")) {
+                nonDeliveryReason = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[0];
+                String remarks = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[1];
+                if (remarks != null && !StringUtils.isBlank(remarks)) {
+                    ndrDto.setRemarks(remarks);
+                }
             }
+            ndrDto.setNonDeliveryReason(nonDeliveryReason);
+
+            if(consignmentObj.getTargetDeliveryDate() != null){
+                ndrDto.setFutureDate(consignmentObj.getTargetDeliveryDate());
+            }
+
+            if (consignmentTracking.getNdrResolution() != null && !StringUtils.isBlank(consignmentTracking.getNdrResolution())) {
+                ndrDto.setNdrResolution(consignmentTracking.getNdrResolution());
+            }
+
+            ndrDto.setConsignmentTrackingId(consignmentTracking.getId());
+            ndrDto.setRunsheetId(consignmentTracking.getRunsheet().getId());
             ndrDtoList.add(ndrDto);
         }
         return ndrDtoList;

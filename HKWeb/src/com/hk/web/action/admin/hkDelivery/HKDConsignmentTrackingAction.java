@@ -41,13 +41,13 @@ public class HKDConsignmentTrackingAction extends BasePaginatedAction {
     @SuppressWarnings("unchecked")
     public Resolution searchConsignmentTracking() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        if (getStartDate().compareTo(getEndDate()) > 0) {
+        if (getStartDate() != null && getEndDate() != null  && getStartDate().compareTo(getEndDate()) > 0) {
             addRedirectAlertMessage(new SimpleMessage("Invalid dates!"));
         } else {
             if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
                 hubId = getHubService().getHubForUser(loggedOnUser).getId();
             }
-            consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, null, getPageNo(), getPerPage());
+            consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
             if (consignmentTrackingPage != null) {
                 consignmentList = consignmentTrackingPage.getList();
             }

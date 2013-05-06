@@ -84,4 +84,6 @@ public interface ConsignmentService {
     public Integer getAttempts(Consignment consignment);
 
     public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId);
+
+    public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId);
 }

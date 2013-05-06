@@ -156,7 +156,7 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, Long consignmentId, int pageNo, int perPage) {
+    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
         DetachedCriteria consignmentTrackingCriteria = DetachedCriteria.forClass(ConsignmentTracking.class);
 
         if (startDate != null) {
@@ -175,10 +175,6 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
             consignmentTrackingCriteria.add(Restrictions.or(Restrictions.eq("sourceHub.id", hubId), Restrictions.eq("destinationHub.id", hubId)));
         }
 
-        if(consignmentId != null){
-            consignmentTrackingCriteria.add(Restrictions.eq("consignment.id", consignmentId));
-        }
-
         return list(consignmentTrackingCriteria, pageNo, perPage);
     }
 
@@ -192,6 +188,12 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId) {
         String query = "from ConsignmentTracking ct where ct.id = :consignmentTrackingId";
         return (ConsignmentTracking) findUniqueByNamedParams(query, new String[]{"consignmentTrackingId"}, new Object[]{consignmentTrackingId});
+    }
+
+    @Override
+    public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId) {
+        String query = "from ConsignmentTracking ct where ct.consignmentLifecycleStatus.id = :consignmentLifecycleStatus and ct.consignment.id = :consignmentId";
+        return (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentLifecycleStatus", "consignmentId"}, new Object[]{consignmentLifecycleStatus, consignmentId});
     }
 }
 

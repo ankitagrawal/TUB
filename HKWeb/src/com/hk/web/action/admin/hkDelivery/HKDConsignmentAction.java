@@ -180,7 +180,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     public Resolution viewNdr() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
-        return new RedirectResolution("/pages/admin/ndrReport.jsp").addParameter("ndrDtoList", ndrDtoList);
+        return new ForwardResolution("/pages/admin/ndrReport.jsp");
     }
 
     public Resolution saveNdr() {
@@ -190,14 +190,22 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         for (NdrDto ndrDto : ndrDtoList) {
             Consignment consignment1 = consignmentService.getConsignmentByAwbNumber(ndrDto.getAwbNumber());
             ConsignmentTracking consignmentTracking1 = consignmentService.getConsignmentTrackingById(ndrDto.getConsignmentTrackingId());
-            if (ndrDto.getNonDeliveryReason().equals(EnumNDRAction.FutureDeliveryDate.getNdrAction())) {
-                consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
-            }
-            if (!ndrDto.getNonDeliveryReason().equals(EnumNDRAction.CustomerNotContactable.getNdrAction())) {
-                consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
-            }
-            if (StringUtils.isBlank(ndrDto.getRemarks())) {
-                String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : " + ndrDto.getRemarks();
+            String ndrResolution = ndrDto.getNdrResolution();
+            if (ndrResolution != null) {
+                if (!ndrResolution.equals(EnumNDRAction.CustomerNotContactable.toString())) {
+                    if (ndrResolution.equals(EnumNDRAction.FutureDeliveryDate.toString())) {
+                        if (ndrDto.getFutureDate() != null && ndrDto.getFutureDate().after(ndrDto.getCreateDate())) {
+                            consignment1.setTargetDeliveryDate(ndrDto.getFutureDate());
+                        }else{
+                            addRedirectAlertMessage(new SimpleMessage("Kindly enter a valid date."));
+                        }
+                    }
+                    consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
+                }
+                String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : ";
+                if (ndrDto.getRemarks() != null) {
+                    remark += ndrDto.getRemarks();
+                }
                 consignmentTracking1.setNdrResolution(ndrDto.getNdrResolution());
                 consignmentTracking1.setRemarks(remark);
             }
@@ -207,7 +215,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
         consignmentService.saveConsignmentTracking(consignmentTrackingList1);
         consignmentService.saveConsignments(consignmentList1);
-        return new RedirectResolution("/pages/admin/ndrReport.jsp").addParameter("ndDtoList", ndrDtoList);
+        return new RedirectResolution(HKDConsignmentAction.class, "viewNdr");
     }
 
     public Resolution trackConsignment(){
