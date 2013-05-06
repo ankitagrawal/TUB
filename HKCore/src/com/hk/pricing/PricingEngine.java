@@ -392,7 +392,7 @@ public class PricingEngine {
                         if (lineItemDiscount < 0) {
                             lineItemDiscount = 0D;
                         }
-                        Double maxDiscount = lineItem.getMarkedPrice() * 0.5;
+                        Double maxDiscount = lineItem.getMarkedPrice() * 0.5 * lineItem.getQty();
                         lineItemDiscount = lineItemDiscount > maxDiscount ? maxDiscount : lineItemDiscount; //no one can get more than 50% discount
                         lineItem.setDiscountOnHkPrice(lineItemDiscount);
                     }
