@@ -34,8 +34,6 @@ public class AddVirtualTryOnAction extends BaseAction {
     public Resolution save() {
         String[] productVariantArray = productVariantList.split(",");
         ProductOption productOption = getProductVariantService().getProductOptionById(optionId);
-        List<ProductOption> productOptionList = new ArrayList<ProductOption>();
-        productOptionList.add(productOption);
         for (String productVariantId : productVariantArray) {
             ProductVariant productVariant = getProductVariantService().getVariantById(productVariantId);
             if (productVariant == null) {
@@ -46,10 +44,15 @@ public class AddVirtualTryOnAction extends BaseAction {
                     addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " is already have TryOn Filter"));
                 } else {
                 boolean productVariantBool=getProductVariantService().isImageType(productVariantId);
-                    if(productVariantBool==false)  {
+                    if(!productVariantBool)  {
                     addRedirectAlertMessage(new SimpleMessage("Product Variant " + productVariantId + " do not have image type 7"));
                 } else {
-                    productVariant.setProductOptions(productOptionList);
+                     List<ProductOption> productOptions = new ArrayList<ProductOption>();
+                    if(productVariant.getProductOptions()!=null){
+                        productOptions = productVariant.getProductOptions();
+                    }
+                    productOptions.add(productOption);
+                    productVariant.setProductOptions(productOptions);
                     getProductVariantService().save(productVariant);
                     addRedirectAlertMessage(new SimpleMessage("Database updated"));
                 }

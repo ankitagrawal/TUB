@@ -101,10 +101,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     public boolean isImageType(String variantId){
         ProductVariant productVariant=getVariantById(variantId);
 
-        for (ProductImage productImage : productVariant.getProductImages())
-          if(productImage.getImageType()==imageTypeId){
-        return true;
+        for (ProductImage productImage : productVariant.getProductImages()){
+          if(productImage.getImageType()!=null && productImage.getImageType().equals(imageTypeId)){
+             return true;
           }
+        }
         return false;
     }
 
