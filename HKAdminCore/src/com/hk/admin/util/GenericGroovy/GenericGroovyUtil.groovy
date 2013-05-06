@@ -40,31 +40,33 @@ public class GenericGroovyUtil {
 		String productOptionValue;
 		Long masterId;
 		Long counter;
+		List<Long> idsToBeDeleted = new ArrayList<Long>();
 		sql.eachRow("""
-                    select count(*), name , value  from product_option   group by name, value having count(*) > 1;""") {
+                    select count(*), name , value  from product_option   group by name, value having count(*) > 1""") {
 			duplicateOptions ->
 			productOptionName = duplicateOptions.name;
 			productOptionValue = duplicateOptions.value;
 
 			masterId=null;
 			counter=0;
-
-			sql.eachRow("""Select * from product_option  where name= '${productOptionName}' and value= '${productOptionValue}';"""){
+			sql.eachRow("""Select * from product_option  where name= '${productOptionName}' and value= '${productOptionValue}' """){
 				productOption ->
-				if(masterId == null && counter == 0){
+				if(masterId == null && counter ==0){
 					masterId = productOption.id;
 				}
 
 				if(masterId != null && counter > 0){
-					sql.execute("""Update product_variant_has_product_option Set product_option_id = ${masterId} where product_option_id=${productOption.id};""");
-
-					sql.execute(""""Delete from product_option where id=${productOption.id};""");
+					sql.executeUpdate("""Update product_variant_has_product_option Set product_option_id = ${masterId} where product_option_id=${productOption.id}""");
+					idsToBeDeleted.add(productOption.id);
+//					sql.execute(""""Delete from product_option where id=${productOption.id}""");
 				}
 				counter++;
 			}
 
 		}
-
+		for(Long poid : idsToBeDeleted){
+			sql.execute("""Delete po from product_option po where id=${poid}""");
+		}
 
 	}
 }
