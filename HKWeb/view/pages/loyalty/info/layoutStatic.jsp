@@ -15,7 +15,7 @@
     <link href="<hk:vhostJs/>/pages/loyalty/resources/css/grid.css" rel="stylesheet">
     <link href="<hk:vhostJs/>/pages/loyalty/resources/css/style.css" rel="stylesheet">
     <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet"> 
-    <link href="/healthkart/pages/loyalty/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+    <link href="<hk:vhostJs/>/pages/loyalty/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-ui-1.9.2.custom.min.js"></script>
  </head>
@@ -29,10 +29,10 @@
 		<div id="logo" class="grid_6">
             <div class="logo-block">
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home'>healthKart</s:link></span>
-			  <span class="embedMarginleft"><s:link href="www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
+			  <span class="embedMarginleft"><s:link href="http://www.healthkartplus.com" title='go to healthkartplus'>healthkartplus</s:link></span>
 			  </p>
               <div class="logoSubblock">
-			  <a title="go to stellar home" href="/healthkart/loyaltypg">
+			  <a title="go to stellar home" href="<hk:vhostJs/>/loyaltypg">
                 <img width="283" height="83" alt="healthkart logo" src="<hk:vhostJs/>/pages/loyalty/resources/images/hkStellar.png">
               </a>
               </div>
