@@ -204,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
              }
         }
         order.setTargetDispatchDate(maxSOTargetDispatchDate);
-        //todo set target delivery date
+//        Date orderTargetDeliveryDate = HKDateUtil.addToDate(maxSOTargetDispatchDate, Calendar.DAY_OF_MONTH, 3);
         order.setTargetDelDate(maxSOTargetDispatchDate);
         getOrderDao().save(order);
     }

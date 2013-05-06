@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
@@ -51,6 +52,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminInventoryService adminInventoryService;
     @Autowired
     private BucketService bucketService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
