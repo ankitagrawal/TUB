@@ -67,6 +67,10 @@ public class AddRewardPointAction extends BaseAction {
         // referredUser stores the id of the user who added reward points
         // this logs the user who has added reward points
         boolean rewardPointsAdded = true;
+        if(user.equals(referredUser)){
+            addRedirectAlertMessage(new SimpleMessage("A user cannot give reward points to himself"));
+            return new RedirectResolution(SearchUserAction.class, "search");
+        }
         RewardPoint rewardPoint = new RewardPoint();
         try {
             rewardPoint = rewardPointDao.addRewardPoints(user, referredUser, null, value, comment, EnumRewardPointStatus.APPROVED, rewardPointMode);

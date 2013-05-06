@@ -69,6 +69,4 @@ public interface ShippingOrderService {
 
 	public boolean shippingOrderHasReplacementOrder(ShippingOrder shippingOrder);
 
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder);
-
 }
