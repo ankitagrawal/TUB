@@ -36,21 +36,21 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 public class RunSheetServiceImpl implements RunSheetService {
 
     @Autowired
-    private RunSheetDao               runsheetDao;
+    private RunSheetDao runsheetDao;
     @Autowired
-    ConsignmentService                consignmentService;
+    ConsignmentService consignmentService;
     @Autowired
-    HubService                        hubService;
+    HubService hubService;
     @Autowired
-    UserService                       userService;
+    UserService userService;
     @Autowired
-    ShippingOrderService              shippingOrderService;
+    ShippingOrderService shippingOrderService;
     @Autowired
     private AdminShippingOrderService adminShippingOrderService;
 
     @Override
     public Runsheet createRunsheet(Hub hub, Set<Consignment> consignments, RunsheetStatus runsheetStatus, User agent, Long prePaidBoxCount, Long totalCODPackets,
-            Double totalCODAmount) {
+                                   Double totalCODAmount) {
         Runsheet runsheetObj = new Runsheet();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         User loggedOnUser = userService.getLoggedInUser();
@@ -134,13 +134,13 @@ public class RunSheetServiceImpl implements RunSheetService {
             if (consignmentObj != null) {
                 consignmentLifecycleStatusId = HKDeliveryUtil.getLifcycleStatusIdFromConsignmentStatus(consignmentObj.getConsignmentStatus().getStatus());
                 ConsignmentLifecycleStatus consignmentLifecycleStatus = runsheetDao.get(ConsignmentLifecycleStatus.class, consignmentLifecycleStatusId);
-	            String consignmentTrackingRemark = null;
+                String consignmentTrackingRemark = null;
                 if (consignmentOnHoldReason != null && consignmentOnHoldReason.get(consignmentObj) != null &&
                         !consignmentOnHoldReason.get(consignmentObj).equals("")
                         && consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId())) {
                     consignmentTrackingRemark = consignmentOnHoldReason.get(consignmentObj);
-                   consignmentService.setOwnerForConsignment(consignmentObj,RoleConstants.CUSTOMER_SUPPORT);
-	            }
+                    consignmentService.setOwnerForConsignment(consignmentObj, RoleConstants.CUSTOMER_SUPPORT);
+                }
                 if (consignmentObj.getConsignmentStatus().getId().equals(EnumConsignmentStatus.ShipmentDelivered.getId())) {
                     sourceHub = consignmentObj.getHub();
                     destinationHub = hubService.findHubByName(HKDeliveryConstants.DELIVERY_HUB);
@@ -154,16 +154,6 @@ public class RunSheetServiceImpl implements RunSheetService {
                 consignmentTrackingList.add(consignmentService.createConsignmentTracking(sourceHub, destinationHub, user, consignmentObj, consignmentLifecycleStatus, consignmentTrackingRemark, runsheet));
             }
         }
-/*
-
-        //updating consignments of runsheet for consignments for the onHoldByCustomer status
-
-        Set<Consignment> orgConsignments = runsheet.getConsignments();
-        Set<Consignment> updatedConsignments = new TreeSet<Consignment>(changedConsignmentsList);
-        updatedConsignments.addAll(orgConsignments);
-        runsheet.setConsignments(updatedConsignments);
-*/
-
         if (consignmentTrackingList.size() > 0) {
             consignmentService.saveConsignmentTracking(consignmentTrackingList);
         }
@@ -242,17 +232,17 @@ public class RunSheetServiceImpl implements RunSheetService {
         return runsheet;
     }
 
-	@Override
-	public Map<Consignment, String> getOnHoldCustomerReasonForRunsheetConsignments(Runsheet runsheet){
-		Map<Consignment, String> consignmentOnHoldReason = new HashMap<Consignment, String>();
-		ConsignmentTracking consignmentTracking;
-		ConsignmentLifecycleStatus onHoldByCustomer =  runsheetDao.get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId());
-		for(Consignment consignment : runsheet.getConsignments()){
-			consignmentTracking = consignmentService.getConsignmentTrackingByRunsheetAndStatus(consignment, runsheet, onHoldByCustomer);
-			if(consignmentTracking != null){
-				consignmentOnHoldReason.put(consignment, consignmentTracking.getRemarks());
-			}
-		}
-		return consignmentOnHoldReason;
-	}
+    @Override
+    public Map<Consignment, String> getOnHoldCustomerReasonForRunsheetConsignments(Runsheet runsheet) {
+        Map<Consignment, String> consignmentOnHoldReason = new HashMap<Consignment, String>();
+        ConsignmentTracking consignmentTracking;
+        ConsignmentLifecycleStatus onHoldByCustomer = runsheetDao.get(ConsignmentLifecycleStatus.class, EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId());
+        for (Consignment consignment : runsheet.getConsignments()) {
+            consignmentTracking = consignmentService.getConsignmentTrackingByRunsheetAndStatus(consignment, runsheet, onHoldByCustomer);
+            if (consignmentTracking != null) {
+                consignmentOnHoldReason.put(consignment, consignmentTracking.getRemarks());
+            }
+        }
+        return consignmentOnHoldReason;
+    }
 }
