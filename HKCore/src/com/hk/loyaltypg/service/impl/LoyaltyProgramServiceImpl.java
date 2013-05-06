@@ -28,7 +28,6 @@ import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
-import com.hk.domain.loyaltypg.UserOrderKey;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
@@ -127,6 +126,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void creditKarmaPoints(Order order) {
+		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
+		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
+			throw new RuntimeException("User order karma profile already exist for given orer and user");
+		}
+		
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser());
 		double loyaltyMultiplier = badgeInfo.getBadge().getLoyaltyMultiplier();
 		Double amount = order.getPayment().getAmount();
@@ -136,8 +140,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
 		profile.setKarmaPoints(karmaPoints);
-		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
-		profile.setUserOrderKey(userOrderKey);
+		profile.setUser(order.getUser());
+		profile.setOrder(order);
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -178,6 +182,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void debitKarmaPoints(Order order) {
+		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
+		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.DEBIT) {
+			throw new RuntimeException("User order karma profile already exist for given orer and user");
+		}
+		
 		double existingKarmaPoints = this.calculateLoyaltyPoints(order.getUser());
 		double karmaPoints = this.calculateLoyaltyPoints(order);
 		if (existingKarmaPoints < karmaPoints) {
@@ -189,8 +198,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.DEBIT);
 		profile.setKarmaPoints(-(karmaPoints));
-		UserOrderKey userOrderKey = new UserOrderKey(order, order.getUser());
-		profile.setUserOrderKey(userOrderKey);
+		profile.setUser(order.getUser());
+		profile.setOrder(order);
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -200,7 +209,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
 		profile.setStatus(KarmaPointStatus.APPROVED);
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
-		this.updateUserBadgeInfo(profile.getUserOrderKey().getUser());
+		this.updateUserBadgeInfo(profile.getUser());
 	}
 
 	@Transactional
@@ -246,7 +255,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
 		profile.setStatus(KarmaPointStatus.CANCELED);
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
-		this.updateUserBadgeInfo(profile.getUserOrderKey().getUser());
+		this.updateUserBadgeInfo(profile.getUser());
 	}
 
 	@Override
@@ -372,8 +381,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			}
 		}
 		criteria.add(Restrictions.ne("status", KarmaPointStatus.CANCELED));
-		criteria.add(Restrictions.eq("userOrderKey.user.id", userId));
-		criteria.add(Restrictions.ne("userOrderKey.order.id", -1l));
+		criteria.add(Restrictions.eq("user.id", userId));
 		criteria.add(Restrictions.eq("transactionType", transactionType));
 
 		@SuppressWarnings("rawtypes")
@@ -385,18 +393,25 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	private UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
+		if(orderId == -1l) {
+			throw new RuntimeException("This API is not supposed to query order id with -1");
+		}
 		Order order = this.orderDao.get(Order.class, orderId);
-		UserOrderKey uOKey = new UserOrderKey();
-		uOKey.setOrder(order);
-		uOKey.setUser(order.getUser());
-		UserOrderKarmaProfile profile = this.userOrderKarmaProfileDao.get(UserOrderKarmaProfile.class, uOKey);
-		return profile;
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		criteria.add(Restrictions.eq("user.id", order.getUser().getId()));
+		criteria.add(Restrictions.eq("order.id", order.getId()));
+		
+		List<UserOrderKarmaProfile> list = this.userOrderKarmaProfileDao.findByCriteria(criteria);
+		if(list == null || list.size() == 0) {
+			return null;
+		}
+		return list.iterator().next();
 	}
 
 	@Override
 	public double convertLoyaltyToRewardPoints(User user) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
-		criteria.add(Restrictions.eq("userOrderKey.user", user));
+		criteria.add(Restrictions.eq("user", user));
 		criteria.add(Restrictions.eq("transactionType", TransactionType.CREDIT));
 		criteria.add(Restrictions.eq("status", KarmaPointStatus.APPROVED));
 		criteria.addOrder(org.hibernate.criterion.Order.asc("creationTime"));
@@ -420,7 +435,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			// when karma points for an order are less than total points for
 			// conversion
 			if (currentProfile.getKarmaPoints() <= loyaltyPoints) {
-				this.rewardPointService.addRewardPoints(user, null, currentProfile.getUserOrderKey().getOrder(),
+				this.rewardPointService.addRewardPoints(user, null, currentProfile.getOrder(),
 						currentProfile.getKarmaPoints(), comment, EnumRewardPointStatus.APPROVED,
 						EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 				currentProfile.setStatus(KarmaPointStatus.CONVERTED);

@@ -12585,6 +12585,9 @@
 	</changeSet>
 	<changeSet author="DeepakC" id="20133001-03">
 		<createTable tableName="user_order_karma_profile">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
 			<column name="order_id" type="INT">
 				<constraints nullable="false" />
 			</column>
@@ -12619,17 +12622,13 @@
 			referencedTableName="user" referencedColumnNames="id" />
 	</changeSet>
 	<changeSet author="DeepakC" id="20133001-06">
-		<addUniqueConstraint tableName="user_order_karma_profile"
-			constraintName="fk_ukarma_uo" columnNames="user_id,order_id" />
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-07">
 		<insert tableName="store">
 			<column name="id" value="4"/>
 			<column name="name" value="LOYALTYPG"/>
 			<column name="prefix" value="LP"/>
 		</insert>
 	</changeSet>
-	<changeSet author="DeepakC" id="20133001-08">
+	<changeSet author="DeepakC" id="20133001-07">
 		<addColumn tableName="badge">
 			<column name="loyalty_multiplier" type="DOUBLE">
 				<constraints nullable="false" />
@@ -12641,7 +12640,7 @@
 		<modifyDataType tableName="badge" columnName="min_score" newDataType="DOUBLE"/>
 		<modifyDataType tableName="badge" columnName="max_score" newDataType="DOUBLE"/>
 	</changeSet>
-	<changeSet author="DeepakC" id="20133001-09">
+	<changeSet author="DeepakC" id="20133001-08">
 		<sql>
 			insert into badge (badge_name,min_score,max_score,loyalty_multiplier) values 
 			('NORMAL', 0, 1500, 0),
@@ -12651,18 +12650,18 @@
 			('PLATINUM', 12001, -1, 0.02);
 		</sql>
 	</changeSet>
-    <changeSet author="DeepakC" id="20133001-10">
+    <changeSet author="DeepakC" id="20133001-09">
 		<insert tableName="reward_point_mode">
 			<column name="id" value="80"/>
 			<column name="name" value="HK Loyalty Points"/>
 		</insert>
 	</changeSet>
-	 <changeSet author="DeepakC" id="20133001-11">
+	 <changeSet author="DeepakC" id="20133001-10">
 		<insert tableName="role">
 			<column name="name" value="HK_LOYALTY_USER"/>
 		</insert>
 	</changeSet>
-	    <changeSet author="DeepakC" id="20133001-12">
+	    <changeSet author="DeepakC" id="20133001-11">
 		<createTable tableName="user_badge_info">
 			<column autoIncrement="true" name="id" type="INT">
 				<constraints nullable="false" primaryKey="true" />
