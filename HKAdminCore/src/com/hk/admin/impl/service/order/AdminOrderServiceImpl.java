@@ -149,7 +149,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             order = getOrderService().save(order);
 
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-            if (shippingOrders != null) {
+            if (shippingOrders != null && !shippingOrders.isEmpty()) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
                     getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
                 }
@@ -442,7 +442,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             payment = paymentManager.verifyCodPayment(order.getPayment());
             order.setConfirmationDate(new Date());
             orderService.save(order);
-            orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
             getOrderLoggingService().logOrderActivity(order, user, getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         }
         return payment;
