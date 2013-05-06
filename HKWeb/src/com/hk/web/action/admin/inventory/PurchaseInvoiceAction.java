@@ -155,7 +155,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			purchaseInvoiceShortLineItems = new ArrayList<PurchaseInvoiceLineItem>();
 			purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>();
 			for(PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoice.getPurchaseInvoiceLineItems()){
-				if(purchaseInvoiceLineItem.getPiLineItemType().getId().equals(EnumPILineItemType.Short.getId())){
+				if(purchaseInvoiceLineItem.getPiLineItemType()!=null&&purchaseInvoiceLineItem.getPiLineItemType().getId().equals(EnumPILineItemType.Short.getId())){
 					purchaseInvoiceShortLineItems.add(purchaseInvoiceLineItem);
 				}
 				else
@@ -170,7 +170,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					ExtraInventory extraInventory = rtvNote.getExtraInventory();
 					List<ExtraInventoryLineItem> eiLineItems = extraInventoryLineItemService
 							.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-					if (eiLineItems != null) {
+					if (eiLineItems != null && eiLineItems.size()!=0) {
 						for (ExtraInventoryLineItem eiLineItem : eiLineItems) {
 							if (eiLineItem.isRtvCreated()!=null && eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
 								extraInventoryLineItems.add(eiLineItem);
@@ -375,13 +375,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					skuService.saveSku(sku);
 					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Short.asPiLineItemType());
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
-				}
-				//productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();
-				//productVariant = productVariantDao.save(productVariant);
-			}
-			if (purchaseInvoice.getReconciled() != null) {
-				if (purchaseInvoice.getReconciled() && purchaseInvoice.getReconcilationDate() == null) {
-					purchaseInvoice.setReconcilationDate(new Date());
 				}
 			}
 			purchaseInvoice.setShortAmount(shortTotalPayable);

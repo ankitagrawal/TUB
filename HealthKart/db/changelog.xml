@@ -12634,4 +12634,29 @@
     <changeSet author="Nihal (generated)" id="1367838930686-14">
         <addNotNullConstraint columnDataType="INT" columnName="tax_id" tableName="extra_inventory_line_item"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-2">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="payable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-3">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-4">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="surcharge_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-5">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="tax_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-6">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="taxable_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
