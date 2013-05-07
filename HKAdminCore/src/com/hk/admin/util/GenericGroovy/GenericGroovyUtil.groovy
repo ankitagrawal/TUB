@@ -47,6 +47,13 @@ public class GenericGroovyUtil {
 			productOptionName = duplicateOptions.name;
 			productOptionValue = duplicateOptions.value;
 
+				if(productOptionName.contains("'")){
+				 productOptionName.replace("'", "\\'");
+			}
+
+			if(productOptionValue.contains("'")){
+				 productOptionValue.replace("'", "\\'");
+			}
 			masterId=null;
 			counter=0;
 			sql.eachRow("""Select * from product_option  where name= '${productOptionName}' and value= '${productOptionValue}' """){
