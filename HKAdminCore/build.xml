@@ -51,6 +51,7 @@
 		<fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar" />
         <fileset file="${lib.root.dir}/rest/resteasy-jaxrs-2.3.0.GA.jar" />
         <fileset file="${lib.root.dir}/rest/jaxrs-api-2.3.0.GA.jar" />
+        <fileset file="${lib.root.dir}/mysql/mysql-connector-java-5.1.10-bin.jar" />
 
 	</path>
 
