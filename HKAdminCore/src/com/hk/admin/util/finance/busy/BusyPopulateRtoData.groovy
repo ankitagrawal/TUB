@@ -106,13 +106,16 @@ public class BusyPopulateRtoData {
 
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
-      if(accountingInvoice.warehouse_id == 1){
-        series = "HR";
-      }
-      else{
-        series = "MH";
-      }
+	     Long warehouseId =  accountingInvoice.warehouse_id;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
 
       date = accountingInvoice.return_date;	    
 
@@ -191,7 +194,6 @@ public class BusyPopulateRtoData {
       }
 
  //     material_centre = accountingInvoice.warehouse;
-	    Long warehouseId =  accountingInvoice.warehouse_id;
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           material_centre = "Gurgaon Warehouse";
 	      }
