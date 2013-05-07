@@ -1,8 +1,6 @@
 package com.hk.web.action.core.loyaltypg;
 
 
-import java.util.Date;
-
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -26,7 +24,7 @@ import com.hk.web.action.core.auth.LoginAction;
 public class JoinLoyaltyProgramAction extends BaseAction {
 	
 	private String gender;
-	private Date dob;
+	private String name;
 	
 	@Autowired UserService userService;
 	@Autowired RoleService roleService;
@@ -44,8 +42,8 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 			user.setGender(this.gender);
 		}
 		
-		if(this.dob != null) {
-			user.setBirthDate(this.dob);
+		if(this.name != null) {
+			user.setName(this.name);
 		}
 		
 		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
@@ -63,17 +61,17 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	}
 
 	/**
-	 * @return the dob
+	 * @return the name
 	 */
-	public Date getDob() {
-		return this.dob;
+	public String getName() {
+		return this.name;
 	}
 
 	/**
-	 * @param dob the dob to set
+	 * @param name the name to set
 	 */
-	public void setDob(Date dob) {
-		this.dob = dob;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

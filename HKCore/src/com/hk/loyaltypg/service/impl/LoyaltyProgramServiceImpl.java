@@ -432,7 +432,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			
 			// add reward points
 			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment,
-					EnumRewardPointStatus.PENDING, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+					EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 			 
 	        this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusYears(1).toDate());
 

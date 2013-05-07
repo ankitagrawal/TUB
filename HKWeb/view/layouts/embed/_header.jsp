@@ -116,7 +116,7 @@
                       <span style="font-size:1.1em;color:silver;">"Silver"</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'BRONZE'}">
-                      <span style="font-size:1.1em;color:#9C6963 ;">"Platinum"</span>
+                      <span style="font-size:1.1em;color:#9C6963 ;">"Bronze"</span>
                     </c:when>
                     
                   </c:choose>
