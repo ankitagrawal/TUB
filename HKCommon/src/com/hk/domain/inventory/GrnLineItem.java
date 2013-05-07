@@ -76,6 +76,9 @@ public class GrnLineItem implements java.io.Serializable {
 	@Transient
 	private Double fillRate;
 	
+	@Column(name = "weight")
+	private Double weight;
+	
 	public Long getId() {
 		return this.id;
 	}
@@ -195,7 +198,14 @@ public class GrnLineItem implements java.io.Serializable {
 	public void setFillRate(Double fillRate) {
 		this.fillRate = fillRate;
 	}
-	
+
+	public Double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
 
 	@Override
     public boolean equals(Object o) {

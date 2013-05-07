@@ -12589,4 +12589,11 @@
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)"  id="2013-05-07-01">
+        <addColumn tableName="grn_line_item">
+            <column name="weight" type="DOUBLE">
+            <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
