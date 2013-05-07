@@ -2,6 +2,8 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.accounting.SeekInvoiceNumService;
+import com.hk.helper.InvoiceNumHelper;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -36,6 +38,8 @@ public class ServiceQueueAction extends BasePaginatedAction {
     private ShippingOrderService       shippingOrderService;
     @Autowired
     private AdminShippingOrderService  adminShippingOrderService;
+		@Autowired
+    private SeekInvoiceNumService      seekInvoiceNumService;
 
 
     List<Order>                        orderList         = new ArrayList<Order>();
@@ -86,7 +90,9 @@ public class ServiceQueueAction extends BasePaginatedAction {
     public Resolution markShippingOrdersAsDelivered() {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
-                getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
+	            String invoiceType = InvoiceNumHelper.getInvoiceType(shippingOrder.isServiceOrder(), shippingOrder.getBaseOrder().isB2bOrder());
+              shippingOrder.setAccountingInvoiceNumber(seekInvoiceNumService.getInvoiceNum(invoiceType, shippingOrder.getWarehouse()));
+              getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as delieverd"));
         } else {

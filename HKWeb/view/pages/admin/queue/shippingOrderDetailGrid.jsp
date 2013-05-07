@@ -166,11 +166,11 @@
 </c:if>
 <c:if test="${shippingOrder.shippingOrderStatus.id < shippingOrderStatusShipped && shippingOrder.shippingOrderStatus.id != shippingOrderStatusCancelled}">
     <div class="floatleft">
-        Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDelDate}" type="date"/>
+        Target Dispatch : <fmt:formatDate value="${shippingOrder.targetDispatchDate}" type="date"/>
     </div>
     <div class="clear"></div>
     <div class="floatleft">
-        <strong>(${hk:periodFromNow(shippingOrder.targetDelDate)})</strong>
+        <strong>(${hk:periodFromNow(shippingOrder.targetDispatchDate)})</strong>
     </div>
 </c:if>
 <div class="clear"></div>
@@ -649,8 +649,7 @@
                     <option value="">Choose Reason</option>
                     <c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back.getName()%>"/>
                     <c:forEach items="${hk:getReasonsByType(escalateBackReason)}" var="reason">
-                        <option value="${reason.id}">${reason.primaryClassification}
-                            - ${reason.secondaryClassification}</option>
+                        <option value="${reason.id}">${reason.classification.primary}- ${reason.classification.secondary}</option>
                     </c:forEach>
                 </select>
             </c:if>

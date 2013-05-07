@@ -176,7 +176,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
 
         if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
-            criteria.add(Restrictions.between("targetDelDate", startTargetDispatchDate, endTargetDispatchDate));
+            criteria.add(Restrictions.between("targetDispatchDate", startTargetDispatchDate, endTargetDispatchDate));
         }
 
         if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0) {
@@ -274,7 +274,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (!searchForPrinting) {
             if (sortByDispatchDate) {
-                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDelDate"));
+                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDispatchDate"));
             }
             if (sortByLastEscDate) {
                 criteria.addOrder(org.hibernate.criterion.Order.desc("lastEscDate"));
@@ -286,7 +286,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
                 baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             }
         } else {
-            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
 //            baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }

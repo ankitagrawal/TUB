@@ -10,13 +10,12 @@
 <%@ page import="com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.pact.dao.store.StoreDao" %>
 <%@ page import="com.hk.pact.service.store.StoreService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
-<%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -185,22 +184,6 @@
                 return false;
             });
 
-            <%--
-                 Set default courier
-
-                   $('.setAsDefaultCourierLink').click(function() {
-
-                     var clickedLink = $(this);
-                     $.getJSON($(this).attr('href'), {'courier':$(this).parents('.addressRow').find('.courierId').val()}, function(res) {
-                       if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                         clickedLink.parents('.addressRow').find('.addressDefaultCourier').html(res.data.courier.name);
-                       }
-                     });
-
-                     return false;
-                   });
-                    --%>
-
         <%--
         Order status hold/unhold toggle functionality
         --%>
@@ -215,20 +198,6 @@
                 $.getJSON($(this).attr('href'), function(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
                         window.location.reload();
-                    <%-- clickedP.find('.orderStatusName').html(res.data.orderStatus.name);
-                    if (res.data.orderStatus.id == '<%=EnumOrderStatus.OnHold.getId()%>') {
-                      clickedP.find('.onHoldStatusLink').show();
-                      clickedP.find('.normalStatusLink').hide();
-                      clickedLink.parents('.orderRow').addClass('highlight_hold');
-                      // disable the line item checkboxes
-                      clickedLink.parents('.orderRow').find('.lineItemCheckBox').attr('disabled', 'disabled');
-                    } else {
-                      clickedP.find('.onHoldStatusLink').hide();
-                      clickedP.find('.normalStatusLink').show();
-                      clickedLink.parents('.orderRow').removeClass('highlight_hold');
-                      // enable the line item checkboxes
-                      clickedLink.parents('.orderRow').find('.lineItemCheckBox').removeAttr('disabled');
-                    }--%>
                     }
                 });
 
@@ -272,29 +241,12 @@
                     $("#raj" + id).prop('checked', true);
                 }
             });
-            /*$('.orderCheckBox').click(function() {
-             if ($(this).attr("checked") == "checked") {
-             $(this).parents('.orderRow').find('.lineItemCheckBox').each(function() {
-             this.checked = true;
-             })
-             } else {
-             $(this).parents('.orderRow').find('.lineItemCheckBox').each(function() {
-             this.checked = false;
-             })
-             }
-             });*/
-
-
         });
 
     </script>
 </s:layout-component>
 <s:layout-component name="heading">
     <div class="actionQueue">Action Awaiting Queue</div>
-    <%--<span style="float:right;">
-      <label style="font-size:.7em; color:black; font-weight:normal;">Avg. time for COD Confirmation(hh:mm:ss):</label>
-        ${actionBean.codConfirmationTime}
-    </span>--%>
 </s:layout-component>
 <s:layout-component name="content">
 
@@ -413,6 +365,14 @@
                         <div><s:checkbox name="b2bOrder"/>B2B Order</div>
                     </div>
 
+                    <div style="float:left;">
+                        COD Calling Status
+                       <s:select name="codCallStatus" >
+                           <s:option value="">------Select------</s:option>
+                           <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="userCodCallStatus"
+                                                      value="id" label="name"/>
+                       </s:select>
+                        </div>
 
                 </li>
 
@@ -432,7 +392,7 @@
                                            varStatus="rctr1">
                                     <div class="newBoxItem">
                                     <label><s:checkbox name="reasons[${rctr1.index}]"
-                                                       value="${reason.id}"/> ${reason.primaryClassification}  ${reason.secondaryClassification}</label>
+                                                       value="${reason.id}"/> ${reason.classification.primary}  ${reason.classification.secondary}</label>
                                         </div>
                                 </c:forEach>
                                     </div>
@@ -483,8 +443,8 @@
                         </div>
                         <c:if test="${order.targetDispatchDate != null}">
                             <div class="floatleft" style="color:red">
-                                Target Dispatch Date: <fmt:formatDate value="${order.targetDelDate}" type="date"/>
-                                <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDelDate)})</strong></span>
+                                Target Dispatch Date: <fmt:formatDate value="${order.targetDispatchDate}" type="date"/>
+                                <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong></span>
                             </div>
                         </c:if>
                         <div class="floatright">

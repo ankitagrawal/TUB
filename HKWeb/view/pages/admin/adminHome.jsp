@@ -266,6 +266,11 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction">Close Grns</s:link>
         </h3>
+<%--
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction" event="closeGrn">Close Grns(2 Months)</s:link>
+        </h3>
+--%>
     </shiro:hasRole>
 
 </div>
