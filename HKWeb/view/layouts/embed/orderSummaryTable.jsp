@@ -23,9 +23,7 @@ Pass an attribute called pricingDto to render a table with pricing details
     <div class='totals newTotals2'>
         <div class='left' style="width: 42%;left: 0px;">
 
-            <c:if test="${pricingDto.codLineCount > 0}">
-                <div style="font-size: 12px;font-weight: normal;" class="shipping">COD Charges</div>
-            </c:if>
+
             <c:if
                     test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount > 0.00}">
                 <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
@@ -35,30 +33,23 @@ Pass an attribute called pricingDto to render a table with pricing details
             <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                 Total:
             </div>
-            <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                    Cashback:
-                </div>
-            </c:if>
+
             <div class='shipping' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                 Shipping:
             </div>
             <c:if test="${pricingDto.redeemedRewardPoints > 0}">
                 <div style="font-size: 12px;font-weight: normal;" class="lightBlue">Reward Points</div>
             </c:if>
-        </div>
-        <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 12px;">
-            <div class='shipping' style="font-weight:normal;font-size: 12px;color: rgb(68, 68, 68);font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                Rs ${pricingDto.shippingTotal}
-            </div>
-            <c:if test="${pricingDto.redeemedRewardPoints > 0}">
-                <div class="green" style="font-size: 12px;color: rgb(68, 68, 68);">
-                    Rs <fmt:formatNumber value="${pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=""/>
+            <c:if test="${pricingDto.codLineCount > 0}">
+                <div style="font-size: 12px;font-weight: normal;" class="shipping">COD Charges</div>
+            </c:if>
+            <c:if test="${pricingDto.totalCashback > 0.00}">
+                <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                    Cashback:
                 </div>
             </c:if>
-            <c:if test="${pricingDto.codLineCount > 0}">
-                Rs ${pricingDto.codSubTotal}
-            </c:if>
+        </div>
+        <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 12px;">
             <c:if
                     test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount+pricingDto.subscriptionDiscount > 0.00}">
                 <div class='discount green'>
@@ -72,6 +63,20 @@ Pass an attribute called pricingDto to render a table with pricing details
                     <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
                 </strong>
             </div>
+
+
+            <div class='shipping' style="font-weight:normal;font-size: 12px;color: rgb(68, 68, 68);font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                Rs ${pricingDto.shippingTotal}
+            </div>
+            <c:if test="${pricingDto.redeemedRewardPoints > 0}">
+                <div class="green lightBlue" style="font-size: 12px;color: rgb(68, 68, 68);">
+                    Rs <fmt:formatNumber value="${pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=""/>
+                </div>
+            </c:if>
+            <c:if test="${pricingDto.codLineCount > 0}">
+                Rs ${pricingDto.codSubTotal}
+            </c:if>
+
             <c:if test="${pricingDto.totalCashback > 0.00}">
                 <div class='special' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                     <span><fmt:formatNumber value="${pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>
@@ -90,11 +95,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                     You Saved:
                 </div>
             </c:if>
-            <c:if test="${pricingDto.totalCashback > 0.00}">
-                <div class='discount ' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                    Cashback:
-                </div>
-            </c:if>
+
             <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                 Total:
             </div>
@@ -104,16 +105,14 @@ Pass an attribute called pricingDto to render a table with pricing details
             <c:if test="${pricingDto.redeemedRewardPoints > 0}">
                 <div style="font-size: 12px;font-weight: normal;" class="lightBlue">Reward Points</div>
             </c:if>
-        </div>
-        <div class='right' style="width: 50%;left: 0px;text-align: right;">
-            <div class='shipping' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                Rs ${pricingDto.shippingTotal}
-            </div>
-            <c:if test="${pricingDto.redeemedRewardPoints > 0}">
-                <div class="green" style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                    Rs <fmt:formatNumber value="${pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=""/>
+            <c:if test="${pricingDto.totalCashback > 0.00}">
+                <div class='discount ' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                    Cashback:
                 </div>
             </c:if>
+        </div>
+        <div class='right' style="width: 50%;left: 0px;text-align: right;">
+
             <c:if
                     test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount > 0.00}">
                 <div class='discount green' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
@@ -122,16 +121,27 @@ Pass an attribute called pricingDto to render a table with pricing details
                   type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>
+
+            <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+
+                    <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+
+            </div>
+
+            <div class='shipping' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                Rs ${pricingDto.shippingTotal}
+            </div>
+            <c:if test="${pricingDto.redeemedRewardPoints > 0}">
+                <div class="green lightBlue" style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+                    Rs <fmt:formatNumber value="${pricingDto.redeemedRewardPoints}" type="currency" currencySymbol=""/>
+                </div>
+            </c:if>
+
             <c:if test="${pricingDto.totalCashback > 0.00}">
                 <div class='discount green' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                     <span><fmt:formatNumber value="${pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>
-            <div class='total lightBlue' style="font-size: 12px;font-weight: normal;">
-                <strong>
-                    <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
-                </strong>
-            </div>
         </div>
     </div>
 </c:if>
@@ -152,10 +162,10 @@ Pass an attribute called pricingDto to render a table with pricing details
                 value="${pricingDto.postpaidServiceMrpSubTotal - pricingDto.postpaidServiceHkSubTotal + pricingDto.postpaidServiceDiscount}"
                 type="currency" currencySymbol="Rs. "/></span>
                 </div>
-                <div class='total lightBlue' style="font-size: 12px;font-weight: normal;">
-                    <strong>
+                <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
+
                         <fmt:formatNumber value="${pricingDto.postpaidServicesTotal}" type="currency" currencySymbol="Rs. "/>
-                    </strong>
+
                 </div>
             </div>
         </div>

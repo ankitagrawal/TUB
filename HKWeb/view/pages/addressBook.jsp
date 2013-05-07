@@ -98,8 +98,8 @@
             </h3>--%>
 
         <div class='left2'>
-            <h3 style="text-align: left;">
-                Use one of your saved addresses &darr;
+            <h3 class="arialBlackBold" style="text-align: left;">
+                Use one of your saved addresses
             </h3>
 
             <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
@@ -192,13 +192,10 @@
 
 
         </div>
-        <div class='or'>
-            or
-        </div>
-                <h3 class="shippingAddressheading">
-                    Add a new shipping address
+                <h3 class="shippingAddressheading arialBlackBold" style="position: relative;left: 16%;">
+                    Or add a new shipping address
                 </h3>
-        <div class='right' style="width: 440px;background: initial;">
+        <div class='right' style="width: 440px;background: initial;position: relative;left: 15%;">
 
 
             <div class="addressContainer shipping_address" style="left: 5px;">

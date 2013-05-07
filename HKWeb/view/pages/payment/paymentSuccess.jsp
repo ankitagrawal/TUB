@@ -43,7 +43,7 @@
             $("#popUpDDate").hide();
         });
         $(".learnMore").click(function(){
-            $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
+            $('html, body').animate({scrollTop: $(".products_container").height() + 500}, 1000);
         });
     });
   </script>
@@ -392,8 +392,25 @@
             <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
                 <h2 class="paymentH2">Order Summary</h2>
 
-                <s:layout-render name="/layouts/embed/orderSummaryTableDetailed.jsp" pricingDto="${actionBean.pricingDto}"
+                <div class="itemSummaryNew">
+                    <s:layout-render name="/layouts/embed/itemSummaryTable.jsp" pricingDto="${actionBean.pricingDto}"
                                  orderDate="${actionBean.payment.paymentDate}"/>
+                </div>
+                <div class="orderSummaryNew">
+                    <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${actionBean.pricingDto}"
+                                 orderDate="${actionBean.payment.paymentDate}"/>
+                </div>
+                <h1 class="youPaid">
+                  <span class="youPay">
+                    You paid:
+                  </span>
+                  <strong>
+                    <span id="summaryGrandTotalPayable" class="youPayValue">
+                      <fmt:formatNumber value="${actionBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+                    </span>
+                  </strong>
+                </h1>
+
                 <div class="orderShippedTo">
                     <h2 class="paymentH2" style="border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER SHIPPED TO</h2>
 
@@ -412,6 +429,27 @@
             </div>
           
           <div style="clear:both;"></div>
+
+            <div class='orderSummaryHeading' style="margin-bottom: 50px;">
+                <div class="deliveryDetails"> DELIVERY DETAILS</div>
+                <ul>
+                    <li>
+                        - The time taken for delivery after dispatch from our warehouse varies with location.
+                    </li>
+                    <li>
+                        - For Metroes: 1-3 business days
+                    </li>
+                    <li>
+                        - For Major Cities: 2-4 business days
+                    </li>
+                    <li>
+                        - For Other Town/Cities: 3-6 business days
+                    </li>
+                    <li>
+                        - For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
+                    </li>
+                </ul>
+            </div>
 
             <a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
 

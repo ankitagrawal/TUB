@@ -111,8 +111,8 @@
     <c:if test="${orderSummary.availableCourierList == null}">
       <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
     </c:if>
-    <h3>
-      You selected
+    <h3 style="margin-bottom: 15px;" class="arialBlackBold">
+        Your Order
     </h3>
     <s:layout-render name="/layouts/embed/itemSummaryTable.jsp" pricingDto="${orderSummary.pricingDto}" orderDate="${orderDate}"/>
     <script type="text/javascript">
@@ -128,7 +128,7 @@
         <s:form beanclass="com.hk.web.action.core.order.OrderSummaryAction" method="post">
         <s:hidden name="order" value="${orderSummary.order.id}"/>
 
-            <h5 class = "newTextHeading">
+            <h5 class = "newTextHeading arialBlackBold">
                 SPECIAL INSTRUCTIONS
             </h5>
             <div class="comment_type">
@@ -205,7 +205,7 @@
               CHANGE </s:link>
         </span>
           <div class='title'>
-              <h5 class="newTextHeading">
+              <h5 class="newTextHeading arialBlackBold">
                   SHIPPING DETAILS
               </h5>
           </div>

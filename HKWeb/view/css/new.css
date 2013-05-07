@@ -6424,11 +6424,11 @@ color: #e62580;
 
 .orderShippedTo{
     margin-top: 10px;
-    float: left;
+    float: right;
     margin-right: 5px;
     width: 30%;
-    left: 30px;
     position: relative;
+    clear: both;
 }
 
 .leftHalf{
@@ -6620,6 +6620,41 @@ color: #e62580;
     top: -1px;
     height: 7px;
     font-size: 10px;
+}
+
+.orderSummaryNew{
+    position: relative;
+    float: left;
+    width: 27%;
+    left: 15px;
+    margin-bottom: 15px;
+}
+
+.itemSummaryNew{
+    position: relative;
+    float: left;
+    width: 70%;
+}
+
+.youPaid{
+    position: relative;
+    float: right;
+    width: 28%;
+    padding: 0px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    right: 5px;
+    margin-bottom: 35px;
+}
+
+.arialBlackBold{
+    font-family: Arial !important;
+    color: rgb(82, 82, 82) !important;
+    font-weight: bold !important;
+}
+
+.arialBold{
+    font-family: Arial !important;
+    font-weight: bold !important;
 }
 /*
 slider pager end
