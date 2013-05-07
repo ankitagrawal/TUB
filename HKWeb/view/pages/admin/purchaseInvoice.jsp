@@ -423,10 +423,54 @@
 			var formId = event.target.parentElement.id;
 			var qty = $("#"+formId).find('.receivedQuantity').val();
 			var costPrice = $("#"+formId).find('.costPrice').val();
-			if (qty == "" || costPrice == "") {
-				alert("All fields are compulsory.");
-				return false;
+			var mrp = $("#"+formId).find('.mrp').val();
+			
+			var saveObj = $(this);
+	        $(this).hide();
+	        var bool = true;
+			$('.receivedQuantity').each(function() {
+	            var receivedQuantity = $(this).val();
+	            if (receivedQuantity == null || receivedQuantity.trim(receivedQuantity) == "" || isNaN(receivedQuantity)) {
+	                alert("Enter Received Quantity in correct format.");
+	                bool = false;
+	                saveObj.show();
+	                return false;
+	            }
+	        });
+			
+			$('.costPrice').each(function() {
+	            var costPrice = $(this).val();
+	            if (costPrice == null || costPrice.trim(costPrice) == "" || isNaN(costPrice)) {
+	                alert("Enter Cost Price in correct format.");
+	                bool = false;
+	                saveObj.show();
+	                return false;
+	            }
+	            costPrice = parseFloat(costPrice);
+	            var mrp = $(this).parent().parent().children('td').children('.mrp').val();
+	            mrp = parseFloat(mrp);
+	            if (mrp <= costPrice) {
+	                alert("MRP can't be less than Cost Price");
+	                bool = false;
+	                $(this).val("");
+	                $(this).parent().parent().children('td').children('.mrp').val("");
+	                saveObj.show();
+	                return false;
+	            }
+
+	        });
+			if(formId=="rtvForm"){
+			$('.mrp').each(function() {
+	            var mrp = $(this).val();
+	            if (mrp == null || mrp.trim(mrp) == "" || isNaN(mrp)) {
+	                alert("Enter MRP in correct format.");
+	                bool = false;
+	                saveObj.show();
+	                return false;
+	            }
+	        });
 			}
+			
 			var invoiceDateString = $('#invoice-date').val();
 			var dateValues = invoiceDateString.split("-");
 			var invoiceDate = new Date();
@@ -439,6 +483,8 @@
 				alert("Invoice date cannot be in future");
 				return false;
 			}
+			
+			if (!bool) return false;
 		});
 		
 		if($(".rtvTable").find(".rtvFinal").val()==""|| isNaN(parseFloat($(".rtvTable").find(".rtvFinal").val()))){
