@@ -56,7 +56,8 @@
           <div class="grid_12">
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
-              info@healthkart.com | Established in India | Terms and Conditions | Connect with Us:
+              info@healthkart.com | Established in India |
+               <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a>| Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"
 						target="_blank" class="connectLink"> <img

@@ -33,7 +33,12 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	@DefaultHandler
 	@DontValidate
 	public Resolution pre() {
-		return new ForwardResolution("/pages/loyalty/join.jsp");
+		User user = this.userService.getLoggedInUser();
+		if (user!=null && user.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+			return new RedirectResolution(LoyaltyCatalogAction.class);
+		} else {
+			return new ForwardResolution("/pages/loyalty/join.jsp");
+		}
 	}
 
 	public Resolution continueProgram() {

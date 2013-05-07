@@ -17,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.joda.time.DateTime;
+
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
 
@@ -166,7 +168,9 @@ public class UserOrderKarmaProfile {
 				statusForHistory = "Cancelled";
 				break;
 			case APPROVED:
-				statusForHistory = "Valid";
+				if (this.creationTime.after(new DateTime().minusYears(2).toDate())) {
+					statusForHistory = "Valid";
+				}
 				break;
 			default: 
 				statusForHistory = "Expired";

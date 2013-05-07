@@ -12,7 +12,11 @@
 				style="float: left; margin-left: 100px; width: 680px;">
 						<div class="grid_5 signUpPart">
 							<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
-							<div class="joinNow">Join Now!</div>
+							<div class="joinNow">One more step before we take you to catalog.</div>
+							<br><br>
+							<div>We'd like to know you better. Would you please fill in some more information for us?
+							</div>
+							<br>
 								<div class="signUp">
 								<div >Name</div> 
 								<s:text class="name" placeholder="Name"  name="name" >
@@ -26,6 +30,7 @@
 								<s:text class="name" placeholder="Date Of Birth"  name="dob" id="datepicker">
 								</s:text>
 							 -->	<div >
+							 <br>
 									<s:submit name="continueProgram" value="TRY OUR CATALOG OUT?" class="btn"/>
 								</div>
 							</div>
