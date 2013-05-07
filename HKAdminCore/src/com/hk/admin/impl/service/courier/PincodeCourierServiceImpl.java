@@ -16,6 +16,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.util.HKDateUtil;
 import com.hk.util.ShipmentServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,6 +110,16 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
     public List<Courier> getApplicableCouriers(ShippingOrder shippingOrder) {
         Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
         return pincodeCourierMappingDao.getApplicableCouriers(pincode, null, Arrays.asList(getShipmentServiceType(shippingOrder)), true);
+    }
+
+    @Override
+    public ShippingOrder setTargetDeliveryDate(ShippingOrder shippingOrder) {
+        ShipmentServiceType shipmentServiceType = getShipmentServiceType(shippingOrder);
+        Pincode pincode = shippingOrder.getBaseOrder().getAddress().getPincode();
+        PincodeDefaultCourier pincodeDefaultCourier = getPincodeDefaultCourier(pincode, shippingOrder.getWarehouse(), ShipmentServiceMapper.isCod(shipmentServiceType), ShipmentServiceMapper.isGround(shipmentServiceType));
+        Integer estimatedDeliveryDays = pincodeDefaultCourier != null ? pincodeDefaultCourier.getEstimatedDeliveryDays() : 3;
+        shippingOrder.setTargetDelDate(HKDateUtil.addToDate(new Date(), Calendar.DAY_OF_MONTH, estimatedDeliveryDays));
+        return shippingOrder;
     }
 
     @Override
