@@ -31,9 +31,9 @@ pageContext.setAttribute("isSecure", isSecure);
   
         <div class="grid_4 leftBlock">
           <div class="embedMarginTop119"></div>
-          <div class="priceFilterContainerOne">
+          <div class="priceFilterContainerOne" style="margin-bottom:30px;">
             <div class="sorting">SORT BY POINTS</div>
-                   <div class="brandsContainer">
+                   <div class="brandsContainer" >
 					<div class="priceRange">
                   <span  id= "pointRange">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByPoints" >
@@ -64,7 +64,7 @@ pageContext.setAttribute("isSecure", isSecure);
 			
 		<div class="priceFilterContainerOne">
 			<div class="sorting">SORT BY CATEGORY</div>
-              <div class="brandsContainer ">
+              <div class="brandsContainer " style ="height: 245px;">
                <div class="priceRange">
 			   <span  id= "categoryNameSpan">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
@@ -90,6 +90,7 @@ pageContext.setAttribute("isSecure", isSecure);
 
     <script type="text/javascript">
       $(document).ready(function() {
+    	  $(".jspDrag").css("height","30px");
         $('#successToolTipBtn').click(function () {
           $('#successToolTip').attr('style', 'display: none;');
         });

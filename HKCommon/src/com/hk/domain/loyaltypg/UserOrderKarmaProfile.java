@@ -170,8 +170,8 @@ public class UserOrderKarmaProfile {
 			case APPROVED:
 				if (this.creationTime.after(new DateTime().minusYears(2).toDate())) {
 					statusForHistory = "Valid";
+					break;
 				}
-				break;
 			default: 
 				statusForHistory = "Expired";
 			}
