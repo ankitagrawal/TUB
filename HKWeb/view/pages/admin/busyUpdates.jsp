@@ -3,7 +3,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Add Hub">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Populate Busy data">
 	<s:useActionBean beanclass="com.hk.web.action.admin.accounts.PopulateBusyDataAction" var="busyAction"/>
 	<s:layout-component name="content">
 		<s:layout-component name="heading">
