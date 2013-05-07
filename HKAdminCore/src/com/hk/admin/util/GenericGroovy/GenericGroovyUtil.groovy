@@ -47,12 +47,12 @@ public class GenericGroovyUtil {
 			productOptionName = duplicateOptions.name;
 			productOptionValue = duplicateOptions.value;
 
-				if(productOptionName.contains("'")){
-				 productOptionName.replace("'", "\\'");
+			if(productOptionName.contains("'")){
+				 productOptionName.replace("'", "\\\\'");
 			}
 
 			if(productOptionValue.contains("'")){
-				 productOptionValue.replace("'", "\\'");
+				 productOptionValue.replace("'", "\\\\'");
 			}
 			masterId=null;
 			counter=0;
