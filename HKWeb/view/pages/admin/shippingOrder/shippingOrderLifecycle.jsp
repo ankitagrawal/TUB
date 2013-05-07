@@ -22,7 +22,7 @@
                 <c:choose>
                     <c:when test="${not empty orderLifeCycle.lifecycleReasons}">
                         <c:forEach items="${orderLifeCycle.lifecycleReasons}" var="lifecycleReason">
-                            ${lifecycleReason.reason.primaryClassification} - ${lifecycleReason.reason.secondaryClassification}
+                            ${lifecycleReason.reason.classification.primary} - ${lifecycleReason.reason.classification.secondary}
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
@@ -34,7 +34,7 @@
                                     <option value="">Choose Reason</option>
                                     <%--<c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>--%>
                                     <c:forEach items="${hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}" var="reason">
-                                        <option value="${reason.id}">${reason.primaryClassification}- ${reason.secondaryClassification}</option>
+                                        <option value="${reason.id}">${reason.classification.primary}- ${reason.classification.secondary}</option>
                                     </c:forEach>
                                 </s:select>
                                 <s:submit name="logReasonForAnActivity" value="Log Reason"/>

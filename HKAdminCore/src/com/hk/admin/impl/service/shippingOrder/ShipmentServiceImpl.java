@@ -18,6 +18,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Pincode;
 import com.hk.domain.courier.*;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.queue.Classification;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
@@ -88,9 +89,15 @@ public class ShipmentServiceImpl implements ShipmentService {
             }
 
             for (Reason reason : reasons) {
-                shippingOrderService.logShippingOrderActivity
-                        (shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(), null, "");
-                adminEmailManager.sendNoShipmentEmail(reason.getPrimaryClassification(), shippingOrder, shippingOrder.getBaseOrder());
+                shippingOrderService.logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated, reason);
+                String reasoning = "";
+                if(reason != null){
+                    Classification classification = reason.getClassification();
+                    if(classification != null){
+                       reasoning = classification.getPrimary();
+                    }
+                }
+                adminEmailManager.sendNoShipmentEmail(reasoning, shippingOrder, shippingOrder.getBaseOrder());
             }
             if (reasons.isEmpty()) {
                 validShipment = new Shipment();
