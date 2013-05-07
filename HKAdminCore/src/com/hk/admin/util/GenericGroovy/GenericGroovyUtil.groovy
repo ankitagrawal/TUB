@@ -48,18 +48,18 @@ public class GenericGroovyUtil {
 			productOptionName = duplicateOptions.name;
 			productOptionValue = duplicateOptions.value;
 
-			if(productOptionName.contains("'")){
-//                logger.info(productOptionName);
-                productOptionName = productOptionName.replace("'", "\\'");
-//                logger.info("after replace"+productOptionName);
-			}
-
-			if(productOptionValue.contains("'")){
-                productOptionValue = productOptionValue.replace("'", "\\'");
-			}
+//			if(productOptionName.contains("'")){
+////                logger.info(productOptionName);
+//                productOptionName = productOptionName.replace("'", "\\'");
+////                logger.info("after replace"+productOptionName);
+//			}
+//
+//			if(productOptionValue.contains("'")){
+//                productOptionValue = productOptionValue.replace("'", "\\'");
+//			}
 			masterId=null;
 			counter=0;
-			sql.eachRow("""Select * from product_option  where name= '${productOptionName}' and value= '${productOptionValue}' """){
+			sql.eachRow("""Select * from product_option  where name= ${productOptionName} and value= ${productOptionValue} """){
 				productOption ->
 				if(masterId == null && counter ==0){
 					masterId = productOption.id;
