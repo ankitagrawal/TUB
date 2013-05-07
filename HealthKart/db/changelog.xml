@@ -12664,4 +12664,7 @@
             <column name="taxable_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1367845228160-7">
+        <addForeignKeyConstraint baseColumnNames="surcharge_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_surcharge1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="surcharge" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>
