@@ -2,6 +2,7 @@ package com.hk.admin.util.GenericGroovy
 
 import groovy.sql.Sql
 import org.slf4j.LoggerFactory
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,11 +49,13 @@ public class GenericGroovyUtil {
 			productOptionValue = duplicateOptions.value;
 
 			if(productOptionName.contains("'")){
-				 productOptionName.replace("'", "\\\\'");
+//                logger.info(productOptionName);
+                productOptionName = productOptionName.replace("'", "\\'");
+//                logger.info("after replace"+productOptionName);
 			}
 
 			if(productOptionValue.contains("'")){
-				 productOptionValue.replace("'", "\\\\'");
+                productOptionValue = productOptionValue.replace("'", "\\'");
 			}
 			masterId=null;
 			counter=0;
@@ -63,7 +66,16 @@ public class GenericGroovyUtil {
 				}
 
 				if(masterId != null && counter > 0){
-					sql.executeUpdate("""Update product_variant_has_product_option Set product_option_id = ${masterId} where product_option_id=${productOption.id}""");
+//					    sql.executeUpdate("""Update product_variant_has_product_option Set product_option_id = ${masterId} where product_option_id=${productOption.id}""");
+                    sql.eachRow("""Select * from product_variant_has_product_option where product_option_id=${productOption.id}""") {
+                        variantOption ->
+                        try{
+                            sql.executeUpdate("""Update product_variant_has_product_option Set product_option_id = ${masterId} where product_variant_id=${variantOption.product_variant_id} AND product_option_id=${productOption.id}""");
+                        } catch(MySQLIntegrityConstraintViolationException e){
+                            logger.error(e.message);
+                            sql.execute("""Delete pvpo from product_variant_has_product_option pvpo where product_variant_id=${variantOption.product_variant_id} AND product_option_id=${productOption.id} """)
+                        }
+                    }
 					idsToBeDeleted.add(productOption.id);
 //					sql.execute(""""Delete from product_option where id=${productOption.id}""");
 				}
