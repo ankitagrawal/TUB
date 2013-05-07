@@ -163,8 +163,8 @@
                 <img src="${pageContext.request.contextPath}/images/banners/Gym-Breaking-Deals.jpg" alt="Gym breaking deals on Nutritional Supplements"
                      class="small_banner"/>
             </a>
-             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Allmax">
-            <img src="${pageContext.request.contextPath}/images/banners/BOW---Allmax.jpg" alt="Brand Of the Week - AllMax"
+             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
+            <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab"
                  class="small_banner"/>
             </a>
         </c:when>
