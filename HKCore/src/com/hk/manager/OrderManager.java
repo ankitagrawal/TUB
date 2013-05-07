@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.HttpSession;
 
 import com.hk.domain.subscription.Subscription;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,6 +127,8 @@ public class OrderManager {
     private SMSManager                        smsManager;
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
@@ -437,8 +440,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-        //this is the most important method, so it is very important as to from where it is called
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+//        //this is the most important method, so it is very important as to from where it is called
+//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        //we are now trying to replace the above method by pushing orderId in queue
+        orderEventPublisher.publishOrderPlacedEvent(order);
 
         //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
