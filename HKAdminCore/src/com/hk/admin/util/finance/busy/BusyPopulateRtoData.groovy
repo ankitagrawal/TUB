@@ -190,7 +190,23 @@ public class BusyPopulateRtoData {
         out_of_state = 1;
       }
 
-      material_centre = accountingInvoice.warehouse;
+ //     material_centre = accountingInvoice.warehouse;
+	    Long warehouseId =  accountingInvoice.warehouse_id;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          material_centre = "Gurgaon Warehouse";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		      material_centre = "Mumbai Warehouse";
+	      }
+	      else if(warehouseId == 301){
+			      material_centre = "Punjabi Bagh Store";
+		    }
+	      else if(warehouseId == 999){
+			      material_centre = "Corporate Office";
+		    }
+	      else if(warehouseId == 401){
+			      material_centre = "Kapashera Warehouse";
+		    }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
