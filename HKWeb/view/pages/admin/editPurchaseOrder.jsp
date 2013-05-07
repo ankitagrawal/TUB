@@ -286,9 +286,9 @@ function temp() {
         <td>Supplier Name</td>
         <td>${pa.purchaseOrder.supplier.name}</td>
 
-    <%--<shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">--%>
+    <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
 
-    <%--<c:when test="pa.purchaseOrder.purchaseOrderStatus.id < = poReceived">--%>
+    <c:when test="pa.purchaseOrder. purchaseOrderStatus.id < = poReceived">
         <td>New Supplier Name</td>
         <td>
         <s:select name="supplier" id ="supplier" >
@@ -298,9 +298,9 @@ function temp() {
          </s:select>
         </td>
         <td><s:submit name="saveSupplier" value="Save" id="saveSupplier"/></td>
-    <%--</c:when>--%>
+    </c:when>
 
-        <%--</shiro:hasPermission>--%>
+        </shiro:hasPermission>
 
 
         </tr>

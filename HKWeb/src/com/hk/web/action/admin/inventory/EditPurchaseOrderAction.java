@@ -281,7 +281,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 
     public Resolution saveSupplier(){
         purchaseOrder.setSupplier(supplier);
-        return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
+        getBaseDao().save(purchaseOrder);
+        return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
     }
 
 	public PurchaseOrder getPurchaseOrder() {
