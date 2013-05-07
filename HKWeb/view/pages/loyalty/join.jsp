@@ -10,10 +10,10 @@
 				class="embedMargin119">Welcome to healthkart stellar !!</div>
 				<div class="topText" id="message1"
 				style="float: left; margin-left: 100px; width: 680px;">
-						<div class="grid_5 signUpPart">
+						<div class=" signUpPart">
 							<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
-							<div class="joinNow">One more step before we take you to catalog.</div>
-							<br><br>
+							<div >One more step before we take you to catalog.</div>
+							<br>
 							<div>We'd like to know you better. Would you please fill in some more information for us?
 							</div>
 							<br>
