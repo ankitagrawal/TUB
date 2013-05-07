@@ -212,8 +212,9 @@ public class StockTransferAction extends BasePaginatedAction {
 		adminInventoryService.inventoryCheckinCheckout(skuGroupToBeReverted.getSku(), skuItemToBeReverted, null, null, null, null, stliToBeReduced, inventoryService.getInventoryTxnType(EnumInvTxnType.STOCK_TRANSFER_CHECKIN), 1L, loggedOnUser);
 
 		getInventoryService().checkInventoryHealth(skuGroupToBeReverted.getSku().getProductVariant());
-
-		stliToBeReduced.setCheckedoutQty(stliToBeReduced.getCheckedoutQty() - 1);
+        if(stliToBeReduced.getCheckedoutQty() > 0){
+		    stliToBeReduced.setCheckedoutQty(stliToBeReduced.getCheckedoutQty() - 1);
+        }
 		baseDao.save(stliToBeReduced);
 		addRedirectAlertMessage(new SimpleMessage("Qty reduced by 1."));
 		return new RedirectResolution(StockTransferAction.class).addParameter("view").addParameter("stockTransfer", stockTransfer.getId()).addParameter("messageColor", "green");
