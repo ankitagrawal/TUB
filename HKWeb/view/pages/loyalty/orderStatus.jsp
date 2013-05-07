@@ -82,7 +82,7 @@ pageContext.setAttribute("isSecure", isSecure);
                         You saved:
                       </div>
                     <div class="total" >
-                      Total:
+                      Total Points:
                     </div>
                   </div>
                   <div class="right">
