@@ -2,6 +2,7 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
@@ -51,6 +52,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminInventoryService adminInventoryService;
     @Autowired
     private BucketService bucketService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -260,6 +263,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getShipmentService().save(shipment);
         }
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
+        getPincodeCourierService().setTargetDeliveryDate(shippingOrder);
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
         getBucketService().popFromActionQueue(shippingOrder);
@@ -436,5 +440,13 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     public void setBucketService(BucketService bucketService) {
         this.bucketService = bucketService;
+    }
+
+    public PincodeCourierService getPincodeCourierService() {
+        return pincodeCourierService;
+    }
+
+    public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
+        this.pincodeCourierService = pincodeCourierService;
     }
 }

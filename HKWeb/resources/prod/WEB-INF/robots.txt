@@ -4,5 +4,4 @@ Disallow: /Cart.action
 Disallow: /Login.action
 Disallow: /action/invite/
 Disallow: /brand/all/
-Disallow: /home-living
 Sitemap: http://www.healthkart.com/sitemap.xml

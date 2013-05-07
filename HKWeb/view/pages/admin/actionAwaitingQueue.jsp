@@ -443,8 +443,8 @@
                         </div>
                         <c:if test="${order.targetDispatchDate != null}">
                             <div class="floatleft" style="color:red">
-                                Target Dispatch Date: <fmt:formatDate value="${order.targetDelDate}" type="date"/>
-                                <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDelDate)})</strong></span>
+                                Target Dispatch Date: <fmt:formatDate value="${order.targetDispatchDate}" type="date"/>
+                                <span style="margin-left:30px;"><strong>(${hk:periodFromNow(order.targetDispatchDate)})</strong></span>
                             </div>
                         </c:if>
                         <div class="floatright">
