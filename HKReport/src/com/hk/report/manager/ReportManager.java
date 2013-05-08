@@ -642,10 +642,17 @@ public class ReportManager {
             Double height;
 
             String lengthBreadthHeightString = EnumBoxSize.getLengthBreadthHeight(boxWeight);
-            String[] dimensions = lengthBreadthHeightString.split("-");
-            length = Double.parseDouble(dimensions[0]);
-            breadth = Double.parseDouble(dimensions[1]);
-            height = Double.parseDouble(dimensions[2]);
+            if (lengthBreadthHeightString == null) {
+                length = 0D;
+                breadth = 0D;
+                height = 0D;
+            } else {
+                String[] dimensions = lengthBreadthHeightString.split("-");
+                length = Double.parseDouble(dimensions[0]);
+                breadth = Double.parseDouble(dimensions[1]);
+                height = Double.parseDouble(dimensions[2]);
+            }
+
             setCellValue(row, 22, length);
             setCellValue(row, 23, breadth);
             setCellValue(row, 24, height);

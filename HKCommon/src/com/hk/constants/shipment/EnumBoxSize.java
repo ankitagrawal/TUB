@@ -63,8 +63,9 @@ public enum EnumBoxSize {
 
     public static String getLengthBreadthHeight(Double weight) {
         String lengthBreadthHeightString = null;
-        for (EnumBoxSize boxSize : EnumBoxSize.values()) {
-            if (boxSize.getBoxWeight().equals(weight)) {
+        List<EnumBoxSize> enumBoxSizeList = Arrays.asList(EnumBoxSize.XS, EnumBoxSize.S, EnumBoxSize.M, EnumBoxSize.M2, EnumBoxSize.L, EnumBoxSize.L2, EnumBoxSize.XL, EnumBoxSize.XXL);
+        for (EnumBoxSize boxSize : enumBoxSizeList) {
+            if (weight < (boxSize.getVolumetricWeight() / 1000)) {
                 lengthBreadthHeightString = boxSize.getLength() + "-" + boxSize.getBreadth() + "-" + boxSize.getHeight();
                 return lengthBreadthHeightString;
             }
