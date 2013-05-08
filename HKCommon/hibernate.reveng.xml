@@ -9,8 +9,11 @@
     <sql-type jdbc-type="INTEGER" hibernate-type="Long"/>
   </type-mapping>
 
-  <table-filter match-name="user"/>
-  <table-filter match-name="brands_to_audit"/>
+  <table-filter match-name="action_queue"/>
+  <table-filter match-name="action_item"/>
+  <table-filter match-name="classification"/>
+  <table-filter match-name="traffic_state"/>
+  <table-filter match-name="watcher"/>
 
 
 </hibernate-reverse-engineering>

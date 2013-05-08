@@ -178,7 +178,7 @@
                 <td>For Warehouse</td>
                 <td>
                     <s:hidden name="debitNote.warehouse" value="${whAction.setWarehouse.id}"/>
-                        ${whAction.setWarehouse.city}
+                        ${whAction.setWarehouse.identifier}
                 </td>
                 <td>Remarks</td>
                 <td><s:textarea name="debitNote.remarks" style="height:50px;"/></td>

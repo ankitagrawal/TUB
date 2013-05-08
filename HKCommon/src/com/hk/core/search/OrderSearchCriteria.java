@@ -250,7 +250,7 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
         if (sortByDispatchDate) {
-            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDelDate"));
+            criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
         }
         if (sortByPaymentDate) {
             paymentCriteria.addOrder(OrderBySqlFormula.sqlFormula("payment_date asc"));
