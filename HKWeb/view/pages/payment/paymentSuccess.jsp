@@ -381,14 +381,17 @@
             Invalid request!
         </c:otherwise>
     </c:choose>
-<script type="text/javascript">
+
+<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+    <script type="text/javascript">
     $(document).ready(function() {
-    
+    var contextPath = ${pageContext.request.contextPath}; 
     if (confirm("Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?")) {
-    	window.location.href="/loyaltypg";
- 	   }
+    	window.open( contextPath + "/core/loyaltypg/LoyaltyIntroduction.action", "_blank");
+   	   }
     });
   </script>
+</shiro:lacksRole>
 </s:layout-component>
 
 <s:layout-component name="analytics">

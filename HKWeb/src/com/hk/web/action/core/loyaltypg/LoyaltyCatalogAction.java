@@ -51,7 +51,6 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 
 		criteria.setStartRow(startRow);
 		criteria.setMaxRows(maxRow);
-		//this.productPage = this.loyaltyProgramService.getUserLoyaltyProfileHistory(this.user, this.getPageNo(), this.getPerPage());
 
 		int count = this.getProcessor().countProducts(this.getPrincipal().getId(), criteria);
 		List<ProductAdapter> list = this.getProcessor().searchProducts(this.getPrincipal().getId(), criteria);

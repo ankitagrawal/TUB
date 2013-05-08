@@ -203,8 +203,17 @@
 <%-- 		<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />
 	<span class="muted" style="font-size:20px;">Following badges can be earned by a user: </span>
 	<br>
-	<% int i=1; %>
-		<table class="cont footer_color">
+	
+	// Logi for db driven about us page
+<c:forEach var="index" begin="0" end="3">
+			<div>
+				<s:file name="attachments[${index}]" />
+			</div>
+		</c:forEach>
+		
+		
+		
+				<table class="cont footer_color">
      	 <c:forEach items="${lca.badgeList}" var="badge">
 			<c:set var="badge_<%=i %>" value="${badge}"> </c:set>
 			<% i++; %>

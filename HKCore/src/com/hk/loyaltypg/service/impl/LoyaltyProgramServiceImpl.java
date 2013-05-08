@@ -1,5 +1,8 @@
 package com.hk.loyaltypg.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -229,9 +232,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				break;
 			}
 		}
-
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1);
 		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
-		if (calculatedBadge.compareTo(userBadgeInfo.getBadge()) > 0) {
+		if (calculatedBadge.compareTo(userBadgeInfo.getBadge()) > 0
+				|| userBadgeInfo.getUpdationTime().before(cal.getTime())) {
 			userBadgeInfo.setBadge(calculatedBadge);
 			userBadgeInfo.setUpdationTime(Calendar.getInstance().getTime());
 			this.baseDao.save(userBadgeInfo);
@@ -443,6 +448,24 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return totalPointsConverted;
 	}
 
+	
+	public void uploadLoyaltyCSVFile(File csvFile) {
+		
+	}
+	
+	
+	private boolean validateLoyaltyCsvFile(File csvFile) {
+		boolean flag = false;
+		try {
+			FileReader fileReader = new FileReader(csvFile);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
 	/**
 	 * 
 	 * Setters and getters start from here.

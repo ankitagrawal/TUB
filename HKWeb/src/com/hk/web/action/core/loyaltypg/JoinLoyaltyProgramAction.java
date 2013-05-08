@@ -35,6 +35,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	public Resolution pre() {
 		User user = this.userService.getLoggedInUser();
 		if (user!=null && user.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+			this.loyaltyProgramService.updateUserBadgeInfo(user);
 			return new RedirectResolution(LoyaltyCatalogAction.class);
 		} else {
 			return new ForwardResolution("/pages/loyalty/join.jsp");
