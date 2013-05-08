@@ -7,6 +7,7 @@ import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
+import com.hk.web.action.admin.queue.ActionAwaitingQueueAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
 import net.sourceforge.stripes.action.RedirectResolution;
@@ -48,6 +49,8 @@ public class OrderOnHoldAction extends BaseAction {
     private Order                     order;
     private ShippingOrder             shippingOrder;
 
+    private boolean isActionQueue;
+
     @DefaultHandler
     @JsonHandler
     public Resolution pre() {
@@ -57,14 +60,24 @@ public class OrderOnHoldAction extends BaseAction {
     @JsonHandler
     public Resolution holdShippingOrder() {
         adminShippingOrderService.putShippingOrderOnHold(shippingOrder);
+        if(!isActionQueue){
         return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId",shippingOrder.getGatewayOrderId());
+        }else{
+            return new RedirectResolution(ActionAwaitingQueueAction.class);
+        }
     }
 
     @JsonHandler
     public Resolution unHoldShippingOrder() {
         adminShippingOrderService.unHoldShippingOrder(shippingOrder);
+        if(!isActionQueue){
         return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId",shippingOrder.getGatewayOrderId());
+    }else{
+             return new RedirectResolution(ActionAwaitingQueueAction.class);
+
+        }
     }
+
 
     @JsonHandler
     public Resolution holdOrder() {
@@ -119,6 +132,11 @@ public class OrderOnHoldAction extends BaseAction {
         this.shippingOrder = shippingOrder;
     }
 
-   
+    public boolean isActionQueue() {
+        return isActionQueue;
+    }
 
+    public void setActionQueue(boolean actionQueue) {
+        isActionQueue = actionQueue;
+    }
 }

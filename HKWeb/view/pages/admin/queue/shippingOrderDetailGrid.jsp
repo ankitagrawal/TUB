@@ -179,8 +179,8 @@
 
         <label style="font-weight:bold;">Last Activity:</label><br>
         ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].shippingOrderLifeCycleActivity.name} Reason:
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.primaryClassification}-
-        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.secondaryClassification}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.classification.primary}-
+        ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].lifecycleReasons[0].reason.classification.secondary}-
         ${shippingOrder.shippingOrderLifecycles[fn:length(shippingOrder.shippingOrderLifecycles)-1].comments}
         on
         <br>
@@ -293,7 +293,7 @@
             <s:select name="soReason" id="SoReason">
             <s:option value="">-------Select-------</s:option>
             <c:forEach items="${hk:getReasonsByType('SO  Cancelled')}" var="soCancelReason">
-            <s:option value="${soCancelReason.id}"> ${soCancelReason.primaryClassification} - ${soCancelReason.secondaryClassification} </s:option>
+            <s:option value="${soCancelReason.id}"> ${soCancelReason.classification.primary} - ${soCancelReason.classification.secondary} </s:option>
             </c:forEach>
              </s:select>
              <br>
