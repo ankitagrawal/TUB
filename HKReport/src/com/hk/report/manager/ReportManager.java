@@ -537,8 +537,6 @@ public class ReportManager {
         setCellValue(row, 24, ReportConstants.HEIGHT);
         setCellValue(row, 25, ReportConstants.PIECES);
         setCellValue(row, 26, ReportConstants.AREA_CUSTOMER_CODE);
-
-
         int rowCounter = 1;
         Page orderPage = null;
 
@@ -642,6 +640,7 @@ public class ReportManager {
             Double length;
             Double breadth;
             Double height;
+
             String lengthBreadthHeightString = EnumBoxSize.getLengthBreadthHeight(boxWeight);
             String[] dimensions = lengthBreadthHeightString.split("-");
             length = Double.parseDouble(dimensions[0]);

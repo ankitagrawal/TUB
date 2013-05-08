@@ -52,6 +52,9 @@ public enum EnumBoxSize {
         this.volumetricWeight = weight;
         this.packagingCost = packagingCost;
         this.boxWeight = boxWeight;
+        this.length = length;
+        this.breadth = breadth;
+        this.height = height;
     }
 
     public static List<EnumBoxSize> getAllEnumBoxSize() {
