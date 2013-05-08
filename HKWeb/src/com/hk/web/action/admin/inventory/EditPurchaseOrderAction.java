@@ -82,6 +82,9 @@ public class EditPurchaseOrderAction extends BaseAction {
 	private PurchaseOrderStatus previousPurchaseOrderStatus;
 	private List<Long> newSkuIdList = new ArrayList<Long>();
     private List<Supplier> suppliers = new ArrayList<Supplier>();
+
+
+    private boolean isPiCreated;
 	@DefaultHandler
 	public Resolution pre() {
 		if(purchaseOrder != null){
@@ -94,7 +97,9 @@ public class EditPurchaseOrderAction extends BaseAction {
 				newSkuIdList.add(poLineItem.getSku().getId());
 			}
 		}
-		return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
+
+        isPiCreated=purchaseOrderDao.isPiCreated(purchaseOrder);
+         return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -379,5 +384,13 @@ public class EditPurchaseOrderAction extends BaseAction {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public boolean isPiCreated() {
+        return isPiCreated;
+    }
+
+    public void setPiCreated(boolean piCreated) {
+        isPiCreated = piCreated;
     }
 }

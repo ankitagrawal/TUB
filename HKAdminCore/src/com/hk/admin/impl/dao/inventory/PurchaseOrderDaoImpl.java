@@ -100,11 +100,12 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
                 "purchaseOrderStatusList", purchaseOrderStatusList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
     }
     public boolean isPiCreated(PurchaseOrder purchaseOrder){
-        List<GoodsReceivedNote> goodsReceivedNote= purchaseOrder.getGoodsReceivedNotes();
-        PurchaseInvoice purchaseInvoice;
-        if(purchaseInvoice.getGoodsReceivedNotes()==goodsReceivedNote) {
-          return true;
-        }
+        List<GoodsReceivedNote> goodsReceivedNotes= purchaseOrder.getGoodsReceivedNotes();
+        for (GoodsReceivedNote grn :goodsReceivedNotes )    {
+                if(grn.getPurchaseInvoices()!=null && grn.getPurchaseInvoices().size()>0 ) {
+                    return true;
+                }
+             }
         return false;
     }
 }
