@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.cache.UserCache;
@@ -328,7 +329,7 @@ public class OrderManager {
         return cartLineItem;
     }
 
-    @Transactional
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public Order orderPaymentReceieved(Payment payment) {
         Order order = payment.getOrder();
         order.setPayment(payment);
