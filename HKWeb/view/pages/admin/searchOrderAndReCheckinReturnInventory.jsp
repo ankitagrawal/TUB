@@ -11,7 +11,6 @@
                  var="orderAdmin"/>
 
 <c:set var="shippingOrderStatusRTO" value="<%=EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus()%>"/>
-<c:set var="shippingOrderStatusReversePickupInitiated" value="<%=EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus()%>" />
 <%
     int lineItemGlobalCtr = 0;
 %>
@@ -91,7 +90,7 @@
 <s:hidden name="orderId" value="${orderAdmin.shippingOrder.id}"/>
 <c:set var="order" value="${orderAdmin.shippingOrder.baseOrder}"/>
 <c:choose>
-    <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id || orderAdmin.shippingOrder.orderStatus.id == shippingOrderStatusReversePickupInitiated.id}">
+    <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id}">
         <h3>SO RTO items check-in</h3>
 
         (<s:link beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" target="_blank">
@@ -162,7 +161,7 @@
         </td>
         <td style="padding: 0" valign="top">
             <c:choose>
-                <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id || orderAdmin.shippingOrder.orderStatus.id == shippingOrderStatusReversePickupInitiated.id}">
+                <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id">
                     <table width="100%">
                         <c:forEach items="${orderAdmin.shippingOrder.lineItems}" var="lineItem"
                                    varStatus="lineItemCtr">
