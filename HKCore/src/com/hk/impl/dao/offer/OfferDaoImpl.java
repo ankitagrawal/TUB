@@ -1,6 +1,7 @@
 package com.hk.impl.dao.offer;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
@@ -32,8 +33,16 @@ public class OfferDaoImpl extends BaseDaoImpl implements OfferDao {
       return list(criteria, pageNo, perPage);
   }
 
+  public List<Offer> listAllValidShowPromptly() {
+    DetachedCriteria criteria = DetachedCriteria.forClass(Offer.class);
+    criteria.add(Restrictions.eq("showPromptly", Boolean.TRUE));
+    criteria.add(Restrictions.ge("endDate", new Date()));
+    criteria.addOrder(Order.desc("id"));
+    return (List<Offer>) findByCriteria(criteria);
+  }
 
-    public Page listAll(int pageNo, int perPage) {
+
+  public Page listAll(int pageNo, int perPage) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Offer.class);
         criteria.addOrder(Order.desc("id"));
         return list(criteria, pageNo, perPage);

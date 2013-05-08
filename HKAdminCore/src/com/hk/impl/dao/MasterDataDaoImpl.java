@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
@@ -15,6 +16,7 @@ import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.review.Mail;
@@ -75,31 +77,31 @@ import com.hk.pact.service.store.StoreService;
 public class MasterDataDaoImpl implements MasterDataDao {
 
     @Autowired
-    private BaseDao             baseDao;
+    private BaseDao baseDao;
     @Autowired
-    private UserService         userService;
+    private UserService userService;
     @Autowired
-    private CategoryService     categoryService;
+    private CategoryService categoryService;
     @Autowired
-    private RoleService         roleService;
+    private RoleService roleService;
     @Autowired
-    private MarketingService    marketingService;
+    private MarketingService marketingService;
     @Autowired
-    private StoreService        storeService;
+    private StoreService storeService;
     @Autowired
-    private CourierDao          courierDao;
+    private CourierDao courierDao;
     @Autowired
-    private CityService         cityService;
+    private CityService cityService;
     @Autowired
-    private StateService        stateService;
+    private StateService stateService;
     @Autowired
-    private HubService          hubService;
+    private HubService hubService;
     @Autowired
-    private RunSheetService     runsheetService;
+    private RunSheetService runsheetService;
     @Autowired
     private CourierGroupService courierGroupService;
     @Autowired
-    private CourierService      courierService;
+    private CourierService courierService;
     @Autowired
     private DispatchLotService dispatchLotService;
     @Autowired
@@ -228,11 +230,11 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return EnumReconciliationType.getSubtractReconciliationType();
     }
 
-    public List<Mail> getAllMailType(){
+    public List<Mail> getAllMailType() {
         return mailService.getAllMailType();
     }
 
-	public List<EmailType> getEmailTypeList() {
+    public List<EmailType> getEmailTypeList() {
         return getBaseDao().getAll(EmailType.class);
     }
 
@@ -244,8 +246,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
         courierListForDeliveryMarking.add(CourierConstants.DELHIVERY);
         courierListForDeliveryMarking.add(CourierConstants.DTDC);
         courierListForDeliveryMarking.add(CourierConstants.QUANTIUM);
-		courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
-		courierListForDeliveryMarking.add(CourierConstants.FEDEX);
+        courierListForDeliveryMarking.add(CourierConstants.INDIAONTIME);
+        courierListForDeliveryMarking.add(CourierConstants.FEDEX);
         return courierListForDeliveryMarking;
     }
 
@@ -430,13 +432,13 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return replacementOrderReasonList;
     }
 
-     public List<Country> getAllCountry(){
-         return getBaseDao().getAll(Country.class);
-     }
+    public List<Country> getAllCountry() {
+        return getBaseDao().getAll(Country.class);
+    }
 
-	public List<Zone> getAllZones() {
-		return getBaseDao().getAll(Zone.class);
-	}
+    public List<Zone> getAllZones() {
+        return getBaseDao().getAll(Zone.class);
+    }
 
     public List<String> getCustomerOnHoldReasonsForHkDelivery() {
         return consignmentService.getCustomerOnHoldReasonsForHkDelivery();
@@ -470,16 +472,9 @@ public class MasterDataDaoImpl implements MasterDataDao {
         return courierService.getCouriers(null, null, null, EnumCourierOperations.DISPATCH_LOT.getId());
     }
 
-    public List<EnumCourierChangeReason> getAllCourierChangeReason(){
-        return EnumCourierChangeReason.getAllCourierChangeReasons();
-    }
-
-    public List<EnumAwbChangeReason> getAllAwbChangeReason(){
-          return EnumAwbChangeReason.getAllAwbChangeReason();
-      }
-
     public List<Warehouse> getAllWarehouse() {
-        return warehouseService.getAllWarehouses();
+        //return warehouseService.getAllWarehouses();
+        return warehouseService.getAllActiveWarehouses();
     }
 
     public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {
@@ -499,27 +494,35 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<ReconciliationType> getAddReconciliationTypeList() {
-       return EnumReconciliationType.getAddReconciliationType();
+        return EnumReconciliationType.getAddReconciliationType();
     }
 
-	public List<PaymentMode> getPaymentModeForStore() {
-		return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
-	}
-
-	public List<EnumCourierOperations> getAllCourierOperations() {
-		return EnumCourierOperations.getAllCourierOperations();
-	}
-
-	public List<EnumCycleCountStatus> getAllCycleCountStatus() {
-		return EnumCycleCountStatus.getAllList();
-	}
-
-	public List<Long> getDiscountsForPOS() {
-		return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
-	}
-
-    public List<ReconciliationType> getProductAuditedReconVoucherType(){
-       return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    public List<PaymentMode> getPaymentModeForStore() {
+        return Arrays.asList(EnumPaymentMode.COUNTER_CASH.asPaymenMode(), EnumPaymentMode.OFFLINE_CARD_PAYMENT.asPaymenMode());
     }
-	
-	}
+
+    public List<EnumCourierOperations> getAllCourierOperations() {
+        return EnumCourierOperations.getAllCourierOperations();
+    }
+
+    public List<EnumCycleCountStatus> getAllCycleCountStatus() {
+        return EnumCycleCountStatus.getAllList();
+    }
+
+    public List<Long> getDiscountsForPOS() {
+        return Arrays.asList(DiscountConstants.fifty_rupees_discount, DiscountConstants.one_hundred_rupees_discount, DiscountConstants.one_hundred_fifty_rupees_discount);
+    }
+
+    public List<ReconciliationType> getProductAuditedReconVoucherType() {
+        return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    }
+
+    public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList() {
+        return getBaseDao().getAll(ConsignmentLifecycleStatus.class);
+    }
+
+    public List<EnumUserCodCalling> getUserCodCallStatus() {
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO);
+    }
+
+}

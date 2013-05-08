@@ -2,8 +2,11 @@ package com.hk.admin.impl.service.shippingOrder;
 
 import java.util.*;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.domain.order.*;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.impl.service.queue.BucketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +45,15 @@ import com.hk.service.ServiceLocatorFactory;
 @Service
 public class AdminShippingOrderServiceImpl implements AdminShippingOrderService {
 
-		private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminShippingOrderServiceImpl.class);
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
     private AdminInventoryService adminInventoryService;
-
+    @Autowired
+    private BucketService bucketService;
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
     @Autowired
     private InventoryService inventoryService;
     @Autowired
@@ -65,10 +71,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private AdminShippingOrderDao adminShippingOrderDao;
     @Autowired
     AwbService awbService;
-	@Autowired
-	UserService userService;
-//	@Autowired
-//	SMSManager smsManager;
+    @Autowired
+    UserService userService;
 
     public void cancelShippingOrder(ShippingOrder shippingOrder) {
         // Check if Order is in Action Queue before cancelling it.
@@ -167,18 +171,15 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
         }
         return null;
     }
-    
-    
-    
-    
 
     @Transactional
     public ShippingOrder putShippingOrderOnHold(ShippingOrder shippingOrder) {
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
-        getAdminInventoryService().reCheckInInventory(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-
-        getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
+            shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
+            getAdminInventoryService().reCheckInInventory(shippingOrder);
+            shippingOrder = getShippingOrderService().save(shippingOrder);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_PutOnHold);
+        }
         return shippingOrder;
     }
 
@@ -255,22 +256,18 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 
     @Transactional
     public ShippingOrder markShippingOrderAsShipped(ShippingOrder shippingOrder) {
-
         Shipment shipment = shippingOrder.getShipment();
-
         if (shipment != null) {
             shipment.getAwb().setAwbStatus(EnumAwbStatus.Used.getAsAwbStatus());
             shipment.setShipDate(new Date());
             getShipmentService().save(shipment);
         }
-
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Shipped));
+        getPincodeCourierService().setTargetDeliveryDate(shippingOrder);
         getShippingOrderService().save(shippingOrder);
-
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Shipped);
+        getBucketService().popFromActionQueue(shippingOrder);
         getAdminOrderService().markOrderAsShipped(shippingOrder.getBaseOrder());
-//	    smsManager.sendOrderShippedSMS(shippingOrder);
-
         return shippingOrder;
     }
 
@@ -298,11 +295,10 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public ShippingOrder moveShippingOrderBackToActionQueue(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_OnHold));
         getAdminInventoryService().reCheckInInventory(shippingOrder);
-        shippingOrder = (ShippingOrder) getShippingOrderService().save(shippingOrder);
-
+        shippingOrder = getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_EscalatedBackToActionQueue, shippingOrder.getReason(), null);
 
-//        getAdminOrderService().moveOrderBackToActionQueue(shippingOrder.getBaseOrder(), shippingOrder.getGatewayOrderId());
+        getBucketService().escalateBackToActionQueue(shippingOrder);
         return shippingOrder;
     }
 
@@ -437,4 +433,20 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	public UserService getUserService() {
 		return userService;
 	}
+
+    public BucketService getBucketService() {
+        return bucketService;
+    }
+
+    public void setBucketService(BucketService bucketService) {
+        this.bucketService = bucketService;
+    }
+
+    public PincodeCourierService getPincodeCourierService() {
+        return pincodeCourierService;
+    }
+
+    public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
+        this.pincodeCourierService = pincodeCourierService;
+    }
 }

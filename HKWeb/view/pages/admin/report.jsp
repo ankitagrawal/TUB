@@ -4,13 +4,16 @@
 <%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
+<%@ page import="com.hk.pact.dao.BaseDao" %>
+<%@ page import="com.hk.domain.order.ShippingOrderStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.report.ReportAction" var="reportActionBean"/>
 <%
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-    pageContext.setAttribute("whList", warehouseService.getAllWarehouses());
-	pageContext.setAttribute("soStatusList", EnumShippingOrderStatus.getStatusForPuttingOrderOnHold());
+    BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
+	pageContext.setAttribute("soStatusList", baseDao.getAll(ShippingOrderStatus.class));
 %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Report Master">
 
@@ -258,44 +261,44 @@
 </div>
 
 <div class="reportBox">
-    <s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">
-        <fieldset class="right_label">
-            <legend>Stock Ledger By Variant</legend>
-            <ul>
-                <li>
-                    <label>Start
-                        date</label><s:text class="date_input startDate" style="width:150px"
-                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-                </li>
-                <li>
-                    <label>End
-                        date</label><s:text class="date_input endDate" style="width:150px"
-                                            formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-                </li>
-                <li>
-                    <label>
-                        Variant Ids
-                    </label><s:text name="productIdListCommaSeparated" style="width:200px"/>
-                </li>
-                <li>
-                    (Enter Ids separated by comma)
-                </li>
-                <li>
-                    <label>
-                        Warehouse
-                    </label>
+    <%--<s:form beanclass="com.hk.web.action.report.ReportAction" target="_blank">--%>
+        <%--<fieldset class="right_label">--%>
+            <%--<legend>Stock Ledger By Variant</legend>--%>
+            <%--<ul>--%>
+                <%--<li>--%>
+                    <%--<label>Start--%>
+                        <%--date</label><s:text class="date_input startDate" style="width:150px"--%>
+                                            <%--formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--<label>End--%>
+                        <%--date</label><s:text class="date_input endDate" style="width:150px"--%>
+                                            <%--formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--<label>--%>
+                        <%--Variant Ids--%>
+                    <%--</label><s:text name="productIdListCommaSeparated" style="width:200px"/>--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--(Enter Ids separated by comma)--%>
+                <%--</li>--%>
+                <%--<li>--%>
+                    <%--<label>--%>
+                        <%--Warehouse--%>
+                    <%--</label>--%>
 
-                    <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
-                        <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.name}</s:option>
-                        </c:forEach>
-                    </s:select>
+                    <%--<s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">--%>
+                        <%--<c:forEach items="${whList}" var="wh">--%>
+                            <%--<s:option value="${wh.id}">${wh.name}</s:option>--%>
+                        <%--</c:forEach>--%>
+                    <%--</s:select>--%>
 
-                </li>
-            </ul>
-            <s:submit name="generateStockReport" value="Generate Report"/>
-        </fieldset>
-    </s:form>
+                <%--</li>--%>
+            <%--</ul>--%>
+            <%--<s:submit name="generateStockReport" value="Generate Report"/>--%>
+        <%--</fieldset>--%>
+    <%--</s:form>--%>
 </div>
 
 <div class="reportBox">
@@ -320,7 +323,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.name}</s:option>
+                            <s:option value="${wh.id}">${wh.identifier}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -353,7 +356,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.name}</s:option>
+                            <s:option value="${wh.id}">${wh.identifier}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -394,7 +397,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.name}</s:option>
+                            <s:option value="${wh.id}">${wh.identifier}</s:option>
                         </c:forEach>
                     </s:select>
 
@@ -435,7 +438,7 @@
 
                     <s:select name="warehouse" style="height:30px;font-size:1.2em;padding:1px;">
                         <c:forEach items="${whList}" var="wh">
-                            <s:option value="${wh.id}">${wh.name}</s:option>
+                            <s:option value="${wh.id}">${wh.identifier}</s:option>
                         </c:forEach>
                     </s:select>
 

@@ -261,12 +261,22 @@
     </c:choose>
   </h2>
 
+ <shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
   <c:if test="${cartAction.pricingDto.productLineCount > 0}">
     <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add more products</a>
   </c:if>
   <c:if test="${cartAction.pricingDto.productLineCount == 0}">
     <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add products to your shopping cart</a>
   </c:if>
+  </shiro:lacksRole>
+  <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
+  <c:if test="${cartAction.pricingDto.productLineCount > 0}">
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add more products</a>
+  </c:if>
+  <c:if test="${cartAction.pricingDto.productLineCount == 0}">
+    <a href="/" class="back" style="position: relative;float: left;width: 100%;"> &larr; go back to add products to your shopping cart</a>
+  </c:if>
+  </shiro:hasRole>
  <div id="offerTextOnTop"></div>
 </s:layout-component>
 
@@ -544,6 +554,7 @@
 <!--google remarketing-->
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
+<shiro:lacksRole name="<%=RoleConstants.B2B_USER%>">
 <c:if test="${cartAction.pricingDto.productLineCount > 0}">
   <s:link beanclass="com.hk.web.action.HomeAction" class="back"> &larr; go back to add more products</s:link>
 </c:if>
@@ -551,6 +562,16 @@
   <s:link beanclass="com.hk.web.action.HomeAction"
           class="back"> &larr; go back to add products to your shopping cart</s:link>
 </c:if>
+</shiro:lacksRole>
+<shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
+<c:if test="${cartAction.pricingDto.productLineCount > 0}">
+  <s:link beanclass="com.hk.web.action.core.b2b.B2BCartAction" class="back"> &larr; go back to add more products</s:link>
+</c:if>
+<c:if test="${cartAction.pricingDto.productLineCount == 0}">
+  <s:link beanclass="com.hk.web.action.core.b2b.B2BCartAction"
+          class="back"> &larr; go back to add products to your shopping cart</s:link>
+</c:if>
+</shiro:hasRole>
 </c:if>
 </div>
 
@@ -704,6 +725,7 @@
 <div id="applicableOfferDiv"></div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>
 
 			<c:if test="${not isSecure }">
 				<iframe src="" id="vizuryTargeting" scrolling="no" width="1"

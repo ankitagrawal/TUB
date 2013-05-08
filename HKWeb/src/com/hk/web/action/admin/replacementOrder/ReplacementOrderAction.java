@@ -22,10 +22,13 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.shippingOrder.ReplacementOrderService;
+import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
+import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.reverseOrder.ReverseLineItem;
 import com.hk.helper.ReplacementOrderHelper;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.inventory.InventoryService;
@@ -49,8 +52,10 @@ public class ReplacementOrderAction extends BaseAction {
 	private Boolean isRto;
 	private String roComment;
 	private List<LineItem> lineItems = new ArrayList<LineItem>();
+	private List<ReverseLineItem> reverseLineItems = new ArrayList<ReverseLineItem>();
 	private List<ReplacementOrder> replacementOrderList;
-	private ReplacementOrderReason replacementOrderReason;
+	private ReplacementOrderReason replacementOrderReason; 	
+	private ReverseOrder reverseOrder;
 
 	@Autowired
 	private ShippingOrderService shippingOrderService;
@@ -63,6 +68,10 @@ public class ReplacementOrderAction extends BaseAction {
 
 	@Autowired
 	private InventoryService inventoryService;
+
+	@Autowired
+	private ReverseOrderService reverseOrderService;
+
 
 	private ReplacementOrder replacementOrder;
 
@@ -93,6 +102,16 @@ public class ReplacementOrderAction extends BaseAction {
 			lineItems.add(ReplacementOrderHelper.getLineItemForReplacementOrder(lineItem));
 		}
 		shippingOrderId = shippingOrder.getId();
+
+		reverseOrder = reverseOrderService.getReverseOrderByShippingOrderId(shippingOrderId);
+		if(reverseOrder != null){
+			lineItems = new ArrayList<LineItem>();
+			for(ReverseLineItem reverseLineItem: reverseOrder.getReverseLineItems()){
+				LineItem replacementLineItem = ReplacementOrderHelper.getLineItemForReplacementOrder(reverseLineItem.getReferredLineItem());
+				replacementLineItem.setQty(reverseLineItem.getReturnQty());
+				lineItems.add(replacementLineItem);
+			}
+		}
 		return new ForwardResolution("/pages/admin/createReplacementOrder.jsp").addParameter("shippingOrderId", shippingOrderId);
 	}
 
@@ -100,10 +119,12 @@ public class ReplacementOrderAction extends BaseAction {
 		if ((!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.RTO_Initiated.getId()))
 				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_RTO.getId()))
 				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.getId()))
+				&& (!shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Customer_Appeasement.getId()))
 				) {
 			addRedirectAlertMessage(new SimpleMessage("Replacement order can be created only for status" + EnumShippingOrderStatus.RTO_Initiated.getName() +
 					" OR <br />" + EnumShippingOrderStatus.SO_RTO.getName() +
-					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()
+					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Return_Replaced.getName()  +
+					" OR <br />" + EnumShippingOrderStatus.SO_Customer_Appeasement.getName()
 			)
 
 
@@ -256,5 +277,21 @@ public class ReplacementOrderAction extends BaseAction {
 
 	public void setRoComment(String roComment) {
 		this.roComment = roComment;
+	}
+
+	public ReverseOrder getReverseOrder() {
+		return reverseOrder;
+	}
+
+	public void setReverseOrder(ReverseOrder reverseOrder) {
+		this.reverseOrder = reverseOrder;
+	}
+
+	public List<ReverseLineItem> getReverseLineItems() {
+		return reverseLineItems;
+	}
+
+	public void setReverseLineItems(List<ReverseLineItem> reverseLineItems) {
+		this.reverseLineItems = reverseLineItems;
 	}
 }

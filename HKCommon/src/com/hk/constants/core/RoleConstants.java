@@ -29,6 +29,7 @@ public class RoleConstants {
     public static final String CUSTOMER_SUPPORT_L2           = "CUSTOMER_SUPPORT_L2";
     public static final String CUSTOMER_SUPPORT_L3           = "CUSTOMER_SUPPORT_L3";
     public static final String CUSTOMER_SUPPORT_L3_ADMINS    = CUSTOMER_SUPPORT_L3 + ", " + ADMIN;
+	public static final String CUSTOMER_SUPPORT_REVERSE_PICKUP = "CUSTOMER_SUPPORT_REVERSE_PICKUP";
     public static final String CATEGORY_MANAGER_L1           = "CATEGORY_MANAGER_L1";
     public static final String CATEGORY_MANAGER_L2           = "CATEGORY_MANAGER_L2";
     public static final String CATEGORY_MANAGER              = "CATEGORY_MANAGER";
@@ -68,6 +69,8 @@ public class RoleConstants {
     public static final String MASTER_BUG_RESOLVER           = "MASTER_BUG_RESOLVER";
     public static final String HK_EMPLOYEE                   = "HK_EMPLOYEE";
     public static final String ROLE_GROUP_ACCOUNTING_INVOICE = GOD + ", " + ADMIN + ", " + FINANCE + ", " + ROLE_GROUP_LOGISTICS_ADMIN;
+    public static final String ACTION_QUEUE = "ACTION_QUEUE";
+    public static final String ACTION_QUEUE_MANAGER = GOD + ", " + ADMIN + ", " + ACTION_QUEUE;
 
     public static final String HK_AFFILIATE_MANAGER          = "HK_AFFILIATE_MANAGER";
     public static final String FINANCE_ADMIN                 ="FINANCE_ADMIN";
@@ -75,4 +78,5 @@ public class RoleConstants {
     public static final String REWARD_POINT_MANAGER_L2       = "REWARD_POINT_MANAGER_L2";
 
     public static final String STORE_MANAGER                 = "STORE_MANAGER";
+    public static final String NOTIFY_ME_EMAIL               ="NOTIFY_ME_EMAIL";
 }

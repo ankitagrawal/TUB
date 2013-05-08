@@ -20,8 +20,8 @@
             var menuStr = "";
             //menuStr += "<li class='lvl1' title='go to healthkart home' id='home_button'><a href='/'><div id='homeIcon'></div></a></li>";
         <c:forEach items='${menuAction.menuNodes}' var='topMenuNode' varStatus='idx'>
-        <c:if test="${topMenuNode.name != 'Baby'}">
-            menuStr += "<li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''}'><a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a><div class='lvl2'>";
+        <%--<c:if test="${topMenuNode.url != '/home-living'}">--%>
+            menuStr += "<li class='lvl1 ${topMenuNode.url == topCategoryUrl ? 'active' : ''} ${topMenuNode.url == '/home-living' ? 'new' : ''}'><a href='${pageContext.request.contextPath}${topMenuNode.url}' ${topCategoryUrl == '/' || topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}>${topMenuNode.name}</a><div class='lvl2'>";
         <c:forEach items='${topMenuNode.childNodes}' var='firstLevelMenuNode'>
             menuStr += "<div class='categories'><a href='${pageContext.request.contextPath}${firstLevelMenuNode.url}' ${topCategoryUrl == topMenuNode.url ? '' : 'rel=\'noFollow\''}><span class='head2'>${firstLevelMenuNode.name}</span></a><ul>";
         <c:forEach items='${firstLevelMenuNode.childNodes}' var='secondLevelMenuNode'>
@@ -30,11 +30,11 @@
             menuStr += "</ul></div>";
         </c:forEach>
             menuStr += "</div></li>";
-        </c:if>
+        <%--</c:if>--%>
         </c:forEach>
         <%--<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">--%>
         <%--</shiro:hasPermission>--%>
-            menuStr += "<li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'><a href='http://www.healthkartplus.com' style='color: yellow; border-bottom: 0;' target='_blank'>HealthKartPlus &gt;</a></li>";
+            //menuStr += "<li class='' id='brands_button' style='float:right; margin: 4px 6px 0 0; padding: 2px 4px; background-color: #2b659d; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #4c97df;'><a href='http://www.healthkartplus.com' style='color: yellow; border-bottom: 0;' target='_blank'>HealthKartPlus &gt;</a></li>";
             return menuStr;
         }
 

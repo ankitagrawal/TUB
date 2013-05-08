@@ -11,6 +11,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.constants.courier.EnumAwbStatus" %>
+<%@ page import="com.hk.constants.analytics.EnumReason" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.courier.ShipmentResolutionAction" var="shipRes"/>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Shipment Resolution">
@@ -161,7 +162,9 @@
                Select Reason for Changing the courier
                <s:select name="reasoning" id="reasoning">
                    <s:option value="">-------Select-------</s:option>
-                   <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allCourierChangeReason" value="name" label="name"/>
+                   <c:forEach items="${hk:getReasonsByType('Courier Change Reason')}" var="courierReason" >
+                       <s:option value="${courierReason.id}">${courierReason.classification.primary}</s:option>
+                   </c:forEach>
                 </s:select>
                <br><br>
               Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
@@ -177,35 +180,38 @@
                    <br>
                    Old Awb Number <span style="color:blue;"> ${shipRes.shipment.awb.awbNumber}</span>
                    Courier Name  <span style="color:blue;"> ${shipRes.shipment.awb.courier.name}</span>
-                                    <c:if test="${shipRes.shippingOrder!=null}">
-                                                    <br><br>
-                                                   <label>Enter Courier Id</label>
-                                                     <s:select name="awb.courier"  id="status">
-                                                         <s:option value="">--Select--</s:option>
-                                                          <c:forEach items="${shipRes.applicableCouriers}" var="courier">
-                                                              <s:option value="${courier.id}">${courier.name}</s:option>
-                                                          </c:forEach>
-                                                        </s:select>
-                                                      <br><br>
-                                                      Select Reason for Changing the Courier or Awb
-                                                             <s:select name="reasoning" id="reasoning1">
-                                                                 <s:option value="">-------Select-------</s:option>
-                                                             <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="allAwbChangeReason" value="name" label="name"/>
-                                                             </s:select>
-                                                      <br><br>
-                                                      <label>Enter Tracking Number</label>
-                                                  <s:text name=   "awb.awbNumber" id = "awbNumber" style="width:180px;height:25px;"/>
-                                                   <s:hidden name="awb.awbBarCode" id= "awbBarCode" value=""/>
-                                                   <s:hidden name="awb.cod" value="${shipRes.shippingOrder.COD}"/>
-                                                   <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
-                                                   <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
-                                                   <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
-                                                      <br><br>
-                                                      Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard it<s:checkbox name="preserveAwb"/>
-                                                      <br>
-                                                  <s:submit name="createAssignAwbForShipment" value="Save" id="saveawb"/>
-                                                    </c:if>
-                                                </c:if>
+                     <c:if test="${shipRes.shippingOrder!=null}">
+                         <br><br>
+                         <label>Enter Courier Id</label>
+                         <s:select name="awb.courier" id="status">
+                             <s:option value="">--Select--</s:option>
+                             <c:forEach items="${shipRes.applicableCouriers}" var="courier">
+                                 <s:option value="${courier.id}">${courier.name}</s:option>
+                             </c:forEach>
+                         </s:select>
+                         <br><br>
+                         Select Reason for Changing the Courier or Awb
+                         <s:select name="awbReasoning" id="awbReasoning">
+                             <s:option value="">-------Select-------</s:option>
+                             <c:forEach items="${hk:getReasonsByType('Awb Change Reason')}" var="awbReason">
+                                 <s:option value="${awbReason.id}"> ${awbReason.classification.primary}</s:option>
+                             </c:forEach>
+                         </s:select>
+                         <br><br>
+                         <label>Enter Tracking Number</label>
+                         <s:text name="awb.awbNumber" id="awbNumber" style="width:180px;height:25px;"/>
+                         <s:hidden name="awb.awbBarCode" id="awbBarCode" value=""/>
+                         <s:hidden name="awb.cod" value="${shipRes.shippingOrder.COD}"/>
+                         <s:hidden name="awb.warehouse" value="${shipRes.shippingOrder.warehouse}"/>
+                         <s:hidden name="awb.awbStatus" value="<%=EnumAwbStatus.Unused.getId()%>"/>
+                         <s:hidden name="shippingOrder" value="${shipRes.shippingOrder.id}"/>
+                         <br><br>
+                         Check Box if you want to preserve old Awb or leave Unchecked if you want to Discard
+                         it<s:checkbox name="preserveAwb"/>
+                         <br>
+                         <s:submit name="createAssignAwbForShipment" value="Save" id="saveawb"/>
+                     </c:if>
+               </c:if>
                </fieldset>
 
                <fieldset>
@@ -236,11 +242,5 @@
              </c:otherwise>
          </c:choose>
      </s:form>
-         <fieldset>
-            <h2> Change Shipping Order Status</h2>
-             <br>
-             Current Shipping Order Status : <span style="color:blue;"> ${shipRes.shippingOrder.shippingOrderStatus.name}</span>
-         </fieldset>
-
     </s:layout-component>
 </s:layout-render>

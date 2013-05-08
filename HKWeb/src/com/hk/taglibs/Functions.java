@@ -49,6 +49,7 @@ import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
+import com.hk.constants.warehouse.EnumWarehouseType;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
@@ -92,6 +93,7 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.core.AddressService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.report.pact.service.catalog.product.ReportProductVariantService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
@@ -478,7 +480,7 @@ public class Functions {
     public static Long getReCheckedinUnitsCount(Object o1) {
         AdminProductVariantInventoryDao productVariantInventoryDao = ServiceLocatorFactory.getService(AdminProductVariantInventoryDao.class);
         LineItem lineItem = (LineItem) o1;
-        return productVariantInventoryDao.getCheckedInPVIAgainstRTO(lineItem);
+        return productVariantInventoryDao.getCheckedInPVIAgainstReturn(lineItem);
     }
 
     public static Long getDamageUnitsCount(Object o1) {
@@ -682,7 +684,7 @@ public class Functions {
     }
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
-		List<String> thirdChildList = Arrays.asList("protein", "sunglasses", "weight-gainer");
+		List<String> thirdChildList = Arrays.asList("sunglasses", "weight-gainer");
 		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
 		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
@@ -690,7 +692,12 @@ public class Functions {
 			if (attributeList.contains(attribute.toLowerCase())) {
 				return true;
 			}
-		}
+		} else if (secondChild.equalsIgnoreCase("protein")){
+            List<String> attributeListProtein = Arrays.asList("age");
+            if (attributeListProtein.contains(attribute.toLowerCase())) {
+                return true;
+            }
+        }
 		return false;
 	}
 
@@ -701,10 +708,10 @@ public class Functions {
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
     }
 
-    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant, Order order) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
         //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
-	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant, order);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());
@@ -820,5 +827,10 @@ public class Functions {
         }
         return actionAwaitingSO;
     }
+
+  public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    return warehouseService.findShippingWarehouse(shippingOrder);
+  }
 
 }

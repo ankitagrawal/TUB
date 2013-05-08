@@ -1,6 +1,10 @@
 package com.hk.constants.analytics;
 
+import com.hk.constants.queue.EnumClassification;
 import com.hk.domain.analytics.Reason;
+import java.util.Arrays;
+
+import java.util.List;
 
 /*
  * User: Pratham
@@ -20,28 +24,62 @@ public enum EnumReason {
     InsufficientUnbookedInventory(150L, "Insufficient Unbooked Inventory", EnumReasonType.NotAutoEscalated),
     InvalidPaymentStatus(160L, "Payment Status is AuthPending/Error", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreated(170L, "Shipment Not Created", EnumReasonType.NotAutoEscalated),
+    HighShippingCost(180L, "High Shipping Cost", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreatedManual(210L, "Shipment Not Created", EnumReasonType.NotManualEscalated),
     InvalidPaymentStatusManual(220L, "Payment Status is AuthPending/Error", EnumReasonType.NotManualEscalated),
-    InsufficientUnbookedInventoryManual(230L, "Insufficient Unbooked Inventory", EnumReasonType.NotManualEscalated);
+    InsufficientUnbookedInventoryManual(230L, "Insufficient Unbooked Inventory", EnumReasonType.NotManualEscalated),
+
+    CourierServiceChange(700L, "Courier Service Change", EnumReasonType.CourierChange),
+    ChangeFromGroundToAirShipping(710L, "Change From Ground To Air Shipping", EnumReasonType.CourierChange),
+    CcRequest(720L, "CC Request", EnumReasonType.CourierChange),
+    BrightMovement(730L, "Bright Movement", EnumReasonType.CourierChange),
+    RtoDueToOda(740L, "RTO Due To ODA", EnumReasonType.CourierChange),
+    DummyAwb(750L,"Dummy Awb",EnumReasonType.AwbChange),
+    B2bOrder(760L,"B2b Order",EnumReasonType.AwbChange),
+    ChangedByCourier(770L,"Changed By Courier",EnumReasonType.AwbChange),
+    DuplicateAwb(780L,"Duplicate Awb",EnumReasonType.AwbChange),
+    TechIssue(790L,"Tech Issue",EnumReasonType.AwbChange);
+
 
 
     Long id;
-    String primaryClassification;
+    EnumClassification enumClassification;
     String reasonType;
 
+    //todo ps migration
     EnumReason(Long id, String primaryClassification, EnumReasonType enumReasonType) {
         this.id = id;
-        this.primaryClassification = primaryClassification;
+        this.enumClassification = enumClassification;
         this.reasonType = enumReasonType.getName();
     }
 
+    EnumReason(Long id, EnumClassification enumClassification, EnumReasonType enumReasonType) {
+        this.id = id;
+        this.enumClassification = enumClassification;
+        this.reasonType = enumReasonType.getName();
+    }
     public Reason asReason() {
         Reason reason = new Reason();
         reason.setId(id);
-        reason.setPrimaryClassification(primaryClassification);
+//        reason.setClassification(enumClassification.asClassification());
         reason.setType(reasonType);
         return reason;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getReasonType() {
+        return reasonType;
+    }
+
+    public void setReasonType(String reasonType) {
+        this.reasonType = reasonType;
+    }
 
 }

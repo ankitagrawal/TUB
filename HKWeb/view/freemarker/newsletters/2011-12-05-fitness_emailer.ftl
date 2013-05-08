@@ -216,7 +216,7 @@ Stay Fit at Home. Introducing complete range of Fitness Accessories.
               <td height="10"></td>
               </tr>
             <tr>
-              <td style="color:#363636; font-size:12px; line-height:1.5em">Chin up, pull up, push up and dip. Do your thing…Go your way to tone up your body!</td>
+              <td style="color:#363636; font-size:12px; line-height:1.5em">Chin up, pull up, push up and dip. Do your thingï¿½Go your way to tone up your body!</td>
               </tr>
             <tr>
               <td height="30" align="right" style="color:#363636; font-size:12px; text-decoration:underline;"><a href="http://www.healthkart.com/product/tunturi-doorway-chinning-bar/SPT010?utm_source=enewsletter&utm_medium=email&utm_campaign=2011-12-05-fitness_emailer" style="color:#363636">Read more >></a></td>
@@ -321,7 +321,7 @@ Stay Fit at Home. Introducing complete range of Fitness Accessories.
   <tr>
         <td bgcolor="#363636" height="70" align="center" ><p><span style="font-size:12px; font-weight:bold; color:#999999; text-align:center; line-height:25px">FOR ANY QUERIES</span> <br />
 
-          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">Website: <a href="www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2011-12-05-fitness_emailer"  style="color:#FFFFFF;">www.healthkart.com</a>  &nbsp;|  &nbsp;E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>&nbsp;  |&nbsp;  Telephone: +91 124 4502930</span></p>          </td>
+          <span style="font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center">Website: <a href="www.healthkart.com?utm_source=enewsletter&utm_medium=email&utm_campaign=2011-12-05-fitness_emailer"  style="color:#FFFFFF;">www.healthkart.com</a>  &nbsp;|  &nbsp;E-mail: <a href="mailto:info@healthkart.com" style="color:#FFFFFF">info@healthkart.com</a>&nbsp;  |&nbsp;  Telephone: +91 124 4616444</span></p>          </td>
       </tr>
 
 
@@ -329,7 +329,7 @@ Stay Fit at Home. Introducing complete range of Fitness Accessories.
     <td style="font-size:11px; text-align:center; color:#929292; padding:8px"> If you prefer not to receive HealthKart.com email, <a href="${unsubscribeLink}">click here to Unsubscribe</a><br />
 
       Parsvanath Arcadia, 1 MG Road, Sector 14, Gurgaon, Haryana, INDIA<br />
-      © 2011 HealthKart.com. All Rights Reserved. </td>
+      ï¿½ 2011 HealthKart.com. All Rights Reserved. </td>
   </tr>
 </table>
 </body>

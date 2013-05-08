@@ -38,8 +38,6 @@ public interface OrderService {
 
     public Set<ShippingOrder> createShippingOrders(Order order);
 
-    public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order);
-
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
@@ -79,9 +77,7 @@ public interface OrderService {
 
     public boolean isShippingOrderExists (Order order);
     
-    public void setTargetDispatchDelDatesOnBO(Order order);
-
-    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);	
+    public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
 

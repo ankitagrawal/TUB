@@ -16,7 +16,7 @@
       <h2>Warehouses:</h2>
       <c:forEach items="${userBean.allWarehouses}" var="warehouse" varStatus="count">
           <s:radio name="userWarehouse" value="${warehouse.id}"
-              checked="${(userBean.userWarehouse != null && warehouse.id == userBean.userWarehouse.id)}"/> ${warehouse.name}/${warehouse.city}(${warehouse.state})<br/>
+              checked="${(userBean.userWarehouse != null && warehouse.id == userBean.userWarehouse.id)}"/> ${warehouse.identifier} - ${warehouse.name}, ${warehouse.city}, ${warehouse.state}<br/>
       </c:forEach>
       <s:hidden name="user" value="${userBean.user.id}"/>
       <s:submit name="change" value="Change Warehouse"/>

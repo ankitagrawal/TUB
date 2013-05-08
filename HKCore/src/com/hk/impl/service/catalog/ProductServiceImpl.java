@@ -146,6 +146,10 @@ public class ProductServiceImpl implements ProductService {
         return getProductDAO().getProductByCategory(category);
     }
 
+    public List<Product> getProductByCategory(List<String> category) {
+        return getProductDAO().getProductByCategory(category);
+    }
+
     public List<Product> getProductByCategories(List<String> categoryNames) {
         return getProductDAO().getProductByCategories(categoryNames);
     }
@@ -456,6 +460,7 @@ public class ProductServiceImpl implements ProductService {
                         this.addBrandSynonyms(brands, cpBrand);
                     }
                 }
+              brands.add(product.getBrand());
             } else {
                 String pBrand = product.getBrand();
                 brands.add(pBrand);

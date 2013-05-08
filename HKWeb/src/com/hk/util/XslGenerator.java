@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,11 +20,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.constants.XslConstants;
+import com.hk.constants.courier.ReverseOrderTypeConstants;
+import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
@@ -33,16 +34,16 @@ import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductExtraOption;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.core.Pincode;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.PincodeDefaultCourier;
-import com.hk.domain.courier.Awb;
+import com.hk.domain.courier.CourierPickupDetail;
 import com.hk.domain.hkDelivery.Consignment;
 import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.order.OrderPaymentReconciliation;
+import com.hk.domain.reverseOrder.ReverseLineItem;
+import com.hk.domain.reverseOrder.ReverseOrder;
+import com.hk.domain.user.Address;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.io.HkXlsWriter;
@@ -54,6 +55,10 @@ public class XslGenerator {
     private InventoryService inventoryService;
     @Autowired
     private AdminInventoryService adminInventoryService;
+
+    @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
+    String adminDownloads;
+    File xlsFile;
 
     private Map<String, Integer> headerMap = new HashMap<String, Integer>();
 
@@ -704,6 +709,68 @@ public class XslGenerator {
         wb.write(out);
         out.close();
         return file;
+    }
+
+
+    public File generateExcelForReversePickup(List<ReverseOrder> reverseOrderList) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        xlsFile = new File(adminDownloads + "/reports/ReversePickup -" + sdf.format(new Date()) + ".xls");
+        HkXlsWriter xlsWriter = new HkXlsWriter();
+
+        int xlsRow = 1;
+        xlsWriter.addHeader("Customer Name", "Customer Name");
+        xlsWriter.addHeader("Customer Contact", "Customer Contact");
+        xlsWriter.addHeader("Customer Address", "Customer Address");
+        xlsWriter.addHeader("Customer City", "Customer City");
+        xlsWriter.addHeader("Customer State", "Customer State");
+        xlsWriter.addHeader("Pincode", "Pincode");
+        xlsWriter.addHeader("SO Order Id", "SO Order Id");
+        xlsWriter.addHeader("Declared Value", "Declared Value");
+        xlsWriter.addHeader("Piece", "Piece");
+        xlsWriter.addHeader("Courier", "Courier");
+        xlsWriter.addHeader("Pickup Confirmation No", "Pickup Confirmation No");
+        xlsWriter.addHeader("AWB No", "AWB No");
+        xlsWriter.addHeader("Pickup DateTime", "Pickup DateTime");
+        xlsWriter.addHeader("Booking Date", "Booking Date");
+        xlsWriter.addHeader("Box Size", "Box Size");
+        xlsWriter.addHeader("Box Weight", "Box Weight");
+
+
+        if (reverseOrderList != null) {
+            for (ReverseOrder order : reverseOrderList) {
+                if (order != null && order.getReverseOrderType().equals(ReverseOrderTypeConstants.Healthkart_Managed_Courier)) {
+                    Address customerDetails = order.getShippingOrder().getBaseOrder().getAddress();
+                    xlsWriter.addCell(xlsRow, customerDetails.getName());
+                    xlsWriter.addCell(xlsRow, customerDetails.getPhone());
+                    String line2 = customerDetails.getLine2();
+                    xlsWriter.addCell(xlsRow, customerDetails.getLine1() + "," + ((line2 != null) ? line2 : ""));
+                    xlsWriter.addCell(xlsRow, customerDetails.getCity());
+                    xlsWriter.addCell(xlsRow, customerDetails.getState());
+                    xlsWriter.addCell(xlsRow, customerDetails.getPincode().getPincode());
+                    xlsWriter.addCell(xlsRow, order.getShippingOrder().getGatewayOrderId());
+                    xlsWriter.addCell(xlsRow, order.getAmount());
+
+                    Long qty = 0L;
+                    for (ReverseLineItem lineItem : order.getReverseLineItems()) {
+                        qty += lineItem.getReturnQty();
+                    }
+                    xlsWriter.addCell(xlsRow, qty);
+
+                    if (order.getCourierPickupDetail() != null) {
+                        CourierPickupDetail courierPickupDetail = order.getCourierPickupDetail();
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getCourier().getName());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupConfirmationNo());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getTrackingNo());
+                        xlsWriter.addCell(xlsRow, courierPickupDetail.getPickupDate().toString());
+                    }
+                    xlsWriter.addCell(xlsRow, order.getCreateDate() != null ? sdf.format(order.getCreateDate()) : "");
+                    xlsRow++;
+                }
+            }
+        }
+        xlsWriter.writeData(xlsFile, "Reverse_Pickup");
+        return xlsFile;
     }
 
     private void setCellValue(Row row, int column, Double cellValue) {

@@ -2,8 +2,7 @@ package com.hk.pact.dao;
 
 import java.util.List;
 
-import com.hk.constants.courier.EnumAwbChangeReason;
-import com.hk.constants.courier.EnumCourierChangeReason;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.EnumCourierOperations;
 import com.hk.constants.shipment.EnumBoxSize;
 import com.hk.constants.shipment.EnumPacker;
@@ -13,6 +12,7 @@ import com.hk.constants.inventory.EnumCycleCountStatus;
 import com.hk.domain.TicketStatus;
 import com.hk.domain.TicketType;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
@@ -36,11 +36,10 @@ import com.hk.domain.subscription.SubscriptionStatus;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
-public interface MasterDataDao 
-{
-	public static final int USER_COMMENT_TYPE_PACKING_BASE_ORDER = 1;
-	public static final int USER_COMMENT_TYPE_DELIVERY_BASE_ORDER = 2;
-	public static final int USER_COMMENT_TYPE_OTHERS_BASE_ORDER = 3;
+public interface MasterDataDao {
+    public static final int USER_COMMENT_TYPE_PACKING_BASE_ORDER = 1;
+    public static final int USER_COMMENT_TYPE_DELIVERY_BASE_ORDER = 2;
+    public static final int USER_COMMENT_TYPE_OTHERS_BASE_ORDER = 3;
 
     public List<PaymentStatus> getPaymentStatusList();
 
@@ -122,7 +121,7 @@ public interface MasterDataDao
 
     public List<Mail> getAllMailType();
 
-    public List<User>  getHKDeliveryAgentList();
+    public List<User> getHKDeliveryAgentList();
 
     public List<RunsheetStatus> getRunsheetStatusList();
 
@@ -132,61 +131,61 @@ public interface MasterDataDao
 
     public List<ConsignmentStatus> getConsignmentStatusList();
 
-	public List<CourierGroup>  getCourierGroupList();
+    public List<CourierGroup> getCourierGroupList();
 
-	public List<Courier> getAvailableCouriers();
+    public List<Courier> getAvailableCouriers();
 
-	public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
+    public List<PurchaseOrderStatus> getPurchaseOrderStatusListForNonApprover();
 
-	public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement();
+    public List<ReplacementOrderReason> getReplacementOrderReasonForReplacement();
 
-	public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
+    public List<ReplacementOrderReason> getReplacementOrderReasonForRto();
 
     public List<Country> getAllCountry();
 
-	public List<Zone> getAllZones();
+    public List<Zone> getAllZones();
 
-	public List<String> getCustomerOnHoldReasonsForHkDelivery();
+    public List<String> getCustomerOnHoldReasonsForHkDelivery();
 
-	public List<DispatchLotStatus> getDispatchLotStatusList();
+    public List<DispatchLotStatus> getDispatchLotStatusList();
 
-	public List<String> getSourceAndDestinationListForDispatchLot();
+    public List<String> getSourceAndDestinationListForDispatchLot();
 
-	public List<String> getShipmentStatusForDispatchLot();
+    public List<String> getShipmentStatusForDispatchLot();
 
-   public List<Warehouse> getServiceableWarehouses();
+    public List<Warehouse> getServiceableWarehouses();
 
-	public List<AwbStatus> getAllAwbStatus();
+    public List<AwbStatus> getAllAwbStatus();
 
-	public List<ReconciliationType> getAddReconciliationTypeList();
+    public List<ReconciliationType> getAddReconciliationTypeList();
 
-    public List <Courier> getListOfVendorCouriers();
+    public List<Courier> getListOfVendorCouriers();
 
-   public List<Warehouse> getAllWarehouse();
+    public List<Warehouse> getAllWarehouse();
 
-   public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes();
+    public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes();
 
-  public List<EnumPicker> getAllPicker();
+    public List<EnumPicker> getAllPicker();
 
-  public List<EnumPacker> getAllPacker();
+    public List<EnumPacker> getAllPacker();
 
-  public List<EnumBoxSize> getAllBoxSize();
-
-  public List<EnumCourierChangeReason> getAllCourierChangeReason();
-
-    public List<EnumAwbChangeReason> getAllAwbChangeReason();
+    public List<EnumBoxSize> getAllBoxSize();
 
     public List<Courier> getCouriersForDispatchLot();
 
-	public List<PaymentMode> getPaymentModeForStore();
+    public List<PaymentMode> getPaymentModeForStore();
 
-	public List<EnumCourierOperations> getAllCourierOperations();
+    public List<EnumCourierOperations> getAllCourierOperations();
 
-	 public List<EnumCycleCountStatus> getAllCycleCountStatus();
+    public List<EnumCycleCountStatus> getAllCycleCountStatus();
 
-     public List<Courier> getAllActiveCourier();
+    public List<Courier> getAllActiveCourier();
 
-	public List<Long> getDiscountsForPOS();
+    public List<Long> getDiscountsForPOS();
 
     public List<ReconciliationType> getProductAuditedReconVoucherType();
+
+    public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList();
+
+    public List<EnumUserCodCalling> getUserCodCallStatus();
 }

@@ -26,6 +26,19 @@
                         <g:id>${product.id}</g:id>
                         <g:condition>New</g:condition>
                         <g:price>${product.minimumMRPProducVariant.hkPrice} INR</g:price>
+                        <g:product_type>
+                                ${product.primaryCategory} &gt;${product.secondaryCategory}
+                        </g:product_type>
+                        <g:availability>
+                            <c:choose>
+                                <c:when test="${product.outOfStock}">
+                                    out of stock
+                                </c:when>
+                                <c:otherwise>
+                                    in stock
+                                </c:otherwise>
+                            </c:choose>
+                        </g:availability>
                         <%--<c:if test="${product.brand != null}">
                             <g:brand><![CDATA[${hk:escapeXML(product.brand)}]]</g:brand>
                         </c:if>

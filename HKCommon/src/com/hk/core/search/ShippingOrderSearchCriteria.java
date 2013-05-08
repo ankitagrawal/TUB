@@ -46,7 +46,8 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private boolean searchForPrinting = false;
     private Date lastEscStartDate;
     private Date lastEscEndDate;
-    private Date targetDispatchDate;
+    private Date startTargetDispatchDate;
+    private Date endTargetDispatchDate;
     private Zone zone;
     private Set<Category> shippingOrderCategories;
     private boolean dropShipping = false;
@@ -174,6 +175,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             criteria.add(Restrictions.between("lastEscDate", lastEscStartDate, lastEscEndDate));
         }
 
+        if (startTargetDispatchDate != null && endTargetDispatchDate != null) {
+            criteria.add(Restrictions.between("targetDispatchDate", startTargetDispatchDate, endTargetDispatchDate));
+        }
+
         if (shippingOrderStatusList != null && shippingOrderStatusList.size() > 0) {
             criteria.add(Restrictions.in("shippingOrderStatus", shippingOrderStatusList));
         }
@@ -269,7 +274,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (!searchForPrinting) {
             if (sortByDispatchDate) {
-                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDelDate"));
+                baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("targetDispatchDate"));
             }
             if (sortByLastEscDate) {
                 criteria.addOrder(org.hibernate.criterion.Order.desc("lastEscDate"));
@@ -282,7 +287,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             }
         } else {
             criteria.addOrder(org.hibernate.criterion.Order.asc("targetDispatchDate"));
-            baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
+//            baseOrderCriteria.addOrder(org.hibernate.criterion.Order.desc("score"));
             criteria.addOrder(org.hibernate.criterion.Order.asc("lastEscDate"));
         }
 
@@ -370,4 +375,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         this.installable = installable;
     }
 
+    public ShippingOrderSearchCriteria setStartTargetDispatchDate(Date startTargetDispatchDate) {
+        this.startTargetDispatchDate = startTargetDispatchDate;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setEndTargetDispatchDate(Date endTargetDispatchDate) {
+        this.endTargetDispatchDate = endTargetDispatchDate;
+        return this;
+    }
 }

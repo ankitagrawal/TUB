@@ -25,6 +25,9 @@
 <s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 <!--YAHOO marketing-->
 <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
+<!--OZONE marketing-->
+<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" />
+
 <s:layout-render name="/layouts/default.jsp" pageTitle="Payment Successful">
 
 <%--<s:layout-component name="htmlHead">
@@ -48,14 +51,14 @@
 
 <%--<s:layout-component name="menu"> </s:layout-component>--%>
 <s:layout-component name="heading">
-   <%--<c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
+   <c:set var="city" value="${actionBean.order.address.pincode.city.name}"/>
     <c:if test="${city == 'DELHI' || city == 'GURGAON' || city == 'NOIDA'}">
         <div>
             <a href="http://www.healthkartplus.com?src=hk" target="_blank" style="text-decoration:none;">
-                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus.jpg"/>
+                <img src="${pageContext.request.contextPath}/images/banners/healthkartplus-banner-15discount.png"/>
             </a>
         </div>
-    </c:if>--%>
+    </c:if>
     <div style="margin-top: 25px;">
         <h1 class="green" style="font-size: 1.2em;">
             Payment Successful

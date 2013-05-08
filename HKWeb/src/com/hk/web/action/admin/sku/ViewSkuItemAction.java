@@ -9,6 +9,7 @@ import com.hk.domain.cycleCount.CycleCount;
 import com.hk.constants.sku.EnumSkuItemTransferMode;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.CycleCountService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import net.sourceforge.stripes.action.Resolution;
@@ -33,6 +34,8 @@ public class ViewSkuItemAction extends BaseAction {
     private AdminInventoryService adminInventoryService;
     @Autowired
     private CycleCountService cycleCountService;
+    @Autowired
+    SkuGroupService skuGroupService;
     private Long entityId;
     private RvLineItem rvLineItem;
     private StockTransferLineItem stockTransferLineItem;
@@ -42,20 +45,22 @@ public class ViewSkuItemAction extends BaseAction {
 
     public Resolution pre() {
 
-        if(entityId == null){
-           return new RedirectResolution("/pages/admin/viewItemBarcode.jsp");
+        if (entityId == null) {
+            return new RedirectResolution("/pages/admin/viewItemBarcode.jsp");
         }
 
         if (entityId.equals(EnumSkuItemTransferMode.RV_LINEITEM_OUT.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null,null, -1L);
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(rvLineItem, null, null, null, -1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_IN.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null,null, 1L);
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, null, 1L);
         } else if (entityId.equals(EnumSkuItemTransferMode.STOCK_TRANSFER_OUT.getId())) {
-            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null,null, -1L);
-        } else if (entityId.equals(EnumSkuItemTransferMode.CYCLE_COUNT.getId()))  {             
-           skuItemList =cycleCountService.getScannedSkuItems(skuGroup.getId(),cycleCount.getId());
+            skuItemList = adminInventoryService.getCheckedInOrOutSkuItems(null, stockTransferLineItem, null, null, -1L);
+        } else if (entityId.equals(EnumSkuItemTransferMode.CYCLE_COUNT.getId())) {
+            skuItemList = cycleCountService.getScannedSkuItems(skuGroup.getId(), cycleCount.getId());
+        } else if (entityId.equals(EnumSkuItemTransferMode.CYCLE_COUNT_SKU_ITEM_MISSED.getId())) {
+            skuItemList = skuGroupService.getInStockSkuItems(skuGroup);
         }
-                                                        
+
         return new ForwardResolution("/pages/admin/viewItemBarcode.jsp");
     }
 

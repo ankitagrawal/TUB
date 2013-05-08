@@ -8,6 +8,7 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="com.hk.taglibs.Functions" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction" event="getCartItems"/>
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
@@ -137,9 +138,15 @@
                 <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release
                   assumed
                   identity)</s:link> |
+                 <shiro:hasAnyRoles name="<%=RoleConstants.B2B_USER%>">
+                  <s:link beanclass = "com.hk.web.action.core.b2b.B2BCartAction" class="sml" rel="noFollow">B2B Cart</s:link> |
+                </shiro:hasAnyRoles>
                 <%
                   }
                 %>
+
+               
+                
                 <s:link beanclass="com.hk.web.action.core.auth.LogoutAction" class="toplinksSecondary"
                         rel="noFollow">Logout</s:link>
               </shiro:lacksRole>
