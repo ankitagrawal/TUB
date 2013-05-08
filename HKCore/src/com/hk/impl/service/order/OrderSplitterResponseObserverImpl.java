@@ -5,6 +5,8 @@ import com.hk.domain.order.Order;
 import com.hk.hkjunction.observers.OrderResponse;
 import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.pact.service.order.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import javax.jms.TextMessage;
 */
 @Service
 public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListener {
+
+    private static Logger logger        = LoggerFactory.getLogger(OrderSplitterResponseObserverImpl.class);
 
     @Autowired
     ProducerFactory producerFactory;
@@ -43,9 +47,16 @@ public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListe
 
                 System.out.println(orderSplitterMessageString);
 
+
                 Long orderId = Long.valueOf(orderResponse.getOrderId());
 
+
+
                 Order order = orderService.find(orderId);
+
+
+                logger.info("order status id " + order.getId(), "order sattu " + order.getOrderStatus().getId() );
+
 
                 if (order != null) {
                     orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
