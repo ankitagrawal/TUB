@@ -78,7 +78,7 @@ public class GrnCloseAction extends BaseAction {
         return new RedirectResolution(AdminHomeAction.class);
     }
     
-    public Resolution closeGrn() {
+    /*public Resolution closeGrn() {
         int dayAgo = 40;
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -101,7 +101,7 @@ public class GrnCloseAction extends BaseAction {
         }
 
         return new RedirectResolution(AdminHomeAction.class);
-    }
+    }*/
 
 	public AdminEmailManager getAdminEmailManager() {
 		return adminEmailManager;
