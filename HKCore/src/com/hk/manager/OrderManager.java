@@ -383,10 +383,8 @@ public class OrderManager {
             order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
             order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
-            cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which
-                                                                    // are
-
-            // associated with a variant, this will help in minimizing brutal use of free checkout
+            // function made to handle deals and offers which are associated with a variant, this will help in minimizing brutal use of free checkout
+            cartLineItems = addFreeVariantsToCart(cartLineItems);
             order.setCartLineItems(cartLineItems);
 
             // award reward points, if using a reward point offer coupon
@@ -401,20 +399,19 @@ public class OrderManager {
             // update user karma profile for those whose score is not yet set
             KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
             if (karmaProfile != null) {
-                order.setScore(new Long(karmaProfile.getKarmaPoints()));
+                order.setScore((long) karmaProfile.getKarmaPoints());
             }
 
-            /*
-             * Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order); Date targetDelDate =
-             * HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH,
-             * Integer.parseInt(dispatchDays[0].toString())); order.setTargetDispatchDate(targetDelDate);
-             */
-             //this is now being being called in splitBOEscalateSO method
-//            getOrderService().setTargetDispatchDelDatesOnBO(order);
             order = getOrderService().save(order);
 
             // Order lifecycle activity logging - Order Placed
             getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            // Check Inventory health of order lineItems
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
 
             getUserService().updateIsProductBought(order);
 

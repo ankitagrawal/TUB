@@ -41,7 +41,6 @@ public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListe
 
                 OrderResponse orderResponse = new Gson().fromJson(orderSplitterMessageString, OrderResponse.class);
 
-
                 System.out.println(orderSplitterMessageString);
 
                 Long orderId = Long.valueOf(orderResponse.getOrderId());
