@@ -318,7 +318,7 @@
             </c:if>--%>
             <br/>
 
-			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+		<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
   		<h2> Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?"
 			<br>
 		<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here. </a>		
@@ -389,7 +389,6 @@
         </c:otherwise>
     </c:choose>
 
-</shiro:lacksRole>
 </s:layout-component>
 
 <s:layout-component name="analytics">
