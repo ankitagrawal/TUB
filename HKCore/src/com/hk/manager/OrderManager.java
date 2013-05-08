@@ -329,7 +329,7 @@ public class OrderManager {
         return cartLineItem;
     }
 
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional
     public Order orderPaymentReceieved(Payment payment) {
         Order order = payment.getOrder();
         order.setPayment(payment);
@@ -441,7 +441,7 @@ public class OrderManager {
 //        //this is the most important method, so it is very important as to from where it is called
 //        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
         //we are now trying to replace the above method by pushing orderId in queue
-        orderEventPublisher.publishOrderPlacedEvent(order);
+//        orderEventPublisher.publishOrderPlacedEvent(order);
 
         //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
