@@ -1,16 +1,11 @@
 package com.hk.loyaltypg.service.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
-import liquibase.util.csv.CSVReader;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -451,7 +446,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	
-	public void uploadLoyaltyCSVFile(File csvFile) {
+/*	public void uploadLoyaltyCSVFile(File csvFile) {
 		
 	}
 	
@@ -468,7 +463,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		
 		return flag;
 	}
-	/**
+*/	/**
 	 * 
 	 * Setters and getters start from here.
 	 */
