@@ -161,7 +161,7 @@
         </td>
         <td style="padding: 0" valign="top">
             <c:choose>
-                <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id">
+                <c:when test="${orderAdmin.shippingOrder.orderStatus.id ==  shippingOrderStatusRTO.id}">
                     <table width="100%">
                         <c:forEach items="${orderAdmin.shippingOrder.lineItems}" var="lineItem"
                                    varStatus="lineItemCtr">
