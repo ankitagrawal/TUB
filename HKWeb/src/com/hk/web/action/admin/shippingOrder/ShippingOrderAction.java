@@ -9,6 +9,7 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
+import com.hk.domain.analytics.Reason;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
@@ -33,6 +34,8 @@ import java.util.Map;
 public class ShippingOrderAction extends BaseAction {
 
 	private ShippingOrder shippingOrder;
+    private Reason soReason;
+    private String cancellationRemark;
 	private Warehouse warehouseToUpdate;
 	@Autowired
 	WarehouseService warehouseService;
@@ -103,12 +106,18 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution cancelShippingOrder() {
-		adminShippingOrderService.cancelShippingOrder(shippingOrder);
+		adminShippingOrderService.cancelShippingOrder(shippingOrder,soReason,cancellationRemark);
 
-		Map<String, Object> data = new HashMap<String, Object>(1);
-		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
-		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "shipping order canceled", data);
-		return new JsonResolution(healthkartResponse);
+//		Map<String, Object> data = new HashMap<String, Object>(1);
+//		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
+//		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "shipping order canceled", data);
+//		return new JsonResolution(healthkartResponse);
+        if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())){
+            addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
+        }else{
+            addRedirectAlertMessage(new SimpleMessage("Please Try again Later!!!"));
+        }
+        return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId",shippingOrder.getGatewayOrderId());
 	}
 
 	@JsonHandler
@@ -155,7 +164,21 @@ public class ShippingOrderAction extends BaseAction {
 	public String getCustomerSatisfyReason() {
 		return customerSatisfyReason;
 	}
+    public Reason getSoReason() {
+        return soReason;
+    }
 
+    public void setSoReason(Reason soReason) {
+        this.soReason = soReason;
+    }
+
+    public String getCancellationRemark() {
+        return cancellationRemark;
+    }
+
+    public void setCancellationRemark(String cancellationRemark) {
+        this.cancellationRemark = cancellationRemark;
+    }
   public Warehouse getWarehouseToUpdate() {
     return warehouseToUpdate;
   }

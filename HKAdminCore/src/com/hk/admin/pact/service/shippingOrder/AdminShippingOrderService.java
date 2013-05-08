@@ -8,12 +8,13 @@ import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.ReplacementOrderReason;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.analytics.Reason;
 
 public interface AdminShippingOrderService {
 
     //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder);
+    public void cancelShippingOrder(ShippingOrder shippingOrder, Reason reason,String comment);
 
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 

@@ -20,23 +20,23 @@
   <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
     <script type="text/javascript">
 
-        $('.cancelSO').click(function() {
-            var proceed = confirm('Are you sure you want to cancel shipping order?');
-            if (!proceed) return false;
+        <%--$('.cancelSO').click(function() {--%>
+            <%--var proceed = confirm('Are you sure you want to cancel shipping order?');--%>
+            <%--if (!proceed) return false;--%>
 
-            var clickedLink = $(this);
-            $.getJSON(clickedLink.attr('href'), function(res) {
-                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                    alert(res.message);
-                    window.location.reload();
-                } else {
-                    alert("SO cannot be cancelled");
-                    location.reload();
-                }
-            });
+            <%--var clickedLink = $(this);--%>
+            <%--$.getJSON(clickedLink.attr('href'), function(res) {--%>
+                <%--if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {--%>
+                    <%--alert(res.message);--%>
+                    <%--window.location.reload();--%>
+                <%--} else {--%>
+                    <%--alert("SO cannot be cancelled");--%>
+                    <%--location.reload();--%>
+                <%--}--%>
+            <%--});--%>
 
-            return false;
-        });
+//            return false;
+//        });
 
         $('.orderStatusLink').click(function() {
             var proceed = confirm('Are you sure?');

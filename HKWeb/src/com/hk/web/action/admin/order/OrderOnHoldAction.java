@@ -6,8 +6,10 @@ import java.util.Map;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.pact.service.OrderStatusService;
+import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +57,13 @@ public class OrderOnHoldAction extends BaseAction {
     @JsonHandler
     public Resolution holdShippingOrder() {
         adminShippingOrderService.putShippingOrderOnHold(shippingOrder);
-        return sendResponse(shippingOrder.getOrderStatus());
+        return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId",shippingOrder.getGatewayOrderId());
     }
 
     @JsonHandler
     public Resolution unHoldShippingOrder() {
         adminShippingOrderService.unHoldShippingOrder(shippingOrder);
-        return sendResponse(shippingOrder.getOrderStatus());
+        return new RedirectResolution(SearchShippingOrderAction.class,"searchShippingOrder").addParameter("shippingOrderGatewayId",shippingOrder.getGatewayOrderId());
     }
 
     @JsonHandler

@@ -49,7 +49,7 @@
             });
             $('#saveawb').click(function(){
                 var status = $('#status').val();
-                var reasoning = $('#reasoning1').val();
+                var reasoning = $('#awbReasoning').val();
                 var awbBarvalue=  $('#awbNumber').val();
                 if(status == "" || reasoning == "" || awbBarvalue == ""){
                    alert("Please Enter all Values");
