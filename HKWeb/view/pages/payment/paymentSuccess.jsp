@@ -318,6 +318,13 @@
             </c:if>--%>
             <br/>
 
+			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  		<h2> Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?"
+			<br>
+		<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here. </a>		
+    	
+  		</h2>
+  		</shiro:lacksRole>
             <h2 class="paymentH2">Shipping & Delivery</h2>
 
             <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
@@ -382,15 +389,6 @@
         </c:otherwise>
     </c:choose>
 
-<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-    <script type="text/javascript">
-    $(document).ready(function() {
-    var contextPath = ${pageContext.request.contextPath}; 
-    if (confirm("Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?")) {
-    	window.open( contextPath + "/core/loyaltypg/LoyaltyIntroduction.action", "_blank");
-   	   }
-    });
-  </script>
 </shiro:lacksRole>
 </s:layout-component>
 

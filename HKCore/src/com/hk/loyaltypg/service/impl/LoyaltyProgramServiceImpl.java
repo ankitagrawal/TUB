@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import liquibase.util.csv.CSVReader;
+
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
@@ -458,7 +460,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		boolean flag = false;
 		try {
 			FileReader fileReader = new FileReader(csvFile);
-			
+			CSVReader reader = new CSVReader(fileReader);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
