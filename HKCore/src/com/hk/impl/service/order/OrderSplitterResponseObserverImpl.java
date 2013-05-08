@@ -55,7 +55,7 @@ public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListe
                 Order order = orderService.find(orderId);
 
 
-                logger.info("order status id " + order.getId(), "order sattu " + order.getOrderStatus().getId() );
+                logger.info("order status id " + order.getId() + "order sattu " + order.getOrderStatus().getId() );
 
 
                 if (order != null) {
