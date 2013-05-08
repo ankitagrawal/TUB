@@ -5362,7 +5362,11 @@ td.top {
     color: HighlightText;
 }
 
-.paymentH2 { font-size:1em; margin-left:15px; }
+.paymentH2 {
+    font-size:1em;
+    margin-left:15px;
+    margin-bottom: 10px;
+}
 
 
 .jcarousel-skin-tango .jcarousel-container {
@@ -5942,7 +5946,7 @@ color: #e62580;
     text-align: left;
     margin-bottom: 15px;
     font-family: Arial;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 15px;
     color: rgb(68, 68, 68);
 }
@@ -6414,6 +6418,17 @@ color: #e62580;
     left: 0px !important;
 }
 
+.newTotals2 .left{
+    position: relative;
+    float: left;
+    line-height: 1.5em;
+}
+.newTotals2 .right{
+    position: relative;
+    float: left;
+    line-height: 2em;
+}
+
 .deliveryDetails{
     position: relative;
     left: 30px;
@@ -6446,7 +6461,7 @@ color: #e62580;
 .backTOHomeButton{
     width: 265px;
     float: right;
-    left: 0px;
+    left: -10px;
     font-size: 13px;
     height: 23px;
     color: black;
@@ -6501,8 +6516,7 @@ color: #e62580;
     font-size: 1em;
     margin-top: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    width: 65%;
+    width: 100%;
     left: 15px;
     position: relative;
     float: left;
@@ -6511,9 +6525,8 @@ color: #e62580;
 .congratsText{
     position: relative;
     float: left;
-    width: 65%;
+    width: 100%;
     padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
     left: 15px;
     margin-bottom: 15px;
     margin-top: 45px;
@@ -6522,18 +6535,17 @@ color: #e62580;
 .confirmationEmailText{
     position: relative;
     float: left;
-    width: 65%;
+    width: 94%;
 }
 
 .useAddressButton{
     display: block;
-    background-color: #df6900 !important;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     font-size: 12.5px !important;
-    color: white;
+    color: #df6900;
     font-family: Arial;
     font-weight: bold;
     position: relative;
@@ -6656,6 +6668,54 @@ color: #e62580;
     font-family: Arial !important;
     font-weight: bold !important;
 }
+
+.orangeBold{
+    color: #ce731a;
+    font-weight: bold;
+}
+
+.greenBold{
+    color: #4fae5a;
+    font-weight: bold;
+}
+
+.codMessage{
+    width: 90%;
+    position: relative;
+    float: left;
+}
+.leftCOD{
+    position: relative;
+    float: left;
+    width: 20%;
+}
+
+.rightCOD{
+    position: relative;
+    float: left;
+    width: 80%;
+}
+
+.codContact{
+    position: relative;
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.leftPS{
+    position: relative;
+    float: left;
+    width: 70%;
+}
+
+.rightPS{
+    position: relative;
+    float: left;
+    width: 30%;
+    top: 50px;
+}
+
 /*
 slider pager end
 */

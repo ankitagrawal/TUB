@@ -321,6 +321,7 @@
   <div class='name' style="width: 25%;left: 30px">
     <span class="dispatchDateText2">Dispatch Days</span>
       <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
+      <span class="dispatchDateText2" style="font-size: 9px;">Delivery time would be extra</span>
       <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
       <span id="learnMore" class="learnMore">learn more</span>
       <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
@@ -667,12 +668,12 @@
   <br/>
   <c:if
       test="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal > cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal +cartAction.pricingDto.postpaidServiceHkSubTotal}">
-        <span class="special" style="font-style: initial;">
+        <%--<span class="special" style="font-style: initial;">
           <span class="checkoutContainerText" style="font-size: 11px;">HealthKart Discount:</span><strong><span id="summaryHkDiscount"
                                                                                          class="green checkoutContainerTextRight">(<fmt:formatNumber
             value="${cartAction.pricingDto.totalHkProductsDiscount + cartAction.pricingDto.totalHkPrepaidServiceDiscount + cartAction.pricingDto.totalHkPostpaidServiceDiscount - cartAction.pricingDto.totalPostpaidAmount}"
             type="currency" currencySymbol="Rs. "/>)</span></strong>
-        </span><br/>
+        </span><br/>--%>
   </c:if>
         <span id="summaryShippingSubTotal">
           <c:if test="${cartAction.pricingDto.shippingSubTotal - cartAction.pricingDto.shippingDiscount >= .005}">

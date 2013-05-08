@@ -25,13 +25,13 @@ Pass an attribute called pricingDto to render a table with pricing details
 
 
             <c:if
-                    test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount > 0.00}">
+                    test="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal > pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}">
                 <div class='discount' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                    You Saved:
+                    Total MRP:
                 </div>
             </c:if>
             <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                Total:
+                Our Price:
             </div>
 
             <div class='shipping' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
@@ -51,16 +51,16 @@ Pass an attribute called pricingDto to render a table with pricing details
         </div>
         <div class='right' style="width: 50%;left: 0px;text-align: right;font-size: 12px;">
             <c:if
-                    test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount+pricingDto.subscriptionDiscount > 0.00}">
+                    test="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal > pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}">
                 <div class='discount green'>
-          <span style="font-size: 12px;color: rgb(68, 68, 68 );font-weight: normal;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><fmt:formatNumber
-                  value="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount + pricingDto.subscriptionDiscount}"
+          <span style="text-decoration:line-through;font-size: 12px;color: rgb(68, 68, 68 );font-weight: normal;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"><fmt:formatNumber
+                  value="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal}"
                   type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>
             <div class='total' style="font-size: 14px;">
                 <strong style="font-size: 12px;font-weight: normal;color: rgb(68,68,68);font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                    <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+                    <fmt:formatNumber value="${pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}" type="currency" currencySymbol="Rs. "/>
                 </strong>
             </div>
 
@@ -90,14 +90,14 @@ Pass an attribute called pricingDto to render a table with pricing details
         <div class='left' style="width: 42%;left: 0px;">
 
             <c:if
-                    test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount > 0.00}">
+                    test="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal > pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}">
                 <div class='discount ' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                    You Saved:
+                    Total MRP:
                 </div>
             </c:if>
 
             <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
-                Total:
+                Our Price:
             </div>
             <div class='shipping' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
                 Shipping:
@@ -114,17 +114,17 @@ Pass an attribute called pricingDto to render a table with pricing details
         <div class='right' style="width: 50%;left: 0px;text-align: right;">
 
             <c:if
-                    test="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount > 0.00}">
+                    test="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal > pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}">
                 <div class='discount green' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
           <span id="summaryTotalDiscount"><fmt:formatNumber
-                  value="${pricingDto.productsMrpSubTotal - pricingDto.productsHkSubTotal + pricingDto.prepaidServiceMrpSubTotal - pricingDto.prepaidServiceHkSubTotal + pricingDto.orderLevelDiscount + pricingDto.productsDiscount + pricingDto.prepaidServiceDiscount - pricingDto.totalPostpaidAmount}"
+                  value="${pricingDto.productsMrpSubTotal + pricingDto.prepaidServiceMrpSubTotal + pricingDto.postpaidServiceMrpSubTotal}"
                   type="currency" currencySymbol="Rs. "/></span>
                 </div>
             </c:if>
 
             <div class='total' style="font-size: 12px;font-weight: normal;color: rgb(68, 68, 68);">
 
-                    <fmt:formatNumber value="${pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
+                    <fmt:formatNumber value="${pricingDto.productsHkSubTotal + pricingDto.prepaidServiceHkSubTotal + pricingDto.postpaidServiceHkSubTotal}" type="currency" currencySymbol="Rs. "/>
 
             </div>
 

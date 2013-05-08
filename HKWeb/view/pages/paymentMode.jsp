@@ -88,9 +88,17 @@
         page="/includes/checkoutNotice.jsp"/>
 
 <div class='pre'>
-    <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber
-            value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
-            currencySymbol="Rs "/> </strong></h4>
+            <div id="CODOption" style="display: none;">
+                <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber
+                        value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}" type="currency"
+                        currencySymbol="Rs "/> </strong></h4>
+            </div>
+
+            <div id="nonCODOption">
+                <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber
+                        value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
+                        currencySymbol="Rs "/> </strong></h4>
+            </div>
     <h6>If you have any trouble during the payment process, call our
         helpline number <strong class='arialBlackBold'> 0124 - 4616444 </strong></h6>
 </div>
@@ -231,28 +239,39 @@
                 </c:when>
 
                 <c:otherwise>
-                    <div class="grid_5">
+                    <div class="grid_5" style="width: 100%;">
                         <h4>Order Total</h4>
                         <br/>
 
-                        <p><strong><u>Order Total</u></strong> <fmt:formatNumber
-                                value="${orderSummary.pricingDto.grandTotalPayable}"
-                                currencySymbol="Rs. " type="currency"/><strong><u>  (Inclusive of Shipping)</u></strong> <br/>
-                            <u>COD Charges</u> <fmt:formatNumber
+                        <div class="leftCOD">
+                            <p>Order Total</p>
+                            <p>COD Charges</p>
+                            <p><strong class="orangeBold">Grand Total</strong></p>
+                        </div>
+                        <div class="rightCOD">
+                            <p>
+                                <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}"
+                                    currencySymbol="Rs. " type="currency"/>  (Inclusive of Shipping) <br/>
+                            </p>
+                            <p><fmt:formatNumber
                                     value="${orderSummary.codCharges}" currencySymbol="Rs. "
                                     type="currency"/> <br/>
-                            <strong class="orange"><u>Grand Total</u></strong> <strong
-                                    class="orange"><fmt:formatNumber
+                            </p>
+                            <p>
+                                <strong
+                                    class="orangeBold"><fmt:formatNumber
                                     value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}"
-                                    currencySymbol="Rs. " type="currency"/></strong><br/>
-                        </p>
+                                    currencySymbol="Rs. " type="currency"/>
+                                </strong><br/>
+                            </p>
+                        </div>
                     </div>
-                    <h4>Contact Details</h4>
+                    <h4 class="codContact">Contact Details</h4>
 
                     <p>Please verify the name and contact number of the person
-                        who will receive this order. You will receive a phone call within
-                        1 business day to confirm your order before it is sent for
-                        processing.</p>
+                        who would receive this order. <br/>  <br/>
+                        You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
                     <s:form
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
@@ -271,7 +290,7 @@
 
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
-                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="Place Order"
+                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
                                       class="positive phoneValidation placeOrderButtonNew"/></div>
                         <br/>
                         <br/>
@@ -282,8 +301,8 @@
 
                         <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please ensure that the above person is available at the
-                            given location for pick-up at all times.<br/>
+                        <p>Please note that COD orders will not be confirmed and shipped from our end untill we manually confirm the order on the phone number provided by you.<br/>
+                            Also please ensure that the above person is available at the given location at all times.
                         </p>
                     </s:form>
                 </c:otherwise>
@@ -346,7 +365,7 @@
                             value="${orderSummary.pricingDto.grandTotalPayable}"
                             currencySymbol="Rs. " type="currency"/></div>
                 <div style="width: 50%;">
-                    <s:submit name="pre" value="Place Order" class="button makePayment signUpButtonNew" style="font-size: 1.5em;width: 125px;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
+                    <s:submit name="pre" value="PLACE ORDER" class="button makePayment signUpButtonNew" style="font-size: 1.5em;width: 125px;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
             </s:form></div>
             <div class="right"
                  style="width: 30%; padding: 10px; line-height: 21px;">
@@ -389,7 +408,7 @@
                     value="${orderSummary.pricingDto.grandTotalPayable}"
                     currencySymbol="Rs. " type="currency"/></div>
         <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                         value="Place Order" class="button makePayment placeOrderButtonNew"
+                                                         value="PLACE ORDER" class="button makePayment placeOrderButtonNew"
                                                          style="font-size: 1.5em;"/></div>
     </s:form></div>
 
@@ -399,6 +418,7 @@
 <c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
     $(document).ready(function() {
+
         $('.tab_content').hide();
         $('.tab_content').first().show();
         $('.tabs ul li').click(function() {
@@ -424,14 +444,33 @@
 
         });
           $("#tab1").click(function(){
+              $("#CODOption").hide();
+              $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
+        $('#tab1').trigger('click');
         $("#tab5").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
         $("#tab3").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
+        $("#tab4").click(function(){
+            $("#CODOption").show();
+            $("#nonCODOption").hide();
+        });
+        $("#tab2").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+        });
+        $("#tab6").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+        });
         if ($.session("selected-tab")) {
             var sTab = $.session("selected-tab");
             $('.tabs ul li').removeClass('selected');
