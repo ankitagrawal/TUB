@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.hk.domain.order.Order;
 import com.hk.hkjunction.observers.OrderResponse;
 import com.hk.hkjunction.producer.ProducerFactory;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.order.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListe
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    BaseDao baseDao;
+
     @PostConstruct
     void init() {
 
@@ -53,6 +57,7 @@ public class OrderSplitterResponseObserverImpl implements javax.jms.MessageListe
 
 
                 Order order = orderService.find(orderId);
+                baseDao.refresh(order);
 
 
                 logger.info("order status id " + order.getId() + "order sattu " + order.getOrderStatus().getId() );
