@@ -303,7 +303,7 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-							left join ${BUSY_DB_NAME}.transaction_header th on so.id=th.hk_ref_no
+							left join healthkart_busy.`transaction_header` th on so.id=th.hk_ref_no
 
 							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
@@ -530,7 +530,7 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-							left join ${BUSY_DB_NAME}.transaction_header th on so.id=th.hk_ref_no
+							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
 
 							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
