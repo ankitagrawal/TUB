@@ -103,15 +103,22 @@ public class BusyTableTransactionGenerator {
 	      String invoiceDate = purchaseRow.purInvoiceDate;
 	      String invoiceNumber =  purchaseRow.invoiceNumber;
 
-	      if (warehouseId == 1 || warehouseId == 10 || warehouseId == 101) {
-		      series = "HR";
+
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
 	      }
-	      else if (warehouseId == 2 || warehouseId == 20) {
-		      series = "MH";
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
 	      }
-	      else if (warehouseId == 301) {
-			      series = "PB";
-		      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
 	      int sameState = 0;
         if (supplierState.equalsIgnoreCase(warehouseState)) {

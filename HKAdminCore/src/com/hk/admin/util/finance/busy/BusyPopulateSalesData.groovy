@@ -120,13 +120,13 @@ public class BusyPopulateSalesData {
 	      else if(warehouseId == 301){
 			       series = "PB";
 		    }
-/*	      else if(warehouseId == 999){
-			      series = "CO";
+	      else if(warehouseId == 999){
+			      series = "HR";
 		    }
 	      else if(warehouseId == 401){
-			      series = "KP";
+			      series = "DL";
 		    }
-*/
+
 
       date = accountingInvoice.order_date;
 /*
@@ -338,12 +338,23 @@ public class BusyPopulateSalesData {
 
       shippingOrderId = accountingInvoice.shipping_order_id
 
-      if(accountingInvoice.warehouse_id == 1){
-        series = "HR";
-      }
-      else{
-        series = "MH";
-      }
+      Long warehouseId =  accountingInvoice.warehouse_id;
+
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
       date = accountingInvoice.order_date;
 /*
@@ -427,7 +438,6 @@ public class BusyPopulateSalesData {
       }
 
 //      material_centre = accountingInvoice.warehouse;
-	    Long warehouseId =  accountingInvoice.warehouse_id;
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           material_centre = "Gurgaon Warehouse";
 	      }
@@ -555,12 +565,23 @@ public class BusyPopulateSalesData {
 
       shippingOrderId = accountingInvoice.shipping_order_id
 
-      if(accountingInvoice.warehouse_id == 1){
-        series = "HR";
-      }
-      else{
-        series = "MH";
-      }
+      Long warehouseId =  accountingInvoice.warehouse_id;
+
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
       date = accountingInvoice.order_date;
 /*
@@ -644,7 +665,6 @@ public class BusyPopulateSalesData {
       }
 
  //     material_centre = accountingInvoice.warehouse;
-	    Long warehouseId =  accountingInvoice.warehouse_id;
 	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
           material_centre = "Gurgaon Warehouse";
 	      }

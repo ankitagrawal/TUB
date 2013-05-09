@@ -116,6 +116,12 @@ public class BusyPopulateRtoData {
 	      else if(warehouseId == 301){
 			       series = "PB";
 		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
       date = accountingInvoice.return_date;	    
 
