@@ -1,51 +1,38 @@
 package com.hk.web.action.admin.hkDelivery;
 
-import java.util.*;
-
+import com.akube.framework.dao.Page;
+import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.admin.dto.NdrDto;
+import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.util.HKDeliveryUtil;
+import com.hk.constants.core.EnumPermission;
+import com.hk.constants.core.Keys;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.courier.EnumCourier;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.EnumNDRAction;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.courier.Courier;
+import com.hk.domain.courier.Shipment;
+import com.hk.domain.hkDelivery.*;
+import com.hk.domain.user.User;
+import com.hk.pact.service.shippingOrder.ShipmentService;
+import com.hk.util.CustomDateTypeConvertor;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.akube.framework.dao.Page;
-import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.admin.pact.service.courier.AwbService;
-import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
-import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
-import com.hk.admin.util.HKDeliveryUtil;
-import com.hk.constants.core.EnumPermission;
-import com.hk.constants.core.Keys;
-import com.hk.constants.courier.EnumCourier;
-import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.courier.Shipment;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
-import com.hk.domain.user.User;
-import com.hk.util.CustomDateTypeConvertor;
 import org.stripesstuff.plugin.security.Secure;
+
+import java.util.*;
 
 @Component
 public class HKDConsignmentAction extends BasePaginatedAction {
@@ -133,8 +120,10 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                         shipmentObj = shipmentService.findByAwb(awbService.findByCourierAwbNumber(hkDelivery, awbNumber));
                         amount = shipmentObj.getShippingOrder().getAmount();
                         cnnNumber = shipmentObj.getShippingOrder().getGatewayOrderId();
-                        address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1() + "," + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2() + "," +
-                                shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity() + "-" + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
+                        address = shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine1() + ","
+                                + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getLine2() + ","
+                                + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getCity() + "-"
+                                + shipmentObj.getShippingOrder().getBaseOrder().getAddress().getPincode().getPincode();
                         paymentMode = consignmentService.getConsignmentPaymentMode(shipmentObj.getShippingOrder());
                         // Creating consignment object and adding to consignmentList.
                         consignmentList.add(consignmentService.createConsignment(awbNumber, cnnNumber, amount, paymentMode, address, hub));
@@ -173,7 +162,8 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
             hub = hubService.getHubForUser(loggedOnUser);
         }
-        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus, hub, runsheet, reconciled, getPageNo(), getPerPage());
+        consignmentPage = consignmentService.searchConsignment(consignment, consignmentNumber, startDate, endDate, consignmentStatus,
+                hub, runsheet, reconciled, getPageNo(), getPerPage());
         if (consignmentPage != null) {
             consignmentList = consignmentPage.getList();
         }
