@@ -6664,6 +6664,12 @@ color: #e62580;
     font-weight: bold !important;
 }
 
+.arialGrayBold{
+    font-family: Arial !important;
+    color: #888 !important;
+    font-weight: bold !important;
+}
+
 .arialBold{
     font-family: Arial !important;
     font-weight: bold !important;
@@ -6716,6 +6722,21 @@ color: #e62580;
     top: 50px;
 }
 
+
+.bulkOrderModal{
+    display: none;
+    position: absolute;
+    top: 20%;
+    overflow: hidden;
+    height: 500px;
+    padding: 15px;
+}
+
+.bulkModalFrame{
+    position: relative;
+    float: left;
+    height: 100%;
+}
 /*
 slider pager end
 */

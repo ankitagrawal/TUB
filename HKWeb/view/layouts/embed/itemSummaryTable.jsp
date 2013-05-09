@@ -115,10 +115,14 @@ Pass an attribute called pricingDto to render a table with pricing details
 
 
                 <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
-                    <div class="hk">
+
+                    <div class="cut">
+                        <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;"> Rs
+                            <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
+                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                     </div>
-                    <div style="left: 70px;position: relative;font-size: 15px;"> Rs
-          <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
+                    <div style="left: 70px;position: relative;">
+          <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
                   value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                     </div>
@@ -169,10 +173,14 @@ Pass an attribute called pricingDto to render a table with pricing details
 
                     <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
                     <div class='price' style="position: relative;margin-left: 0px;width: 32%;">
-                        <div class="hk">
+
+                        <div class="cut">
+                            <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;">  Rs
+                                <fmt:formatNumber value="${invoiceLineItem.comboInstance.combo.markedPrice * hk:getComboCount(invoiceLineItem)}"
+                                                  pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                         </div>
-                        <div class="num" style="left: 70px;position: relative;"> Rs
-            <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
+                        <div style="left: 70px;position: relative;">
+            <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
                     value="${invoiceLineItem.comboInstance.combo.hkPrice * hk:getComboCount(invoiceLineItem)}"
                     pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                         </div>
@@ -215,10 +223,13 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
                 <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
                 <div class='price' style="position: relative;margin-left: 0px;width: 32%">
-                    <div class="hk">
+
+                    <div class="cut">
+                        <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;"> Rs<fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
                     </div>
-                    <div class="num" style="left: 70px;position: relative;"> Rs
-            <span class="lineItemSubTotalMrp" style="font-weight:bold;"><fmt:formatNumber
+                </div>
+                    <div style="left: 70px;position: relative;">
+            <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
                     value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
                     pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
                     </div>

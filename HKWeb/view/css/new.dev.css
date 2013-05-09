@@ -3067,12 +3067,28 @@ font-weight:bold;
 color: #e62580;
 }
 
-.raj_modal{
+.raj_modal2{
     overflow: scroll;
     height: 500px;
     top: 60px;
     padding: 15px 0 30px 30px;
 }
+
+.bulkOrderModal{
+    display: none;
+    position: absolute;
+    top: 20%;
+    overflow: hidden;
+    height: 500px;
+    padding: 15px;
+}
+
+.bulkModalFrame{
+    position: relative;
+    float: left;
+    height: 100%;
+}
+
 .banner_raj{
     position: absolute;
     float: left;

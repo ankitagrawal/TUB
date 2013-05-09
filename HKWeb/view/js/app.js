@@ -414,8 +414,8 @@ HK.CartOfferController = Ember.Controller.create({
         });
     },
 
-    removeOffer:function(event){
-        $("#" + event.context).click();
+    removeOffer:function(context){
+        $("#" + context).click();
     },
 
     scrollToOffer:function(){
@@ -423,17 +423,18 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getOffer:function(){
-        var self = this;
-        this.get("applicableOffers").clear();
-        this.get("finalApplicableOffers").clear();
-        this.get("array").clear();
-        this.get("totalOffers").clear();
-        self.get("currentlyAppliedOffer").clear();
-        tempArray = [],
+        var self = this,
+            tempArray;
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
             success: function ( data ) {
+                tempArray = [];
+                self.set("applicableOffers",[]);
+                self.set("finalApplicableOffers",[]);
+                self.set("array",[]);
+                self.set("totalOffers",[]);
+                self.set("currentlyAppliedOffer",[]);
                 data.applicableOffers.forEach(function(offer){
                     self.get("totalOffers").pushObject(Ember.Object.create(offer));
                     self.get("applicableOffers").pushObject(Ember.Object.create(offer));

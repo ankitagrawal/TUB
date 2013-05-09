@@ -29,7 +29,7 @@
 
     $('#discountCouponModal').jqm({trigger: '#sendCouponLink'});
     $("#discountCouponModal").append($('<iframe id="raj_frame" src="https://docs.google.com/spreadsheet/embeddedform?formkey=dFFBeGVKUzR6dl9NTkJsVUNlQWRYZnc6MQ" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
-    $("#discountCouponModal").addClass("raj_modal");
+    $("#discountCouponModal").addClass("raj_modal2");
 
   </script>
 </div>

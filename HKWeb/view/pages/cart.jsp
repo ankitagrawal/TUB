@@ -212,9 +212,9 @@
       $('#summaryTotalCashback').html('Rs. ' + responseData.data.totalCashback);
 
       if (responseData.data.shippingTotal == "0.00") {
-        $('#summaryShippingSubTotal').html('Shipping: Free!');
+        $('#summaryShippingSubTotal .checkoutContainerTextRight').html('Free!');
       } else {
-        $('#summaryShippingSubTotal').html('Shipping: Rs. ' + (responseData.data.shippingTotal));
+        $('#summaryShippingSubTotal .checkoutContainerTextRight').html((responseData.data.shippingTotal));
       }
       var mrp = 0.0;
       mrp = Math.round((responseData.data.productsMrpSubTotal).replace(',', ''));
@@ -321,7 +321,6 @@
   <div class='name' style="width: 25%;left: 30px">
     <span class="dispatchDateText2">Dispatch Days</span>
       <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
-      <span class="dispatchDateText2" style="font-size: 9px;">Delivery time would be extra</span>
       <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
       <span id="learnMore" class="learnMore">learn more</span>
       <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
@@ -451,8 +450,8 @@
       <c:choose>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
-            <div class="num"> Rs
-              <span class="lineItemSubTotalMrp"><fmt:formatNumber
+            <div class="num">
+              <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -460,11 +459,11 @@
         </c:when>
         <c:otherwise>
           <div class="cut">
-            <div class="num lineItemSubTotalMrp">
+            <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
               <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
           </div>
-          <div class='special green'>
+          <%--<div class='special green'>
             (saved
                     <span class='num '>
                       Rs  <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
@@ -472,10 +471,10 @@
                         value="${(cartLineItem.markedPrice - cartLineItem.hkPrice - cartLineItem.productVariant.postpaidAmount) * cartLineItem.qty}"
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
-          </div>
+          </div>--%>
           <div class="hk">
-            <div class="num"> Rs
-              <span class="lineItemHkTotal"><fmt:formatNumber
+            <div class="num">
+              <span class="lineItemHkTotal arialBlackBold">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -551,29 +550,29 @@
       <c:choose>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
-            <div class="num"> Rs
-      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
+            <div class="num">
+      <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
                                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
         </c:when>
         <c:otherwise>
           <div class="cut">
-            <div class="num lineItemSubTotalMrp">
+            <div class="num lineItemSubTotalMrp arialGrayBold">  Rs
               <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
           </div>
-          <div class='special green'>
+          <%--<div class='special green'>
             (saved
       <span class='num '>
       Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
           value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
       </span>
-          </div>
+          </div>--%>
           <div class="hk">
-            <div class="num"> Rs
-      <span class="lineItemHkTotal"> <fmt:formatNumber
+            <div class="num">
+      <span class="lineItemHkTotal arialBlackBold"> Rs <fmt:formatNumber
           value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -668,7 +667,7 @@
   <br/>
   <c:if
       test="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal > cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal +cartAction.pricingDto.postpaidServiceHkSubTotal}">
-        <%--<span class="special" style="font-style: initial;">
+       <%-- <span class="special" style="font-style: initial;">
           <span class="checkoutContainerText" style="font-size: 11px;">HealthKart Discount:</span><strong><span id="summaryHkDiscount"
                                                                                          class="green checkoutContainerTextRight">(<fmt:formatNumber
             value="${cartAction.pricingDto.totalHkProductsDiscount + cartAction.pricingDto.totalHkPrepaidServiceDiscount + cartAction.pricingDto.totalHkPostpaidServiceDiscount - cartAction.pricingDto.totalPostpaidAmount}"
@@ -695,8 +694,8 @@
       </span>
       <span class="special" id="summaryPromoDiscountContainer"
             style="display: ${cartAction.pricingDto.totalPromoDiscount > 0 ? 'block':'none'};font-style: initial;">
-        <span class="checkoutContainerText" style="font-size: 11px;">Promo Discount:</span> <strong><span id="summaryPromoDiscount"
-                                                                                  class="green checkoutContainerTextRight">(<fmt:formatNumber
+        <span class="checkoutContainerText lightBlue" style="font-size: 11px;">Promo Discount:</span> <strong><span id="summaryPromoDiscount"
+                                                                                  class="green lightBlue checkoutContainerTextRight">(<fmt:formatNumber
           value="${cartAction.pricingDto.totalPromoDiscount}" type="currency" currencySymbol="Rs. "/>)</span></strong>
       </span>
 </div>
@@ -718,11 +717,12 @@
 
 <div style="text-align:center; padding-top: 10px; display: ${cartAction.pricingDto.totalCashback > 0 ? 'block':'none'};"
      id="summaryTotalCashbackContainer">
-  <span class="special">
-    <span style="font-size: 11px;">You will get cashback</span>: <br/><strong>(<span id="summaryTotalCashback"
-                                                                                     class="green"><fmt:formatNumber
-      value="${cartAction.pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>)</strong>
-  </span>
+
+    <span class="checkoutContainerText lightBlue">You will get cashback:</span>
+            <span class="checkoutContainerTextRight lightBlue">
+                (<fmt:formatNumber
+                        value="${cartAction.pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/>)
+            </span>
 </div>
 
 
