@@ -51,7 +51,7 @@ public class BusyPopulateSalesData {
       lastUpdateDate = "2009-01-01";
     }
 
-//	  lastUpdateDate = "2013-04-01";
+	  lastUpdateDate = "2013-04-01";
 
     sql.eachRow("""
 
@@ -77,8 +77,7 @@ public class BusyPopulateSalesData {
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
 
-							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
-							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
+							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36'
 							and (so.is_service_order <> 1 or so.is_service_order is null)
@@ -306,8 +305,8 @@ public class BusyPopulateSalesData {
 							inner join warehouse w on w.id = so.warehouse_id
 							left join healthkart_busy.`transaction_header` th on so.id=th.hk_ref_no
 
-							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
-							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
+							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
+							((so.shipping_order_status_id = 110) and (so.is_service_order = 1)))
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and so.is_service_order = 1
 							and th.hk_ref_no is null
@@ -533,8 +532,7 @@ public class BusyPopulateSalesData {
 							inner join warehouse w on w.id = so.warehouse_id
 							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
 
-							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
-							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
+							where (((so.shipping_order_status_id in (180, 190, 200,210, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999))
 							and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) >= ${lastUpdateDate}
 							and bo.is_b2b_order = 1
 							and th.hk_ref_no is null
