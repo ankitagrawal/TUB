@@ -3,6 +3,8 @@ package com.hk.loyaltypg.service;
 import java.util.Collection;
 import java.util.List;
 
+import net.sourceforge.stripes.action.FileBean;
+
 import com.akube.framework.dao.Page;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -49,5 +51,10 @@ public interface LoyaltyProgramService {
 	
 	public double convertLoyaltyToRewardPoints(User user);
 
-	void updateUserBadgeInfo(User user);
+	public void updateUserBadgeInfo(User user);
+
+	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages);
+
+	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages);
+
 }

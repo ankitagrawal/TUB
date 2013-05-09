@@ -1,11 +1,15 @@
 package com.hk.loyaltypg.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import net.sourceforge.stripes.action.FileBean;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -15,15 +19,17 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.order.EnumOrderStatus;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
@@ -166,15 +172,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			info = new UserBadgeInfo();
 			info.setBadge(normalBadge);
 			info.setUser(user);
+			info.setCreationTime(Calendar.getInstance().getTime());
+			info.setUpdationTime(Calendar.getInstance().getTime());
 			return info;
 		}
 		info = infos.iterator().next();
-		Period period = new Period(new Date().getTime(), info.getUpdationTime().getTime());
-		if (period.getDays() > 365) {
-			info.setBadge(normalBadge);
-			info.setUpdationTime(Calendar.getInstance().getTime());
-			this.baseDao.save(info);
-		}
 		return info;
 	}
 
@@ -238,6 +240,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			userBadgeInfo.setUpdationTime(Calendar.getInstance().getTime());
 			this.baseDao.save(userBadgeInfo);
 		}
+
 	}
 
 	@Override
@@ -445,25 +448,136 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return totalPointsConverted;
 	}
 
-	
-/*	public void uploadLoyaltyCSVFile(File csvFile) {
-		
+	@Override
+	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages) {
+		Set<LoyaltyProduct> uploadedProducts = new HashSet<LoyaltyProduct>();
+		if (this.validateLoyaltyCsvFile(csvFileReader, uploadedProducts, errorMessages)) {
+			this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
+		}
 	}
 	
-	
-	private boolean validateLoyaltyCsvFile(File csvFile) {
+	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts, List<String> errorMessages) {
 		boolean flag = false;
+		List<LoyaltyProduct> products;
+		List<ProductVariant> variants;
+		DetachedCriteria criteria;
+		DetachedCriteria variantCriteria;
+
 		try {
-			FileReader fileReader = new FileReader(csvFile);
-			CSVReader reader = new CSVReader(fileReader);
+			CSVReader reader = new CSVReader(csvFileReader.getReader());
+			List<String[]> loyaltyProductList = reader.readAll();
+			
+			for(String[] productRow: loyaltyProductList) {
+				if(productRow.equals(loyaltyProductList.get(0))) {
+					continue;
+				}
+				criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
+				criteria.add(Restrictions.eq("variant.id", productRow[0]));
+				products = this.loyaltyProductDao.findByCriteria(criteria);
+				LoyaltyProduct prod;
+				try {
+					if (products!=null && !products.isEmpty()) {
+						prod = products.iterator().next();
+						prod.setPoints(Double.parseDouble(productRow[1]));
+					} else {
+						// For a new product, check if the variant exists
+						variantCriteria = DetachedCriteria.forClass(ProductVariant.class);
+						variantCriteria.add(Restrictions.eq("id", productRow[0]));
+						variants = this.loyaltyProductDao.findByCriteria(variantCriteria);
+						if (variants!=null && !variants.isEmpty()) {
+							prod = new LoyaltyProduct();
+							prod.setVariant(variants.iterator().next());
+							prod.setPoints(Double.parseDouble(productRow[1]));
+						} else {
+							errorMessages.add("No Product Variant found for the variant Id " + productRow[0]);
+							continue;
+						}
+					}
+					if (!uploadedProducts.add(prod)) {
+						errorMessages.add("Duplicate entries found in the file for the variant Id " + productRow[0]);
+					}
+				}catch (NumberFormatException nfe) {
+					errorMessages.add(productRow[1]+ " is not suitable value as points for product variant " + productRow[0]);
+				}
+				reader.close();
+			}
+			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorMessages.add("File not found for the given path");
+		} catch (IOException ioe) {
+			errorMessages.add("Failed to read the uploaded file");	
+			ioe.printStackTrace();
+		} catch (Exception e) {
+			errorMessages.add("Bad file format or corrupt file");
 		}
 		
+		if (!(errorMessages.size()>0)) {
+			flag = true;
+		}
 		return flag;
 	}
-*/	/**
+
+	@Override
+	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages) {
+		Set<UserBadgeInfo> uploadedBadges = new HashSet<UserBadgeInfo>();
+		if (this.validateBadgeCsvFile(csvFileReader, uploadedBadges, errorMessages)) {
+			this.loyaltyProductDao.saveOrUpdate(uploadedBadges);
+		}
+	}
+
+	private boolean validateBadgeCsvFile(FileBean csvFileReader,Set<UserBadgeInfo> uploadedBadges, List<String> errorMessages) {
+		boolean flag = false;
+		List<UserBadgeInfo> badges;
+		DetachedCriteria criteria;
+		
+		try {
+			CSVReader reader = new CSVReader(csvFileReader.getReader());
+			List<String[]> badgeList = reader.readAll();
+
+			for(String[] badgeRow: badgeList) {
+				if(badgeRow.equals(badgeList.get(0))) {
+					continue;
+				}
+				criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
+				try {
+				criteria.add(Restrictions.eq("user.id", Long.parseLong(badgeRow[0])));
+				} catch(NumberFormatException nfe) {
+					errorMessages.add("User Id: " + badgeRow[0] + " is not a valid user id.");
+				}
+				badges = this.loyaltyProductDao.findByCriteria(criteria);
+				UserBadgeInfo localBadge;
+				if (badges!=null && !badges.isEmpty()) {
+					localBadge = badges.iterator().next();
+					localBadge.setCardNumber(badgeRow[1]);
+				} else {
+					// For a new user, automatic badge creation not allowed
+					errorMessages.add("User Id: "+ badgeRow[0] +" is not a loyalty member" );
+					continue;
+				}
+
+				if (!uploadedBadges.add(localBadge)) {
+					errorMessages.add("Duplicate entries found in the file for the User Id " + badgeRow[0]);
+				}
+				reader.close();
+			}
+
+		} catch (FileNotFoundException e) {
+			errorMessages.add("File not found for the given path");
+		} catch (IOException ioe) {
+			errorMessages.add("Failed to read the uploaded file");	
+			ioe.printStackTrace();
+		} catch (Exception e) {
+			errorMessages.add("Bad file format or corrupt file");
+		}
+
+		if (!(errorMessages.size()>0)) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	
+	/**
 	 * 
 	 * Setters and getters start from here.
 	 */

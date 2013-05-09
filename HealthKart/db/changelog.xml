@@ -12524,10 +12524,10 @@
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1366966901739-5">
+<!--     <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="marut (generated)" id="1366356450756-01">
+ -->    <changeSet author="marut (generated)" id="1366356450756-01">
         <createTable tableName="marketing_feed">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -12676,6 +12676,9 @@
 				<constraints nullable="true" />
 			</column>
 			<column name="updation_time" type="DATETIME">
+				<constraints nullable="true" />
+			</column>
+			<column name="card_number" type="VARCHAR(25)">
 				<constraints nullable="true" />
 			</column>
 		</createTable>

@@ -42,9 +42,12 @@ public class UserBadgeInfo {
 	@Version
 	@Column(name = "updation_time")
 	private Date updationTime;
-    
+
+	@Column(name = "card_number")
+	private String cardNumber;
+	
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -52,7 +55,7 @@ public class UserBadgeInfo {
 	}
 
 	public User getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(User user) {
@@ -60,7 +63,7 @@ public class UserBadgeInfo {
 	}
 
 	public Badge getBadge() {
-		return badge;
+		return this.badge;
 	}
 
 	public void setBadge(Badge badge) {
@@ -68,7 +71,7 @@ public class UserBadgeInfo {
 	}
 
 	public Date getCreationTime() {
-		return creationTime;
+		return this.creationTime;
 	}
 
 	public void setCreationTime(Date creationTime) {
@@ -76,10 +79,24 @@ public class UserBadgeInfo {
 	}
 
 	public Date getUpdationTime() {
-		return updationTime;
+		return this.updationTime;
 	}
 
 	public void setUpdationTime(Date updationTime) {
 		this.updationTime = updationTime;
+	}
+
+	/**
+	 * @return the cardNumber
+	 */
+	public String getCardNumber() {
+		return this.cardNumber;
+	}
+
+	/**
+	 * @param cardNumber the cardNumber to set
+	 */
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
 	}
 }

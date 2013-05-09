@@ -51,7 +51,7 @@
         <fileset file="${lib.root.dir}/commons/commons-codec-1.4.jar"/>
         <fileset file="${lib.root.dir}/commons/commons-httpclient-3.0.1.jar"/>
         <fileset file="${lib.root.dir}/axis/commons-logging-1.0.4.jar"/>
-
+    	<fileset file="${lib.root.dir}/thirdParty/opencsv-2.3.jar"/>
 
     </path>
 

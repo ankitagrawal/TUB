@@ -28,8 +28,7 @@
 		<div id="logo" class="grid_6">
             <div class="logo-block">
               <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target="_blank">healthKart</s:link></span>
-			  <span class="embedMarginleft"><a href="http://www.healthkartplus.com" title='go to healthkartplus' target="_blank">healthkartplus</a></span>
-			  </p>
+			 </p>
               <div class="logoSubblock">
 			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
                 <img width="283" height="83" alt="healthkart logo" src="${pageContext.request.contextPath}/pages/loyalty/resources/images/hkStellar.png">
@@ -56,7 +55,7 @@
           <div class="grid_12">
             <div class="footerRight" style="width: 672px;">
             <div class="footerLeft" >
-              info@healthkart.com | Established in India |
+              info@healthkart.com |
                <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a>| Connect with Us:
             </div> &nbsp;
              	<a rel="nofollow" href="http://www.facebook.com/healthkart"

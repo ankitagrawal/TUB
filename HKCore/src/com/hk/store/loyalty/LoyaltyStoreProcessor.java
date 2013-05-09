@@ -65,7 +65,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 		double shoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(cartLineItems);
 		double userKarmaPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.userService.getUserById(userId));
 		if(shoppingPoints > userKarmaPoints ) {
-			throw new InvalidOrderException("Not sufficient karma points in account to purchase the product.");
+			throw new InvalidOrderException("Not sufficient loyalty points in account to purchase the product.");
 		}
 	}
 
