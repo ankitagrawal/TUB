@@ -414,9 +414,9 @@ $(document).ready(function() {
         <th>Surcharge</th>
         <th>Payable</th>
         <th>Weight <br/>(in gms)</th>
-        <th>Length</th>
-        <th>Breadth</th>
-        <th>Height</th>
+        <th>Length <br/>(in cm)</th>
+        <th>Breadth <br/>(in cm)</th>
+        <th>Height <br/>(in cm)</th>
 
     </tr>
     </thead>
