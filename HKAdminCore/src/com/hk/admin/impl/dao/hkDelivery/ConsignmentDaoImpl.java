@@ -1,20 +1,19 @@
 package com.hk.admin.impl.dao.hkDelivery;
 
-import java.util.Date;
-import java.util.List;
-
-import com.hk.domain.hkDelivery.*;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
-
 import com.akube.framework.dao.Page;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.EnumRunsheetStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.impl.dao.BaseDaoImpl;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -179,9 +178,9 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     }
 
     @Override
-    public List<Consignment> getConsignmentsByStatusAndOwner(Long consignmentStatus, String owner) {
-        String query = "from Consignment c where c.consignmentStatus.id = :consignmentStatus and c.owner = :owner";
-        return (List<Consignment>) findByNamedParams(query, new String[]{"consignmentStatus", "owner"}, new Object[]{consignmentStatus, owner});
+    public List<Consignment> getConsignmentsByStatusOwnerAndHub(Long consignmentStatus, String owner, Hub hub) {
+        String query = "from Consignment c where c.consignmentStatus.id = :consignmentStatus and c.owner = :owner and c.hub = :hub";
+        return (List<Consignment>) findByNamedParams(query, new String[]{"consignmentStatus", "owner", "hub"}, new Object[]{consignmentStatus, owner, hub});
     }
 
     @Override
@@ -193,7 +192,8 @@ public class ConsignmentDaoImpl extends BaseDaoImpl implements ConsignmentDao {
     @Override
     public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId) {
         String query = "from ConsignmentTracking ct where ct.consignmentLifecycleStatus.id = :consignmentLifecycleStatus and ct.consignment.id = :consignmentId";
-        return (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentLifecycleStatus", "consignmentId"}, new Object[]{consignmentLifecycleStatus, consignmentId});
+        return (List<ConsignmentTracking>) findByNamedParams(query, new String[]{"consignmentLifecycleStatus", "consignmentId"},
+                new Object[]{consignmentLifecycleStatus, consignmentId});
     }
 }
 

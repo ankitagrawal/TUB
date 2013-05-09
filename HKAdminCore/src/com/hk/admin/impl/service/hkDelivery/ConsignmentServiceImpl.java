@@ -356,8 +356,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         } else if (user.getRoleStrings().contains(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
             owner = RoleConstants.HK_DELIVERY_HUB_MANAGER;
         }
-
-        List<Consignment> consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
+        List<Consignment> consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
         Date currentDate = new Date();
