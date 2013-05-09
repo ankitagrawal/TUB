@@ -12589,4 +12589,9 @@
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
     </changeSet>
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
 </databaseChangeLog>
