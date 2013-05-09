@@ -2,7 +2,7 @@
 package com.hk.constants.report;
 
 public class ReportConstants {
-    
+
     public static final String INVOICE_ID = "INVOICE_ID";
     public static final String INVOICE_DATE = "INVOICE_DATE";
     public static final String ACCOUNTING_INVOICE_ID = "ACCOUNTING_INVOICE_ID";
@@ -130,7 +130,7 @@ public class ReportConstants {
     public static final String CN_NO = "CNNO";
     public static final String DELIVERED_DATE = "Delivered Date ";
     public static final String STATUS = "Status";
-    
+
     public static final String DEBTORS_BANK_DEPOSIT_CASH = "Debtors Bank Deposit Cash";   // cash deposit
     public static final String DEBTORS_BANK_DEPOSIT_OTHERS = "Debtors Bank Deposit Others";  //mapped to neft and cheque deposit
     public static final String DEBTORS_COD = "Debtors COD"; //mapped to COD
@@ -169,6 +169,34 @@ public class ReportConstants {
     public static final String HK_BARCODE = "HK BARCODE";
     public static final String COURIER_ID_STR = "Courier Id";                   
 
-	public static final String ZONE = "ZONE";
-	public static final String BARCODE = "BARCODE";
+    public static final String ZONE = "ZONE";
+    public static final String BARCODE = "BARCODE";
+    public static final String TYPE = "TYPE";
+    public static final String AIR_WAY_BILL = "AIR WAY BILL";
+    public static final String SENDER  = "SENDER";
+    public static final String REFERENCE_NUMBER = "REFERENCE NUMBER";
+    public static final String ATTENTION = "ATTENTION";
+    public static final String ADDRESS_1 = "ADDRESS1";
+    public static final String ADDRESS_2 = "ADDRESS2";
+    public static final String ADDRESS_3 = "ADDRESS3";
+    public static final String PINCODE = "PINCODE";
+    public static final String TEL_NUMBER = "TEL NUMBER";
+    public static final String MOBILE_NUMBER = "MOBILE NUMBER";
+    public static final String CONTENT = "CONTENT";
+    public static final String VENDOR_CODE = "VENDOR CODE";
+    public static final String SHIPPER_NAME = "SHIPPER NAME";
+    public static final String RETURN_ADDRESS1 = "RETURN_ADDRESS1";
+    public static final String RETURN_ADDRESS2 = "RETURN_ADDRESS2";
+    public static final String RETURN_ADDRESS3 = "RETURN_ADDRESS3";
+    public static final String COLLECTABLE_VALUES = "COLLECTABLE VALUES";
+    public static final String RETURN_PIN = "RETURN PIN";
+    public static final String LENGTH = "LENGHT(Cms)";
+    public static final String BREADTH = "BREADTH(Cms)";
+    public static final String HEIGHT = "HEIGHT(Cms)";
+    public static final String PIECES = "PIECES";
+    public static final String AREA_CUSTOMER_CODE = "AREA CUSTOMER CODE";
+    public static final String Ggn_Cod_Vendor_Code = "373925";
+    public static final String Ggn_Prepaid_Vendor_Code = "373914";
+    public static final String Mumbai_Cod_Vendor_Code = "608322";
+    public static final String Mumbai_Prepaid_Vendor_Code = "608333";
 }
