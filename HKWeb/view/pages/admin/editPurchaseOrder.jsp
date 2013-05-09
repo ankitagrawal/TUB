@@ -88,11 +88,15 @@ $(document).ready(function () {
 		return false;
 	});
             $('#saveSupplier').click(function(){
+                        var supplier=$('#supplier').val();
+                        if(supplier==null || supplier==""){
+                            alert("Please select correct supplier!!")
+                            return false;
+                        }
                        if(${pa.piCreated}){
-                           alert("Purchase Invoice created, you cannot change supplier!!!");
+                           alert("Purchase Invoice Already created, You cannot change supplier!!!");
                            return false;
                         }
-                           return true;
                       });
 
 	$('.valueChange').live("change", function () {        
@@ -301,6 +305,7 @@ function temp() {
         <td>New Supplier Name</td>
         <td>
         <s:select name="supplier" id ="supplier" >
+            <s:option value="">-------Select New Supplier-------</s:option>
             <c:forEach items="${pa.suppliers}" var ="supplierName" >
              <s:option value="${supplierName.id}">${supplierName.name}</s:option>
             </c:forEach>
