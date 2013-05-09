@@ -41,7 +41,8 @@ public class BusyPopulateSalesData {
     busySql.eachRow("""
                     select max(create_date) as max_date
                     from transaction_header
-                    where vch_type = 9;
+                    where vch_type = 9
+                    and vch_no like '%R%';
                       """){
           lastDate ->
           lastUpdateDate = lastDate.max_date;
