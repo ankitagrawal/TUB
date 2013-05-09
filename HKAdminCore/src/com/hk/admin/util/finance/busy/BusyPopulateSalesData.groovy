@@ -20,6 +20,7 @@ public class BusyPopulateSalesData {
   private String serverPassword;
   Sql sql;
   Sql busySql;
+	public static final String  BUSY_DB_NAME = "healthkart_busy";
 
   BusyPopulateSalesData(String hostName, String dbName, String serverUser, String serverPassword){
     this.hostName = hostName;
@@ -49,7 +50,7 @@ public class BusyPopulateSalesData {
       lastUpdateDate = "2009-01-01";
     }
 
-	  lastUpdateDate = "2013-04-01";
+//	  lastUpdateDate = "2013-04-01";
 
     sql.eachRow("""
 
@@ -289,7 +290,7 @@ public class BusyPopulateSalesData {
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
 							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
-							so.shipping_order_status_id , ship.return_date as return_date
+							so.shipping_order_status_id , ship.return_date as return_date, th.hk_ref_no
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
 							inner join base_order bo on so.base_order_id = bo.id
@@ -302,7 +303,7 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
+							left join ${BUSY_DB_NAME}.transaction_header th on so.id=th.hk_ref_no
 
 							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
@@ -515,7 +516,7 @@ public class BusyPopulateSalesData {
 							pay_gate.name as payment_gateway_name,
 							a.line1 as address_1, a.line2 as address_2, a.city, a.state,
 							w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
-							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+							c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type, th.hk_ref_no,
 							so.shipping_order_status_id , ship.return_date as return_date
 							from line_item li
 							inner join shipping_order so on li.shipping_order_id=so.id
@@ -529,7 +530,7 @@ public class BusyPopulateSalesData {
 							left join courier c on aw.courier_id = c.id
 							left join gateway pay_gate on p.gateway_id = pay_gate.id
 							inner join warehouse w on w.id = so.warehouse_id
-							left join healthkart_busy.transaction_header th on so.id=th.hk_ref_no
+							left join ${BUSY_DB_NAME}.transaction_header th on so.id=th.hk_ref_no
 
 							where (((so.shipping_order_status_id in (180, 190, 200, 220, 230, 250, 260) OR bo.order_status_id in (30,40,45,50,60,70)) and so.shipping_order_status_id <> 999) or
 							((so.shipping_order_status_id in (195,210) or bo.order_status_id = 42) and (so.drop_shipping=1 or so.is_service_order = 1)))
