@@ -76,7 +76,7 @@ public class GrnLineItem implements java.io.Serializable {
 	@Transient
 	private Double fillRate;
 	
-	@Column(name = "weight", nullable = false)
+	@Column(name = "weight")
 	private Double weight;
 	
 	public Long getId() {
