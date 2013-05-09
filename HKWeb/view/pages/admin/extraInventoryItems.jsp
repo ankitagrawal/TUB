@@ -327,7 +327,7 @@ $(document).ready(function () {
 		var taxable = costPrice * qty;
 		var surchargeCategory = 0.0;
 		var stateIdentifier = $('.state').html();
-		surchargeCategory = ${hk:getSurchargeValue(supplierState, warehouseState)};
+		surchargeCategory = ${hk:getSurchargeValue(extraInventory.supplierState, extraInventory.warehouseState)};
 		var tax = taxable * taxCategory;
 		var surcharge = tax * surchargeCategory;
 		var payable = surcharge + taxable + tax;

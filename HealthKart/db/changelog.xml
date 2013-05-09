@@ -12609,16 +12609,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-4">
-        <addColumn tableName="purchase_invoice">
-            <column name="pi_rtv_amount" type="DECIMAL(12,2)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-5">
-        <addColumn tableName="purchase_invoice">
-            <column name="short_amount" type="DECIMAL(12,2)"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-6">
         <addColumn tableName="purchase_invoice_line_item">
             <column name="pi_line_item_type_id" type="INT"/>
@@ -12635,9 +12625,6 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-13">
         <addForeignKeyConstraint baseColumnNames="pi_line_item_type_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_pi_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pi_line_item_type" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-14">
-        <addNotNullConstraint columnDataType="INT" columnName="tax_id" tableName="extra_inventory_line_item"/>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1367845228160-2">
         <addColumn tableName="extra_inventory_line_item">

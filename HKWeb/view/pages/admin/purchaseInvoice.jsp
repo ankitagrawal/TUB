@@ -514,7 +514,8 @@
 		var shortTotal = $(".shortFinal").val();
 		$("#shortTotal").val(shortTotal);
 		var rtvTotal = parseFloat($('.rtvFinal').length!=0?($(".rtvFinal").val()!=null?$(".rtvFinal").val():0):0);
-		$("#piRtvTotal").val(parseFloat($('.piTotal').val())+rtvTotal);
+		$("#rtvTotal").val(rtvTotal);
+		$("#grnTotal").val(parseFloat($('.piTotal').val()));
 		
 	});
 </script>
@@ -1003,8 +1004,7 @@
 	</tr>
 	<tr>
 		<td colspan="12"></td><td>Short Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortTotalPayable"
-		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
+		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortTotalPayable"/></td>
 	</tr>
 	</tfoot>
 </table>
@@ -1210,13 +1210,15 @@
 <table >
 <tr>
 <th></th>
-<th>PI+RTV TOTAL</th>
-<th>SHORT TOTAL</th>
+<th>GRN</th>
+<th>SHORT</th>
+<th>RTV</th>
 </tr>
 <tr>
 <td><label>Final Payable Amounts</label></td>
-<td><input id= "piRtvTotal" readonly="readonly" /></td>
+<td><input id= "grnTotal" readonly="readonly" /></td>
 <td><input id= "shortTotal" readonly="readonly" /></td>
+<td><input id= "rtvTotal" readonly="readonly" /></td>
 </tr>
 </table>
 </fieldset>

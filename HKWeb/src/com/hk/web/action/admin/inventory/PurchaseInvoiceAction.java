@@ -211,7 +211,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	public Resolution importRtv(){
 		
 		//fetch all rtv notes
-		
 		Set<RtvNote> rtvSet = new HashSet<RtvNote>();
 		for(GoodsReceivedNote grn : purchaseInvoice.getGoodsReceivedNotes()){
 			PurchaseOrder po = grn.getPurchaseOrder();
@@ -239,7 +238,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		if(purchaseInvoice.getRtvNotes()!=null && purchaseInvoice.getRtvNotes().size()>0){
 			piHasRtvList.addAll(purchaseInvoice.getRtvNotes());
 		}
-		Double piRtvAmount  =0.0;
+		Double rtvAmount  =0.0;
 		for (RtvNote rtvNote : piHasRtvList) {
 			ExtraInventory extraInventory = rtvNote.getExtraInventory();
 			List<ExtraInventoryLineItem> eiLineItems = extraInventoryLineItemService
@@ -248,13 +247,22 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				for (ExtraInventoryLineItem eiLineItem : eiLineItems) {
 					if (eiLineItem.isRtvCreated()!=null && eiLineItem.isRtvCreated().equals(Boolean.TRUE)) {
 						extraInventoryLineItems.add(eiLineItem);
-						piRtvAmount+=eiLineItem.getPayableAmount();
+						if(eiLineItem.getPayableAmount()!=null){
+						rtvAmount+=eiLineItem.getPayableAmount();
+						}
 					}
 				}
 			}
 		}
 		purchaseInvoice.setRtvNotes(piHasRtvList);
-		purchaseInvoice.setPiRtvAmount(piRtvAmount);
+		/*if(purchaseInvoice.getPiRtvShortAmount()!=null){
+			Double piRtvShortAmount = purchaseInvoice.getPiRtvShortAmount();
+			piRtvShortAmount+=rtvAmount;
+			purchaseInvoice.setPiRtvShortAmount(piRtvShortAmount);
+		}
+		else{
+			purchaseInvoice.setPiRtvShortAmount(purchaseInvoice.getFinalPayableAmount());
+		}*/
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
@@ -269,8 +277,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
-		Double piRtvAmount = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable;
-		purchaseInvoice.setPiRtvAmount(piRtvAmount);
+		Double piRtvShortTotal = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable+shortTotalPayable;
+		purchaseInvoice.setPiRtvShortAmount(piRtvShortTotal);
+		
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
@@ -326,13 +335,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 			}
 
-			if(purchaseInvoice.getPiRtvAmount()!=null){
-				Double piRtvDiff = purchaseInvoice.getFinalPayableAmount()-piFinalPayable;
-				Double piRtv = purchaseInvoice.getPiRtvAmount();
-				piRtv+=piRtvDiff;
-				purchaseInvoice.setPiRtvAmount(piRtv);
-			}
-			
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -377,8 +379,9 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
 				}
 			}
-			purchaseInvoice.setShortAmount(shortTotalPayable);
-
+			
+			//Double piRtvShortTotal = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable+shortTotalPayable;
+			//purchaseInvoice.setPiRtvShortAmount(piRtvShortTotal);
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
