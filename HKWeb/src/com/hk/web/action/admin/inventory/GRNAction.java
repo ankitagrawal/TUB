@@ -454,6 +454,9 @@ public class GRNAction extends BasePaginatedAction {
 		purchaseInvoice.setSurchargeAmount(totalSurcharge);
 		purchaseInvoice.setPayableAmount(totalPayable);
 		purchaseInvoice.setFinalPayableAmount(totalPayable - overallDiscount);
+		purchaseInvoice.setShortAmount(0.0);
+		purchaseInvoice.setRtvAmount(0.0);
+		purchaseInvoice.setPiRtvShortTotal(totalPayable - overallDiscount);
 		purchaseInvoiceDao.save(purchaseInvoice);
 
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));

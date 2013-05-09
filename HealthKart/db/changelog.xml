@@ -12657,4 +12657,19 @@
     <changeSet author="Nihal (generated)" id="1367911904146-2">
         <dropNotNullConstraint columnDataType="INT" columnName="tax_id" tableName="extra_inventory_line_item"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-2">
+        <addColumn tableName="purchase_invoice">
+            <column name="pi_rtv_short_total" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-3">
+        <addColumn tableName="purchase_invoice">
+            <column name="rtv_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-4">
+        <addColumn tableName="purchase_invoice">
+            <column name="short_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

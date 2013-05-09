@@ -1004,7 +1004,7 @@
 	</tr>
 	<tr>
 		<td colspan="12"></td><td>Short Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="shortTotalPayable"/></td>
+		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.shortAmount"/></td>
 	</tr>
 	</tfoot>
 </table>
@@ -1017,7 +1017,6 @@
 <s:form id="rtvForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <p style="font-weight: bold;font-size: medium;">RTV Line Items</p>
-
 <table id="rtvTable" class="rtvTable">
 <thead>
 	<tr>
@@ -1196,7 +1195,7 @@
 	</tr>
 	<tr>
 		<td colspan="11"></td><td>RTV Final Total</td>
-		<td><input readonly="readonly" class="finalPayable rtvFinal" name="rtvTotalPayable"/></td>
+		<td><input readonly="readonly" class="finalPayable rtvFinal" name="purchaseInvoice.rtvAmount"/></td>
 		            <td></td>
 	</tr>
 	</tfoot>

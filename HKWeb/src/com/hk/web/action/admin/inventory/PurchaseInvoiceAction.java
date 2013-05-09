@@ -215,9 +215,11 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		for(GoodsReceivedNote grn : purchaseInvoice.getGoodsReceivedNotes()){
 			PurchaseOrder po = grn.getPurchaseOrder();
 			ExtraInventory ei = extraInventoryService.getExtraInventoryByPoId(po.getId());
-			RtvNote rtv = rtvNoteService.getRtvNoteByExtraInventory(ei.getId());
-			if(rtv!=null){
-				rtvSet.add(rtv);
+			if (ei != null) {
+				RtvNote rtv = rtvNoteService.getRtvNoteByExtraInventory(ei.getId());
+				if (rtv != null) {
+					rtvSet.add(rtv);
+				}
 			}
 		}
 		rtvList.addAll(rtvSet);
@@ -255,14 +257,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			}
 		}
 		purchaseInvoice.setRtvNotes(piHasRtvList);
-		/*if(purchaseInvoice.getPiRtvShortAmount()!=null){
-			Double piRtvShortAmount = purchaseInvoice.getPiRtvShortAmount();
-			piRtvShortAmount+=rtvAmount;
-			purchaseInvoice.setPiRtvShortAmount(piRtvShortAmount);
-		}
-		else{
-			purchaseInvoice.setPiRtvShortAmount(purchaseInvoice.getFinalPayableAmount());
-		}*/
+		purchaseInvoice.setRtvAmount(rtvAmount);
+		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+rtvAmount);
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
@@ -277,9 +273,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
-		Double piRtvShortTotal = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable+shortTotalPayable;
-		purchaseInvoice.setPiRtvShortAmount(piRtvShortTotal);
-		
+		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
@@ -334,7 +328,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoice.setReconcilationDate(new Date());
 				}
 			}
-
+			purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
@@ -379,9 +373,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
 				}
 			}
-			
-			//Double piRtvShortTotal = purchaseInvoice.getFinalPayableAmount()+rtvTotalPayable+shortTotalPayable;
-			//purchaseInvoice.setPiRtvShortAmount(piRtvShortTotal);
+			purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
 			getPurchaseInvoiceService().save(purchaseInvoice);
 		}
 		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
