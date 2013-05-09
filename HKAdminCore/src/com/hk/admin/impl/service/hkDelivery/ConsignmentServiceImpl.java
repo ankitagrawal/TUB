@@ -1,33 +1,26 @@
 package com.hk.admin.impl.service.hkDelivery;
 
-import java.util.*;
-
+import com.akube.framework.dao.Page;
+import com.hk.admin.dto.ConsignmentDto;
 import com.hk.admin.dto.NdrDto;
+import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
+import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.hkDelivery.HubService;
+import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
+import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.HKDeliveryConstants;
+import com.hk.domain.hkDelivery.*;
+import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.user.User;
+import com.hk.pact.service.UserService;
 import com.hk.util.ShipmentServiceMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.akube.framework.dao.Page;
-import com.hk.admin.dto.ConsignmentDto;
-import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
-import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
-import com.hk.admin.pact.service.hkDelivery.RunSheetService;
-import com.hk.constants.hkDelivery.EnumConsignmentStatus;
-import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
-import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.User;
-import com.hk.pact.service.UserService;
+import java.util.*;
 
 @Service
 public class ConsignmentServiceImpl implements ConsignmentService {
@@ -322,20 +315,20 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
+    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
         return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, pageNo, perPage);
     }
 
     @Override
     public Consignment setOwnerForConsignment(Consignment consignment, String owner) {
         consignment.setOwner(owner);
-        return (Consignment)consignmentDao.save(consignment);
+        return (Consignment) consignmentDao.save(consignment);
     }
 
     @Override
-    public Integer getAttempts(Consignment consignment){
-      List<ConsignmentTracking> consignmentTrackingList =  getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(),consignment.getId());
-      return consignmentTrackingList.size();
+    public Integer getAttempts(Consignment consignment) {
+        List<ConsignmentTracking> consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignment.getId());
+        return consignmentTrackingList.size();
     }
 
     @Override
@@ -356,7 +349,15 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         } else if (user.getRoleStrings().contains(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
             owner = RoleConstants.HK_DELIVERY_HUB_MANAGER;
         }
-        List<Consignment> consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
+
+        List<Consignment> consignments = new ArrayList<Consignment>();
+
+        if (owner.equals(RoleConstants.CUSTOMER_SUPPORT)) {
+            consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
+        } else if (owner.equals(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
+            consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
+        }
+
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
         Date currentDate = new Date();
@@ -394,7 +395,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             }
             ndrDto.setNonDeliveryReason(nonDeliveryReason);
 
-            if(consignmentObj.getTargetDeliveryDate() != null){
+            if (consignmentObj.getTargetDeliveryDate() != null) {
                 ndrDto.setFutureDate(consignmentObj.getTargetDeliveryDate());
             }
 

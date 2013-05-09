@@ -40,4 +40,6 @@ public interface ConsignmentDao extends BaseDao {
     public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId);
 
     public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId);
+
+    public List<Consignment> getConsignmentsByStatusAndOwner(Long consignmentStatus, String owner);
 }
