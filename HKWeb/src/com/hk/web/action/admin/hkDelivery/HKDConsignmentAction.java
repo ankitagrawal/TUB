@@ -54,7 +54,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
     private Boolean reconciled;
     private Runsheet runsheet;
     private User loggedOnUser;
-    private Integer ndrIndex;
+    private List<String> ndrIndex = new ArrayList<String>();
     private List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
 
     @Autowired
@@ -182,7 +182,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         List<ConsignmentTracking> consignmentTrackingList1 = new ArrayList<ConsignmentTracking>();
 
         for (int i = 0; i < ndrDtoList.size(); i++) {
-            if (i == ndrIndex) {
+            if (ndrIndex.get(i).equals("YES")) {
                 NdrDto ndrDto = ndrDtoList.get(i);
                 Consignment consignment1 = consignmentService.getConsignmentByAwbNumber(ndrDto.getAwbNumber());
                 ConsignmentTracking consignmentTracking1 = consignmentService.getConsignmentTrackingById(ndrDto.getConsignmentTrackingId());
@@ -370,11 +370,11 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         this.ndrDtoList = ndrDtoList;
     }
 
-    public Integer getNdrIndex() {
+    public List<String> getNdrIndex() {
         return ndrIndex;
     }
 
-    public void setNdrIndex(Integer ndrIndex) {
+    public void setNdrIndex(List<String> ndrIndex) {
         this.ndrIndex = ndrIndex;
     }
 

@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.hkDelivery.RunSheetService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumNDRAction;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.domain.hkDelivery.*;
 import com.hk.domain.order.ShippingOrder;
@@ -344,17 +345,20 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     @Override
     public List<NdrDto> getNdrByOwner(User user) {
         String owner = "";
-        if (user.getRoleStrings().contains(RoleConstants.CUSTOMER_SUPPORT)) {
-            owner = RoleConstants.CUSTOMER_SUPPORT;
-        } else if (user.getRoleStrings().contains(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
-            owner = RoleConstants.HK_DELIVERY_HUB_MANAGER;
+        String hubManager = RoleConstants.HK_DELIVERY_HUB_MANAGER;
+        String customerSupport = RoleConstants.CUSTOMER_SUPPORT;
+
+        if (user.getRoleStrings().contains(customerSupport)) {
+            owner = customerSupport;
+        } else if (user.getRoleStrings().contains(hubManager)) {
+            owner = hubManager;
         }
 
         List<Consignment> consignments = new ArrayList<Consignment>();
 
-        if (owner.equals(RoleConstants.CUSTOMER_SUPPORT)) {
+        if (owner.equals(customerSupport)) {
             consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
-        } else if (owner.equals(RoleConstants.HK_DELIVERY_HUB_MANAGER)) {
+        } else if (owner.equals(hubManager)) {
             consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
         }
 
@@ -384,7 +388,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             });
             ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
 
-            //ndrDto saves the remark when a ndr action takes place
+            // consignment tracking remarks already contains the ndr comment when a ndr action has taken place already
             String nonDeliveryReason = consignmentTracking.getRemarks();
             if (nonDeliveryReason.contains("Ndr Comment")) {
                 nonDeliveryReason = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[0];
@@ -395,12 +399,14 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             }
             ndrDto.setNonDeliveryReason(nonDeliveryReason);
 
-            if (consignmentObj.getTargetDeliveryDate() != null) {
+            if (consignmentObj.getTargetDeliveryDate() != null && owner.equals(hubManager)) {
                 ndrDto.setFutureDate(consignmentObj.getTargetDeliveryDate());
             }
 
             if (consignmentTracking.getNdrResolution() != null && !StringUtils.isBlank(consignmentTracking.getNdrResolution())) {
-                ndrDto.setNdrResolution(consignmentTracking.getNdrResolution());
+                if(consignmentTracking.getNdrResolution().equals(EnumNDRAction.CustomerNotContactable.toString()) || owner.equals(hubManager)){
+                    ndrDto.setNdrResolution(consignmentTracking.getNdrResolution());
+                }
             }
 
             ndrDto.setConsignmentTrackingId(consignmentTracking.getId());

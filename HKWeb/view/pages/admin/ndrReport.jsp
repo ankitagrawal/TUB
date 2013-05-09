@@ -1,8 +1,7 @@
+<%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.hkDelivery.EnumNDRAction" %>
-<%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" %>
-<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="NDR Report">
@@ -71,17 +70,19 @@
                                                            label="ndrAction"/>
                                 </s:select>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
-                                ${ndrDto.ndrResolution}
-                            </shiro:hasPermission>
+                            <shiro:lacksPermission name="<%=PermissionConstants.EDIT_NDR%>">
+                                <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
+                                    ${ndrDto.ndrResolution}
+                                </shiro:hasPermission>
+                            </shiro:lacksPermission>
                         </td>
 
                         <td style="width: 90px;">
                             <div class="show_date" style="width: 135px;">
                                 <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
-                                <s:text formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="date_input"
-                                        value="${ndrDto.futureDate}"
-                                        name="ndrDtoList[${ctr.index}].futureDate"/>
+                                    <s:text formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" class="date_input"
+                                            value="${ndrDto.futureDate}"
+                                            name="ndrDtoList[${ctr.index}].futureDate"/>
                                 </shiro:hasPermission>
                             </div>
 
@@ -91,9 +92,11 @@
                         </td>
 
                         <td>
-                            <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
-                                ${ndrDto.remarks}
-                            </shiro:hasPermission>
+                            <shiro:lacksPermission name="<%=PermissionConstants.EDIT_NDR%>">
+                                <shiro:hasPermission name="<%=PermissionConstants.VIEW_NDR%>">
+                                    ${ndrDto.remarks}
+                                </shiro:hasPermission>
+                            </shiro:lacksPermission>
                             <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
                                 <s:text name="ndrDtoList[${ctr.index}].remarks" style="width: 150px;" maxlength="100"/>
                             </shiro:hasPermission>
@@ -101,12 +104,12 @@
 
                         <td>
                             <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
-                                <s:submit name="saveNdr" value="Save NDR"/>
+                                <s:submit name="saveNdr" value="Save NDR" class="submit"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentid"
                                           value="${ndrDto.consignmentId}"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentTrackingId"
                                           value="${ndrDto.consignmentTrackingId}"/>
-                                <s:hidden name="ndrIndex" value="${ctr.index}"/>
+                                <s:hidden name="ndrIndex[${ctr.index}]" class="index" value="NO"/>
                             </shiro:hasPermission>
                         </td>
                     </tr>
@@ -128,11 +131,17 @@
         function showDateForNdr(parent) {
             if (parent.find('.future_date').val().trim() === futureDateAction) {
                 parent.find('.show_date').show();
+            } else {
+                parent.find('.show_date').hide();
             }
         }
 
         futureDate.change(function () {
             showDateForNdr($(this).parent().parent());
+        });
+
+        $('.submit').click(function () {
+            $(this).parent().parent().find('.index').val('YES');
         });
     });
 </script>
