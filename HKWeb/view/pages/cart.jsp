@@ -434,7 +434,7 @@
 
       <%--HTML code for dispatch date--%>
       <div class="dispatchedDateNew">
-          <div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div>
+          <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} working days</div>
       </div>
 
 
@@ -688,7 +688,7 @@
 
       <span class="special" id="summarySubscriptionDiscountContainer"
             style="display: ${cartAction.pricingDto.subscriptionDiscount > 0 ? 'block':'none'};font-style: initial;">
-        <span class="checkoutContainerText" style="font-size: 11px;">Subscription Discount:</span> <strong><span id="totalSubscriptionDiscount"
+        <span class="checkoutContainerText" style="font-size: 12px;">Subscription Discount:</span> <strong><span id="totalSubscriptionDiscount"
                                                                                   class="green checkoutContainerTextRight">(<fmt:formatNumber
           value="${cartAction.pricingDto.subscriptionDiscount}" type="currency" currencySymbol="Rs. "/>)</span></strong>
       </span>
