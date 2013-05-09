@@ -259,7 +259,7 @@
         <div>
 			<c:if test="${fn:length(pa.productImages) > 1 && !pa.product.productHaveColorOptions}">
 				<%--<ul class="thumblist">--%>
-_prod				<ul id="mycarousel" class="jcarousel-skin-tango">
+				<ul id="mycarousel" class="jcarousel-skin-tango">
 					<c:forEach items="${pa.productImages}" var="productImage">
 						<li><a href='javascript:void(0);' rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, productImage.id,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, productImage.id,isSecure)}'}">
               <img itemprop="image" style="height:75px;" src='${hk:getS3ImageUrl(imageSmallSizeCorousal, productImage.id,isSecure)}'></a>
