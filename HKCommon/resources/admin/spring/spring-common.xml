@@ -125,7 +125,7 @@
 
     <bean id="connectionFactory"
           class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="brokerURL" value="tcp://172.16.3.92:61616" />
     </bean>
 
     <!-- A POJO that implements the JMS message listener -->
