@@ -29,6 +29,11 @@
       Pincode Default Courier
     </s:link>
   </h3>
+	 <h3>
+    <s:link beanclass="com.hk.web.action.admin.courier.ZoneAction">
+      Zone Crud Operations
+    </s:link>
+  </h3>
 </div>
 
 <div class="cl"></div>

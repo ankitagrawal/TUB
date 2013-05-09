@@ -12589,7 +12589,12 @@
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-2">
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
+		<changeSet author="Nihal (generated)" id="1367838930686-2">
         <createTable tableName="pi_line_item_type">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
