@@ -6,16 +6,15 @@ import com.hk.admin.dto.inventory.PurchaseOrderDto;
 import com.hk.admin.pact.dao.inventory.PoLineItemDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.util.TaxUtil;
-import static com.hk.constants.core.HealthkartConstants.CompanyName.brightLifeCarePvtLtd;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.TaxComponent;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.inventory.SkuService;
-import com.hk.pact.service.core.WarehouseService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,24 +106,19 @@ public class PurchaseOrderManager {
 
 
 		StringBuffer warehouseAddress = new StringBuffer();
-		warehouseAddress.append("Billing Address- " + newline + brightLifeCarePvtLtd);
-		if (purchaseOrder.getWarehouse() != null) {
-			if (purchaseOrder.getWarehouse().getLine1() != null) {
-				warehouseAddress.append(newline + purchaseOrder.getWarehouse().getLine1());
-			}
-			if (purchaseOrder.getWarehouse().getLine2() != null) {
-				warehouseAddress.append(newline + purchaseOrder.getWarehouse().getLine2());
-			}
-			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getCity());
-			warehouseAddress.append(newline + purchaseOrder.getWarehouse().getState());
-			//warehouseAddress.append(newline + "TIN: " + purchaseOrder.getWarehouse().getTin());
-      if (purchaseOrder.getWarehouse().equals(getWarehouseService().getMumbaiWarehouse())) {
-        warehouseAddress.append(newline + "TIN: 27210893736");
-      } else {
-        warehouseAddress.append(newline + "TIN: 06101832036");
+    Warehouse warehouse = purchaseOrder.getWarehouse();
+    if (warehouse != null) {
+      warehouseAddress.append("Billing Address- " + newline + warehouse.getName());
+      if (warehouse.getLine1() != null) {
+        warehouseAddress.append(newline + warehouse.getLine1());
       }
-
-		}
+      if (warehouse.getLine2() != null) {
+        warehouseAddress.append(newline + warehouse.getLine2());
+      }
+      warehouseAddress.append(newline + warehouse.getCity());
+      warehouseAddress.append(newline + warehouse.getState());
+      warehouseAddress.append(newline + "TIN: " + purchaseOrder.getWarehouse().getTin());
+    }
 
 		StringBuffer supplierDetails = new StringBuffer();
 		supplierDetails.append(purchaseOrder.getSupplier().getName());

@@ -72,7 +72,7 @@
             value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
             currencySymbol="Rs "/> </strong></h4>
     <h6>If you have any trouble during the payment process, call our
-        helpline number <strong class='red'> 0124 - 4502930 </strong></h6>
+        helpline number <strong class='red'> 0124 - 4616444 </strong></h6>
 </div>
 
 <div class="alert messages" style="font-size: 14px; color: red">
@@ -240,9 +240,9 @@
                         <div class="label">Contact Name</div>
                         <s:text name="codContactName"
                                 value="${orderSummary.order.address.name}"/>
-                        <div class="label">Contact Phone</div>
+                        <div class="label">Contact Mobile</div>
                         <s:text name="codContactPhone"
-                                value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                                value="${orderSummary.order.address.phone}" id="phoneNo" class="contactMobile"/>
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
                             <s:submit name="pre" value="Place Order"
@@ -679,3 +679,14 @@
    }
 
    </style>
+
+<script type="text/javascript">
+  /*
+  $(document).ready(function(){
+     $('.contactMobile').blur(function validateMobile(){
+       var mobile = this.value;
+       if()
+     });
+  });*/
+  
+</script>

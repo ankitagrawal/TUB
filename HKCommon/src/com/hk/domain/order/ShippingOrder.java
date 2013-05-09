@@ -6,6 +6,7 @@ import com.hk.domain.accounting.AccountingInvoice;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
+import com.hk.domain.queue.ActionItem;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.warehouse.Warehouse;
@@ -68,6 +69,12 @@ public class ShippingOrder implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
+/*
+
+    @JsonSkip
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
+    private ActionItem actionItem;
+*/
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "shippingOrder")
     @Where(clause = "deleted = 0")
@@ -317,4 +324,5 @@ public class ShippingOrder implements java.io.Serializable {
     public void setShippingOrderCategories(Set<ShippingOrderCategory> categories) {
         this.shippingOrderCategories = categories;
     }
+
 }

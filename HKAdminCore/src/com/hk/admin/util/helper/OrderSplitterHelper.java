@@ -64,14 +64,16 @@ public class OrderSplitterHelper {
             for (CartLineItem cartLineItem : dummyOrder.getCartLineItemList()) {
                 ProductVariant productVariant = cartLineItem.getProductVariant();
                 Warehouse warehouse = dummyOrder.getWarehouse();
-                Sku sku;
+                Sku sku = null;
                 try {
                     sku = skuService.getSKU(productVariant, warehouse);
                 } catch (NoSkuException e) {
-                    sku = skuService.findSKU(productVariant, warehouseService.getWarehoueForFlipping(warehouse));
+                    List<Sku> skuList = skuService.getSkus(productVariant, warehouseService.getWarehoueForFlipping(warehouse));
+                    if(skuList != null && !skuList.isEmpty()){
+                      sku = skuList.get(0);
+                    }
                 } catch (Exception e) {
                     logger.debug("no sku exists for variant" + productVariant.getId());
-                    sku = null;
                 }
                 if (sku != null) {
 	                Double netHkPriceForVariant = cartLineItem.getHkPrice() * cartLineItem.getQty() - cartLineItem.getDiscountOnHkPrice();

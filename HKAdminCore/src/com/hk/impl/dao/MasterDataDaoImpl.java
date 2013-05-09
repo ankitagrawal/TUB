@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
 import com.hk.admin.pact.service.courier.DispatchLotService;
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.courier.*;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.pos.DiscountConstants;
@@ -15,6 +16,7 @@ import com.hk.constants.shipment.EnumPacker;
 import com.hk.constants.shipment.EnumPicker;
 import com.hk.constants.shipment.EnumShipmentServiceType;
 import com.hk.domain.courier.*;
+import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.service.core.WarehouseService;
 import com.hk.domain.review.Mail;
@@ -471,7 +473,8 @@ public class MasterDataDaoImpl implements MasterDataDao {
     }
 
     public List<Warehouse> getAllWarehouse() {
-        return warehouseService.getAllWarehouses();
+        //return warehouseService.getAllWarehouses();
+        return warehouseService.getAllActiveWarehouses();
     }
 
     public List<EnumShipmentServiceType> getAllEnumShipmentServiceTypes() {
@@ -512,6 +515,14 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<ReconciliationType> getProductAuditedReconVoucherType() {
         return Arrays.asList(EnumReconciliationType.ProductVariantAudited.asReconciliationType());
+    }
+
+    public List<ConsignmentLifecycleStatus> getConsignmentLifecycleStatusList() {
+        return getBaseDao().getAll(ConsignmentLifecycleStatus.class);
+    }
+
+    public List<EnumUserCodCalling> getUserCodCallStatus() {
+        return Arrays.asList(EnumUserCodCalling.PENDING_WITH_KNOWLARITY, EnumUserCodCalling.THIRD_PARTY_FAILED, EnumUserCodCalling.PENDING_WITH_EFFORT_BPO);
     }
 
 }

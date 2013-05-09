@@ -173,7 +173,7 @@ ALTER EVENT healthkart_prod.insert_product_variant_inventory_history
 ON SCHEDULE
 
 EVERY '1' DAY
-STARTS '2013-04-05 00:00:01'
+STARTS '2013-04-05 00:20:00'
 DO
 BEGIN
 	drop table if exists healthkart_prod.temp_pvi_history;

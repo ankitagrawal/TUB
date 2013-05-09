@@ -74,4 +74,5 @@ public interface ConsignmentService {
 
 	ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
+    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage);
 }

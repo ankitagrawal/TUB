@@ -48,7 +48,7 @@ public class BusyPopulateRtoData {
     if(lastUpdateDate == null){
       lastUpdateDate = "2009-01-01";
     }
-	  lastUpdateDate = "2012-04-01";
+	  lastUpdateDate = "2013-04-01";
     sql.eachRow("""
 
 									select so.id as shipping_order_id,
@@ -76,7 +76,6 @@ public class BusyPopulateRtoData {
 									where ((so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70)) and so.shipping_order_status_id <> 999)
 									and (ship.return_date >=${lastUpdateDate}
 									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
-									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) < '2013-04-01'
 									and ship.return_date is not null
 									GROUP BY so.id
 									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
@@ -106,13 +105,22 @@ public class BusyPopulateRtoData {
 
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
-      if(accountingInvoice.warehouse_id == 1){
-        series = "HR";
-      }
-      else{
-        series = "MH";
-      }
+	     Long warehouseId =  accountingInvoice.warehouse_id;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
       date = accountingInvoice.return_date;	    
 
@@ -190,7 +198,22 @@ public class BusyPopulateRtoData {
         out_of_state = 1;
       }
 
-      material_centre = accountingInvoice.warehouse;
+ //     material_centre = accountingInvoice.warehouse;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          material_centre = "Gurgaon Warehouse";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		      material_centre = "Mumbai Warehouse";
+	      }
+	      else if(warehouseId == 301){
+			      material_centre = "Punjabi Bagh Store";
+		    }
+	      else if(warehouseId == 999){
+			      material_centre = "Corporate Office";
+		    }
+	      else if(warehouseId == 401){
+			      material_centre = "Kapashera Warehouse";
+		    }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
