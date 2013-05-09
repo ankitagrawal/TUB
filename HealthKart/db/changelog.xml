@@ -12584,6 +12584,11 @@
     <changeSet author="Ajeet (generated)" id="1367657291705-4">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="2013-05-06-01">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_delivery_days" type="INT"/>
+        </addColumn>
+    </changeSet>
 		<changeSet author="Tarun (written)" id="2013-06-05-01">
 			<sql>
 				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT

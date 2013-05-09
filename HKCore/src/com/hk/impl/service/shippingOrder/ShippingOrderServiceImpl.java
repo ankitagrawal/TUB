@@ -11,6 +11,7 @@ import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.impl.service.queue.BucketService;
+import com.hk.util.ShippingCostCutOff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,17 +187,23 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 }
                 if (shippingOrder.getShipment() == null) {
                     reasons.add(EnumReason.ShipmentNotCreated.asReason());
+                } else {
+                    //putting checks for shipping cost
+                    Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
+                    if (estimatedShippingCharges > ShippingCostCutOff.minAllowedShippingCharges && estimatedShippingCharges >= ShippingCostCutOff.calculateCutoffAmount(shippingOrder)) {
+                        reasons.add(EnumReason.HighShippingCost.asReason());
+                    }
                 }
                 if (!reasons.isEmpty()) {
                     for (Reason reason : reasons) {
-                        logShippingOrderActivity(shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), reason, null);
+                        logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, reason);
                     }
                     return false;
                 }
                 return true;
             }
         } else {
-            logShippingOrderActivity(shippingOrder, adminUser, getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue), EnumReason.InvalidPaymentStatus.asReason(), null);
+            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue,  EnumReason.InvalidPaymentStatus.asReason());
             return false;
         }
         return false;
@@ -220,8 +227,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
 					if(shippingOrder.getShipment() == null && !shippingOrder.isDropShipping()){
 						Shipment newShipment = getShipmentService().createShipment(shippingOrder, true);
 						if (newShipment == null) {
-							logShippingOrderActivity(shippingOrder, adminUser,
-								getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.ShipmentNotCreatedManual.asReason(), null);
+                            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.ShipmentNotCreatedManual.asReason());
 							return false;
 						}
 					}
@@ -229,9 +235,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 return true;
             }
         } else {
-            User adminUser = getUserService().getAdminUser();
-            logShippingOrderActivity(shippingOrder, adminUser,
-                    getShippingOrderLifeCycleActivity(EnumShippingOrderLifecycleActivity.SO_CouldNotBeManuallyEscalatedToProcessingQueue), EnumReason.InvalidPaymentStatusManual.asReason(), null);
+            logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_CouldNotBeAutoEscalatedToProcessingQueue, EnumReason.InvalidPaymentStatusManual.asReason());
             return false;
         }
         return false;
@@ -422,12 +426,6 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         return getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()) != null
                 && getReplacementOrderDao().getReplacementOrderFromShippingOrder(shippingOrder.getId()).size() > 0;
     }
-
-	@Override
-	public Zone getZoneForShippingOrder(ShippingOrder shippingOrder) {
-		return shippingOrder.getShipment().getZone();
-
-	}
 
 	public Page searchShippingOrders(ShippingOrderSearchCriteria shippingOrderSearchCriteria, int pageNo, int perPage) {
         return searchShippingOrders(shippingOrderSearchCriteria, true, pageNo, perPage);

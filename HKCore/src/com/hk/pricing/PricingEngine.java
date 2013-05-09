@@ -388,6 +388,9 @@ public class PricingEngine {
                             actualPrice = costPrice * lineItem.getQty() * (1 + vat_cst_percentage + surcharge_percentage);
                         }
 
+                        Double minPrice = lineItem.getMarkedPrice() * lineItem.getQty() * 0.5;
+                        actualPrice = actualPrice > minPrice ? actualPrice : minPrice;
+
                         Double lineItemDiscount = lineItem.getHkPrice() * lineItem.getQty() - actualPrice;
                         if (lineItemDiscount < 0) {
                             lineItemDiscount = 0D;
