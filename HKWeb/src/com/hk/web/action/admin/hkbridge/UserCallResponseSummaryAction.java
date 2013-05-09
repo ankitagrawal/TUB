@@ -4,6 +4,7 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.google.gson.Gson;
 import com.hk.constants.core.Keys;
 
+import com.hk.hkjunction.observers.OrderLifecycleSummary;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
@@ -13,8 +14,6 @@ import org.jboss.resteasy.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
-//import com.hk.hkjunction.observers.OrderLifecycleSummary;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,7 +62,6 @@ public class UserCallResponseSummaryAction extends BaseAction {
             logger.info("Calling Knowlarity Rest Api For Call Summary " + urlStr);
             if (status == 200) {
                 String data = (String) response.getEntity(String.class);
-/*
                 OrderLifecycleSummary orderLifecycleSummary = new Gson().fromJson(data, OrderLifecycleSummary.class);
                 totalCODCount = orderLifecycleSummary.getTotalCODCount();
                 totalEfforBpoCODCount = orderLifecycleSummary.getTotalEfforBpoCODCount();
@@ -72,7 +70,6 @@ public class UserCallResponseSummaryAction extends BaseAction {
                 totalEfforBpoPaymentFailureCount = orderLifecycleSummary.getTotalEfforBpoPaymentFailureCount();
                 totalKnowlarityCODConfirmedCount = orderLifecycleSummary.getTotalKnowlarityCODConfirmedCount();
                 totalKnowlarityCODCancelledCount = orderLifecycleSummary.getTotalKnowlarityCODCancelledCount();
-*/
 
 
             } else {
