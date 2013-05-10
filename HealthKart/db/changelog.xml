@@ -12620,7 +12620,7 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1367933059204-2">
         <addColumn tableName="grn_line_item">
-            <column name="weight" type="DECIMAL(6,2)">
+            <column name="weight" type="DOUBLE">
             </column>
         </addColumn>
     </changeSet>

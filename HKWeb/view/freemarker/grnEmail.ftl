@@ -230,7 +230,7 @@ background: #ff0;
 	</#list>
 	
 	<tr>
-	<td colspan="16"></td>
+	<td colspan="17"></td>
 	<td colspan="2">Total Payable: <#if grn.purchaseOrder.payable??>
  		 ${grn.purchaseOrder.payable}
   		<#else>
