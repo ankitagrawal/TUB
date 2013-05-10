@@ -5,6 +5,7 @@ import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
+import com.hk.hkjunction.observers.OrderSplitterMessage;
 import com.hk.hkjunction.observers.OrderType;
 import com.hk.pact.service.codbridge.UserCallResponseObserver;
 import com.hk.pact.service.codbridge.UserCartDetail;
@@ -23,6 +24,7 @@ import com.hk.hkjunction.observers.OrderStatusMessage;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -116,6 +118,20 @@ public class OrderEventPublisher {
             Producer producer = producerFactory.getProducer(ProducerTypeEnum.COD_PRODUCER);
             messagePublished = producer.publishMessage(orderStatusMessage);
             userCallResponseObserver.subscribe();
+        }catch (Exception ex){
+            logger.error("Error while publishing event for Order " + order.getId() );
+        }
+        return messagePublished;
+    }
+
+    public boolean publishOrderPlacedEvent(Order order){
+        boolean messagePublished = false;
+        try{
+            OrderSplitterMessage orderSplitterMessage = new OrderSplitterMessage();
+            orderSplitterMessage.setOrderId(String.valueOf(order.getId()));
+            orderSplitterMessage.setPushDate(new Date());
+            Producer producer = producerFactory.getProducer(ProducerTypeEnum.ORDER_SPLITTER_PRODUCER);
+            messagePublished = producer.publishMessage(orderSplitterMessage);
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
