@@ -196,7 +196,8 @@ public enum EnumShippingOrderStatus {
 	public static List<ShippingOrderStatus> getStatusForReCheckinReturnItems(){
 		return Arrays.asList(EnumShippingOrderStatus.SO_RTO.asShippingOrderStatus(),
 				EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus(),
-				EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus());
+				EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus(),
+				EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus());
 	}
 
     public static List<Long> getApplicableShippingOrderStatus(){
