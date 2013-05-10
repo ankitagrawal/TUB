@@ -36,7 +36,7 @@ public class RunGenericGroovyScriptAction extends BaseAction {
 		try {
 			GenericGroovyUtil genericGroovyUtil = new GenericGroovyUtil(dbHostName, dbName, dbUser, dbPassword);
 
-			genericGroovyUtil.performScript();
+			//genericGroovyUtil.performScript();
 
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
