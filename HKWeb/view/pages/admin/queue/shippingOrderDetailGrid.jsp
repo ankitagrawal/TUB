@@ -24,7 +24,7 @@
     Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
 
 
-    if (isActionQueue != null) {
+    if (isActionQueue!=null) {
         pageContext.setAttribute("isActionQueue", isActionQueue);
     } else {
         pageContext.setAttribute("isActionQueue", false);
@@ -658,6 +658,7 @@
             <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldShippingOrder"
                     title="Unhold Shipping Order" class="orderStatusLink onHoldStatusLink">
                 <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                <s:param name="isActionQueue" value="${isActionQueue}" />
                 <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Shipping Order"
                      title="Unhold Shipping Order"/>
             </s:link>
@@ -669,6 +670,7 @@
                             title="Put Shipping Order on Hold"
                             class="orderStatusLink normalStatusLink">
                         <s:param name="shippingOrder" value="${shippingOrder.id}"/>
+                        <s:param name="isActionQueue" value="${isActionQueue}" />
                         <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Shipping Order on Hold"
                              title="Put Shipping Order on Hold"/>
                     </s:link>

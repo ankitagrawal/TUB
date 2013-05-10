@@ -52,9 +52,7 @@
         CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
         pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
     %>
-    <s:layout-definition>
-        <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getName()%>"/>
-    </s:layout-definition>
+
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -254,7 +252,7 @@
     <div class="actionQueue">Action Awaiting Queue</div>
 </s:layout-component>
 <s:layout-component name="content">
-
+<%--<c:set var="actionQueue" value="true" />--%>
 <fieldset style="margin: 10px;" class="top_label">
     <ul style="margin-top: 0px;">
         <div class="grouped grid_12">
@@ -629,34 +627,6 @@
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                              shippingOrders="${shippingOrders}" isActionQueue="true"  />
-
-                        </td>
-                        <td>
-                            <c:choose>
-                                    <c:when test="${shippingOrders.orderStatusHold == shippingOrderStatusHold}">
-                                        <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="unHoldShippingOrder"
-                                                title="Unhold Shipping Order" class="orderStatusLink onHoldStatusLink">
-                                            <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                                            <s:param name="isActionQueue" value="true" />
-                                            <img src="<hk:vhostImage/>/images/admin/icon_unhold.png" alt="Unhold Shipping Order"
-                                                 title="Unhold Shipping Order"/>
-                                        </s:link>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:choose>
-                                            <c:when test="${shippingOrders.orderStatus.id == shippingOrderStatusActionAwaiting}">
-                                                <s:link beanclass="com.hk.web.action.admin.order.OrderOnHoldAction" event="holdShippingOrder"
-                                                        title="Put Shipping Order on Hold"
-                                                        class="orderStatusLink normalStatusLink">
-                                                    <s:param name="shippingOrder" value="${shippingOrder.id}"/>
-                                                    <s:param name="isActionQueue" value="true" />
-                                                    <img src="<hk:vhostImage/>/images/admin/icon_hold.png" alt="Put Shipping Order on Hold"
-                                                         title="Put Shipping Order on Hold"/>
-                                                </s:link>
-                                            </c:when>
-                                        </c:choose>
-                                    </c:otherwise>
-                                </c:choose>
 
                         </td>
                     </c:when>

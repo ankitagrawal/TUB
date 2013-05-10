@@ -25,7 +25,6 @@
                             ${lifecycleReason.reason.classification.primary} - ${lifecycleReason.reason.classification.secondary}
                         </c:forEach>
                     </c:when>
-<<<<<<< HEAD
                     <c:otherwise>
                         <c:if test="${not empty hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}">
                             <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction">
@@ -42,24 +41,6 @@
                             </s:form>
                         </c:if>
                     </c:otherwise>
-=======
-                    <%--<c:otherwise>--%>
-                        <%--<c:if test="${not empty hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}">--%>
-                            <%--<s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderLifecycleAction">--%>
-                                <%--<s:hidden name="lifecycleReason.shippingOrderLifecycle.id" value="${orderLifeCycle.id}"/>--%>
-                                <%--<s:hidden name="shippingOrder" value="${orderLifeCycleBean.shippingOrder}"/>--%>
-                                <%--<s:select name="lifecycleReason.reason">--%>
-                                    <%--<option value="">Choose Reason</option>--%>
-                                    <%--&lt;%&ndash;<c:set var="escalateBackReason" value="<%=EnumReasonType.Escalate_Back%>"/>&ndash;%&gt;--%>
-                                    <%--<c:forEach items="${hk:getReasonsByType(orderLifeCycle.shippingOrderLifeCycleActivity.name)}" var="reason">--%>
-                                        <%--<option value="${reason.id}">${reason.primaryClassification}- ${reason.secondaryClassification}</option>--%>
-                                    <%--</c:forEach>--%>
-                                <%--</s:select>--%>
-                                <%--<s:submit name="logReasonForAnActivity" value="Log Reason"/>--%>
-                            <%--</s:form>--%>
-                        <%--</c:if>--%>
-                    <%--</c:otherwise>--%>
->>>>>>> 7dfc04e5724870f72aba036262580e1ba48b8a4d
                 </c:choose>
                 ${orderLifeCycle.comments}</td>
         </tr>

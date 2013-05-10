@@ -66,7 +66,7 @@
 </s:layout-component>
 
 <s:layout-component name="content">
-
+    <c:set var="actionQueue" value="false" />
 <span id="ajaxLoader" style="display:none;"><img src="<hk:vhostImage/>/common/images/ajax-loader.gif"/></span>
 
 <c:set var="lineItemType_Product" value="<%=EnumCartLineItemType.Product.getId()%>"/>
