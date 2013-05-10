@@ -174,8 +174,12 @@ background: #ff0;
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign hasWeight = 1>
 	<#if grnLineItem.weight??>
+	<#if poLineItem.sku.productVariant.weight>
  		 <#if grnLineItem.weight!=poLineItem.sku.productVariant.weight>
 			<td style="background:#ff0;">${grnLineItem.weight}</td>
+		<#else>
+			<td>${grnLineItem.weight}</td>
+		</#if>
 		<#else>
 			<td>${grnLineItem.weight}</td>
 		</#if>
