@@ -180,6 +180,7 @@ background: #ff0;
 			<td>${grnLineItem.weight}</td>
 		</#if>
 	</#if>
+	</#if>
 	</#list>
 	<#if hasWeight ==0>
 	<td style="background:#ff0;">N/A</td>
