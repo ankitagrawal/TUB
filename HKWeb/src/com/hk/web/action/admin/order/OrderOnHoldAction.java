@@ -137,6 +137,6 @@ public class OrderOnHoldAction extends BaseAction {
     }
 
     public void setActionQueue(boolean actionQueue) {
-        isActionQueue = actionQueue;
+        this.isActionQueue = actionQueue;
     }
 }
