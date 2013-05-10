@@ -207,7 +207,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 							.getExtraInventoryLineItemsByExtraInventoryId(ei.getId());
 					if (eiliList != null) {
 						for (ExtraInventoryLineItem eili : eiliList) {
-							if (eili.isShortCreated()) {
+							if (eili.isShortCreated()!=null && eili.isShortCreated()) {
 								eiLineItemSet.add(eili);
 							}
 						}
@@ -253,7 +253,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 						.getExtraInventoryLineItemsByExtraInventoryId(ei.getId());
 				if (eiliList != null) {
 					for (ExtraInventoryLineItem eili : eiliList) {
-						if (eili.isShortCreated()) {
+						if (eili.isShortCreated()!=null && eili.isShortCreated()) {
 							eiLineItemSet.add(eili);
 						}
 					}
@@ -779,6 +779,18 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setEiliId(List<Long> eiliId) {
 		this.eiliId = eiliId;
+	}
+
+	public List<ExtraInventoryLineItem> getToImportShortEiLiList() {
+		return toImportShortEiLiList;
+	}
+
+	public void setToImportShortEiLiList(List<ExtraInventoryLineItem> toImportShortEiLiList) {
+		this.toImportShortEiLiList = toImportShortEiLiList;
+	}
+
+	public void setToImportRtvList(List<RtvNote> toImportRtvList) {
+		this.toImportRtvList = toImportRtvList;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

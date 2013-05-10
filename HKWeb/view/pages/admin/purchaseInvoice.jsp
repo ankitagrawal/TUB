@@ -559,11 +559,11 @@
 	<td><s:checkbox name="eiliId[${ctr.index}]" value="${eili.id}" class="purchaseLineItemCheckBox"/></td>
 	</c:forEach>
 	</c:if>
-	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
+	<c:if test="${fn:length(pia.toImportShortEiLiList) eq 0}">
 		There are no short inventory attached with the PI.
 	</c:if>
 </table>
-<c:if test="${fn:length(pia.toImportRtvList) gt 0 && fn:length(pia.toImportShortEiLiList) gt 0}">
+<c:if test="${fn:length(pia.toImportRtvList) gt 0 || fn:length(pia.toImportShortEiLiList) gt 0}">
 	<s:submit name="importRtv" value="Import Rtv"/>
 	</c:if>
 	
