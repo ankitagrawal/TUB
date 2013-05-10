@@ -1,8 +1,6 @@
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.akube.framework.util.FormatUtils" %>
-<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
+<%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" var="hkcBean"/>
@@ -10,7 +8,7 @@
 
     <s:layout-component name="htmlHead">
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(document).ready(function () {
 
 
                 function stopRKey(evt) {
@@ -34,10 +32,10 @@
 
                         var newRowHtml =
                                 '<tr count="' + nextIndex + '" class="lastRow lineItemRow" id="awbTableTr' + nextIndex + '">' +
-                                '  <td>' +
-                                '    <input type="text" id="trackingIdList' + nextIndex + '" name="trackingIdList[' + nextIndex + ']"/>' +
-                                '  </td>' +
-                                '</tr>';
+                                        '  <td>' +
+                                        '    <input type="text" id="trackingIdList' + nextIndex + '" name="trackingIdList[' + nextIndex + ']"/>' +
+                                        '  </td>' +
+                                        '</tr>';
 
                         /*appending the new row*/
                         $('#awbTable').append(newRowHtml);
@@ -57,7 +55,7 @@
                 $('#trackingIdList0').focus();
 
                 /* reloading page on submitting it*/
-                $('.reloadLink').click(function() {
+                $('.reloadLink').click(function () {
                     location.reload();
                     return false;
 
@@ -65,7 +63,7 @@
 
 
                 /*function to delete last row.*/
-                $('.removeRowButton').click(function() {
+                $('.removeRowButton').click(function () {
 
                     /*Fetching last row index.*/
                     var lastIndex = $('.lastRow').attr('count');
@@ -119,10 +117,10 @@
                                 </s:select>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="<%=PermissionConstants.VIEW_HUB%>">
-	                            <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>" >
-									<c:set var="hub" value="${hk:getHubForHkdeliveryUser(hkcBean.loggedOnUser)}" />
-									 <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>
-	                            </shiro:lacksPermission>
+                                <shiro:lacksPermission name="<%=PermissionConstants.SELECT_HUB%>">
+                                    <c:set var="hub" value="${hk:getHubForHkdeliveryUser(hkcBean.loggedOnUser)}"/>
+                                    <s:hidden name="hub" value="${hub.id}"/><strong>${hub.name}</strong>
+                                </shiro:lacksPermission>
                             </shiro:hasPermission>
                         </li>
                         <br>
@@ -158,13 +156,16 @@
                                style="font-size:1.2em;color:blue;">Remove row</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="hkDeliveryWorksheet.jsp#" class="reloadLink"
-                                                           style="font-size:1.2em;color:blue;">Reload</a>
+                               style="font-size:1.2em;color:blue;">Reload</a>
 
 
                         </li>
                         <li>
-                            <s:submit id="submitButton" name="markShipmentsReceived" value="Mark Shipments as Received"
-                                      class="verifyData"/>
+                            <shiro:hasPermission name="<%=PermissionConstants.RECEIVE_CONSIGNMENTS%>">
+                                <s:submit id="submitButton" name="markShipmentsReceived"
+                                          value="Mark Shipments as Received"
+                                          class="verifyData"/>
+                            </shiro:hasPermission>
                         </li>
                     </ul>
                 </fieldset>
@@ -174,16 +175,16 @@
     </s:layout-component>
 </s:layout-render>
 <script type="text/javascript">
-   $('.verifyData').click(function() {
-    //alert("in validator");
-    var hub = $('.hubName').val();
-       //alert(hub);
-    if (hub == "-Select Hub-" ) {
-      alert("Please select a Hub.");
-      return false;
-    }
-  });
-  </script>
+    $('.verifyData').click(function () {
+        //alert("in validator");
+        var hub = $('.hubName').val();
+        //alert(hub);
+        if (hub == "-Select Hub-") {
+            alert("Please select a Hub.");
+            return false;
+        }
+    });
+</script>
 
 
 
