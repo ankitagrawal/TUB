@@ -268,6 +268,10 @@
 			$('#rtvForm').hide();
 		}
 		
+		if(${!pia.piHasShortEiLi}){
+			$('#shortForm').hide();
+		}
+		
 		$('.variant').live("change", function() {
 			var variantRow = $(this).parents('.lineItemRow');
 			var productVariantId = variantRow.find('.variant').val();
@@ -534,19 +538,35 @@
 <br/>
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
+<table>
 	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
-	There are rtvs attached with the PI. Select to import them.<br/>
-	<table>
+	There are rtvs attached with the PI.<br/>
+	
 	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
 	<td>${ctr.index+1}. Purchase Order No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
 	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</c:forEach>
-	<tr><td colspan="2"><s:submit name="importRtv" value="Import Rtv"></s:submit></td></tr>
-	</table>
 	</c:if>
 	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
 		There are no rtvs attached with the PI.
 	</c:if>
+</table>
+<table>
+	<c:if test="${fn:length(pia.toImportShortEiLiList) gt 0}">
+	There are short inventory attached with the PI.<br/>
+	<c:forEach items="${pia.toImportShortEiLiList}" var="eili" varStatus="ctr">
+	<td>${ctr.index+1}. Purchase Order No. ${eili.extraInventory.purchaseOrder.id}, Extra Inven. Id. ${eili.extraInventory.id}</td>
+	<td><s:checkbox name="eiliId[${ctr.index}]" value="${eili.id}" class="purchaseLineItemCheckBox"/></td>
+	</c:forEach>
+	</c:if>
+	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
+		There are no short inventory attached with the PI.
+	</c:if>
+</table>
+<c:if test="${fn:length(pia.toImportRtvList) gt 0 && fn:length(pia.toImportShortEiLiList) gt 0}">
+	<s:submit name="importRtv" value="Import Rtv"/>
+	</c:if>
+	
 </s:form>
 </fieldset>
 </div>
@@ -1050,6 +1070,7 @@
 		<s:hidden name="extraInventoryId" value="${extraInventoryLineItem.extraInventory.id}" />
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${extraInventoryLineItem.grnCreated}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${extraInventoryLineItem.rtvCreated}"/>
+		<s:hidden name="extraInventoryLineItems[${ctr.index}].shortCreated" value="${extraInventoryLineItem.shortCreated}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].poLineItem" value="${extraInventoryLineItem.poLineItem}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].updateDate" value="${extraInventoryLineItem.updateDate}"/>
 		<c:choose>

@@ -651,7 +651,6 @@ $(document).ready(function () {
 <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}"/>
 <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}"/>
 <s:submit name="save" class="save" value="SAVE"/>
-<s:submit name="saveShort" class="save" value="SAVE SHORT"/>
 <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" class="requiredFieldValidator createRtv"/>
