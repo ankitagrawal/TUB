@@ -61,6 +61,7 @@ background: #ff0;
 		<th>Checkedin Batch MRP</th>
 		<th>Site MRP</th>
 		<th>HK Price</th>
+		<th>Checking Weight(gm.)</th>
 		<th>Weight(gm.)</th>
 		<th>JIT</th>
 		<th>Deleted</th>
@@ -167,6 +168,23 @@ background: #ff0;
 	</#if>
 	</#if>
 	<td>${poLineItem.sku.productVariant.hkPrice}</td>
+	
+	<#assign hasWeight = 0>
+	<#list grn.grnLineItems as grnLineItem>
+	<#if poLineItem.sku==grnLineItem.sku>
+	<#assign hasWeight = 1>
+	<#if grnLineItem.weight??>
+ 		 <#if grnLineItem.weight!=poLineItem.sku.productVariant.weight>
+			<td style="background:#ff0;">${grnLineItem.weight}</td>
+		<#else>
+			<td>${grnLineItem.weight}</td>
+		</#if>
+	</#if>
+	</#list>
+	<#if hasWeight ==0>
+	<td style="background:#ff0;">N/A</td>
+	</#if>
+	
 	<#if poLineItem.sku.productVariant.weight??>
 	<#if poLineItem.sku.productVariant.weight==0>
  		 <td style="background:#ff0;">${poLineItem.sku.productVariant.weight}</td>
