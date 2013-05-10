@@ -3,12 +3,16 @@ package com.hk.domain.inventory.rtv;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.core.Tax;
+import com.hk.domain.inventory.po.PurchaseInvoice;
 
 /**
  * Created by IntelliJ IDEA.
@@ -85,6 +89,9 @@ public class ExtraInventoryLineItem implements Serializable{
 
   @Column (name ="is_grn_created")
   private Boolean isGrnCreated;
+  
+  @Column (name ="is_short_created")
+  private Boolean isShortCreated;
 
   @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
@@ -93,6 +100,15 @@ public class ExtraInventoryLineItem implements Serializable{
 	@Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "update_dt", length = 19)
 	private Date updateDate;
+	
+	@JsonSkip
+	  @ManyToMany(fetch = FetchType.LAZY)
+	  @JoinTable(
+	          name = "purchase_invoice_has_extra_inventory_line_item",
+	          joinColumns = {@JoinColumn(name = "extra_inventory_line_item_id", nullable = false, updatable = false)},
+	          inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
+	  )
+	  private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
 
   public Long getId() {
     return id;
@@ -201,10 +217,22 @@ public class ExtraInventoryLineItem implements Serializable{
   public void setGrnCreated(Boolean grnCreated) {
     isGrnCreated = grnCreated;
   }
-
-   public Boolean getGrnCreated() {
+  
+public Boolean getGrnCreated() {
     return isGrnCreated;
   }
+
+public Boolean getShortCreated() {
+	return isShortCreated;
+}
+
+public void setShortCreated(Boolean shortCreated) {
+	isShortCreated = shortCreated;
+}
+
+public Boolean isShortCreated() {
+	return isShortCreated;
+}
 
   public String getRemarks() {
     return remarks;
@@ -253,5 +281,13 @@ public class ExtraInventoryLineItem implements Serializable{
 	public void setSurcharge(Surcharge surcharge) {
 		this.surcharge = surcharge;
 	}
-  
+
+	public List<PurchaseInvoice> getPurchaseInvoices() {
+		return purchaseInvoices;
+	}
+
+	public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
+		this.purchaseInvoices = purchaseInvoices;
+	}
+	
 }

@@ -12677,4 +12677,28 @@
             <column name="short_amount" type="DECIMAL(12,2)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-2">
+        <createTable tableName="purchase_invoice_has_extra_inventory_line_item">
+            <column name="purchase_invoice_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="extra_inventory_line_item_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-3">
+        <addColumn tableName="extra_inventory_line_item">
+            <column defaultValue="0" name="is_short_created" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-4">
+        <addPrimaryKey columnNames="purchase_invoice_id, extra_inventory_line_item_id" tableName="purchase_invoice_has_extra_inventory_line_item"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-7">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_extra_inven1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368113151171-8">
+        <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_purchase_in1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

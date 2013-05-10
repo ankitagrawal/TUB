@@ -7,6 +7,7 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseFormType;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
 import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.inventory.rtv.RtvNoteStatus;
 import com.hk.domain.payment.PaymentHistory;
@@ -127,6 +128,17 @@ public class PurchaseInvoice implements java.io.Serializable {
 	    inverseJoinColumns = {@JoinColumn(name = "rtv_note_id", nullable = false, updatable = false)}
 	)
 	private List<RtvNote> rtvNotes = new ArrayList<RtvNote>();
+	
+	
+	
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "purchase_invoice_has_extra_inventory_line_item",
+	    joinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "extra_inventory_line_item_id", nullable = false, updatable = false)}
+	)
+	private List<ExtraInventoryLineItem> eiLineItems = new ArrayList<ExtraInventoryLineItem>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "surcharge_id")
@@ -391,6 +403,14 @@ public Double getPiRtvShortTotal() {
 
 public void setPiRtvShortTotal(Double piRtvShortTotal) {
 	this.piRtvShortTotal = piRtvShortTotal;
+}
+
+public List<ExtraInventoryLineItem> getEiLineItems() {
+	return eiLineItems;
+}
+
+public void setEiLineItems(List<ExtraInventoryLineItem> eiLineItems) {
+	this.eiLineItems = eiLineItems;
 }
 
 @Override

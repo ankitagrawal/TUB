@@ -234,6 +234,9 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         extraInventoryLineItem.setExtraInventory(extraInventory);
         extraInventoryLineItem.setCreateDate(new Date());
         extraInventoryLineItem.setUpdateDate(new Date());
+        if(extraInventoryLineItem.isShortCreated()==null){
+        	extraInventoryLineItem.setShortCreated(false);
+        }
         extraInventoryLineItem.setRtvCreated(false);
         extraInventoryLineItem.setGrnCreated(false);
         getExtraInventoryLineItemService().save(extraInventoryLineItem);

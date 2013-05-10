@@ -156,6 +156,18 @@ $(document).ready(function () {
             }
 
         });
+        $('.rowShortCheck').each(function(){
+        	var state = $(this).is(':checked'); //state = true/false depending on state
+            if (state){
+        		var productVariant = $(this).parent().parent().children('td').children('.variantId').val();
+        		if(productVariant==null||productVariant.trim(variant) == ""){
+        			alert("Please provide a valid variant for SHORT creation");
+                    bool = false;
+                    return false;
+        		}
+        	}
+        });
+        
         $(".variantId").each(function() {
             var variant = $(this).val();
             var obj = $(this);
@@ -287,6 +299,8 @@ $(document).ready(function () {
                 '<td>' +
                 '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
                 '</td>' +
+                '<td class="shortCheck"> <input type="checkbox" class="rowShortCheck" name = "extraInventoryLineItems[' + nextIndex + '].shortCreated"/>' +
+                '</td>' +
                 '</tr>';
 
         $('#poTable').append(newRowHtml);
@@ -295,6 +309,7 @@ $(document).ready(function () {
 
         return false;
     });
+    
     
     $('.valueChange').live("blur", function() {
 		var table = $(this).parent().parent().parent();
@@ -469,6 +484,12 @@ $(document).ready(function () {
                                   value="${eInLineItems.grnCreated}"/>
                         <c:set var="bool" value="1"/>
                     </c:if>
+                    <c:if test="${eInLineItems.shortCreated}">
+                        ${eInLineItems.id}(SHORT)
+                        <s:hidden name="extraInventoryLineItems[${ctr.index}].shortCreated"
+                                  value="${eInLineItems.shortCreated}"/>
+                        <c:set var="bool" value="1"/>
+                    </c:if>
                     <c:if test="${bool eq '0' and eInLineItems.id !=null}">
                         <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
                             <s:checkbox class="checkbox1" value="${eInLineItems.id}"
@@ -488,7 +509,7 @@ $(document).ready(function () {
                 </td>
                 <td class="skuId">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.shortCreated}">
                             ${eInLineItems.sku.id}
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
                                       value="${eInLineItems.sku.id}"/>
@@ -503,7 +524,7 @@ $(document).ready(function () {
                 </td>
                 <td class="txtSku">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.shortCreated}">
                             ${eInLineItems.sku.productVariant.id}
                         </c:when>
                         <c:otherwise>
@@ -521,7 +542,7 @@ $(document).ready(function () {
                 </td>
                 <td class="proName">
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.shortCreated}">
                             ${eInLineItems.productName}
                             <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
                                       value="${eInLineItems.productName}"/>
@@ -549,7 +570,7 @@ $(document).ready(function () {
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.shortCreated}">
                             ${eInLineItems.receivedQty}
                             <s:hidden class="receivedQuantity valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
@@ -630,6 +651,7 @@ $(document).ready(function () {
 <s:hidden name="wareHouseId" value="${extraInventory.wareHouseId}"/>
 <s:hidden name="purchaseOrderId" value="${extraInventory.purchaseOrderId}"/>
 <s:submit name="save" class="save" value="SAVE"/>
+<s:submit name="saveShort" class="save" value="SAVE SHORT"/>
 <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" class="requiredFieldValidator createRtv"/>
