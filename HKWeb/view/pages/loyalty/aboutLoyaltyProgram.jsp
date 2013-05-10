@@ -91,13 +91,10 @@
             </div>
             <div class="dottedLine"></div>
           </div>
-<%-- 
-		<% int i=0; %>
-     	 <c:forEach items="${lca.badgeList}" var="badge">
-			<c:set var="badge_<%=i %>" value="${badge}"> </c:set>
-			<% i++; %>
+		<c:forEach var="index" begin="0" end="4" >
+				<c:set name="badge_[${index}]" value="${lca.badgeList[index]}" />
 		</c:forEach>
- --%>
+
           <div class="aboutContent">
             <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
             <p>Here’s how it works- you’ll earn ‘A’ Lumens every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>

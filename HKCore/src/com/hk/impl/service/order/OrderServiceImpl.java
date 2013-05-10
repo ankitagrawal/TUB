@@ -1,5 +1,22 @@
 package com.hk.impl.service.order;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
@@ -16,7 +33,6 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
@@ -36,6 +52,7 @@ import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.OrderDateUtil;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
@@ -58,16 +75,6 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -99,9 +106,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService orderStatusService;
     @Autowired
     private RewardPointService rewardPointService;
-    /*
-     * @Autowired private CategoryService categoryService;
-     */
+
+
+
     @Autowired
     private OrderLoggingService orderLoggingService;
     @Autowired
@@ -114,49 +121,55 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ShipmentService shipmentService;
     @Autowired
+    BucketService bucketService;
+    @Autowired
     SubscriptionService subscriptionService;
 
-
-    /*
+	/*
      * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
      */
 
     // @Value("#{hkEnvProps['codMaxAmount']}")
     // private Double codMaxAmount;
-    @Transactional
+    @Override
+	@Transactional
     public Order save(Order order) {
-        return getOrderDao().save(order);
+        return this.getOrderDao().save(order);
     }
 
     @Override
     public Order find(Long orderId) {
-        return getOrderDao().get(Order.class, orderId);
+        return this.getOrderDao().get(Order.class, orderId);
     }
 
-    public Order findByGatewayOrderId(String gatewayOrderId) {
-        return orderDao.findByGatewayOrderId(gatewayOrderId);
+    @Override
+	public Order findByGatewayOrderId(String gatewayOrderId) {
+        return this.orderDao.findByGatewayOrderId(gatewayOrderId);
     }
 
-    public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus) {
-        return getOrderDao().findByUserAndOrderStatus(user, orderStatus);
+    @Override
+	public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus) {
+        return this.getOrderDao().findByUserAndOrderStatus(user, orderStatus);
     }
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
-        return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
+        return this.getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
     }
 
     @Override
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria) {
-        return getOrderDao().searchOrders(orderSearchCriteria);
+        return this.getOrderDao().searchOrders(orderSearchCriteria);
     }
 
-    public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus) {
-        return getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
+    @Override
+	public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus) {
+        return this.getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
     }
 
-    public Long getCountOfOrdersWithStatus() {
-        return getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
+    @Override
+	public Long getCountOfOrdersWithStatus() {
+        return this.getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
     }
 
     /**
@@ -200,11 +213,11 @@ public class OrderServiceImpl implements OrderService {
          */
         if (refDateForSO != null) {
             for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                getShippingOrderService().setTargetDispatchDelDatesOnSO(refDateForSO, shippingOrder);
+                this.getShippingOrderService().setTargetDispatchDelDatesOnSO(refDateForSO, shippingOrder);
             }
         }
 
-        getOrderDao().save(order);
+        this.getOrderDao().save(order);
 
     }
 
@@ -216,12 +229,14 @@ public class OrderServiceImpl implements OrderService {
              }
         }
         order.setTargetDispatchDate(maxSOTargetDispatchDate);
-        //todo set target delivery date
+		
+		//todo set target delivery date
         order.setTargetDelDate(maxSOTargetDispatchDate);
-        getOrderDao().save(order);
+        this.getOrderDao().save(order);
     }
 
-    public Set<OrderCategory> getCategoriesForBaseOrder(Order order) {
+    @Override
+	public Set<OrderCategory> getCategoriesForBaseOrder(Order order) {
 
         // Map<BasketCategory, Category> basketCategoryMap = new HashMap<BasketCategory, Category>();
 
@@ -255,7 +270,7 @@ public class OrderServiceImpl implements OrderService {
                 orderCategory.setPrimary(true);
                 primaryCategory = false;
             }
-            orderCategory = (OrderCategory) getBaseDao().save(orderCategory);
+            orderCategory = (OrderCategory) this.getBaseDao().save(orderCategory);
             orderCategories.add(orderCategory);
         }
 
@@ -263,7 +278,8 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder) {
+    @Override
+	public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder) {
 
         List<BasketCategory> basketCategories = new ArrayList<BasketCategory>();
 
@@ -294,15 +310,16 @@ public class OrderServiceImpl implements OrderService {
                 shippingOrderCategory.setPrimary(true);
                 primaryCategory = false;
             }
-            shippingOrderCategory = (ShippingOrderCategory) getBaseDao().save(shippingOrderCategory);
+            shippingOrderCategory = (ShippingOrderCategory) this.getBaseDao().save(shippingOrderCategory);
             shippingOrderCategories.add(shippingOrderCategory);
         }
 
         return shippingOrderCategories;
     }
 
-    public Category getBasketCategory(ShippingOrder shippingOrder) {
-        Set<ShippingOrderCategory> shippingOrderCategories = getCategoriesForShippingOrder(shippingOrder);
+    @Override
+	public Category getBasketCategory(ShippingOrder shippingOrder) {
+        Set<ShippingOrderCategory> shippingOrderCategories = this.getCategoriesForShippingOrder(shippingOrder);
 
         for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
             if (shippingOrderCategory.isPrimary()) {
@@ -312,7 +329,8 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories.iterator().next().getCategory();
     }
 
-    public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories) {
+    @Override
+	public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories) {
         for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
             if (shippingOrderCategory.isPrimary()) {
                 return shippingOrderCategory.getCategory();
@@ -321,11 +339,12 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories.iterator().next().getCategory();
     }
 
-    public Set<ShippingOrder> createShippingOrders(Order order) {
+    @Override
+	public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                shippingOrders = splitOrder(order);
+                shippingOrders = this.splitOrder(order);
             } else {
                 logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
             }
@@ -341,13 +360,14 @@ public class OrderServiceImpl implements OrderService {
      * if all shipping orders for a order are in shipped/delievered or escalted to packing queue status update base
      * order's status to statusToUpdate
      */
-    @Transactional
+    @Override
+	@Transactional
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
 
         boolean shouldUpdate = true;
 
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if (!getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)) {
+            if (!this.getShippingOrderService().shippingOrderHasReplacementOrder(shippingOrder)) {
                 if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
                     shouldUpdate = false;
                     break;
@@ -356,8 +376,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (shouldUpdate) {
-            order.setOrderStatus(getOrderStatus(boStatusOnSuccess));
-            order = getOrderDao().save(order);
+            order.setOrderStatus(this.getOrderStatus(boStatusOnSuccess));
+            order = this.getOrderDao().save(order);
         }
         /*
          * else { order.setOrderStatus(orderStatusDao.find(boStatusOnFailure.getId())); order =
@@ -367,41 +387,42 @@ public class OrderServiceImpl implements OrderService {
         return shouldUpdate;
     }
 
-    public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
-        subscriptionService.placeSubscriptions(order);
-        splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+	public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
+        this.subscriptionService.placeSubscriptions(order);
+        this.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
     }
-
-    @Transactional
+	
+    @Override
+	@Transactional
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId) {
-        User loggedOnUser = getUserService().getLoggedInUser();
+        User loggedOnUser = this.getUserService().getLoggedInUser();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();
         if (loggedOnUser == null) {
             loggedOnUser = order.getUser();
         }
 
-        OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
-        getOrderLoggingService().logOrderActivity(order, loggedOnUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
+        OrderLifecycleActivity orderLifecycleActivity = this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
+        this.getOrderLoggingService().logOrderActivity(order, loggedOnUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
 
         return order;
     }
 
     @Transactional
     public Order markOrderAsShipped(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
+            this.getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
         }
         return order;
     }
 
     @Transactional
     public Order markOrderAsDelivered(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
         if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
-            approvePendingRewardPointsForOrder(order);
-            affilateService.approvePendingAffiliateTxn(order);
+            this.getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
+            this.approvePendingRewardPointsForOrder(order);
+            this.affilateService.approvePendingAffiliateTxn(order);
             // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
             // check if payment mode was COD and email hasn't been sent yet
             // sendEmailToServiceProvidersForOrder(order);
@@ -411,23 +432,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
+        boolean isUpdated = this.updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
+            this.getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
         } else {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
+            this.getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
         }
-        affilateService.cancelTxn(order);
+        this.affilateService.cancelTxn(order);
         return order;
     }
 
-    public Order getLatestOrderForUser(User user) {
-        return getOrderDao().getLatestOrderForUser(user);
+    @Override
+	public Order getLatestOrderForUser(User user) {
+        return this.getOrderDao().getLatestOrderForUser(user);
     }
 
-    public Page listOrdersForUser(User user, int page, int perPage) {
-        List<OrderStatus> orderStatusList = orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
-        return getOrderDao().listOrdersForUser(orderStatusList, user, page, perPage);
+    @Override
+	public Page listOrdersForUser(User user, int page, int perPage) {
+        List<OrderStatus> orderStatusList = this.orderStatusService.getOrderStatuses(EnumOrderStatus.getStatusForCustomers());
+        return this.getOrderDao().listOrdersForUser(orderStatusList, user, page, perPage);
     }
 
     /**
@@ -436,7 +459,8 @@ public class OrderServiceImpl implements OrderService {
      * @throws OrderSplitException
      */
 
-    @Transactional
+    @Override
+	@Transactional
     public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
@@ -446,7 +470,7 @@ public class OrderServiceImpl implements OrderService {
             if (order.isB2bOrder()) {
             } else {
                 if (!cartLineItems.isEmpty() && !bucketCartLineItemMap.getKey().equals("Service")) {
-                    List<DummyOrder> dummyOrders = orderSplitterService.listBestDummyOrdersPractically(order, cartLineItems);
+                    List<DummyOrder> dummyOrders = this.orderSplitterService.listBestDummyOrdersPractically(order, cartLineItems);
                     if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                         long startTime = (new Date()).getTime();
                         // Create Shipping orders and Save it in DB
@@ -457,13 +481,13 @@ public class OrderServiceImpl implements OrderService {
                                 logger.debug("bucketedCartLineItemMap Size " + bucketedCartLineItemMap.size());
                                 for (Map.Entry<String, List<CartLineItem>> bucketedCartLineItemMapEntry : bucketedCartLineItemMap.entrySet()) {
                                     logger.debug("bucketedCartLineItemMapEntry Key " + bucketedCartLineItemMapEntry.getKey() + " Size " + bucketedCartLineItemMapEntry.getValue().size());
-                                    ShippingOrder shippingOrder = shippingOrderService.createSOWithBasicDetails(order, warehouse);
+                                    ShippingOrder shippingOrder = this.shippingOrderService.createSOWithBasicDetails(order, warehouse);
                                     boolean isDropShipped = false;
                                     boolean containsJitProducts = false;
                                     for (CartLineItem cartLineItem : bucketedCartLineItemMapEntry.getValue()) {
                                         isDropShipped = cartLineItem.getProductVariant().getProduct().isDropShipping();
                                         containsJitProducts = cartLineItem.getProductVariant().getProduct().isJit();
-                                        Sku sku = skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
+                                        Sku sku = this.skuService.getSKU(cartLineItem.getProductVariant(), warehouse);
                                         LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, cartLineItem);
                                         shippingOrder.getLineItems().add(shippingOrderLineItem);
                                     }
@@ -471,13 +495,13 @@ public class OrderServiceImpl implements OrderService {
                                     shippingOrder.setContainsJitProducts(containsJitProducts);
                                     ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, order);
                                     shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-                                    shippingOrder = shippingOrderService.save(shippingOrder);
-                                    shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-                                    shippingOrder = shippingOrderService.save(shippingOrder);
-                                    Set<ShippingOrderCategory> categories = getCategoriesForShippingOrder(shippingOrder);
+                                    shippingOrder = this.shippingOrderService.save(shippingOrder);
+                                    shippingOrder = this.shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+                                    shippingOrder = this.shippingOrderService.save(shippingOrder);
+                                    Set<ShippingOrderCategory> categories = this.getCategoriesForShippingOrder(shippingOrder);
                                     shippingOrder.setShippingOrderCategories(categories);
-                                    shippingOrder.setBasketCategory(getBasketCategory(categories).getName());
-                                    shippingOrder = shippingOrderService.save(shippingOrder);
+                                    shippingOrder.setBasketCategory(this.getBasketCategory(categories).getName());
+                                    shippingOrder = this.shippingOrderService.save(shippingOrder);
                                     shippingOrders.add(shippingOrder);
                                 }
                             }
@@ -489,7 +513,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                 } else {
                     for (CartLineItem serviceCartLineItem : cartLineItems) {
-                        shippingOrders.add(createSOForService(serviceCartLineItem));
+                        shippingOrders.add(this.createSOForService(serviceCartLineItem));
                     }
                 }
             }
@@ -497,7 +521,8 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrders;
     }
 
-    public ProductVariant getTopDealVariant(Order order) {
+    @Override
+	public ProductVariant getTopDealVariant(Order order) {
         Category personalCareCategory = CategoryCache.getInstance().getCategoryByName(CategoryConstants.PERSONAL_CARE).getCategory();
 
         // Category personalCareCategory = getCategoryService().getCategoryByName("personal-care");
@@ -519,21 +544,23 @@ public class OrderServiceImpl implements OrderService {
         return topOrderedVariant;
     }
 
-    public void approvePendingRewardPointsForOrder(Order order) {
-        rewardPointService.approvePendingRewardPointsForOrder(order);
+    @Override
+	public void approvePendingRewardPointsForOrder(Order order) {
+        this.rewardPointService.approvePendingRewardPointsForOrder(order);
     }
 
-    public void sendEmailToServiceProvidersForOrder(Order order) {
+    @Override
+	public void sendEmailToServiceProvidersForOrder(Order order) {
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> serviceCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyServiceLineItems(true).filter();
         for (CartLineItem lineItem : serviceCartLineItems) {
             // emailManager.sendServiceVoucherMailToCustomer(lineItem);
-            emailManager.sendServiceVoucherMailToServiceProvider(order, lineItem);
+            this.emailManager.sendServiceVoucherMailToServiceProvider(order, lineItem);
         }
     }
 
     public OrderDao getOrderDao() {
-        return orderDao;
+        return this.orderDao;
     }
 
     public void setOrderDao(OrderDao orderDao) {
@@ -541,7 +568,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ShippingOrderService getShippingOrderService() {
-        return shippingOrderService;
+        return this.shippingOrderService;
     }
 
     public void setShippingOrderService(ShippingOrderService shippingOrderService) {
@@ -549,7 +576,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public UserService getUserService() {
-        return userService;
+        return this.userService;
     }
 
     public void setUserService(UserService userService) {
@@ -557,7 +584,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public EmailManager getEmailManager() {
-        return emailManager;
+        return this.emailManager;
     }
 
     public void setEmailManager(EmailManager emailManager) {
@@ -565,7 +592,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public WarehouseService getWarehouseService() {
-        return warehouseService;
+        return this.warehouseService;
     }
 
     public void setWarehouseService(WarehouseService warehouseService) {
@@ -573,7 +600,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public SkuService getSkuService() {
-        return skuService;
+        return this.skuService;
     }
 
     public void setSkuService(SkuService skuService) {
@@ -581,7 +608,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public InventoryService getInventoryService() {
-        return inventoryService;
+        return this.inventoryService;
     }
 
     public void setInventoryService(InventoryService inventoryService) {
@@ -589,7 +616,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public AffilateService getAffilateService() {
-        return affilateService;
+        return this.affilateService;
     }
 
     public void setAffilateService(AffilateService affilateService) {
@@ -597,7 +624,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ReferrerProgramManager getReferrerProgramManager() {
-        return referrerProgramManager;
+        return this.referrerProgramManager;
     }
 
     public void setReferrerProgramManager(ReferrerProgramManager referrerProgramManager) {
@@ -605,7 +632,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public OrderStatusService getOrderStatusService() {
-        return orderStatusService;
+        return this.orderStatusService;
     }
 
     public void setOrderStatusService(OrderStatusService orderStatusService) {
@@ -613,7 +640,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public RewardPointService getRewardPointService() {
-        return rewardPointService;
+        return this.rewardPointService;
     }
 
     public void setRewardPointService(RewardPointService rewardPointService) {
@@ -626,7 +653,7 @@ public class OrderServiceImpl implements OrderService {
      */
 
     public BaseDao getBaseDao() {
-        return baseDao;
+        return this.baseDao;
     }
 
     public void setBaseDao(BaseDao baseDao) {
@@ -634,21 +661,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public OrderLoggingService getOrderLoggingService() {
-        return orderLoggingService;
+        return this.orderLoggingService;
     }
 
     public void setOrderLoggingService(OrderLoggingService orderLoggingService) {
         this.orderLoggingService = orderLoggingService;
     }
 
-    public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
+    @Override
+	public ShippingOrder createSOForService(CartLineItem serviceCartLineItem) {
         Order baseOrder = serviceCartLineItem.getOrder();
-        Warehouse corporateOffice = getWarehouseService().getCorporateOffice();
-        ShippingOrder shippingOrder = getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
+        Warehouse corporateOffice = this.getWarehouseService().getCorporateOffice();
+        ShippingOrder shippingOrder = this.getShippingOrderService().createSOWithBasicDetails(baseOrder, corporateOffice);
         shippingOrder.setBaseOrder(baseOrder);
 
         ProductVariant productVariant = serviceCartLineItem.getProductVariant();
-        Sku sku = getSkuService().getSKU(productVariant, corporateOffice);
+        Sku sku = this.getSkuService().getSKU(productVariant, corporateOffice);
         if (sku != null) {
             LineItem shippingOrderLineItem = LineItemHelper.createLineItemWithBasicDetails(sku, shippingOrder, serviceCartLineItem);
             shippingOrder.getLineItems().add(shippingOrderLineItem);
@@ -658,16 +686,16 @@ public class OrderServiceImpl implements OrderService {
 
         shippingOrder.setBasketCategory(CategoryConstants.SERVICES);
         shippingOrder.setServiceOrder(true);
-        shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
+        shippingOrder.setOrderStatus(this.getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_ReadyForProcess));
         ShippingOrderHelper.updateAccountingOnSOLineItems(shippingOrder, baseOrder);
         shippingOrder.setAmount(ShippingOrderHelper.getAmountForSO(shippingOrder));
-        shippingOrder = getShippingOrderService().save(shippingOrder);
-        shippingOrder.setShippingOrderCategories(getCategoriesForShippingOrder(shippingOrder));
+        shippingOrder = this.getShippingOrderService().save(shippingOrder);
+        shippingOrder.setShippingOrderCategories(this.getCategoriesForShippingOrder(shippingOrder));
         /**
          * this additional call to save is done so that we have shipping order id to generate shipping order gateway id
          */
-        shippingOrder = shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
-        shippingOrder = getShippingOrderService().save(shippingOrder);
+        shippingOrder = this.shippingOrderService.setGatewayIdAndTargetDateOnShippingOrder(shippingOrder);
+        shippingOrder = this.getShippingOrderService().save(shippingOrder);
 
         return shippingOrder;
 
@@ -675,10 +703,11 @@ public class OrderServiceImpl implements OrderService {
 
   
 
-    public boolean isShippingOrderExists(Order order) {
+    @Override
+	public boolean isShippingOrderExists(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         for (CartLineItem cartLineItem : productCartLineItems) {
-            if (lineItemDao.getLineItem(cartLineItem) != null) {
+            if (this.lineItemDao.getLineItem(cartLineItem) != null) {
                 return true;
             }
         }
@@ -686,7 +715,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public ShippingOrderStatusService getShippingOrderStatusService() {
-        return shippingOrderStatusService;
+        return this.shippingOrderStatusService;
     }
 
     public void setShippingOrderStatusService(ShippingOrderStatusService shippingOrderStatusService) {
@@ -698,24 +727,24 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
+        boolean shippingOrderAlreadyExists = this.isShippingOrderExists(order);
 
         logger.debug("Trying to split order " + order.getId());
 
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-        User adminUser = getUserService().getAdminUser();
+        User adminUser = this.getUserService().getAdminUser();
 
         if (shippingOrderAlreadyExists) {
             if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
                 order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-                order = save(order);
+                order = this.save(order);
             }
         } else {
             //DO Nothing for B2B Orders
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+                this.orderLoggingService.logOrderActivity(order, adminUser, this.orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
-                shippingOrders = createShippingOrders(order);
+                shippingOrders = this.createShippingOrders(order);
                 if (shippingOrders != null && shippingOrders.size() > 0) {
 
                 }
@@ -725,54 +754,58 @@ public class OrderServiceImpl implements OrderService {
         if (shippingOrders != null && shippingOrders.size() > 0) {
             if (!shippingOrderAlreadyExists) {
                 // save order with InProcess status since shipping orders have been created
-                order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+                order.setOrderStatus(this.getOrderStatusService().find(EnumOrderStatus.InProcess));
                 order.setShippingOrders(shippingOrders);
-                order = save(order);
+                order = this.save(order);
                 String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+                this.orderLoggingService.logOrderActivity(order, adminUser, this.orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
             }
             for (ShippingOrder shippingOrder : shippingOrders) {
                 if (!shippingOrder.isDropShipping()) {
                     if (shippingOrder.getShipment() == null) {
-                        shipmentService.createShipment(shippingOrder, true);
+                        this.shipmentService.createShipment(shippingOrder, true);
                     }
                 } else {
                     shippingOrder.setDropShipping(true);
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
+                    shippingOrder = this.shippingOrderService.save(shippingOrder);
+                    this.shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
                             EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
                 }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                    this.shippingOrderService.autoEscalateShippingOrder(shippingOrder);
                 }
             }
 
             for (ShippingOrder shippingOrder : shippingOrders) {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
-                getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
+                this.getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
-            setTargetDatesOnBO(order);
+            this.setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
 
 
-        // Check Inventory health of order lineitems
+        // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
 
         return shippingOrderAlreadyExists;
     }
 
+
+
+	@Override
 	@Transactional
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall){
-		return (UserCodCall)baseDao.save(userCodCall);
+		return (UserCodCall)this.baseDao.save(userCodCall);
 	}
 
+	@Override
 	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling) {
 		UserCodCall userCodCall = new UserCodCall();
 		userCodCall.setBaseOrder(order);
@@ -783,8 +816,9 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
+	@Override
 	public List<UserCodCall> getAllUserCodCallForToday(){
-	return 	orderDao.getAllUserCodCallOfToday();
+	return 	this.orderDao.getAllUserCodCallOfToday();
 	}
 
 	@Override
@@ -795,7 +829,7 @@ public class OrderServiceImpl implements OrderService {
 		criteria.add(Restrictions.eq("store.id", store.getId()));
 		
 		@SuppressWarnings("unchecked")
-		List<Order> orders = baseDao.findByCriteria(criteria);
+		List<Order> orders = this.baseDao.findByCriteria(criteria);
 		if(orders != null && orders.size() > 0) {
 			return orders.iterator().next();
 		}

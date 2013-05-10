@@ -50,6 +50,7 @@
         });
       </script> 
 
+
     <div class="mainContainer">
       <div class="container_16 clearfix">
         <div class="grid_4 leftBlock">
@@ -204,14 +205,6 @@
 	<span class="muted" style="font-size:20px;">Following badges can be earned by a user: </span>
 	<br>
 	
-	// Logi for db driven about us page
-<c:forEach var="index" begin="0" end="3">
-			<div>
-				<s:file name="attachments[${index}]" />
-			</div>
-		</c:forEach>
-		
-		
 		
 				<table class="cont footer_color">
      	 <c:forEach items="${lca.badgeList}" var="badge">

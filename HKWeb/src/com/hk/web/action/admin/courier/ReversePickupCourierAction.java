@@ -10,6 +10,7 @@ import com.hk.admin.pact.service.courier.CourierPickupService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 
 import com.hk.admin.factory.courier.thirdParty.ThirdPartyCourierServiceFactory;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.courier.Courier;
 import com.hk.domain.courier.CourierPickupDetail;
@@ -83,22 +84,23 @@ public class ReversePickupCourierAction extends BaseAction {
 	public Resolution submit() {
 		if (shippingOrderId != null && pickupDate != null && selectedCourier != null ) {
 			ShippingOrder shippingOrder = shippingOrderService.findByGatewayOrderId(shippingOrderId);
-			CourierPickupDetail courierPickupDetail;
+			CourierPickupDetail courierPickupDetail = null;
 
 			if (ThirdPartyAwbService.integratedCouriers.contains(selectedCourier.getId())) {
 				List<String> pickupReply = courierPickupService.getPickupDetailsForThirdParty(selectedCourier.getId(), shippingOrder, pickupDate);
 				if (pickupReply != null) {
-					if (pickupReply.get(0).equals(CourierConstants.SUCCESS)) {
+					String response = pickupReply.get(0);
+					if (response.equals(CourierConstants.SUCCESS)) {
 						String confirmationNo = pickupReply.get(1);
-						addRedirectAlertMessage(new SimpleMessage("Pickup Request saved. Pickup confirmation number: " + confirmationNo));						
+						addRedirectAlertMessage(new SimpleMessage("Pickup Request saved. Pickup confirmation number: " + confirmationNo));
 						courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, confirmationNo, null);
-					} else {
+					} else if (response.equals(CourierConstants.ERROR)){
 						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request. " + pickupReply.get(1)));
 						return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
+					} else {
+						addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request." + response + ". Please choose some other courier"));
+						return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 					}
-				} else {					
-					addRedirectAlertMessage(new SimpleMessage("Could not generate a pickup request (#AF).Please choose some other courier"));
-					return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 				}
 			} else{
 				courierPickupDetail = courierPickupService.requestCourierPickup(selectedCourier, pickupDate, null, null);
@@ -110,8 +112,16 @@ public class ReversePickupCourierAction extends BaseAction {
 			reverseOrderService.setCourierDetails(reverseOrder, courierPickupDetail);
 			return new RedirectResolution(AdminHomeAction.class);
 		}
+		addRedirectAlertMessage(new SimpleMessage("Please fill all values."));
 		return new RedirectResolution(ReversePickupCourierAction.class).addParameter("reverseOrderId", reverseOrderId);
 	}
+
+    //Cancel Reverse Order if created by mistake
+    public Resolution cancel() {
+        ReverseOrder reverseOrder = reverseOrderService.getReverseOrderById(reverseOrderId);
+        reverseOrderService.deleteReverseOrder(reverseOrder);
+        return new RedirectResolution(ReverseOrdersManageAction.class);
+    }
 
 	public Date getPickupDate() {
 		return pickupDate;

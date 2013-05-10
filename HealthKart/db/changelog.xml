@@ -12540,6 +12540,26 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1367471591738-2">
+        <dropNotNullConstraint columnDataType="INT" columnName="previous_action_task_id" tableName="action_item"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1367471591738-3">
+        <dropNotNullConstraint columnDataType="INT" columnName="next_action_task_id" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (written)" id="20130502-01">
+        <sql>
+            ALTER TABLE bucket MODIFY COLUMN id INT;
+            ALTER TABLE reason MODIFY COLUMN id INT;
+            ALTER TABLE classification MODIFY COLUMN id INT;
+            ALTER TABLE action_task MODIFY COLUMN id INT;
+        </sql>
+    </changeSet>
+    <changeSet author="Pratham (written)" id="20130502-02">
+        <sql>
+            UPDATE `action_task` SET acknowledged =0;
+            ALTER TABLE `action_task` CHANGE `acknowledged` `acknowledged` TINYINT( 4 ) NULL DEFAULT '0';
+        </sql>
+    </changeSet>
 	<changeSet author="Rahul (written)" id="2013-05-03-01">
 		<sql>
 			INSERT INTO  `seek_invoice_num` (`id` ,`warehouse_id`,`invoice_num`,`prefix`,`description`)
@@ -12564,7 +12584,6 @@
     <changeSet author="Ajeet (generated)" id="1367657291705-4">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
-    
     <changeSet author="DeepakC" id="20133001-01">
 		<createTable tableName="loyalty_product">
 			<column autoIncrement="true" name="id" type="INT">
@@ -12683,4 +12702,14 @@
 			</column>
 		</createTable>
 	</changeSet>
+    <changeSet author="Pratham (generated)" id="2013-05-06-01">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_delivery_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
 </databaseChangeLog>

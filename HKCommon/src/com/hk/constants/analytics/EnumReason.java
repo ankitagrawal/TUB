@@ -1,5 +1,6 @@
 package com.hk.constants.analytics;
 
+import com.hk.constants.queue.EnumClassification;
 import com.hk.domain.analytics.Reason;
 import java.util.Arrays;
 
@@ -23,6 +24,7 @@ public enum EnumReason {
     InsufficientUnbookedInventory(150L, "Insufficient Unbooked Inventory", EnumReasonType.NotAutoEscalated),
     InvalidPaymentStatus(160L, "Payment Status is AuthPending/Error", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreated(170L, "Shipment Not Created", EnumReasonType.NotAutoEscalated),
+    HighShippingCost(180L, "High Shipping Cost", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreatedManual(210L, "Shipment Not Created", EnumReasonType.NotManualEscalated),
     InvalidPaymentStatusManual(220L, "Payment Status is AuthPending/Error", EnumReasonType.NotManualEscalated),
     InsufficientUnbookedInventoryManual(230L, "Insufficient Unbooked Inventory", EnumReasonType.NotManualEscalated),
@@ -40,19 +42,26 @@ public enum EnumReason {
 
 
 
-    private Long id;
-    private String primaryClassification;
-    private String reasonType;
+    Long id;
+    EnumClassification enumClassification;
+    String reasonType;
 
+    //todo ps migration
     EnumReason(Long id, String primaryClassification, EnumReasonType enumReasonType) {
         this.id = id;
-        this.primaryClassification = primaryClassification;
+        this.enumClassification = enumClassification;
+        this.reasonType = enumReasonType.getName();
+    }
+
+    EnumReason(Long id, EnumClassification enumClassification, EnumReasonType enumReasonType) {
+        this.id = id;
+        this.enumClassification = enumClassification;
         this.reasonType = enumReasonType.getName();
     }
     public Reason asReason() {
         Reason reason = new Reason();
         reason.setId(id);
-        reason.setPrimaryClassification(primaryClassification);
+//        reason.setClassification(enumClassification.asClassification());
         reason.setType(reasonType);
         return reason;
     }
@@ -63,14 +72,6 @@ public enum EnumReason {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getPrimaryClassification() {
-        return primaryClassification;
-    }
-
-    public void setPrimaryClassification(String primaryClassification) {
-        this.primaryClassification = primaryClassification;
     }
 
     public String getReasonType() {
