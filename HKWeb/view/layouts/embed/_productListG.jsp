@@ -6,7 +6,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
 <s:layout-definition>
 
 
@@ -23,6 +23,9 @@
     ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
     Combo combo = comboDao.getComboById(product_productThumb.getId());
     pageContext.setAttribute("combo", combo);
+
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
   %>
 
   <div>
@@ -32,16 +35,8 @@
       <c:otherwise>
         <div class="grid_4">
           <s:link class="img128"  href="${product.productURL}" title="${product.name}">
-            <c:choose>
-              <c:when test="${product.mainImageId != null}">
-                <hk:productImage imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
-                                 alt="${product.name}" class='prod128'/>
-              </c:when>
-              <c:otherwise>
-                <img src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
-                     alt="${product.name}" class='prod128'/>
-              </c:otherwise>
-            </c:choose>
+            <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				     title="${product.name}">
           </s:link>
         </div>
         <div class="grid_13">

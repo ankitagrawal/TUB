@@ -51,6 +51,7 @@ import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.exception.OutOfStockException;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.catalog.combo.ComboInstanceHasProductVariantDao;
 import com.hk.pact.dao.order.OrderDao;
@@ -129,6 +130,8 @@ public class OrderManager {
     private SMSManager                        smsManager;
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
@@ -384,10 +387,8 @@ public class OrderManager {
             order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
             order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
-            cartLineItems = this.addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which
-                                                                    // are
-
-            // associated with a variant, this will help in minimizing brutal use of free checkout
+            // function made to handle deals and offers which are associated with a variant, this will help in minimizing brutal use of free checkout
+            cartLineItems = this.addFreeVariantsToCart(cartLineItems);
             order.setCartLineItems(cartLineItems);
 
             // award reward points, if using a reward point offer coupon
@@ -402,20 +403,19 @@ public class OrderManager {
             // update user karma profile for those whose score is not yet set
             KarmaProfile karmaProfile = this.getKarmaProfileService().updateKarmaAfterOrder(order);
             if (karmaProfile != null) {
-                order.setScore(new Long(karmaProfile.getKarmaPoints()));
+                order.setScore((long) karmaProfile.getKarmaPoints());
             }
 
-            /*
-             * Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order); Date targetDelDate =
-             * HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH,
-             * Integer.parseInt(dispatchDays[0].toString())); order.setTargetDispatchDate(targetDelDate);
-             */
-             //this is now being being called in splitBOEscalateSO method
-//            getOrderService().setTargetDispatchDelDatesOnBO(order);
             order = this.getOrderService().save(order);
 
             // Order lifecycle activity logging - Order Placed
             this.getOrderLoggingService().logOrderActivity(order, order.getUser(), this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            // Check Inventory health of order lineItems
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                this.inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
 
             this.getUserService().updateIsProductBought(order);
 
@@ -441,8 +441,10 @@ public class OrderManager {
             this.getSmsManager().sendOrderPlacedSMS(order);
         }
 
-        //this is the most important method, so it is very important as to from where it is called
-        this.orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+//        //this is the most important method, so it is very important as to from where it is called
+//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        //we are now trying to replace the above method by pushing orderId in queue
+//        orderEventPublisher.publishOrderPlacedEvent(order);
 
         //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
