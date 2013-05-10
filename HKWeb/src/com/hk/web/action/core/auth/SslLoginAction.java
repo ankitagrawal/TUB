@@ -17,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
+@Ssl
 @Component
-public class LoginAction extends BaseAction {
+public class SslLoginAction extends BaseAction {
 
     @Validate(required = true)
     String email;
