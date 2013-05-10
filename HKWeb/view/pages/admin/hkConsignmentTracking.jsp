@@ -86,7 +86,7 @@
           <td>${consignmentTracking.consignmentLifecycleStatus.status}</td>
           <td>${consignmentTracking.ndrResolution}</td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment">
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment" target="_blank">
               <s:param name="consignmentNumber" value="${consignmentTracking.consignment.awbNumber}" />
               <s:param name="doTracking" value="true" />Track Consignment
             </s:link>
