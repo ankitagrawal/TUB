@@ -179,7 +179,7 @@ public class MCodPaymentReceiveAction extends MBaseAction {
 
 			try {
 				getPaymentManager().verifyPayment(gatewayOrderId, order.getAmount(), null);
-				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone);
+				getPaymentManager().codSuccess(gatewayOrderId, codContactName, codContactPhone ,true);
 				payMap.put("gatewayOrderId", gatewayOrderId);
                 paymentSuccess(gatewayOrderId,request,response);
                 status = MHKConstants.STATUS_OK;

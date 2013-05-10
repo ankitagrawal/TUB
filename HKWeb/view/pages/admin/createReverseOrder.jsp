@@ -21,7 +21,10 @@
             $(document).ready(function() {
                 if (${pickupNotValid}) {
                     alert("Customer Returns only allowed within 14 days after delivery. This limit has been exceeded.");
-                    window.location.href="<%=request.getContextPath()%>/admin";
+                    if(!confirm("Are you sure you want to proceed ?")){
+                        return false;
+                    }
+                    <%--window.location.href="<%=request.getContextPath()%>/admin";--%>
                 }
 
                 $('#validateOnSubmit').click(function() {
