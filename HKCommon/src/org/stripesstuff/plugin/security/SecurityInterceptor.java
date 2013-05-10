@@ -344,6 +344,12 @@ public class SecurityInterceptor implements Interceptor, ConfigurableComponent {
                         redirectUrl = redirectUrl + "?" + request.getQueryString();
                     }
                 }
+              if (redirectUrl != null && !redirectUrl.startsWith(secure.scheme()+"://")) {
+                if (redirectUrl.startsWith("https"))
+                  redirectUrl = redirectUrl.replaceAll("https", "http");
+                else if (redirectUrl.startsWith("http"))
+                  redirectUrl = redirectUrl.replaceAll("http", "https");
+              }
             }
 
             if (redirectUrl != null && secure.redirect() != SecureRedirect.False) {
