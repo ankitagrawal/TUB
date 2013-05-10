@@ -3,6 +3,8 @@ package com.hk.admin.impl.dao.inventory;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.po.PurchaseInvoice;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -96,5 +98,14 @@ public class PurchaseOrderDaoImpl extends BaseDaoImpl implements PurchaseOrderDa
         return (List<PurchaseOrder>) getSession().createQuery(
                 "from PurchaseOrder o where o.purchaseOrderStatus.id not in (:purchaseOrderStatusList) " + " and o.poDate >= (:startDate) and o.poDate <= (:endDate) ").setParameterList(
                 "purchaseOrderStatusList", purchaseOrderStatusList).setParameter("startDate", startDate).setParameter("endDate", endDate).list();
+    }
+    public boolean isPiCreated(PurchaseOrder purchaseOrder){
+        List<GoodsReceivedNote> goodsReceivedNotes= purchaseOrder.getGoodsReceivedNotes();
+        for (GoodsReceivedNote grn :goodsReceivedNotes )    {
+                if(grn.getPurchaseInvoices()!=null && grn.getPurchaseInvoices().size()>0 ) {
+                    return true;
+                }
+             }
+        return false;
     }
 }

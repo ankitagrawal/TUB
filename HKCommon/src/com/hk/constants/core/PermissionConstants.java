@@ -150,6 +150,7 @@ public class PermissionConstants {
     public static final String BULK_SPLIT_BO = "BULK_SPLIT_BO";
     public static final String SPLIT_BO = "SPLIT_BO";
     public static final String SAVE_SHIPPING_COST = "SAVE_SHIPPING_COST";
+    public static final String PO_APPROVER = "PO_APPROVER";
 
     public static final String RECEIVE_CONSIGNMENTS = "RECEIVE_CONSIGNMENTS";
     public static final String EDIT_RUNSHEET = "EDIT_RUNSHEET";
