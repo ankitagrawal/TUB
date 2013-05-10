@@ -12589,6 +12589,11 @@
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
     </changeSet>
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
     <changeSet author="Ankur (generated)" id="1367992804803-3">
         <createIndex indexName="name_value_unique_constraint" tableName="product_option" unique="true">
             <column name="name"/>

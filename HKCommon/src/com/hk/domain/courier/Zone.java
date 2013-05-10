@@ -1,9 +1,6 @@
 package com.hk.domain.courier;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +15,7 @@ import javax.persistence.Table;
 public class Zone {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
