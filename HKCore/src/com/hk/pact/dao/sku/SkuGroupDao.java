@@ -37,6 +37,8 @@ public interface SkuGroupDao extends BaseDao {
     public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
 
     public List<SkuGroup> getSkuGroupByGrnLineItem(GrnLineItem grnLineItem);
+    
+    public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
 
 }
