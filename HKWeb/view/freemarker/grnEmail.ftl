@@ -173,15 +173,17 @@ background: #ff0;
 	<#list grn.grnLineItems as grnLineItem>
 	<#if poLineItem.sku==grnLineItem.sku>
 	<#assign hasWeight = 1>
-	<#if grnLineItem.weight??>
-	<#if poLineItem.sku.productVariant.weight??>
+	<#if grnLineItem.weight?? && poLineItem.sku.productVariant.weight??>
  		 <#if grnLineItem.weight!=poLineItem.sku.productVariant.weight>
 			<td style="background:#ff0;">${grnLineItem.weight}</td>
 		<#else>
 			<td>${grnLineItem.weight}</td>
 		</#if>
 		<#else>
-			<td>${grnLineItem.weight}</td>
+			<#if grnLineItem.weight??>
+			<td style="background:#ff0;">${grnLineItem.weight}</td>
+		<#else>
+			<td>N/A</td>
 		</#if>
 	</#if>
 	</#if>
@@ -197,8 +199,8 @@ background: #ff0;
  		 <td>${poLineItem.sku.productVariant.weight}</td>
  		 </#if>
   		<#else>
-  		 
-  		</#if></td>
+  		 <td></td>
+  		</#if>
   	<#if poLineItem.sku.productVariant.product.isJit()>
  		<td style="background:#ff0;">1</td>
   		<#else>
