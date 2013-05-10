@@ -12600,4 +12600,22 @@
             <column name="value"/>
         </createIndex>
     </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-1">
+        <addColumn tableName="consignment">
+            <column name="owner" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-2">
+        <addColumn tableName="consignment">
+            <column name="target_delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-3">
+        <addColumn tableName="consignment_tracking">
+            <column name="ndr_resolution" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842551660-1">
+        <modifyDataType columnName="remarks" newDataType="VARCHAR(150)" tableName="consignment_tracking"/>
+    </changeSet>
 </databaseChangeLog>
