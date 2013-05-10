@@ -132,7 +132,7 @@
 				</c:if>
 					<c:if test="${sta.stockTransfer.id != null}">
 						<s:hidden name="toWarehouse" value="${sta.stockTransfer.toWarehouse}"/>
-						${sta.stockTransfer.toWarehouse.name}
+						${sta.stockTransfer.toWarehouse.identifier}
 					</c:if>
 				</td>
 			</tr>
