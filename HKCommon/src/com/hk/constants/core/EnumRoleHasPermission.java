@@ -184,7 +184,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.SKU_SALES_REPORT,
                     EnumPermission.UPDATE_PRODUCT_CATALOG,
                     EnumPermission.DOWNLOAD_PRDOUCT_CATALOG,
-                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS
+                    EnumPermission.UPDATE_COURIER_DELIVERY_STATUS,
+                    EnumPermission.TRACK_CONSIGNMENTS
             )
     ),
     CUSTOMER_SUPPORT(
@@ -210,7 +211,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_DROP_SHIPPING_QUEUE,
                     EnumPermission.UPDATE_DROP_SHIPPING_QUEUE,
                     EnumPermission.VIEW_NDR,
-                    EnumPermission.EDIT_NDR
+                    EnumPermission.EDIT_NDR,
+                    EnumPermission.TRACK_CONSIGNMENTS
             )
     ),
 
@@ -240,7 +242,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.VIEW_CONSIGNMENT_TRACKING,
                     EnumPermission.CREATE_REVERSE_PICKUP_ORDER,
                     EnumPermission.VIEW_NDR,
-                    EnumPermission.EDIT_NDR
+                    EnumPermission.EDIT_NDR,
+                    EnumPermission.TRACK_CONSIGNMENTS
             )
     ),
 
@@ -258,7 +261,8 @@ public enum EnumRoleHasPermission {
                     EnumPermission.CREATE_REPLACEMENT_ORDER,
                     EnumPermission.CREATE_REVERSE_PICKUP_ORDER,
                     EnumPermission.VIEW_NDR,
-                    EnumPermission.EDIT_NDR
+                    EnumPermission.EDIT_NDR,
+                    EnumPermission.TRACK_CONSIGNMENTS
             )
     ),
 

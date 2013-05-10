@@ -38,6 +38,7 @@
                     <th>NDR Action</th>
                     <th>Future Delivery Date</th>
                     <th>Remarks</th>
+                    <th>Action</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -100,6 +101,13 @@
                             <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
                                 <s:text name="ndrDtoList[${ctr.index}].remarks" style="width: 150px;" maxlength="100"/>
                             </shiro:hasPermission>
+                        </td>
+
+                        <td>
+                            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment">
+                                <s:param name="consignmentNumber" value="${ndrDto.awbNumber}" />
+                                <s:param name="doTracking" value="true" />Track Consignment
+                            </s:link>
                         </td>
 
                         <td>

@@ -360,12 +360,17 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
         } else if (owner.equals(hubManager)) {
             consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
+            consignments.addAll(consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentRTH.getId(), owner, user.getHub()));
+            consignments.addAll(consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOutForDelivery.getId(),owner, user.getHub()));
+            Collections.sort(consignments, new Comparator<Consignment>() {
+                public int compare(Consignment consignment1, Consignment consignment2) {
+                    return consignment1.getCreateDate().compareTo(consignment2.getCreateDate());
+                }
+            });
         }
-
-        List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
         Date currentDate = new Date();
-
+        List<ConsignmentTracking> consignmentTrackingList;
         for (Consignment consignmentObj : consignments) {
             NdrDto ndrDto = new NdrDto();
             ndrDto.setNumberOfAttempts(getAttempts(consignmentObj));
@@ -381,14 +386,15 @@ public class ConsignmentServiceImpl implements ConsignmentService {
             consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignmentObj.getId());
 
             //getting the latest consignment tracking object for onHoldByCustomer
-            Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
+      /*      Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
                 public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
                     return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
                 }
             });
+      */
             ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
 
-            // consignment tracking remarks already contains the ndr comment when a ndr action has taken place already
+            // consignment tracking 'remarks' already contains the ndr comment when a ndr action has taken place already
             String nonDeliveryReason = consignmentTracking.getRemarks();
             if (nonDeliveryReason.contains("Ndr Comment")) {
                 nonDeliveryReason = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[0];

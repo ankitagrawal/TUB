@@ -9,6 +9,7 @@ import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.util.HKDeliveryUtil;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.EnumCourier;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
@@ -170,7 +171,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
         return new ForwardResolution("/pages/admin/hkConsignmentList.jsp");
     }
 
-    @Secure(hasAnyRoles = {RoleConstants.HK_DELIVERY_HUB_MANAGER, RoleConstants.CUSTOMER_SUPPORT}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.EDIT_NDR,PermissionConstants.VIEW_NDR}, authActionBean = AdminPermissionAction.class)
     public Resolution viewNdr() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
@@ -199,7 +200,7 @@ public class HKDConsignmentAction extends BasePaginatedAction {
                         }
                         consignment1.setOwner(RoleConstants.HK_DELIVERY_HUB_MANAGER);
                     }
-                    String remark = ndrDto.getNonDeliveryReason() + " \n Ndr Comment : ";
+                    String remark = ndrDto.getNonDeliveryReason() + " \n\r Ndr Comment : ";
                     if (ndrDto.getRemarks() != null) {
                         remark += ndrDto.getRemarks();
                     }
