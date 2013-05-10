@@ -9,6 +9,7 @@ public enum EnumSurcharge {
     ZeroPercent(10L, "ZeroPercent", 0.0D),
     //For Himachal
       OnePercent(20L, "OnePercent", 0.01D),
+     OneDotFivePercent(25L,"OneDotFivePercent",0.015D),
     TwoPercent(30L, "TwoPercent", 0.02D),
       //For Banglore
       FourPercent(35L, "FourPercent", 0.04D),
