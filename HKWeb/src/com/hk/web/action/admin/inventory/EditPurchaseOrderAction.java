@@ -12,6 +12,7 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
+import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
@@ -19,6 +20,7 @@ import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.manager.EmailManager;
+import com.hk.pact.dao.core.SupplierDao;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.taglibs.Functions;
@@ -60,6 +62,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 	AdminEmailManager adminEmailManager;
 	@Autowired
 	SkuService skuService;
+    @Autowired
+    private SupplierDao supplierDao;
 
 	// @Named(Keys.Env.adminUploads)
 	@Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
@@ -68,6 +72,8 @@ public class EditPurchaseOrderAction extends BaseAction {
 	@Validate(required = true, on = "parse")
 	private FileBean fileBean;
 
+    private  Supplier supplier;
+
 	private PurchaseOrder purchaseOrder;
 	private List<PoLineItem> poLineItems = new ArrayList<PoLineItem>();
 	public PurchaseOrderDto purchaseOrderDto;
@@ -75,19 +81,25 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public Warehouse warehouse;
 	private PurchaseOrderStatus previousPurchaseOrderStatus;
 	private List<Long> newSkuIdList = new ArrayList<Long>();
+    private List<Supplier> suppliers = new ArrayList<Supplier>();
 
+
+    private boolean isPiCreated;
 	@DefaultHandler
 	public Resolution pre() {
 		if(purchaseOrder != null){
 			logger.info("purchaseOrder@Pre: " + purchaseOrder.getId());
 		}
+        suppliers = supplierDao.getListOrderedByName();
 		purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
 		for(PoLineItem poLineItem : purchaseOrder.getPoLineItems()) {
 			if(poLineItemDao.getPoLineItemCountBySku(poLineItem.getSku()) <= 1) {
 				newSkuIdList.add(poLineItem.getSku().getId());
 			}
 		}
-		return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
+
+        isPiCreated=purchaseOrderDao.isPiCreated(purchaseOrder);
+         return new ForwardResolution("/pages/admin/editPurchaseOrder.jsp");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -195,7 +207,6 @@ public class EditPurchaseOrderAction extends BaseAction {
 					}
 				}
 			}
-
 			purchaseOrder.setUpdateDate(new Date());
 			purchaseOrderDto = purchaseOrderManager.generatePurchaseOrderDto(purchaseOrder);
 			purchaseOrder.setPayable(purchaseOrderDto.getTotalPayable());
@@ -272,6 +283,12 @@ public class EditPurchaseOrderAction extends BaseAction {
 		}
 		return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
 	}
+
+    public Resolution saveSupplier(){
+        purchaseOrder.setSupplier(supplier);
+        getBaseDao().save(purchaseOrder);
+        return new RedirectResolution(EditPurchaseOrderAction.class).addParameter("purchaseOrder", purchaseOrder.getId());
+    }
 
 	public PurchaseOrder getPurchaseOrder() {
 		return purchaseOrder;
@@ -352,4 +369,28 @@ public class EditPurchaseOrderAction extends BaseAction {
 	public void setNewSkuIdList(List<Long> newSkuIdList) {
 		this.newSkuIdList = newSkuIdList;
 	}
+
+    public List<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
+    public boolean isPiCreated() {
+        return isPiCreated;
+    }
+
+    public void setPiCreated(boolean piCreated) {
+        isPiCreated = piCreated;
+    }
 }

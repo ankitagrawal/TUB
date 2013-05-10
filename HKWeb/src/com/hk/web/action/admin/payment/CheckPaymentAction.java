@@ -9,6 +9,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
+import org.apache.commons.lang.StringUtils;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.PermissionConstants;
@@ -21,6 +22,7 @@ import com.hk.domain.user.User;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
+import com.hk.manager.payment.EbsPaymentGatewayWrapper;
 import com.hk.pact.service.OrderStatusService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
@@ -33,37 +35,39 @@ import com.hk.web.action.error.AdminPermissionAction;
 public class CheckPaymentAction extends BaseAction {
 
     @Validate(required = true)
-    private Order                order;
+    private Order order;
 
-    private List<Payment>        paymentList;
+    private List<Payment> paymentList;
 
-    @Validate(required = true, on = { "acceptAsAuthPending", "acceptAsSuccessful" })
-    private Payment              payment;
+    @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
+    private Payment payment;
 
-    private PricingDto           pricingDto;
+    private PricingDto pricingDto;
 
     @Autowired
-    private PaymentService       paymentService;
+    private PaymentService paymentService;
     @Autowired
-    private OrderLoggingService  orderLoggingService;
+    private OrderLoggingService orderLoggingService;
     @Autowired
-    private OrderService         orderService;
+    private OrderService orderService;
     @Autowired
-    private OrderStatusService   orderStatusService;
+    private OrderStatusService orderStatusService;
     @Autowired
     private ShippingOrderService shippingOrderService;
     @Autowired
-    private OrderManager         orderManager;
+    private OrderManager orderManager;
     @Autowired
-    private PricingEngine        pricingEngine;
+    private PricingEngine pricingEngine;
     @Autowired
-    private PaymentManager       paymentManager;
+    private PaymentManager paymentManager;
 
     Map<String, Object> paymentResultMap = new HashMap<String, Object>();
     private String gatewayOrderId;
     private String txnStartDate;
     private String txnEndDate;
     private String merchantId;
+    private String paymentId;
+    private String amount;
 
 
     List<Map<String, Object>> transactionList = new ArrayList<Map<String, Object>>();
@@ -87,40 +91,100 @@ public class CheckPaymentAction extends BaseAction {
     public Resolution seekPayment() {
         payment = paymentService.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            paymentResultMap = PaymentFinder.findCitrusPayment(gatewayOrderId);
-            if (paymentResultMap.isEmpty()) {
-                paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007518");
+            int gatewayId = payment.getGateway().getId().intValue();
+
+            switch (gatewayId) {
+                case 80:
+                    paymentResultMap = PaymentFinder.findCitrusPayment(gatewayOrderId);
+                    if (paymentResultMap.isEmpty()) {
+                        paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
+                    }
+                    break;
+                case 90:
+                    paymentResultMap = PaymentFinder.findEbsTransaction(gatewayOrderId, null, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS);
+                    break;
+                case 100:
+                    paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007518");
+                    break;
             }
-            if (paymentResultMap.isEmpty()) {
-                paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
-            }
-            transactionList.add(paymentResultMap);
         }
+        transactionList.add(paymentResultMap);
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
     @DontValidate
     public Resolution searchTransactionByDate() {
-        if(merchantId != null){
-            transactionList = PaymentFinder.findTransactionListIcici(txnStartDate,txnEndDate,merchantId);
-        } else{
-            transactionList = PaymentFinder.findTransactionListCitrus(txnStartDate,txnEndDate);
+        if (merchantId != null) {
+            transactionList = PaymentFinder.findTransactionListIcici(txnStartDate, txnEndDate, merchantId);
+        } else {
+            transactionList = PaymentFinder.findTransactionListCitrus(txnStartDate, txnEndDate);
         }
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
 
     @DontValidate
-    @Secure(hasAnyPermissions = { PermissionConstants.REFUND_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution refundPayment() {
         payment = paymentService.findByGatewayOrderId(gatewayOrderId);
         if (payment != null) {
-            paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
+            int gatewayId = payment.getGateway().getId().intValue();
+            switch (gatewayId) {
+                case 80:
+                    paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
+                    break;
+                case 90:
+                    if (paymentId == null || StringUtils.isEmpty(paymentId) || amount == null || StringUtils.isEmpty(amount)) {
+                        addRedirectAlertMessage(new SimpleMessage("Payment Id and Amount cannot be null"));
+                        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+                    }
+                    paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
+                    break;
+            }
+
         }
+         transactionList.add(paymentResultMap);
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
-    @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
+
+
+
+    @DontValidate
+    @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+       public Resolution cancelPayment() {
+           payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+           if (payment != null) {
+               if (paymentId == null || StringUtils.isEmpty(paymentId)|| amount == null || StringUtils.isEmpty(amount)) {
+                   addRedirectAlertMessage(new SimpleMessage("Payment Id and Amount cannot be null"));
+                   return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+               }
+               paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_CANCEL);
+           }
+           transactionList.add(paymentResultMap);
+           return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+       }
+
+
+
+     @DontValidate
+     @Secure(hasAnyPermissions = {PermissionConstants.REFUND_PAYMENT}, authActionBean = AdminPermissionAction.class)
+       public Resolution capturePayment() {
+           payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+           if (payment != null) {
+               if (paymentId == null || StringUtils.isEmpty(paymentId)|| amount == null || StringUtils.isEmpty(amount)) {
+                   addRedirectAlertMessage(new SimpleMessage("Payment Id and Amount cannot be null"));
+                   return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+               }
+               paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_CAPTURE);
+           }
+           transactionList.add(paymentResultMap);
+           return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+       }
+    
+
+
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsAuthPending() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -133,7 +197,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
-	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
         if (getPrincipal() != null) {
@@ -152,7 +216,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
-	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution associateToPayment() {
         getPaymentManager().associateToOrder(payment.getGatewayOrderId());
         User loggedOnUser = null;
@@ -166,7 +230,7 @@ public class CheckPaymentAction extends BaseAction {
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }
 
-	@Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PAYMENT }, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution updateToSuccess() {
         Payment payment = order.getPayment();
         payment.setPaymentStatus(getPaymentService().findPaymentStatus(EnumPaymentStatus.SUCCESS));
@@ -180,7 +244,7 @@ public class CheckPaymentAction extends BaseAction {
                 getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentUpdatedAsSuccessful), null);
 
         orderService.sendEmailToServiceProvidersForOrder(order);
-        orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
@@ -321,5 +385,21 @@ public class CheckPaymentAction extends BaseAction {
 
     public void setMerchantId(String merchantId) {
         this.merchantId = merchantId;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 }

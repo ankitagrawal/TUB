@@ -36,19 +36,10 @@
                 <div class="img">
                     <div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
                         <s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-                            <c:choose>
-                                <c:when test="${product.mainImageId != null}">
-                                    <hk:productImage style="max-height:180px;max-width:180px;"
-                                                     imageId="${product.mainImageId}"
-                                                     size="<%=EnumImageSize.MediumSize%>"
-                                                     alt="${product.name}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <img style="max-height:180px;max-width:180px;"
-                                         src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
-                                         alt="${product.name}"/>
-                                </c:otherwise>
-                            </c:choose>
+                                <hk:productImage style="max-height:180px;max-width:180px;"
+                                                 imageId="${product.mainImageId}"
+                                                 size="<%=EnumImageSize.MediumSize%>"
+                                                 alt="${product.name}"/>
                         </s:link>
                     </div>
                 </div>
@@ -147,7 +138,7 @@
                         <c:if test="${product.maximumDiscountProducVariant.discountPercent > 0}">
                             <c:choose>
                                 <c:when
-                                        test="${product.maximumDiscountProducVariant.discountPercent > product.minimumMRPProducVariant.discountPercent}">
+                                        test="${product.maximumDiscountProducVariant.discountPercent > product.maximumDiscountProducVariant.discountPercent}">
                                     
 
                                     <p class="bid"
@@ -169,9 +160,6 @@
                                     </p>
                                 </c:when>
                                 <c:otherwise>
-
-                                   
-
 
                                     <p class="bid">
                                         <c:if test="${product.maximumDiscountProducVariant.discountPercent >= .33}">

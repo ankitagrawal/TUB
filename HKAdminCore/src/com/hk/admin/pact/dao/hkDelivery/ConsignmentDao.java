@@ -25,11 +25,21 @@ public interface ConsignmentDao extends BaseDao {
 
     public List<ConsignmentTracking> getConsignmentTracking(Consignment consignment);
 
-	ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus);
+    ConsignmentTracking getConsignmentTrackingByRunsheetAndStatus(Consignment consignment, Runsheet runsheet, ConsignmentLifecycleStatus consignmentLifecycleStatus);
 
     public ShippingOrder getShippingOrderFromConsignment(Consignment consignment);
 
-    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate ,int pageNo, int perPage);
+    public Page getPaymentReconciliationListByDates(Date startDate, Date endDate, int pageNo, int perPage);
 
-	public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub);
+    public List<Consignment> getConsignmentsForPaymentReconciliation(Date startDate, Date endDate, Hub hub);
+
+    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage);
+
+    public List<Consignment> getConsignmentsByStatusOwnerAndHub(Long consignmentStatus, String owner, Hub hub);
+
+    public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId);
+
+    public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId);
+
+    public List<Consignment> getConsignmentsByStatusAndOwner(Long consignmentStatus, String owner);
 }

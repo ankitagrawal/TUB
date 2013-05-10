@@ -105,6 +105,13 @@
         <h3><s:link
                 beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
     </shiro:hasRole>
+<%--
+	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <h3><s:link
+                beanclass="com.hk.web.action.admin.util.RunGenericGroovyScriptAction"> Run generic groovy script </s:link></h3>
+    </shiro:hasRole>
+--%>
+
         <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -266,6 +273,11 @@
         <h3>
             <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction">Close Grns</s:link>
         </h3>
+<%--
+        <h3>
+            <s:link beanclass="com.hk.web.action.admin.inventory.GrnCloseAction" event="closeGrn">Close Grns(2 Months)</s:link>
+        </h3>
+--%>
     </shiro:hasRole>
 
 </div>

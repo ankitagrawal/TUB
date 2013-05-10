@@ -41,6 +41,12 @@ public class SubscriptionLoggingServiceImpl implements SubscriptionLoggingServic
         logSubscriptionActivity(subscription, loggedOnUser, subscriptionLifecycleActivity, null);
     }
 
+    @Override
+    public void logSubscriptionActivityByAdmin(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity) {
+        SubscriptionLifecycleActivity subscriptionLifecycleActivity = enumSubscriptionLifecycleActivity.asSubscriptionLifecycleActivity();
+        logSubscriptionActivity(subscription, userService.getLoggedInUser(), subscriptionLifecycleActivity, null);
+    }
+
     public void logSubscriptionActivity(Subscription subscription, EnumSubscriptionLifecycleActivity enumSubscriptionLifecycleActivity, String comments) {
         User loggedOnUser = userService.getLoggedInUser();
         // User loggedOnUser = UserCache.getInstance().getLoggedInUser();

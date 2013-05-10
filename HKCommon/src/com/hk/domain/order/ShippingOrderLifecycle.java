@@ -102,6 +102,10 @@ public class ShippingOrderLifecycle implements java.io.Serializable, Comparable<
         this.activityDate = activityDate;
     }
 
+    public LifecycleReason getLifecycleReason() {
+         return lifecycleReasons != null && !lifecycleReasons.isEmpty() ? lifecycleReasons.get(0) : null;
+    }
+
     public List<LifecycleReason> getLifecycleReasons() {
         return lifecycleReasons;
     }

@@ -35,6 +35,7 @@ import com.hk.exception.OrderSplitException;
 import com.hk.helper.LineItemHelper;
 import com.hk.helper.OrderDateUtil;
 import com.hk.helper.ShippingOrderHelper;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.pact.dao.BaseDao;
@@ -95,9 +96,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService orderStatusService;
     @Autowired
     private RewardPointService rewardPointService;
-    /*
-     * @Autowired private CategoryService categoryService;
-     */
     @Autowired
     private OrderLoggingService orderLoggingService;
     @Autowired
@@ -106,19 +104,13 @@ public class OrderServiceImpl implements OrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     LineItemDao lineItemDao;
-
     @Autowired
     ShipmentService shipmentService;
     @Autowired
+    BucketService bucketService;
+    @Autowired
     SubscriptionService subscriptionService;
 
-
-    /*
-     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
-     */
-
-    // @Value("#{hkEnvProps['codMaxAmount']}")
-    // private Double codMaxAmount;
     @Transactional
     public Order save(Order order) {
         return getOrderDao().save(order);
@@ -212,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
              }
         }
         order.setTargetDispatchDate(maxSOTargetDispatchDate);
-        //todo set target delivery date
+//        Date orderTargetDeliveryDate = HKDateUtil.addToDate(maxSOTargetDispatchDate, Calendar.DAY_OF_MONTH, 3);
         order.setTargetDelDate(maxSOTargetDispatchDate);
         getOrderDao().save(order);
     }
@@ -320,11 +312,7 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                shippingOrders = splitOrder(order);
-            } else {
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
-            }
+            shippingOrders = splitOrder(order);
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
@@ -361,11 +349,6 @@ public class OrderServiceImpl implements OrderService {
          */
 
         return shouldUpdate;
-    }
-
-    public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
-        subscriptionService.placeSubscriptions(order);
-        splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
     }
 
     @Transactional
@@ -694,11 +677,14 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderAlreadyExists = isShippingOrderExists(order);
+        boolean shippingOrderAlreadyExists = false;
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        if(!shippingOrders.isEmpty()) {
+            shippingOrderAlreadyExists = true;
+        }
 
         logger.debug("Trying to split order " + order.getId());
 
-        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
 
         if (shippingOrderAlreadyExists) {
@@ -711,9 +697,8 @@ public class OrderServiceImpl implements OrderService {
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
                 orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
-                shippingOrders = createShippingOrders(order);
-                if (shippingOrders != null && shippingOrders.size() > 0) {
-
+                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                    shippingOrders = createShippingOrders(order);
                 }
             }
         }
@@ -735,28 +720,34 @@ public class OrderServiceImpl implements OrderService {
                 } else {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
-                    shippingOrderService.logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                            EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
+                    getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
+                            EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
             }
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
                 }
             }
 
             for (ShippingOrder shippingOrder : shippingOrders) {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
+
+                //auto allocate buckets, based on business use case
+                if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                    bucketService.autoCreateUpdateActionItem(shippingOrder);
+                }
+
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
+            subscriptionService.placeSubscriptions(order);
             setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
 
-
-        // Check Inventory health of order lineitems
+        // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }

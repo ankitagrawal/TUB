@@ -29,6 +29,63 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+    function checkvariantWeightonBlur(){
+        var receivedQuantity = $(this).parents('.lineItemRow');
+        var receivedQuantityValue   = receivedQuantity.find(".receivedQuantity").val();
+        var variantRegex=/^[0-9]+$/;
+        varWeightLength = $(this).val().length;
+        varWeightValue = $(this).val();
+        if(receivedQuantityValue!='0'){
+            //alert(receivedQuantityValue);
+                if (varWeightLength == 0){
+                    alert("Variant weight cannot be empty!");
+                    return false;
+
+                }else if (isNaN(varWeightValue)) {
+                    //alert(varWeightValue);
+                    alert("Please enter variant weight in correct format!");
+                    return false;
+                }
+                else if ((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
+                    alert(" Weight should be in grams!");
+                    return false;
+                }
+                else{
+                    return true;
+                }
+        }
+    }
+    function checkvariantWeightonSubmit(){
+
+        var variantRegex=/^[0-9]+$/;
+        var success = true;
+            $(".weight").each(function() {
+                    var receivedQuantity = $(this).parents('.lineItemRow');
+                    var receivedQuantityValue   = receivedQuantity.find(".receivedQuantity").val();
+                    //alert(receivedQuantityValue);
+                    varWeightLength = $(this).val().length;
+                    varWeightValue = $(this).val();
+                    if(receivedQuantityValue!='0'){
+                        if (varWeightLength == 0){
+                            alert("Variant weight cannot be empty!");
+                            success = false;
+
+                        }else if (isNaN(varWeightValue)) {
+                            //alert(varWeightValue);
+                            alert("Please enter variant weight in correct format!");
+                            success = false;
+                        }
+                        else if((varWeightLength < 2) || (!variantRegex.test(varWeightValue))) {
+                            alert(" Weight should be in grams!");
+                            success = false;
+                        }
+                        return success;
+                    }
+            });
+
+            return success;
+        }
+    $('.weight').blur(checkvariantWeightonBlur);
     $('a.lightbox').lightBox({conPath:"${pageContext.request.contextPath}/"});
 
     $('.hkProductLightbox').each(function(){
@@ -186,6 +243,15 @@ $(document).ready(function() {
         }
     };
 
+    $('.validateWeight').click(function() {
+       // console.log(checkvariantWeightonSubmit());
+        if(checkvariantWeightonSubmit()){
+            $('.requiredFieldValidator').click();
+        }else{
+            return false;
+        }
+
+   });
     $('.requiredFieldValidator').click(function() {
         var invoice = $('.invoiceNumber').val();
         if(invoice == "-"){
@@ -348,9 +414,9 @@ $(document).ready(function() {
         <th>Surcharge</th>
         <th>Payable</th>
         <th>Weight <br/>(in gms)</th>
-        <th>Length</th>
-        <th>Breadth</th>
-        <th>Height</th>
+        <th>Length <br/>(in cm)</th>
+        <th>Breadth <br/>(in cm)</th>
+        <th>Height <br/>(in cm)</th>
 
     </tr>
     </thead>
@@ -477,7 +543,7 @@ $(document).ready(function() {
         <td>
             <s:text readonly="readonly" class="payableAmount" name="grnLineItems[${ctr.index}].payableAmount" value="${grnLineItemDto.payable}" />
         </td>
-        <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" class="weight" value="${productVariant.weight}"/></td>
+        <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" id="variantWeight" class="weight" value="${productVariant.weight}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>
@@ -513,7 +579,8 @@ $(document).ready(function() {
 <br/>
 <%--<a href="grn.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>--%>
 <shiro:hasPermission name="<%=PermissionConstants.EDIT_GRN%>">
-    <s:submit name="save" value="Save" class="requiredFieldValidator"/>
+	<s:submit name="save" value="Save" class="requiredFieldValidator" style="display:none;"/>
+    <s:button name="validateWeight" value="Save" class="validateWeight" />
 
     <c:if test='${itemCheckedin && pa.grn.grnStatus.id == GrnCloseId}' >
         <s:link class=" button_green" style="width: 180px; height: 18px; align_right" beanclass ="com.hk.web.action.admin.inventory.InventoryCheckinAction" event="downloadAllBarcode"> Get All Barcodes

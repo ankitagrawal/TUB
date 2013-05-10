@@ -50,8 +50,11 @@ public class ConsignmentTracking implements java.io.Serializable {
     private Date createDate;
 
 
-    @Column(name = "remarks", length = 45)
+    @Column(name = "remarks", length = 150)
     private String remarks;
+
+    @Column(name = "ndr_resolution", length = 100)
+    private String ndrResolution;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -61,7 +64,7 @@ public class ConsignmentTracking implements java.io.Serializable {
     @JoinColumn(name = "consignment_lifecycle_status_id")
     private ConsignmentLifecycleStatus consignmentLifecycleStatus;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "runsheet_id", nullable = true)
     private Runsheet runsheet;
 
@@ -129,13 +132,22 @@ public class ConsignmentTracking implements java.io.Serializable {
         this.consignmentLifecycleStatus = consignmentLifecycleStatus;
     }
 
-	public Runsheet getRunsheet() {
-		return runsheet;
-	}
+    public Runsheet getRunsheet() {
+        return runsheet;
+    }
 
-	public void setRunsheet(Runsheet runsheet) {
-		this.runsheet = runsheet;
-	}
+    public void setRunsheet(Runsheet runsheet) {
+        this.runsheet = runsheet;
+    }
+
+    public String getNdrResolution() {
+        return ndrResolution;
+    }
+
+    public void setNdrResolution(String ndrResolution) {
+        this.ndrResolution = ndrResolution;
+    }
+
 }
 
 
