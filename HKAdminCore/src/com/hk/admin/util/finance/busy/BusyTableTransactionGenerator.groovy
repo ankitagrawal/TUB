@@ -80,18 +80,47 @@ public class BusyTableTransactionGenerator {
         String supplierState = purchaseRow.supState;
         String warehouseState = purchaseRow.warehouseState;
         String supplierName = purchaseRow.supName;
-        String warehouseName = purchaseRow.warehouseName;
 
+	      Long warehouseId = purchaseRow.warehouseId;
+	      String warehouseName;
+	      if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          warehouseName = "Gurgaon Warehouse";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		      warehouseName = "Mumbai Warehouse";
+	      }
+	      else if(warehouseId == 301){
+			      warehouseName = "Punjabi Bagh Store";
+		    }
+	      else if(warehouseId == 999){
+			      warehouseName = "Corporate Office";
+		    }
+	      else if(warehouseId == 401){
+			      warehouseName = "Kapashera Warehouse";
+		    }
 
         String series = '';
-        if (purchaseRow.warehouseId == 1) {
-          series = 'HR'
-        }
-        else if (purchaseRow.warehouseId == 2) {
-          series = 'MH';
-        }
+	      String invoiceDate = purchaseRow.purInvoiceDate;
+	      String invoiceNumber =  purchaseRow.invoiceNumber;
 
-        int sameState = 0;
+
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
+
+	      int sameState = 0;
         if (supplierState.equalsIgnoreCase(warehouseState)) {
           sameState = 0;
         }
@@ -106,7 +135,7 @@ public class BusyTableTransactionGenerator {
       date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
       tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
     )
-        VALUES(   ${series} , ${ purchaseRow.purInvoiceDate} , substring( ${purchaseRow.invoiceNumber },1,25) ,  2 , 'VAT TAX INC'  , substring(${supplierName},1,40)
+        VALUES(   ${series} , ${invoiceDate} , substring(${invoiceNumber} ,1,25) ,  2 , 'VAT TAX INC'  , substring(${supplierName},1,40)
      , substring(${purchaseRow.suppId },1,40)  , substring(${purchaseRow.supAddress1 },1,40) ,  substring(${purchaseRow.supAddress2 },1,40) , ${supplierState}
           , substring(${purchaseRow.supPincode },1,40),${purchaseRow.supTin} ,substring(${warehouseName},1,40)  , ${sameState} , ${purchaseRow.finalPayable}
          ,0 , NOW() , ${purchaseRow.purchaseInvoiceId} )
