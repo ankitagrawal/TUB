@@ -32,14 +32,8 @@
 <s:layout-component name="htmlHead">
 <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
 <style type="text/css">
-.shortLink{
-	float: left;
-    font-size: 0.8em;
-    position: relative;
-    width: 56px;
-}
 
-.purchaseInvoiceShortTable{
+.extraInventoryShortTable{
 	float: left;
     position: relative;
 	width: 100%;
@@ -93,20 +87,6 @@
 			}
 		};
 		
-		function populateRow(rowValues, index){
-			var indexValue = eval(index);
-			var row = $('#piShortTable').find("tr")[indexValue+1];
-			var rowAtIndex = $($('#piShortTable').find("tr")[indexValue+1]);
-			var selectedTax = $(rowValues).find(".taxCategory :selected").val();
-			rowAtIndex.find('.variant').val($(rowValues).find(".variant").val());
-			var text = ($(rowValues).find(".variantName").text());
-			rowAtIndex.find('.pvDetails').append(text); 
-			rowAtIndex.find('.taxCategory').val(selectedTax);
-			rowAtIndex.find('.costPrice').val($(rowValues).find(".costPrice").val());
-			rowAtIndex.find('.mrp').val($(rowValues).find(".mrp").val());
-			
-		};
-
 		$('.addRowButton').click(function(event) {
 			var id = event.target.id;
 			rowValue = event;
@@ -132,7 +112,6 @@
 			}
 			
 			var taxOptions = "";
-			var shortTaxOptions = "";
 		<c:choose>
 		<c:when test="${pia.purchaseInvoice.supplier.state==pia.purchaseInvoice.warehouse.state}">
 			taxOptions = '<select class="taxCategory valueChange" name="purchaseInvoiceLineItems[' + nextIndex + '].tax">';
@@ -201,64 +180,7 @@
 					'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="purchaseInvoiceLineItems[' + nextIndex + '].surchargeAmount"/></td>' +
 					'  <td ><input class="payableAmount" type="text" readonly="readonly" name="purchaseInvoiceLineItems[' + nextIndex + '].payableAmount"/></td>' +
 					'  </tr>';
-					
-					var newShortRowHtml = row
-					 +
-					'<td>' + Math.round(nextIndex + 1) + '.</td>' +
-					'<td></td>' +
-					'  <td>' +
-					'    <input type="hidden" name="purchaseInvoiceShortLineItems[' + nextIndex + '].id" />' +
-					'    <input type="text" class="variant" name="purchaseInvoiceShortLineItems[' + nextIndex + '].productVariant"/>' +
-					'  </td>' +
-					'<td></td>' +
-					'  <td class="pvDetails"></td>' +
-					'<td>' +
-					shortTaxOptions +
-					'</select>' +
-					'<input type="hidden" value="finance" class="taxIdentifier"/>' +
-					'</td>' +
-					'  <td>' +
-					'    <input type="text" name="purchaseInvoiceShortLineItems[' + nextIndex + '].qty" class="receivedQuantity valueChange" />' +
-					'  </td>' +
-					'  <td>' +
-					'    <input class="costPrice valueChange" type="text" name="purchaseInvoiceShortLineItems[' + nextIndex + '].costPrice" />' +
-					'  </td>' +
-					'  <td>' +
-					'    <input class="mrp" type="text" name="purchaseInvoiceShortLineItems[' + nextIndex + '].mrp" />' +
-					' </td>' +
-					'  <td>' +
-					'    <input class="discountPercentage valueChange" type="text" name="purchaseInvoiceShortLineItems[' + nextIndex + '].discountPercent" />' +
-					' </td>' +
-					'  <td ><input class="taxableAmount" type="text" readonly="readonly" name="purchaseInvoiceShortLineItems[' + nextIndex + '].taxableAmount"/></td>' +
-					'  <td ><input class="taxAmount" type="text" readonly="readonly" name="purchaseInvoiceShortLineItems[' + nextIndex + '].taxAmount"></td>' +
-					'  <td ><input class="surchargeAmount" type="text" readonly="readonly" name="purchaseInvoiceShortLineItems[' + nextIndex + '].surchargeAmount"/></td>' +
-					'  <td ><input class="payableAmount" type="text" readonly="readonly" name="purchaseInvoiceShortLineItems[' + nextIndex + '].payableAmount"/></td>' +
-					'  </tr>';
 
-					if(id == "createShortLink"){
-						var addRow =true;
-						var trValues = rowValue.target.parentElement.parentElement.parentElement;
-						$('#piShortTable  > .shortTableTr').each(function(currentInedx, ob) {
-							if($(this).find(".variant").is("input")){
-						    if ($(this).find(".variant").val() == $(trValues).find(".variant").val()){
-						        addRow = false;
-						    }
-							}
-							else{
-								if ($(this).find(".variant").text() == $(trValues).find(".variant").val()){
-							        addRow = false;
-							    }
-							}
-						});
-						if(addRow){
-						$('#piShortTable').append(newShortRowHtml);
-						populateRow(trValues,lastShortIndex);
-						}
-						else{
-							alert('Cannot add mutiple rows for same Variant');
-						}
-					}
-					else
 						$('#piTable').append(newRowHtml);
 			
 			return false;
@@ -491,11 +413,6 @@
 			if (!bool) return false;
 		});
 		
-		if($(".rtvTable").find(".rtvFinal").val()==""|| isNaN(parseFloat($(".rtvTable").find(".rtvFinal").val()))){
-			populateRtvTable();
-		}
-		
-
 		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piTable"));
 		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piShortTable"));
 		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piRtvTable"));
@@ -514,12 +431,21 @@
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
-	
-		var shortTotal = $(".shortFinal").val();
-		$("#shortTotal").val(shortTotal);
-		var rtvTotal = parseFloat($('.rtvFinal').length!=0?($(".rtvFinal").val()!=null?$(".rtvFinal").val():0):0);
-		$("#rtvTotal").val(rtvTotal);
-		$("#grnTotal").val(parseFloat($('.piTotal').val()));
+		
+		$("#grnTotalTaxable").val(${pia.purchaseInvoice.taxableAmount});
+		$("#shortTotalTaxable").val($("#shortTaxableAmount").val());
+		$("#rtvTotalTaxable").val($("#rtvTaxableAmount").val());
+		
+		$("#grnTotalTax").val(${pia.purchaseInvoice.taxAmount});
+		$("#shortTotalTax").val($("#shortTaxAmount").val());
+		$("#rtvTotalTax").val($("#rtvTaxAmount").val());
+		
+		$("#grnTotalSurcharge").val(${pia.purchaseInvoice.surchargeAmount});
+		$("#shortTotalSurcharge").val($("#shortSurchargeAmount").val());
+		$("#rtvTotalSurcharge").val($("#rtvSurchargeAmount").val());
+		
+		
+		
 		
 	});
 </script>
@@ -534,7 +460,6 @@
 </div>
 
 <div class="rtvListForm">
-<fieldset style="height:200px"><legend><em>RTV Info</em></legend>
 <br/>
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
@@ -543,8 +468,10 @@
 	There are rtvs attached with the PI.<br/>
 	
 	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
-	<td>${ctr.index+1}. Purchase Order No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
+	<tr>
+	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
 	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
+	</tr>
 	</c:forEach>
 	</c:if>
 	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
@@ -555,8 +482,10 @@
 	<c:if test="${fn:length(pia.toImportShortEiLiList) gt 0}">
 	There are short inventory attached with the PI.<br/>
 	<c:forEach items="${pia.toImportShortEiLiList}" var="eili" varStatus="ctr">
-	<td>${ctr.index+1}. Purchase Order No. ${eili.extraInventory.purchaseOrder.id}, Extra Inven. Id. ${eili.extraInventory.id}</td>
+	<tr>
+	<td>${ctr.index+1}. PO No. ${eili.extraInventory.purchaseOrder.id}, Extra Inven. Id. ${eili.id}</td>
 	<td><s:checkbox name="eiliId[${ctr.index}]" value="${eili.id}" class="purchaseLineItemCheckBox"/></td>
+	</tr>
 	</c:forEach>
 	</c:if>
 	<c:if test="${fn:length(pia.toImportShortEiLiList) eq 0}">
@@ -566,9 +495,7 @@
 <c:if test="${fn:length(pia.toImportRtvList) gt 0 || fn:length(pia.toImportShortEiLiList) gt 0}">
 	<s:submit name="importRtv" value="Import Rtv"/>
 	</c:if>
-	
 </s:form>
-</fieldset>
 </div>
 
 
@@ -737,7 +664,6 @@
 			</td>
 			<td>
 					${productVariant.id}
-					<span class="shortLink"><a href="" id="createShortLink" class="addRowButton" style="font-size:1.2em">Create Short</a></span>
 				<s:hidden class="variant" name="purchaseInvoiceLineItems[${ctr.index}].sku.productVariant"
 				          value="${productVariant.id}"/>
 			</td>
@@ -824,7 +750,7 @@
 	</tbody>
 	<tfoot>
 	<tr>
-		<td colspan="6">Totals</td>
+		<td colspan="6"><strong>Totals</strong></td>
 		<td colspan="4" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseInvoice.taxableAmount"
 		            value="${pia.purchaseInvoice.taxableAmount}"/></td>
@@ -867,13 +793,15 @@
 
 <br>
 <br>
-<p style="font-weight: bold;font-size: medium;">Short Line Items</p>
 <s:form id="shortForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
-<table border="1" class="purchaseInvoiceShortTable">
-	<thead>
+<p style="font-weight: bold;font-size: medium;">Short Line Items</p>
+<table id="shortTable" class="extraInventoryShortTable">
+<thead>
 	<tr>
 		<th>S.No.</th>
+		<th>Ext Inven Id</th>
+		<th>Ext Inven Line ID</th>
 		<th></th>
 		<th>VariantID</th>
 		<th>UPC</th>
@@ -889,24 +817,37 @@
 		<th>Short Qty</th>
 		<th>Cost Price<br/>(Without TAX)</th>
 		<th>MRP</th>
-		<th>Discount<br/>(%)</th>
 		<th>Taxable</th>
 		<th>Tax</th>
 		<th>Surcharge</th>
 		<th>Payable</th>
-
+		<th>Comment</th>
 	</tr>
 	</thead>
 	<tbody id="piShortTable">
-	<c:forEach var="purchaseInvoiceLineItem" items="${pia.purchaseInvoiceShortLineItems}" varStatus="ctr">
-		<c:set value="${purchaseInvoiceLineItem.sku}" var="sku"/>
+	<c:forEach var="extraInventoryShortLineItem" items="${pia.extraInventoryShortLineItems}" varStatus="ctr">
+	<tr count="${ctr.index}" class="${ctr.last ? 'lastShortRow lineItemRow shortTableTr':'lineItemRow shortTableTr'}">
+	    <s:hidden name="extraInventoryShortLineItems[${ctr.index}].id" value="${extraInventoryShortLineItem.id}"/>
+		<s:hidden name="extraInventoryId" value="${extraInventoryShortLineItem.extraInventory.id}" />
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].grnCreated" value="${extraInventoryShortLineItem.grnCreated}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].rtvCreated" value="${extraInventoryShortLineItem.rtvCreated}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].shortCreated" value="${extraInventoryShortLineItem.shortCreated}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].poLineItem" value="${extraInventoryShortLineItem.poLineItem}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].updateDate" value="${extraInventoryShortLineItem.updateDate}"/>
+		<c:choose>
+						<c:when test="${extraInventoryShortLineItem.sku != null}">
+		<c:set value="${extraInventoryShortLineItem.sku}" var="sku"/>
 		<c:set value="${sku.productVariant}" var="productVariant"/>
 		<c:set value="${productVariant.product}" var="product"/>
-		<s:hidden name="purchaseInvoiceShortLineItems[${ctr.index}]" value="${purchaseInvoiceLineItem.id}"/>
-		<s:hidden name="purchaseInvoiceShortLineItems[${ctr.index}].productVariant"
-		          value="${purchaseInvoiceLineItem.sku.productVariant.id}"/>
-		<tr  count="${ctr.index}" class="${ctr.last ? 'lastShortRow lineItemRow shortTableTr':'lineItemRow shortTableTr'}">
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].productVariant"
+		          value="${extraInventoryShortLineItem.sku.productVariant.id}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].sku"
+		          value="${extraInventoryShortLineItem.sku}"/>
+		          
+		
 			<td>${ctr.index+1}</td>
+			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryShortLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryShortLineItem.extraInventory.id}</a></td>
+			<td>${extraInventoryShortLineItem.id}</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>
@@ -922,10 +863,28 @@
 					</c:choose>
 				</div>
 			</td>
-			<td class="variant">${productVariant.id}</td>
+			<td>${productVariant.id}</td>
 			<td>${productVariant.upc}</td>
-			<td class="variantName ">${product.name}<br/>${productVariant.optionsCommaSeparated}
-			</td>
+			<td>
+                            <s:hidden class="productName" name="extraInventoryShortLineItems[${ctr.index}].productName"
+                                      value="${product.name}"/>
+                            ${product.name}
+                                   <br/>${productVariant.optionsCommaSeparated}
+                </td>
+			</c:when>
+			<c:otherwise>
+				<td>${ctr.index+1}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+				 <s:hidden class="productName" name="extraInventoryShortLineItems[${ctr.index}].productName"
+                                      value="${extraInventoryShortLineItem.productName}"/>
+                            ${extraInventoryShortLineItem.productName}
+				</td>
+			</c:otherwise>
+			</c:choose>
+			
 			<td class="taxCategory">
 
 				<shiro:hasPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
@@ -933,16 +892,16 @@
 					       class="taxIdentifier"/>
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
-							<s:select name="purchaseInvoiceShortLineItems[${ctr.index}].tax" id="taxValues"
-							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange">
+							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax" id="taxValues"
+							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
 						</c:when>
 						<c:otherwise>
-							<s:select name="purchaseInvoiceShortLineItems[${ctr.index}].surcharge" id="taxValues"
-							          value="${purchaseInvoiceLineItem.surcharge.id}" class="valueChange">
+							<s:select name="extraInventoryShortLineItems[${ctr.index}].surcharge" id="taxValues"
+							          value="${extraInventoryShortLineItem.surcharge.id}" class="valueChange">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="surchargeList" value="id"
 								                           label="value"/>
@@ -953,84 +912,82 @@
 				<shiro:lacksPermission name="<%=PermissionConstants.UPDATE_RECONCILIATION_REPORTS%>">
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state==pia.purchaseInvoice.warehouse.state}">
-							<s:text name="purchaseInvoiceShortLineItems[${ctr.index}].tax"
-							        value="${purchaseInvoiceLineItem.tax.value}" class="taxCategory"/>
+							<s:text name="extraInventoryShortLineItems[${ctr.index}].tax"
+							        value="${extraInventoryShortLineItem.tax.value}" class="taxCategory"/>
 						</c:when>
 						<c:otherwise>
-							<s:text name="purchaseInvoiceShortLineItems[${ctr.index}].surcharge"
-							        value="${purchaseInvoiceLineItem.surcharge.value}" class="taxCategory"/>
+							<s:text name="extraInventoryShortLineItems[${ctr.index}].surcharge"
+							        value="${extraInventoryShortLineItem.surcharge.value}" class="taxCategory"/>
 						</c:otherwise>
 					</c:choose>
 				</shiro:lacksPermission>
 			</td>
 			<td>
-				<s:text name="purchaseInvoiceShortLineItems[${ctr.index}].qty" value="${purchaseInvoiceLineItem.qty}"
-				        class="receivedQuantity valueChange"/>
+				 ${extraInventoryShortLineItem.receivedQty}
+                            <s:hidden class="receivedQuantity valueChange"
+                                      name="extraInventoryShortLineItems[${ctr.index}].receivedQty"
+                                      value="${extraInventoryShortLineItem.receivedQty}"/>
 			</td>
 			<td>
-				<s:text name="purchaseInvoiceShortLineItems[${ctr.index}].costPrice"
-				        value="${purchaseInvoiceLineItem.costPrice}"
+				<s:text name="extraInventoryShortLineItems[${ctr.index}].costPrice"
+				        value="${extraInventoryShortLineItem.costPrice}"
 				        class="costPrice valueChange"/>
 			</td>
 			<td>
-				<s:text class="mrp" name="purchaseInvoiceShortLineItems[${ctr.index}].mrp"
-				        value="${purchaseInvoiceLineItem.mrp}"/>
-			</td>
-			<td>
-				<s:text class="discountPercentage valueChange"
-				        name="purchaseInvoiceShortLineItems[${ctr.index}].discountPercent"
-				        value="${purchaseInvoiceLineItem.discountPercent}"/>
+				<s:text class="mrp valueChange" name="extraInventoryShortLineItems[${ctr.index}].mrp"
+				        value="${extraInventoryShortLineItem.mrp}"/>
 			</td>
 			<td>
 				<s:text readonly="readonly" class="taxableAmount"
-				        name="purchaseInvoiceShortLineItems[${ctr.index}].taxableAmount"
-				        value="${purchaseInvoiceLineItem.taxableAmount}"/>
+				        name="extraInventoryShortLineItems[${ctr.index}].taxableAmount"
+				        value="${extraInventoryShortLineItem.taxableAmount}"/>
 			</td>
 			<td>
-				<s:text readonly="readonly" class="taxAmount" name="purchaseInvoiceShortLineItems[${ctr.index}].taxAmount"
-				        value="${purchaseInvoiceLineItem.taxAmount}"/>
+				<s:text readonly="readonly" class="taxAmount" name="extraInventoryShortLineItems[${ctr.index}].taxAmount"
+				        value="${extraInventoryShortLineItem.taxAmount}"/>
 			</td>
 			<td>
 				<s:text readonly="readonly" class="surchargeAmount"
-				        name="purchaseInvoiceShortLineItems[${ctr.index}].surchargeAmount"
-				        value="${purchaseInvoiceLineItem.surchargeAmount}"/>
+				        name="extraInventoryShortLineItems[${ctr.index}].surchargeAmount"
+				        value="${extraInventoryLineItem.surchargeAmount}"/>
 			</td>
 			<td>
 
 				<s:text readonly="readonly" class="payableAmount"
-				        name="purchaseInvoiceShortLineItems[${ctr.index}].payableAmount"
-				        value="${purchaseInvoiceLineItem.payableAmount}"/>
+				        name="extraInventoryShortLineItems[${ctr.index}].payableAmount"
+				        value="${extraInventoryShortLineItem.payableAmount}"/>
 			</td>
+			
+			<c:choose>
+			<c:when test="${extraInventoryShortLineItem.remarks!=null}">
+			<td><s:text style="height:60px; width:210px;" name="extraInventoryShortLineItems[${ctr.index}].remarks" value="${extraInventoryShortLineItem.remarks}"/></td>
+			</c:when>
+			<c:otherwise><td><s:text name="extraInventoryShortLineItems[${ctr.index}].remarks" value=""/></td></c:otherwise>
+			</c:choose>
+			
 		</tr>
 	</c:forEach>
 	</tbody>
 	<tfoot id="piShortTableFoot">
 	<tr>
-		<td colspan="6">Totals</td>
-		<td colspan="4" class="totalQuantity"></td>
-		<td><input readonly="readonly" class="totalTaxable" name="shortTaxableAmount"/></td>
-		<td><input readonly="readonly" class="totalTax" name="shortTaxAmount"/></td>
-		<td><input readonly="readonly" class="totalSurcharge" name="shortSurchargeAmount"/></td>
-		<td><input readonly="readonly" class="totalPayable" name="shortPayableAmount"/></td>
+		<td colspan="6"><strong>Totals</strong></td>
+		<td colspan="3" class="totalQuantity"></td>
+		<td><input readonly="readonly" class="totalTaxable" id="shortTaxableAmount"/></td>
+		<td><input readonly="readonly" class="totalTax" id="shortTaxAmount"/></td>
+		<td><input readonly="readonly" class="totalSurcharge" id="shortSurchargeAmount"/></td>
+		<td colspan="2"><input readonly="readonly" class="totalPayable" id="shortPayableAmount"/></td>
 	</tr>
 	<tr>
-		<td colspan="12"></td><td>Overall Discount<br/>(In Rupees)</td>
-		<td><input class="overallDiscount footerChanges" name="shortDiscount"/></td>
-	</tr>
-	<tr>
-	<tr>
-		<td colspan="12"></td><td>Freight and Forwarding<br/>Charges(In Rupees)</td>
-		<td><input class="freightCharges footerChanges" name="shortFreightForwardingCharges"/></td>
-	</tr>
-	<tr>
-		<td colspan="12"></td><td>Short Payable</td>
-		<td><s:text readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.shortAmount"/></td>
+		<td colspan="11"></td><td><strong>Short Payable</strong></td>
+		<td><input readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.shortAmount"/></td>
+		<td></td>
 	</tr>
 	</tfoot>
 </table>
-<div class="variantDetails info"></div>
-	<s:submit name="saveShortLineItems" value="Save" class="requiredFieldValidator" id="save-button"/>
+<s:submit name="saveShort" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
+
+
 
 <br/>
 <br/>
@@ -1041,6 +998,8 @@
 <thead>
 	<tr>
 		<th>S.No.</th>
+		<th>Ext Inven Id</th>
+		<th>Ext Inven Line ID</th>
 		<th></th>
 		<th>VariantID</th>
 		<th>UPC</th>
@@ -1084,7 +1043,9 @@
 		          value="${extraInventoryLineItem.sku}"/>
 		          
 		
-			<td>${ctr.index+1}.${extraInventoryLineItem.extraInventory.id}	</td>
+			<td>${ctr.index+1}</td>
+			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
+			<td>${extraInventoryLineItem.id}</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>
@@ -1111,6 +1072,8 @@
 			</c:when>
 			<c:otherwise>
 				<td>${ctr.index+1}</td>
+				<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
+			<td>${extraInventoryLineItem.id}</td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -1207,15 +1170,15 @@
 	</tbody>
 	<tfoot id="piRtvTableFoot">
 		<tr>
-		<td colspan="6">Totals</td>
+		<td colspan="6"><strong>Totals</strong></td>
 		<td colspan="3" class="totalQuantity"></td>
-		<td><input readonly="readonly" class="totalTaxable" name="rtvTaxableAmount"/></td>
-		<td><input readonly="readonly" class="totalTax" name="rtvTotalTax"/></td>
-		<td><input readonly="readonly" class="totalSurcharge" id="rtvTotalSurcharge"/></td>
-		<td colspan="2" ><input readonly="readonly" class="totalPayable" name="rtvTotalPayable"/></td>
+		<td><input readonly="readonly" class="totalTaxable" id="rtvTaxableAmount"/></td>
+		<td><input readonly="readonly" class="totalTax" id="rtvTaxAmount"/></td>
+		<td><input readonly="readonly" class="totalSurcharge" id="rtvSurchargeAmount"/></td>
+		<td colspan="2" ><input readonly="readonly" class="totalPayable" id="rtvTotalPayable"/></td>
 	</tr>
 	<tr>
-		<td colspan="11"></td><td>RTV Final Total</td>
+		<td colspan="11"></td><td><strong>RTV Total Payable</strong></td>
 		<td><input readonly="readonly" class="finalPayable rtvFinal" name="purchaseInvoice.rtvAmount"/></td>
 		            <td></td>
 	</tr>
@@ -1235,10 +1198,37 @@
 <th>RTV</th>
 </tr>
 <tr>
-<td><label>Final Payable Amounts</label></td>
-<td><input id= "grnTotal" readonly="readonly" /></td>
-<td><input id= "shortTotal" readonly="readonly" /></td>
-<td><input id= "rtvTotal" readonly="readonly" /></td>
+<td><label>Taxable</label></td>
+<td><input id= "grnTotalTaxable" readonly="readonly" /></td>
+<td><input id= "shortTotalTaxable" readonly="readonly" /></td>
+<td><input id= "rtvTotalTaxable" readonly="readonly" /></td>
+</tr>
+<tr>
+
+<tr>
+<td><label>Tax</label></td>
+<td><input id= "grnTotalTax" readonly="readonly"/></td>
+<td><input id= "shortTotalTax" readonly="readonly" /></td>
+<td><input id= "rtvTotalTax" readonly="readonly" /></td>
+</tr>
+<tr>
+
+<tr>
+<td><label>Surcharge</label></td>
+<td><input id= "grnTotalSurcharge" readonly="readonly" /></td>
+<td><input id= "shortTotalSurcharge" readonly="readonly" /></td>
+<td><input id= "rtvTotalSurcharge" readonly="readonly" /></td>
+</tr>
+
+<tr>
+<td><label>Total</label></td>
+<td><input id= "grnTotal" readonly="readonly" value="${pia.purchaseInvoice.finalPayableAmount }"/></td>
+<td><input id= "shortTotal" readonly="readonly" value="${pia.purchaseInvoice.shortAmount }"/></td>
+<td><input id= "rtvTotal" readonly="readonly" value="${pia.purchaseInvoice.rtvAmount }"/></td>
+</tr>
+<tr>
+<td colspan="3"><strong>Overall Total</strong></td>
+<td colspan="1"><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
 </tr>
 </table>
 </fieldset>

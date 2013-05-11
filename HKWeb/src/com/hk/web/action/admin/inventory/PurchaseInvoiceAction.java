@@ -157,13 +157,8 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				// logger.debug("purchaseInvoice@view: " + purchaseInvoice.getId());
 				// grnDto = grnManager.generateGRNDto(grn);
 			}
-			purchaseInvoiceShortLineItems = new ArrayList<PurchaseInvoiceLineItem>();
 			purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>();
 			for(PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoice.getPurchaseInvoiceLineItems()){
-				if(purchaseInvoiceLineItem.getPiLineItemType()!=null&&purchaseInvoiceLineItem.getPiLineItemType().getId().equals(EnumPILineItemType.Short.getId())){
-					purchaseInvoiceShortLineItems.add(purchaseInvoiceLineItem);
-				}
-				else
 					purchaseInvoiceLineItems.add(purchaseInvoiceLineItem);
 			}
 			
@@ -310,21 +305,26 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 				}
 			}
 		}
-		//TODO
-		for(ExtraInventoryLineItem lineItems:piHasShortEiLiList){
-			
+		Double shortAmount = 0.0;
+		if (piHasShortEiLiList.size() > 0) {
+			for (ExtraInventoryLineItem lineItems : piHasShortEiLiList) {
+				if (lineItems.getPayableAmount() != null) {
+					shortAmount += lineItems.getPayableAmount();
+				}
+			}
 		}
+		purchaseInvoice.setShortAmount(shortAmount);
 		purchaseInvoice.setRtvNotes(piHasRtvList);
+		purchaseInvoice.setEiLineItems(piHasShortEiLiList);
 		purchaseInvoice.setRtvAmount(rtvAmount);
-		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+rtvAmount);
+		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+shortAmount+rtvAmount);
 		getPurchaseInvoiceService().save(purchaseInvoice);
 		
 		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
 	}
 
 	public Resolution saveRtv(){
-		
-		
+
 		for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems)
 		{
 			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
@@ -406,36 +406,20 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		return new RedirectResolution(PurchaseInvoiceAction.class);
 	}
 	
-	public Resolution saveShortLineItems() {
-		if (purchaseInvoice != null && purchaseInvoice.getId() != null) {
-			logger.debug("purchaseInvoiceLineItems@Save: " + purchaseInvoiceShortLineItems.size());
-
-			if (StringUtils.isBlank(purchaseInvoice.getInvoiceNumber()) || purchaseInvoice.getInvoiceDate() == null) {
-				addRedirectAlertMessage(new SimpleMessage("Invoice date and number are mandatory."));
-				return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
-			}
-
-			Resolution sourceResolution = performPISanityChecks("view", purchaseInvoice);
-			if (sourceResolution != null) {
-				return sourceResolution;
-			}
-			for (PurchaseInvoiceLineItem purchaseInvoiceLineItem : purchaseInvoiceShortLineItems) {
-				if (purchaseInvoiceLineItem.getQty() != null && purchaseInvoiceLineItem.getQty() == 0 && purchaseInvoiceLineItem.getId() != null) {
-					purchaseInvoiceDao.delete(purchaseInvoiceLineItem);
-				} else if (purchaseInvoiceLineItem.getQty() > 0) {
-					purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
-					Sku sku = skuService.getSKU(purchaseInvoiceLineItem.getProductVariant(), purchaseInvoice.getWarehouse());
-					purchaseInvoiceLineItem.setSku(sku);
-					skuService.saveSku(sku);
-					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Short.asPiLineItemType());
-					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
-				}
-			}
-			purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
-			getPurchaseInvoiceService().save(purchaseInvoice);
+	public Resolution saveShort() {
+		List<PurchaseInvoice> invoices = new ArrayList<PurchaseInvoice>();
+		invoices.add(purchaseInvoice);
+		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryShortLineItems) {
+			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
+			extraInventoryLineItem.setExtraInventory(extraInventory);
+			extraInventoryLineItem.setPurchaseInvoices(invoices);
+			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
-		addRedirectAlertMessage(new SimpleMessage("Changes saved."));
-		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice", purchaseInvoice.getId());
+		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount() + purchaseInvoice.getShortAmount()
+				+ purchaseInvoice.getRtvAmount());
+		getPurchaseInvoiceService().save(purchaseInvoice);
+		return new RedirectResolution(PurchaseInvoiceAction.class).addParameter("view").addParameter("purchaseInvoice",
+				purchaseInvoice.getId());
 	}
 	
 	public Resolution close(){
@@ -791,6 +775,22 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setToImportRtvList(List<RtvNote> toImportRtvList) {
 		this.toImportRtvList = toImportRtvList;
+	}
+
+	public List<ExtraInventoryLineItem> getShortEiLiList() {
+		return shortEiLiList;
+	}
+
+	public void setShortEiLiList(List<ExtraInventoryLineItem> shortEiLiList) {
+		this.shortEiLiList = shortEiLiList;
+	}
+
+	public List<ExtraInventoryLineItem> getExtraInventoryShortLineItems() {
+		return extraInventoryShortLineItems;
+	}
+
+	public void setExtraInventoryShortLineItems(List<ExtraInventoryLineItem> extraInventoryShortLineItems) {
+		this.extraInventoryShortLineItems = extraInventoryShortLineItems;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)
