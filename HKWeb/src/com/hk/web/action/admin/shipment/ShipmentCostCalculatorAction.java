@@ -159,26 +159,15 @@ public class ShipmentCostCalculatorAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveHistoricalShipmentCost() {
-        List<Courier> courierList = new ArrayList<Courier>();
-        for (Courier courier : applicableCourierList) {
-            if (courier != null) {
-                courierList.add(courier);
-            }
-        }
-        if (courierList.size() == 0) {
-            courierList = courierService.getCouriers(null,null,true, EnumCourierOperations.HK_SHIPPING.getId());
-        }
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
-        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForEnteringShippingCost()));
-        shippingOrderSearchCriteria.setCourierList(courierList);
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
         if (shippingOrderList != null) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 Shipment shipment = shippingOrder.getShipment();
-                if (shipment != null && courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
-                    if (overrideHistoricalShipmentCost || shipment.getEstmShipmentCharge() == null) {
+                if (shipment != null) {
+                    if (overrideHistoricalShipmentCost) {
                         shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
                         shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
                         shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
@@ -186,7 +175,6 @@ public class ShipmentCostCalculatorAction extends BaseAction {
                     }
                 } else {
                     logger.debug("No Shipment exists or courier group exists for SO " + shippingOrder.getGatewayOrderId());
-//                    addRedirectAlertMessage(new SimpleMessage("No Shipment currently exists to be updated"));
                 }
             }
         }
