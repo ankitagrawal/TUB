@@ -463,6 +463,7 @@ $(document).ready(function () {
         <th>Surcharge</th>
 		<th>Payable</th>
         <th>Remarks</th>
+         <th>Short Item Check</th>
     </tr>
     </thead>
     <tbody id="poTable">
@@ -570,7 +571,7 @@ $(document).ready(function () {
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.shortCreated}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
                             ${eInLineItems.receivedQty}
                             <s:hidden class="receivedQuantity valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
