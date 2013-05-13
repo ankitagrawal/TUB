@@ -82,6 +82,7 @@
 			});
 			total = total.toFixed(2);
 			if (toHtml == 1) {
+				total = Math.floor(total);
 				table.parent().find(toTotalClass).html(total);
 			} else {
 				table.parent().find(toTotalClass).val(total);
@@ -433,9 +434,9 @@
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
 		
-		$("#grnTotalQunatity").val($('#piForm').find('totalQuantity').html());
-		$("#shortTotalQunatity").val($('#shortForm').find('totalQuantity').html());
-		$("#rtvTotalQunatity").val($('#rtvForm').find('totalQuantity').html());
+		$("#grnTotalQuantity").val($('#piForm').find('.totalQuantity').html());
+		$("#shortTotalQuantity").val($('#shortForm').find('.totalQuantity').html());
+		$("#rtvTotalQuantity").val($('#rtvForm').find('.totalQuantity').html());
 		
 		$("#grnTotalTaxable").val(${pia.purchaseInvoice.taxableAmount});
 		$("#shortTotalTaxable").val($("#shortTaxableAmount").val());
@@ -765,7 +766,7 @@
 	</tbody>
 	<tfoot>
 	<tr>
-		<td colspan="6"><strong>Totals</strong></td>
+		<td colspan="7"><strong>Totals</strong></td>
 		<td colspan="4" class="totalQuantity"></td>
 		<td><s:text readonly="readonly" class="totalTaxable" name="purchaseInvoice.taxableAmount"
 		            value="${pia.purchaseInvoice.taxableAmount}"/></td>
