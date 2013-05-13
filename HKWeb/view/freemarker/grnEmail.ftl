@@ -15,7 +15,7 @@ background: #ff0;
 </head>
 <body>
 <#include "header.ftl">
-
+<#assign skuGroupsSize = skuGroups?size>
 <p style="margin-bottom:1.2em">Attention!!</p>
 
 <p style="margin-bottom:1em">
@@ -56,11 +56,12 @@ background: #ff0;
 		<th>Asked Qty</th>
 		<th>Total Received Qty</th>
 		<th>CheckedIn With this GRN</th>
-		<th>GRN Cost Price</th>
+		<th>Checkedin Batch Cost Price</th>
 		<th>Site Cost Price</th>
-		<th>GRN MRP</th>
+		<th>Checkedin Batch MRP</th>
 		<th>Site MRP</th>
 		<th>HK Price</th>
+		<th>Checking Weight(gm.)</th>
 		<th>Weight(gm.)</th>
 		<th>JIT</th>
 		<th>Deleted</th>
@@ -105,6 +106,18 @@ background: #ff0;
 	<td></td>
 	</#if>
 	
+	<#if (skuGroupsSize>0)>
+	<td><#list skuGroups as skuGroup>
+	<#if poLineItem.sku==skuGroup.sku>
+		<#if skuGroup.costPrice!=poLineItem.sku.productVariant.costPrice>
+			<label style="background:#ff0;">${skuGroup.costPrice}</label>, <br/>
+		<#else>
+			<label>${skuGroup.costPrice}</label>, <br/>
+		</#if>
+	</#if>
+	</#list></td>
+	<td>${poLineItem.sku.productVariant.costPrice}</td>
+	<#else>
 	<#assign cptest = 0>
 	<#list grn.grnLineItems as grnLineItem>
 	<#if poLineItem.sku==grnLineItem.sku>
@@ -122,7 +135,20 @@ background: #ff0;
 			<td></td>
 			<td>${poLineItem.sku.productVariant.costPrice}</td>
 	</#if>
+	</#if>
 	
+	<#if (skuGroupsSize>0)>
+	<td><#list skuGroups as skuGroup>
+	<#if poLineItem.sku==skuGroup.sku>
+		<#if skuGroup.mrp!=poLineItem.sku.productVariant.markedPrice>
+			<label style="background:#ff0;">${skuGroup.mrp}</label>, <br/>
+		<#else>
+			<label>${skuGroup.mrp}</label>, <br/>
+		</#if>
+	</#if>
+	</#list></td>
+	<td>${poLineItem.sku.productVariant.markedPrice}</td>
+	<#else>
 	<#assign mptest =0>
 	<#list grn.grnLineItems as grnLineItem>
 	<#if poLineItem.sku==grnLineItem.sku>
@@ -140,8 +166,32 @@ background: #ff0;
 			<td></td>
 			<td>${poLineItem.sku.productVariant.markedPrice}</td>
 	</#if>
-	
+	</#if>
 	<td>${poLineItem.sku.productVariant.hkPrice}</td>
+	
+	<#assign hasWeight = 0>
+	<#list grn.grnLineItems as grnLineItem>
+	<#if poLineItem.sku==grnLineItem.sku>
+	<#assign hasWeight = 1>
+	<#if grnLineItem.weight?? && poLineItem.sku.productVariant.weight??>
+ 		 <#if grnLineItem.weight!=poLineItem.sku.productVariant.weight>
+			<td style="background:#ff0;">${grnLineItem.weight}</td>
+		<#else>
+			<td>${grnLineItem.weight}</td>
+		</#if>
+		<#else>
+			<#if grnLineItem.weight??>
+			<td style="background:#ff0;">${grnLineItem.weight}</td>
+		<#else>
+			<td>N/A</td>
+		</#if>
+	</#if>
+	</#if>
+	</#list>
+	<#if hasWeight ==0>
+	<td style="background:#ff0;">N/A</td>
+	</#if>
+	
 	<#if poLineItem.sku.productVariant.weight??>
 	<#if poLineItem.sku.productVariant.weight==0>
  		 <td style="background:#ff0;">${poLineItem.sku.productVariant.weight}</td>
@@ -149,8 +199,8 @@ background: #ff0;
  		 <td>${poLineItem.sku.productVariant.weight}</td>
  		 </#if>
   		<#else>
-  		 
-  		</#if></td>
+  		 <td></td>
+  		</#if>
   	<#if poLineItem.sku.productVariant.product.isJit()>
  		<td style="background:#ff0;">1</td>
   		<#else>
@@ -182,7 +232,7 @@ background: #ff0;
 	</#list>
 	
 	<tr>
-	<td colspan="16"></td>
+	<td colspan="17"></td>
 	<td colspan="2">Total Payable: <#if grn.purchaseOrder.payable??>
  		 ${grn.purchaseOrder.payable}
   		<#else>

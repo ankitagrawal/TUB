@@ -6,12 +6,14 @@ import java.util.*;
 import javax.servlet.http.HttpSession;
 
 import com.hk.domain.subscription.Subscription;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.pact.service.combo.ComboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.cache.UserCache;
@@ -126,6 +128,8 @@ public class OrderManager {
     private SMSManager                        smsManager;
     @Autowired
     private ComboInstanceHasProductVariantDao comboInstanceHasProductVariantDao;
+    @Autowired
+    OrderEventPublisher orderEventPublisher;
 
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double                            codCharges;
@@ -380,10 +384,8 @@ public class OrderManager {
             order.setAmount(pricingDto.getGrandTotalPayable() + codCharges);
             order.setRewardPointsUsed(pricingDto.getRedeemedRewardPoints());
 
-            cartLineItems = addFreeVariantsToCart(cartLineItems); // function made to handle deals and offers which
-                                                                    // are
-
-            // associated with a variant, this will help in minimizing brutal use of free checkout
+            // function made to handle deals and offers which are associated with a variant, this will help in minimizing brutal use of free checkout
+            cartLineItems = addFreeVariantsToCart(cartLineItems);
             order.setCartLineItems(cartLineItems);
 
             // award reward points, if using a reward point offer coupon
@@ -398,20 +400,19 @@ public class OrderManager {
             // update user karma profile for those whose score is not yet set
             KarmaProfile karmaProfile = getKarmaProfileService().updateKarmaAfterOrder(order);
             if (karmaProfile != null) {
-                order.setScore(new Long(karmaProfile.getKarmaPoints()));
+                order.setScore((long) karmaProfile.getKarmaPoints());
             }
 
-            /*
-             * Long[] dispatchDays = OrderUtil.getDispatchDaysForBO(order); Date targetDelDate =
-             * HKDateUtil.addToDate(order.getPayment().getPaymentDate(), Calendar.DAY_OF_MONTH,
-             * Integer.parseInt(dispatchDays[0].toString())); order.setTargetDispatchDate(targetDelDate);
-             */
-             //this is now being being called in splitBOEscalateSO method
-//            getOrderService().setTargetDispatchDelDatesOnBO(order);
             order = getOrderService().save(order);
 
             // Order lifecycle activity logging - Order Placed
             getOrderLoggingService().logOrderActivity(order, order.getUser(), getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderPlaced), null);
+
+            Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+            // Check Inventory health of order lineItems
+            for (CartLineItem cartLineItem : productCartLineItems) {
+                inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            }
 
             getUserService().updateIsProductBought(order);
 
@@ -437,8 +438,10 @@ public class OrderManager {
             getSmsManager().sendOrderPlacedSMS(order);
         }
 
-        //this is the most important method, so it is very important as to from where it is called
-        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+//        //this is the most important method, so it is very important as to from where it is called
+//        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        //we are now trying to replace the above method by pushing orderId in queue
+//        orderEventPublisher.publishOrderPlacedEvent(order);
 
         //Set Order in Traffic Tracking
 	    TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);

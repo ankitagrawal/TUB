@@ -155,6 +155,13 @@ public class ProductVariantDaoImpl extends BaseDaoImpl implements ProductVariant
                 "select pv from ProductVariant pv where pv.product.deleted != 1 and pv.deleted != 1").list();
     }
 
+    public List<ProductVariant> getVariantsForQuickInventoryCheck(){
+        return getSession().createQuery(
+                "select pv from ProductVariant pv where pv.product.deleted != 1 and pv.deleted != 1 " +
+                        "and (pv.outOfStock = 1 or pv.product.outOfStock = 1)" +
+                        " and pv.product.hidden != 1 and pv.product.isJit != 1").list();
+    }
+
     public Product getProductForProudctVariant(String variantId) {
         return getVariantById(variantId).getProduct();  //To change body of implemented methods use File | Settings | File Templates.
 

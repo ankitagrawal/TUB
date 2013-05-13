@@ -118,7 +118,7 @@ public class CartLineItemUpdateAction extends BaseAction {
         }
       }
       else{
-        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Your cart might have Expired, Please refresh your cart", cartLineItem.getId());
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Your cart might have Expired, Please refresh your cart");
 
             return new JsonResolution(healthkartResponse);
       }

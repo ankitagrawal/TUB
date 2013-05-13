@@ -677,7 +677,8 @@ public class Functions {
     }
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
-        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements");
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements",
+                "shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
@@ -685,16 +686,17 @@ public class Functions {
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
 		List<String> thirdChildList = Arrays.asList("sunglasses", "weight-gainer");
+        List<String> secondChildList = Arrays.asList("dietary-supplements","shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
 		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
-		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
-			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
-			if (attributeList.contains(attribute.toLowerCase())) {
-				return true;
-			}
 		} else if (secondChild.equalsIgnoreCase("protein")){
             List<String> attributeListProtein = Arrays.asList("age");
             if (attributeListProtein.contains(attribute.toLowerCase())) {
+                return true;
+            }
+        } else if(secondChildList.contains(secondChild)){
+            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size","type");
+            if(attributesHealthNutrition.contains(attribute.toLowerCase())){
                 return true;
             }
         }

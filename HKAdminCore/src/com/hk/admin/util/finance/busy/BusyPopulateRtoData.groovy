@@ -48,28 +48,37 @@ public class BusyPopulateRtoData {
     if(lastUpdateDate == null){
       lastUpdateDate = "2009-01-01";
     }
-
+//	  lastUpdateDate = "2013-04-01";
     sql.eachRow("""
-                    select so.id as shipping_order_id, ship.ship_date as order_date, so.accounting_invoice_number as vch_no,
-                           u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
-                           a.line1 as address_1, a.line2 as address_2, a.city, a.state,
-                           w.name as warehouse, w.id as warehouse_id, so.amount as net_amount, c.name as courier_name,
-                           so.is_service_order, bo.is_b2b_order, so.shipping_order_status_id  , ship.return_date as return_date
-                    from 	  shipping_order so
 
-                    inner join base_order bo on so.base_order_id = bo.id
-                    inner join payment  p ON bo.payment_id = p.id
-                    inner join payment_mode pm ON pm.id = p.payment_mode_id
-                    inner join user u on bo.user_id = u.id
-                    inner join address a ON bo.address_id = a.id
-                    inner join shipment ship on ship.id = so.shipment_id
-                    inner join awb aw on ship.awb_id=aw.id
-                    inner join courier c on aw.courier_id = c.id
-                    inner join warehouse w on w.id = so.warehouse_id
+									select so.id as shipping_order_id,
+									ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) as order_date,
+									so.accounting_invoice_number as vch_no,
+									u.name as account_name, pm.name as debtors, pm.id as payment_mode_id,
+									pay_gate.name as payment_gateway_name,
+									a.line1 as address_1, a.line2 as address_2, a.city, a.state,
+									w.name as warehouse, w.id as warehouse_id, sum(li.hk_price*li.qty-li.order_level_discount-li.discount_on_hk_price+li.shipping_charge+li.cod_charge) AS net_amount,
+									c.name as courier_name,if(so.drop_shipping =1,'DropShip',if(so.is_service_order =1,'Services',if(bo.is_b2b_order=1,'B2B','B2C'))) Order_type,
+									so.shipping_order_status_id , ship.return_date as return_date
+									from line_item li
+									inner join shipping_order so on li.shipping_order_id=so.id
+									inner join base_order bo on so.base_order_id = bo.id
+									left join payment p ON bo.payment_id = p.id
+									left join payment_mode pm ON pm.id = p.payment_mode_id
+									inner join user u on bo.user_id = u.id
+									inner join address a ON bo.address_id = a.id
+									left join shipment ship on ship.id = so.shipment_id
+									left join awb aw on ship.awb_id=aw.id
+									left join courier c on aw.courier_id = c.id
+									left join gateway pay_gate on p.gateway_id = pay_gate.id
+									inner join warehouse w on w.id = so.warehouse_id
 
-                    where so.shipping_order_status_id = 200
-                      and (ship.return_date > ${lastUpdateDate} and ship.ship_date > '2011-11-08 19:59:36')
-                      ORDER BY ship.ship_date ASC
+									where ((so.shipping_order_status_id in (200, 220, 230, 250, 260) OR bo.order_status_id in (45,50,60,70)) and so.shipping_order_status_id <> 999)
+									and (ship.return_date >=${lastUpdateDate}
+									and ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) > '2011-11-08 19:59:36')
+									and ship.return_date is not null
+									GROUP BY so.id
+									ORDER BY ifnull(ship.ship_date,ifnull(p.payment_date, bo.create_dt)) ASC
                  """) {
       accountingInvoice ->
 
@@ -77,7 +86,7 @@ public class BusyPopulateRtoData {
       String series;
       Date date;
       String vch_no;
- //     String vch_prefix;
+  //    String vch_prefix;
       int vch_type;
       String sale_type;
       String account_name;
@@ -91,33 +100,42 @@ public class BusyPopulateRtoData {
       String narration;
       byte out_of_state;
       String against_form;
-      Long net_amount;
+      Double net_amount;
       byte imported_flag;
 
 
       shippingOrderId = accountingInvoice.shipping_order_id
-
-      if(accountingInvoice.warehouse_id == 1){
-        series = "HR";
-      }
-      else{
-        series = "MH";
-      }
+	     Long warehouseId =  accountingInvoice.warehouse_id;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          series = "HR";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		       series = "MH";
+	      }
+	      else if(warehouseId == 301){
+			       series = "PB";
+		    }
+	      else if(warehouseId == 999){
+			      series = "HR";
+		    }
+	      else if(warehouseId == 401){
+			      series = "DL";
+		    }
 
       date = accountingInvoice.return_date;	    
 
-/*      if(accountingInvoice.is_b2b_order != 0 && accountingInvoice.is_b2b_order == 1){
-        vch_prefix = "B";
+/*      if(accountingInvoice.Order_type.equals("B2B")){
+        vch_prefix = "T";
       }
-      else if(accountingInvoice.is_service_order != null && accountingInvoice.is_service_order == 1){
+      else if(accountingInvoice.Order_type.equals("Services")){
         vch_prefix = "S";
       }
       else{
         vch_prefix = "R";
-      }*/
-
-      vch_no = accountingInvoice.vch_no;
-
+      }
+      vch_no = vch_prefix+accountingInvoice.vch_no;
+      */
+	    vch_no = accountingInvoice.vch_no;
       vch_type = 3;
 
       //Following is for RTO. to be used when busy's RTO model goes live
@@ -129,15 +147,23 @@ public class BusyPopulateRtoData {
         vch_type = 9;
       }*/
 
-      sale_type = "VAT TAX INC";
+	    if(accountingInvoice.Order_type.equals("Services")){
+		    sale_type = "SERVICE TAX";
+	    }
+	    else{
+        sale_type = "VAT TAX INC";
+	    }
       account_name = accountingInvoice.account_name;
 
       if(accountingInvoice.payment_mode_id == 40){
-        debtors  = "COD_"+accountingInvoice.courier_name;
-      }
-      else{
-        debtors = accountingInvoice.debtors;
-      }
+			debtors  = "COD_"+accountingInvoice.courier_name;
+			}
+			else if (accountingInvoice.payment_mode_id == 1000){
+				debtors = accountingInvoice.payment_gateway_name;
+			}
+			else {
+				debtors = accountingInvoice.debtors;
+			}
 
       address_1 = accountingInvoice.address_1;
       address_2 = accountingInvoice.address_2;
@@ -172,7 +198,22 @@ public class BusyPopulateRtoData {
         out_of_state = 1;
       }
 
-      material_centre = accountingInvoice.warehouse;
+ //     material_centre = accountingInvoice.warehouse;
+	    if(warehouseId == 1 || warehouseId == 10 || warehouseId == 101){
+          material_centre = "Gurgaon Warehouse";
+	      }
+	      else if(warehouseId == 2 || warehouseId == 20){
+		      material_centre = "Mumbai Warehouse";
+	      }
+	      else if(warehouseId == 301){
+			      material_centre = "Punjabi Bagh Store";
+		    }
+	      else if(warehouseId == 999){
+			      material_centre = "Corporate Office";
+		    }
+	      else if(warehouseId == 401){
+			      material_centre = "Kapashera Warehouse";
+		    }
       net_amount = accountingInvoice.net_amount;
       imported_flag = 0;
       tin_number = " ";
@@ -189,6 +230,27 @@ public class BusyPopulateRtoData {
         VALUES (${series}, ${date}, ${vch_no}, ${vch_type}, ${sale_type}, ${account_name}, ${debtors}, ${address_1}, ${address_2}, ${city}, ${state}, ${tin_number}, ${material_centre},
         ${narration}, ${out_of_state}, ${against_form}, ${net_amount}, ${imported_flag}, NOW(), ${shippingOrderId}
       )
+      ON DUPLICATE KEY UPDATE
+      series = ${series},
+      date = ${date},
+      vch_no = ${vch_no},
+      vch_type = ${vch_type},
+      sale_type = ${sale_type},
+      account_name = ${account_name},
+      debtors = ${debtors},
+      address_1 =  ${address_1},
+      address_2 = ${address_2},
+      address_3 = ${city},
+      address_4 = ${state},
+      tin_number = ${tin_number},
+      material_centre = ${material_centre},
+      narration = ${narration},
+      out_of_state = ${out_of_state},
+      against_form = ${against_form},
+      net_amount = ${net_amount},
+      imported = ${imported_flag},
+      create_date = NOW(),
+      hk_ref_no = ${shippingOrderId}
      """)
        Long vch_code=keys[0][0];
        transactionBodyForSalesGenerator(vch_code, accountingInvoice.shipping_order_id);
@@ -220,7 +282,7 @@ public class BusyPopulateRtoData {
 
       String unit = "pcs";
       Double mrp = invoiceItems.marked_price;
-      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty + invoiceItems.reward_point_discount/qty);
+      Double discount = (invoiceItems.discount_on_hk_price/qty + invoiceItems.order_level_discount/qty);
       Double rate = invoiceItems.hk_price - discount;
       Double vat = invoiceItems.tax_value;
       Double amount = rate*qty;
@@ -235,6 +297,9 @@ public class BusyPopulateRtoData {
 
           VALUES (${vch_code}, ${s_no}, ${item_code}, ${qty}, ${unit}, ${mrp}, ${rate}, ${discount}, ${vat}, ${amount}, NOW(), ${lineItemId}, ${cost_price}
           )
+          ON DUPLICATE KEY UPDATE
+          vch_code = ${vch_code}, s_no = ${s_no}, item_code = ${item_code}, qty = ${qty}, unit = ${unit}, mrp = ${mrp}, rate = ${rate}, discount = ${discount},
+          vat = ${vat}, amount = ${amount}, create_date = NOW(), hk_ref_no = ${lineItemId}, cost_price = ${cost_price}
          """)
       }
       catch (Exception e) {
@@ -246,7 +311,7 @@ public class BusyPopulateRtoData {
 
   public void transactionFooterForSalesGenerator(Long vch_code, Long shipping_order_id) {
     sql.eachRow("""
-                    select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge
+                    select sum(shipping_charge) as shipping_charge, sum(cod_charge) as cod_charge, sum(reward_point_discount)  as reward_points
                     from line_item li
                     inner join tax t on li.tax_id = t.id
                     where li.shipping_order_id = ${shipping_order_id}
@@ -256,6 +321,7 @@ public class BusyPopulateRtoData {
 
     Double shipping_charge = footerItems.shipping_charge;
     Double cod_charge = footerItems.cod_charge;
+	  Double reward_points = footerItems.reward_points;
     try{
       busySql.executeInsert("""
       INSERT INTO transaction_footer
@@ -265,6 +331,9 @@ public class BusyPopulateRtoData {
 
         VALUES (${vch_code}, 1, 0, 'shipping charge',0 , ${shipping_charge}, NOW()
         )
+         ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 1, type = 0, bill_sundry_name = 'shipping charge',
+        percent = 0, amount = ${shipping_charge}, create_date = NOW()
        """)
 
 
@@ -276,6 +345,22 @@ public class BusyPopulateRtoData {
 
         VALUES (${vch_code}, 2, 0, 'cod charge',0 , ${cod_charge}, NOW()
         )
+        ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 2, type = 0, bill_sundry_name = 'cod charge',
+        percent = 0, amount = ${cod_charge}, create_date = NOW()
+       """)
+
+	     busySql.executeInsert("""
+      INSERT INTO transaction_footer
+        (
+          vch_code, s_no, type, bill_sundry_name, percent, amount, create_date
+        )
+
+        VALUES (${vch_code}, 3, 1, 'reward_points_discount',0 , ${reward_points}, NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+        vch_code = ${vch_code}, s_no = 3, type = 1, bill_sundry_name = 'reward_points_discount',
+        percent = 0, amount = ${reward_points}, create_date = NOW()
        """)
     }
     catch (Exception e) {
