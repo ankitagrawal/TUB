@@ -6785,9 +6785,11 @@ color: #e62580;
 
 .topHeadingBillingAddress{
     font-family: arial;
-    font-size: 15px;
+    font-size: 18px;
     position: relative;
     float: left;
+    left: 30px;
+    margin-top: 20px;
 }
 /*
 slider pager end

@@ -94,8 +94,8 @@
         </div>
     </div>
 </s:layout-component>
-<div>To proceed with payment using Paypal you would need to enter your billing details.</div>
 <s:layout-component name="steps_content">
+<div class="topHeadingBillingAddress">To proceed with payment using Paypal you would need to enter your billing details.</div>
   <div class='current_step_content'>
 
    <%
