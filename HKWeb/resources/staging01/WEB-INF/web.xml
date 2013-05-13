@@ -102,15 +102,15 @@
 		</init-param>
 		<init-param>
 			<param-name>SSL.Enabled</param-name>
-			<param-value>false</param-value>
+			<param-value>true</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SecureHost</param-name>
-			<param-value>staging01.healthkart.com:8443</param-value>
+			<param-value>staging01.healthkart.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.UnsecureHost</param-name>
-			<param-value>staging01.healthkart.com:8080</param-value>
+			<param-value>staging01.healthkart.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>SSL.SessionMode</param-name>

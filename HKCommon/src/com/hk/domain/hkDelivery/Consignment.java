@@ -65,14 +65,21 @@ public class Consignment implements java.io.Serializable, Comparable<Consignment
     @Column(name = "address")
     private String address;
 
-	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "owner", length = 100)
+    private String owner;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "target_delivery_date", length = 19)
+    private Date targetDeliveryDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "delivery_date", length = 19)
     private Date deliveryDate;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="hkdelivery_payment_reconciliation_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hkdelivery_payment_reconciliation_id")
     private HkdeliveryPaymentReconciliation hkdeliveryPaymentReconciliation;
-    
+
     public Long getId() {
         return this.id;
     }
@@ -161,22 +168,37 @@ public class Consignment implements java.io.Serializable, Comparable<Consignment
         this.address = address;
     }
 
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
 
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return id == null ? "" : id.toString();
     }
 
-	public int compareTo(Consignment o) {
-		return this.id.compareTo(o.getId());
-	}
+    public int compareTo(Consignment o) {
+        return this.id.compareTo(o.getId());
+    }
+    public Date getTargetDeliveryDate() {
+        return targetDeliveryDate;
+    }
+
+    public void setTargetDeliveryDate(Date targetDeliveryDate) {
+        this.targetDeliveryDate = targetDeliveryDate;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }
 
 

@@ -35,6 +35,8 @@ import net.sourceforge.stripes.action.ActionBean;
 @Target( {ElementType.METHOD, ElementType.TYPE})
 @Documented
 public @interface Secure {
+  String scheme() default "http";
+
   // All roles must be satisified
   String[] hasAllRoles() default {};
 

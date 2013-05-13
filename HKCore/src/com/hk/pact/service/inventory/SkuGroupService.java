@@ -42,6 +42,8 @@ public interface SkuGroupService {
     public void deleteSkuGroup(SkuGroup skuGroup);
 
     public List<SkuGroup> getAllInStockSkuGroups(Sku sku);
+    
+    public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn);
 
 
     //SkuItemDao Methods
