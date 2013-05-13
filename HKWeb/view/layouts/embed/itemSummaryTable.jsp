@@ -114,7 +114,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                 </div>
 
 
-                <div class='price' style="position: relative;margin-left: 0px;">
+                <div class='price' style="position: relative;text-align: center;margin-left: 0px;">
 
                     <div class="cut">
                         <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;"> Rs
@@ -172,7 +172,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                     </div>
 
                     <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
-                    <div class='price' style="position: relative;margin-left: 0px;">
+                    <div class='price' style="position: relative;text-align: center;margin-left: 0px;">
 
                         <div class="cut">
                             <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;">  Rs
@@ -222,7 +222,7 @@ Pass an attribute called pricingDto to render a table with pricing details
                     </table>
                 </div>
                 <div class="dispatchedDateNew2"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
-                <div class='price' style="position: relative;margin-left: 0px;">
+                <div class='price' style="position: relative;text-align: center;margin-left: 0px;">
 
                     <div class="cut">
                         <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;"> Rs<fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}" pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>

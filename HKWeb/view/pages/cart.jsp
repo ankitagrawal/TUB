@@ -261,12 +261,12 @@
     <c:choose>
       <c:when test="${cartAction.pricingDto.productLineCount == 1}">
         There is
-        <span class='num'>${cartAction.pricingDto.productLineCount}</span>
+        <span class='num arialBold'>${cartAction.pricingDto.productLineCount}</span>
         item in your shopping cart
       </c:when>
       <c:when test="${cartAction.pricingDto.productLineCount > 1}">
         There are
-        <span class='num' id="numProdTitle">${cartAction.pricingDto.productLineCount}</span>
+        <span class='num arialBold' id="numProdTitle">${cartAction.pricingDto.productLineCount}</span>
         items in your shopping cart
       </c:when>
       <c:otherwise>
