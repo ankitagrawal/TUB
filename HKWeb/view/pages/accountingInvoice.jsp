@@ -110,6 +110,7 @@
     <tr>
       <th>Item</th>
       <th>Qty</th>
+      <th>MRP</th>
       <th>Rate (per unit)</th>
       <th>
       <c:choose>
@@ -147,6 +148,12 @@
 
         <td>
           <fmt:formatNumber
+              value="${invoiceLineItem.markedPrice}"
+              maxFractionDigits="2"/>
+        </td>
+
+        <td>
+          <fmt:formatNumber
               value="${invoiceLineItem.rate}"
               maxFractionDigits="2"/>
         </td>
@@ -167,7 +174,7 @@
       </tr>
     </c:forEach>
     <tr>
-      <td colspan="4"><b>Total</b></td>
+      <td colspan="5"><b>Total</b></td>
       <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable}" maxFractionDigits="2"/></td>
       <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalTax}" maxFractionDigits="2"/></td>
       <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
