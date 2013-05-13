@@ -14,7 +14,6 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.EnumUserCodCalling" %>
-<%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -135,12 +134,6 @@
 
                 return false;
             });
-
-            $('.cancelSO').click(function() {
-                var proceed = confirm('Are you sure you want to cancel shipping order?');
-                if (!proceed) return false;
-            });
-
                 var clickedLink = $(this);
                 $.getJSON(clickedLink.attr('href'), function(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
@@ -252,7 +245,6 @@
     <div class="actionQueue">Action Awaiting Queue</div>
 </s:layout-component>
 <s:layout-component name="content">
-<%--<c:set var="actionQueue" value="true" />--%>
 <fieldset style="margin: 10px;" class="top_label">
     <ul style="margin-top: 0px;">
         <div class="grouped grid_12">

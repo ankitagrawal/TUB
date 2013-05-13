@@ -107,11 +107,6 @@ public class ShippingOrderAction extends BaseAction {
 	@JsonHandler
 	public Resolution cancelShippingOrder() {
 		adminShippingOrderService.cancelShippingOrder(shippingOrder,cancellationRemark);
-
-//		Map<String, Object> data = new HashMap<String, Object>(1);
-//		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
-//		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "shipping order canceled", data);
-//		return new JsonResolution(healthkartResponse);
         if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())){
             addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
         }else{

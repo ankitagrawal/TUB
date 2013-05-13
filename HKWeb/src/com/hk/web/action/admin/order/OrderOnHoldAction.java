@@ -57,7 +57,6 @@ public class OrderOnHoldAction extends BaseAction {
         return null;
     }
 
-    @JsonHandler
     public Resolution holdShippingOrder() {
         adminShippingOrderService.putShippingOrderOnHold(shippingOrder);
         if(!isActionQueue){
@@ -67,7 +66,6 @@ public class OrderOnHoldAction extends BaseAction {
         }
     }
 
-    @JsonHandler
     public Resolution unHoldShippingOrder() {
         adminShippingOrderService.unHoldShippingOrder(shippingOrder);
         if(!isActionQueue){

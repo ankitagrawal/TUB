@@ -55,7 +55,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     private BucketService bucketService;
     @Autowired
     private PincodeCourierService pincodeCourierService;
-    private Reason  SoReason;
     private String CancellationRemark;
 
     @Autowired
@@ -453,14 +452,6 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     public void setPincodeCourierService(PincodeCourierService pincodeCourierService) {
         this.pincodeCourierService = pincodeCourierService;
     }
-    public Reason getSoReason() {
-        return SoReason;
-    }
-
-    public void setSoReason(Reason soReason) {
-        SoReason = soReason;
-    }
-
     public String getCancellationRemark() {
         return CancellationRemark;
     }
