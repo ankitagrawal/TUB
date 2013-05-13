@@ -210,7 +210,7 @@
 
 
     </div>
-          <div class="goBackButtonNew2">GO BACK</div>
+          <s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" class="goBackButtonNew2">GO BACK</s:link>
           <div class="specialNew2" style="left: 5px;margin-top: 10px;">
               Go back and change your payment mode
           </div>

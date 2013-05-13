@@ -6791,6 +6791,10 @@ color: #e62580;
     left: 30px;
     margin-top: 20px;
 }
+
+.goBackButtonNew2:hover {
+    color: white;
+}
 /*
 slider pager end
 */
