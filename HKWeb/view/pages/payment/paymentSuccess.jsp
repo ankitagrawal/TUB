@@ -23,13 +23,7 @@
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
 <s:useActionBean beanclass="com.hk.web.action.core.payment.PaymentSuccessAction" var="actionBean"/>
-<!--google remarketing-->
-<s:layout-render name="/layouts/embed/googleremarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
-<!--YAHOO marketing-->
-<s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="purchase"/>
 
-<!--OZONE marketing-->
-<s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="purchase" order="${actionBean.payment.order}"/>
 
 
 <s:layout-render name="/layouts/paymentSuccess.jsp" pageTitle="Payment Successful">
