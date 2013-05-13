@@ -26,7 +26,7 @@
 						success: function(resp) {
 							if(resp.code == "error"){
 								qty_box.val(qty-1);
-								error_message.addClass('errorMessage').slideDown().delay(8000).slideUp();
+								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
 							}
 							else{
 								$('.total-shopping-points').html(resp.data.totalShoppingPoints + " Points");
