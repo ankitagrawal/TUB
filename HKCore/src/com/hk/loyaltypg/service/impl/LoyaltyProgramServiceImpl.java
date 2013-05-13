@@ -28,14 +28,17 @@ import au.com.bytecode.opencsv.CSVReader;
 import com.akube.framework.dao.Page;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
+import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.coupon.Coupon;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.KarmaPointStatus;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile.TransactionType;
+import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -135,6 +138,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void creditKarmaPoints(Order order) {
+		boolean creditLoyaltyPoints = true;
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
 			throw new RuntimeException("User order karma profile already exist for given orer and user");
@@ -144,14 +148,24 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		double loyaltyPercentage = badgeInfo.getBadge().getLoyaltyPercentage();
 		Double amount = order.getPayment().getAmount();
 
-		double karmaPoints = (amount * loyaltyPercentage)/100;
-		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
-		profile.setStatus(KarmaPointStatus.PENDING);
-		profile.setTransactionType(TransactionType.CREDIT);
-		profile.setKarmaPoints(karmaPoints);
-		profile.setUser(order.getUser());
-		profile.setOrder(order);
-		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		 OfferInstance offerInstance = order.getOfferInstance();
+         if (offerInstance != null) {
+             Coupon coupon = offerInstance.getCoupon();
+             if (coupon != null && coupon.getCode().equalsIgnoreCase(OfferConstants.HK_EMPLOYEE_CODE)) {
+             		creditLoyaltyPoints=false;
+             	}
+             }
+
+         if (creditLoyaltyPoints || !(badgeInfo.getBadge().getId()==1l)) {
+        	double karmaPoints = (amount * loyaltyPercentage)/100;
+        	UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
+        	profile.setStatus(KarmaPointStatus.PENDING);
+        	profile.setTransactionType(TransactionType.CREDIT);
+        	profile.setKarmaPoints(karmaPoints);
+        	profile.setUser(order.getUser());
+        	profile.setOrder(order);
+        	this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+        }
 	}
 
 	@Override
@@ -440,7 +454,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment,
 					EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
 			 
-	        this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusYears(1).toDate());
+	        this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusDays(0).toDate());
 
 	        // save reward profile
 			this.userOrderKarmaProfileDao.saveOrUpdate(rewardProfile);

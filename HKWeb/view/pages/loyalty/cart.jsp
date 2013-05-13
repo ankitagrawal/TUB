@@ -39,13 +39,13 @@
 			    	  var lineItemQty =  $(this).parent().find('.lineItemQty');
 			    	  lineItemQty.val(0);
 			    	  $(this).parent().parent().hide();
-			          lineItemQty.trigger('blur');
 			          var rowCount = $("#itemRows").val();
 			         	if (rowCount ==="1") {
 			        	  $("#deleteForm").submit();
 			        	} else {
 			        		$("#itemRows").val(rowCount-1);
-			        	  }
+			        		lineItemQty.trigger('blur');
+					      }
 			         return false;
 			        });	
 				
@@ -95,6 +95,7 @@ pageContext.setAttribute("isSecure", isSecure);
 					</thead>
 					<tbody>
 						<s:form name="deleteForm" beanclass="com.hk.web.action.core.loyaltypg.CartAction" event="emptyCart">
+						<s:hidden name="emptyCart" value="emptyCart"/>
 							<input type=text id="itemRows" value="${fn: length(ca.loyaltyProductList)}"  style="display:none;"/>
 						</s:form>
 						

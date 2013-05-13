@@ -69,7 +69,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	}
 	
 	public Resolution emptyCart() {
-		this.loyaltyProductList = null;
+		this.getProcessor().getCart(this.getPrincipal().getId()).setCartLineItems(null);
 		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}
 

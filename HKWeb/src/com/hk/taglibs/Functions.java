@@ -95,6 +95,7 @@ import com.hk.pact.service.catalog.CategoryService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.core.PincodeService;
+import com.hk.pact.service.core.WarehouseService;
 import com.hk.pact.service.homeheading.HeadingProductService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.inventory.SkuService;
@@ -844,6 +845,12 @@ public class Functions {
         }
         return actionAwaitingSO;
     }
+
+    public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
+        WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        return warehouseService.findShippingWarehouse(shippingOrder);
+      }
+
     
 	public static double getLoyaltyKarmaPointsForUser(Long userId){
 		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
