@@ -11,7 +11,8 @@ public enum  EnumReasonType {
     NotAutoEscalated(30L, "SO Could not be Auto-escalated"),
     NotManualEscalated(40L, "SO Could not be Manually-escalated"),
     CourierChange(50L, "Courier Change Reason"),
-    AwbChange(60L, "Awb Change Reason");
+    AwbChange(60L, "Awb Change Reason"),
+    So_Cancelled(410L,"SO  Cancelled");
     private String name;
 
     private Long id;

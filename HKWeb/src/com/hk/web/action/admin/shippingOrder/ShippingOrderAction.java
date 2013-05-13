@@ -34,7 +34,7 @@ import java.util.Map;
 public class ShippingOrderAction extends BaseAction {
 
 	private ShippingOrder shippingOrder;
-    private Reason soReason;
+
     private String cancellationRemark;
 	private Warehouse warehouseToUpdate;
 	@Autowired
@@ -106,7 +106,7 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution cancelShippingOrder() {
-		adminShippingOrderService.cancelShippingOrder(shippingOrder,soReason,cancellationRemark);
+		adminShippingOrderService.cancelShippingOrder(shippingOrder,cancellationRemark);
 
 //		Map<String, Object> data = new HashMap<String, Object>(1);
 //		data.put("orderStatus", JsonUtils.hydrateHibernateObject(shippingOrder.getOrderStatus()));
@@ -164,13 +164,6 @@ public class ShippingOrderAction extends BaseAction {
 	public String getCustomerSatisfyReason() {
 		return customerSatisfyReason;
 	}
-    public Reason getSoReason() {
-        return soReason;
-    }
-
-    public void setSoReason(Reason soReason) {
-        this.soReason = soReason;
-    }
 
     public String getCancellationRemark() {
         return cancellationRemark;

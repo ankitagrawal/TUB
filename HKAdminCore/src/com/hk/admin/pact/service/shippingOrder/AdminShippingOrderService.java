@@ -14,7 +14,7 @@ public interface AdminShippingOrderService {
 
     //  public List<Long> getShippingOrderListByCourier(Date startDate, Date endDate, Long courierId);
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder, Reason reason,String comment);
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String comment);
 
     public boolean updateWarehouseForShippingOrder(ShippingOrder shippingOrder, Warehouse warehouse);
 

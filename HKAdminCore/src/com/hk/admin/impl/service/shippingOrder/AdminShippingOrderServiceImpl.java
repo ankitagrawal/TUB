@@ -78,7 +78,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     @Autowired
     UserService userService;
 
-    public void cancelShippingOrder(ShippingOrder shippingOrder,Reason SoReason,String CancellationRemark) {
+    public void cancelShippingOrder(ShippingOrder shippingOrder,String CancellationRemark) {
         // Check if Order is in Action Queue before cancelling it.
         if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
 	          logger.warn("Cancelling Shipping order gateway id:::"+ shippingOrder.getGatewayOrderId());
@@ -87,7 +87,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
             getAdminInventoryService().reCheckInInventory(shippingOrder);
             // TODO : Write a generic ROLLBACK util which will essentially release all attached laibilities i.e.
             // inventory, reward points, shipment, discount
-            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,SoReason,CancellationRemark);
+            getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Cancelled,shippingOrder.getReason(),CancellationRemark);
 
             orderService.updateOrderStatusFromShippingOrders(shippingOrder.getBaseOrder(), EnumShippingOrderStatus.SO_Cancelled, EnumOrderStatus.Cancelled);
             if(shippingOrder.getShipment()!= null){

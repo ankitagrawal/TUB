@@ -287,12 +287,14 @@
     <c:if test="${isActionQueue == false || isSearchShippingOrder == true }">
     <s:form beanclass="com.hk.web.action.admin.shippingOrder.ShippingOrderAction">
             <s:param name="shippingOrder" value="${shippingOrder}"/>
+
             <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
             <br>
             Reason:
-            <s:select name="soReason" id="SoReason">
+            <s:select name="shippingOrder.reason">
             <s:option value="">-------Select-------</s:option>
-            <c:forEach items="${hk:getReasonsByType('SO  Cancelled')}" var="soCancelReason">
+            <c:set var="soCancelReasonVar" value="<%=EnumReasonType.So_Cancelled.getName()%>"/>
+            <c:forEach items="${hk:getReasonsByType(soCancelReasonVar)}" var="soCancelReason">
             <s:option value="${soCancelReason.id}"> ${soCancelReason.classification.primary} - ${soCancelReason.classification.secondary} </s:option>
             </c:forEach>
              </s:select>
@@ -300,7 +302,7 @@
              Remark:
                 <s:textarea name="cancellationRemark" id="cancellationId" style="height:100px"></s:textarea>
                 <div class="buttons">
-                   <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO" />
+                   <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
                 </div>
             </c:if>
         </s:form>
@@ -312,7 +314,6 @@
                 }
                  var proceed = confirm('Are you sure you want to cancel shipping order?');
                  if (!proceed) return false;
-
              });
         </script>
     </c:if>
