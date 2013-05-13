@@ -12594,16 +12594,6 @@
 				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
 			</sql>
 		</changeSet>
-		<changeSet author="Nihal (generated)" id="1367838930686-2">
-        <createTable tableName="pi_line_item_type">
-            <column name="id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="name" type="VARCHAR(45)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-3">
         <createTable tableName="purchase_invoice_has_rtv_note">
             <column name="purchase_invoice_id" type="INT">
@@ -12614,11 +12604,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-6">
-        <addColumn tableName="purchase_invoice_line_item">
-            <column name="pi_line_item_type_id" type="INT"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-7">
         <addPrimaryKey columnNames="purchase_invoice_id, rtv_note_id" tableName="purchase_invoice_has_rtv_note"/>
     </changeSet>
@@ -12627,9 +12612,6 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-12">
         <addForeignKeyConstraint baseColumnNames="rtv_note_id" baseTableName="purchase_invoice_has_rtv_note" constraintName="fk_purchase_invoice_has_rtv_note_rtv_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="rtv_note" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1367838930686-13">
-        <addForeignKeyConstraint baseColumnNames="pi_line_item_type_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_pi_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pi_line_item_type" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="Nihal (generated)" id="1367845228160-2">
         <addColumn tableName="extra_inventory_line_item">
@@ -12700,5 +12682,14 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1368113151171-8">
         <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_purchase_in1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368424154197-3">
+        <addColumn tableName="purchase_invoice_line_item">
+            <column name="goods_received_note_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368424154197-7">
+        <addForeignKeyConstraint baseColumnNames="goods_received_note_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_goods_received_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="goods_received_note" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

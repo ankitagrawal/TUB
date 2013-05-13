@@ -12,7 +12,6 @@ import com.hk.admin.pact.service.rtv.ExtraInventoryService;
 import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.core.EnumPermission;
 import com.hk.constants.core.PermissionConstants;
-import com.hk.constants.inventory.EnumPILineItemType;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
@@ -375,7 +374,6 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 						purchaseInvoiceLineItem.setSku(sku);
 					}
 					skuService.saveSku(sku);
-					purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Normal.asPiLineItemType());
 					purchaseInvoiceLineItem = (PurchaseInvoiceLineItem) purchaseInvoiceDao.save(purchaseInvoiceLineItem);
 				}
 				productVariant = purchaseInvoiceLineItem.getSku().getProductVariant();

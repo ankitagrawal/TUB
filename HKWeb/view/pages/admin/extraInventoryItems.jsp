@@ -469,6 +469,7 @@ $(document).ready(function () {
     <tbody id="poTable">
     <c:if test="${extraInventory.extraInventoryLineItems!=null}">
         <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
+        <s:hidden name="extraInventoryLineItems[${ctr.index}].purchaseInvoices" value="${eInLineItems.purchaseInvoices}"></s:hidden>
             <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                 <td>${ctr.index+1}.</td>
                 <td>

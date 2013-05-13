@@ -21,7 +21,6 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumGrnStatus;
-import com.hk.constants.inventory.EnumPILineItemType;
 import com.hk.constants.inventory.EnumPurchaseInvoiceStatus;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
 import com.hk.domain.accounting.PoLineItem;
@@ -398,6 +397,7 @@ public class GRNAction extends BasePaginatedAction {
 				Double discountPercentage = 0D;
 				PurchaseInvoiceLineItem purchaseInvoiceLineItem = new PurchaseInvoiceLineItem();
 				purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
+				purchaseInvoiceLineItem.setGoodsReceivedNote(grn);
 				if (grnLineItem.getCostPrice() != null) {
 					purchaseInvoiceLineItem.setCostPrice(grnLineItem.getCostPrice());
 				}
@@ -436,7 +436,6 @@ public class GRNAction extends BasePaginatedAction {
 				purchaseInvoiceLineItem.setTaxAmount(taxComponent.getTax());
 				purchaseInvoiceLineItem.setSurchargeAmount(taxComponent.getSurcharge());
 				purchaseInvoiceLineItem.setPayableAmount(taxComponent.getPayable());
-				purchaseInvoiceLineItem.setPiLineItemType(EnumPILineItemType.Normal.asPiLineItemType());
 				getPurchaseInvoiceDao().save(purchaseInvoiceLineItem);
 
 			}

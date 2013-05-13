@@ -48,6 +48,7 @@
 .rtvListForm{
 	float: right;
 	position: relative;
+	background-color:  #F5DEB3;
 }
 
 #finalPayableDiv{
@@ -432,6 +433,10 @@
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
 		
+		$("#grnTotalQunatity").val($('#piForm').find('totalQuantity').html());
+		$("#shortTotalQunatity").val($('#shortForm').find('totalQuantity').html());
+		$("#rtvTotalQunatity").val($('#rtvForm').find('totalQuantity').html());
+		
 		$("#grnTotalTaxable").val(${pia.purchaseInvoice.taxableAmount});
 		$("#shortTotalTaxable").val($("#shortTaxableAmount").val());
 		$("#rtvTotalTaxable").val($("#rtvTaxableAmount").val());
@@ -610,7 +615,7 @@
 	<thead>
 	<tr>
 		<th>S.No.</th>
-		<!-- <th>Grn Id</th> -->
+		<th>Grn Id</th>
 		<th></th>
 		<th>VariantID</th>
 		<th>UPC</th>
@@ -644,11 +649,19 @@
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}]" value="${purchaseInvoiceLineItem.id}"/>
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].productVariant"
 		          value="${purchaseInvoiceLineItem.sku.productVariant.id}"/>
+		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].goodsReceivedNote" value="${purchaseInvoiceLineItem.goodsReceivedNote}"/>
 		
 		<%--<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].sku" value="${purchaseInvoiceLineItem.sku.id}"/>--%>
 		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 			<td>${ctr.index+1}.</td>
-			<%-- <td>${purchaseInvoiceLineItem.grnId}</td> --%>
+			<c:choose>
+						<c:when test="${purchaseInvoiceLineItem.goodsReceivedNote.id != null}">
+							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.goodsReceivedNote.id}">${purchaseInvoiceLineItem.goodsReceivedNote.id}</a></td>
+						</c:when>
+						<c:otherwise>
+							<td>N/A</td>
+						</c:otherwise>
+					</c:choose>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>
@@ -848,7 +861,7 @@
 		          
 		
 			<td>${ctr.index+1}</td>
-			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryShortLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryShortLineItem.extraInventory.id}</a></td>
+			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryShortLineItem.extraInventory.purchaseOrder.id}&wareHouseId=${pia.purchaseInvoice.goodsReceivedNotes[0].warehouse.id}" target="_blank">${extraInventoryShortLineItem.extraInventory.id}</a></td>
 			<td>${extraInventoryShortLineItem.id}</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
@@ -972,7 +985,7 @@
 	</tbody>
 	<tfoot id="piShortTableFoot">
 	<tr>
-		<td colspan="6"><strong>Totals</strong></td>
+		<td colspan="8"><strong>Totals</strong></td>
 		<td colspan="3" class="totalQuantity"></td>
 		<td><input readonly="readonly" class="totalTaxable" id="shortTaxableAmount"/></td>
 		<td><input readonly="readonly" class="totalTax" id="shortTaxAmount"/></td>
@@ -980,7 +993,7 @@
 		<td colspan="2"><input readonly="readonly" class="totalPayable" id="shortPayableAmount"/></td>
 	</tr>
 	<tr>
-		<td colspan="11"></td><td><strong>Short Payable</strong></td>
+		<td colspan="11"></td><td colspan="3"><strong>Short Payable</strong></td>
 		<td><input readonly="readonly" class="finalPayable shortFinal" name="purchaseInvoice.shortAmount"/></td>
 		<td></td>
 	</tr>
@@ -1074,7 +1087,7 @@
 			</c:when>
 			<c:otherwise>
 				<td>${ctr.index+1}</td>
-				<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
+				<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}&wareHouseId=${pia.purchaseInvoice.goodsReceivedNotes[0].warehouse.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
 			<td>${extraInventoryLineItem.id}</td>
 				<td></td>
 				<td></td>
@@ -1172,7 +1185,7 @@
 	</tbody>
 	<tfoot id="piRtvTableFoot">
 		<tr>
-		<td colspan="6"><strong>Totals</strong></td>
+		<td colspan="8"><strong>Totals</strong></td>
 		<td colspan="3" class="totalQuantity"></td>
 		<td><input readonly="readonly" class="totalTaxable" id="rtvTaxableAmount"/></td>
 		<td><input readonly="readonly" class="totalTax" id="rtvTaxAmount"/></td>
@@ -1180,7 +1193,7 @@
 		<td colspan="2" ><input readonly="readonly" class="totalPayable" id="rtvTotalPayable"/></td>
 	</tr>
 	<tr>
-		<td colspan="11"></td><td><strong>RTV Total Payable</strong></td>
+		<td colspan="11"></td><td colspan="3"><strong>RTV Total Payable</strong></td>
 		<td><input readonly="readonly" class="finalPayable rtvFinal" name="purchaseInvoice.rtvAmount"/></td>
 		            <td></td>
 	</tr>
@@ -1191,7 +1204,7 @@
 
 <div id = "finalPayableDiv">
 <fieldset>
-<legend><br/><em>Final Payable Amounts</em></legend>
+<legend><br/><em>Final Totals</em></legend>
 <table >
 <tr>
 <th></th>
@@ -1199,6 +1212,14 @@
 <th>SHORT</th>
 <th>RTV</th>
 </tr>
+
+<tr>
+<td><label>Quantity</label></td>
+<td><input id= "grnTotalQuantity" readonly="readonly" /></td>
+<td><input id= "shortTotalQuantity" readonly="readonly" /></td>
+<td><input id= "rtvTotalQuantity" readonly="readonly" /></td>
+</tr>
+
 <tr>
 <td><label>Taxable</label></td>
 <td><input id= "grnTotalTaxable" readonly="readonly" /></td>
