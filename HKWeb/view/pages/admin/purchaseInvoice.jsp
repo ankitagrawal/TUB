@@ -610,6 +610,7 @@
 	<thead>
 	<tr>
 		<th>S.No.</th>
+		<!-- <th>Grn Id</th> -->
 		<th></th>
 		<th>VariantID</th>
 		<th>UPC</th>
@@ -647,6 +648,7 @@
 		<%--<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].sku" value="${purchaseInvoiceLineItem.sku.id}"/>--%>
 		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 			<td>${ctr.index+1}.</td>
+			<%-- <td>${purchaseInvoiceLineItem.grnId}</td> --%>
 			<td>
 				<div class='img48' style="vertical-align:top;">
 					<c:choose>
