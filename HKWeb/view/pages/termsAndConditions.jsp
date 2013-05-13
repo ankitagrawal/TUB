@@ -7,15 +7,14 @@
 </s:layout-component>
 <s:layout-component name="htmlHead">
   <style type="text/css">
-    ul {list-style-type: circle; padding-left: 0;}
-    ul li {margin-left: 20px;}
+   .tncNavUL{list-style: none; line-height: 25px;padding-left: 0;}
+   .tncContent {list-style-type: circle; padding-left: 0;}
+   .tncNavUL li, .tncContent li {margin-left: 20px;}
   </style>
 </s:layout-component>
 <s:layout-component name="rhsContent">
 <div class="grid_18">
-
 <b>Introduction:</b><br>
-
 <p style="text-align: justify">
   HealthKart.com ('<strong>Website</strong>') is an online service operated and managed by Aquamarine Healthcare Private Limited
   ('<strong>HealthKart</strong>' or '<strong>we</strong>' or '<strong>us</strong>'). In using the HealthKart service, you are deemed to have accepted the terms and
@@ -64,7 +63,7 @@
 <b>Usage Restrictions:</b>
 
 <p style="text-align: justify">
-<ul>
+<ul class="tncContent">
   You shall not use the Website for any of the following purposes:
   <li>Disseminating any unlawful, harassing, libelous, abusive, threatening, harmful, vulgar, obscene, or otherwise objectionable material.</li>
   <li>Transmitting material that encourages conduct that constitutes a criminal offence, results in civil liability or otherwise breaches any relevant laws, regulations or code of practice.</li>
@@ -75,7 +74,7 @@
   <li>Making, transmitting or storing electronic copies of materials protected by copyright without the permission of the owner.</li>
 </ul>
 
-<ul>
+<ul class="tncContent">
   You are not permitted to host, display, upload, modify, publish, transmit, update or share any information on the Website that
   <li>belongs to another person and to which you do not have any right to;</li>
   <li>is grossly harmful, harassing, blasphemous, defamatory, obscene, pornographic, paedophilic, libellous, invasive of another's privacy, hateful, or racially, ethnically objectionable, disparaging, relating or encouraging money laundering or gambling, or otherwise unlawful in any manner whatever;</li>
@@ -88,7 +87,7 @@
   <li>threatens the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, or public order or causes incitement to the commission of any cognisable offence or prevents investigation of any offence or is insulting any other nation.</li>
 </ul>
 
-<ul>
+<ul class="tncContent">
   You are also prohibited from:
   <li>violating or attempting to violate the integrity or security of the Website or its content;</li>
   <li>transmitting any information (including job posts, messages and hyperlinks) on or through the Website that is disruptive or competitive to the provision of services by us;</li>
@@ -397,7 +396,7 @@
 <b>Website Security:</b>
 
 <p style="text-align: justify">
-  <ul>
+  <ul class="tncContent">
   You are prohibited from violating or attempting to violate the security of the Website, including, without limitation:
   <li>Accessing data not intended for you or logging onto a server or an account which you are not authorized to access;</li>
   <li>Attempting to probe, scan or test the vulnerability of a system or network or to breach security or authentication measures without proper authorization;</li>
