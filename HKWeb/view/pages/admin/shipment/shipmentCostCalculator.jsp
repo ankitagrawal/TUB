@@ -159,9 +159,9 @@
             <div style="float: left; width:40%">
                 Applicable Couriers
 
-                <c:forEach items="${calculator.applicableCourierList}" var="courier">
+                <c:forEach items="${calculator.courierCostingMap}" var="courierCostingMap">
                     <div class="clear"></div>
-                    ${courier.name}
+                    ${courierCostingMap.key.name}
                 </c:forEach>
 
                 <fieldset>
