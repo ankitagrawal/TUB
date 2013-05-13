@@ -94,7 +94,7 @@ public class ShipmentCostCalculatorAction extends BaseAction {
     CourierService courierService;
 
     TreeMap<Courier, Long> courierCostingMap = new TreeMap<Courier, java.lang.Long>();
-    List<Courier> applicableCourierList;
+    Courier applicableCourier;
 
     @DefaultHandler
     public Resolution pre() {
@@ -156,11 +156,13 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         return new ForwardResolution("/pages/admin/shipment/shipmentCostCalculator.jsp");
     }
 
-
     @Secure(hasAnyPermissions = {PermissionConstants.SAVE_SHIPPING_COST}, authActionBean = AdminPermissionAction.class)
     public Resolution saveHistoricalShipmentCost() {
         ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
         shippingOrderSearchCriteria.setShipmentStartDate(shippedStartDate).setShipmentEndDate(shippedEndDate);
+        if (applicableCourier != null){
+            shippingOrderSearchCriteria.setCourierList(Arrays.asList(applicableCourier));
+        }
         List<ShippingOrder> shippingOrderList = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false);
 
         if (shippingOrderList != null) {
@@ -233,12 +235,12 @@ public class ShipmentCostCalculatorAction extends BaseAction {
         this.shippingOrderId = shippingOrderId;
     }
 
-    public List<Courier> getApplicableCourierList() {
-        return applicableCourierList;
+    public Courier getApplicableCourier() {
+        return applicableCourier;
     }
 
-    public void setApplicableCourierList(List<Courier> applicableCourierList) {
-        this.applicableCourierList = applicableCourierList;
+    public void setApplicableCourier(Courier applicableCourier) {
+        this.applicableCourier = applicableCourier;
     }
 
     public TreeMap<Courier, Long> getCourierCostingMap() {
