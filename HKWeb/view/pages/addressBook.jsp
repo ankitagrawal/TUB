@@ -103,9 +103,10 @@
             </h3>
 
             <c:forEach items="${addressBean.addresses}" var="address" varStatus="addressCount">
+            <div class="address raj_address">
                 <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" class="raj_addressLink" event="checkout" title="Click to use this address and proceed">
                     <s:param name="selectedAddress" value="${address.id}"/>
-                    <div class="address raj_address">
+
                         <h5 class="name">${address.name}</h5>
                         <div class='street street1'>${address.line1}</div>
                         <c:if test="${hk:isNotBlank(address.line2)}">
@@ -128,8 +129,9 @@
                             and proceed
 
                         </div>
-                    </div>
+
                 </s:link>
+                </div>
             </c:forEach>
             <script type="text/javascript">
                 $(document).ready(function() {
