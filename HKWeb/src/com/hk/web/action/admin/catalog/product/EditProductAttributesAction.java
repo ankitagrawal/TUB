@@ -276,6 +276,8 @@ public class EditProductAttributesAction extends BaseAction {
             String productOptionValue = productOptionString.substring(productOptionString.indexOf(":") + 1);
 
             // checking whether the product option already exists or not
+            productOptionName = StringUtils.strip(productOptionName);
+            productOptionValue = StringUtils.strip(productOptionValue);
             ProductOption productOption = getProductService().findProductOptionByNameAndValue(productOptionName, productOptionValue);
             if (productOption == null) {
                 productOption = new ProductOption(productOptionName, productOptionValue);
