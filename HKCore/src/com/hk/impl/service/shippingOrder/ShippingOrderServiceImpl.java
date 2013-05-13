@@ -190,7 +190,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 } else {
                     //putting checks for shipping cost
                     Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
-                    if (estimatedShippingCharges > ShippingCostCutOff.minAllowedShippingCharges && estimatedShippingCharges >= ShippingCostCutOff.calculateCutoffAmount(shippingOrder)) {
+                    if (estimatedShippingCharges != null && estimatedShippingCharges > ShippingCostCutOff.minAllowedShippingCharges && estimatedShippingCharges >= ShippingCostCutOff.calculateCutoffAmount(shippingOrder)) {
                         reasons.add(EnumReason.HighShippingCost.asReason());
                     }
                 }
