@@ -123,7 +123,7 @@ public class UserOrderKarmaProfile {
 
 
 	public static enum KarmaPointStatus {
-		APPROVED, PENDING, EXPIRED, CANCELED, REWARDED;
+		APPROVED, PENDING, EXPIRED, CANCELED, REWARDED, BONUS;
 	}
 	
 	public static enum TransactionType {
@@ -155,21 +155,24 @@ public class UserOrderKarmaProfile {
 		if (TransactionType.DEBIT.equals(this.transactionType)) {
 	
 			if (KarmaPointStatus.REWARDED.equals(this.status)) {
-				statusForHistory = "Rewarded";
+				statusForHistory = "Converted to Reward Points";
 			} else {
 				statusForHistory = "Redeemed";
 			}
 		} else if (TransactionType.CREDIT.equals(this.transactionType)) {
 			switch (this.status) {
+			case BONUS:
+				statusForHistory = "Enrollment Bonus";
+				break;
 			case PENDING:
-				statusForHistory = "Awaited";
+				statusForHistory = "Pending";
 				break;
 			case CANCELED:
 				statusForHistory = "Cancelled";
 				break;
 			case APPROVED:
 				if (this.creationTime.after(new DateTime().minusYears(2).toDate())) {
-					statusForHistory = "Valid";
+					statusForHistory = "Earned";
 					break;
 				}
 			default: 

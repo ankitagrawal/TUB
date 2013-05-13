@@ -12,6 +12,7 @@
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 <stripes:layout-component name="contents">
+	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />  
       <script type="text/javascript">
         $(document).ready(function(){
           
@@ -66,7 +67,7 @@
           <div class="embedMarginTop108"></div>
           <div class="priceFilterContainerOne">
             <div id="top" class="sorting makeCursor">TOP</div>
-              <div class="brandsContainer">
+              <div class="brandsContainer1">
                 <div id="aboutStellar" class="priceRange">
                   <span >About stellar</span>
                 </div>
@@ -91,17 +92,18 @@
             </div>
             <div class="dottedLine"></div>
           </div>
-		<c:forEach var="index" begin="0" end="4" >
-				<c:set name="badge_[${index}]" value="${lca.badgeList[index]}" />
-		</c:forEach>
-
+		<c:set var="bronze" value="${lca.badgeList[1]}" />
+		<c:set var="silver" value="${lca.badgeList[2]}" />
+		<c:set var="gold" value="${lca.badgeList[3]}" />
+		<c:set var="platinum" value="${lca.badgeList[4]}" />
+	
           <div class="aboutContent">
             <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
             <p>Here’s how it works- you’ll earn ‘A’ Lumens every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
-            <p class="embedMargin5">-Bronze ${badge_1.badgeName}</p>
-            <p class="embedMargin5">-Silver</p>
-            <p class="embedMargin5">-Gold</p>
-            <p class="embedMargin5">-Platinum</p>
+            <p class="embedMargin5">-${bronze.badgeName}</p>
+            <p class="embedMargin5">-${silver.badgeName}</p>
+            <p class="embedMargin5">-${gold.badgeName}</p>
+            <p class="embedMargin5">-${platinum.badgeName}</p>
 
             <p>It is easy to opt-in. Register. Log in. Shop! Stack up Lumens and unlock some very exciting rewards, indeed.</p>
 
@@ -109,10 +111,10 @@
 
             <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 0 Lumens.</p>
             <p>On every purchase,</p>
-	        <p class="embedMargin5">For Bronze level, you get 0.01 Lumen for every rupee you spend.</p>
-            <p class="embedMargin5">For Silver level, you are awarded 0.015 Lumens for every rupee you spend.</p>
-            <p class="embedMargin5">For Gold level, you are awarded 0.0175 Lumens for every rupee you spend.</p>
-            <p class="embedMargin5">For Platinum level, you are awarded 0.02 Lumens for every rupee you spend.</p>
+	        <p class="embedMargin5">For Bronze level, you get ${bronze.loyaltyPercentage} Lumen for every rupee you spend.</p>
+            <p class="embedMargin5">For Silver level, you are awarded ${silver.loyaltyPercentage} Lumens for every rupee you spend.</p>
+            <p class="embedMargin5">For Gold level, you are awarded ${gold.loyaltyPercentage} Lumens for every rupee you spend.</p>
+            <p class="embedMargin5">For Platinum level, you are awarded ${platinum.loyaltyPercentage} Lumens for every rupee you spend.</p>
 
             <h1 id="benefits" class="embedMarginTop50">BENEFIT LEVELS</h1>
 
@@ -120,18 +122,18 @@
             <div class="tableHistory embedMarginTop40">
               <div class="headingRow">
                 <div class="headRowValue"><div class="rowValue">ANNUAL SPEND</div></div>
-                <div class="headRowValue">Rs.1501 - Rs.3000</div>
-                <div class="headRowValue">Rs.3001 - Rs.6000</div>
-                <div class="headRowValue">Rs.6001 - Rs.12000</div>
-                <div class="headRowValue">Rs.12001 and above</div>
+                <div class="headRowValue">Rs.${bronze.minScore} - Rs.${bronze.maxScore}</div>
+                <div class="headRowValue">Rs.${silver.minScore} - Rs.${silver.maxScore}</div>
+                <div class="headRowValue">Rs.${gold.minScore} - Rs.${gold.maxScore}</div>
+                <div class="headRowValue">Rs.${platinum.minScore} and above</div>
               </div>
 
               <div class="normalRowWithBorderBottom">
                 <div class="headRowValue"><div class="rowValue">POINTS EARNED PER RUPEE SPENT</div></div>
-                <div class="headRowValue"><div class="rowValue">0.0100</div></div>
-                <div class="headRowValue"><div class="rowValue">0.0150</div></div>
-                <div class="headRowValue"><div class="rowValue">0.0175</div></div>
-                <div class="headRowValue"><div class="rowValue">0.0200</div></div>
+                <div class="headRowValue"><div class="rowValue">${bronze.loyaltyPercentage/100}</div></div>
+                <div class="headRowValue"><div class="rowValue">${silver.loyaltyPercentage/100}</div></div>
+                <div class="headRowValue"><div class="rowValue">${gold.loyaltyPercentage/100}</div></div>
+                <div class="headRowValue"><div class="rowValue">${platinum.loyaltyPercentage/100}</div></div>
               </div>
 
               <div class="normalRowWithBorderBottom">
@@ -207,49 +209,6 @@
     </div>
 
 <!-- The about us page ends here -->
-<%-- 		<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" var="lca" />
-	<span class="muted" style="font-size:20px;">Following badges can be earned by a user: </span>
-	<br>
-	<% int i=1; %>
-		<table class="cont footer_color">
-     	 <c:forEach items="${lca.badgeList}" var="badge">
-			<c:set var="badge_<%=i %>" value="${badge}"> </c:set>
-			<% i++; %>
-		
-			<strong>${badge.badgeName}: </strong> ${badge.loyaltyMultiplier}
-	
-	
-                    <tr>
-                        <th> </th>
-					<c:forEach items="${lca.badgeList}" var="badge">
-						<th><strong>${badge.badgeName} </strong></th>
-					</c:forEach>
-
-                    </tr>
-                    <tbody>
-                        <tr>
-                            <td>
-                               Points earned per Rupee Spent
-
-                            </td>
-                            <td>
- 								${badge.loyaltyMultiplier} 
-                            </td>
-                            <td>
-                                    ${badge.loyaltyMultiplier}
-                            </td>
-                            <td>
-                            ${badge.loyaltyMultiplier}
-                            </td>
- 									
- 	                        <td>
-    						${badge.loyaltyMultiplier}
-                            </td>
-                        </tr>
-                    </tbody>
-                    </c:forEach>
-                 </table>--%>
-
 </stripes:layout-component>
 </stripes:layout-render>
 

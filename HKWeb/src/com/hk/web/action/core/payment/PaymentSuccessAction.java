@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.Keys;
+import com.hk.constants.discount.OfferConstants;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.coupon.Coupon;
@@ -68,6 +69,7 @@ public class PaymentSuccessAction extends BaseAction {
     OrderEventPublisher orderEventPublisher;
 
     public Resolution pre() {
+    	boolean creditLoyaltyPoints = true;
         this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
         if (this.payment != null && EnumPaymentStatus.getPaymentSuccessPageStatusIds().contains(this.payment.getPaymentStatus().getId())) {
 
@@ -86,7 +88,10 @@ public class PaymentSuccessAction extends BaseAction {
             if (offerInstance != null) {
                 Coupon coupon = offerInstance.getCoupon();
                 if (coupon != null) {
-                    this.couponCode = coupon.getCode() + "@" + offerInstance.getId();
+                	if(coupon.getCode().equalsIgnoreCase(OfferConstants.HK_EMPLOYEE_CODE)) {
+                		creditLoyaltyPoints=false;
+                	}
+                	this.couponCode = coupon.getCode() + "@" + offerInstance.getId();
                 }
                 this.couponAmount = this.pricingDto.getTotalPromoDiscount().intValue();
             }
@@ -154,7 +159,9 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-	    this.loyaltyProgramService.creditKarmaPoints(this.order);
+        if (creditLoyaltyPoints) {
+        	this.loyaltyProgramService.creditKarmaPoints(this.order);
+        }
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }

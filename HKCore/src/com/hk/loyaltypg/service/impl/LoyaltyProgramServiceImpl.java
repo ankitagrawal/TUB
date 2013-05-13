@@ -141,10 +141,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 		
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser());
-		double loyaltyMultiplier = badgeInfo.getBadge().getLoyaltyMultiplier();
+		double loyaltyPercentage = badgeInfo.getBadge().getLoyaltyPercentage();
 		Double amount = order.getPayment().getAmount();
 
-		double karmaPoints = (amount * loyaltyMultiplier);
+		double karmaPoints = (amount * loyaltyPercentage)/100;
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
 		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
@@ -275,7 +275,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double calculateLoyaltyPoints(User user) {
-		Double credits = this.calculatePoints(user.getId(), TransactionType.CREDIT, KarmaPointStatus.APPROVED);
+		Double credits = this.calculatePoints(user.getId(), TransactionType.CREDIT, KarmaPointStatus.APPROVED, KarmaPointStatus.BONUS);
 		Double debits = this.calculatePoints(user.getId(), TransactionType.DEBIT);
 		if (credits == null) {
 			return 0d;
@@ -355,7 +355,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				CriteriaSpecification.INNER_JOIN);
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".deleted", Boolean.FALSE));
-		criteria.createAlias(LoyaltyProductAlias.PRODUCT.alias + ".categories", LoyaltyProductAlias.CATEGORY.alias,
+		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".hidden", Boolean.FALSE));
+		criteria.createAlias(LoyaltyProductAlias.PRODUCT.alias + ".primaryCategory", LoyaltyProductAlias.CATEGORY.alias,
 				CriteriaSpecification.INNER_JOIN);
 		if (search != null) {
 			if (search.getCategoryName() != null) {

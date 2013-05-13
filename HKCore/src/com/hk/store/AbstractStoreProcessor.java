@@ -22,7 +22,9 @@ import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.manager.EmailManager;
 import com.hk.manager.OrderManager;
+import com.hk.manager.SMSManager;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
@@ -30,6 +32,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
+import com.hk.pact.service.payment.PaymentService;
 import com.hk.pact.service.store.StoreService;
 
 public abstract class AbstractStoreProcessor implements StoreProcessor {
@@ -52,6 +55,14 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	protected CartLineItemService cartLineItemService;
 	@Autowired
 	protected OrderManager orderManager;
+
+	@Autowired
+	protected PaymentService paymentService;
+	@Autowired	 
+	protected EmailManager     emailManager;
+	
+	@Autowired
+	SMSManager smsManager;
 
 	@Override
 	public Long createOrder(Long userId) {
@@ -154,6 +165,10 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		order.setPayment(payment);
 		order.setGatewayOrderId(payment.getGatewayOrderId());
 		this.orderService.save(order);
+        this.paymentService.sendPaymentEmailForOrder(order);
+        this.orderManager.sendReferralProgramEmail(order.getUser());
+  //      this.getSmsManager().sendOrderPlacedSMS(order);
+
 		return payment;
 	}
 

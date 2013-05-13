@@ -66,14 +66,14 @@ pageContext.setAttribute("isSecure", isSecure);
 			<div class="sorting">SORT BY CATEGORY</div>
               <div class="brandsContainer " style ="height: 245px;">
                <div class="priceRange">
-			   <span  id= "categoryNameSpan">
+			   <span  id= "categoryNameSpan" class="font-caps">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   Clear All </s:link></span>
 			     </div>
 			 
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
-			   <span  id= "categoryNameSpan">
+			   <span  id= "categoryNameSpan" class="font-caps">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                   ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} ) </s:link></span>
@@ -99,12 +99,12 @@ pageContext.setAttribute("isSecure", isSecure);
           $('#errorToolTip').attr('style', 'display: none;');
         });
 
-        $('form').submit(function(event) {
+        $('.cartFormm').submit(function(event) {
           event.preventDefault();
           var form = $(this);
           $.ajax({
             type: 'POST',
-            url: 'core/loyaltypg/Cart.action?addToCart',
+            url: '${pageContext.request.contextPath}/core/loyaltypg/Cart.action?addToCart',
             data: form.serialize(),
             success: function(resp) {
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
@@ -115,11 +115,18 @@ pageContext.setAttribute("isSecure", isSecure);
                 $('#successToolTip').attr('style', '');
                 $('#errorToolTip').attr('style', 'display: none;');
               } else {
-                $('#successToolTip').attr('style', 'display: none;');
-                document.getElementById("errorMsg").innerHTML = resp.message;
+			  $('#successToolTip').attr('style', 'display: none;');
+                $("#errorMsg").innerHTML = resp.message;
                 $('#errorToolTip').attr('style', '');
               }
-            }
+            },
+            error: function (resp) {
+            	$('#successToolTip').attr('style', 'display: none;');
+                $("#errorMsg").innerHTML = resp.message;
+                $("#errorMsg").attr('style', '');
+                $('#errorToolTip').attr('style', '');
+              }
+            
           });
         });
       });
@@ -128,8 +135,8 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span12">
         <div class="alert alert-success">
           <button id="successToolTipBtn" type="button" class="close">×</button>
-          <strong>Product added to Cart!&nbsp;&nbsp;&nbsp;</strong><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View
-          your Cart</a>
+          Product added to Cart!&nbsp;&nbsp;&nbsp;<strong><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View
+          your Cart</a></strong>
         </div>
       </div>
     </div>
@@ -137,7 +144,7 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span12">
         <div class="alert alert-error">
           <button id="errorToolTipBtn" type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">x</span>
+          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">aaa</span>
         </div>
       </div>
     </div>
@@ -178,7 +185,7 @@ pageContext.setAttribute("isSecure", isSecure);
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${lp.points} PTS</div>
-                <form method="post" action="/core/loyaltypg/Cart.action" id="${variant.id}-cartForm">
+                <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">
 				<input type="submit" class="addToCompare font-caps embedMargin5" name="addToCart" value="REDEEM">

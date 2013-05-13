@@ -1,10 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
+
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" var="userKarmaHA"/>
 <s:layout-render name="/pages/loyalty/layout.jsp">
  
   <s:layout-component name="contents">
+<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
+<link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
   <div class="mainContainer">
       <div class="container_16 clearfix">
         <div class="mainContent">
@@ -105,9 +108,12 @@ $(document).ready(function(){
     var rewardPoints = ${userKarmaHA.pointsConverted};
     
     if (rewardPoints > 0) {
-    	alert("Congratulations you have been awarded " + rewardPoints + " Reward points.");
+    	bootbox.alert("Congratulations you have been awarded " + rewardPoints + " Reward points.", function() {
+    		 // do nothing
+    		});
+    	
     } else if (rewardPoints === -1) {
-    	alert("Unfortunaetly you don't have sufficient loyaty points to be converted into reward points at this point of time.");
+    	bootbox.alert("Sorry, you don’t have enough loyalty points for conversion. Why don’t you shop more by clicking here.");
     }
     
     
@@ -124,10 +130,12 @@ $(document).ready(function(){
     
     // Reward points conversion
   	$("#rewardLink").click(function(){
+ 
   		var convert = false;
-  		if (confirm("If you click OK then all your loyalty points will be converted to maximum possible reward points. Do you want to covert your loyalty points ?")) {
-  			convert = true;
-  		}
+  		bootbox.confirm("If you click OK then all your loyalty points will be converted to maximum possible reward points. Do you want to convert all your loyalty points ?",
+  				function(result){
+  			convert = result;
+  		});
   		return convert;
   	});  
 

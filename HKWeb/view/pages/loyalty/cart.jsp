@@ -40,8 +40,30 @@
 			    	  lineItemQty.val(0);
 			    	  $(this).parent().parent().hide();
 			          lineItemQty.trigger('blur');
-			    	  return false;
+			          var rowCount = $("#itemRows").val();
+			         	if (rowCount ==="1") {
+			        	  $("#deleteForm").submit();
+			        	} else {
+			        		$("#itemRows").val(rowCount-1);
+			        	  }
+			         return false;
 			        });	
+				
+				$('.plus').click(function(){
+					var lineItemQty =  $(this).parent().find('.lineItemQty');
+					var currentQty = parseInt(lineItemQty.val());
+					lineItemQty.val(currentQty + 1); 
+					lineItemQty.trigger('blur');
+				});
+				
+				$('.minus').click(function(){
+					var lineItemQty =  $(this).parent().find('.lineItemQty');
+					var currentQty = parseInt(lineItemQty.val());
+					if(currentQty > 1) {
+						lineItemQty.val(currentQty-1); 
+						lineItemQty.trigger('blur');
+					}
+				});
 			});
 			
 			 
@@ -72,6 +94,10 @@ pageContext.setAttribute("isSecure", isSecure);
 						</tr>
 					</thead>
 					<tbody>
+						<s:form name="deleteForm" beanclass="com.hk.web.action.core.loyaltypg.CartAction" event="emptyCart">
+							<input type=text id="itemRows" value="${fn: length(ca.loyaltyProductList)}"  style="display:none;"/>
+						</s:form>
+						
 						<c:forEach items="${ca.loyaltyProductList}" var="lp">
 							<tr>
 								<td width="50%">
@@ -96,10 +122,13 @@ pageContext.setAttribute("isSecure", isSecure);
 
 
 								</td>
-								<td width="30%">
-
+								<td width="30%" style="text-align:center;">
+									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
+									&nbsp;&nbsp;
 									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}" maxlength="3"
-								           style="width:30px;height:24px;"/>
+								           style="width:30px;height:24px;" disabled="disabled"/>
+								     &nbsp;&nbsp;
+								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
 								        <p class="removeLink">(Remove)</p>
 									<br/>
 									<span class="error-message" style="display:none">

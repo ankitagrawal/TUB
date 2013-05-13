@@ -38,7 +38,7 @@ pageContext.setAttribute("isSecure", isSecure);
           </div>
 
           <div class="queryText">
-                <p>For any query please call us: 0124-4502950 or you can drop us an email at info@healthkart.com with your Order ID.</p>
+                <p>For any query please call us: 0124-4616444 or you can drop us an email at info@healthkart.com with your Order ID.</p>
           </div>
 
 	  <div class="step2 success_order_summary" >

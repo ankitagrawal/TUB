@@ -29,8 +29,8 @@ public class Badge implements Serializable, Comparable<Badge>{
 	@Column(name = "badge_name")
 	private String badgeName;
 	
-	@Column(name = "loyalty_multiplier")
-	private double loyaltyMultiplier;
+	@Column(name = "loyalty_percentage")
+	private double loyaltyPercentage;
 	
 	@Column(name = "icon_rel_url")
 	private String iconRelUrl;
@@ -52,7 +52,7 @@ public class Badge implements Serializable, Comparable<Badge>{
 	}
 
 	public double getMaxScore() {
-		return this.maxScore;
+		return (long)this.maxScore;
 	}
 
 	public void setMaxScore(double maxScore) {
@@ -67,12 +67,18 @@ public class Badge implements Serializable, Comparable<Badge>{
 		this.badgeName = badgeName;
 	}
 
-	public double getLoyaltyMultiplier() {
-		return this.loyaltyMultiplier;
+	/**
+	 * @return the loyaltyPercentage
+	 */
+	public double getLoyaltyPercentage() {
+		return this.loyaltyPercentage;
 	}
 
-	public void setLoyaltyMultiplier(double loyaltyMultiplier) {
-		this.loyaltyMultiplier = loyaltyMultiplier;
+	/**
+	 * @param loyaltyPercentage the loyaltyPercentage to set
+	 */
+	public void setLoyaltyPercentage(double loyaltyPercentage) {
+		this.loyaltyPercentage = loyaltyPercentage;
 	}
 
 	public String getIconRelUrl() {

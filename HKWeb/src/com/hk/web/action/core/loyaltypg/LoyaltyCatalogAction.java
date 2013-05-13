@@ -33,7 +33,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	private int defaultPerPage = 9;
 	private Page productPage;
 	private List<LoyaltyProduct> productList;
-	private Collection<Badge> badgeList;
+	private List<Badge> badgeList;
 	private List<CategoryDto> categories;
 	private String categoryName;
 	private double minPoints;
@@ -66,7 +66,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	}
 
 	public Resolution aboutLoyaltyProgram() {
-		this.badgeList = this.loyaltyProgramService.getAllBadges();
+		this.badgeList = new ArrayList<Badge>(this.loyaltyProgramService.getAllBadges());
 		return new ForwardResolution("/pages/loyalty/aboutLoyaltyProgram.jsp");
 	}
 	

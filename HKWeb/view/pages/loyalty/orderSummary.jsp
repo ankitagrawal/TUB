@@ -76,14 +76,13 @@ pageContext.setAttribute("isSecure", isSecure);
 		</div>
 <script type="text/javascript" >
 $(document).ready(function() {
-	alert("Page ready.");
-    $("#confirmBtn").click(function () {
+	$("#confirmBtn").click(function () {
     	  if (confirm('Confirm your Order ?')) {
 			return true;
     	  } else {
     		  return false;
     		  }
-    	  }
+    	  });
     });
 
 </script>

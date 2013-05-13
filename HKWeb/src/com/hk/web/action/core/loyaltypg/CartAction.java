@@ -1,5 +1,20 @@
 package com.hk.web.action.core.loyaltypg;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.JsonResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
@@ -9,11 +24,6 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.InvalidOrderException;
 import com.hk.store.ProductVariantInfo;
 import com.hk.web.HealthkartResponse;
-import net.sourceforge.stripes.action.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_LOYALTY_USER}, authActionBean=JoinLoyaltyProgramAction.class)
 public class CartAction extends AbstractLoyaltyAction {
@@ -32,49 +42,54 @@ public class CartAction extends AbstractLoyaltyAction {
 
 		Map<String, Object> responseMap = new HashMap<String, Object>();
 		HealthkartResponse healthkartResponse = null;
-		Long orderId = getProcessor().createOrder(getPrincipal().getId());
+		Long orderId = this.getProcessor().createOrder(this.getPrincipal().getId());
 		
 		ProductVariantInfo info = new ProductVariantInfo();
-		info.setProductVariantId(productVariantId);
-		info.setQuantity(qty);
+		info.setProductVariantId(this.productVariantId);
+		info.setQuantity(this.qty);
 		List<ProductVariantInfo> infos = new ArrayList<ProductVariantInfo>();
 		infos.add(info);
 		try {
-			getProcessor().addToCart(orderId, infos);
+			this.getProcessor().addToCart(orderId, infos);
 		} catch (InvalidOrderException e) {
 			healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, e.getMessage(), new HashMap<Object, Object>());
-			noCache();
+			this.noCache();
 			return new JsonResolution(healthkartResponse);
 		}
-		init();
-		responseMap.put("totalShoppingPoints", totalShoppingPoints);
+		this.init();
+		responseMap.put("totalShoppingPoints", this.totalShoppingPoints);
 		healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "", responseMap);
-        noCache();
+        this.noCache();
 		return new JsonResolution(healthkartResponse);
 	}
 	
 	@DefaultHandler
-	public Resolution viewKart() {
+	public Resolution viewCart() {
 		return new ForwardResolution("/pages/loyalty/cart.jsp");
 	}
 	
+	public Resolution emptyCart() {
+		this.loyaltyProductList = null;
+		return new ForwardResolution("/pages/loyalty/cart.jsp");
+	}
+
 	private void init() {
-		Order order = getProcessor().getCart(getPrincipal().getId());
+		Order order = this.getProcessor().getCart(this.getPrincipal().getId());
 		if(order != null) {
-			loyaltyProductList = new ArrayList<LoyaltyProduct>();
+			this.loyaltyProductList = new ArrayList<LoyaltyProduct>();
 			Set<CartLineItem> cartLineItems = order.getCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
-				LoyaltyProduct loyaltyProduct  = loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
+				LoyaltyProduct loyaltyProduct  = this.loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
 				loyaltyProduct.setQty(cartLineItem.getQty());
-				loyaltyProductList.add(loyaltyProduct);
+				this.loyaltyProductList.add(loyaltyProduct);
 			}
-			totalShoppingPoints = loyaltyProgramService.calculateLoyaltyPoints(order);
+			this.totalShoppingPoints = this.loyaltyProgramService.calculateLoyaltyPoints(order);
 		}
 	}
 
 	@JsonHandler
 	public Resolution updateQuantity() {
-		return addToCart();
+		return this.addToCart();
 	}
 	
     public Resolution checkout() {
@@ -82,7 +97,7 @@ public class CartAction extends AbstractLoyaltyAction {
     }
 
 	public String getProductVariantId() {
-		return productVariantId;
+		return this.productVariantId;
 	}
 
 	public void setProductVariantId(String productVariantId) {
@@ -90,12 +105,12 @@ public class CartAction extends AbstractLoyaltyAction {
 	}
 
 	public List<LoyaltyProduct> getLoyaltyProductList() {
-		init();
-		return loyaltyProductList;
+		this.init();
+		return this.loyaltyProductList;
 	}
 	
 	public long getQty() {
-		return qty;
+		return this.qty;
 	}
 
 	public void setQty(long qty) {
@@ -103,7 +118,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	}
 	
 	public Double getTotalShoppingPoints() {
-		return totalShoppingPoints;
+		return this.totalShoppingPoints;
 	}
 	
 	public void setTotalShoppingPoints(Double totalShoppingPoints) {
@@ -111,7 +126,7 @@ public class CartAction extends AbstractLoyaltyAction {
 	}
 
 	public CartLineItem getCartLineItem() {
-		return cartLineItem;
+		return this.cartLineItem;
 	}
 
 	public void setCartLineItem(CartLineItem cartLineItem) {
