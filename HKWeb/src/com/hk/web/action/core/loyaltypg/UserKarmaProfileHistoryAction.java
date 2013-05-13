@@ -69,7 +69,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			if (upgradeAmount != 0) {
 				this.upgradeString = "To move up a level, you need to spend :  Rs. " + Math.ceil(upgradeAmount) + " before " + dateFormat.format(cal.getTime());
 				} else {
-					this.upgradeString = "Congratulations! You are at highest level till at least " +  dateFormat.format(cal.getTime());
+					this.upgradeString = "Hi! You are our Mogul. Make most of its use by shopping more and retaining this privileged position.";
 				}
 			
 		}

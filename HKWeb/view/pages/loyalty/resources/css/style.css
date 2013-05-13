@@ -1373,3 +1373,7 @@ ul {
 	cursor: pointer;
 	color: green !important;
 }
+.successMsg{
+	color: green !important;
+	font-size: 12px !important;
+}

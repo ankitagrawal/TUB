@@ -20,9 +20,10 @@
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
 		  
           <div class="topText">
-            <span><s:link beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction" 
-            	event="convertPoints" class="blue"  id="rewardLink">
-            Click here</s:link></span> to convert your points to Reward points!
+            <s:form beanclass="com.hk.web.action.core.loyaltypg.UserKarmaProfileHistoryAction"  event="convertPoints" id="conversionForm">
+            <s:hidden name="convertPoints" value="convertPoints"></s:hidden>
+            <span class="blue makeCursor" id="rewardLink">Click here</span> to convert your points to Reward points!</s:form>
+            
           </div>
 		 
 		</div>
@@ -108,12 +109,10 @@ $(document).ready(function(){
     var rewardPoints = ${userKarmaHA.pointsConverted};
     
     if (rewardPoints > 0) {
-    	bootbox.alert("Congratulations you have been awarded " + rewardPoints + " Reward points.", function() {
-    		 // do nothing
-    		});
-    	
+    	bootbox.alert("Hi! " + rewardPoints + " Loyalty Points have been successfully converted to " + rewardPoints + 
+				" Reward Points. Please note these points are valid for 6 months only.");
     } else if (rewardPoints === -1) {
-    	bootbox.alert("Sorry, you don’t have enough loyalty points for conversion. Why don’t you shop more by clicking here.");
+    	bootbox.alert("Sorry, you don’t have enough loyalty points for conversion. Why don’t you shop more and earn some points.");
     }
     
     
@@ -129,14 +128,13 @@ $(document).ready(function(){
     });
     
     // Reward points conversion
-  	$("#rewardLink").click(function(){
- 
-  		var convert = false;
-  		bootbox.confirm("If you click OK then all your loyalty points will be converted to maximum possible reward points. Do you want to convert all your loyalty points ?",
-  				function(result){
-  			convert = result;
+  	$("#rewardLink").click(function(e){
+  		bootbox.confirm("Please note that by clicking OK all your loyalty points will be converted to reward points." +
+  				" They will be valid for next six months only. Do you wish to continue?", function(result){
+  				if (result) {
+  					$("#conversionForm").submit();
+  			  	}
   		});
-  		return convert;
   	});  
 
   });
