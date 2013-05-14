@@ -2,6 +2,7 @@ package com.hk.loyaltypg.service.impl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -93,12 +94,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		DetachedCriteria distinctCriteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		int fromIndex = searchCriteria.getStartRow();
 		int toIndex = searchCriteria.getStartRow() + searchCriteria.getMaxRows();
+		if (ids.size()==0) {
+			return new ArrayList<LoyaltyProduct>();
+		}
 		toIndex = ids.size() < toIndex ? ids.size() : toIndex;
 		if (searchCriteria.getMaxRows() == 0) {
 			distinctCriteria.add(Restrictions.in("id", ids));
 		} else {
 			distinctCriteria.add(Restrictions.in("id", ids.subList(fromIndex, toIndex)));
 		}
+		
 		return this.loyaltyProductDao.findByCriteria(distinctCriteria);
 	}
 

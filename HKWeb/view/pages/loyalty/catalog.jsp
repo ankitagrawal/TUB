@@ -91,11 +91,13 @@ pageContext.setAttribute("isSecure", isSecure);
     <script type="text/javascript">
       $(document).ready(function() {
     	  $(".jspDrag").css("height","30px");
-        $('#successToolTipBtn').click(function () {
+        $('#successToolTipBtn').click(function (resp) {
+        	
           $('#successToolTip').attr('style', 'display: none;');
         });
 
-        $('#errorToolTipBtn').click(function () {
+        $('#errorToolTipBtn1').click(function (resp) {
+        	
           $('#errorToolTip').attr('style', 'display: none;');
         });
 
@@ -112,22 +114,24 @@ pageContext.setAttribute("isSecure", isSecure);
                 $("#" + form.context.id + ' input').attr('value', 'Added to Cart');
                 $("#" + form.context.id + ' input').disabled = true;
 
-                $('#successToolTip').attr('style', '');
+                $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
-                $("#errorMsg").html = resp.message;
-                $('#errorToolTip').attr('style', '');
+			    $("#errorMsg").attr('style', 'display:block;');
+	            $("#errorMsg").text(resp.message);
+                $('#errorToolTip').attr('style', 'display:block;');
               }
             },
             error: function (resp) {
             	$('#successToolTip').attr('style', 'display: none;');
-                $("#errorMsg").html = resp.message;
-                $("#errorMsg").attr('style', '');
-                $('#errorToolTip').attr('style', '');
+                $("#errorMsg").text(resp.message);
+                $("#errorMsg").attr('style', 'display:block;');
+                $('#errorToolTip').attr('style', 'display:block;');
               }
             
           });
+		  $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
         });
       });
     </script>
@@ -143,7 +147,7 @@ pageContext.setAttribute("isSecure", isSecure);
     <div id="errorToolTip" class="row" style="display: none;">
       <div class="span12">
         <div class="alert alert-error">
-          <button id="errorToolTipBtn" type="button" class="close" data-dismiss="alert">×</button>
+          <button id="errorToolTipBtn1" type="button" class="close" data-dismiss="alert">×</button>
           <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">x</span>
         </div>
       </div>

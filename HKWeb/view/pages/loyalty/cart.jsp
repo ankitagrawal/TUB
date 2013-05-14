@@ -29,25 +29,26 @@
 								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
 							}
 							else{
-								$('.total-shopping-points').html(${hk:roundNumberForDisplay(resp.data.totalShoppingPoints)} + " Points");
+								var rowCount = $("#itemRows").val();
+								if (rowCount ==="0") {
+									window.location.reload();
+								} else {									
+									$('.total-shopping-points').html(resp.data.totalShoppingPoints + " Points");
+								}
+								
 							}
 						}
 					});
 				});
 				
-				$('.removeLink').click(function() {
-			    	  var lineItemQty =  $(this).parent().find('.lineItemQty');
-			    	  lineItemQty.val(0);
-			    	  $(this).parent().parent().hide();
-			          var rowCount = $("#itemRows").val();
-			         	if (rowCount ==="1") {
-			        	  $("#deleteForm").submit();
-			        	} else {
-			        		$("#itemRows").val(rowCount-1);
-			        		lineItemQty.trigger('blur');
-					      }
-			         return false;
-			        });	
+				$('.removeLink').click(function(){
+					var lineItemQty =  $(this).parent().find('.lineItemQty');
+					var currentQty = parseInt(lineItemQty.val());
+					lineItemQty.val(0); 
+					lineItemQty.trigger('blur');
+					var rowCount = $("#itemRows").val();
+					$("#itemRows").val(rowCount-1);
+				});
 				
 				$('.plus').click(function(){
 					var lineItemQty =  $(this).parent().find('.lineItemQty');
@@ -96,8 +97,8 @@ pageContext.setAttribute("isSecure", isSecure);
 					<tbody>
 						<s:form name="deleteForm" beanclass="com.hk.web.action.core.loyaltypg.CartAction" event="emptyCart">
 						<s:hidden name="emptyCart" value="emptyCart"/>
-							<input type=text id="itemRows" value="${fn: length(ca.loyaltyProductList)}"  style="display:none;"/>
 						</s:form>
+							<input type=text id="itemRows" value="${fn: length(ca.loyaltyProductList)}"  style="display:none;"/>
 						
 						<c:forEach items="${ca.loyaltyProductList}" var="lp">
 							<tr>

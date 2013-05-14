@@ -870,10 +870,10 @@ public class Functions {
 
 	public static String roundNumberForDisplay(double number) {
 		
-		if (number%10==0) {
-			return "" + Math.round(number);
+		if ((number*10)%10==0) {
+			return "" + (Math.round(number));
 		} else {
-			return "" + Math.round(number*10)/10;
+			return "" + (Math.round(number*10)/10);
 		}
 	}
 }
