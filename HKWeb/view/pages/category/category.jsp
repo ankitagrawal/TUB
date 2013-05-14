@@ -164,7 +164,7 @@
                      class="small_banner"/>
             </a>
              <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
-            <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab"
+            <img src="${pageContext.request.contextPath}/images/banners/Muscleblaze_small.jpg" alt="Brand Of the Week - MuscleBlaze"
                  class="small_banner"/>
             </a>
         </c:when>
