@@ -50,6 +50,34 @@ public class TaxUtil {
 		return new TaxComponent(surcharge, tax, payable, taxRate);
 	}
 
+  public static TaxComponent getStateTaxForPV(String state, Sku sku, Double taxable) {
+		Double tax = 0.0D, surcharge = 0.0D, payable = 0.0D, taxRate = 0.0D;
+	    taxRate = sku.getTax().getValue();
+		String warehouseState = sku.getWarehouse().getState();
+		if (state != null
+				&& sku != null && sku.getTax() != null) {
+
+			if (state.equalsIgnoreCase(warehouseState)) {
+				tax = taxRate * taxable;
+				/**
+				 * Surchage calculated only for Haryana
+				 */
+				if (warehouseState.equalsIgnoreCase(StateList.HARYANA)) {
+					Double surchargeValue = getSurchargeValue(warehouseState, state);
+					surcharge = tax * surchargeValue;
+				}
+			} else {
+				if (taxRate != 0.0) {
+					taxRate = TaxConstants.CST;
+					tax = taxRate * taxable;
+					//surcharge = tax * StateList.SURCHARGE;
+				}
+			}
+		}
+		payable = taxable + tax + surcharge;
+		return new TaxComponent(surcharge, tax, payable, taxRate);
+	}
+
     public static Double getSurchargeValue(String warehouseState, String supplierState){
       Double surchargeValue = 0.00;
       if(warehouseState.equalsIgnoreCase(supplierState)){

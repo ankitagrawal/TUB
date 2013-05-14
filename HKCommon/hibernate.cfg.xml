@@ -126,7 +126,7 @@
         <mapping class="com.hk.domain.inventory.po.PurchaseInvoiceLineItem"/>
         <mapping class="com.hk.domain.inventory.po.PurchaseInvoiceStatus"/>
         <mapping class="com.hk.domain.core.Surcharge"/>
-        <mapping class="com.hk.domain.user.B2bUserDetails"/>
+        <mapping class="com.hk.domain.user.B2bUser"/>
         <mapping class="com.hk.domain.inventory.rv.ReconciliationType"/>
         <mapping class="com.hk.domain.marketing.MarketingExpense"/>
         <mapping class="com.hk.domain.marketing.AdNetworks"/>
@@ -217,5 +217,8 @@
 	    <mapping class="com.hk.domain.review.UserReviewMail"/>
         <mapping class="com.hk.domain.cycleCount.CycleCount"/>
         <mapping class="com.hk.domain.cycleCount.CycleCountItem"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNote"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNoteStatus"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNoteLineItem"/>
     </session-factory>
 </hibernate-configuration>

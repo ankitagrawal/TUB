@@ -16,7 +16,7 @@ import com.hk.constants.core.EnumRole;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.affiliate.Affiliate;
 import com.hk.domain.user.Address;
-import com.hk.domain.user.B2bUserDetails;
+import com.hk.domain.user.B2bUser;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.UserManager;
@@ -25,7 +25,6 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.service.RoleService;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class MyAccountAction extends BaseAction {
   User user;
   Affiliate affiliate;
   Address affiliateDefaultAddress;
-  B2bUserDetails b2bUserDetails;
+  B2bUser b2bUser;
   List<Address> addresses;
 
   String oldPassword;
@@ -56,9 +55,9 @@ public class MyAccountAction extends BaseAction {
   UserManager userManager;
   @Autowired
   RoleDao roleDao;
-  
+
   /*@Autowired
-  private RoleService roleService;*/
+private RoleService roleService;*/
 
   @DefaultHandler
   public Resolution pre() {
@@ -69,7 +68,8 @@ public class MyAccountAction extends BaseAction {
       if (affiliate != null && affiliate.getMainAddressId() != null) {
         affiliateDefaultAddress = addressDao.get(Address.class,affiliate.getMainAddressId());
       }
-      b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(user);
+      if (user instanceof B2bUser)
+        b2bUser = (B2bUser) user;
     }
 
     return new ForwardResolution("/pages/userProfile.jsp");
@@ -126,7 +126,7 @@ public class MyAccountAction extends BaseAction {
     user = userDao.save(user);
     Role b2bRole = RoleCache.getInstance().getRoleByName(EnumRole.B2B_USER).getRole();
     if (user.getRoles().contains(b2bRole)) {
-      b2bUserDetailsDao.save(b2bUserDetails);
+      b2bUserDetailsDao.save(b2bUser);
     }
 
     addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
@@ -152,12 +152,12 @@ public class MyAccountAction extends BaseAction {
     return new ForwardResolution(MyAccountAction.class);
   }
 
-  public B2bUserDetails getB2bUserDetails() {
-    return b2bUserDetails;
+  public B2bUser getB2bUser() {
+    return b2bUser;
   }
 
-  public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
-    this.b2bUserDetails = b2bUserDetails;
+  public void setB2bUser(B2bUser b2bUser) {
+    this.b2bUser = b2bUser;
   }
 
   public Affiliate getAffiliate() {

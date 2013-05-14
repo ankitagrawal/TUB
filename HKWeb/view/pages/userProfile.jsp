@@ -127,14 +127,13 @@
       <div class="clear"></div>
 
       <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
-        <s:hidden name="b2bUserDetails" value="${maa.b2bUserDetails.id}"/>
-        <s:hidden name="b2bUserDetails.user" value="${maa.user}"/>
+        <s:hidden name="b2bUser" value="${maa.b2bUser.id}"/>
         <div class="row">
           <label class="rowLabel">TIN#</label>
           <label class="rowText">
             <c:choose>
-              <c:when test="${maa.b2bUserDetails.tin != null}">
-                ${maa.b2bUserDetails.tin}
+              <c:when test="${maa.b2bUser.tin != null}">
+                ${maa.b2bUser.tin}
               </c:when>
               <c:otherwise>
                 --
@@ -149,8 +148,8 @@
           <label class="rowLabel">DL Number</label>
           <label class="rowText">
             <c:choose>
-              <c:when test="${maa.b2bUserDetails.dlNumber != null}">
-                ${maa.b2bUserDetails.dlNumber}
+              <c:when test="${maa.b2bUser.dlNumber != null}">
+                ${maa.b2bUser.dlNumber}
               </c:when>
               <c:otherwise>
                 --

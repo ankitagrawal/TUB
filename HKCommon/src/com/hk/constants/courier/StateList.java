@@ -1,9 +1,6 @@
 package com.hk.constants.courier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -169,7 +166,12 @@ public class StateList {
     }
   };
 
-
-
-
+  public static String getStateByTin(String tin) {
+    String state = null;
+    if (tin != null && tin.length() > 2) {
+      state = stateMapTIN.get(tin.substring(0, 2));
+    }
+    return state;
+  }
+  
 }
