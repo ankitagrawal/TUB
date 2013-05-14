@@ -35,10 +35,8 @@ public class PaymentModeAction extends BaseAction {
 
     List<Issuer> bankIssuers;
     List<Issuer> cardIssuers;
-    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
-    private Integer sizeOfCLI;
     Map<String, String> codFailureMap = new HashMap<String, String>();
-    private PricingDto         pricingDto;
+    private PricingDto pricingDto;
 
     @Autowired
     GatewayIssuerMappingService gatewayIssuerMappingService;
@@ -86,28 +84,12 @@ public class PaymentModeAction extends BaseAction {
         this.cardIssuers = cardIssuers;
     }
 
-    public Set<CartLineItem> getTrimCartLineItems() {
-        return trimCartLineItems;
-    }
-
-    public void setTrimCartLineItems(Set<CartLineItem> trimCartLineItems) {
-        this.trimCartLineItems = trimCartLineItems;
-    }
-
     public Order getOrder() {
         return order;
     }
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Integer getSizeOfCLI() {
-        return sizeOfCLI;
-    }
-
-    public void setSizeOfCLI(Integer sizeOfCLI) {
-        this.sizeOfCLI = sizeOfCLI;
     }
 
 

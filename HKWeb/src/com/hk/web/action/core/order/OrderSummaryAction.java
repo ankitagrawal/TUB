@@ -73,9 +73,7 @@ public class OrderSummaryAction extends BaseAction {
     private List<Courier> availableCourierList;
     private boolean groundShippingAllowed;
     private boolean groundShippedItemPresent;
-    private boolean codAllowedOnGroundShipping;
-    private Double cashbackOnGroundshipped;
-    //    Map<String, String>        codFailureMap = new HashMap<String, String>();
+    private boolean codAllowedOnGroundShipping;       
     private Set<CartLineItem> trimCartLineItems;// = new HashSet<CartLineItem>();
     private Integer sizeOfCLI;
 
@@ -215,14 +213,6 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setGroundShippedItemPresent(boolean groundShippedItemPresent) {
         this.groundShippedItemPresent = groundShippedItemPresent;
-    }
-
-    public Double getCashbackOnGroundshipped() {
-        return cashbackOnGroundshipped;
-    }
-
-    public void setCashbackOnGroundshipped(Double cashbackOnGroundshipped) {
-        this.cashbackOnGroundshipped = cashbackOnGroundshipped;
     }
 
     public boolean isGroundShippingAllowed() {
