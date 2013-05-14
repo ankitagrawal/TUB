@@ -161,7 +161,7 @@
                 <td>Credit to Customer</td>
                 <td><s:checkbox name="creditNote.userCredited"/></td>
                 <td>Status</td>
-                <td><s:select name="creditNote.creditNoteStatus" value="${pa.creditNote.creditNoteStatus.id}">
+                <td><s:select name="creditNote.creditNoteStatus">
                     <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="creditNoteStatusList"
                                                value="id" label="name"/>
                 </s:select></td>
