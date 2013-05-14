@@ -19,7 +19,7 @@ WHERE pigrn.purchase_invoice_id = pi.id
 AND pigrn.goods_received_note_id = grn.id
 GROUP by pi.id;
 
-UPDATE transaction_header th,pi_grn_date_temp grn
+UPDATE transaction_header th,healthkart_stag.pi_grn_date_temp grn
 SET th.goods_receiving_date = grn.grn_date
 WHERE grn.pi_id = th.hk_ref_no
 AND th.vch_type=2;
