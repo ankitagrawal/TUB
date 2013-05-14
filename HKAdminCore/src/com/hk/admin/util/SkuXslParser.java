@@ -121,7 +121,9 @@ public class SkuXslParser {
                     variant_warehouse_id = variantId + "-" + String.valueOf(warehouseId);
 
                 } catch (NullPointerException ne) {
+                    logger.error("Error while uploading sku excel", ne);
                     throw new HealthKartCatalogUploadException("Blank Column in excel.", rowCount);
+                    
 
                 }
 
