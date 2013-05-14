@@ -1,9 +1,7 @@
 package com.hk.impl.dao.user;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;

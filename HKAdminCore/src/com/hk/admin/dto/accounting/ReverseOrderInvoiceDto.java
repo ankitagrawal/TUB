@@ -1,6 +1,5 @@
 package com.hk.admin.dto.accounting;
 
-import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.reverseOrder.ReverseOrder;
