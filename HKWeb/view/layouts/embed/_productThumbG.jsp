@@ -7,7 +7,7 @@
 <%@ page import="com.hk.pact.service.catalog.ProductService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
 <s:layout-definition>
   <%
     Product product_productThumb = (Product) pageContext.getAttribute("product");
@@ -24,6 +24,9 @@
       Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
       pageContext.setAttribute("combo", combo);
     }
+
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
   %>
 	<style type="text/css">
 		.opaque {
@@ -41,18 +44,8 @@
 			<div class='grid_4 product'>
 				<div class='img128 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;margin-top:10px;">
 					<s:link href="${product.productURL}?productReferrerId=${productReferrerId}" class="prod_link" title="${product.name}">
-						<c:choose>
-							<c:when test="${product.mainImageId != null}">
-								<hk:productImage
-								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.SmallSize%>"
-								                 alt="${product.name}"/>
-							</c:when>
-							<c:otherwise>
-								<img
-								     src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
-								     alt="${product.name}"/>
-							</c:otherwise>
-						</c:choose>
+						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				     title="${product.name}">
 					</s:link>
 				</div>
 				<div>

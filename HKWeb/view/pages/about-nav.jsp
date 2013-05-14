@@ -1,5 +1,5 @@
 <div class="grid_6 bk_blue alpha">
-  <ul style="list-style: none; line-height: 25px;">
+  <ul class="tncNavUL">
 
     <li>
       <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp" title="About Us">

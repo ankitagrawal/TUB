@@ -177,11 +177,14 @@ public class CreateOrSelectProductAction extends BaseAction {
         String[] temp;
         temp = options.split("\\|");
         for (String optStr : temp) {
-            ProductOption productOption = new ProductOption();
+//            ProductOption productOption = new ProductOption();
             String name = optStr.substring(0, optStr.indexOf(":"));
             String value = optStr.substring(optStr.indexOf(":") + 1);
-            productOption.setName(name);
-            productOption.setValue(value);
+            ProductOption productOption = getProductService().findProductOptionByNameAndValue(name, value);
+            if(productOption == null){
+                productOption = new ProductOption(name,value);
+                productOption = (ProductOption) getBaseDao().save(productOption);
+            }
             optionList.add(productOption);
         }
         return optionList;

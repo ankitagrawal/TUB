@@ -50,6 +50,7 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.warehouse.EnumWarehouseType;
+import com.hk.constants.courier.StateList;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.catalog.category.Category;
@@ -75,6 +76,7 @@ import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.core.Country;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
@@ -82,6 +84,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
@@ -677,7 +680,8 @@ public class Functions {
     }
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
-        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements");
+        List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements",
+                "shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
@@ -685,16 +689,17 @@ public class Functions {
 
 	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
 		List<String> thirdChildList = Arrays.asList("sunglasses", "weight-gainer");
+        List<String> secondChildList = Arrays.asList("dietary-supplements","shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
 		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
 			return true;
-		} else if (secondChild.equalsIgnoreCase("dietary-supplements")) {
-			List<String> attributeList = Arrays.asList("size", "quantity", "type", "flavor", "protein/serving", "strength");
-			if (attributeList.contains(attribute.toLowerCase())) {
-				return true;
-			}
 		} else if (secondChild.equalsIgnoreCase("protein")){
             List<String> attributeListProtein = Arrays.asList("age");
             if (attributeListProtein.contains(attribute.toLowerCase())) {
+                return true;
+            }
+        } else if(secondChildList.contains(secondChild)){
+            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size","type");
+            if(attributesHealthNutrition.contains(attribute.toLowerCase())){
                 return true;
             }
         }
@@ -831,6 +836,15 @@ public class Functions {
   public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
     WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
     return warehouseService.findShippingWarehouse(shippingOrder);
+  }
+
+  public static B2bUserDetails getB2bUserDetails(User user){
+    B2bUserDetailsDao b2bUserDetailsDao = ServiceLocatorFactory.getService(B2bUserDetailsDao.class);
+    return b2bUserDetailsDao.getB2bUserDetails(user);
+  }
+
+  public static String getStateFromTin(String tin){
+    return StateList.getStateByTin(tin);
   }
 
 }
