@@ -161,11 +161,11 @@
 
                         </li>
                         <li>
-                            <shiro:hasPermission name="<%=PermissionConstants.RECEIVE_CONSIGNMENTS%>">
+                           <%-- <shiro:hasPermission name="<%=PermissionConstants.RECEIVE_CONSIGNMENTS%>">--%>
                                 <s:submit id="submitButton" name="markShipmentsReceived"
                                           value="Mark Shipments as Received"
                                           class="verifyData"/>
-                            </shiro:hasPermission>
+                           <%-- </shiro:hasPermission>--%>
                         </li>
                     </ul>
                 </fieldset>
