@@ -28,7 +28,7 @@ import com.hk.domain.accounting.DebitNoteLineItem;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.inventory.GoodsReceivedNote;
-import com.hk.domain.sku.Sku;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -60,12 +60,13 @@ public class DebitNoteAction extends BasePaginatedAction {
 
     private String                  tinNumber;
     private String                  supplierName;
+    private Warehouse               warehouse;
 
     private Integer                 defaultPerPage     = 20;
 
     @DefaultHandler
     public Resolution pre() {
-        debitNotePage = debitNoteDao.searchDebitNote(grn, debitNoteStatus, tinNumber, supplierName, getPageNo(), getPerPage());
+        debitNotePage = debitNoteDao.searchDebitNote(grn, debitNoteStatus, tinNumber, supplierName, warehouse, getPageNo(), getPerPage());
         debitNoteList = debitNotePage.getList();
         return new ForwardResolution("/pages/admin/debitNoteList.jsp");
     }
@@ -183,7 +184,16 @@ public class DebitNoteAction extends BasePaginatedAction {
         this.debitNoteLineItems = debitNoteLineItems;
     }
 
-    public int getPerPageDefault() {
+
+  public Warehouse getWarehouse() {
+    return warehouse;
+  }
+
+  public void setWarehouse(Warehouse warehouse) {
+    this.warehouse = warehouse;
+  }
+
+  public int getPerPageDefault() {
         return defaultPerPage;
     }
 
@@ -201,6 +211,7 @@ public class DebitNoteAction extends BasePaginatedAction {
         params.add("tinNumber");
         params.add("supplierName");
         params.add("debitNoteStatus");
+        params.add("warehouse");
         return params;
     }
 

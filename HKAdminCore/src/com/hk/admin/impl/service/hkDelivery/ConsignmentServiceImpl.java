@@ -1,36 +1,27 @@
 package com.hk.admin.impl.service.hkDelivery;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.admin.pact.service.hkDelivery.HubService;
-import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
-import com.hk.util.ShipmentServiceMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.akube.framework.dao.Page;
 import com.hk.admin.dto.ConsignmentDto;
+import com.hk.admin.dto.NdrDto;
 import com.hk.admin.pact.dao.hkDelivery.ConsignmentDao;
 import com.hk.admin.pact.service.hkDelivery.ConsignmentService;
+import com.hk.admin.pact.service.hkDelivery.HubService;
 import com.hk.admin.pact.service.hkDelivery.RunSheetService;
+import com.hk.constants.core.RoleConstants;
+import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.constants.hkDelivery.EnumConsignmentStatus;
+import com.hk.constants.hkDelivery.EnumNDRAction;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
-import com.hk.domain.hkDelivery.Consignment;
-import com.hk.domain.hkDelivery.ConsignmentLifecycleStatus;
-import com.hk.domain.hkDelivery.ConsignmentStatus;
-import com.hk.domain.hkDelivery.ConsignmentTracking;
-import com.hk.domain.hkDelivery.HkdeliveryPaymentReconciliation;
-import com.hk.domain.hkDelivery.Hub;
-import com.hk.domain.hkDelivery.Runsheet;
+import com.hk.domain.hkDelivery.*;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.user.User;
 import com.hk.pact.service.UserService;
+import com.hk.util.ShipmentServiceMapper;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class ConsignmentServiceImpl implements ConsignmentService {
@@ -325,7 +316,109 @@ public class ConsignmentServiceImpl implements ConsignmentService {
     }
 
     @Override
-    public Page searchConsignmentTracking(Date startDate,Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
+    public Page searchConsignmentTracking(Date startDate, Date endDate, Long consignmentLifecycleStatus, Long hubId, int pageNo, int perPage) {
         return consignmentDao.searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, pageNo, perPage);
+    }
+
+    @Override
+    public Consignment setOwnerForConsignment(Consignment consignment, String owner) {
+        consignment.setOwner(owner);
+        return (Consignment) consignmentDao.save(consignment);
+    }
+
+    @Override
+    public Integer getAttempts(Consignment consignment) {
+        List<ConsignmentTracking> consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignment.getId());
+        return consignmentTrackingList.size();
+    }
+
+    @Override
+    public ConsignmentTracking getConsignmentTrackingById(Long consignmentTrackingId) {
+        return consignmentDao.getConsignmentTrackingById(consignmentTrackingId);
+    }
+
+    @Override
+    public List<ConsignmentTracking> getConsignmentTrackingByStatusAndConsignment(Long consignmentLifecycleStatus, Long consignmentId) {
+        return consignmentDao.getConsignmentTrackingByStatusAndConsignment(consignmentLifecycleStatus, consignmentId);
+    }
+
+    @Override
+    public List<NdrDto> getNdrByOwner(User user) {
+        String owner = "";
+        String hubManager = RoleConstants.HK_DELIVERY_HUB_MANAGER;
+        String customerSupport = RoleConstants.CUSTOMER_SUPPORT;
+
+        if (user.getRoleStrings().contains(customerSupport)) {
+            owner = customerSupport;
+        } else if (user.getRoleStrings().contains(hubManager)) {
+            owner = hubManager;
+        }
+
+        List<Consignment> consignments = new ArrayList<Consignment>();
+
+        if (owner.equals(customerSupport)) {
+            consignments = consignmentDao.getConsignmentsByStatusAndOwner(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner);
+        } else if (owner.equals(hubManager)) {
+            consignments = consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOnHoldByCustomer.getId(), owner, user.getHub());
+            consignments.addAll(consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentRTH.getId(), owner, user.getHub()));
+            consignments.addAll(consignmentDao.getConsignmentsByStatusOwnerAndHub(EnumConsignmentStatus.ShipmentOutForDelivery.getId(),owner, user.getHub()));
+            Collections.sort(consignments, new Comparator<Consignment>() {
+                public int compare(Consignment consignment1, Consignment consignment2) {
+                    return consignment1.getCreateDate().compareTo(consignment2.getCreateDate());
+                }
+            });
+        }
+        List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
+        Date currentDate = new Date();
+        List<ConsignmentTracking> consignmentTrackingList;
+        for (Consignment consignmentObj : consignments) {
+            NdrDto ndrDto = new NdrDto();
+            ndrDto.setNumberOfAttempts(getAttempts(consignmentObj));
+            // Aging is the gap between current date and create date (in days)
+            ndrDto.setAging((int) ((currentDate.getTime() - consignmentObj.getCreateDate().getTime()) / (1000 * 60 * 60 * 24)));
+            ndrDto.setAwbNumber(consignmentObj.getAwbNumber());
+            ndrDto.setConsignmentId(consignmentObj.getId());
+            ndrDto.setCreateDate(consignmentObj.getCreateDate());
+            ndrDto.setHubName(consignmentObj.getHub().getName());
+            ndrDto.setOwner(owner);
+            ndrDto.setStatus(consignmentObj.getConsignmentStatus().getStatus());
+
+            consignmentTrackingList = getConsignmentTrackingByStatusAndConsignment(EnumConsignmentLifecycleStatus.OnHoldByCustomer.getId(), consignmentObj.getId());
+
+            //getting the latest consignment tracking object for onHoldByCustomer
+      /*      Collections.sort(consignmentTrackingList, new Comparator<ConsignmentTracking>() {
+                public int compare(ConsignmentTracking consignmentTracking1, ConsignmentTracking consignmentTracking2) {
+                    return consignmentTracking1.getCreateDate().compareTo(consignmentTracking2.getCreateDate());
+                }
+            });
+      */
+            ConsignmentTracking consignmentTracking = consignmentTrackingList.get(consignmentTrackingList.size() - 1);
+
+            // consignment tracking 'remarks' already contains the ndr comment when a ndr action has taken place already
+            String nonDeliveryReason = consignmentTracking.getRemarks();
+            if (nonDeliveryReason.contains("Ndr Comment")) {
+                nonDeliveryReason = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[0];
+                String remarks = consignmentTracking.getRemarks().split("Ndr Comment :", 2)[1];
+                if (remarks != null && !StringUtils.isBlank(remarks)) {
+                    ndrDto.setRemarks(remarks);
+                }
+            }
+            ndrDto.setNonDeliveryReason(nonDeliveryReason);
+
+            if (consignmentObj.getTargetDeliveryDate() != null && owner.equals(hubManager)) {
+                ndrDto.setFutureDate(consignmentObj.getTargetDeliveryDate());
+            }
+
+            if (consignmentTracking.getNdrResolution() != null && !StringUtils.isBlank(consignmentTracking.getNdrResolution())) {
+                if(consignmentTracking.getNdrResolution().equals(EnumNDRAction.CustomerNotContactable.toString()) || owner.equals(hubManager)){
+                    ndrDto.setNdrResolution(consignmentTracking.getNdrResolution());
+                }
+            }
+
+            ndrDto.setConsignmentTrackingId(consignmentTracking.getId());
+            ndrDto.setRunsheetId(consignmentTracking.getRunsheet().getId());
+            ndrDtoList.add(ndrDto);
+        }
+        return ndrDtoList;
     }
 }

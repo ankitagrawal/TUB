@@ -6,7 +6,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-
+<c:set var="imageSmallSize" value="<%=EnumImageSize.SmallSize%>"/>
 <s:layout-definition>
 	<%
 		Product product_productThumb = (Product) pageContext.getAttribute("product");
@@ -21,6 +21,9 @@
 		ComboDao comboDao = ServiceLocatorFactory.getService(ComboDao.class);
 		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
 		pageContext.setAttribute("combo", combo);
+
+    boolean isSecure = pageContext.getRequest().isSecure();
+    pageContext.setAttribute("isSecure", isSecure);
 	%>
 	<style type="text/css">
 		.opaque {
@@ -42,18 +45,8 @@
 
 				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${product.productURL}" class="prod_link" title="${product.name}">
-						<c:choose>
-							<c:when test="${product.mainImageId != null}">
-								<hk:productImage style="max-height:180px;max-width:180px;"
-								                 imageId="${product.mainImageId}" size="<%=EnumImageSize.MediumSize%>"
-								                 alt="${product.name}"/>
-							</c:when>
-							<c:otherwise>
-								<img style="max-height:180px;max-width:180px;"
-								     src='<hk:vhostImage/>/images/ProductImages/ProductImagesThumb/${product.id}.jpg'
-								     alt="${product.name}"/>
-							</c:otherwise>
-						</c:choose>
+						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+				     title="${product.name}">
 					</s:link>
 				</div>
 				<div>

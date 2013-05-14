@@ -312,11 +312,7 @@ public class OrderServiceImpl implements OrderService {
     public Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                shippingOrders = splitOrder(order);
-            } else {
-                logger.debug("order with gatewayId:" + order.getGatewayOrderId() + " is not in placed status. abort system split and do a manual split");
-            }
+            shippingOrders = splitOrder(order);
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
@@ -682,13 +678,13 @@ public class OrderServiceImpl implements OrderService {
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = false;
-        if(!order.getShippingOrders().isEmpty()) {
+        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+        if(!shippingOrders.isEmpty()) {
             shippingOrderAlreadyExists = true;
         }
 
         logger.debug("Trying to split order " + order.getId());
 
-        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
         User adminUser = getUserService().getAdminUser();
 
         if (shippingOrderAlreadyExists) {
@@ -701,9 +697,8 @@ public class OrderServiceImpl implements OrderService {
             if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
                 orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
             } else {
-                shippingOrders = createShippingOrders(order);
-                if (shippingOrders != null && shippingOrders.size() > 0) {
-
+                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+                    shippingOrders = createShippingOrders(order);
                 }
             }
         }
@@ -725,8 +720,8 @@ public class OrderServiceImpl implements OrderService {
                 } else {
                     shippingOrder.setDropShipping(true);
                     shippingOrder = shippingOrderService.save(shippingOrder);
-                    getShippingOrderService().logShippingOrderActivity(shippingOrder, adminUser, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated.asShippingOrderLifecycleActivity(),
-                            EnumReason.DROP_SHIPPED_ORDER.asReason(), null);
+                    getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
+                            EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
             }
             // auto escalate shipping orders if possible

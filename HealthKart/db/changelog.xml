@@ -12589,4 +12589,39 @@
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
     </changeSet>
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
+    <changeSet author="Ankur (generated)" id="1367992804803-3">
+        <createIndex indexName="name_value_unique_constraint" tableName="product_option" unique="true">
+            <column name="name"/>
+            <column name="value"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-1">
+        <addColumn tableName="consignment">
+            <column name="owner" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-2">
+        <addColumn tableName="consignment">
+            <column name="target_delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-3">
+        <addColumn tableName="consignment_tracking">
+            <column name="ndr_resolution" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842551660-1">
+        <modifyDataType columnName="remarks" newDataType="VARCHAR(150)" tableName="consignment_tracking"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367933059204-2">
+        <addColumn tableName="grn_line_item">
+            <column name="weight" type="DOUBLE">
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

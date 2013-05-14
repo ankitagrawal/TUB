@@ -37,7 +37,7 @@
         <fileset file="${project.common.dir}/dependencies/testng-5.8-jdk15.jar"/>
         <fileset file="${project.common.dir}/dist/hk-common.jar"/>
         <fileset file="${lib.root.dir}/freemarker/freemarker.jar"/>
-        <fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.1.jar"/>
+        <fileset file="${lib.root.dir}/thirdParty/HKBridgeClient-1.2.jar"/>
         <fileset file="${lib.root.dir}/thirdParty/activemq-core-5.7.0.jar"/>
         <fileset file="${lib.root.dir}/thirdParty/activemq-pool-5.7.0.jar"/>
         <fileset file="${lib.root.dir}/thirdParty/spring-jms-3.1.0.RELEASE.jar"/>

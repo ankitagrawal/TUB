@@ -1,6 +1,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.constants.inventory.EnumStockTransferStatus" %>
+<%@ page import="com.hk.pact.service.core.WarehouseService" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.StockTransferAction" var="sta"/>
@@ -10,8 +11,8 @@
 	<c:set var="stStatusCheckoutCompleted" value="<%=EnumStockTransferStatus.Stock_Transfer_Out_Completed.getId()%>" />
 	<c:set var="stStatusCheckinInProcess" value="<%=EnumStockTransferStatus.Stock_Transfer_CheckIn_In_Process.getId()%>" />
 	<%
-		WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
-		pageContext.setAttribute("whList", warehouseDao.getAllWarehouses());
+		WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    pageContext.setAttribute("whList", warehouseService.getAllActiveWarehouses());
 	%>
 	<s:layout-component name="htmlHead">
 		<link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -36,14 +37,14 @@
 						<s:select name="fromWarehouse">
 							<s:option value="0">-All-</s:option>
 							<c:forEach items="${whList}" var="wh">
-								<s:option value="${wh.id}">${wh.name}</s:option>
+								<s:option value="${wh.id}">${wh.identifier}</s:option>
 							</c:forEach>
 						</s:select>
 					<label>   To Warehouse: </label>
 						<s:select name="toWarehouse">
 							<s:option value="0">-All-</s:option>
 							<c:forEach items="${whList}" var="wh">
-								<s:option value="${wh.id}">${wh.name}</s:option>
+								<s:option value="${wh.id}">${wh.identifier}</s:option>
 							</c:forEach>
 						</s:select>
 				<s:submit name="pre" value="Search"/>
