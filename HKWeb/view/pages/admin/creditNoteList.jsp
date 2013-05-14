@@ -48,6 +48,7 @@
         <th>TIN#</th>
         <th>State</th>
         <th>Warehouse</th>
+        <th>Created By</th>
         <th>Status</th>
         <th>Reconciled</th>
         <th>Actions</th>
@@ -63,6 +64,7 @@
           <td>${b2bUserDetails.tin}</td>
           <td>${hk:getStateFromTin(b2bUserDetails.tin)}</td>
           <td>${creditNote.warehouse.identifier}</td>
+          <td>${creditNote.createdBy.login}</td>
           <td>${creditNote.creditNoteStatus.name}</td>
           <td>
             <c:choose>
