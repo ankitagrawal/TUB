@@ -868,4 +868,12 @@ public class Functions {
 		return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
 	}
 
+	public static String roundNumberForDisplay(double number) {
+		
+		if (number%10==0) {
+			return "" + Math.round(number);
+		} else {
+			return "" + Math.round(number*10)/10;
+		}
+	}
 }

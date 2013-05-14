@@ -1180,4 +1180,16 @@
             ${hk:getShippingWarehouse(${o1})}
         </example>
     </function>
+        <function>
+        <description>
+            returns rounded number for display on jsp page
+        </description>
+        <name>roundNumberForDisplay</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String roundNumberForDisplay(double))</function-signature>
+        <example>
+            ${hk:round(${number})}
+        </example>
+    </function>
+   
 </taglib>

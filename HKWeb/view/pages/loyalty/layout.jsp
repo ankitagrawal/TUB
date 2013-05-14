@@ -105,7 +105,7 @@
                   </shiro:hasAnyRoles>
 				  ,</p>
 				<p class="section1 rewardText"> ${badge.badgeName} member</p>
-				<p class="section1 rewardText">you have ${hk:getLoyaltyKarmaPointsForUser(userId)} points</p> 
+				<p class="section1 rewardText">you have ${hk:roundNumberForDisplay(hk:getLoyaltyKarmaPointsForUser(userId))} points</p> 
             </div>
            <div>
               <p class="section2 ">

@@ -29,7 +29,7 @@
 								error_message.addClass('errorMessage').slideDown().delay(3000).slideUp();
 							}
 							else{
-								$('.total-shopping-points').html(resp.data.totalShoppingPoints + " Points");
+								$('.total-shopping-points').html(${hk:roundNumberForDisplay(resp.data.totalShoppingPoints)} + " Points");
 							}
 						}
 					});
@@ -136,13 +136,13 @@ pageContext.setAttribute("isSecure", isSecure);
 										Not enough stellar points to increase the quantity.
 									</span>
 								</td>
-								<td>${lp.points}</td>
+								<td>${hk:roundNumberForDisplay(lp.points)}</td>
 							</tr>
 						</c:forEach>
 						<tr style="background-color: #f9f9f9;">
 							<td><h8>Total Shopping points</h8></td>
 							<td colspan="2">
-								<div class="total-shopping-points">${ca.totalShoppingPoints} Points</div>
+								<div class="total-shopping-points">${hk:roundNumberForDisplay(ca.totalShoppingPoints)} Points</div>
 							</td>
 						</tr>
 					</tbody>

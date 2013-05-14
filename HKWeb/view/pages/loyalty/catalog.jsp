@@ -116,13 +116,13 @@ pageContext.setAttribute("isSecure", isSecure);
                 $('#errorToolTip').attr('style', 'display: none;');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
-                $("#errorMsg").innerHTML = resp.message;
+                $("#errorMsg").html = resp.message;
                 $('#errorToolTip').attr('style', '');
               }
             },
             error: function (resp) {
             	$('#successToolTip').attr('style', 'display: none;');
-                $("#errorMsg").innerHTML = resp.message;
+                $("#errorMsg").html = resp.message;
                 $("#errorMsg").attr('style', '');
                 $('#errorToolTip').attr('style', '');
               }
@@ -144,7 +144,7 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span12">
         <div class="alert alert-error">
           <button id="errorToolTipBtn" type="button" class="close" data-dismiss="alert">×</button>
-          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">aaa</span>
+          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">x</span>
         </div>
       </div>
     </div>
@@ -179,7 +179,7 @@ pageContext.setAttribute("isSecure", isSecure);
 					     title="${product.name}" class="productImage" ></a>
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
-                <div class="stellarPoints">${lp.points} PTS</div>
+                <div class="stellarPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">

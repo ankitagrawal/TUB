@@ -25,6 +25,7 @@ import com.hk.domain.loyaltypg.UserBadgeInfo;
 import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.user.User;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
+import com.hk.taglibs.Functions;
 /**
  * @author Ankit Chhabra
  *
@@ -67,7 +68,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			cal.add(Calendar.YEAR, 1);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy");
 			if (upgradeAmount != 0) {
-				this.upgradeString = "To move up a level, you need to spend :  Rs. " + Math.ceil(upgradeAmount) + " before " + dateFormat.format(cal.getTime());
+				this.upgradeString = "To move up a level, you need to spend :  Rs. " + Functions.roundNumberForDisplay(upgradeAmount) + " before " + dateFormat.format(cal.getTime());
 				} else {
 					this.upgradeString = "Hi! You are our Mogul. Make most of its use by shopping more and retaining this privileged position.";
 				}

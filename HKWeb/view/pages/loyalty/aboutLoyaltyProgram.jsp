@@ -109,7 +109,7 @@
 
             <h1 id="howItWorks" class="embedMarginTop50">HOW IT WORKS</h1>
 
-            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 0 Loyalty Points.</p>
+            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 15 Loyalty Points as bonus.</p>
             <p>On every purchase,</p>
 	        <p class="embedMargin5">For Bronze level, you get ${bronze.loyaltyPercentage} Loyalty Point for every rupee you spend.</p>
             <p class="embedMargin5">For Silver level, you are awarded ${silver.loyaltyPercentage} Loyalty Points for every rupee you spend.</p>
@@ -122,10 +122,10 @@
             <div class="tableHistory embedMarginTop40">
               <div class="headingRow">
                 <div class="headRowValue"><div class="rowValue">ANNUAL SPEND</div></div>
-                <div class="headRowValue">Rs.${bronze.minScore} - Rs.${bronze.maxScore}</div>
-                <div class="headRowValue">Rs.${silver.minScore} - Rs.${silver.maxScore}</div>
-                <div class="headRowValue">Rs.${gold.minScore} - Rs.${gold.maxScore}</div>
-                <div class="headRowValue">Rs.${platinum.minScore} and above</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(bronze.minScore)} - Rs.${hk:roundNumberForDisplay(bronze.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(silver.minScore)} - Rs.${hk:roundNumberForDisplay(silver.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(gold.minScore)} - Rs.${hk:roundNumberForDisplay(gold.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(platinum.minScore)} and above</div>
               </div>
 
               <div class="normalRowWithBorderBottom">
@@ -169,16 +169,6 @@
               <p>Q: First things first. What is HealthKart Stellar?</p>
               A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
               more.
-            </div>
-
-            <div class="qAndA">
-              <p>Q: Does it cost anything to become a Stellar member?</p>
-              A: Nope. Happily, some things in life are still free.
-            </div>
-
-            <div class="qAndA">
-              <p>Q: How do I become a member?</p>
-              A: Just <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">click here</a>, create your profile and hit submit. That's it. We will take care of the rest. 
             </div>
 
             <div class="qAndA">

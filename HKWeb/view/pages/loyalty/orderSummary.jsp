@@ -34,13 +34,13 @@ pageContext.setAttribute("isSecure", isSecure);
 						<h8>${lp.variant.product.name}</h8>
 						</td>
 						<td>${lp.qty}</td>
-						<td>${lp.points}</td>
+						<td>${hk:roundNumberForDisplay(lp.points)}</td>
 					</tr>
 				</c:forEach>
 				<tr style="background-color: #f9f9f9;">
 					<td><h8>Total Shopping points</h8></td>
 					<td colspan="2">
-						<div>${ca.totalShoppingPoints} Points</div>
+						<div>${hk:roundNumberForDisplay(ca.totalShoppingPoints)} Points</div>
 					</td>
 				</tr>
 			</tbody>

@@ -14,7 +14,7 @@
         <div class="grid_14">
           <div class="topText">
           <c:set var = "userId" value ="${userKarmaHA.user.id}" />
-  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.badgeInfo.creationTime}" /> | Points available :  ${hk:getLoyaltyKarmaPointsForUser(userId)}
+  	    	Member since:  <fmt:formatDate value = "${userKarmaHA.badgeInfo.creationTime}" /> | Points available :  ${hk:roundNumberForDisplay(hk:getLoyaltyKarmaPointsForUser(userId))}
 			| Current status : <c:set var="badgeInfo" value="${userKarmaHA.badgeInfo}" /> ${badgeInfo.badge.badgeName} MEMBER
           </div>
           <div class="topText"> ${userKarmaHA.upgradeString} </div>
@@ -63,10 +63,10 @@
               <div class="headRowValue">
               <c:choose>
                     <c:when test="${karmaProfile.karmaPoints >= 0.0}">
-                        ${karmaProfile.karmaPoints}
+                        ${hk:roundNumberForDisplay(karmaProfile.karmaPoints)}
                     </c:when>
                     <c:otherwise>
-                       ${0-karmaProfile.karmaPoints}
+                       ${hk:roundNumberForDisplay(0-karmaProfile.karmaPoints)}
                     </c:otherwise>
                 </c:choose>
               

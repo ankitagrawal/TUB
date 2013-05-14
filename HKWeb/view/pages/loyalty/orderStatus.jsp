@@ -65,7 +65,7 @@ pageContext.setAttribute("isSecure", isSecure);
                       <div class="hk">
                       </div>
                       <div class="num" > 
-                        <span class="lineItemSubTotalMrp">${lp.points*lp.qty}</span>
+                        <span class="lineItemSubTotalMrp">${hk:roundNumberForDisplay(lp.points*lp.qty)}</span>
                       </div>
                     </div>
                     <div class="floatix"></div>
@@ -78,10 +78,7 @@ pageContext.setAttribute("isSecure", isSecure);
                       Shipping:
                     </div>
                       <div class="shipping">COD Charges</div>
-                      <div class="discount special" >
-                        You saved:
-                      </div>
-                    <div class="total" >
+                      <div class="total" >
                       Total Points:
                     </div>
                   </div>
@@ -90,12 +87,9 @@ pageContext.setAttribute("isSecure", isSecure);
                       Rs 0.0
                     </div>
                       Rs 0.0
-                      <div class="discount num green special">
-                        <span >All</span>
-                      </div>
-                    <div class="total num">
+                      <div class="total num">
                       <strong >
-                    	${pla.totalShoppingPoints}    
+                    	${hk:roundNumberForDisplay(pla.totalShoppingPoints)}    
                       </strong>
                     </div>
                   </div>
