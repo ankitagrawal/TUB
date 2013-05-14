@@ -93,6 +93,12 @@
                                 date</label><s:text class="date_input endDate" style="width:150px"
                                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="shippedEndDate"/>
                         </li>
+                        <label>Courier</label>
+                        <s:select name="applicableCourier" class="courierService">
+                            <s:option value="">All Couriers</s:option>
+                            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="availableCouriers" value="id"
+                                                       label="name"/>
+                        </s:select>
                         <s:label name="overrideHistoricalShipmentCost"
                                  class="label">Override Historical Shipment Cost ?</s:label>
                         <div class="clear"></div>
@@ -141,19 +147,8 @@
                         <div class="clear"></div>
                         <div style="margin-top:15px;"></div>
                         <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
+                            <s:submit name="quickInventoryCheck" value="Quick Inventory Check"/>
                             <s:submit name="setVariantsInStockHavingInventory" value="Mark Variants In Stock"/>
-                        </shiro:hasAnyRoles>
-                    </fieldset>
-                </s:form>
-                <s:form beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction">
-                    <fieldset class="top_label">
-                        <legend> Find Payment</legend>
-                        <div class="clear"></div>
-                        <div style="margin-top:15px;"></div>
-                        <shiro:hasAnyRoles name="<%=RoleConstants.GOD%>">
-                            <s:text name="shippingOrderId" style="width:200px" class="text"/>
-                            <s:text name="merchantId" style="width:200px" class="text"/>
-                            <s:submit name="findIciciPayment" value="Find Icici Payment"/>
                         </shiro:hasAnyRoles>
                     </fieldset>
                 </s:form>
@@ -164,9 +159,9 @@
             <div style="float: left; width:40%">
                 Applicable Couriers
 
-                <c:forEach items="${calculator.applicableCourierList}" var="courier">
+                <c:forEach items="${calculator.courierCostingMap}" var="courierCostingMap">
                     <div class="clear"></div>
-                    ${courier.name}
+                    ${courierCostingMap.key.name}
                 </c:forEach>
 
                 <fieldset>
