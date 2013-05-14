@@ -209,57 +209,56 @@ public class EditProductAttributesAction extends BaseAction {
     }
 
     public Resolution saveProductVariantDetails() {
-        logger.debug("product id " + product);
-        logger.debug(productVariants.size());
         int i = 0;
-        for (ProductVariant productVariant : productVariants) {
-            logger.debug("variant id " + productVariant.getId());
+        if (productVariants != null) {
+            for (ProductVariant productVariant : productVariants) {
+                logger.debug("variant id " + productVariant.getId());
 
-            if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
-                if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
-                    addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
+                if (productVariant.isClearanceSale() == null || !productVariant.isClearanceSale()) {
+                    if (productVariant.getCostPrice() != null && productVariant.getCostPrice() > productVariant.getHkPrice(null)) {
+                        addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is less than Cost Price. Please fix it."));
+                        return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
+                    }
+                }
+
+                if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
+                    addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
                     return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
                 }
-            }
 
-            if (productVariant.getMarkedPrice() != null && productVariant.getMarkedPrice() < productVariant.getHkPrice(null)) {
-                addRedirectAlertMessage(new SimpleMessage("HK Price of variant " + productVariant.getId() + " is more than Marked Price. Please fix it."));
-                return new RedirectResolution(EditProductAttributesAction.class, "editProductVariantDetails").addParameter("product", product);
-            }
-
-            String productOpts = "";
-            if (options != null && i < options.size() && options.get(i) != null) {
-                productOpts = options.get(i);
-            }
-            if (productOpts != null && StringUtils.isNotBlank(productOpts)) {
-                List<ProductOption> productOptionList = getProductOptionList(productOpts);
-                if (!productOptionList.isEmpty()) {
-                    productVariant.setProductOptions(productOptionList);
+                String productOpts = "";
+                if (options != null && i < options.size() && options.get(i) != null) {
+                    productOpts = options.get(i);
                 }
-            } else {
-                productVariant.setProductOptions(null);
-            }
-
-            String extraOpt = "";
-            if (extraOptions != null && i < extraOptions.size() && extraOptions.get(i) != null) {
-                extraOpt = extraOptions.get(i);
-            }
-            if (extraOpt != null && StringUtils.isNotBlank(extraOpt)) {
-                List<ProductExtraOption> productExtraOptionList = getProductExtraOptionList(extraOpt);
-                if (!productExtraOptionList.isEmpty()) {
-                    productVariant.setProductExtraOptions(productExtraOptionList);
+                if (productOpts != null && StringUtils.isNotBlank(productOpts)) {
+                    List<ProductOption> productOptionList = getProductOptionList(productOpts);
+                    if (!productOptionList.isEmpty()) {
+                        productVariant.setProductOptions(productOptionList);
+                    }
+                } else {
+                    productVariant.setProductOptions(null);
                 }
-            } else {
-                productVariant.setProductExtraOptions(null);
-            }
 
-            productVariant = getProductVariantService().save(productVariant);
-            if (!(productVariant.getProduct().isJit() || productVariant.getProduct().isService())) {
-                getInventoryService().checkInventoryHealth(productVariant);
+                String extraOpt = "";
+                if (extraOptions != null && i < extraOptions.size() && extraOptions.get(i) != null) {
+                    extraOpt = extraOptions.get(i);
+                }
+                if (extraOpt != null && StringUtils.isNotBlank(extraOpt)) {
+                    List<ProductExtraOption> productExtraOptionList = getProductExtraOptionList(extraOpt);
+                    if (!productExtraOptionList.isEmpty()) {
+                        productVariant.setProductExtraOptions(productExtraOptionList);
+                    }
+                } else {
+                    productVariant.setProductExtraOptions(null);
+                }
+
+                productVariant = getProductVariantService().save(productVariant);
+                if (!(productVariant.getProduct().isJit() || productVariant.getProduct().isService())) {
+                    getInventoryService().checkInventoryHealth(productVariant);
+                }
+                i++;
             }
-            i++;
         }
-
         // Setting deleted after reading variants status
         product.setDeleted(isProductDeleted());
         getProductService().save(product);
@@ -276,6 +275,8 @@ public class EditProductAttributesAction extends BaseAction {
             String productOptionValue = productOptionString.substring(productOptionString.indexOf(":") + 1);
 
             // checking whether the product option already exists or not
+            productOptionName = StringUtils.strip(productOptionName);
+            productOptionValue = StringUtils.strip(productOptionValue);
             ProductOption productOption = getProductService().findProductOptionByNameAndValue(productOptionName, productOptionValue);
             if (productOption == null) {
                 productOption = new ProductOption(productOptionName, productOptionValue);
