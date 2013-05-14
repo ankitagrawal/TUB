@@ -43,11 +43,11 @@
           <div style="margin-top: 10px"></div>
 
           <shiro:hasRole name="<%=RoleConstants.B2B_USER%>">
-            <s:hidden name="b2bUserDetails" value="${maa.b2bUserDetails.id}"/>
-            <s:hidden name="b2bUserDetails.user" value="${maa.user.id}"/>
+            <s:hidden name="b2bUser" value="${maa.b2bUser.id}"/>
+            <s:hidden name="b2bUser.user" value="${maa.user.id}"/>
             <div class="row">
               <s:label class="rowLabel" name="Tin#"/>
-              <s:text name="b2bUserDetails.tin" value="${maa.b2bUserDetails.tin}" class="rowText"/>
+              <s:text name="b2bUser.tin" value="${maa.b2bUser.tin}" class="rowText"/>
             </div>
 
             <div class="clear"></div>
@@ -55,7 +55,7 @@
 
             <div class="row">
               <s:label class="rowLabel" name="DL Number"/>
-              <s:text name="b2bUserDetails.dlNumber" value="${maa.b2bUserDetails.dlNumber}" class="rowText"/>
+              <s:text name="b2bUser.dlNumber" value="${maa.b2bUser.dlNumber}" class="rowText"/>
             </div>
 
             <div class="clear"></div>
