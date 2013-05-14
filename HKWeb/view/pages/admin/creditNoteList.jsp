@@ -18,8 +18,6 @@
     <fieldset class="right_label">
       <legend>Search Credit Note</legend>
       <s:form beanclass="com.hk.web.action.admin.inventory.CreditNoteAction">
-        <%--<label>GRN ID:</label><s:text name="grn"/>--%>
-        <label>Tin Number:</label><s:text name="tinNumber"/>
         <label>Customer Login:</label><s:text name="customerLogin"/>
         <label>Status:</label><s:select name="creditNoteStatus">
         <s:option value="">-All-</s:option>
@@ -43,11 +41,12 @@
     <table class="zebra_vert">
       <thead>
       <tr>
-        <th>DN ID</th>
-          <%--<th>GRN ID</th>--%>
+        <th>ID</th>
         <th>Create Date</th>
-        <th>Supplier</th>
-        <th>Supplier TIN</th>
+        <th>Customer</th>
+        <th>Login</th>
+        <th>TIN#</th>
+        <th>State</th>
         <th>Warehouse</th>
         <th>Status</th>
         <th>Reconciled</th>
@@ -57,15 +56,12 @@
       <c:forEach items="${poa.creditNoteList}" var="creditNote" varStatus="ctr">
         <tr>
           <td>${creditNote.id}</td>
-            <%--<td>
-              <s:link beanclass="com.hk.web.action.admin.inventory.GRNAction" event="view">
-                <s:param name="grn" value="${creditNote.goodsReceivedNote.id}"/>
-                ${creditNote.goodsReceivedNote.id}
-              </s:link>
-            </td>--%>
           <td><fmt:formatDate value="${creditNote.createDt}" type="both" timeStyle="short"/></td>
-          <td>${creditNote.b2bUser.name}</td>
-          <td>${creditNote.b2bUser.tin}</td>
+          <td>${creditNote.user.name}</td>
+          <td>${creditNote.user.login}</td>
+          <c:set var="b2bUserDetails" value="${hk:getB2bUserDetails(creditNote.user)}"/>
+          <td>${b2bUserDetails.tin}</td>
+          <td>${hk:getStateFromTin(b2bUserDetails.tin)}</td>
           <td>${creditNote.warehouse.identifier}</td>
           <td>${creditNote.creditNoteStatus.name}</td>
           <td>
@@ -81,6 +77,7 @@
           <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.CreditNoteAction" event="view">Edit/View
               <s:param name="creditNote" value="${creditNote.id}"/>
+            </s:link>
           </td>
         </tr>
       </c:forEach>

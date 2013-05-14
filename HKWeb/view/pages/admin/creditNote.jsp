@@ -6,7 +6,7 @@
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.CreditNoteAction" var="pa"/>
 <s:useActionBean beanclass="com.hk.web.action.admin.warehouse.SelectWHAction" var="whAction" event="getUserWarehouse"/>
-<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Debit Note">
+<s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Credit Note">
 <s:layout-component name="htmlHead">
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
@@ -21,27 +21,27 @@
                     lastIndex = -1;
                 }
                 $('.lastRow').removeClass('lastRow');
-                var debitNoteId = $('#debitNoteId').val();
+                var creditNoteId = $('#creditNoteId').val();
                 var nextIndex = eval(lastIndex + "+1");
                 var newRowHtml =
                         '<tr count="' + nextIndex + '" class="lastRow lineItemRow">' +
                                 '<td class="sNo">' + Math.round(nextIndex + 1) + '.</td>' +
                                 '<td>' +
-                                '    <input type="hidden" name="debitNoteLineItems[' + nextIndex + '].id" />' +
-                                '    <input type="text" class="variant" name="debitNoteLineItems[' + nextIndex + '].productVariant"/>' +
-                                '    <input type="hidden" class="debitNotes" name="debitNoteLineItems[' + nextIndex + '].debitNote" value="' + debitNoteId + '" ' +
+                                '    <input type="hidden" name="creditNoteLineItems[' + nextIndex + '].id" />' +
+                                '    <input type="text" class="variant" name="creditNoteLineItems[' + nextIndex + '].productVariant"/>' +
+                                '    <input type="hidden" class="creditNotes" name="creditNoteLineItems[' + nextIndex + '].creditNote" value="' + creditNoteId + '" ' +
                                 '  </td>' +
                                 '<td></td>' +
                                 '  <td class="pvDetails"></td>' +
                                 '<td></td>' +
                                 '  <td>' +
-                                '    <input class="qty" type="text" name="debitNoteLineItems[' + nextIndex + '].qty" />' +
+                                '    <input class="qty" type="text" name="creditNoteLineItems[' + nextIndex + '].qty" />' +
                                 '  </td>' +
                                 '  <td>' +
-                                '    <input class="costPrice" type="text" name="debitNoteLineItems[' + nextIndex + '].costPrice" />' +
+                                '    <input class="costPrice" type="text" name="creditNoteLineItems[' + nextIndex + '].costPrice" />' +
                                 '  </td>' +
                                 '  <td>' +
-                                '    <input class="mrp" type="text" name="debitNoteLineItems[' + nextIndex + '].mrp" />' +
+                                '    <input class="mrp" type="text" name="creditNoteLineItems[' + nextIndex + '].mrp" />' +
                                 '  </td>' +
                                 '</tr>';
 
@@ -117,7 +117,7 @@
                                         res.data.product + '<br/>' +
                                                 res.data.options
                                 );
-                                obj.parent().append('<input type="hidden" name="debitNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
+                                obj.parent().append('<input type="hidden" name="creditNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
@@ -131,31 +131,38 @@
     </script>
 </s:layout-component>
 <s:layout-component name="heading">
-    Edit Debit Note # ${pa.debitNote.id}
+    Create/Edit Credit Note # ${pa.creditNote.id}
 </s:layout-component>
 <s:layout-component name="content">
     <div style="display: none;">
         <s:link beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" id="pvInfoLink" event="getPVDetails"></s:link>
     </div>
 
-    <s:form beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">
-        <s:hidden name="debitNote" value="${pa.debitNote.id}" id="debitNoteId"  />
-        <s:hidden name="debitNote.supplier" value="${pa.debitNote.supplier.id}" />
+    <s:form beanclass="com.hk.web.action.admin.inventory.CreditNoteAction">
+        <s:hidden name="creditNote" value="${pa.creditNote.id}" id="creditNoteId"  />
+        <s:hidden name="creditNote.user" value="${pa.creditNote.user.id}" />
         <table>
             <tr>
                 <td>Customer Name</td>
                 <td>
-                        ${pa.debitNote.supplier.name}</td>
+                    ${pa.creditNote.user.name}</td>
+                <c:set var="b2bUserDetails" value="${hk:getB2bUserDetails(pa.creditNote.user)}"/>
+                <td>TIN#</td>
+                <td>
+                    ${b2bUserDetails.tin}</td>
+               <td>State</td>
+                <td>
+                    ${hk:getStateFromTin(b2bUserDetails.tin)}</td>
 
             </tr>
             <tr>
                 <td>Create Date</td>
-                <td><s:text class="date_input" formatPattern="yyyy-MM-dd" name="debitNote.createDate"/></td>
+                <td>${pa.creditNote.createDt}</td>
                 <td>Credit to Customer</td>
-                <td><s:checkbox name="debitNote.isDebitToSupplier"/></td>
+                <td><s:checkbox name="creditNote.userCredited"/></td>
                 <td>Status</td>
-                <td><s:select name="debitNote.debitNoteStatus" value="${pa.debitNote.debitNoteStatus.id}">
-                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="debitNoteStatusList"
+                <td><s:select name="creditNote.creditNoteStatus" value="${pa.creditNote.creditNoteStatus.id}">
+                    <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="creditNoteStatusList"
                                                value="id" label="name"/>
                 </s:select></td>
 
@@ -163,11 +170,11 @@
             <tr>
                 <td>For Warehouse</td>
                 <td>
-                    <s:hidden name="debitNote.warehouse" value="${whAction.setWarehouse.id}"/>
+                    <s:hidden name="creditNote.warehouse" value="${whAction.setWarehouse.id}"/>
                         ${whAction.setWarehouse.identifier}
                 </td>
                 <td>Remarks</td>
-                <td><s:textarea name="debitNote.remarks" style="height:50px;"/></td>
+                <td><s:textarea name="creditNote.remarks" style="height:50px;"/></td>
             </tr>
         </table>
 
@@ -190,7 +197,7 @@
             </tr>
             </thead>
             <tbody id="poTable">
-            <c:forEach var="debitNoteLineItemDto" items="${pa.creditNoteDto.creditNoteLineItemDtoList}" varStatus="ctr">
+            <c:forEach var="creditNoteLineItemDto" items="${pa.creditNoteDto.creditNoteLineItemDtoList}" varStatus="ctr">
                 <c:set var="sku" value="${creditNoteLineItemDto.creditNoteLineItem.sku}"/>
                 <c:set var="productVariant" value="${creditNoteLineItemDto.creditNoteLineItem.sku.productVariant}"/>
                 <c:set var="creditNote" value="${creditNoteLineItemDto.creditNoteLineItem.creditNote}" />

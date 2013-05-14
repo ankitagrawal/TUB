@@ -7,7 +7,7 @@ import com.hk.constants.core.EnumTax;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reverseOrder.ReverseOrder;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
@@ -48,7 +48,7 @@ public class AccountingInvoiceAction extends BaseAction {
   private ReverseOrderInvoiceDto reverseOrderInvoiceDto;
 
   // private Order order;
-  private B2bUser b2bUserDetails;
+  private B2bUserDetails b2bUserDetails;
   @Autowired
   B2BOrderService b2bOrderService;
 
@@ -146,11 +146,11 @@ public class AccountingInvoiceAction extends BaseAction {
     this.invoiceDto = invoiceDto;
   }
 
-  public B2bUser getB2bUserDetails() {
+  public B2bUserDetails getB2bUserDetails() {
     return b2bUserDetails;
   }
 
-  public void setB2bUserDetails(B2bUser b2bUserDetails) {
+  public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
     this.b2bUserDetails = b2bUserDetails;
   }
 

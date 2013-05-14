@@ -22,7 +22,7 @@ import com.hk.constants.core.Keys;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
@@ -61,7 +61,7 @@ public class AccountingInvoicePdfGenerator {
     BaseDao                         baseDao;
 
     private InvoiceDto              invoiceDto;
-    private B2bUser b2bUserDetails;
+    private B2bUserDetails b2bUserDetails;
     private Category                sexualCareCategory;
     private java.util.List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
 
@@ -99,7 +99,7 @@ public class AccountingInvoicePdfGenerator {
         }
     }
 
-    private void addOrderDetailsContent(Document document, ShippingOrder shippingOrder, B2bUser b2bUserDetails, InvoiceDto invoiceDto) throws DocumentException,
+    private void addOrderDetailsContent(Document document, ShippingOrder shippingOrder, B2bUserDetails b2bUserDetails, InvoiceDto invoiceDto) throws DocumentException,
             MalformedURLException, IOException {
         ReplacementOrder replacementOrder = getBaseDao().get(ReplacementOrder.class, shippingOrder.getId());
 
@@ -435,7 +435,7 @@ public class AccountingInvoicePdfGenerator {
 
     }
 
-    private void addFooter(Document document, ShippingOrder shippingOrder, B2bUser b2bUserDetails) throws DocumentException {
+    private void addFooter(Document document, ShippingOrder shippingOrder, B2bUserDetails b2bUserDetails) throws DocumentException {
         Paragraph footerParagraph = new Paragraph();
         Paragraph authorisedSigntry = new Paragraph(new Phrase("(Authorised Signatory)", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD)));
         authorisedSigntry.setAlignment(Element.ALIGN_RIGHT);
@@ -461,7 +461,7 @@ public class AccountingInvoicePdfGenerator {
         return invoiceDto;
     }
 
-    public B2bUser getB2bUserDetails() {
+    public B2bUserDetails getB2bUserDetails() {
         return b2bUserDetails;
     }
 

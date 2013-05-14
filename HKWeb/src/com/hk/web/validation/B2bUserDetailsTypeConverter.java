@@ -9,11 +9,11 @@ import net.sourceforge.stripes.validation.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.pact.dao.BaseDao;
 
 @Component
-public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUser> {
+public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUserDetails> {
   public void setLocale(Locale locale) {
   }
 
@@ -23,7 +23,7 @@ public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUser> {
   private BaseDao baseDao;
 
 
-  public B2bUser convert(String s, Class<? extends B2bUser> aClass, Collection<ValidationError> validationErrors) {
+  public B2bUserDetails convert(String s, Class<? extends B2bUserDetails> aClass, Collection<ValidationError> validationErrors) {
     Long idLong = null;
     try {
       idLong = Long.parseLong(s);
@@ -32,7 +32,7 @@ public class B2bUserDetailsTypeConverter implements TypeConverter<B2bUser> {
     if (idLong == null) {
       return null;
     } else {
-        return getBaseDao().get(B2bUser.class, idLong);
+        return getBaseDao().get(B2bUserDetails.class, idLong);
      // return userDao.getUserById(idLong);
     }
   }

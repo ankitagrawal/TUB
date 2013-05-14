@@ -166,10 +166,51 @@ public class StateList {
     }
   };
 
+  public static final Map<String, String> tinStateMap = new HashMap<String, String>() {
+    {
+      put(JAMMU_AND_KASHMIR_TIN, JAMMU_AND_KASHMIR);
+      put(HIMACHAL_PRADESH_TIN, HIMACHAL_PRADESH);
+      put(PUNJAB_TIN, PUNJAB);
+      put(CHANDIGARH_TIN, CHANDIGARH);
+      put(UTTARAKHAND_TIN, UTTARAKHAND);
+      put(HARYANA_TIN, HARYANA);
+      put(DELHI_TIN, DELHI);
+      put(RAJASTHAN_TIN, RAJASTHAN);
+      put(UTTAR_PRADESH_TIN, UTTAR_PRADESH);
+      put(BIHAR_TIN, BIHAR);
+      put(SIKKIM_TIN, SIKKIM);
+      put(ARUNACHAL_PRADESH_TIN, ARUNACHAL_PRADESH);
+      put(NAGALAND_TIN, NAGALAND);
+      put(MANIPUR_TIN, MANIPUR);
+      put(MIZORAM_TIN, MIZORAM);
+      put(TRIPURA_TIN, TRIPURA);
+      put(MEGHALAYA_TIN, MEGHALAYA);
+      put(ASSAM_TIN, ASSAM);
+      put(WEST_BENGAL_TIN, WEST_BENGAL);
+      put(JHARKHAND_TIN, JHARKHAND);
+      put(ORRISA_TIN, ORRISA);
+      put(CHHATISGARH_TIN, CHHATISGARH);
+      put(MADHYA_PRADESH_TIN, MADHYA_PRADESH);
+      put(GUJARAT_TIN, GUJARAT);
+      put(DAMAN_AND_DIU_TIN, DAMAN_AND_DIU);
+      put(DADRA_AND_NAGAR_HAVELI_TIN, DADRA_AND_NAGAR_HAVELI);
+      put(MAHARASHTRA_TIN, MAHARASHTRA);
+      put(ANDHRA_PRADESH_TIN, ANDHRA_PRADESH);
+      put(KARNATAKA_TIN, KARNATAKA);
+      put(GOA_TIN, GOA);
+      put(LAKSHADWEEP_TIN, LAKSHADWEEP);
+      put(KERALA_TIN, KERALA);
+      put(TAMIL_NADU_TIN, TAMIL_NADU);
+      put(PUDUCHERRY_TIN, PUDUCHERRY);
+      put(ANDAMAN_AND_NICOBAR_ISLAND_TIN, ANDAMAN_AND_NICOBAR_ISLAND);
+
+    }
+  };
+
   public static String getStateByTin(String tin) {
     String state = null;
     if (tin != null && tin.length() > 2) {
-      state = stateMapTIN.get(tin.substring(0, 2));
+      state = tinStateMap.get(tin.substring(0, 2));
     }
     return state;
   }

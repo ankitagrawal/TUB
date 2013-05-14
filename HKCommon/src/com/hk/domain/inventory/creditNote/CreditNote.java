@@ -2,7 +2,6 @@ package com.hk.domain.inventory.creditNote;
 // Generated 13 May, 2013 6:34:46 PM by Hibernate Tools 3.2.4.CR1
 
 
-import com.hk.domain.user.B2bUser;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
@@ -24,8 +23,8 @@ public class CreditNote implements java.io.Serializable {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "b2b_user_id", nullable = false)
-  private B2bUser b2bUser;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "created_by", nullable = false)
@@ -66,12 +65,12 @@ public class CreditNote implements java.io.Serializable {
     this.id = id;
   }
 
-  public B2bUser getB2bUser() {
-    return b2bUser;
+  public User getUser() {
+    return user;
   }
 
-  public void setB2bUser(B2bUser b2bUser) {
-    this.b2bUser = b2bUser;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public User getCreatedBy() {

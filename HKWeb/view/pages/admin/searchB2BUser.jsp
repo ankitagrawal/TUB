@@ -131,7 +131,7 @@
          <td>
             <s:link beanclass="com.hk.web.action.admin.inventory.CreditNoteAction" event="view">
               Raise Credit Note
-              <s:param name="b2bUser" value="${user.id}"/></s:link>
+              <s:param name="user" value="${user.id}"/></s:link>
           </td>
         </tr>
       </c:forEach>

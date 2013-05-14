@@ -1155,5 +1155,27 @@
             ${hk:getShippingWarehouse(${o1})}
         </example>
     </function>
+    <function>
+        <description>
+            returns B2bUserDetails of User
+        </description>
+        <name>getB2bUserDetails</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.user.B2bUserDetails getB2bUserDetails(com.hk.domain.user.User)</function-signature>
+        <example>
+            ${hk:getB2bUserDetails(${o1})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns State of Tin
+        </description>
+        <name>getStateFromTin</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getStateFromTin(java.lang.String)</function-signature>
+        <example>
+            ${hk:getStateFromTin(${o1})}
+        </example>
+    </function>
 
 </taglib>

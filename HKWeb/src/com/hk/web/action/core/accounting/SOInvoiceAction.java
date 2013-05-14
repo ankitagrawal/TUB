@@ -24,7 +24,7 @@ import com.hk.constants.courier.EnumCourier;
 import com.hk.domain.coupon.Coupon;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.Product;
@@ -78,7 +78,7 @@ public class SOInvoiceAction extends BaseAction {
 	private Coupon coupon;
 	private String routingCode;
 	private InvoiceDto invoiceDto;
-	private B2bUser b2bUserDetails;
+	private B2bUserDetails b2bUserDetails;
 	private String freebieItem;
 	private boolean groundShipped;
 	private Shipment shipment;

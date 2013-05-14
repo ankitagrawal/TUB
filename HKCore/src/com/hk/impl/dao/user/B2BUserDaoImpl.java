@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.util.DateUtils;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserDetail;
 import com.hk.dto.user.B2BUserFilterDto;
@@ -38,7 +38,7 @@ public class B2BUserDaoImpl extends BaseDaoImpl implements B2BUserDao {
 
         DetachedCriteria criteria = DetachedCriteria.forClass(User.class,"u")
         		.createAlias("roles", "r").add(Restrictions.eq("r.name","B2B_USER"));
-        DetachedCriteria b2b_criteria = DetachedCriteria.forClass(B2bUser.class)
+        DetachedCriteria b2b_criteria = DetachedCriteria.forClass(B2bUserDetails.class)
         		.setProjection(Projections.property("user"));
         DetachedCriteria ud_criteria = DetachedCriteria.forClass(UserDetail.class)
         		.setProjection(Projections.property("user"));

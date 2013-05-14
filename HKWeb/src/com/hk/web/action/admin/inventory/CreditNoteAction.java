@@ -9,10 +9,11 @@ import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.inventory.creditNote.CreditNote;
 import com.hk.domain.inventory.creditNote.CreditNoteLineItem;
 import com.hk.domain.inventory.creditNote.CreditNoteStatus;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
-import com.hk.domain.user.B2bUser;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
@@ -38,11 +39,13 @@ public class CreditNoteAction extends BasePaginatedAction {
   GRNManager grnManager;
   @Autowired
   SkuService skuService;
+  @Autowired
+  B2bUserDetailsDao b2bUserDetailsDao;
 
   Page creditNotePage;
   private List<CreditNote> creditNoteList = new ArrayList<CreditNote>();
   private List<CreditNoteLineItem> creditNoteLineItems = new ArrayList<CreditNoteLineItem>();
-  private B2bUser b2bUser;
+  private User user;
   private CreditNote creditNote;
   private CreditNoteDto creditNoteDto;
   private CreditNoteStatus creditNoteStatus;
@@ -65,17 +68,20 @@ public class CreditNoteAction extends BasePaginatedAction {
       creditNoteDto = grnManager.generateCreditNoteDto(creditNote);
     } else {
       creditNote = new CreditNote();
-      creditNote.setB2bUser(b2bUser);
+      creditNote.setUser(user);
+      creditNote.setCreateDt(new Date());
     }
     return new ForwardResolution("/pages/admin/creditNote.jsp");
   }
 
   public Resolution save() {
-
+    User loggedOnUser = getUserService().getLoggedInUser();
     logger.debug("creditNoteLineItems@Save: " + creditNoteLineItems.size());
     if (creditNote == null || creditNote.getId() == null) {
       creditNote.setCreateDt(new Date());
+      creditNote.setCreatedBy(loggedOnUser);
     }
+    creditNote.setUpdateDt(new Date());
     creditNote = (CreditNote) getCreditNoteDao().save(creditNote);
     for (CreditNoteLineItem creditNoteLineItem : creditNoteLineItems) {
       if (creditNoteLineItem.getCreditNote() == null) {
@@ -99,12 +105,12 @@ public class CreditNoteAction extends BasePaginatedAction {
     this.customerLogin = customerLogin;
   }
 
-  public B2bUser getB2bUser() {
-    return b2bUser;
+  public User getUser() {
+    return user;
   }
 
-  public void setB2bUser(B2bUser b2bUser) {
-    this.b2bUser = b2bUser;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public List<CreditNote> getCreditNoteList() {

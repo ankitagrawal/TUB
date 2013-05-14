@@ -15,7 +15,7 @@ import com.hk.domain.inventory.creditNote.CreditNoteLineItem;
 import com.hk.domain.inventory.creditNote.CreditNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.SkuService;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
@@ -302,11 +302,14 @@ public class GRNManager {
 			if (creditNoteLineItem != null && creditNoteLineItem.getCostPrice() != null && creditNoteLineItem.getQty() != null) {
 				taxable = creditNoteLineItem.getCostPrice() * creditNoteLineItem.getQty();
 			}
-			if (creditNote.getB2bUser() != null) {
-        TaxComponent taxComponent = TaxUtil.getStateTaxForPV(StateList.getStateByTin(creditNote.getB2bUser().getTin()), sku, taxable);
-				tax = taxComponent.getTax();
-				surcharge = taxComponent.getSurcharge();
-			}
+      if (creditNote.getUser() != null) {
+        B2bUserDetails b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(creditNote.getUser());
+        if (b2bUserDetails != null) {
+          TaxComponent taxComponent = TaxUtil.getStateTaxForPV(StateList.getStateByTin(b2bUserDetails.getTin()), sku, taxable);
+          tax = taxComponent.getTax();
+          surcharge = taxComponent.getSurcharge();
+        }
+      }
 			payable = taxable + tax + surcharge;
 			creditNoteLineItemDto.setTaxable(taxable);
 			creditNoteLineItemDto.setPayable(payable);

@@ -1,7 +1,7 @@
 package com.hk.admin.dto.accounting;
 
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.reverseOrder.ReverseLineItem;
 import com.hk.constants.core.EnumTax;
@@ -56,7 +56,7 @@ public class ReverseOrderInvoiceDto {
   HashMap<String, Double> summaryPayableMap = new HashMap<String, Double>();
   HashMap<String, Double> summarySurchargeMap = new HashMap<String, Double>();
   private Set<InvoiceLineItemDto> invoiceLineItemDtos = new HashSet<InvoiceLineItemDto>(0);
-  private B2bUser b2bUserDetails;
+  private B2bUserDetails b2bUserDetails;
   String invoiceType;
   String accountingInvoiceHeading;
   String invoiceTinNumber;
@@ -64,7 +64,7 @@ public class ReverseOrderInvoiceDto {
 
 
 
-  public ReverseOrderInvoiceDto(ReverseOrder reverseOrder, B2bUser b2bUserDetailsLocal) {
+  public ReverseOrderInvoiceDto(ReverseOrder reverseOrder, B2bUserDetails b2bUserDetailsLocal) {
 
     for (EnumTax enumTax : EnumTax.values()) {
       summaryAmountMap.put(enumTax.getName(), 0.0);
@@ -390,11 +390,11 @@ public class ReverseOrderInvoiceDto {
     return totalSummaryQty;
   }
 
-  public B2bUser getB2bUserDetails() {
+  public B2bUserDetails getB2bUserDetails() {
     return b2bUserDetails;
   }
 
-  public void setB2bUserDetails(B2bUser b2bUserDetails) {
+  public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
     this.b2bUserDetails = b2bUserDetails;
   }
 

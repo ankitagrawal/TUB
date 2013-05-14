@@ -12624,21 +12624,12 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-1">
-        <createTable tableName="b2b_user">
-            <column name="b2b_user_id" type="INT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="tin" type="VARCHAR(45)"/>
-            <column name="dl_number" type="VARCHAR(45)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-2">
+    <changeSet author="Ajeet (generated)" id="1368526085655-1">
         <createTable tableName="credit_note">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="b2b_user_id" type="INT">
+            <column name="user_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="warehouse_id" type="INT">
@@ -12662,7 +12653,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-3">
+    <changeSet author="Ajeet (generated)" id="1368526085655-2">
         <createTable tableName="credit_note_line_item">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -12685,7 +12676,7 @@
             <column name="remarks" type="TEXT"/>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-4">
+    <changeSet author="Ajeet (generated)" id="1368526085655-3">
         <createTable tableName="credit_note_status">
             <column name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -12695,37 +12686,29 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Ajeet (written)" id="1368465836917-5">
-        <sql>insert into b2b_user (select user_id, tin, dl_number from b2b_user_details);</sql>
+    <changeSet author="Ajeet (generated)" id="1368526085655-4">
+        <addColumn tableName="address">
+            <column name="mobile" type="VARCHAR(10)"/>
+        </addColumn>
     </changeSet>
-
-    <changeSet author="Ajeet (generated)" id="1368465836917-8">
-        <addForeignKeyConstraint baseColumnNames="b2b_user_id" baseTableName="b2b_user" constraintName="fk_b2b_user_details_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-9">
-        <addForeignKeyConstraint baseColumnNames="b2b_user_id" baseTableName="credit_note" constraintName="fk_credit_note_b2b_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="b2b_user_id" referencedTableName="b2b_user" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-10">
+    
+    <changeSet author="Ajeet (generated)" id="1368526085655-7">
         <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="credit_note" constraintName="fk_credit_note_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-11">
+    <changeSet author="Ajeet (generated)" id="1368526085655-8">
         <addForeignKeyConstraint baseColumnNames="credit_note_status_id" baseTableName="credit_note" constraintName="fk_credit_note_credit_note_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note_status" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-12">
+    <changeSet author="Ajeet (generated)" id="1368526085655-9">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="credit_note" constraintName="fk_credit_note_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-10">
         <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="credit_note" constraintName="fk_credit_note_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-13">
+    <changeSet author="Ajeet (generated)" id="1368526085655-11">
         <addForeignKeyConstraint baseColumnNames="credit_note_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_credit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-14">
+    <changeSet author="Ajeet (generated)" id="1368526085655-12">
         <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
     </changeSet>
-
-    <!--<changeSet author="Ajeet (generated)" id="1368465836917-6">
-        <dropForeignKeyConstraint baseTableName="b2b_user_details" constraintName="fk_b2b_details_user1"/>
-    </changeSet>
-    <changeSet author="Ajeet (generated)" id="1368465836917-15">
-        <dropTable tableName="b2b_user_details"/>
-    </changeSet>-->
-
+    
 </databaseChangeLog>

@@ -12,7 +12,7 @@ import com.hk.core.fliter.LineItemFilter;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
-import com.hk.domain.user.B2bUser;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 
 /**
@@ -55,7 +55,7 @@ public class InvoiceDto {
 	HashMap<String, Double> summaryPayableMap = new HashMap<String, Double>();
 	HashMap<String, Double> summarySurchargeMap = new HashMap<String, Double>();
 	private Set<InvoiceLineItemDto> invoiceLineItemDtos = new HashSet<InvoiceLineItemDto>(0);
-	private B2bUser b2bUserDetails;
+	private B2bUserDetails b2bUserDetails;
 	String invoiceType;
 	String accountingInvoiceHeading;
 	String invoiceTinNumber;
@@ -66,7 +66,7 @@ public class InvoiceDto {
 	private ShippingOrder ShippingOrder;
 
 
-	public InvoiceDto(ShippingOrder shippingOrder, B2bUser b2bUserDetailsLocal, boolean cFormaAvailable) {
+	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetailsLocal, boolean cFormaAvailable) {
 		if (shippingOrder instanceof ReplacementOrder) {
 			ReplacementOrder replacementOrder = (ReplacementOrder) shippingOrder;
 			replacementOrderString = "The following order is in lieu of order number: "
@@ -244,7 +244,7 @@ public class InvoiceDto {
 
 	}
 
-	public InvoiceDto(ShippingOrder shippingOrder, B2bUser b2bUserDetails) {
+	public InvoiceDto(ShippingOrder shippingOrder, B2bUserDetails b2bUserDetails) {
 		this(shippingOrder,b2bUserDetails,false);
 	}
 
@@ -453,11 +453,11 @@ public class InvoiceDto {
 		return totalSummaryQty;
 	}
 
-	public B2bUser getB2bUserDetails() {
+	public B2bUserDetails getB2bUserDetails() {
 		return b2bUserDetails;
 	}
 
-	public void setB2bUserDetails(B2bUser b2bUserDetails) {
+	public void setB2bUserDetails(B2bUserDetails b2bUserDetails) {
 		this.b2bUserDetails = b2bUserDetails;
 	}
 
