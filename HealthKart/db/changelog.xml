@@ -12708,4 +12708,32 @@
     <changeSet author="Nihal (generated)" id="1368113151171-8">
         <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_purchase_in1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
     </changeSet>
+     <changeSet author="Nihal (generated)" id="1368515586650-2">
+        <createTable tableName="extra_inventory_line_item_type">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-7">
+        <addColumn tableName="extra_inventory_line_item">
+            <column name="extra_inventory_line_item_type_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-8">
+        <addColumn tableName="purchase_invoice_line_item">
+            <column name="grn_line_item_id" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-13">
+        <addForeignKeyConstraint baseColumnNames="extra_inventory_line_item_type_id" baseTableName="extra_inventory_line_item" constraintName="fk_extra_inventory_line_item_extra_inventory_line_item_type1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="extra_inventory_line_item_type" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1368515586650-14">
+        <addForeignKeyConstraint baseColumnNames="grn_line_item_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_grn_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="grn_line_item" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

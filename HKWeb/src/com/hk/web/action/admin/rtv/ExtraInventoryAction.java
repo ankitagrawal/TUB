@@ -11,6 +11,7 @@ import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.constants.courier.EnumPickupStatus;
 import com.hk.constants.courier.StateList;
 import com.hk.constants.inventory.EnumPurchaseOrderStatus;
+import com.hk.constants.rtv.EnumExtraInventoryLineItemType;
 import com.hk.constants.rtv.EnumExtraInventoryStatus;
 import com.hk.domain.core.PurchaseOrderStatus;
 import com.hk.domain.courier.CourierPickupDetail;
@@ -89,6 +90,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
+  private List<ExtraInventoryLineItem> extraInventoryShortLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
   private List<RtvNoteLineItem> rtvNoteLineItems = new ArrayList<RtvNoteLineItem>();
   private List<Tax> taxList = new ArrayList<Tax>();
   private List<ExtraInventory> extraInventories = new ArrayList<ExtraInventory>();
@@ -231,6 +233,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     //Double totalTaxable = 0.0D, totalTax = 0.0D, totalSurcharge = 0.0D, totalPayable = 0.0D;
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItems){
       if(extraInventoryLineItem.getId()==null && extraInventoryLineItem.getReceivedQty()!=0){
+    	extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal.asEnumExtraInventoryLineItemType());
         extraInventoryLineItem.setExtraInventory(extraInventory);
         extraInventoryLineItem.setCreateDate(new Date());
         extraInventoryLineItem.setUpdateDate(new Date());
@@ -323,6 +326,23 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     addRedirectAlertMessage(new SimpleMessage("Rtv Created !!!!"));
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
   }
+
+@Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
+public Resolution createShort(){
+	extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
+    List<ExtraInventoryLineItem> extraLineItems = new ArrayList<ExtraInventoryLineItem>();
+    for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
+      if(extraInventoryLineItem!=null){
+        extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+        extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short.asEnumExtraInventoryLineItemType());
+        extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
+        extraLineItems.add(extraInventoryLineItem);
+      }
+    }
+    
+    addRedirectAlertMessage(new SimpleMessage("Short Created !!!!"));
+    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+}
 
   @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
   public Resolution editRtvNote(){
@@ -830,5 +850,12 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   public void setWarehouseState(String warehouseState) {
 	this.warehouseState = warehouseState;
   }
-  
+
+  public List<ExtraInventoryLineItem> getExtraInventoryShortLineItemsSelected() {
+	return extraInventoryShortLineItemsSelected;
+  }
+
+  public void setExtraInventoryShortLineItemsSelected(List<ExtraInventoryLineItem> extraInventoryShortLineItemsSelected) {
+	this.extraInventoryShortLineItemsSelected = extraInventoryShortLineItemsSelected;
+  }
 }

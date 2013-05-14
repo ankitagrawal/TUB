@@ -107,7 +107,7 @@ public class ExtraInventoryLineItem implements Serializable{
 	  )
 	  private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
 	
-	@ManyToMany
+	@ManyToOne
 	@JoinColumn(name="extra_inventory_line_item_type_id")
 	private ExtraInventoryLineItemType extraInventoryLineItemType;
 

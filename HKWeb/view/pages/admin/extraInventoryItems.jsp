@@ -53,6 +53,25 @@ $(document).ready(function () {
             return false;
         }
     });
+    
+    $('.createShort').live('click', function() {
+        var bool = true;
+        $('.checkbox1').each(function() {
+            if ($(this).attr("checked") == "checked") {
+                bool = false;
+            }
+        });
+        if (bool) {
+            alert("Please select Line Items to create Short");
+            return false;
+        }
+        if (confirm('Are you sure you want to create Short for selected items?')) {
+            $(this).hide();
+        }
+        else {
+            return false;
+        }
+    });
 
     $('.variantId').live('change', function() {
         var variant = $(this).val();
@@ -104,7 +123,8 @@ $(document).ready(function () {
         $('.createRtv').remove();
     });
 
-    $(".save").click(function() {
+    $(".save").click(function(event) {
+    	var id = event.target.id;
         var saveObj = $(this);
         $(this).hide();
         var bool = true;
@@ -156,18 +176,20 @@ $(document).ready(function () {
             }
 
         });
-        $('.rowShortCheck').each(function(){
+        
+        if(id=="createShort"){
+        $('.checkbox1').each(function(){
         	var state = $(this).is(':checked'); //state = true/false depending on state
             if (state){
         		var productVariant = $(this).parent().parent().children('td').children('.variantId').val();
         		if(productVariant==null||productVariant.trim(variant) == ""){
-        			alert("Please provide a valid variant for SHORT creation");
+        			alert("SHORT can not be created if Variant is Unknown!!");
                     bool = false;
                     return false;
         		}
         	}
         });
-        
+        }
         $(".variantId").each(function() {
             var variant = $(this).val();
             var obj = $(this);
@@ -299,8 +321,8 @@ $(document).ready(function () {
                 '<td>' +
                 '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
                 '</td>' +
-                '<td class="shortCheck"> <input type="checkbox" class="rowShortCheck" name = "extraInventoryLineItems[' + nextIndex + '].extraInventoryLineItemType"/>' +
-                '</td>' +
+                /* '<td class="shortCheck"> <input type="checkbox" class="rowShortCheck" name="extraInventoryLineItems[' + nextIndex + '].id"/>' +
+                '</td>' + */
                 '</tr>';
 
         $('#poTable').append(newRowHtml);
@@ -463,13 +485,13 @@ $(document).ready(function () {
         <th>Surcharge</th>
 		<th>Payable</th>
         <th>Remarks</th>
-         <th>Short Item Check</th>
     </tr>
     </thead>
     <tbody id="poTable">
     <c:if test="${extraInventory.extraInventoryLineItems!=null}">
         <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
         <s:hidden name="extraInventoryLineItems[${ctr.index}].purchaseInvoices" value="${eInLineItems.purchaseInvoices}"></s:hidden>
+        <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType" value="${eInLineItems.extraInventoryLineItemType}"></s:hidden>
             <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                 <td>${ctr.index+1}.</td>
                 <td>
@@ -486,7 +508,7 @@ $(document).ready(function () {
                                   value="${eInLineItems.grnCreated}"/>
                         <c:set var="bool" value="1"/>
                     </c:if>
-                    <c:if test="${eInLineItems.extraInventoryLineItemType!=null && eInLineItems.extraInventoryLineItemType.name eq Short}">
+                    <c:if test="${eInLineItems.extraInventoryLineItemType!=null && eInLineItems.extraInventoryLineItemType.name == 'Short'}">
                         ${eInLineItems.id}(SHORT)
                         <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType"
                                   value="${eInLineItems.extraInventoryLineItemType}"/>
@@ -511,7 +533,7 @@ $(document).ready(function () {
                 </td>
                 <td class="skuId">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType!=null}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
                             ${eInLineItems.sku.id}
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
                                       value="${eInLineItems.sku.id}"/>
@@ -526,7 +548,7 @@ $(document).ready(function () {
                 </td>
                 <td class="txtSku">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.shortCreated}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
                             ${eInLineItems.sku.productVariant.id}
                         </c:when>
                         <c:otherwise>
@@ -544,7 +566,7 @@ $(document).ready(function () {
                 </td>
                 <td class="proName">
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.shortCreated}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
                             ${eInLineItems.productName}
                             <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
                                       value="${eInLineItems.productName}"/>
@@ -656,6 +678,9 @@ $(document).ready(function () {
 <shiro:hasPermission name="<%=PermissionConstants.PO_MANAGEMENT%>">
     <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
         <s:submit name="createRtv" value="Create RTV" class="requiredFieldValidator createRtv"/>
+    </c:if>
+    <c:if test="${extraInventory.reconciledStatus==null or (extraInventory.reconciledStatus!=null and !extraInventory.reconciledStatus eq 'reconciled')}">
+        <s:submit id="createShort" name="createShort" class="requiredFieldValidator save createShort" value="Create Short"/>
     </c:if>
     <s:submit name="editRtv" class="save" value="Check RTV Status" id="checkRtvStatus"/>
     <s:submit name="createPO" value="Create PO" class="save createRtv"/>

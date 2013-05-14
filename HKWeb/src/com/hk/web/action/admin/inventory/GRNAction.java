@@ -397,7 +397,7 @@ public class GRNAction extends BasePaginatedAction {
 				Double discountPercentage = 0D;
 				PurchaseInvoiceLineItem purchaseInvoiceLineItem = new PurchaseInvoiceLineItem();
 				purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
-				//purchaseInvoiceLineItem.setGoodsReceivedNote(grn);
+				purchaseInvoiceLineItem.setGrnLineItem(grnLineItem);
 				if (grnLineItem.getCostPrice() != null) {
 					purchaseInvoiceLineItem.setCostPrice(grnLineItem.getCostPrice());
 				}

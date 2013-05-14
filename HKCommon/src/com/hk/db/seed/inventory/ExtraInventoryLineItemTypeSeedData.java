@@ -21,6 +21,7 @@ public class ExtraInventoryLineItemTypeSeedData extends BaseSeedData{
 		ExtraInventoryLineItemType extraInventoryLineItemType = new ExtraInventoryLineItemType();
 		extraInventoryLineItemType.setId(id);
 		extraInventoryLineItemType.setName(name);
+		getBaseDao().save(extraInventoryLineItemType);
 	}
 	
 	public void invokeInsert() {

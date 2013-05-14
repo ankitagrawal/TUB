@@ -17,6 +17,7 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.core.Tax;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.GrnLineItem;
 import com.hk.domain.sku.Sku;
 
 /**
@@ -76,8 +77,8 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 	private Surcharge surcharge;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "goods_received_note_id")
-	private GoodsReceivedNote goodsReceivedNote;
+	@JoinColumn(name = "grn_line_item_id")
+	private GrnLineItem grnLineItem;
 	
 	public Long getId() {
 		return this.id;
@@ -191,12 +192,12 @@ public class PurchaseInvoiceLineItem implements java.io.Serializable {
 		this.surcharge = surcharge;
 	}
 
-	public GoodsReceivedNote getGoodsReceivedNote() {
-		return goodsReceivedNote;
+	public GrnLineItem getGrnLineItem() {
+		return grnLineItem;
 	}
 
-	public void setGoodsReceivedNote(GoodsReceivedNote goodsReceivedNote) {
-		this.goodsReceivedNote = goodsReceivedNote;
+	public void setGrnLineItem(GrnLineItem grnLineItem) {
+		this.grnLineItem = grnLineItem;
 	}
 
 	@Override

@@ -475,7 +475,7 @@
 	
 	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
 	<tr>
-	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, RTV Id. ${rtv.id}</td>
+	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?editRtvNoteLineItems=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&extraInventoryId=${rtv.extraInventory.id }&rtvNoteId=${rtv.id}">RTV Id. ${rtv.id}</a></td>
 	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</tr>
 	</c:forEach>
@@ -489,7 +489,7 @@
 	Short inventory attached with the PI.<br/>
 	<c:forEach items="${pia.toImportShortEiLiList}" var="eili" varStatus="ctr">
 	<tr>
-	<td>${ctr.index+1}. PO No. ${eili.extraInventory.purchaseOrder.id}, Extra Inven. Id. ${eili.id}</td>
+	<td>${ctr.index+1}.PO No. ${eili.extraInventory.purchaseOrder.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${eili.extraInventory.purchaseOrder.id}&wareHouseId=${pia.purchaseInvoice.goodsReceivedNotes[0].warehouse.id}" target="_blank">EI. Id. ${eili.id}</a></td>
 	<td><s:checkbox name="eiliId[${ctr.index}]" value="${eili.id}" class="purchaseLineItemCheckBox"/></td>
 	</tr>
 	</c:forEach>
@@ -650,13 +650,13 @@
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}]" value="${purchaseInvoiceLineItem.id}"/>
 		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].productVariant"
 		          value="${purchaseInvoiceLineItem.sku.productVariant.id}"/>
-		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].goodsReceivedNote" value="${purchaseInvoiceLineItem.goodsReceivedNote}"/>
+		<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].grnLineItem" value="${purchaseInvoiceLineItem.grnLineItem}"/>
 		
 		<%--<s:hidden name="purchaseInvoiceLineItems[${ctr.index}].sku" value="${purchaseInvoiceLineItem.sku.id}"/>--%>
 		<tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
 			<td>${ctr.index+1}.</td>
 			<c:choose>
-						<c:when test="${purchaseInvoiceLineItem.goodsReceivedNote.id != null}">
+						<c:when test="${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id != null}">
 							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}">${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}</a></td>
 						</c:when>
 						<c:otherwise>
@@ -778,18 +778,18 @@
 		            value="${pia.purchaseInvoice.payableAmount}"/></td>
 	</tr>
 	<tr>
-		<td colspan="12"></td><td>Overall Discount<br/>(In Rupees)</td>
+		<td colspan="13"></td><td>Overall Discount<br/>(In Rupees)</td>
 		<td><s:text class="overallDiscount footerChanges" name="purchaseInvoice.discount"
 		            value="${pia.purchaseInvoice.discount}"/></td>
 	</tr>
 	<tr>
 	<tr>
-		<td colspan="12"></td><td>Freight and Forwarding<br/>Charges(In Rupees)</td>
+		<td colspan="13"></td><td>Freight and Forwarding<br/>Charges(In Rupees)</td>
 		<td><s:text class="freightCharges footerChanges" name="purchaseInvoice.freightForwardingCharges"
 		            value="${pia.purchaseInvoice.freightForwardingCharges}"/></td>
 	</tr>
 	<tr>
-		<td colspan="12"></td><td>Final Payable</td>
+		<td colspan="13"></td><td>Final Payable</td>
 		<td><s:text readonly="readonly" class="finalPayable piTotal" name="purchaseInvoice.finalPayableAmount"
 		            value="${pia.purchaseInvoice.finalPayableAmount}"/></td>
 	</tr>
@@ -847,9 +847,9 @@
 		<s:hidden name="extraInventoryId" value="${extraInventoryShortLineItem.extraInventory.id}" />
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].grnCreated" value="${extraInventoryShortLineItem.grnCreated}"/>
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].rtvCreated" value="${extraInventoryShortLineItem.rtvCreated}"/>
-		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].shortCreated" value="${extraInventoryShortLineItem.shortCreated}"/>
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].poLineItem" value="${extraInventoryShortLineItem.poLineItem}"/>
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].updateDate" value="${extraInventoryShortLineItem.updateDate}"/>
+		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].extraInventoryLineItemType" value="${extraInventoryShortLineItem.extraInventoryLineItemType}"/>
 		<c:choose>
 						<c:when test="${extraInventoryShortLineItem.sku != null}">
 		<c:set value="${extraInventoryShortLineItem.sku}" var="sku"/>
@@ -1001,9 +1001,6 @@
 	</tfoot>
 </table>
 <s:submit name="saveShort" value="Save" class="requiredFieldValidator" id="save-button"/>
-<shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
-	<s:submit name="deleteShortMapping" value="Delete"/>
-</shiro:hasRole>
 </s:form>
 
 
@@ -1047,7 +1044,6 @@
 		<s:hidden name="extraInventoryId" value="${extraInventoryLineItem.extraInventory.id}" />
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].grnCreated" value="${extraInventoryLineItem.grnCreated}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].rtvCreated" value="${extraInventoryLineItem.rtvCreated}"/>
-		<s:hidden name="extraInventoryLineItems[${ctr.index}].shortCreated" value="${extraInventoryLineItem.shortCreated}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].poLineItem" value="${extraInventoryLineItem.poLineItem}"/>
 		<s:hidden name="extraInventoryLineItems[${ctr.index}].updateDate" value="${extraInventoryLineItem.updateDate}"/>
 		<c:choose>

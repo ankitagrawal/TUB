@@ -405,7 +405,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 						.getExtraInventoryLineItemsByExtraInventoryId(ei.getId());
 				if (eiliList != null) {
 					for (ExtraInventoryLineItem eili : eiliList) {
-						if (eili.getExtraInventoryLineItemType().getId()!=null && 
+						if (eili.getExtraInventoryLineItemType()!=null && 
 								eili.getExtraInventoryLineItemType().getId().equals(EnumExtraInventoryLineItemType.Short.getId())) {
 							eiLineItemSet.add(eili);
 						}
