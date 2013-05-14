@@ -73,11 +73,11 @@
             </h5>
             <ul>
                 <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
-                <li>
+                <%--<li>
                     <a id="bulkOrder" style="cursor: pointer;">
                         Bulk Order
                     </a>
-                </li>
+                </li>--%>
             </ul>
         </div>
       <div style="float:right;">
