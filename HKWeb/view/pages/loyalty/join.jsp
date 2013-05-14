@@ -5,51 +5,47 @@
 
 <stripes:layout-render name="/pages/loyalty/info/layoutStatic.jsp">
 	<stripes:layout-component name="contents">
+		<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction" var="joinAction" />  
 		<div class="container_16 clearfix">
-			<div style="width: 100%; font-size: 38px; padding-bottom: 15px; margin-left: 100px;"
-				class="embedMargin119">Welcome to healthkart stellar !!</div>
-				<div class="topText" id="message1"
-				style="float: left; margin-left: 100px; width: 680px;">
-						<div class=" signUpPart">
-							<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
-							<div >One more step before we take you to catalog.</div>
-							<br>
-							<div>We'd like to know you better. Would you please fill in some more information for us?
-							</div>
-							<br>
-								<div class="signUp">
-								<div >Name</div> 
-								<s:text class="name" placeholder="Name"  name="name" >
-								</s:text>
-								<div>Gender: </div>
-								<select class="name" name="gender" placeholder="Gender">
-									<option value="MALE">MALE</option>
-									<option value="FEMALE">FEMALE</option>
-								</select>
-							<!-- 	<div style="width: 40%;">Date of Birth</div> 
-								<s:text class="name" placeholder="Date Of Birth"  name="dob" id="datepicker">
-								</s:text>
-							 -->	<div >
-							 <br>
-									<s:submit name="continueProgram" value="TRY OUR CATALOG OUT?" class="btn"/>
-								</div>
-							</div>
-							</s:form>
-						</div>
-				</div>
-		</div>
-				
-	<script type="text/javascript">
-		$(document).ready(function(){
+			<div class="welcomeTitle" style="width: 650px; margin-left:180px;">Welcome to healthkart stellar !!</div>
+	    <div class="grid_10 innerContent">
+			<s:form beanclass="com.hk.web.action.core.loyaltypg.JoinLoyaltyProgramAction">
+		      
+			<div class="content">
+				<p>One more step before we take you to the catalog.</p>
+				<p>We’d like to know you better. Could you please fill in the fields and then, we’re good to go!</p>
+			</div>
 
-			    $( "#datepicker" ).datepicker({
-			      changeMonth: true,
-			      changeYear: true,
-				  minDate: "-90Y", maxDate: "-15Y" 
-				});
-		});
-		
-	
-	</script>
+        <div class="inputFields">
+          <div>Your name</div>
+          <s:text class="welcomeInput" name="name" value="${joinAction.name}"></s:text>
+        </div>
+
+        <div class="inputFields">
+          <div>Gender</div>
+			<select class="welcomeInput" name="gender" >
+				<option value="MALE">MALE</option>
+				<option value="FEMALE">FEMALE</option>
+			</select>
+        </div>
+
+        <div class="inputFields">
+          <div>Age group</div>
+          <div class="welcomeInput noPadding">
+            <select class="welcomeSelect" name="ageGroup">
+              <option></option>
+			  <option>below 18</option>
+              <option>18-30</option>
+              <option>30-40</option>
+              <option>40-60</option>
+			  <option>above 60</option>
+            </select>
+          </div>
+        </div>
+
+		<div><br><br><s:submit name="continueProgram" value="TRY OUR CATALOG OUT?" class="btn"/></div>
+		</s:form>
+	</div>
+	</div>
 	</stripes:layout-component>
 </stripes:layout-render>

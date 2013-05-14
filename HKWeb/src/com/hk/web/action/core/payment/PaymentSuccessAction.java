@@ -45,7 +45,8 @@ public class PaymentSuccessAction extends BaseAction {
     private String purchaseDate;
     private String couponCode;
     private int couponAmount = 0;
-
+    private double loyaltyPointsEarned=0;
+    
     @Autowired
     private PaymentDao paymentDao;
     @Autowired
@@ -154,7 +155,7 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-        	this.loyaltyProgramService.creditKarmaPoints(this.order);
+        this.loyaltyPointsEarned = Math.round(this.loyaltyProgramService.creditKarmaPoints(this.order)*10)/10;
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
@@ -218,4 +219,18 @@ public class PaymentSuccessAction extends BaseAction {
     public int getCouponAmount() {
         return this.couponAmount;
     }
+
+	/**
+	 * @return the loyaltyPointsEarned
+	 */
+	public double getLoyaltyPointsEarned() {
+		return this.loyaltyPointsEarned;
+	}
+
+	/**
+	 * @param loyaltyPointsEarned the loyaltyPointsEarned to set
+	 */
+	public void setLoyaltyPointsEarned(double loyaltyPointsEarned) {
+		this.loyaltyPointsEarned = loyaltyPointsEarned;
+	}
 }

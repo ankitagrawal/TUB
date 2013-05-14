@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +70,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Autowired
 	private RewardPointService rewardPointService;
 
+	private final double LOYALTY_JOINING_BONUS= 15.0;
+	
 	private enum LoyaltyProductAlias {
 		VARIANT("pv"), PRODUCT("p"), CATEGORY("c");
 
@@ -137,11 +140,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	@Transactional
-	public void creditKarmaPoints(Order order) {
+	public double creditKarmaPoints(Order order) {
 		boolean creditLoyaltyPoints = true;
+		double karmaPoints =0;
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
-			throw new RuntimeException("User order karma profile already exist for given orer and user");
+			return karmaPoints=karmaProfile.getKarmaPoints();
 		}
 		
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser());
@@ -155,9 +159,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
              		creditLoyaltyPoints=false;
              	}
              }
-
-         if (creditLoyaltyPoints || !(badgeInfo.getBadge().getId()==1l)) {
-        	double karmaPoints = (amount * loyaltyPercentage)/100;
+         
+         if (creditLoyaltyPoints || !(badgeInfo.getBadge().getBadgeName().equalsIgnoreCase("NORMAL"))) {
+        	karmaPoints = (amount * loyaltyPercentage)/100;
+        	if (karmaPoints ==0) {
+        		return 0;
+        	}
         	UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
         	profile.setStatus(KarmaPointStatus.PENDING);
         	profile.setTransactionType(TransactionType.CREDIT);
@@ -166,6 +173,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
         	profile.setOrder(order);
         	this.userOrderKarmaProfileDao.saveOrUpdate(profile);
         }
+         return karmaPoints;
 	}
 
 	@Override
@@ -235,12 +243,12 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void updateUserBadgeInfo(User user) {
-		double anualSpend = this.calculateAnualSpend(user);
+		double annualSpend = this.calculateAnualSpend(user);
 
 		List<Badge> badges = this.baseDao.getAll(Badge.class);
 		Badge calculatedBadge = this.baseDao.get(Badge.class, 1l);
 		for (Badge badge : badges) {
-			if (anualSpend >= badge.getMinScore() && (anualSpend <= badge.getMaxScore() || badge.getMaxScore() == -1)) {
+			if (annualSpend >= badge.getMinScore() && (annualSpend <= badge.getMaxScore() || badge.getMaxScore() == -1)) {
 				calculatedBadge = badge;
 				break;
 			}
@@ -255,6 +263,39 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			this.baseDao.save(userBadgeInfo);
 		}
 
+	}
+
+	@Override
+	@Transactional
+	public void createNewUserBadgeInfo(User user) {
+		double annualSpend = this.calculateAnualSpend(user);
+		Order bonusOrder = this.baseDao.get(Order.class, -1l);
+		List<Badge> badges = this.baseDao.getAll(Badge.class);
+		Badge calculatedBadge = this.baseDao.get(Badge.class, 1l);
+		Date currentTime = Calendar.getInstance().getTime();
+		for (Badge badge : badges) {
+			if (annualSpend >= badge.getMinScore() && (annualSpend <= badge.getMaxScore() || badge.getMaxScore() == -1)) {
+				calculatedBadge = badge;
+				break;
+			}
+		}
+		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
+		if (calculatedBadge.compareTo(userBadgeInfo.getBadge()) > 0) {
+			userBadgeInfo.setBadge(calculatedBadge);
+			userBadgeInfo.setUpdationTime(currentTime);
+			this.baseDao.save(userBadgeInfo);
+		} else {
+			this.baseDao.save(userBadgeInfo);
+		}
+		UserOrderKarmaProfile bonusProfile = new UserOrderKarmaProfile();
+		bonusProfile.setUser(user);
+		bonusProfile.setOrder(bonusOrder);
+		bonusProfile.setKarmaPoints(this.LOYALTY_JOINING_BONUS);
+		bonusProfile.setCreationTime(currentTime);
+		bonusProfile.setUpdateTime(currentTime);
+		bonusProfile.setTransactionType(TransactionType.CREDIT);
+		bonusProfile.setStatus(KarmaPointStatus.BONUS);
+		this.loyaltyProductDao.saveOrUpdate(bonusProfile);
 	}
 
 	@Override

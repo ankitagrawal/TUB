@@ -319,15 +319,26 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     order = this.orderService.save(order);
                     this.storeOrderService.updateOrderStatusInStore(order);
                 }
-                if (!order.isDeliveryEmailSent() && order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                    if (this.getAdminEmailManager().sendOrderDeliveredEmail(order)) {
-                        order.setDeliveryEmailSent(true);
-                        this.getOrderService().save(order);
-                    }
-	                this.smsManager.sendOrderDeliveredSMS(order);
-
-                    this.reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
-                }
+                // to do order delivered mail
+                if (!order.isDeliveryEmailSent() && order.getStore() != null) {
+                	
+                	if(order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)){
+                        if (this.getAdminEmailManager().sendOrderDeliveredEmail(order)) {
+                            order.setDeliveryEmailSent(true);
+                            this.getOrderService().save(order);
+                            this.smsManager.sendOrderDeliveredSMS(order);
+                            this.reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
+                        }
+                	} else if ((order.getStore().getId().equals(StoreService.LOYALTYPG_ID))) {
+                		// separate condition added in case future changes happen to the email or messages
+                        if (this.getAdminEmailManager().sendOrderDeliveredEmail(order)) {
+                            order.setDeliveryEmailSent(true);
+                            this.getOrderService().save(order);
+                            this.smsManager.sendOrderDeliveredSMS(order);
+                            this.reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
+                        }
+                	}
+	            }
             }
         }
         return order;

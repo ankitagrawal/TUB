@@ -149,11 +149,6 @@ pageContext.setAttribute("isSecure", isSecure);
       </div>
     </div>
 
- <%--    <p>
-      <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${lca}"/>
-      <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${lca}"/>
-    </p>
- --%>
     <div class="grid_12 mainContent">
             <div class="grid_12 embedMarginBottom40" id="productCategory">
               <div class="dottedLine"></div>

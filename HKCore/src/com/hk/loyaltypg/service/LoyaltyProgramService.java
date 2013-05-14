@@ -17,37 +17,37 @@ import com.hk.store.SearchCriteria;
 
 public interface LoyaltyProgramService {
 	
-	List<LoyaltyProduct> listProucts(SearchCriteria criteria);
+	public List<LoyaltyProduct> listProucts(SearchCriteria criteria);
 	
-	int countProucts(SearchCriteria criteria);
+	public int countProucts(SearchCriteria criteria);
 	
-	LoyaltyProduct getProductByVariantId(String variantId);
+	public LoyaltyProduct getProductByVariantId(String variantId);
 	
-	void creditKarmaPoints(Order order);
+	public double creditKarmaPoints(Order order);
 	
-	void debitKarmaPoints(Order order);
+	public void debitKarmaPoints(Order order);
 
-	void approveKarmaPoints(Order order);
+	public void approveKarmaPoints(Order order);
 	
-	void cancelLoyaltyPoints(Order order);
+	public void cancelLoyaltyPoints(Order order);
 
-	UserBadgeInfo getUserBadgeInfo(User user);
+	public UserBadgeInfo getUserBadgeInfo(User user);
 
-	Collection<Badge> getAllBadges();
+	public Collection<Badge> getAllBadges();
 	
-	Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
+	public Page getUserLoyaltyProfileHistory (User user, int page, int perPage);
 	
-	List<CategoryDto> listCategories();
+	public List<CategoryDto> listCategories();
 
-	double calculateLoyaltyPoints(User user);
+	public double calculateLoyaltyPoints(User user);
 	
-	double calculateLoyaltyPoints(Order order);
+	public double calculateLoyaltyPoints(Order order);
 	
-	double calculateLoyaltyPoints(Collection<CartLineItem> cartLineItems);
+	public double calculateLoyaltyPoints(Collection<CartLineItem> cartLineItems);
 
-	double calculateAnualSpend(User user);
+	public double calculateAnualSpend(User user);
 	
-	NextLevelInfo fetchNextLevelInfo(User user);
+	public NextLevelInfo fetchNextLevelInfo(User user);
 	
 	public double convertLoyaltyToRewardPoints(User user);
 
@@ -56,5 +56,7 @@ public interface LoyaltyProgramService {
 	public void uploadLoyaltyProductsCSV(FileBean csvFileReader, List<String> errorMessages);
 
 	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages);
+
+	public void createNewUserBadgeInfo(User user);
 
 }

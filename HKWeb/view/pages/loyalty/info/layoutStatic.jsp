@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
@@ -53,7 +54,7 @@
     <div id="footer">
         <div class="container_16 clearfix embedMarginTop100">
           <div class="grid_12">
-            <div class="footerRight" style="width: 672px;">
+            <div class="footerRight">
             <div class="footerLeft" >
               info@healthkart.com |
                <a href= "${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" target="_blank">Terms and Conditions </a>| Connect with Us:

@@ -34,6 +34,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	@DontValidate
 	public Resolution pre() {
 		User user = this.userService.getLoggedInUser();
+		this.name = user.getName();
 		if (user!=null && user.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 			this.loyaltyProgramService.updateUserBadgeInfo(user);
 			return new RedirectResolution(LoyaltyCatalogAction.class);
@@ -54,7 +55,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 		
 		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
 		this.userService.save(user);
-		this.loyaltyProgramService.updateUserBadgeInfo(user);
+		this.loyaltyProgramService.createNewUserBadgeInfo(user);
 		return new RedirectResolution(LoyaltyCatalogAction.class);
 	}
 	

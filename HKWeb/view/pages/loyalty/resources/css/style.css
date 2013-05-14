@@ -1377,3 +1377,70 @@ ul {
 	color: green !important;
 	font-size: 12px !important;
 }
+
+.welcomeTitle{
+	position: relative;
+	float: left;
+	font-size: 40px;
+	font-family: whitneyBook;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #ddd;
+	width: 100%;
+}
+
+.innerContentTitle{
+	position: relative;
+	left: 180px;
+	text-align: center;
+}
+
+.innerContent{
+	position: relative;
+	left: 180px;
+}
+
+.embedMarginBottom20{
+	margin-bottom: 20px !important;
+}
+
+.welcomeInput{
+	border: 1px solid rgb(240, 240, 240);
+	background: rgb(240, 240, 240);
+	width: 250px;
+	padding: 6px;
+}
+
+.welcomeSelect{
+	background: transparent;
+	width: 100%;
+	border: none;
+	height: 29px;
+}
+
+.noPadding{
+	padding:0px !important;
+}
+
+.inputFields{
+	margin-bottom: 10px;
+}
+
+.content p{
+	font-size: 16px;
+}
+
+.content{
+	margin-bottom: 30px;
+}
+
+.tryOutButton{
+	position: relative;
+	float: left;
+	border: 2px solid #ddd;
+	padding: 5px;
+	font-size: 12px;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-top: 20px;
+	cursor: pointer;
+}

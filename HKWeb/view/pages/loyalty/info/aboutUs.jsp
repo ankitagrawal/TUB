@@ -164,42 +164,98 @@
             </div>
 
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
-              more.
+              <p>Q: Does it cost anything to become a Stellar member?</p>
+              A: Nope. Happily, some things in life are still free.
             </div>
 
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
-              more.
+              <p>Q: How do I become a member?</p>
+              A: Just <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">click here</a>, create your profile and hit submit. That's it. We will take care of the rest. 
             </div>
 
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
-              more.
+              <p>Q: I forgot my password. Now what? </p>
+              A: If you have any unanswered queries, please feel free to contact the HealthKart Customer Support at 0124-4616444. 
             </div>
 
             <div class="qAndA">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
-              more.
+              <p>Q: Can I transfer my points to my friends? </p>
+              A: No, points are non-transferrable.
             </div>
 
+           <div class="qAndA">
+              <p>Q: Where can I find my current level status?</p>
+              A: Your current level status is displayed on the top of the HealthKart home page. 
+              As well as, on healthkartstellar home page under “My Accounts”. 
+              This page also carries information about total points accumulated, date of expiry and order history.
+            </div>
+	
+			<div class="qAndA">
+              <p>Q: Can I transfer my points to my friends? </p>
+              A: No, points are non-transferrable.
+            </div>
+			
+			<div class="qAndA">
+              <p>Q: How much time does it take to update my information? </p>
+              A: As soon as you make any purchase and it gets successfully delivered, your information will be automatically updated. 
+            </div>
+			
+			<div class="qAndA">
+              <p>Q: Is there an expiry date for my loyalty points? </p>
+              A: Your points do expire within 2 years, from the date you receive them. Please note, if you convert them to rewards points, they will expire in 6 months. 
+            </div>
+
+            <div class="qAndA">
+              <p>Q: What are Reward Points? </p>
+              A: Rewards points can be described as currency for HealthKart site. To explain the process, when loyalty points are converted to redeem points,
+               they are credited to your HK account. With these points you can shop anything from HeathKart. If the product is of higher value than the points,
+                that much will be discounted from the total amount due. You will need to pay the rest for successful delivery. 
+            </div>
+
+            <div class="qAndA">
+              <p>Q: Does it mean that my loyalty points can be converted to reward points? </p>
+              A: Yes
+            </div>
+
+            <div class="qAndA">
+              <p>Q: How can I earn more points? </p>
+              A: All you have to do is shop and order a product from the HealthKart website. You will automatically earn some points; depending upon the level you are placed. 
+            </div>
+
+            <div class="qAndA">
+              <p>Q: How can I redeem my points?</p>
+              A: As soon as you make any purchase and it gets successfully delivered, your information will be automatically updated. 
+              Stellar Store is one shop store which has products ranging from all categories at HealthKart. The currency here is only loyalty points.
+               For your favorite goodie, click on add to my cart and check out. During check out, the points will be deducted from the total.
+            </div>            
+           
+            <div class="qAndA">
+              <p>Q: I am interested to pick a product from the Stellar Store but I am short of points? What should I do? </p>
+              A: The only currency at the Stellar Store is points. Unfortunately you can’t exchange them in lieu of money.
+               If you are interested in a purchase but short of them, you need to shop further on HealthKart and earn more points. 
+            </div>
+           
+            <div class="qAndA">
+              <p>Q: How to upgrade from one level to the other? </p>
+              A: Awaited. 
+            </div>
+              
             <div class="qAndA removeBorderBottom">
-              <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
-              more.
-            </div>
+              <p>Q: I have more questions. Who can help? </p>
+              A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
+				Contact us 24X 7 @
+				0124-4616444 or mail us your query @ info@healthkart.com.
+				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
 
+            </div>
+			
+			
           </div>
 
         </div>
 
       </div>
     </div>
-
 <!-- The about us page ends here -->
 </stripes:layout-component>
 </stripes:layout-render>

@@ -439,6 +439,11 @@ public class OrderManager {
             this.getPaymentService().sendPaymentEmailForOrder(order);
             this.sendReferralProgramEmail(order.getUser());
             this.getSmsManager().sendOrderPlacedSMS(order);
+        } else if (order.getStore() != null && order.getStore().getId().equals(StoreService.LOYALTYPG_ID) && !order.isSubscriptionOrder()) {
+        	// separate condition added for loyalty to handle future changes
+        	this.getPaymentService().sendPaymentEmailForOrder(order);
+            this.sendReferralProgramEmail(order.getUser());
+            this.getSmsManager().sendOrderPlacedSMS(order);
         }
 
 //        //this is the most important method, so it is very important as to from where it is called

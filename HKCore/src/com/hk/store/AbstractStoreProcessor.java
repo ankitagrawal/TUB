@@ -111,7 +111,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartLineItem.setOrder(order);
 			cartLineItem.setMarkedPrice(productVariant.getMarkedPrice());
 			cartLineItem.setHkPrice(productVariant.getHkPrice());
-			cartLineItem.setDiscountOnHkPrice(100d);
+			cartLineItem.setDiscountOnHkPrice(productVariant.getHkPrice());
 			cartLineItem.setLineItemType(EnumCartLineItemType.Product.asCartLineItemType());
 			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 		}
@@ -167,7 +167,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		this.orderService.save(order);
         this.paymentService.sendPaymentEmailForOrder(order);
         this.orderManager.sendReferralProgramEmail(order.getUser());
-  //      this.getSmsManager().sendOrderPlacedSMS(order);
+       this.smsManager.sendOrderPlacedSMS(order);
 
 		return payment;
 	}

@@ -40,10 +40,10 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	public Resolution confirm() {
 		this.order = this.getProcessor().getCart(this.getPrincipal().getId());
-		this.shipmentAddress = this.order.getAddress();
-		if(this.order==null || this.shipmentAddress == null) {
+		if(this.order==null) {
 			return new ForwardResolution("/pages/loyalty/cart.jsp");
 		}
+		this.shipmentAddress = this.order.getAddress();
 		try {
 			this.getProcessor().makePayment(this.order.getId(), this.getRemoteHostAddr());
 			this.getProcessor().escalateOrder(this.order.getId());

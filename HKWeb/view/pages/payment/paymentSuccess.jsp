@@ -319,12 +319,20 @@
             <br/>
 
 		<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-  		<h2> Congratulations on your purchase. You are now eligible to earn our loyalty points. Would you like to know more?"
-			<br>
-		<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here. </a>		
-    	
-  		</h2>
-  		</shiro:lacksRole>
+		<div class='prom yellow help' style="width: 95%; padding:5px;">
+  			Congratulations! Your payment is successful. Did you know about our Loyalty Program yet?<br>
+  			It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on 15 bonus loyalty points on joining now!
+  			<br> 
+			<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.		
+    	</div>
+    	</shiro:lacksRole>
+  		
+  		<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
+  		<div class='prom yellow help' style="width: 95%; padding:5px;">
+  			Congratulations! Your payment is successful. You have earned ${actionBean.loyaltyPointsEarned} points. These points will be transferred to your account once your order has been delivered.
+  		</div>
+  		</shiro:hasRole>
+  		
             <h2 class="paymentH2">Shipping & Delivery</h2>
 
             <p>Your order will be dispatched within ${hk:getDispatchDaysForOrder(actionBean.payment.order)}. Additional time will be taken by the courier company.</p>
