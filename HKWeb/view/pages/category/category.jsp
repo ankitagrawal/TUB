@@ -163,7 +163,7 @@
                 <img src="${pageContext.request.contextPath}/images/banners/Gym-Breaking-Deals.jpg" alt="Gym breaking deals on Nutritional Supplements"
                      class="small_banner"/>
             </a>
-             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
+             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/muscleblaze">
             <img src="${pageContext.request.contextPath}/images/banners/Muscleblaze_small.jpg" alt="Brand Of the Week - MuscleBlaze"
                  class="small_banner"/>
             </a>
