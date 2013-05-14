@@ -12699,11 +12699,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Nihal (generated)" id="1368113151171-3">
-        <addColumn tableName="extra_inventory_line_item">
-            <column defaultValue="0" name="is_short_created" type="TINYINT"/>
-        </addColumn>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1368113151171-4">
         <addPrimaryKey columnNames="purchase_invoice_id, extra_inventory_line_item_id" tableName="purchase_invoice_has_extra_inventory_line_item"/>
     </changeSet>
@@ -12712,14 +12707,5 @@
     </changeSet>
     <changeSet author="Nihal (generated)" id="1368113151171-8">
         <addForeignKeyConstraint baseColumnNames="purchase_invoice_id" baseTableName="purchase_invoice_has_extra_inventory_line_item" constraintName="fk_purchase_invoice_has_extra_inventory_line_item_purchase_in1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="purchase_invoice" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1368424154197-3">
-        <addColumn tableName="purchase_invoice_line_item">
-            <column name="goods_received_note_id" type="INT">
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1368424154197-7">
-        <addForeignKeyConstraint baseColumnNames="goods_received_note_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_goods_received_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="goods_received_note" referencesUniqueColumn="false"/>
     </changeSet>
 </databaseChangeLog>

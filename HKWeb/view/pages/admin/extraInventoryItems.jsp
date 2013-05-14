@@ -299,7 +299,7 @@ $(document).ready(function () {
                 '<td>' +
                 '    <textarea rows="10" cols="10" style="height:60px; width:210px;" name="extraInventoryLineItems[' + nextIndex + '].remarks" />' +
                 '</td>' +
-                '<td class="shortCheck"> <input type="checkbox" class="rowShortCheck" name = "extraInventoryLineItems[' + nextIndex + '].shortCreated"/>' +
+                '<td class="shortCheck"> <input type="checkbox" class="rowShortCheck" name = "extraInventoryLineItems[' + nextIndex + '].extraInventoryLineItemType"/>' +
                 '</td>' +
                 '</tr>';
 
@@ -486,10 +486,10 @@ $(document).ready(function () {
                                   value="${eInLineItems.grnCreated}"/>
                         <c:set var="bool" value="1"/>
                     </c:if>
-                    <c:if test="${eInLineItems.shortCreated}">
+                    <c:if test="${eInLineItems.extraInventoryLineItemType!=null && eInLineItems.extraInventoryLineItemType.name eq Short}">
                         ${eInLineItems.id}(SHORT)
-                        <s:hidden name="extraInventoryLineItems[${ctr.index}].shortCreated"
-                                  value="${eInLineItems.shortCreated}"/>
+                        <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType"
+                                  value="${eInLineItems.extraInventoryLineItemType}"/>
                         <c:set var="bool" value="1"/>
                     </c:if>
                     <c:if test="${bool eq '0' and eInLineItems.id !=null}">
@@ -511,7 +511,7 @@ $(document).ready(function () {
                 </td>
                 <td class="skuId">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.shortCreated}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType!=null}">
                             ${eInLineItems.sku.id}
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
                                       value="${eInLineItems.sku.id}"/>

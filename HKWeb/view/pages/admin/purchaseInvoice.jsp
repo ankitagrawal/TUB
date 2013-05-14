@@ -481,12 +481,12 @@
 	</c:forEach>
 	</c:if>
 	<c:if test="${fn:length(pia.toImportRtvList) eq 0}">
-		There are no rtvs attached with the PI.
+		No rtvs attached with the PI.
 	</c:if>
 </table>
 <table>
 	<c:if test="${fn:length(pia.toImportShortEiLiList) gt 0}">
-	There are short inventory attached with the PI.<br/>
+	Short inventory attached with the PI.<br/>
 	<c:forEach items="${pia.toImportShortEiLiList}" var="eili" varStatus="ctr">
 	<tr>
 	<td>${ctr.index+1}. PO No. ${eili.extraInventory.purchaseOrder.id}, Extra Inven. Id. ${eili.id}</td>
@@ -495,11 +495,11 @@
 	</c:forEach>
 	</c:if>
 	<c:if test="${fn:length(pia.toImportShortEiLiList) eq 0}">
-		There are no short inventory attached with the PI.
+		No short inventory attached with the PI.
 	</c:if>
 </table>
 <c:if test="${fn:length(pia.toImportRtvList) gt 0 || fn:length(pia.toImportShortEiLiList) gt 0}">
-	<s:submit name="importRtv" value="Import Rtv"/>
+	<s:submit name="importRtv" value="Import"/>
 	</c:if>
 </s:form>
 </div>
@@ -657,7 +657,7 @@
 			<td>${ctr.index+1}.</td>
 			<c:choose>
 						<c:when test="${purchaseInvoiceLineItem.goodsReceivedNote.id != null}">
-							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.goodsReceivedNote.id}">${purchaseInvoiceLineItem.goodsReceivedNote.id}</a></td>
+							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}">${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}</a></td>
 						</c:when>
 						<c:otherwise>
 							<td>N/A</td>
@@ -1001,8 +1001,10 @@
 	</tfoot>
 </table>
 <s:submit name="saveShort" value="Save" class="requiredFieldValidator" id="save-button"/>
+<shiro:hasRole name="<%=RoleConstants.FINANCE_ADMIN%>">
+	<s:submit name="deleteShortMapping" value="Delete"/>
+</shiro:hasRole>
 </s:form>
-
 
 
 <br/>

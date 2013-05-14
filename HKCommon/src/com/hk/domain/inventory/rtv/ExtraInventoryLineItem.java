@@ -90,9 +90,6 @@ public class ExtraInventoryLineItem implements Serializable{
   @Column (name ="is_grn_created")
   private Boolean isGrnCreated;
   
-  @Column (name ="is_short_created")
-  private Boolean isShortCreated;
-
   @Temporal (TemporalType.TIMESTAMP)
 	@Column (name = "create_dt", nullable = false, length = 19)
 	private Date createDate = new Date();
@@ -109,6 +106,10 @@ public class ExtraInventoryLineItem implements Serializable{
 	          inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
 	  )
 	  private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
+	
+	@ManyToMany
+	@JoinColumn(name="extra_inventory_line_item_type_id")
+	private ExtraInventoryLineItemType extraInventoryLineItemType;
 
   public Long getId() {
     return id;
@@ -222,18 +223,6 @@ public Boolean getGrnCreated() {
     return isGrnCreated;
   }
 
-public Boolean getShortCreated() {
-	return isShortCreated;
-}
-
-public void setShortCreated(Boolean shortCreated) {
-	isShortCreated = shortCreated;
-}
-
-public Boolean isShortCreated() {
-	return isShortCreated;
-}
-
   public String getRemarks() {
     return remarks;
   }
@@ -288,6 +277,14 @@ public Boolean isShortCreated() {
 
 	public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
 		this.purchaseInvoices = purchaseInvoices;
+	}
+
+	public ExtraInventoryLineItemType getExtraInventoryLineItemType() {
+		return extraInventoryLineItemType;
+	}
+
+	public void setExtraInventoryLineItemType(ExtraInventoryLineItemType extraInventoryLineItemType) {
+		this.extraInventoryLineItemType = extraInventoryLineItemType;
 	}
 	
 }
