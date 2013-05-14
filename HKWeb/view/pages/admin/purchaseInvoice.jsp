@@ -48,7 +48,6 @@
 .rtvListForm{
 	float: right;
 	position: relative;
-	background-color:  #F5DEB3;
 }
 
 #finalPayableDiv{
@@ -466,16 +465,18 @@
 </div>
 
 <div class="rtvListForm">
-<br/>
+<fieldset>
+<legend><br/><em>Extra Inventory Info.</em></legend>
 <s:form beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
+<br/>
 <table>
 	<c:if test="${fn:length(pia.toImportRtvList) gt 0}">
 	There are rtvs attached with the PI.<br/>
 	
 	<c:forEach items="${pia.toImportRtvList}" var="rtv" varStatus="ctr">
 	<tr>
-	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?editRtvNoteLineItems=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&extraInventoryId=${rtv.extraInventory.id }&rtvNoteId=${rtv.id}">RTV Id. ${rtv.id}</a></td>
+	<td>${ctr.index+1}. PO No. ${rtv.extraInventory.purchaseOrder.id}, <a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?editRtvNoteLineItems=&purchaseOrderId=${rtv.extraInventory.purchaseOrder.id}&extraInventoryId=${rtv.extraInventory.id }&rtvNoteId=${rtv.id}" target="_blank">RTV Id. ${rtv.id}</a></td>
 	<td><s:checkbox name="rtvId[${ctr.index}]" value="${rtv.id}" class="purchaseLineItemCheckBox"/></td>
 	</tr>
 	</c:forEach>
@@ -502,6 +503,7 @@
 	<s:submit name="importRtv" value="Import"/>
 	</c:if>
 </s:form>
+</fieldset>
 </div>
 
 
@@ -657,7 +659,7 @@
 			<td>${ctr.index+1}.</td>
 			<c:choose>
 						<c:when test="${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id != null}">
-							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}">${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}</a></td>
+							<td><a href="${pageContext.request.contextPath}/admin/inventory/GRN.action?view=&grn=${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}" target="_blank">${purchaseInvoiceLineItem.grnLineItem.goodsReceivedNote.id}</a></td>
 						</c:when>
 						<c:otherwise>
 							<td>N/A</td>

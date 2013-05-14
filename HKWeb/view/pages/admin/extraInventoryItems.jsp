@@ -490,8 +490,8 @@ $(document).ready(function () {
     <tbody id="poTable">
     <c:if test="${extraInventory.extraInventoryLineItems!=null}">
         <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
-        <s:hidden name="extraInventoryLineItems[${ctr.index}].purchaseInvoices" value="${eInLineItems.purchaseInvoices}"></s:hidden>
-        <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType" value="${eInLineItems.extraInventoryLineItemType}"></s:hidden>
+        <s:hidden name="extraInventoryLineItems[${ctr.index}].purchaseInvoices" value="${eInLineItems.purchaseInvoices}" />
+        <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType.id" value="${eInLineItems.extraInventoryLineItemType.id}" />
             <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                 <td>${ctr.index+1}.</td>
                 <td>
@@ -686,6 +686,8 @@ $(document).ready(function () {
     <s:submit name="createPO" value="Create PO" class="save createRtv"/>
 </shiro:hasPermission>
 </s:form>
+<br/>
+<br/>
 <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="pre">
     <div align="center" style="font-weight:bold; font-size:150%">BACK</div>
 </s:link>

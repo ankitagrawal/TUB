@@ -242,6 +242,13 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
       }
       else{
+    	  if(extraInventoryLineItem.getExtraInventoryLineItemType()!=null){
+    	  Long id = extraInventoryLineItem.getExtraInventoryLineItemType().getId();
+    	  if(id!=null){
+    		  EnumExtraInventoryLineItemType lineItemType = EnumExtraInventoryLineItemType.getById(id);
+    		  extraInventoryLineItem.setExtraInventoryLineItemType(lineItemType.asEnumExtraInventoryLineItemType());
+    	  	}
+    	  }
         if(extraInventoryLineItem.getReceivedQty()!=0){
         extraInventoryLineItem.setUpdateDate(new Date());
         extraInventoryLineItem.setExtraInventory(extraInventory);
@@ -279,7 +286,19 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
       if(extraInventoryLineItem!=null){
         extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+		if (extraInventoryLineItem.getExtraInventoryLineItemType() != null) {
+			Long id = extraInventoryLineItem.getExtraInventoryLineItemType().getId();
+			if (id != null) {
+			EnumExtraInventoryLineItemType lineItemType = EnumExtraInventoryLineItemType.getById(id);
+			extraInventoryLineItem.setExtraInventoryLineItemType(lineItemType
+								.asEnumExtraInventoryLineItemType());
+				}
+			}
+		else{
+			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short.asEnumExtraInventoryLineItemType());
+		}
         extraInventoryLineItem.setRtvCreated(true);
+        extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal.asEnumExtraInventoryLineItemType());
         extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
         extraLineItems.add(extraInventoryLineItem);
       }
@@ -330,18 +349,16 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)
 public Resolution createShort(){
 	extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
-    List<ExtraInventoryLineItem> extraLineItems = new ArrayList<ExtraInventoryLineItem>();
     for(ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected){
-      if(extraInventoryLineItem!=null){
+        if(extraInventoryLineItem!=null){
         extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
         extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short.asEnumExtraInventoryLineItemType());
         extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
-        extraLineItems.add(extraInventoryLineItem);
       }
     }
     
     addRedirectAlertMessage(new SimpleMessage("Short Created !!!!"));
-    return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
+    return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
 }
 
   @Secure(hasAnyPermissions = {PermissionConstants.PO_MANAGEMENT}, authActionBean = AdminPermissionAction.class)

@@ -34,4 +34,11 @@ public enum EnumExtraInventoryLineItemType {
 		extraInventoryLineItemType.setName(this.name);
 		return extraInventoryLineItemType;
 	}
+	
+	public static EnumExtraInventoryLineItemType getById(Long id) {
+	    for(EnumExtraInventoryLineItemType e : values()) {
+	        if(e.id.equals(id)) return e;
+	    }
+	    return null;
+	 }
 }
