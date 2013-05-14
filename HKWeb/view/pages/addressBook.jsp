@@ -204,7 +204,7 @@
                 <s:form beanclass="com.hk.web.action.core.user.NewAddressAction" id="newAddressForm" style="width:425px;" >
                     <s:layout-render name="/layouts/addressLayout.jsp" />
                     <s:hidden name="countryId" value="${countryId}"/>
-                    <s:submit name="create" value="Use this address and continue" class="placeOrderButtonNew" style="width: 240px;left: -10px !important;"/>
+                    <s:submit name="create" value="Use this address and continue" class="button placeOrderButtonNew" style="width: 240px;left: -10px !important;"/>
                 </s:form>
             </div>
 

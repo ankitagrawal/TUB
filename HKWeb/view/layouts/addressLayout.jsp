@@ -24,15 +24,18 @@
 			var err = 0;
 
      		$('.button').click(function() {
+                 $('.error').empty();
 				err = 0;
 				$('.rowText').each(function() {
 					if ($(this).attr('id') != 'line2') {
 						if ($(this).val().trim() === "") {
-							$('.error').append("<br/> Kindly Enter all Fields  <br/>");
 							err = 1;
 						}
 					}
 				});
+                if(err ==1){
+                    $('.error').append("<br/> Kindly Enter all Fields  <br/>");
+                }
 
                 if($('#stateselect').val() == ""){
 				$('.error').append("<br/> Select State  <br/>");
