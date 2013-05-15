@@ -9,6 +9,8 @@
 <%@ include file="/layouts/_userData.jsp" %>
 <c:set var="lineItem_Service_Postpaid" value="<%=EnumProductVariantPaymentType.Postpaid.getId()%>"/>
 <s:useActionBean beanclass="com.hk.web.action.core.cart.CartAction" var="cartAction"/>
+<s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
+<c:set var="product" value="${pa.product}"/>
 <%
   boolean isSecure = pageContext.getRequest().isSecure();
   pageContext.setAttribute("isSecure", isSecure);
@@ -33,6 +35,18 @@
     }
 
     $(document).ready(function() {
+
+        $("#learnMore").click(function(){
+            $('html, body').animate({scrollTop: $(".products_container").height() + 400}, 1000);
+        });
+
+        $("#dispatchDateQuesMark").click(function(){
+            $("#popUpDDate").toggle();
+        });
+
+        $("#crossNew").click(function(){
+            $("#popUpDDate").hide();
+        });
 
         $('.lineItemQty').blur(function() {
         var lineItemRow = $(this).parents('.lineItemRow');
@@ -198,9 +212,9 @@
       $('#summaryTotalCashback').html('Rs. ' + responseData.data.totalCashback);
 
       if (responseData.data.shippingTotal == "0.00") {
-        $('#summaryShippingSubTotal').html('Shipping: Free!');
+        $('#summaryShippingSubTotal .checkoutContainerTextRight').html('Free!');
       } else {
-        $('#summaryShippingSubTotal').html('Shipping: Rs. ' + (responseData.data.shippingTotal));
+        $('#summaryShippingSubTotal .checkoutContainerTextRight').html((responseData.data.shippingTotal));
       }
       var mrp = 0.0;
       mrp = Math.round((responseData.data.productsMrpSubTotal).replace(',', ''));
@@ -247,12 +261,12 @@
     <c:choose>
       <c:when test="${cartAction.pricingDto.productLineCount == 1}">
         There is
-        <span class='num'>${cartAction.pricingDto.productLineCount}</span>
+        <span class='num arialBold'>${cartAction.pricingDto.productLineCount}</span>
         item in your shopping cart
       </c:when>
       <c:when test="${cartAction.pricingDto.productLineCount > 1}">
         There are
-        <span class='num' id="numProdTitle">${cartAction.pricingDto.productLineCount}</span>
+        <span class='num arialBold' id="numProdTitle">${cartAction.pricingDto.productLineCount}</span>
         items in your shopping cart
       </c:when>
       <c:otherwise>
@@ -300,23 +314,32 @@
 </c:if>
 <c:if test="${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)>=1}">
 <span id="simpleProductsInCart" style="display: none;">${(cartAction.pricingDto.productLineCount-cartAction.pricingDto.subscriptionLineCount)}</span>
-<div class='tabletitle'>
-  <div class='name'>
+<div class='tabletitle tableTitleNew' style="border-radius: 0px;">
+  <div class='name' style="width: 35%;left: 5px;">
     Product
   </div>
-  <div class='quantity'>
+  <div class='name' style="width: 25%;left: 30px">
+    <span class="dispatchDateText2">Dispatch Days</span>
+      <span id="dispatchDateQuesMark" class="dispatchDateQuesMark">?</span>
+      <div class="popUpDDate" id="popUpDDate">The dispatch date is when the product will be shipped from our warehouse. The delivery time would be extra and will vary according to your location.
+      <span id="learnMore" class="learnMore">learn more</span>
+      <span id="crossNew" style="position: relative;float: right;top: 12px;cursor: pointer;">X</span>
+      <span class="arrowNew"></span>
+      </div>
+  </div>
+  <div class='quantity' style="width: 15%;left: 0px;">
     Quantity
   </div>
-  <div class='price'>
+  <div class='price' style="width: 15%;left: 35px;">
     Price
   </div>
   <div class='floatfix'></div>
 </div>
 <c:forEach items="${cartAction.order.exclusivelyProductCartLineItems}" var="cartLineItem" varStatus="ctr">
-  <div class="lineItemRow product">
+  <div class="lineItemRow product" style="border: 1px solid #ddd;border-top: none;">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -328,10 +351,11 @@
         </c:otherwise>
       </c:choose>
     </div>
-    <div class="name" style="font-size: 14px; line-height: 21px;" :>
+
+    <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
         ${cartLineItem.productVariant.product.name}
         ${cartLineItem.productVariant.variantName}<br/>
-      <table style="display: inline-block; font-size: 12px;">
+      <table style="display: inline-block; font-size: 11px;">
         <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
 	        <tr>
 		        <c:if test="${hk:showOptionOnUI(productOption.name)}">
@@ -407,10 +431,17 @@
 
       </table>
     </div>
-    <div class="quantity">
+
+      <%--HTML code for dispatch date--%>
+      <div class="dispatchedDateNew">
+          <div>${cartLineItem.productVariant.product.minDays} - ${cartLineItem.productVariant.product.maxDays} working days</div>
+      </div>
+
+
+    <div class="quantity" style="width: 80px;left: 35px;">
       <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
       <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
-      <a class='remove removeLink' href='#'>
+      <a style="position: relative;float:left;" class='remove removeLink' href='#'>
         (remove)
       </a>
       </c:if>
@@ -419,8 +450,8 @@
       <c:choose>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
-            <div class="num"> Rs
-              <span class="lineItemSubTotalMrp"><fmt:formatNumber
+            <div class="num">
+              <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -428,11 +459,11 @@
         </c:when>
         <c:otherwise>
           <div class="cut">
-            <div class="num lineItemSubTotalMrp">
+            <div class="num lineItemSubTotalMrp arialGrayBold"> Rs
               <fmt:formatNumber value="${cartLineItem.markedPrice * cartLineItem.qty}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
           </div>
-          <div class='special green'>
+          <%--<div class='special green'>
             (saved
                     <span class='num '>
                       Rs  <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
@@ -440,10 +471,10 @@
                         value="${(cartLineItem.markedPrice - cartLineItem.hkPrice - cartLineItem.productVariant.postpaidAmount) * cartLineItem.qty}"
                         pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
                     </span>
-          </div>
+          </div>--%>
           <div class="hk">
-            <div class="num"> Rs
-              <span class="lineItemHkTotal"><fmt:formatNumber
+            <div class="num">
+              <span class="lineItemHkTotal arialBlackBold">Rs <fmt:formatNumber
                   value="${cartLineItem.hkPrice * cartLineItem.qty}"
                   pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -482,7 +513,7 @@
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;">
+    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -494,7 +525,8 @@
         </c:otherwise>
       </c:choose>
     </div>
-    <div class="name" style="font-size: 14px; line-height: 21px;">
+
+    <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;">
         ${cartLineItem.comboInstance.combo.name}<br/>
       <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
@@ -507,9 +539,10 @@
         <br/>
       </c:forEach>
     </div>
-    <div class="quantity">
+      <div class="dispatchedDateNew"><div>${invoiceLineItem.productVariant.product.minDays} - ${invoiceLineItem.productVariant.product.maxDays} working days</div></div>
+    <div class="quantity" style="width: 80px;left: 35px;">
       <input value="${hk:getComboCount(cartLineItem)}" size="1" class="comboQty" style="width: 20px; height: 18px;"/>
-      <a class='remove removeComboLink' href='#'>
+      <a style="position: relative;float:left;" class='remove removeComboLink' href='#'>
         (remove)
       </a>
     </div>
@@ -517,29 +550,29 @@
       <c:choose>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
-            <div class="num"> Rs
-      <span class="lineItemSubTotalMrp"><fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
+            <div class="num">
+      <span class="lineItemSubTotalMrp arialBlackBold">Rs <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice}"
                                                           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
           </div>
         </c:when>
         <c:otherwise>
           <div class="cut">
-            <div class="num lineItemSubTotalMrp">
+            <div class="num lineItemSubTotalMrp arialGrayBold">  Rs
               <fmt:formatNumber value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem)}"
                                 pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
           </div>
-          <div class='special green'>
+          <%--<div class='special green'>
             (saved
       <span class='num '>
       Rs <span class="lineItemSubTotalHkDiscount"><fmt:formatNumber
           value="${cartLineItem.comboInstance.combo.markedPrice * hk:getComboCount(cartLineItem) - cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>)
       </span>
-          </div>
+          </div>--%>
           <div class="hk">
-            <div class="num"> Rs
-      <span class="lineItemHkTotal"> <fmt:formatNumber
+            <div class="num">
+      <span class="lineItemHkTotal arialBlackBold"> Rs <fmt:formatNumber
           value="${cartLineItem.comboInstance.combo.hkPrice * hk:getComboCount(cartLineItem)}"
           pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
             </div>
@@ -578,13 +611,13 @@
 
 <div class="offerContainer">
 <shiro:lacksRole name="<%=RoleConstants.COUPON_BLOCKED%>">
-    <div style="left:0px; margin-bottom: 2px;border:none;width:235px;margin-left: initial;margin-right: initial;" class='right_container coupon'>
+    <div class='right_container coupon gotACoupon'>
         <shiro:hasAnyRoles name="<%=RoleConstants.HK_USER%>">
             <div class="appliedOfferHead" style=" left: 0;">Got a discount coupon?</div>
 
-            <input placeholder='discount code' type='text' id="couponCode"/>
+            <input class="couponInput" placeholder='Enter discount code' type='text' id="couponCode"/>
             <s:link beanclass="com.hk.web.action.core.discount.ApplyCouponAction" id="couponLink" onclick="return false;"
-                    class="button_grey">Apply</s:link>
+                    class="button_grey new_button_grey">APPLY</s:link>
         </shiro:hasAnyRoles>
 
         <shiro:hasAnyRoles name="<%=RoleConstants.TEMP_USER%>">
@@ -610,84 +643,86 @@
 </div>
 
 
-<div class='right_container total' style="left: 30px;margin-bottom: 2px;width:235px;margin-left: initial;margin-right: initial;">
-<h5>Checkout</h5>
+<div class='right_container total checkoutContainer' style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;">
+<h5 class="checkoutHead5">Checkout</h5>
 <br/>
 
 <div style="font-weight: normal; color: #888; text-align: center; line-height: 21px;">
   <c:if
       test="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal + cartAction.pricingDto.postpaidServiceMrpSubTotal > cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal + cartAction.pricingDto.postpaidServiceHkSubTotal}">
-          <span class="cut" style="text-align: center;">
-            Total MRP: <span id="summaryProductsMrpSubTotal" style="text-decoration: line-through;"> <fmt:formatNumber
+      <span class="checkoutContainerText">Total MRP:</span>
+      <span class="cut checkoutContainerTextRight" style="text-align: center;">
+              <span id="summaryProductsMrpSubTotal" style="text-decoration: line-through;"> <fmt:formatNumber
               value="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal + cartAction.pricingDto.postpaidServiceMrpSubTotal}"
               type="currency" currencySymbol="Rs. "/></span>
           </span>
     <br/>
   </c:if>
-        <span class="" style="text-align: center;">
-          Our Price: <span id="summaryProductsHkpSubTotal"> <fmt:formatNumber
+    <span class="checkoutContainerText">Our Price:</span>
+    <span class="checkoutContainerTextRight" style="text-align: center;">
+          <span id="summaryProductsHkpSubTotal"> <fmt:formatNumber
             value="${cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal + cartAction.pricingDto.postpaidServiceHkSubTotal}"
             type="currency" currencySymbol="Rs. "/></span>
         </span>
   <br/>
   <c:if
       test="${cartAction.pricingDto.productsMrpSubTotal + cartAction.pricingDto.prepaidServiceMrpSubTotal > cartAction.pricingDto.productsHkSubTotal + cartAction.pricingDto.prepaidServiceHkSubTotal +cartAction.pricingDto.postpaidServiceHkSubTotal}">
-        <span class="special">
-          <span style="font-size: 11px;">HealthKart Discount</span>: <br/><strong>(<span id="summaryHkDiscount"
-                                                                                         class="green"><fmt:formatNumber
+       <%-- <span class="special" style="font-style: initial;">
+          <span class="checkoutContainerText" style="font-size: 11px;">HealthKart Discount:</span><strong><span id="summaryHkDiscount"
+                                                                                         class="green checkoutContainerTextRight">(<fmt:formatNumber
             value="${cartAction.pricingDto.totalHkProductsDiscount + cartAction.pricingDto.totalHkPrepaidServiceDiscount + cartAction.pricingDto.totalHkPostpaidServiceDiscount - cartAction.pricingDto.totalPostpaidAmount}"
-            type="currency" currencySymbol="Rs. "/></span>)</strong>
-        </span><br/>
+            type="currency" currencySymbol="Rs. "/>)</span></strong>
+        </span><br/>--%>
   </c:if>
         <span id="summaryShippingSubTotal">
           <c:if test="${cartAction.pricingDto.shippingSubTotal - cartAction.pricingDto.shippingDiscount >= .005}">
-            Shipping:
-            <fmt:formatNumber value="${cartAction.pricingDto.shippingSubTotal - cartAction.pricingDto.shippingDiscount}"
-                              type="currency" currencySymbol="Rs. "/>
+            <span class="checkoutContainerText">Shipping:</span>
+            <span class="checkoutContainerTextRight"><fmt:formatNumber value="${cartAction.pricingDto.shippingSubTotal - cartAction.pricingDto.shippingDiscount}"
+                              type="currency" currencySymbol="Rs. "/>  </span>
           </c:if>
           <c:if test="${cartAction.pricingDto.shippingSubTotal - cartAction.pricingDto.shippingDiscount == 0}">
-            Shipping: Free!
+              <span class="checkoutContainerText">Shipping:</span> <span class="checkoutContainerTextRight">Free!</span>
           </c:if>
         </span>
   <br/>
 
       <span class="special" id="summarySubscriptionDiscountContainer"
-            style="display: ${cartAction.pricingDto.subscriptionDiscount > 0 ? 'block':'none'};">
-        <span style="font-size: 11px;">Subscription Discount</span>: <br/><strong>(<span id="totalSubscriptionDiscount"
-                                                                                  class="green"><fmt:formatNumber
-          value="${cartAction.pricingDto.subscriptionDiscount}" type="currency" currencySymbol="Rs. "/></span>)</strong>
+            style="display: ${cartAction.pricingDto.subscriptionDiscount > 0 ? 'block':'none'};font-style: initial;">
+        <span class="checkoutContainerText" style="font-size: 12px;">Subscription Discount:</span> <strong><span id="totalSubscriptionDiscount"
+                                                                                  class="green checkoutContainerTextRight">(<fmt:formatNumber
+          value="${cartAction.pricingDto.subscriptionDiscount}" type="currency" currencySymbol="Rs. "/>)</span></strong>
       </span>
       <span class="special" id="summaryPromoDiscountContainer"
-            style="display: ${cartAction.pricingDto.totalPromoDiscount > 0 ? 'block':'none'};">
-        <span style="font-size: 11px;">Promo Discount</span>: <br/><strong>(<span id="summaryPromoDiscount"
-                                                                                  class="green"><fmt:formatNumber
-          value="${cartAction.pricingDto.totalPromoDiscount}" type="currency" currencySymbol="Rs. "/></span>)</strong>
+            style="display: ${cartAction.pricingDto.totalPromoDiscount > 0 ? 'block':'none'};font-style: initial;">
+        <span class="checkoutContainerText lightBlue" style="font-size: 11px;">Promo Discount:</span> <strong><span id="summaryPromoDiscount"
+                                                                                  class="green lightBlue checkoutContainerTextRight">(<fmt:formatNumber
+          value="${cartAction.pricingDto.totalPromoDiscount}" type="currency" currencySymbol="Rs. "/>)</span></strong>
       </span>
 </div>
 
-<h1>
-      <span class="special" style="text-align: center; font-size: 10px; font-weight: bold;">
-        you pay
+<h1 style="position: relative;float: left;width: 100%;padding: 0px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important">
+      <span class="youPay">
+        You pay
       </span>
-  <br/>
   <strong>
-        <span id="summaryGrandTotalPayable">
+        <span id="summaryGrandTotalPayable" class="youPayValue">
           <fmt:formatNumber value="${cartAction.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/>
         </span>
   </strong>
 </h1>
 
-<div class='small'>
+<div class='newShippingHandling'>
   (inclusive of shipping, handling and taxes.)
 </div>
 
 <div style="text-align:center; padding-top: 10px; display: ${cartAction.pricingDto.totalCashback > 0 ? 'block':'none'};"
      id="summaryTotalCashbackContainer">
-  <span class="special">
-    <span style="font-size: 11px;">You will get cashback</span>: <br/><strong>(<span id="summaryTotalCashback"
-                                                                                     class="green"><fmt:formatNumber
-      value="${cartAction.pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/></span>)</strong>
-  </span>
+
+    <span class="checkoutContainerText lightBlue">You will get cashback:</span>
+            <span class="checkoutContainerTextRight lightBlue">
+                (<fmt:formatNumber
+                        value="${cartAction.pricingDto.totalCashback}" type="currency" currencySymbol="Rs. "/>)
+            </span>
 </div>
 
 
@@ -713,7 +748,7 @@
 </c:if>
 <s:form beanclass="com.hk.web.action.core.cart.CartAction" id="cartForm">
 <s:hidden name="order" value="${cartAction.order}"/>
-<s:submit name="checkout" value="Place order >" class="button" style="font-size: 1em"/>
+<s:submit name="checkout" value="PLACE ORDER" class="placeOrderButtonNew" style="font-size: 1em"/>
 
 </s:form>
 <script type="text/javascript">
@@ -723,6 +758,27 @@
 </script>
 </div>
 <div id="applicableOfferDiv"></div>
+
+<div class='orderSummaryHeading'>
+    <div class="deliveryDetails"> DELIVERY DETAILS</div>
+    <ul>
+        <li>
+            - The time taken for delivery after dispatch from our warehouse varies with location.
+        </li>
+        <li>
+            - For Metroes: 1-3 business days
+        </li>
+        <li>
+            - For Major Cities: 2-4 business days
+        </li>
+        <li>
+            - For Other Town/Cities: 3-6 business days
+        </li>
+        <li>
+            - For Rest of India Non Serviceable through Couriers: 7-15 business days (Delivery done by Indian Post)
+        </li>
+    </ul>
+</div>
 
 <s:layout-render name="/layouts/embed/_remarketingCode.jsp" label="qbr7CMDf6QIQuLjI5QM" id="1018305592"/>
 <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="cart" order="${cartAction.order}"/>

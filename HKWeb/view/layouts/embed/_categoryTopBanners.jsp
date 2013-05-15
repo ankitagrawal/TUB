@@ -40,6 +40,11 @@
     <jsp:include page="/categoryBanners/beautyHatTrickDisocunt.jsp"/>
   </c:if>--%>
 
+
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'home-living')}">
+    <jsp:include page="/categoryBanners/home-livingTopStripBanner.jsp"/>
+  </c:if>
+
     <c:if test="${hk:collectionContains(topCategoryNameList, 'beauty')}">
         <jsp:include page="/categoryBanners/beautyPrepayDiscount.jsp"/>
     </c:if>
