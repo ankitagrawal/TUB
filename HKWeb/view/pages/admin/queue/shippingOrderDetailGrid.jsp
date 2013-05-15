@@ -291,7 +291,7 @@
             <c:if test="${shippingOrder.shippingOrderStatus.id eq shippingOrderStatusActionAwaiting}">
             <br>
             Reason:
-            <s:select name="shippingOrder.reason">
+            <s:select name="shippingOrder.reason" id="soReason">
             <s:option value="">-------Select-------</s:option>
             <c:set var="soCancelReasonVar" value="<%=EnumReasonType.So_Cancelled.getName()%>"/>
             <c:forEach items="${hk:getReasonsByType(soCancelReasonVar)}" var="soCancelReason">
@@ -308,7 +308,7 @@
         </s:form>
         <script type="text/javascript">
             $ ('.cancelSO').click(function(){
-                if($('#SoReason').val()==""){
+                if($('#soReason').val()==""){
                 alert("Please select Reason");
                 return false;
                 }

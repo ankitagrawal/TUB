@@ -106,7 +106,7 @@ public class ShippingOrderAction extends BaseAction {
 
 	@JsonHandler
 	public Resolution cancelShippingOrder() {
-		adminShippingOrderService.cancelShippingOrder(shippingOrder,cancellationRemark);
+		adminShippingOrderService.cancelShippingOrder(shippingOrder, cancellationRemark);
         if(shippingOrder.getShippingOrderStatus().getId().equals(EnumShippingOrderStatus.SO_Cancelled.getId())){
             addRedirectAlertMessage(new SimpleMessage("Shipping Order Cancelled Successfully!!!"));
         }else{
@@ -167,6 +167,7 @@ public class ShippingOrderAction extends BaseAction {
     public void setCancellationRemark(String cancellationRemark) {
         this.cancellationRemark = cancellationRemark;
     }
+
   public Warehouse getWarehouseToUpdate() {
     return warehouseToUpdate;
   }
