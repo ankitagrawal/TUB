@@ -418,6 +418,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".hidden", Boolean.FALSE));
 		criteria.createAlias(LoyaltyProductAlias.PRODUCT.alias + ".primaryCategory", LoyaltyProductAlias.CATEGORY.alias,
 				CriteriaSpecification.INNER_JOIN);
+		criteria.addOrder(org.hibernate.criterion.Order.asc("points"));
 		if (search != null) {
 			if (search.getCategoryName() != null) {
 				criteria.add(Restrictions.eq(LoyaltyProductAlias.CATEGORY.alias + ".name", search.getCategoryName()));
@@ -425,7 +426,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			if (search.getRange() != null) {
 				criteria.add(Restrictions.ge("points", search.getRange().getStart()));
 				criteria.add(Restrictions.le("points", search.getRange().getEnd()));
-				criteria.addOrder(org.hibernate.criterion.Order.asc("points"));
 			}
 		}
 		return criteria;

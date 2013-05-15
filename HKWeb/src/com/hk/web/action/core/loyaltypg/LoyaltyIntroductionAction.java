@@ -35,7 +35,8 @@ public class LoyaltyIntroductionAction  extends AbstractLoyaltyAction {
 	}
 	
 	public Resolution aboutLoyaltyProgram() {
-		this.badges = new ArrayList<Badge>(this.loyaltyProgramService.getAllBadges());
+		this.badges = new ArrayList<Badge>();
+		this.badges.addAll(this.loyaltyProgramService.getAllBadges());
 		return new ForwardResolution("/pages/loyalty/info/aboutUs.jsp");
 	}
 

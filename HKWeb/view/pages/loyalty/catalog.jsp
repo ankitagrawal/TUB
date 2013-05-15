@@ -145,9 +145,9 @@ pageContext.setAttribute("isSecure", isSecure);
       </div>
     </div>
     <div id="errorToolTip" class="row" style="display: none;">
-      <div class="span12">
+      <div class="span7">
         <div class="alert alert-error">
-          <button id="errorToolTipBtn1" type="button" class="close" data-dismiss="alert">×</button>
+          <button id="errorToolTipBtn1" type="button" class="close" >×</button>
           <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg">x</span>
         </div>
       </div>

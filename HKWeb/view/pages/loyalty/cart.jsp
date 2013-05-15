@@ -45,11 +45,12 @@
 					var lineItemQty =  $(this).parent().find('.lineItemQty');
 					var currentQty = parseInt(lineItemQty.val());
 					lineItemQty.val(0); 
+					$(this).parent().parent().hide();
 					lineItemQty.trigger('blur');
 					var rowCount = $("#itemRows").val();
 					$("#itemRows").val(rowCount-1);
 				});
-				
+	
 				$('.plus').click(function(){
 					var lineItemQty =  $(this).parent().find('.lineItemQty');
 					var currentQty = parseInt(lineItemQty.val());

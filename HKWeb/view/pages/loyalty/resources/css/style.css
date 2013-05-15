@@ -898,6 +898,11 @@ button.close {
   float: right;
 }
 
+.span7 {
+  width: 700px;
+  float: right;
+}
+
 .row {
   margin-left: -20px;
   *zoom: 1;

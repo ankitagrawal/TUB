@@ -1,6 +1,8 @@
 package com.hk.web.action.core.loyaltypg;
 
 
+import java.util.Date;
+
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -25,6 +27,7 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 	
 	private String gender;
 	private String name;
+	private Date dob;
 	
 	@Autowired UserService userService;
 	@Autowired RoleService roleService;
@@ -53,6 +56,9 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 			user.setName(this.name);
 		}
 		
+		if (this.dob != null && this.dob instanceof Date) {
+			user.setBirthDate(this.dob);
+		}
 		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
 		this.userService.save(user);
 		this.loyaltyProgramService.createNewUserBadgeInfo(user);
