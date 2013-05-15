@@ -3068,7 +3068,7 @@ color: #e62580;
 }
 
 .raj_modal2{
-    overflow: scroll;
+    overflow: hidden;
     height: 500px;
     top: 60px;
     padding: 15px 0 30px 30px;
@@ -3081,13 +3081,14 @@ color: #e62580;
     overflow: hidden;
     height: 500px;
     padding: 15px;
-    left: 25%;
+    left: 21%;
 }
 
 .bulkModalFrame{
     position: relative;
     float: left;
     height: 100%;
+    width: 630px;
 }
 
 .banner_raj{
@@ -3113,6 +3114,14 @@ color: #e62580;
     position: absolute;
     width: 100%;
     background: transparent;
+}
+
+.sports_frameNew{
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
 }
 
 /*
