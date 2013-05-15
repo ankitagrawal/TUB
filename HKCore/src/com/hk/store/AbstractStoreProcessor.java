@@ -99,9 +99,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartLineItem.setOrder(order);
 			cartLineItem.setMarkedPrice(productVariant.getMarkedPrice());
 			cartLineItem.setDiscountOnHkPrice(0d);
-			//cartLineItem.setHkPrice(productVariant.getHkPrice());
-
-			cartLineItem.setDiscountOnHkPrice(productVariant.getHkPrice()*productVariantInfo.getQuantity());
+			cartLineItem.setHkPrice(productVariant.getHkPrice());
 			cartLineItem.setLineItemType(EnumCartLineItemType.Product.asCartLineItemType());
 			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 		}

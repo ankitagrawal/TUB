@@ -60,6 +60,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 			orderAmount += (cartLineItem.getHkPrice() * cartLineItem.getQty());
 		}
 		order.setAmount(orderAmount);
+		order.setRewardPointsUsed(orderAmount);
 		this.orderService.save(order);
 		CartLineItem rewardLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.RewardPoint).build();
 		rewardLineItem.setOrder(order);
