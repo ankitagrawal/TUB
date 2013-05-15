@@ -3067,11 +3067,52 @@ font-weight:bold;
 color: #e62580;
 }
 
-.raj_modal{
+.raj_modal2{
     overflow: scroll;
     height: 500px;
     top: 60px;
     padding: 15px 0 30px 30px;
+}
+
+.bulkOrderModal{
+    display: none;
+    position: absolute;
+    top: 20%;
+    overflow: hidden;
+    height: 500px;
+    padding: 15px;
+    left: 25%;
+}
+
+.bulkModalFrame{
+    position: relative;
+    float: left;
+    height: 100%;
+}
+
+.banner_raj{
+    position: absolute;
+    float: left;
+    top: 200px;
+}
+
+.banner_raj_modal{
+    position: absolute;
+    float: left;
+    width: auto;
+    left: 10%;
+    z-index: 100;
+    display: none;
+    border: 1px solid #ddd;
+    top: -50px;
+    height: auto;
+    padding: 20px 0 15px 15px;
+}
+
+.raj_modal{
+    position: absolute;
+    width: 100%;
+    background: transparent;
 }
 
 /*

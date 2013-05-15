@@ -51,6 +51,7 @@ import com.hk.domain.hkDelivery.ConsignmentStatus;
 import com.hk.domain.hkDelivery.Hub;
 import com.hk.domain.hkDelivery.RunsheetStatus;
 import com.hk.domain.inventory.GrnStatus;
+import com.hk.domain.inventory.creditNote.CreditNoteStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -216,6 +217,10 @@ public class MasterDataDaoImpl implements MasterDataDao {
 
     public List<DebitNoteStatus> getDebitNoteStatusList() {
         return getBaseDao().getAll(DebitNoteStatus.class);
+    }
+
+  public List<CreditNoteStatus> getCreditNoteStatusList() {
+        return getBaseDao().getAll(CreditNoteStatus.class);
     }
 
     public List<PurchaseInvoiceStatus> getPurchaseInvoiceStatusList() {

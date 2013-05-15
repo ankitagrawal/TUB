@@ -51,31 +51,51 @@
 </s:layout-component>
 
 <s:layout-component name="steps">
-  <div class='steps'>
-    <div class='step'>
-      <h2>Step 1</h2>
-
-      <div class='small'>
-        Select A shipping address
-      </div>
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
     </div>
-    <div class='step'>
-      <h2>Step 2</h2>
+    <div class='steps_new'>
+        <hr noshade class="stepLine">
+        <s:link
+                beanclass="com.hk.web.action.core.user.SelectAddressAction"
+                style="margin-top: 0; margin-bottom: 0;">
+            <div class='newStep' id="step1">
+                <div class="newStepCount">1</div>
 
-      <div class='small'>
-        Confirm your order
-      </div>
-    </div>
-    <div class='step current_step'>
-      <h2>Step 3</h2>
+                <div class='newStepText'>
+                    Select A shipping address
+                </div>
+            </div>
+        </s:link> <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction"
+                          style="margin-top: 0; margin-bottom: 0;">
+        <div class='newStep ' id="step2">
+            <div class="newStepCount">2</div>
 
-      <div class='small'>
-        Choose Payment Method
-      </div>
+            <div class='newStepText'>
+                Confirm your order
+            </div>
+        </div>
+    </s:link>
+        <div class='newStep '>
+            <div class="newStepCount current_step">3</div>
+
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
+        </div>
     </div>
-  </div>
 </s:layout-component>
 <s:layout-component name="steps_content">
+<div class="topHeadingBillingAddress">To proceed with payment using Paypal you would need to enter your billing details.</div>
   <div class='current_step_content'>
 
    <%
@@ -83,17 +103,19 @@
             pageContext.setAttribute("countryList", addressService.getAllCountry());
         %>
 
+      <div class="billingAddressLeftNew2">
     <div class='left2'>
-      <h3 style="text-align: left;">
-        Use one of your saved Billing addresses &darr;
+      <h3 class="arialBlackBold" style="text-align: left;">
+        Use one of your saved Billing addresses
       </h3>
 
       <c:forEach items="${addressBean.billingAddresses}" var="billingAddress" varStatus="addressCount">
-        <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="checkout" title="Click to use this address and proceed">
+      <div class="address raj_address">
+          <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="checkout" class="raj_addressLink" title="Click to use this address and proceed">
           <s:param name="billingAddressId" value="${billingAddress.id}"/>
           <s:param name="issuer" value="${issuerPaypal}"/>
           <s:param name="order" value="${orderSummary.order.id}"/>
-          <div class="address" style="position: relative;">
+          <div class="address" style="position: relative;border: none;float:left;">
             <h5 class="name">${billingAddress.name}</h5>
 
             <div class='street street1'>${billingAddress.line1}</div>
@@ -110,20 +132,21 @@
             <div class='pin'>${billingAddress.pin}</div>
             <div class='phone'>${billingAddress.phone}</div>
             <br/>
-            <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" class="delete">
+            <s:link beanclass="com.hk.web.action.core.user.BillingAddressAction" event="remove" style="left: 0px;top: -7px;border-radius: 0px;" class="appliedButton">
               <s:param name="billingAddressId" value="${billingAddress.id}"/>
-              (delete)
+                DELETE
             </s:link>
 
-            <span class="edit">(edit)</span>
+            <span style="left: 0px;top: -7px;border-radius: 0px;margin-bottom: 12px;" class="appliedButton edit">EDIT</span>
 
-            <div class="hidden help yellow">
+              <div class="useAddressButton">
               Click to use this address
-              and proceed &rarr;
+              and proceed
 
             </div>
           </div>
         </s:link>
+          </div>
       </c:forEach>
       <script type="text/javascript">
        $(document).ready(function() {
@@ -187,50 +210,54 @@
 
 
     </div>
-    <div class='or'>
-      or
-    </div>
-    <div class='right'>
-      <h3>
-        Add a new Billing address
-      </h3>
+          <s:link beanclass="com.hk.web.action.core.payment.PaymentModeAction" class="goBackButtonNew2">GO BACK</s:link>
+          <div class="specialNew2" style="left: 5px;margin-top: 10px;">
+              Go back and change your payment mode
+          </div>
+   </div>
+
+   <h3 class="shippingAddressheading arialBlackBold" style="position: relative;left: 16%;top: 5px;margin-bottom: 10px;">
+       Or add a new Billing address
+   </h3>
+    <div class='right' style="width: 440px;background: initial;position: relative;left: 15%;">
+
 
       <div class="addressContainer shipping_address">
         <div class="newAddress-errors">
           <s:errors/>
         </div>
         <div class="newAddress-errors alert messages"><s:messages key="generalMessages"/></div>
-        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" id="newAddressForm" onsubmit="return validateForm()" method="post" name="BillingAddressForm">
+        <s:form beanclass="com.hk.web.action.core.user.BillingAddressAction" style="width: 425px;position: relative;left: -79px;" id="newAddressForm" onsubmit="return validateForm()" method="post" name="BillingAddressForm">
         <s:hidden name="issuer" value="${issuerPaypal}"/>
-        <span class="aster special">(Fields marked * are required.)</span>
-          <div class='label'>Name<span class="aster">*</span></div>
-          <s:text name="address.name" maxlength = "80"/>
-          <div class='label'>Address Line 1<span class="aster">*</span></div>
-          <s:text name="address.line1" maxlength = "120"/>
-          <div class='label'>Address Line 2</div>
-          <s:text name="address.line2" maxlength = "120"/>
-          <div class='label'>City<span class="aster">*</span></div>
-          <s:text name="address.city" maxlength = "60"/>
-          <div class='label'>State<span class="aster">*</span></div>
-          <s:text name="address.state" maxlength = "50"/>
-           <div class='label'>Country<span class="aster">*</span></div>
-          <s:select name="countryId" style="width:310px;">
+          <div class='label newLabel3'>Name<span class="aster">*</span></div>
+          <s:text name="address.name" class="signUpInputNew" maxlength = "80"/>
+          <div class='label newLabel3'>Address Line 1<span class="aster">*</span></div>
+          <s:text name="address.line1" class="signUpInputNew" maxlength = "120"/>
+          <div class='label newLabel3'>Address Line 2</div>
+          <s:text name="address.line2" class="signUpInputNew" maxlength = "120"/>
+          <div class='label newLabel3'>City<span class="aster">*</span></div>
+          <s:text name="address.city" class="signUpInputNew" maxlength = "60"/>
+          <div class='label newLabel3'>State<span class="aster">*</span></div>
+          <s:text name="address.state" class="signUpInputNew" maxlength = "50"/>
+           <div class='label newLabel3'>Country<span class="aster">*</span></div>
+          <s:select class="signUpInputNew" name="countryId" style="width:310px;height: 35px !important;">
               <s:option value="">-select-</s:option>
               <c:forEach items="${countryList}" var="country">
                   <s:option value="${country.id}">${country.name}</s:option>
            </c:forEach>
           </s:select>
-          <div class='label'>PIN Code<span class="aster">*</span></div>
-          <s:text name="pin" class="pincode" maxlength="20"/>
+          <div class='label newLabel3'>PIN Code<span class="aster">*</span></div>
+          <s:text  name="pin" class="pincode signUpInputNew" maxlength="20"/>
           <s:hidden name="address.pincode" value="-1"/>
-          <div class='label'>Phone / Mobile<span class="aster">*</span></div>
-          <s:text name="address.phone" id="phoneNo" maxlength = "25"/>
-          <s:submit name="create" value="Use this address and continue >" class="button addressValidation" style="left: 50px;"/>
-          <div class="special" style="text-align: right;">
-            Proceed to Order Confirmation <br/>(This address will be added to your address book so you can use it later)
+          <div class='label newLabel3'>Phone<span class="aster">*</span></div>
+          <s:text name="address.phone" id="phoneNo" class="signUpInputNew" maxlength = "25"/>
+          <s:submit name="create" value="USE THIS ADDRESS AND CONTINUE" class="placeOrderButtonNew" style="margin-bottom: 10px !important;width: 275px;left: 20px !important;"/>
+          <div class="specialNew2">
+            This address will be added to your address book and you will now be directed to the order confirmation page
           </div>
         </s:form>
       </div>
+
 
       <div class="addressSuccessContainer" style="display:none;">
         <h2>New address has been added</h2>
@@ -290,6 +317,7 @@
 
 
     </div>
+
   </div>
 </s:layout-component>
 
