@@ -8,7 +8,7 @@ public class HKAPIProductDTO {
     private String productID;
     private String imageUrl;
     private String name;
-    private String description;
+    private String overview;
     private HKAPIProductVariantDTO[] productVariantDTOs;
     private boolean deleted;
     private boolean outOfStock;
@@ -53,19 +53,19 @@ public class HKAPIProductDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 }

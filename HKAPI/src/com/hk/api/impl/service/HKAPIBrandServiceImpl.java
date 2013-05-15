@@ -49,7 +49,7 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
             HKAPIProductDTO productDTO=new HKAPIProductDTO();
 
             productDTO.setName(product.getName());
-            productDTO.setDescription(product.getDescription());
+            productDTO.setDescription(product.getOverview());
             productDTO.setDeleted(product.isDeleted());
             productDTO.setOutOfStock(product.getOutOfStock());
             productDTO.setProductID(product.getId());
