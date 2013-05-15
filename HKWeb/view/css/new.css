@@ -6796,6 +6796,14 @@ color: #e62580;
 .goBackButtonNew2:hover {
     color: white;
 }
+
+.sports_frameNew{
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
 /*
 slider pager end
 */
