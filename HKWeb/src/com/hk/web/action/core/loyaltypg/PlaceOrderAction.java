@@ -2,7 +2,6 @@ package com.hk.web.action.core.loyaltypg;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -46,7 +45,6 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 		this.shipmentAddress = this.order.getAddress();
 		try {
 			this.getProcessor().makePayment(this.order.getId(), this.getRemoteHostAddr());
-			this.getProcessor().escalateOrder(this.order.getId());
 		} catch (InvalidOrderException e) {
 			this.errorMessage = e.getMessage();
 		}

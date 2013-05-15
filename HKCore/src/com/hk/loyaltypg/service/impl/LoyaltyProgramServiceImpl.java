@@ -301,7 +301,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double calculateLoyaltyPoints(Order order) {
-		Set<CartLineItem> cartLineItems = order.getCartLineItems();
+		List<CartLineItem> cartLineItems = order.getProductCartLineItems();
 		return this.calculateLoyaltyPoints(cartLineItems);
 	}
 
