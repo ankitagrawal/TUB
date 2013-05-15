@@ -62,11 +62,7 @@ public class PaymentModeAction extends BaseAction {
             return new RedirectResolution(SelectAddressAction.class);
         }
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), order.getRewardPointsUsed()), order.getAddress());
-        long startCodTime =    System.currentTimeMillis();
         codFailureMap = adminOrderService.isCODAllowed(order, pricingDto.getGrandTotalPayable());
-          long endCodTime =    System.currentTimeMillis();
-        System.out.println("Total cod execution time is :"+ (endCodTime - startCodTime));
-
         bankIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Bank.getId(), true);
         cardIssuers = gatewayIssuerMappingService.getIssuerByType(EnumIssuerType.Card.getId(), true);
         return new ForwardResolution("/pages/paymentMode.jsp");

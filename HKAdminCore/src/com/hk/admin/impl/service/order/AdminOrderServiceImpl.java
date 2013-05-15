@@ -411,17 +411,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 break;
             }
         }
-
-        Long startTimeRTO = System.currentTimeMillis();
-//        OrderSearchCriteria osc = new OrderSearchCriteria();
-//        osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
-//        List<Order> rtoOrders = getOrderService().searchOrders(osc);
-
         Long rtoOrdersCount = orderService.getCountOfOrdersByStatus(order.getUser(),EnumOrderStatus.RTO);
-
-        Long endTimeRTO = System.currentTimeMillis();
-        System.out.println("Rto total elapsed time : " + ( endTimeRTO - startTimeRTO));
-
         if (payable < codMinAmount || payable > codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
@@ -431,12 +421,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
             codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (rtoOrdersCount >= 2) {
-            Long startTimeDeliveredCheck = System.currentTimeMillis();
-//            osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
-//            List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
             Long totalDelieveredOrdersCount= orderService.getCountOfOrdersByStatus(order.getUser(),EnumOrderStatus.Delivered);
-            Long endTimeDeliveredCheck = System.currentTimeMillis();
-            System.out.println("Deliverd check total elapsed time : " + ( endTimeDeliveredCheck - startTimeDeliveredCheck));
             if (rtoOrdersCount >= totalDelieveredOrdersCount)
                 codFailureMap.put("MutipleRTOs", "Y");
         }
