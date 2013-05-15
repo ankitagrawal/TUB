@@ -3081,13 +3081,14 @@ color: #e62580;
     overflow: hidden;
     height: 500px;
     padding: 15px;
-    left: 25%;
+    left: 21%;
 }
 
 .bulkModalFrame{
     position: relative;
     float: left;
     height: 100%;
+    width: 630px;
 }
 
 .banner_raj{
