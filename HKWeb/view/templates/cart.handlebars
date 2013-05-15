@@ -4,7 +4,7 @@
   {{#each array in controller.finalApplicableOffers}}
     <div class="offerRow">
       {{#each value in array}}
-        <div class="applicableOffer">    
+        <div class="applicableOffer minHeight">
           <div class="applicableOfferDesc" style="width: 92%;">{{value.description}}</div>
           {{#if value.terms}}
             <div class="applicableOfferTerms"><strong>Terms:</strong>{{value.terms}}</div>
