@@ -12584,6 +12584,48 @@
     <changeSet author="Ajeet (generated)" id="1367657291705-4">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
+    
+        <changeSet author="Pratham (generated)" id="2013-05-06-01">
+        <addColumn tableName="pincode_default_courier">
+            <column name="estimated_delivery_days" type="INT"/>
+        </addColumn>
+    </changeSet>
+		<changeSet author="Tarun (written)" id="2013-06-05-01">
+			<sql>
+				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+			</sql>
+		</changeSet>
+    <changeSet author="Ankur (generated)" id="1367992804803-3">
+        <createIndex indexName="name_value_unique_constraint" tableName="product_option" unique="true">
+            <column name="name"/>
+            <column name="value"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-1">
+        <addColumn tableName="consignment">
+            <column name="owner" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-2">
+        <addColumn tableName="consignment">
+            <column name="target_delivery_date" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842115673-3">
+        <addColumn tableName="consignment_tracking">
+            <column name="ndr_resolution" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Shilpa (generated)" id="1367842551660-1">
+        <modifyDataType columnName="remarks" newDataType="VARCHAR(150)" tableName="consignment_tracking"/>
+    </changeSet>
+    <changeSet author="Nihal (generated)" id="1367933059204-2">
+        <addColumn tableName="grn_line_item">
+            <column name="weight" type="DOUBLE">
+            </column>
+        </addColumn>
+    </changeSet>
+    
     <changeSet author="DeepakC" id="20133001-01">
 		<createTable tableName="loyalty_product">
 			<column autoIncrement="true" name="id" type="INT">
@@ -12649,7 +12691,7 @@
 	</changeSet>
 	<changeSet author="DeepakC" id="20133001-07">
 		<addColumn tableName="badge">
-			<column name="loyalty_multiplier" type="DOUBLE">
+			<column name="loyalty_percentage" type="DOUBLE">
 				<constraints nullable="false" />
 			</column>
 			<column name="icon_rel_url" type="VARCHAR(32)">
@@ -12661,12 +12703,12 @@
 	</changeSet>
 	<changeSet author="DeepakC" id="20133001-08">
 		<sql>
-			insert into badge (badge_name,min_score,max_score,loyalty_multiplier) values 
-			('NORMAL', 0, 1500, 0),
-			('BRONZE', 1501, 3000, 0.01),
-			('SILVER', 3001, 6000, 0.015),
-			('GOLD', 6001, 12000, 0.0175),
-			('PLATINUM', 12001, -1, 0.02);
+			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
+			('NORMAL', 0, 1500, 0.0),
+			('BRONZE', 1501, 3000, 1.0),
+			('SILVER', 3001, 6000, 1.5),
+			('GOLD', 6001, 12000, 1.75),
+			('PLATINUM', 12001, -1, 2.0);
 		</sql>
 	</changeSet>
     <changeSet author="DeepakC" id="20133001-09">
@@ -12702,44 +12744,11 @@
 			</column>
 		</createTable>
 	</changeSet>
-    <changeSet author="Pratham (generated)" id="2013-05-06-01">
-        <addColumn tableName="pincode_default_courier">
-            <column name="estimated_delivery_days" type="INT"/>
-        </addColumn>
-    </changeSet>
-		<changeSet author="Tarun (written)" id="2013-06-05-01">
-			<sql>
-				ALTER TABLE  `zone` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT
-			</sql>
-		</changeSet>
-    <changeSet author="Ankur (generated)" id="1367992804803-3">
-        <createIndex indexName="name_value_unique_constraint" tableName="product_option" unique="true">
-            <column name="name"/>
-            <column name="value"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="Shilpa (generated)" id="1367842115673-1">
-        <addColumn tableName="consignment">
-            <column name="owner" type="VARCHAR(100)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Shilpa (generated)" id="1367842115673-2">
-        <addColumn tableName="consignment">
-            <column name="target_delivery_date" type="DATETIME"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Shilpa (generated)" id="1367842115673-3">
-        <addColumn tableName="consignment_tracking">
-            <column name="ndr_resolution" type="VARCHAR(100)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Shilpa (generated)" id="1367842551660-1">
-        <modifyDataType columnName="remarks" newDataType="VARCHAR(150)" tableName="consignment_tracking"/>
-    </changeSet>
-    <changeSet author="Nihal (generated)" id="1367933059204-2">
-        <addColumn tableName="grn_line_item">
-            <column name="weight" type="DOUBLE">
-            </column>
-        </addColumn>
-    </changeSet>
+	<changeSet author="DeepakC" id="20133001-12">
+		<addColumn tableName="user_detail">
+			<column name="age_group" type="VARCHAR(32)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

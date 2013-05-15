@@ -71,8 +71,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Autowired
 	private RewardPointService rewardPointService;
 
-	private final double LOYALTY_JOINING_BONUS= 15.0;
-	
+	private final double LOYALTY_JOINING_BONUS = 15.0;
+
 	private enum LoyaltyProductAlias {
 		VARIANT("pv"), PRODUCT("p"), CATEGORY("c");
 
@@ -94,7 +94,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		DetachedCriteria distinctCriteria = DetachedCriteria.forClass(LoyaltyProduct.class);
 		int fromIndex = searchCriteria.getStartRow();
 		int toIndex = searchCriteria.getStartRow() + searchCriteria.getMaxRows();
-		if (ids.size()==0) {
+		if (ids.size() == 0) {
 			return new ArrayList<LoyaltyProduct>();
 		}
 		toIndex = ids.size() < toIndex ? ids.size() : toIndex;
@@ -103,7 +103,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		} else {
 			distinctCriteria.add(Restrictions.in("id", ids.subList(fromIndex, toIndex)));
 		}
-		
+
 		return this.loyaltyProductDao.findByCriteria(distinctCriteria);
 	}
 
@@ -146,39 +146,35 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public double creditKarmaPoints(Order order) {
-		boolean creditLoyaltyPoints = true;
-		double karmaPoints =0;
+		double karmaPoints = 0d;
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
-		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
-			return karmaPoints=karmaProfile.getKarmaPoints();
+		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
+			return karmaPoints = karmaProfile.getKarmaPoints();
 		}
-		
+
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser());
 		double loyaltyPercentage = badgeInfo.getBadge().getLoyaltyPercentage();
 		Double amount = order.getPayment().getAmount();
 
-		 OfferInstance offerInstance = order.getOfferInstance();
-         if (offerInstance != null) {
-             Coupon coupon = offerInstance.getCoupon();
-             if (coupon != null && coupon.getCode().equalsIgnoreCase(OfferConstants.HK_EMPLOYEE_CODE)) {
-             		creditLoyaltyPoints=false;
-             	}
-             }
-         
-         if (creditLoyaltyPoints || !(badgeInfo.getBadge().getBadgeName().equalsIgnoreCase("NORMAL"))) {
-        	karmaPoints = (amount * loyaltyPercentage)/100;
-        	if (karmaPoints ==0) {
-        		return 0;
-        	}
-        	UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
-        	profile.setStatus(KarmaPointStatus.PENDING);
-        	profile.setTransactionType(TransactionType.CREDIT);
-        	profile.setKarmaPoints(karmaPoints);
-        	profile.setUser(order.getUser());
-        	profile.setOrder(order);
-        	this.userOrderKarmaProfileDao.saveOrUpdate(profile);
-        }
-         return karmaPoints;
+		OfferInstance offerInstance = order.getOfferInstance();
+		if (offerInstance != null) {
+			Coupon coupon = offerInstance.getCoupon();
+			if (coupon != null && coupon.getCode().equalsIgnoreCase(OfferConstants.HK_EMPLOYEE_CODE)) {
+				return 0d;
+			}
+		}
+		karmaPoints = (amount * loyaltyPercentage) / 100;
+		if (karmaPoints == 0d) {
+			return 0d;
+		}
+		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
+		profile.setStatus(KarmaPointStatus.PENDING);
+		profile.setTransactionType(TransactionType.CREDIT);
+		profile.setKarmaPoints(karmaPoints);
+		profile.setUser(order.getUser());
+		profile.setOrder(order);
+		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		return karmaPoints;
 	}
 
 	@Override
@@ -216,10 +212,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void debitKarmaPoints(Order order) {
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
-		if(karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.DEBIT) {
+		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.DEBIT) {
 			throw new RuntimeException("User order karma profile already exist for given orer and user");
 		}
-		
+
 		double existingKarmaPoints = this.calculateLoyaltyPoints(order.getUser());
 		double karmaPoints = this.calculateLoyaltyPoints(order);
 		if (existingKarmaPoints < karmaPoints) {
@@ -335,7 +331,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double calculateLoyaltyPoints(User user) {
-		Double credits = this.calculatePoints(user.getId(), TransactionType.CREDIT, KarmaPointStatus.APPROVED, KarmaPointStatus.BONUS);
+		Double credits = this.calculatePoints(user.getId(), TransactionType.CREDIT, KarmaPointStatus.APPROVED,
+				KarmaPointStatus.BONUS);
 		Double debits = this.calculatePoints(user.getId(), TransactionType.DEBIT);
 		if (credits == null) {
 			return 0d;
@@ -416,8 +413,8 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".outOfStock", Boolean.FALSE));
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".deleted", Boolean.FALSE));
 		criteria.add(Restrictions.eq(LoyaltyProductAlias.PRODUCT.alias + ".hidden", Boolean.FALSE));
-		criteria.createAlias(LoyaltyProductAlias.PRODUCT.alias + ".primaryCategory", LoyaltyProductAlias.CATEGORY.alias,
-				CriteriaSpecification.INNER_JOIN);
+		criteria.createAlias(LoyaltyProductAlias.PRODUCT.alias + ".primaryCategory",
+				LoyaltyProductAlias.CATEGORY.alias, CriteriaSpecification.INNER_JOIN);
 		if (search != null) {
 			if (search.getCategoryName() != null) {
 				criteria.add(Restrictions.eq(LoyaltyProductAlias.CATEGORY.alias + ".name", search.getCategoryName()));
@@ -464,16 +461,16 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	}
 
 	private UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
-		if(orderId == -1l) {
+		if (orderId == -1l) {
 			throw new RuntimeException("This API is not supposed to query order id with -1");
 		}
 		Order order = this.orderDao.get(Order.class, orderId);
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
 		criteria.add(Restrictions.eq("user.id", order.getUser().getId()));
 		criteria.add(Restrictions.eq("order.id", order.getId()));
-		
+
 		List<UserOrderKarmaProfile> list = this.userOrderKarmaProfileDao.findByCriteria(criteria);
-		if(list == null || list.size() == 0) {
+		if (list == null || list.size() == 0) {
 			return null;
 		}
 		return list.iterator().next();
@@ -481,9 +478,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	public double convertLoyaltyToRewardPoints(User user) {
-	
+
 		double loyaltyPoints = this.calculateLoyaltyPoints(user);
-		double totalPointsConverted = -1;	
+		double totalPointsConverted = -1;
 		if (loyaltyPoints > 0) {
 			String comment = "Reward Points converted from Loyalty points";
 			Order orderReward = this.orderDao.get(Order.class, -1l);
@@ -495,17 +492,18 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			rewardProfile.setOrder(orderReward);
 			rewardProfile.setTransactionType(TransactionType.DEBIT);
 			rewardProfile.setStatus(KarmaPointStatus.REWARDED);
-			
-			// add reward points
-			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward, loyaltyPoints, comment,
-					EnumRewardPointStatus.APPROVED, EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
-			 
-	        this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusDays(0).toDate());
 
-	        // save reward profile
+			// add reward points
+			RewardPoint loyaltyRewardPoints = this.rewardPointService.addRewardPoints(user, null, orderReward,
+					loyaltyPoints, comment, EnumRewardPointStatus.APPROVED,
+					EnumRewardPointMode.HKLOYALTY_POINTS.asRewardPointMode());
+
+			this.rewardPointService.approveRewardPoints(Arrays.asList(loyaltyRewardPoints), new DateTime().plusDays(180).toDate());
+
+			// save reward profile
 			this.userOrderKarmaProfileDao.saveOrUpdate(rewardProfile);
 			totalPointsConverted = loyaltyPoints;
- 		} 
+		}
 		return totalPointsConverted;
 	}
 
@@ -516,8 +514,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			this.loyaltyProductDao.saveOrUpdate(uploadedProducts);
 		}
 	}
-	
-	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts, List<String> errorMessages) {
+
+	private boolean validateLoyaltyCsvFile(FileBean csvFileReader, Set<LoyaltyProduct> uploadedProducts,
+			List<String> errorMessages) {
 		boolean flag = false;
 		List<LoyaltyProduct> products;
 		List<ProductVariant> variants;
@@ -527,9 +526,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		try {
 			CSVReader reader = new CSVReader(csvFileReader.getReader());
 			List<String[]> loyaltyProductList = reader.readAll();
-			
-			for(String[] productRow: loyaltyProductList) {
-				if(productRow.equals(loyaltyProductList.get(0))) {
+
+			for (String[] productRow : loyaltyProductList) {
+				if (productRow.equals(loyaltyProductList.get(0))) {
 					continue;
 				}
 				criteria = DetachedCriteria.forClass(LoyaltyProduct.class);
@@ -537,7 +536,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				products = this.loyaltyProductDao.findByCriteria(criteria);
 				LoyaltyProduct prod;
 				try {
-					if (products!=null && !products.isEmpty()) {
+					if (products != null && !products.isEmpty()) {
 						prod = products.iterator().next();
 						prod.setPoints(Double.parseDouble(productRow[1]));
 					} else {
@@ -545,7 +544,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 						variantCriteria = DetachedCriteria.forClass(ProductVariant.class);
 						variantCriteria.add(Restrictions.eq("id", productRow[0]));
 						variants = this.loyaltyProductDao.findByCriteria(variantCriteria);
-						if (variants!=null && !variants.isEmpty()) {
+						if (variants != null && !variants.isEmpty()) {
 							prod = new LoyaltyProduct();
 							prod.setVariant(variants.iterator().next());
 							prod.setPoints(Double.parseDouble(productRow[1]));
@@ -557,22 +556,23 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 					if (!uploadedProducts.add(prod)) {
 						errorMessages.add("Duplicate entries found in the file for the variant Id " + productRow[0]);
 					}
-				}catch (NumberFormatException nfe) {
-					errorMessages.add(productRow[1]+ " is not suitable value as points for product variant " + productRow[0]);
+				} catch (NumberFormatException nfe) {
+					errorMessages.add(productRow[1] + " is not suitable value as points for product variant "
+							+ productRow[0]);
 				}
 				reader.close();
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			errorMessages.add("File not found for the given path");
 		} catch (IOException ioe) {
-			errorMessages.add("Failed to read the uploaded file");	
+			errorMessages.add("Failed to read the uploaded file");
 			ioe.printStackTrace();
 		} catch (Exception e) {
 			errorMessages.add("Bad file format or corrupt file");
 		}
-		
-		if (!(errorMessages.size()>0)) {
+
+		if (!(errorMessages.size() > 0)) {
 			flag = true;
 		}
 		return flag;
@@ -586,33 +586,34 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		}
 	}
 
-	private boolean validateBadgeCsvFile(FileBean csvFileReader,Set<UserBadgeInfo> uploadedBadges, List<String> errorMessages) {
+	private boolean validateBadgeCsvFile(FileBean csvFileReader, Set<UserBadgeInfo> uploadedBadges,
+			List<String> errorMessages) {
 		boolean flag = false;
 		List<UserBadgeInfo> badges;
 		DetachedCriteria criteria;
-		
+
 		try {
 			CSVReader reader = new CSVReader(csvFileReader.getReader());
 			List<String[]> badgeList = reader.readAll();
 
-			for(String[] badgeRow: badgeList) {
-				if(badgeRow.equals(badgeList.get(0))) {
+			for (String[] badgeRow : badgeList) {
+				if (badgeRow.equals(badgeList.get(0))) {
 					continue;
 				}
 				criteria = DetachedCriteria.forClass(UserBadgeInfo.class);
 				try {
-				criteria.add(Restrictions.eq("user.id", Long.parseLong(badgeRow[0])));
-				} catch(NumberFormatException nfe) {
+					criteria.add(Restrictions.eq("user.id", Long.parseLong(badgeRow[0])));
+				} catch (NumberFormatException nfe) {
 					errorMessages.add("User Id: " + badgeRow[0] + " is not a valid user id.");
 				}
 				badges = this.loyaltyProductDao.findByCriteria(criteria);
 				UserBadgeInfo localBadge;
-				if (badges!=null && !badges.isEmpty()) {
+				if (badges != null && !badges.isEmpty()) {
 					localBadge = badges.iterator().next();
 					localBadge.setCardNumber(badgeRow[1]);
 				} else {
 					// For a new user, automatic badge creation not allowed
-					errorMessages.add("User Id: "+ badgeRow[0] +" is not a loyalty member" );
+					errorMessages.add("User Id: " + badgeRow[0] + " is not a loyalty member");
 					continue;
 				}
 
@@ -625,19 +626,18 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		} catch (FileNotFoundException e) {
 			errorMessages.add("File not found for the given path");
 		} catch (IOException ioe) {
-			errorMessages.add("Failed to read the uploaded file");	
+			errorMessages.add("Failed to read the uploaded file");
 			ioe.printStackTrace();
 		} catch (Exception e) {
 			errorMessages.add("Bad file format or corrupt file");
 		}
 
-		if (!(errorMessages.size()>0)) {
+		if (!(errorMessages.size() > 0)) {
 			flag = true;
 		}
 		return flag;
 	}
 
-	
 	/**
 	 * 
 	 * Setters and getters start from here.
