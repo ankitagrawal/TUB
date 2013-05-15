@@ -28,7 +28,7 @@ public interface OrderService {
 
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
-    public Long getCountOfOrdersWithStatus();
+    public Long getCountOfOrdersByStatus(User user,EnumOrderStatus enumOrderStatus);
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 

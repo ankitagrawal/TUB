@@ -92,6 +92,8 @@ public class MasterDataService {
 	GoogleBannedWordSeedData googleBannedWordSeedData;
 	@Autowired
 	DebitNoteStatusSeedData debitNoteStatusSeedData;
+  @Autowired
+	CreditNoteStatusSeedData creditNoteStatusSeedData;
 	@Autowired
 	PurchaseInvoiceStatusSeedData purchaseInvoiceStatusSeedData;
 	@Autowired
@@ -234,6 +236,9 @@ public class MasterDataService {
 
 		logger.debug("inserting debit note status");
 		debitNoteStatusSeedData.invokeInsert();
+
+    logger.debug("inserting credit note status");
+		creditNoteStatusSeedData.invokeInsert();
 
 		logger.debug("inserting purchase invoice status seed data");
 		purchaseInvoiceStatusSeedData.invokeInsert();

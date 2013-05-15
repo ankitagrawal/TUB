@@ -143,8 +143,8 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
     }
 
-    public Long getCountOfOrdersWithStatus() {
-        return getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
+    public Long getCountOfOrdersByStatus(User user, EnumOrderStatus enumOrderStatus) {
+        return getOrderDao().getCountOfOrdersWithStatus( user, enumOrderStatus);
     }
 
     /**
