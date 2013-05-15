@@ -6,10 +6,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction" var="userBean" event="pre"/>
-<%
-    BaseDao baseDao = (BaseDao) ServiceLocatorFactory.getService(BaseDao.class);
-pageContext.setAttribute("bucketList", baseDao.getAll(Bucket.class));
-%>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
@@ -22,10 +18,9 @@ pageContext.setAttribute("bucketList", baseDao.getAll(Bucket.class));
         <s:form beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction" method="post">
             <h2>Buckets:</h2>
             <div class="checkBoxList">
-                <c:forEach items="${bucketList}" var="bucket" varStatus="ctr">
-                    <label><s:checkbox name="user.buckets[${ctr.index}].selected"
-                                       value="${bucket.id}"/> ${bucket.name}
-                                        <%--${bucket.description}--%>
+                <c:forEach items="${userBean.buckets}" var="bucket" varStatus="ctr">
+                    <label><s:checkbox name="buckets[${ctr.index}].selected" /> ${bucket.name}
+                        <s:hidden name="buckets[${ctr.index}].id" value="${bucket.id}" />
                     </label>
                     <br/>
                 </c:forEach>

@@ -90,6 +90,11 @@ public class Bucket implements java.io.Serializable {
     }
 
     @Override
+    public String toString(){
+       return this.id!=null ? this.id.toString() : "";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

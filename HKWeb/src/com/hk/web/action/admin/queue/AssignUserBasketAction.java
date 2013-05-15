@@ -3,6 +3,7 @@ package com.hk.web.action.admin.queue;
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
+import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.*;
@@ -11,6 +12,7 @@ import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,56 +24,48 @@ import java.util.Set;
 public class AssignUserBasketAction extends BaseAction {
 
 
-    private List<Bucket> buckets;
+    private List<Bucket> buckets = new ArrayList<Bucket>();
+
     @Validate(required = true)
     private User user;
 
     @Autowired
     UserDao userDao;
-
     @Autowired
     UserService userService;
-    private Set<Bucket>     bucketSet;
+    @Autowired
+    BucketService bucketService;
+
+    private Set<Bucket> bucketSet;
 
     @DefaultHandler
+
     public Resolution pre() {
-        buckets = user.getBuckets();
-        for (Bucket bucket : buckets) {
-                    if (user.getBuckets().contains(bucket)) {
+        buckets = getBaseDao().getAll(Bucket.class);
+        if (user != null) {
+            List<Bucket> userBuckets = user.getBuckets();
+            if (userBuckets != null && userBuckets.size() > 0) {
+                for (Bucket bucket : buckets) {
+                    if (userBuckets.contains(bucket)) {
                         bucket.setSelected(true);
                     }
-//                    buckets.add(bucket);
                 }
+            }
+        }
         return new ForwardResolution("/pages/admin/queue/userBasket.jsp");
     }
 
-    @ValidationMethod(on = "change")
-        public void validate() {
-            if (buckets == null || buckets.size() == 0) {
-                addValidationError("userRoles", new LocalizableError("/ChangeUserRoles.action.no.role.selected"));
-            } else {
-                bucketSet = new HashSet<Bucket>();
-                userDao.refresh(user);
-                List<Bucket> userBucketDb = user.getBuckets();
-                  for(Bucket bucket : buckets){
-                     if(userBucketDb.contains(bucket) && bucket.isSelected()){
-                         bucketSet.add(bucket);
-                     }
-                    else if(!(bucketSet.contains(bucket)) && (bucket.isSelected())){
-                         bucketSet.add(bucket);
-                     }
-                  }
-              for(Bucket bucket : userBucketDb){
-                if(!buckets.contains(bucket)){
-                  bucketSet.add(bucket);
-                }
-              }
-            }
-
-        }
-
     public Resolution save() {
-//        user.setBuckets(buckets);
+
+        List<Bucket> userBuckets = new ArrayList<Bucket>();
+        for (Bucket bucket : buckets) {
+            if (bucket.getId() != null) {
+                if (bucket.isSelected()) {
+                    userBuckets.add(bucketService.getBucketById(bucket.getId()));
+                }
+            }
+        }
+        user.setBuckets(userBuckets);
         userService.save(user);
         addRedirectAlertMessage(new SimpleMessage("Buckets Updated Successfully"));
         return new RedirectResolution(AssignUserBasketAction.class).addParameter("user", user.getId());
