@@ -6,6 +6,9 @@ package com.hk.api.dto.product;
  */
 public class HKAPIProductDTO {
     private String productID;
+    private String imageUrl;
+    private String name;
+    private String description;
     private HKAPIProductVariantDTO[] productVariantDTOs;
     private boolean deleted;
     private boolean outOfStock;
@@ -40,5 +43,29 @@ public class HKAPIProductDTO {
 
     public void setOutOfStock(boolean outOfStock) {
         this.outOfStock = outOfStock;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
