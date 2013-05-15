@@ -156,7 +156,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		this.orderService.save(order);
 		this.paymentService.sendPaymentEmailForOrder(order);
 		this.orderManager.sendReferralProgramEmail(order.getUser());
-		this.smsManager.sendOrderPlacedSMS(order);
+		//this.smsManager.sendOrderPlacedSMS(order);
 
 		return payment;
 	}

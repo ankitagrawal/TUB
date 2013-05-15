@@ -118,21 +118,20 @@ pageContext.setAttribute("isSecure", isSecure);
                 $('#errorToolTip').attr('style', 'display: none;');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
-			    $("#errorMsg").attr('style', ' ');
+			  //  $("#errorMsg").attr('style', 'display:block;');
 	            $("#errorMsg").text(resp.message);
                 $('#errorToolTip').attr('style', 'display:block;');
               }
-    		  $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
             },
             error: function (resp) {
             	$('#successToolTip').attr('style', 'display: none;');
                 $("#errorMsg").text(resp.message);
-                $("#errorMsg").attr('style', ' ');
+                //$("#errorMsg").attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display:block;');
-      		  $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
-            }
+              }
             
           });
+		  $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
         });
       });
     </script>
