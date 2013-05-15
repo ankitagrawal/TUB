@@ -12524,10 +12524,10 @@
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-<!--     <changeSet author="Ajeet (generated)" id="1366966901739-5">
+    <changeSet author="Ajeet (generated)" id="1366966901739-5">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
- -->    <changeSet author="marut (generated)" id="1366356450756-01">
+    <changeSet author="marut (generated)" id="1366356450756-01">
         <createTable tableName="marketing_feed">
             <column autoIncrement="true" name="id" type="INT">
                 <constraints nullable="false" primaryKey="true"/>
@@ -12584,8 +12584,7 @@
     <changeSet author="Ajeet (generated)" id="1367657291705-4">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="clearance_sale_product" constraintName="fk_clearance_sale_product_product1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product" referencesUniqueColumn="false"/>
     </changeSet>
-    
-        <changeSet author="Pratham (generated)" id="2013-05-06-01">
+    <changeSet author="Pratham (generated)" id="2013-05-06-01">
         <addColumn tableName="pincode_default_courier">
             <column name="estimated_delivery_days" type="INT"/>
         </addColumn>
@@ -12625,8 +12624,94 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-1">
+        <createTable tableName="credit_note">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="warehouse_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_note_status_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_user_credited" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remarks" type="VARCHAR(200)"/>
+            <column name="create_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_dt" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-2">
+        <createTable tableName="credit_note_line_item">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="qty" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost_price" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mrp" type="DECIMAL(8,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_note_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sku_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remarks" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-3">
+        <createTable tableName="credit_note_status">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-4">
+        <addColumn tableName="address">
+            <column name="mobile" type="VARCHAR(10)"/>
+        </addColumn>
+    </changeSet>
     
-    <changeSet author="DeepakC" id="20133001-01">
+    <changeSet author="Ajeet (generated)" id="1368526085655-7">
+        <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="credit_note" constraintName="fk_credit_note_user2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-8">
+        <addForeignKeyConstraint baseColumnNames="credit_note_status_id" baseTableName="credit_note" constraintName="fk_credit_note_credit_note_status1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note_status" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-9">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="credit_note" constraintName="fk_credit_note_user1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-10">
+        <addForeignKeyConstraint baseColumnNames="warehouse_id" baseTableName="credit_note" constraintName="fk_credit_note_warehouse1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="warehouse" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-11">
+        <addForeignKeyConstraint baseColumnNames="credit_note_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_credit_note1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="credit_note" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368526085655-12">
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
+    </changeSet>
+    
+        <changeSet author="DeepakC" id="20133001-01">
 		<createTable tableName="loyalty_product">
 			<column autoIncrement="true" name="id" type="INT">
 				<constraints nullable="false" primaryKey="true" />
@@ -12743,12 +12828,5 @@
 				<constraints nullable="true" />
 			</column>
 		</createTable>
-	</changeSet>
-	<changeSet author="DeepakC" id="20133001-12">
-		<addColumn tableName="user_detail">
-			<column name="age_group" type="VARCHAR(32)">
-				<constraints nullable="true" />
-			</column>
-		</addColumn>
 	</changeSet>
 </databaseChangeLog>

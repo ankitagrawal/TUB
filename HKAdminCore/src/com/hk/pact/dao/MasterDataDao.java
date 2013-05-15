@@ -22,6 +22,7 @@ import com.hk.domain.catalog.Manufacturer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.core.*;
 import com.hk.domain.inventory.GrnStatus;
+import com.hk.domain.inventory.creditNote.CreditNoteStatus;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.rv.ReconciliationStatus;
 import com.hk.domain.inventory.rv.ReconciliationType;
@@ -92,6 +93,8 @@ public interface MasterDataDao {
     public List<User> getCreatorList();
 
     public List<DebitNoteStatus> getDebitNoteStatusList();
+
+    public List<CreditNoteStatus> getCreditNoteStatusList();
 
     public List<PurchaseInvoiceStatus> getPurchaseInvoiceStatusList();
 

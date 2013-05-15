@@ -968,7 +968,7 @@
             returns true if cod is allowed on order
         </description>
         <name>getHubForHkdeliveryUser</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-class>com.hk.taglibs.Functions</function-class>                                ;
         <function-signature>com.hk.domain.hkDelivery.Hub getHubForHkdeliveryUser(com.hk.domain.user.User)</function-signature>
         <example>
             ${hk:getHubForHkdeliveryUser(${user})}
@@ -1144,7 +1144,40 @@
             ${hk:getActionAwaitingSO(${o1})}
         </example>
     </function>
-	<function>
+     <function>
+        <description>
+            returns appropriate WH based on SO
+        </description>
+        <name>getShippingWarehouse</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.warehouse.Warehouse getShippingWarehouse(com.hk.domain.order.ShippingOrder))</function-signature>
+        <example>
+            ${hk:getShippingWarehouse(${o1})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns B2bUserDetails of User
+        </description>
+        <name>getB2bUserDetails</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.user.B2bUserDetails getB2bUserDetails(com.hk.domain.user.User)</function-signature>
+        <example>
+            ${hk:getB2bUserDetails(${o1})}
+        </example>
+    </function>
+    <function>
+        <description>
+            returns State of Tin
+        </description>
+        <name>getStateFromTin</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String getStateFromTin(java.lang.String)</function-signature>
+        <example>
+            ${hk:getStateFromTin(${o1})}
+        </example>
+    </function>
+    	<function>
         <description>
             returns loyalty karma points for a user
         </description>
@@ -1169,18 +1202,7 @@
 
         </example>
 	</function>
-     <function>
-        <description>
-            returns appropriate WH based on SO
-        </description>
-        <name>getShippingWarehouse</name>
-        <function-class>com.hk.taglibs.Functions</function-class>
-        <function-signature>com.hk.domain.warehouse.Warehouse getShippingWarehouse(com.hk.domain.order.ShippingOrder))</function-signature>
-        <example>
-            ${hk:getShippingWarehouse(${o1})}
-        </example>
-    </function>
-        <function>
+	<function>
         <description>
             returns rounded number for display on jsp page
         </description>
@@ -1191,5 +1213,5 @@
             ${hk:round(${number})}
         </example>
     </function>
-   
+
 </taglib>

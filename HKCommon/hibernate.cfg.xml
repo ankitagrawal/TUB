@@ -217,5 +217,8 @@
 	    <mapping class="com.hk.domain.review.UserReviewMail"/>
         <mapping class="com.hk.domain.cycleCount.CycleCount"/>
         <mapping class="com.hk.domain.cycleCount.CycleCountItem"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNote"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNoteStatus"/>
+        <mapping class="com.hk.domain.inventory.creditNote.CreditNoteLineItem"/>
     </session-factory>
 </hibernate-configuration>
