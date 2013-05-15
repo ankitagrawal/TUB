@@ -20,5 +20,6 @@ public class HttpRequestAndSessionConstants {
   public static final String GCLID = "gclid";
   public static final String ADWORD = "adword";
   public static final String TRAFFIC_TRACKING = "trafficTracking";
+  public static final String TRAFFIC_TRACKING_ID = "trafficTrackingId";
   public static final String AFF_ID = "affid";
 }

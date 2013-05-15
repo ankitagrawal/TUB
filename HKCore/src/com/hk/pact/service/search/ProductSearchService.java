@@ -32,4 +32,6 @@ public interface ProductSearchService {
     SearchResult getSearchResults(String query,List<SearchFilter> searchFilters, int page, int perPage,boolean isRetry) throws SearchException;
 
     SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException;
+
+    public void logSearchResult(String keyword, Long results);
 }

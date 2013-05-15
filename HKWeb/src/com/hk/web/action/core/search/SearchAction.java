@@ -96,6 +96,8 @@ public class SearchAction extends BasePaginatedAction {
 		if (productList != null && productList.size() == 0) {
 			addRedirectAlertMessage(new SimpleMessage("No results found."));
 		}
+    //Logging search results
+    productSearchService.logSearchResult(query, Long.valueOf(productList != null ? productList.size() : 0));
 		return new ForwardResolution("/pages/search.jsp");
 	}
 

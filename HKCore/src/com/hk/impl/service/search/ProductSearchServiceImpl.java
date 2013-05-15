@@ -3,18 +3,20 @@ package com.hk.impl.service.search;
 import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.*;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
+import com.hk.web.filter.WebContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
@@ -44,12 +46,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
     ProductService        productService;
 
     @Autowired
-    LocalityMapDao        localityMapDao;
-
-    @Autowired
-    MapIndiaDao           mapIndiaDao;
-
-    @Autowired
     CommonsHttpSolrServer solr;
 
     @Autowired
@@ -57,6 +53,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     @Autowired
     LinkManager           linkManager;
+
+    @Autowired
+    BaseDao baseDao;
 
     private final String  SEARCH_SERVER = "SOLR";
 
@@ -461,4 +460,26 @@ class ProductSearchServiceImpl implements ProductSearchService {
      private String sanitizeQuery(String query){
         return query.replace(':',' ');
     }
+
+  @Override
+  public void logSearchResult(String keyword, Long results) {
+    Long trafficTrackingId = 0L;
+    Object trackingId = WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID);
+    if (trackingId != null)
+      trafficTrackingId = (Long) trackingId;
+    SearchLog searchLog = new SearchLog();
+    searchLog.setTrafficTrackingId(trafficTrackingId);
+    searchLog.setKeyword(keyword);
+    searchLog.setKeyword(keyword);
+    searchLog.setResults(results);
+    getBaseDao().save(searchLog);
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
+
+  public void setBaseDao(BaseDao baseDao) {
+    this.baseDao = baseDao;
+  }
 }
