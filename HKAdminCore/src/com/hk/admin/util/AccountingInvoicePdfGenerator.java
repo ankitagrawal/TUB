@@ -61,7 +61,7 @@ public class AccountingInvoicePdfGenerator {
     BaseDao                         baseDao;
 
     private InvoiceDto              invoiceDto;
-    private B2bUserDetails          b2bUserDetails;
+    private B2bUserDetails b2bUserDetails;
     private Category                sexualCareCategory;
     private java.util.List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
 

@@ -67,6 +67,7 @@
         <th>Reward Points Txn History</th>
         <th>User Referrals</th>
         <th>Karma</th>
+        <th>Action</th>
       </tr>
       </thead>
       <c:forEach items="${userBean.userList}" var="user" varStatus="userCount">
@@ -126,6 +127,11 @@
           </td>
           <td>
               ${user.karmaProfile.karmaPoints}
+          </td>
+         <td>
+            <s:link beanclass="com.hk.web.action.admin.inventory.CreditNoteAction" event="view">
+              Raise Credit Note
+              <s:param name="user" value="${user.id}"/></s:link>
           </td>
         </tr>
       </c:forEach>
