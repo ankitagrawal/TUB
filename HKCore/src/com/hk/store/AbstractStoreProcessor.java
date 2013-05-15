@@ -37,32 +37,20 @@ import com.hk.pact.service.store.StoreService;
 
 public abstract class AbstractStoreProcessor implements StoreProcessor {
 
-	@Autowired
-	protected UserService userService;
-	@Autowired
-	protected BaseDao baseDao;
-	@Autowired
-	protected OrderService orderService;
-	@Autowired
-	protected StoreService storeService;
-	@Autowired
-	protected ProductVariantService productVariantService;
-	@Autowired
-	protected PaymentManager paymentManager;
-	@Autowired
-	protected AddressService addressService;
-	@Autowired
-	protected CartLineItemService cartLineItemService;
-	@Autowired
-	protected OrderManager orderManager;
+	@Autowired protected UserService userService;
+	@Autowired protected BaseDao baseDao;
+	@Autowired protected OrderService orderService;
+	@Autowired protected StoreService storeService;
+	@Autowired protected ProductVariantService productVariantService;
+	@Autowired protected PaymentManager paymentManager;
+	@Autowired protected AddressService addressService;
+	@Autowired protected CartLineItemService cartLineItemService;
+	@Autowired protected OrderManager orderManager;
 
-	@Autowired
-	protected PaymentService paymentService;
-	@Autowired	 
-	protected EmailManager     emailManager;
-	
-	@Autowired
-	SMSManager smsManager;
+	@Autowired protected PaymentService paymentService;
+	@Autowired protected EmailManager emailManager;
+
+	@Autowired SMSManager smsManager;
 
 	@Override
 	public Long createOrder(Long userId) {
@@ -110,8 +98,10 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			cartLineItem.setQty(productVariantInfo.getQuantity());
 			cartLineItem.setOrder(order);
 			cartLineItem.setMarkedPrice(productVariant.getMarkedPrice());
+			cartLineItem.setDiscountOnHkPrice(0d);
 			cartLineItem.setHkPrice(productVariant.getHkPrice());
-			cartLineItem.setDiscountOnHkPrice(productVariant.getHkPrice()*productVariantInfo.getQuantity());
+
+			//cartLineItem.setDiscountOnHkPrice(productVariant.getHkPrice()*productVariantInfo.getQuantity());
 			cartLineItem.setLineItemType(EnumCartLineItemType.Product.asCartLineItemType());
 			cartItemMap.put(cartLineItem.getProductVariant().getId(), cartLineItem);
 		}
@@ -161,13 +151,14 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 				this.cartLineItemService.remove(cartLineItem.getId());
 			}
 		}
+		
 		Payment payment = this.doPayment(orderId, remoteIp);
 		order.setPayment(payment);
 		order.setGatewayOrderId(payment.getGatewayOrderId());
 		this.orderService.save(order);
-        this.paymentService.sendPaymentEmailForOrder(order);
-        this.orderManager.sendReferralProgramEmail(order.getUser());
-       this.smsManager.sendOrderPlacedSMS(order);
+		this.paymentService.sendPaymentEmailForOrder(order);
+		this.orderManager.sendReferralProgramEmail(order.getUser());
+		this.smsManager.sendOrderPlacedSMS(order);
 
 		return payment;
 	}

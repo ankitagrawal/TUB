@@ -52,7 +52,7 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 		}
 		if(this.order != null) {
 			this.loyaltyProductList = new ArrayList<LoyaltyProduct>();
-			Set<CartLineItem> cartLineItems = this.order.getCartLineItems();
+			List<CartLineItem> cartLineItems = this.order.getProductCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = this.loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
 				loyaltyProduct.setQty(cartLineItem.getQty());
