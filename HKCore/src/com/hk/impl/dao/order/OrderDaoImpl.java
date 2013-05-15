@@ -151,8 +151,8 @@ public class OrderDaoImpl extends BaseDaoImpl implements OrderDao {
         return (Order) super.save(order);
     }
 
-    public Long getCountOfOrdersWithStatus(EnumOrderStatus enumOrderStatus) {
-        return (Long) getSession().createQuery("select count(*) from Order o where o.orderStatus.id = :orderStatusId").setLong("orderStatusId", enumOrderStatus.getId()).uniqueResult();
+    public Long getCountOfOrdersWithStatus( User user ,EnumOrderStatus enumOrderStatus) {
+        return (Long) getSession().createQuery("select count(*) from Order o where o.user = :user and  o.orderStatus.id = :orderStatusId").setEntity("user",user).setLong("orderStatusId", enumOrderStatus.getId()).uniqueResult();
     }
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant) {

@@ -108,9 +108,9 @@
         <div class="leftHalf">
     <jsp:include page="/includes/checkoutNotice.jsp"/>
 
-    <c:if test="${orderSummary.availableCourierList == null}">
-      <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
-    </c:if>
+    <%--<c:if test="${orderSummary.availableCourierList == null}">--%>
+      <%--<div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>--%>
+    <%--</c:if>--%>
     <h3 style="margin-bottom: 15px;" class="arialBlackBold">
         Your Order
     </h3>

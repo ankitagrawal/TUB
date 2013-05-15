@@ -143,6 +143,10 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
     }
 
+    public Long getCountOfOrdersByStatus(User user, EnumOrderStatus enumOrderStatus) {
+        return getOrderDao().getCountOfOrdersWithStatus( user, enumOrderStatus);
+    }
+
     /**
      * this will return the dispatch date for BO by adding min of dispatch days to refdate honouring the constraints of
      * warehouse like last time a order will be processed in WH each day (say till 4pm),
@@ -285,6 +289,16 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories;
     }
 
+    public Category getBasketCategory(ShippingOrder shippingOrder) {
+        Set<ShippingOrderCategory> shippingOrderCategories = getCategoriesForShippingOrder(shippingOrder);
+
+        for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
+            if (shippingOrderCategory.isPrimary()) {
+                return shippingOrderCategory.getCategory();
+            }
+        }
+        return shippingOrderCategories.iterator().next().getCategory();
+    }
 
     public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories) {
         for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
@@ -402,7 +416,7 @@ public class OrderServiceImpl implements OrderService {
      */
 
     @Transactional
-    private Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {

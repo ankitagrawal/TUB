@@ -210,7 +210,7 @@
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:set var="message"
                    value=" <h4 style=\"text-align: center;\">We are sorry Cash on Delivery is not available for your order</h4>"/>
-            <c:set var="codFailureMap" value="${orderSummary.codFailureMap}"/>
+            <c:set var="codFailureMap" value="${paymentModeBean.codFailureMap}"/>
 
             <c:choose>
                  <c:when test='${codFailureMap["MutipleRTOs"] == "Y"}'>
