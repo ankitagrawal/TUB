@@ -2,15 +2,7 @@ package com.hk.taglibs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import net.sourceforge.stripes.util.CryptoUtil;
 
@@ -38,6 +30,7 @@ import com.hk.admin.pact.service.inventory.AdminInventoryService;
 import com.hk.admin.pact.service.inventory.GrnLineItemService;
 import com.hk.admin.util.CourierStatusUpdateHelper;
 import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.courier.StateList;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
@@ -75,6 +68,7 @@ import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.sku.SkuItem;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.dto.menu.MenuNode;
@@ -89,6 +83,7 @@ import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
 import com.hk.pact.dao.shippingOrder.ShippingOrderLifecycleDao;
 import com.hk.pact.dao.sku.SkuDao;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.accounting.InvoiceService;
 import com.hk.pact.service.catalog.CategoryService;
@@ -202,39 +197,34 @@ public class Functions {
     }
 
     public static String decimal2(Double n) {
-        if (n == null) {
-			return "0.00";
-		}
+        if (n == null)
+            return "0.00";
         return FormatUtils.getDecimalFormat(n);
     }
 
     public static String convertToLettersNumbersUnderscore(String s) {
-        if (s == null) {
-			return "";
-		}
+        if (s == null)
+            return "";
         return s.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContains(Collection c, Object o) {
-        if (c == null) {
-			return false;
-		}
+        if (c == null)
+            return false;
         return c.contains(o);
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsBoth(Collection c, Object o1, Object o2) {
-        if (c == null) {
-			return false;
-		}
+        if (c == null)
+            return false;
         return c.contains(o1) && c.contains(o2);
     }
 
     public static boolean firstStringContainsSecond(String s1, String s2) {
-        if (s1 == null) {
-			return false;
-		}
+        if (s1 == null)
+            return false;
         return s1.contains(s2);
     }
 
@@ -247,9 +237,8 @@ public class Functions {
      */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
-        if (c1 == null || c2 == null) {
-			return false;
-		}
+        if (c1 == null || c2 == null)
+            return false;
         boolean collectionContainsCollection = true;
 
         for (Object o : c2) {
@@ -726,10 +715,10 @@ public class Functions {
         return productImages != null && !productImages.isEmpty() ? productImages.get(0).getId() : null;
     }
 
-    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant) {
+    public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant, Order order) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
         //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
-	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant);
+	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant, order);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());
@@ -846,12 +835,20 @@ public class Functions {
         return actionAwaitingSO;
     }
 
-    public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
-        WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-        return warehouseService.findShippingWarehouse(shippingOrder);
-      }
+  public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
+    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+    return warehouseService.findShippingWarehouse(shippingOrder);
+  }
 
-    
+  public static B2bUserDetails getB2bUserDetails(User user){
+    B2bUserDetailsDao b2bUserDetailsDao = ServiceLocatorFactory.getService(B2bUserDetailsDao.class);
+    return b2bUserDetailsDao.getB2bUserDetails(user);
+  }
+
+  public static String getStateFromTin(String tin){
+    return StateList.getStateByTin(tin);
+  }
+  
 	public static double getLoyaltyKarmaPointsForUser(Long userId){
 		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
 		if(userId == null){
@@ -859,7 +856,7 @@ public class Functions {
 		}
 		return Math.round(loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId))*100)/100;
 	}
-
+	
 	public static Badge getBadgeInfoForUser(Long userId){
 		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
 		if(userId == null){
@@ -867,7 +864,7 @@ public class Functions {
 		}
 		return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
 	}
-
+	
 	public static String roundNumberForDisplay(double number) {
 		
 		if ((number*10)%10==0) {
@@ -876,4 +873,5 @@ public class Functions {
 			return "" + (Math.round(number*10)/10);
 		}
 	}
+
 }
