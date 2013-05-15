@@ -424,7 +424,7 @@
         $('.tabs ul li').click(function() {
             $('.tabs ul li').removeClass('selected');
             $(this).addClass('selected');
-            /*if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+            /*if(this.id == "tab4" && ${false} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
              $('.offer-banner').css("visibility", "visible");
              $.getJSON(
              $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
@@ -475,7 +475,7 @@
             var sTab = $.session("selected-tab");
             $('.tabs ul li').removeClass('selected');
             $('#' + sTab).addClass('selected');
-            /*if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+            /*if(sTab == "tab4" && ${false} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
              $('.offer-banner').css("visibility", "visible");
              $.getJSON(
              $('#setInCookieLink').attr('href'), {wantedCOD: "true"},

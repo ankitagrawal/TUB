@@ -3,6 +3,7 @@ package com.hk.web.action.core.order;
 import java.util.*;
 
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.pact.service.order.OrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.LocalizableMessage;
@@ -45,96 +46,56 @@ import com.hk.web.action.core.user.SelectAddressAction;
 @HttpCache(allow = false)
 public class OrderSummaryAction extends BaseAction {
 
-    // private static Logger logger = LoggerFactory.getLogger(OrderSummaryAction.class);
-
-    @Autowired
-    private CourierService courierService;
-    @Autowired
-    private PincodeCourierService pincodeCourierService;
-    @Autowired
-    UserDao userDao;
     @Autowired
     OrderManager orderManager;
+    @Autowired
+    OrderService orderService;
     @Autowired
     PricingEngine pricingEngine;
     @Autowired
     private RewardPointService rewardPointService;
-    @Autowired
-    private AdminOrderService adminOrderService;
 
     @Session(key = HealthkartConstants.Session.useRewardPoints)
     private boolean useRewardPoints;
+    private Double redeemableRewardPoints;
+
+    @Autowired
+    private PincodeCourierService pincodeCourierService;
+    private boolean groundShippingAllowed;
 
     private PricingDto pricingDto;
     private Order order;
-    private Address billingAddress;
-    private boolean codAllowed;
-    private Double redeemableRewardPoints;
-    private List<Courier> availableCourierList;
-    private boolean groundShippingAllowed;
-    private boolean groundShippedItemPresent;
-    private boolean codAllowedOnGroundShipping;       
-    private Set<CartLineItem> trimCartLineItems;// = new HashSet<CartLineItem>();
-    private Integer sizeOfCLI;
+    private Set<CartLineItem> trimCartLineItems = new HashSet<CartLineItem>();
 
-    // COD related changes
     @Autowired
     PaymentManager paymentManager;
-    @Autowired
-    PaymentModeDao paymentModeDao;
-
     @Value("#{hkEnvProps['" + Keys.Env.codCharges + "']}")
     private Double codCharges;
-
     @Value("#{hkEnvProps['" + Keys.Env.codFreeAfter + "']}")
     private Double codFreeAfter;
 
-    /*
-     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount; //
-     * @Named(Keys.Env.codMaxAmount) @Value("#{hkEnvProps['codMaxAmount']}") private Double codMaxAmount;
-     */
-
     @DefaultHandler
     public Resolution pre() {
-        User user = getUserService().getUserById(getPrincipal().getId());
-        // User user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
+        User user = getUserService().getLoggedInUser();
         order = orderManager.getOrCreateOrder(user);
+        if (order.getAddress() == null) return new RedirectResolution(SelectAddressAction.class);
         trimCartLineItems = orderManager.trimEmptyLineItems(order);
-        sizeOfCLI = order.getCartLineItems().size();
 
-        // OfferInstance offerInstance = order.getOfferInstance();
-        Double rewardPointsUsed = 0D;
         redeemableRewardPoints = rewardPointService.getTotalRedeemablePoints(user);
-        if (useRewardPoints)
-            rewardPointsUsed = redeemableRewardPoints;
-
+        Double rewardPointsUsed = useRewardPoints ? redeemableRewardPoints : 0D;
         pricingDto = new PricingDto(pricingEngine.calculatePricing(order.getCartLineItems(), order.getOfferInstance(), order.getAddress(), rewardPointsUsed), order.getAddress());
-
         order.setRewardPointsUsed(rewardPointsUsed);
-        order = (Order) getBaseDao().save(order);
-        if (order.getAddress() == null) {
-            return new RedirectResolution(SelectAddressAction.class);
-        }
+        order = orderService.save(order);
 
-        Address address = order.getAddress();
-        String pin = address != null ? address.getPincode().getPincode() : null;
-
-        CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-        Set<CartLineItem> groundShippedCartLineItemSet = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
-        if (groundShippedCartLineItemSet != null && groundShippedCartLineItemSet.size() > 0) {
-            groundShippedItemPresent = true;
-            groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(pin);
+        Set<CartLineItem> groundShippedCartLineItemSet = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).hasOnlyGroundShippedItems(true).filter();
+        if (groundShippedCartLineItemSet.size() > 0) {
+            groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(order.getAddress().getPincode().getPincode());
         }
 
         Double netShopping = pricingDto.getGrandTotalPayable() - pricingDto.getShippingTotal();
         if (netShopping >= codFreeAfter) {
             codCharges = 0.0;
         }
-
-//        availableCourierList = pincodeCourierService.getAvailableCouriers(order);
-//        if (availableCourierList != null && availableCourierList.size() == 0) {
-//            availableCourierList = null;
-//        }
         return new ForwardResolution("/pages/orderSummary.jsp");
     }
 
@@ -147,7 +108,7 @@ public class OrderSummaryAction extends BaseAction {
     }
 
     public Resolution orderReviewed() {
-        getBaseDao().save(order);
+        orderService.save(order);
         return new RedirectResolution(PaymentModeAction.class);
     }
 
@@ -161,18 +122,6 @@ public class OrderSummaryAction extends BaseAction {
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Address getBillingAddress() {
-        return billingAddress;
-    }
-
-    public boolean isCodAllowed() {
-        return codAllowed;
-    }
-
-    public void setCodAllowed(boolean codAllowed) {
-        this.codAllowed = codAllowed;
     }
 
     public boolean isUseRewardPoints() {
@@ -199,36 +148,12 @@ public class OrderSummaryAction extends BaseAction {
         this.codCharges = codCharges;
     }
 
-    public List<Courier> getAvailableCourierList() {
-        return availableCourierList;
-    }
-
-    public void setAvailableCourierList(List<Courier> availableCourierList) {
-        this.availableCourierList = availableCourierList;
-    }
-
-    public boolean isGroundShippedItemPresent() {
-        return groundShippedItemPresent;
-    }
-
-    public void setGroundShippedItemPresent(boolean groundShippedItemPresent) {
-        this.groundShippedItemPresent = groundShippedItemPresent;
-    }
-
     public boolean isGroundShippingAllowed() {
         return groundShippingAllowed;
     }
 
     public void setGroundShippingAllowed(boolean groundShippingAllowed) {
         this.groundShippingAllowed = groundShippingAllowed;
-    }
-
-    public boolean isCodAllowedOnGroundShipping() {
-        return codAllowedOnGroundShipping;
-    }
-
-    public void setCodAllowedOnGroundShipping(boolean codAllowedOnGroundShipping) {
-        this.codAllowedOnGroundShipping = codAllowedOnGroundShipping;
     }
 
     public Set<CartLineItem> getTrimCartLineItems() {
@@ -239,11 +164,4 @@ public class OrderSummaryAction extends BaseAction {
         this.trimCartLineItems = trimCartLineItems;
     }
 
-    public Integer getSizeOfCLI() {
-        return sizeOfCLI;
-    }
-
-    public void setSizeOfCLI(Integer sizeOfCLI) {
-        this.sizeOfCLI = sizeOfCLI;
-    }
 }
