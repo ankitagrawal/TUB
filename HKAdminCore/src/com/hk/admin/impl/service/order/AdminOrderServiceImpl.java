@@ -398,16 +398,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
      */
     public Map<String, String> isCODAllowed(Order order, Double payable) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
-
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
-
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
-
         Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         boolean codAllowedonProduct = true;
 
         for (CartLineItem productCartLineItem : productCartLineItems) {
             Product product = productCartLineItem.getProductVariant().getProduct();
+
             if (product.isCodAllowed() != null && !product.isCodAllowed()) {
                 codAllowedonProduct = false;
                 break;
