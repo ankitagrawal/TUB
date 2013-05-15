@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.akube.framework.util.BaseUtils;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -52,6 +54,18 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	@Transactional
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = this.orderService.find(orderId);
+		
+		double orderAmount = 0d;
+		for (CartLineItem cartLineItem : order.getCartLineItems()) {
+			orderAmount += (cartLineItem.getHkPrice() * cartLineItem.getQty());
+		}
+		order.setAmount(orderAmount);
+		this.orderService.save(order);
+		CartLineItem rewardLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.RewardPoint).build();
+		rewardLineItem.setOrder(order);
+		rewardLineItem.setDiscountOnHkPrice(orderAmount);
+		this.cartLineItemService.save(rewardLineItem);
+		
 		Payment payment = this.paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
 		this.loyaltyProgramService.debitKarmaPoints(order);
 		payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());

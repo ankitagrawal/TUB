@@ -77,7 +77,7 @@ public class CartAction extends AbstractLoyaltyAction {
 		Order order = this.getProcessor().getCart(this.getPrincipal().getId());
 		if(order != null) {
 			this.loyaltyProductList = new ArrayList<LoyaltyProduct>();
-			Set<CartLineItem> cartLineItems = order.getCartLineItems();
+			List<CartLineItem> cartLineItems = order.getProductCartLineItems();
 			for (CartLineItem cartLineItem : cartLineItems) {
 				LoyaltyProduct loyaltyProduct  = this.loyaltyProgramService.getProductByVariantId(cartLineItem.getProductVariant().getId());
 				loyaltyProduct.setQty(cartLineItem.getQty());
