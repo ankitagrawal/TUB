@@ -46,9 +46,12 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 			Country country = this.addressDao.get(Country.class, 80l);
 			this.address.setCountry(country);
 		}
-		Long orderId = this.getProcessor().getCart(this.getPrincipal().getId()).getId();
-		this.getProcessor().setShipmentAddress(orderId, this.address);
-		
+		if (this.getProcessor().getCart(this.getPrincipal().getId()) != null ) {
+			Long orderId = this.getProcessor().getCart(this.getPrincipal().getId()).getId();
+			this.getProcessor().setShipmentAddress(orderId, this.address);
+		} else {
+			return new RedirectResolution(CartAction.class);
+		}
 		return new RedirectResolution(PlaceOrderAction.class);
 	}
 	

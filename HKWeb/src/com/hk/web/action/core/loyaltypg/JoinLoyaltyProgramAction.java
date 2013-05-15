@@ -87,4 +87,18 @@ public class JoinLoyaltyProgramAction extends BaseAction {
 		this.name = name;
 	}
 
+	/**
+	 * @return the dob
+	 */
+	public Date getDob() {
+		return this.dob;
+	}
+
+	/**
+	 * @param dob the dob to set
+	 */
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
 }

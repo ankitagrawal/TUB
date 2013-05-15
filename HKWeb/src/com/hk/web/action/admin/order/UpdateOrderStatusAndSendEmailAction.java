@@ -54,9 +54,9 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
                 isEmailSent = this.emailManager.sendOrderShippedEmail(shippingOrder, this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
 	            this.smsManager.sendOrderShippedSMS(shippingOrder);
 
-            }else if(order.getStore() != null && order.getStore().getId().equals(StoreService.LOYALTYPG_ID)){
-                isEmailSent = this.emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,this.getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
-                this.smsManager.sendOrderShippedSMS(shippingOrder);
+            }else if(order.getStore() != null && order.getStore().getId().equals(StoreService.LOYALTYPG_ID)) {
+            	isEmailSent = this.emailManager.sendOrderShippedEmail(shippingOrder, this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
+  	            this.smsManager.sendOrderShippedSMS(shippingOrder);
             }else if(order.isSubscriptionOrder()){
                 isEmailSent = this.emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,this.getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
             }else {

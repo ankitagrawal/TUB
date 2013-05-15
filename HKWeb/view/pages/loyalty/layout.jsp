@@ -99,7 +99,7 @@
         <div class="grid_10">
 			<div id="nav" class="nav-menu">
 				<div>
-				<p class="section2">Hello 
+				<p class="section2" style="float:right;">Hello 
                   <shiro:hasAnyRoles name="<%=roles%>">
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
