@@ -217,7 +217,7 @@
 					);
 		});
 		
-		function populateRtvTable(){
+		/* function populateRtvTable(){
 			$('#piRtvTable  > .rtvTableTr').each(function(currentInedx, ob) {
 				if($(this).find('.taxableAmount').val()==""||isNaN(parseFloat($(this).find('.taxableAmount').val()))){
 					var costPrice = $(this).find('.costPrice').val();
@@ -245,7 +245,7 @@
 					$(this).find('.payableAmount').val(payable.toFixed(2));
 				}
 			});
-		};
+		}; */
 		
 		
 		$('.valueChange').live("change", function() {

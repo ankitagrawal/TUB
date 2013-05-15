@@ -533,7 +533,7 @@ $(document).ready(function () {
                 </td>
                 <td class="skuId">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
                             ${eInLineItems.sku.id}
                             <s:hidden name="extraInventoryLineItems[${ctr.index}].sku"
                                       value="${eInLineItems.sku.id}"/>
@@ -548,7 +548,7 @@ $(document).ready(function () {
                 </td>
                 <td class="txtSku">
                     <c:choose>
-                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
+                        <c:when test="${eInLineItems.rtvCreated or eInLineItems.grnCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
                             ${eInLineItems.sku.productVariant.id}
                         </c:when>
                         <c:otherwise>
@@ -566,7 +566,7 @@ $(document).ready(function () {
                 </td>
                 <td class="proName">
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name eq Short}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
                             ${eInLineItems.productName}
                             <s:hidden class="productName" name="extraInventoryLineItems[${ctr.index}].productName"
                                       value="${eInLineItems.productName}"/>
@@ -579,22 +579,36 @@ $(document).ready(function () {
                     </c:choose>
                 </td>
                 <td>
-                            <input type="text" class="mrp valueChange"
-                                   name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                            ${eInLineItems.mrp}
                             <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
                                       value="${eInLineItems.mrp}"/>
-                </td>
-                <td>
-                            <input type="text" class="costPrice valueChange"
-                                   name="extraInventoryLineItems[${ctr.index}].costPrice"
-                                   value="${eInLineItems.costPrice}"/>
-                            <s:hidden class="costPrice valueChange"
-                                   name="extraInventoryLineItems[${ctr.index}].costPrice"
-                                   value="${eInLineItems.costPrice}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="mrp valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].mrp" value="${eInLineItems.mrp}"/>
+                        </c:otherwise>
+                    </c:choose>
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                            ${eInLineItems.costPrice}
+                            <s:hidden class="costPrice valueChange"
+                                      name="extraInventoryLineItems[${ctr.index}].costPrice"
+                                      value="${eInLineItems.costPrice}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" class="costPrice valueChange"
+                                   name="extraInventoryLineItems[${ctr.index}].costPrice"
+                                   value="${eInLineItems.costPrice}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
                             ${eInLineItems.receivedQty}
                             <s:hidden class="receivedQuantity valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
@@ -610,8 +624,14 @@ $(document).ready(function () {
                 <td class="taxClass taxCategory">
                 <input type="hidden" value="finance"
 					       class="taxIdentifier"/>
-                    <c:choose>
-                        
+				<c:choose>
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                            ${eInLineItems.tax.name}
+                            <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
+                                   readonly="readonly" value="${eInLineItems.tax.id}"/>
+                        </c:when>
+					   <c:otherwise>    
+                    <c:choose>                        
 						<c:when test="${extraInventory.sameState}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
 							          value="${eInLineItems.tax.id}" class="valueChange">
@@ -628,6 +648,8 @@ $(document).ready(function () {
 								                           label="value"/>
 							</s:select>
 						</c:otherwise>
+                    </c:choose>
+                    </c:otherwise>
                     </c:choose>
                 </td>
                 
