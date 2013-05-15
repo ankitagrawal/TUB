@@ -72,7 +72,7 @@
                 Misc
             </h5>
             <ul>
-                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li
+                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
             </ul>
         </div>
       <div style="float:right;">
@@ -107,7 +107,6 @@
   </div>
   <div id="bulkOrderModal" class="bulkOrderModal"></div>
   <div class='floatfix'></div>
-  </div>
 
   <script type="text/javascript">
     $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
