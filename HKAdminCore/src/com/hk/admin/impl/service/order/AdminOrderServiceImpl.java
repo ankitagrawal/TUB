@@ -398,8 +398,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
      */
     public Map<String, String> isCODAllowed(Order order, Double payable) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
+
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
+
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
+
         Set<CartLineItem> subscriptionCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Subscription).filter();
         boolean codAllowedonProduct = true;
 
@@ -411,9 +414,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
         }
 
+        Long startTimeRTO = System.currentTimeMillis();
         OrderSearchCriteria osc = new OrderSearchCriteria();
         osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
         List<Order> rtoOrders = getOrderService().searchOrders(osc);
+
+        Long endTimeRTO = System.currentTimeMillis();
+        System.out.println("Rto total elapsed time : " + ( endTimeRTO - startTimeRTO));
 
         if (payable < codMinAmount || payable > codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
@@ -424,8 +431,11 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
             codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
+            Long startTimeDeliveredCheck = System.currentTimeMillis();
             osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
             List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
+            Long endTimeDeliveredCheck = System.currentTimeMillis();
+            System.out.println("Deliverd check total elapsed time : " + ( endTimeDeliveredCheck - startTimeDeliveredCheck));
             if (rtoOrders.size() >= totalDeliveredOrders.size())
                 codFailureMap.put("MutipleRTOs", "Y");
         }

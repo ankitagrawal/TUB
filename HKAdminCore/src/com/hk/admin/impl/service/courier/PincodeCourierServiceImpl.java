@@ -77,7 +77,10 @@ public class PincodeCourierServiceImpl implements PincodeCourierService {
 
     @Override
     public boolean isCourierAvailable(Pincode pincode, List<Courier> couriers, List<ShipmentServiceType> shipmentServiceTypes, Boolean activeCourier) {
+        Long startTimeCourierAvaialble = System.currentTimeMillis();
         List<Courier> courierList = pincodeCourierMappingDao.getApplicableCouriers(pincode, couriers, shipmentServiceTypes, activeCourier);
+        Long endTimeCourierAvaialble = System.currentTimeMillis();
+        System.out.println("courierAvailable elapsed time is : " + (endTimeCourierAvaialble - startTimeCourierAvaialble));
         return courierList != null && !courierList.isEmpty();
     }
 
