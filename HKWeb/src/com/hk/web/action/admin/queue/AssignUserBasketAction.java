@@ -36,10 +36,7 @@ public class AssignUserBasketAction extends BaseAction {
     @Autowired
     BucketService bucketService;
 
-    private Set<Bucket> bucketSet;
-
     @DefaultHandler
-
     public Resolution pre() {
         buckets = getBaseDao().getAll(Bucket.class);
         if (user != null) {
@@ -56,7 +53,6 @@ public class AssignUserBasketAction extends BaseAction {
     }
 
     public Resolution save() {
-
         List<Bucket> userBuckets = new ArrayList<Bucket>();
         for (Bucket bucket : buckets) {
             if (bucket.getId() != null) {
