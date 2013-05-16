@@ -71,12 +71,8 @@ public interface OrderService {
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-    // public boolean isCODAllowed(Order order);
-
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
-    public boolean isShippingOrderExists (Order order);
-    
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);

@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.queue.Bucket;
@@ -88,6 +89,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     BucketService bucketService;
 
     private Long orderId;
+    private Long shippingOrderId;
     private Long storeId;
     private String gatewayOrderId;
     private Date startDate;
@@ -133,11 +135,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         Long startTime = (new Date()).getTime();
-        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
-        if (orderPage != null) {
-            orderList = orderPage.getList();
-        }
+//        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
+//        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+//        if (orderPage != null) {
+//            orderList = orderPage.getList();
+//        }
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
+        orderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false, getPageNo(), getPerPage());
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
@@ -251,6 +255,48 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 //        }
         orderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         return orderSearchCriteria;
+    }
+
+    private ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setBaseOrderId(orderId).setOrderId(shippingOrderId).setStoreId(storeId).setSortByUpdateDate(false);
+        shippingOrderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+
+        List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+        shippingOrderStatusList.addAll(shippingOrderStatuses);
+        if (shippingOrderStatusList.isEmpty()) shippingOrderStatusList.addAll(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+
+        Set<Category> basketCategoryList = new HashSet<Category>();
+        basketCategoryList.addAll(categoryDao.getCategoryByNames(basketCategories));
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
+
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(shippingOrderLifecycleActivities);
+        shippingOrderSearchCriteria.setReasonList(reasons);
+
+        if(!paymentModes.isEmpty()){
+            shippingOrderSearchCriteria.setPaymentModes(paymentModes);
+        }
+        if(!paymentStatuses.isEmpty()){
+            shippingOrderSearchCriteria.setPaymentStatuses(paymentStatuses);
+        }
+        if (startDate != null && endDate != null) {
+            shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
+        }
+        if (dropShip != null) {
+            shippingOrderSearchCriteria.setDropShip(dropShip);
+        }
+        if (containsJit != null) {
+            shippingOrderSearchCriteria.setContainsJit(containsJit);
+        }
+        if (b2bOrder) {
+            shippingOrderSearchCriteria.setB2bOrder(b2bOrder);
+        }
+        if (codCallStatus != 0) {
+            shippingOrderSearchCriteria.setUserCodCallStatus(codCallStatus);
+        }
+
+        return shippingOrderSearchCriteria;
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
