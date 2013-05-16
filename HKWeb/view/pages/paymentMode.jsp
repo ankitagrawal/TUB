@@ -418,7 +418,7 @@
 <c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
     $(document).ready(function() {
-
+         
         $('.tab_content').hide();
         $('.tab_content').first().show();
         $('.tabs ul li').click(function() {
