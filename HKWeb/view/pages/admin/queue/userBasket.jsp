@@ -13,19 +13,26 @@
     <s:layout-component name="content">
 
         <s:useActionBean beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction" var="userBean"/>
-        Name: ${userBean.user.name}<br/>
-        Login: ${userBean.user.login}<br/>
+        Name: ${userBean.userName}<br/>
+        Login: ${userBean.userLogin}<br/>
         <s:form beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction" method="post">
             <h2>Buckets:</h2>
             <div class="checkBoxList">
                 <c:forEach items="${userBean.buckets}" var="bucket" varStatus="ctr">
-                    <label><s:checkbox name="buckets[${ctr.index}].selected" /> ${bucket.name}
-                        <s:hidden name="buckets[${ctr.index}].id" value="${bucket.id}" />
+                    <label><s:checkbox name="buckets[${ctr.index}].selected" />
+                        <c:choose>
+                            <c:when test="${bucket.selected}">
+                               <span style="font-weight:bold">${bucket.name}</span>
+                            </c:when>
+                            <c:otherwise>
+                                ${bucket.name}
+                            </c:otherwise>
+                        </c:choose>
+                        <s:hidden name="buckets[${ctr.index}].id" value="${bucket.id}"  />
                     </label>
                     <br/>
                 </c:forEach>
             </div>
-            <s:hidden name="user" value="${userBean.user.id}"/>
             <s:submit name="save" value="Save"/>
         </s:form>
     </s:layout-component>

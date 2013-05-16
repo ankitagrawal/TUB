@@ -25,9 +25,8 @@ public class AssignUserBasketAction extends BaseAction {
 
 
     private List<Bucket> buckets = new ArrayList<Bucket>();
-
-    @Validate(required = true)
-    private User user;
+    private String userName;
+    private String userLogin;
 
     @Autowired
     UserDao userDao;
@@ -38,6 +37,7 @@ public class AssignUserBasketAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
+       User user = getUserService().getUserById(getPrincipal().getId());
         buckets = getBaseDao().getAll(Bucket.class);
         if (user != null) {
             List<Bucket> userBuckets = user.getBuckets();
@@ -49,10 +49,13 @@ public class AssignUserBasketAction extends BaseAction {
                 }
             }
         }
+        userName = user.getName();
+        userLogin = user.getLogin();
         return new ForwardResolution("/pages/admin/queue/userBasket.jsp");
     }
 
     public Resolution save() {
+        User user = getUserService().getUserById(getPrincipalUser().getId());
         List<Bucket> userBuckets = new ArrayList<Bucket>();
         for (Bucket bucket : buckets) {
             if (bucket.getId() != null) {
@@ -75,11 +78,19 @@ public class AssignUserBasketAction extends BaseAction {
         this.buckets = buckets;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 }
