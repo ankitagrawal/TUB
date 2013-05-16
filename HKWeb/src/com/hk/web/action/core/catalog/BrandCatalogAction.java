@@ -24,12 +24,10 @@ import com.hk.constants.core.HealthkartConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.content.SeoData;
 import com.hk.dto.menu.MenuNode;
 import com.hk.dto.search.SearchResult;
 import com.hk.helper.MenuHelper;
-import com.hk.impl.dao.catalog.category.CategoryDaoImpl;
 import com.hk.manager.LinkManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
@@ -105,7 +103,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
                   String[] params = (String[])getContext().getRequest().getParameterMap().get("onlyCOD");
                   onlyCOD = Boolean.parseBoolean( params[0].toString());
               }
-			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), categoryDao.getCategoryByName(topLevelCategory), getPageNo(), getPerPage(), preferredZone);
+			  SearchResult searchResult = productSearchService.getBrandCatalogResults(URLDecoder.decode(brand), categoryDao.getCategoryByName(topLevelCategory), getPageNo(), getPerPage(), preferredZone, false);
 			  productPage = new Page(searchResult.getSolrProducts(), getPerPage(), getPageNo(), searchResult.getResultSize());
 		  } catch (Exception e) {
 			  logger.debug("SOLR NOT WORKING, HITTING DB TO ACCESS DATA");

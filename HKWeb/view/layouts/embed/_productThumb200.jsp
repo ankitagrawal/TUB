@@ -37,10 +37,7 @@
 			filter: alpha(opacity = 100);
 		}
 	</style>
-	<c:choose>
-		<c:when test="${product.googleAdDisallowed || product.deleted}">
-		</c:when>
-		<c:otherwise>
+	<c:if test="${!product.googleAdDisallowed && !product.deleted && !product.hidden}">
 			<div class='grid_6 product' style="width:240px;height:300px;">
 
 				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
@@ -157,6 +154,5 @@
 
 				<div class="floatfix"></div>
 			</div>
-		</c:otherwise>
-	</c:choose>
+	</c:if>
 </s:layout-definition>

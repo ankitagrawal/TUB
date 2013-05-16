@@ -70,7 +70,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
-                if (!pr.getDeleted()) {
+                if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
@@ -102,14 +102,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
         // resultsMap.getResultSize().longValue());
     }
 
-    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
+    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone, boolean showGoogleBannedProducts) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
         //query.addFilterQuery("{!field f= brand}" + brand);
         //query.addFilterQuery(SolrSchemaConstants.brand + ":" + brand);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + brand+"\"");
         if(topLevelCategory != null)
           query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory.getName());
-        query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
+        if(!showGoogleBannedProducts)
+          query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
 
@@ -238,7 +239,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return searchResult;
     }
 
-   private SearchResult getCategoryResults(String category, int page, int perPage) throws SearchException {
+   private SearchResult getCategorySearchResults(String category, int page, int perPage) throws SearchException {
 
      SolrQuery query = new SolrQuery("*:*");
        query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + category+"\"");
@@ -371,9 +372,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
             query = sanitizeQuery(query);
             //Level 1 check Starts - Ajeet
             if (this.isBrandTerm(query)) {
-              return this.getBrandCatalogResults(query, null, page, perPage, null);
+              return this.getBrandCatalogResults(query, null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
-              return this.getCategoryResults(query, page, perPage);
+              return this.getCategorySearchResults(query, page, perPage);
             }
             //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));
