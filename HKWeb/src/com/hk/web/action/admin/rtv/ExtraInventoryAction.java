@@ -2,6 +2,7 @@ package com.hk.web.action.admin.rtv;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.admin.pact.service.accounting.PurchaseInvoiceService;
 import com.hk.admin.pact.service.courier.CourierPickupService;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
@@ -23,6 +24,7 @@ import com.hk.domain.warehouse.Warehouse;
 import com.hk.domain.user.User;
 import com.hk.pact.dao.MasterDataDao;
 import com.hk.constants.rtv.EnumRtvNoteStatus;
+import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
@@ -87,6 +89,8 @@ public class ExtraInventoryAction extends BasePaginatedAction{
   CourierPickupService courierPickupService;
   @Autowired
   UserService userService;
+  @Autowired
+  PurchaseInvoiceService purchaseInvoiceService;
 
   private List<ExtraInventoryLineItem> extraInventoryLineItems = new ArrayList<ExtraInventoryLineItem>();
   private List<ExtraInventoryLineItem> extraInventoryLineItemsSelected = new ArrayList<ExtraInventoryLineItem>();
@@ -253,7 +257,24 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         extraInventoryLineItem.setUpdateDate(new Date());
         extraInventoryLineItem.setExtraInventory(extraInventory);
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
-        }
+        
+		if (extraInventoryLineItem.getPurchaseInvoices() != null
+				&& extraInventoryLineItem.getPurchaseInvoices().get(0) != null) {
+			for (PurchaseInvoice pi : extraInventoryLineItem.getPurchaseInvoices()) {
+				List<ExtraInventoryLineItem> eiliList = pi.getEiLineItems();
+				Double shortAmount = 0.0;
+				if (eiliList != null && eiliList.get(0) != null) {
+					for (ExtraInventoryLineItem eiLi : eiliList) {
+						shortAmount += eiLi.getPayableAmount();
+					}
+				}
+				pi.setShortAmount(shortAmount);
+				pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getRtvAmount() + shortAmount);
+				purchaseInvoiceService.save(pi);
+			}
+		}
+
+	}
         else{
           extraInventoryLineItem.setExtraInventory(extraInventory);
           getExtraInventoryLineItemService().delete(extraInventoryLineItem);
@@ -274,6 +295,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 //      newPurchaseOrderId = purchaseOrder.getId();
 //    }
 //     taxList = getMasterDataDao().getTaxList();
+    
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
     return new RedirectResolution(ExtraInventoryAction.class,"searchExtraInventory");
@@ -341,11 +363,25 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(rtvNoteLineItems1!=null && rtvNoteLineItems1.size()!=0){
       rtvNoteLineItems.addAll(rtvNoteLineItems1);
     }
-    if(rtvNote!=null){
-    	 if(rtvNote.getPurchaseInvoices()!=null &&rtvNote.getPurchaseInvoices().get(0)!=null){
-       	  
-         }
-    }
+	if (rtvNote != null) {
+		Double rtvAmount = 0.0;
+		List<ExtraInventoryLineItem> eiLi = getExtraInventoryLineItemService()
+				.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
+		if (eiLi != null && eiLi.get(0) != null) {
+			for (ExtraInventoryLineItem lineItem : eiLi) {
+			if (lineItem.isRtvCreated() != null && lineItem.isRtvCreated()) {
+				rtvAmount += lineItem.getPayableAmount();
+				}
+			}
+		}
+		if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().get(0) != null) {
+		for (PurchaseInvoice pi : rtvNote.getPurchaseInvoices()) {
+			pi.setRtvAmount(rtvAmount);
+			pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount() + rtvAmount);
+			purchaseInvoiceService.save(pi);
+			}
+		}
+	}
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Rtv Created !!!!"));
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
