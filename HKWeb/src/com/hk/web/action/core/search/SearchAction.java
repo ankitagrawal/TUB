@@ -97,7 +97,14 @@ public class SearchAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("No results found."));
 		}
     //Logging search results
-    productSearchService.logSearchResult(query, Long.valueOf(productList != null ? productList.size() : 0));
+    String category = "n/a";
+    if (productList != null && !productList.isEmpty()) {
+      category = productList.get(0).getPrimaryCategory().getName();
+      if (!productList.get(0).getPrimaryCategory().equals(productList.get(productList.size() - 1).getPrimaryCategory())) {
+        category = "mixed";
+      }
+    }
+    productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
 		return new ForwardResolution("/pages/search.jsp");
 	}
 

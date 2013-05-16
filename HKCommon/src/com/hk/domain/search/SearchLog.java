@@ -27,6 +27,9 @@ public class SearchLog implements java.io.Serializable {
   @Column(name = "results", nullable = false)
   private Long results;
 
+  @Column(name = "category", nullable = false, length = 200)
+  private String category;
+
   public Long getId() {
     return this.id;
   }
@@ -59,6 +62,13 @@ public class SearchLog implements java.io.Serializable {
     this.results = results;
   }
 
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
 }
 
 
