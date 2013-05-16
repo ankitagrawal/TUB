@@ -464,22 +464,20 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
   @Override
   public void logSearchResult(String keyword, Long results) {
-    Long trafficTrackingId = 0L;
-    Object trkIdObj = WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID);
-    if (trkIdObj != null){
-      String trackingId = (String) trkIdObj;
-      try {
-        trafficTrackingId = Long.valueOf(trackingId);
-      } catch (NumberFormatException e) {
-        
+    try {
+      TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+      if (trafficTracking != null) {
+        Long trafficTrackingId = trafficTracking.getId();
+        SearchLog searchLog = new SearchLog();
+        searchLog.setTrafficTrackingId(trafficTrackingId);
+        searchLog.setKeyword(keyword);
+        searchLog.setKeyword(keyword);
+        searchLog.setResults(results);
+        getBaseDao().save(searchLog);
       }
+    } catch (Exception e) {
+      logger.error("Exception while logging search results "+e.getMessage());
     }
-    SearchLog searchLog = new SearchLog();
-    searchLog.setTrafficTrackingId(trafficTrackingId);
-    searchLog.setKeyword(keyword);
-    searchLog.setKeyword(keyword);
-    searchLog.setResults(results);
-    getBaseDao().save(searchLog);
   }
 
   public BaseDao getBaseDao() {

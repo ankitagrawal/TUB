@@ -100,7 +100,6 @@ public class CampaignTrackingFilter implements Filter {
 	        if (StringUtils.isNotBlank(trackingId)) {
 		        TrafficTracking trafficTracking = trafficTrackingDao.get(TrafficTracking.class, Long.valueOf(trackingId));
 		        if (trafficTracking != null)
-			        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID, trackingId);
 			        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
 
 	        } else {
@@ -111,7 +110,6 @@ public class CampaignTrackingFilter implements Filter {
 				        && !userAgent.toLowerCase().contains("price") && !userAgent.toLowerCase().contains("monit/4.10.1") ) {
 			        TrafficTracking trafficTracking = trafficAndUserBrowsingService.saveTrafficTracking(httpRequest, user);
 			        if (trafficTracking != null && trafficTracking.getId() != null) {
-                httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID, trafficTracking.getId());
 				        httpSession.setAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING, trafficTracking);
 				        Cookie cookie = new Cookie(HealthkartConstants.Cookie.trackingId, trafficTracking.getId().toString());
 				        cookie.setPath("/");
