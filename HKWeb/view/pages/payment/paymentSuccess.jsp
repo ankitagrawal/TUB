@@ -369,7 +369,7 @@
                 <br/>
                 
 			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-				<div class='prom yellow help' style="width: 95%; padding:5px;">
+				<div class='loyaltyMessage' >
   				<p>Congratulations! Your payment is successful. Did you know about our Loyalty Program yet?<br>
   				It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on 15 bonus loyalty points on joining now!
   				<br> 
@@ -380,13 +380,18 @@
     		</shiro:lacksRole>
   		
   			<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
-  				<div class='prom yellow help' style="width: 95%; padding:5px;">
-  				
-  				Congratulations! Your payment is successful. You have earned ${actionBean.loyaltyPointsEarned } loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
-  				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">
-  				<br/> Almost there! You need to shop more to upgrade your status and start earning some loyalty points.
+  				<div class='loyaltyMessage' >
+  				<p>
+  				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
+  				You have earned ${actionBean.loyaltyPointsEarned } loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
   				</c:if>
                 
+  				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">
+  				<br/> Oops! You didn't earn any loyalty points on this order. Upgrade your status by shopping more.
+  				</c:if>
+  				<br/>
+                <a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.
+  				<p>
   				</div>
   				<br/>
   			</shiro:hasRole>

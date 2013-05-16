@@ -11,6 +11,17 @@
   <%
     Object basePaginatedActionObj = pageContext.getAttribute("paginatedBean");
     pageContext.setAttribute("paginatedBean", basePaginatedActionObj);
+    Object paginatedCategoryName = pageContext.getAttribute("categoryName");
+    if (paginatedCategoryName != null) {
+    	pageContext.setAttribute("paginatedCategoryName", paginatedCategoryName);
+    }
+    
+    Object paginatedMinPoints = pageContext.getAttribute("minPoints");
+    Object paginatedMaxPoints = pageContext.getAttribute("maxPoints");
+    if (paginatedMinPoints != null && paginatedMaxPoints != null)  {
+    	pageContext.setAttribute("paginatedMinPoints", paginatedMinPoints);
+    	pageContext.setAttribute("paginatedMaxPoints", paginatedMaxPoints);
+    }
     String maxSisplayStr = (String) pageContext.getAttribute("maxDisplay");
     if (StringUtils.isBlank(maxSisplayStr)) {
       maxSisplayStr = "8";
@@ -32,7 +43,7 @@
       <%
         if (basePaginatedAction.getPageNo() > 1) {
       %>
-      <s:layout-render name="/pages/loyalty/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="<%=basePaginatedAction.getPageNo()-1%>" pageText="&larr; Previous"/>
+      <s:layout-render name="/pages/loyalty/_pageNoLink.jsp" paginatedBean="${paginatedBean}" pageNo="<%=basePaginatedAction.getPageNo()-1%>" categoryName="${paginatedCategoryName}" minPoints="${paginatedMinPoints}" maxPoints= "${paginatedMaxPoints}" pageText="&larr; Previous"/>
       <%
         }
       %>

@@ -148,6 +148,16 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			}
 		}
 		
+/*		Payment payment = this.doPayment(orderId, remoteIp);
+		order.setPayment(payment);
+		order.setGatewayOrderId(payment.getGatewayOrderId());
+		this.orderService.save(order);
+		this.paymentService.sendPaymentEmailForOrder(order);
+		this.orderManager.sendReferralProgramEmail(order.getUser());
+		//this.smsManager.sendOrderPlacedSMS(order);
+
+		return payment;
+*/
 		return this.doPayment(orderId, remoteIp);
 	}
 

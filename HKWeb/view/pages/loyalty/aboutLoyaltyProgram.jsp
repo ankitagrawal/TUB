@@ -1,12 +1,12 @@
 <%@ page import="com.akube.framework.util.BaseUtils"%>
 <%@ page import="com.hk.constants.core.HealthkartConstants"%>
 <%@ page import="com.hk.service.ServiceLocatorFactory"%>
+<%@ page import="com.hk.web.HealthkartResponse"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Arrays"%>
-<%@ page import="com.hk.web.HealthkartResponse"%>
 <%@ page import="com.hk.taglibs.Functions"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 
@@ -188,6 +188,13 @@
               This page also carries information about total points accumulated, date of expiry and order history.
             </div>
 	
+	 	 <div class="qAndA">
+	 		<p>Q: What will be my initial level?</p>
+	 		 A: If you are already a healthkart customer, you will enjoy membership level based on your successful orders  (delivered orders) with a 
+	 		 cumulative value of 1500 INR or above processed in the last 12 months. However, if you are a new customer with no orders processed to your name,
+	 		   you will have no membership level until your order history value sums up to 1500 INR or above. 
+		 </div>
+
 			<div class="qAndA">
               <p>Q: Can I transfer my points to my friends? </p>
               A: No, points are non-transferrable.
@@ -235,7 +242,12 @@
            
             <div class="qAndA">
               <p>Q: How to upgrade from one level to the other? </p>
-              A: Awaited. 
+             A: In simple words: shop more. The more you shop, the better your upgrade. Here's how: <br/>
+             Once you gain by a level, you will be at that level  for the next 12 months, even if your expenditure is zero or a minimum 
+             with us during that period. However, you will upgrade to the next higher level whenever your cumulative shopping value becomes eligible
+              for the next upgrade in the existing 12-month period. As soon as you climb a level, you will be at that level for the next 12 months 
+              from the date of upgrade.<br/>At the end of the said 12 months, cumulative value of your shopping amount from the last 12 months will
+               be evaluated. You will then either upgrade, stay at the same level or regress to the respective levels, depending on your expenditure trend. 
             </div>
               
             <div class="qAndA removeBorderBottom">

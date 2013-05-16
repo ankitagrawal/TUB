@@ -21,7 +21,7 @@ public class LoyaltyIntroductionAction  extends AbstractLoyaltyAction {
 	@Autowired private UserService userService;
 	@Autowired private LoyaltyProgramService loyaltyProgramService;
 
-	private List<Badge> badges;
+	private List<Badge> badgeList;
 	
 	@DefaultHandler
 	public Resolution pre() {
@@ -35,9 +35,23 @@ public class LoyaltyIntroductionAction  extends AbstractLoyaltyAction {
 	}
 	
 	public Resolution aboutLoyaltyProgram() {
-		this.badges = new ArrayList<Badge>();
-		this.badges.addAll(this.loyaltyProgramService.getAllBadges());
+		this.badgeList = new ArrayList<Badge>();
+		this.badgeList.addAll(this.loyaltyProgramService.getAllBadges());
 		return new ForwardResolution("/pages/loyalty/info/aboutUs.jsp");
+	}
+
+	/**
+	 * @return the badgeList
+	 */
+	public List<Badge> getBadgeList() {
+		return this.badgeList;
+	}
+
+	/**
+	 * @param badgeList the badgeList to set
+	 */
+	public void setBadgeList(List<Badge> badgeList) {
+		this.badgeList = badgeList;
 	}
 
 

@@ -434,14 +434,10 @@ public class OrderManager {
         }
 
         // Check if HK order then only send emails and no order placed email is necessary for subscription orders
-        if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
+        if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) || 
+        		order.getStore().getId().equals(StoreService.LOYALTYPG_ID))&& !order.isSubscriptionOrder()) {
             // Send mail to Customer
             this.getPaymentService().sendPaymentEmailForOrder(order);
-            this.sendReferralProgramEmail(order.getUser());
-            this.getSmsManager().sendOrderPlacedSMS(order);
-        } else if (order.getStore() != null && order.getStore().getId().equals(StoreService.LOYALTYPG_ID) && !order.isSubscriptionOrder()) {
-        	// separate condition added for loyalty to handle future changes
-        	this.getPaymentService().sendPaymentEmailForOrder(order);
             this.sendReferralProgramEmail(order.getUser());
             this.getSmsManager().sendOrderPlacedSMS(order);
         }

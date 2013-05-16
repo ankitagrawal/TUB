@@ -1,5 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
+
+<%@ page import="com.akube.framework.util.BaseUtils"%>
+<%@ page import="com.hk.constants.core.HealthkartConstants"%>
+<%@ page import="com.hk.service.ServiceLocatorFactory"%>
+<%@ page import="com.hk.web.HealthkartResponse"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="com.hk.taglibs.Functions"%>
 <stripes:layout-render name="/pages/loyalty/info/layoutStatic.jsp">
 	<stripes:layout-component name="contents">
 	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" var="lia" />  
@@ -84,7 +93,7 @@
             </div>
             <div class="dottedLine"></div>
           </div>
-		<c:set var="bronze" value="${lia.badgeList[1]}" />
+	<c:set var="bronze" value="${lia.badgeList[1]}" />
 		<c:set var="silver" value="${lia.badgeList[2]}" />
 		<c:set var="gold" value="${lia.badgeList[3]}" />
 		<c:set var="platinum" value="${lia.badgeList[4]}" />
@@ -101,7 +110,7 @@
 
             <h1 id="howItWorks" class="embedMarginTop50">HOW IT WORKS</h1>
 
-            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 0 Loyalty Points.</p>
+            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 15 Loyalty Points as bonus.</p>
             <p>On every purchase,</p>
 	        <p class="embedMargin5">For Bronze level, you get ${bronze.loyaltyPercentage} Loyalty Point for every rupee you spend.</p>
             <p class="embedMargin5">For Silver level, you are awarded ${silver.loyaltyPercentage} Loyalty Points for every rupee you spend.</p>
@@ -114,10 +123,10 @@
             <div class="tableHistory embedMarginTop40">
               <div class="headingRow">
                 <div class="headRowValue"><div class="rowValue">ANNUAL SPEND</div></div>
-                <div class="headRowValue">Rs.${bronze.minScore} - Rs.${bronze.maxScore}</div>
-                <div class="headRowValue">Rs.${silver.minScore} - Rs.${silver.maxScore}</div>
-                <div class="headRowValue">Rs.${gold.minScore} - Rs.${gold.maxScore}</div>
-                <div class="headRowValue">Rs.${platinum.minScore} and above</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(bronze.minScore)} - Rs.${hk:roundNumberForDisplay(bronze.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(silver.minScore)} - Rs.${hk:roundNumberForDisplay(silver.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(gold.minScore)} - Rs.${hk:roundNumberForDisplay(gold.maxScore)}</div>
+                <div class="headRowValue">Rs.${hk:roundNumberForDisplay(platinum.minScore)} and above</div>
               </div>
 
               <div class="normalRowWithBorderBottom">
@@ -164,11 +173,6 @@
             </div>
 
             <div class="qAndA">
-              <p>Q: Does it cost anything to become a Stellar member?</p>
-              A: Nope. Happily, some things in life are still free.
-            </div>
-
-            <div class="qAndA">
               <p>Q: How do I become a member?</p>
               A: Just <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">click here</a>, create your profile and hit submit. That's it. We will take care of the rest. 
             </div>
@@ -190,6 +194,13 @@
               This page also carries information about total points accumulated, date of expiry and order history.
             </div>
 	
+	 	 <div class="qAndA">
+	 		<p>Q: What will be my initial level?</p>
+	 		 A: If you are already a healthkart customer, you will enjoy membership level based on your successful orders  (delivered orders) with a 
+	 		 cumulative value of 1500 INR or above processed in the last 12 months. However, if you are a new customer with no orders processed to your name,
+	 		   you will have no membership level until your order history value sums up to 1500 INR or above. 
+		 </div>
+
 			<div class="qAndA">
               <p>Q: Can I transfer my points to my friends? </p>
               A: No, points are non-transferrable.
@@ -237,7 +248,12 @@
            
             <div class="qAndA">
               <p>Q: How to upgrade from one level to the other? </p>
-              A: Awaited. 
+             A: In simple words: shop more. The more you shop, the better your upgrade. Here's how: <br/>
+             Once you gain by a level, you will be at that level  for the next 12 months, even if your expenditure is zero or a minimum 
+             with us during that period. However, you will upgrade to the next higher level whenever your cumulative shopping value becomes eligible
+              for the next upgrade in the existing 12-month period. As soon as you climb a level, you will be at that level for the next 12 months 
+              from the date of upgrade.<br/>At the end of the said 12 months, cumulative value of your shopping amount from the last 12 months will
+               be evaluated. You will then either upgrade, stay at the same level or regress to the respective levels, depending on your expenditure trend. 
             </div>
               
             <div class="qAndA removeBorderBottom">
@@ -259,4 +275,3 @@
 <!-- The about us page ends here -->
 </stripes:layout-component>
 </stripes:layout-render>
-
