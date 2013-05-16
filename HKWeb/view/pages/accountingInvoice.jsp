@@ -25,15 +25,11 @@
       <c:when test="${!isB2BOrder||orderSummary.invoiceDto.warehouseState == 'MUMBAI'}">
            RETAIL INVOICE            
       </c:when>
-      <c:otherwise>
-      <c:choose>
       <c:when test="${isB2BOrder&&(fn:toLowerCase(orderSummary.invoiceDto.warehouseState) ne fn:toLowerCase(address.state))}">
            TAX INVOICE            
       </c:when>
       <c:otherwise>
       RETAIL INVOICE
-      </c:otherwise>
-      </c:choose>
       </c:otherwise>
     </c:choose>
   </h4>
