@@ -12737,4 +12737,28 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-1">
+        <addColumn tableName="credit_note_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-2">
+        <addColumn tableName="debit_note_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-3">
+        <addColumn tableName="stock_transfer_line_item">
+            <column name="tax_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-4">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-5">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="debit_note_line_item" constraintName="fk_debit_note_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Tarun (generated)" id="1368701511031-6">
+        <addForeignKeyConstraint baseColumnNames="tax_id" baseTableName="stock_transfer_line_item" constraintName="fk_stock_transfer_line_item_tax1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tax" referencesUniqueColumn="false"/>
+    </changeSet>
 </databaseChangeLog>

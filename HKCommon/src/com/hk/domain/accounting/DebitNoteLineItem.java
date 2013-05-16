@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.sku.Sku;
 
 /**
@@ -52,6 +53,10 @@ public class DebitNoteLineItem implements java.io.Serializable {
 
 	@Column(name = "remarks")
   private String remarks;
+
+	@ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "tax_id")
+  private Tax tax;
 
   public Long getId() {
     return this.id;
@@ -115,6 +120,14 @@ public class DebitNoteLineItem implements java.io.Serializable {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Tax getTax() {
+		return tax;
+	}
+
+	public void setTax(Tax tax) {
+		this.tax = tax;
 	}
 }
 

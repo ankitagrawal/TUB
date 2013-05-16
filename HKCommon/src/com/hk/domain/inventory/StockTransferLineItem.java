@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.core.Tax;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.sku.SkuGroup;
 
@@ -71,6 +72,10 @@ public class StockTransferLineItem implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "checked_in_sku_group_id")
 	private SkuGroup checkedInSkuGroup;
+
+	@ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "tax_id")
+  private Tax tax;
 
 	public Long getId() {
 		return id;
@@ -179,5 +184,13 @@ public class StockTransferLineItem implements java.io.Serializable {
 
 	public void setCheckedInSkuGroup(SkuGroup checkedInSkuGroup) {
 		this.checkedInSkuGroup = checkedInSkuGroup;
+	}
+
+	public Tax getTax() {
+		return tax;
+	}
+
+	public void setTax(Tax tax) {
+		this.tax = tax;
 	}
 }

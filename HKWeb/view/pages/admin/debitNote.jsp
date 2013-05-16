@@ -117,7 +117,9 @@
                                         res.data.product + '<br/>' +
                                                 res.data.options
                                 );
+
                                 obj.parent().append('<input type="hidden" name="debitNoteLineItems[' + index + '].sku" value="' + res.data.sku.id + '" />');
+	                              obj.parent().append('<input type="hidden" name="debitNoteLineItems[' + index + '].tax" value="' + res.data.tax_id + '" />');
                             } else {
                                 $('.variantDetails').html('<h2>'+res.message+'</h2>');
                             }
@@ -206,6 +208,7 @@
             <tbody id="poTable">
             <c:forEach var="debitNoteLineItemDto" items="${pa.debitNoteDto.debitNoteLineItemDtoList}" varStatus="ctr">
                 <c:set var="sku" value="${debitNoteLineItemDto.debitNoteLineItem.sku}"/>
+                <c:set var="tax" value="${debitNoteLineItemDto.debitNoteLineItem.tax}"/>
                 <c:set var="productVariant" value="${debitNoteLineItemDto.debitNoteLineItem.sku.productVariant}"/>
                 <c:set var="debitNote" value="${debitNoteLineItemDto.debitNoteLineItem.debitNote}" />
                 <s:hidden name="debitNoteLineItems[${ctr.index}].id" value="${debitNoteLineItemDto.debitNoteLineItem.id}"/>
@@ -216,6 +219,7 @@
                             ${productVariant.id}
                             <s:hidden name="debitNoteLineItems[${ctr.index}].debitNote" value="${debitNote.id}" />
                             <s:hidden name="debitNoteLineItems[${ctr.index}].sku" value="${sku.id}" />
+	                            <s:hidden name="debitNoteLineItems[${ctr.index}].tax" value="${tax.id}" />
                         <s:hidden class="variant" name="debitNoteLineItems[${ctr.index}].productVariant"
                                   value="${productVariant.id}"/>
                     </td>
