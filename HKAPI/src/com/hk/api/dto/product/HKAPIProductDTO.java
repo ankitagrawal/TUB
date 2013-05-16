@@ -7,6 +7,7 @@ package com.hk.api.dto.product;
 public class HKAPIProductDTO {
     private String productID;
     private String imageUrl;
+    private String thumbUrl;
     private String name;
     private String overview;
     private HKAPIProductVariantDTO[] productVariantDTOs;
@@ -67,5 +68,13 @@ public class HKAPIProductDTO {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 }

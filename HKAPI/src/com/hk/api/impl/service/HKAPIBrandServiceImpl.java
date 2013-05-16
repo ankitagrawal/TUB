@@ -30,9 +30,6 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
     @Autowired
     ProductService productService;
 
-    @Autowired
-    HKImageUtils hkImageUtils;
-
     public HKAPIBaseDTO getAllProductsByBrand(String brand){
         HKAPIBaseDTO hkapiBaseDTO=new HKAPIBaseDTO();
         if(!productService.doesBrandExist(brand)){
@@ -55,7 +52,8 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
             productDTO.setProductID(product.getId());
 
             if(product.getMainImageId()!=null){
-                productDTO.setImageUrl(hkImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false));
+                productDTO.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false));
+                productDTO.setThumbUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(),false));
             }
 
             List<ProductVariant> productVariantList=product.getProductVariants();
