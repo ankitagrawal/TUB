@@ -381,8 +381,10 @@
   		
   			<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
   				<div class='loyaltyMessage' >
-  				
+  				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
   				You have earned ${actionBean.loyaltyPointsEarned } loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
+  				</c:if>
+                
   				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">
   				<br/> Almost there! You need to shop more to upgrade your status and start earning some loyalty points.
   				</c:if>

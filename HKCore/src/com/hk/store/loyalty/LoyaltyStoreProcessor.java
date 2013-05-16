@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.akube.framework.util.BaseUtils;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
-import com.hk.domain.builder.CartLineItemBuilder;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
@@ -21,6 +18,7 @@ import com.hk.domain.store.EnumStore;
 import com.hk.domain.store.Store;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.service.UserService;
+import com.hk.pricing.PricingEngine;
 import com.hk.store.AbstractStoreProcessor;
 import com.hk.store.CategoryDto;
 import com.hk.store.InvalidOrderException;
@@ -32,6 +30,7 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 
 	@Autowired LoyaltyProgramService loyaltyProgramService;
 	@Autowired UserService userService;
+	@Autowired PricingEngine pricingEngine;
 	
 	@Override
 	public List<ProductAdapter> searchProducts(Long userId, SearchCriteria criteria) {
@@ -55,24 +54,20 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 	protected Payment doPayment(Long orderId, String remoteIp) {
 		Order order = this.orderService.find(orderId);
 		
-		double orderAmount = 0d;
+		double rewardPoints = 0d;
 		for (CartLineItem cartLineItem : order.getCartLineItems()) {
-			orderAmount += (cartLineItem.getHkPrice() * cartLineItem.getQty());
+			rewardPoints += (cartLineItem.getHkPrice() * cartLineItem.getQty());
 		}
-		order.setAmount(orderAmount);
-		order.setRewardPointsUsed(orderAmount);
-		this.orderService.save(order);
-		CartLineItem rewardLineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.RewardPoint).build();
-		rewardLineItem.setOrder(order);
-		rewardLineItem.setDiscountOnHkPrice(orderAmount);
-		this.cartLineItemService.save(rewardLineItem);
 		
+		order.setAmount(rewardPoints);
+		order.setRewardPointsUsed(rewardPoints);
+		this.orderService.save(order);
+		
+		order = this.orderManager.recalAndUpdateAmount(order);
 		Payment payment = this.paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
 		this.loyaltyProgramService.debitKarmaPoints(order);
-		payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
-		payment.setPaymentDate(BaseUtils.getCurrentTimestamp());
-		this.baseDao.saveOrUpdate(payment);
-		return payment;
+		order = this.paymentManager.success(payment.getGatewayOrderId());
+		return order.getPayment();
 	}
 
 	@Override

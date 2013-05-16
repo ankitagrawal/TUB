@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -17,7 +16,6 @@ import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.order.OrderCategory;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
@@ -74,7 +72,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		Map<String, CartLineItem> cartItemMap = new HashMap<String, CartLineItem>();
 
 		Order order = this.orderService.find(orderId);
-		Set<CartLineItem> cartItems = order.getCartLineItems();
+		List<CartLineItem> cartItems = order.getProductCartLineItems();
 
 		List<ProductVariantInfo> processedVariants = new ArrayList<ProductVariantInfo>();
 		if (cartItems != null && cartItems.size() > 0) {
@@ -141,7 +139,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 	@Override
 	public Payment makePayment(Long orderId, String remoteIp) throws InvalidOrderException {
 		Order order = this.orderService.find(orderId);
-		Set<CartLineItem> cartLineItems = order.getCartLineItems();
+		List<CartLineItem> cartLineItems = order.getProductCartLineItems();
 		this.validateCart(order.getUser().getId(), cartLineItems);
 		List<CartLineItem> lineItems = new ArrayList<CartLineItem>(cartLineItems);
 		for (CartLineItem cartLineItem : lineItems) {
@@ -150,7 +148,7 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 			}
 		}
 		
-		Payment payment = this.doPayment(orderId, remoteIp);
+/*		Payment payment = this.doPayment(orderId, remoteIp);
 		order.setPayment(payment);
 		order.setGatewayOrderId(payment.getGatewayOrderId());
 		this.orderService.save(order);
@@ -159,6 +157,8 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		//this.smsManager.sendOrderPlacedSMS(order);
 
 		return payment;
+*/
+		return this.doPayment(orderId, remoteIp);
 	}
 
 	@Override
@@ -169,17 +169,6 @@ public abstract class AbstractStoreProcessor implements StoreProcessor {
 		address = this.addressService.save(address);
 		order.setAddress(address);
 		this.orderService.save(order);
-	}
-
-	@Override
-	public void escalateOrder(Long orderId) throws InvalidOrderException {
-		this.validatePayment(orderId);
-		Order order = this.orderService.find(orderId);
-		Set<OrderCategory> categories = this.orderService.getCategoriesForBaseOrder(order);
-		order.setCategories(categories);
-		order.setOrderStatus(EnumOrderStatus.Placed.asOrderStatus());
-		order = this.orderService.save(order);
-		this.orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 	}
 
 	@Override
