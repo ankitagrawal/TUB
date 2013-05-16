@@ -24,6 +24,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -464,9 +465,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
   @Override
   public void logSearchResult(String keyword, Long results) {
     Long trafficTrackingId = 0L;
-    Object trackingId = WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID);
-    if (trackingId != null)
-      trafficTrackingId = (Long) trackingId;
+    Object trkIdObj = WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING_ID);
+    if (trkIdObj != null){
+      String trackingId = (String) trkIdObj;
+      try {
+        trafficTrackingId = Long.valueOf(trackingId);
+      } catch (NumberFormatException e) {
+        
+      }
+    }
     SearchLog searchLog = new SearchLog();
     searchLog.setTrafficTrackingId(trafficTrackingId);
     searchLog.setKeyword(keyword);
