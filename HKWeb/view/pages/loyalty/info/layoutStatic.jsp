@@ -18,6 +18,7 @@
     <link href="${pageContext.request.contextPath}/pages/loyalty/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-1.9.0.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="<hk:vhostJs/>/js/jquery.hkCommonPlugins.js" > </script>
  </head>
 
 

@@ -206,7 +206,7 @@ pageContext.setAttribute("isSecure", isSecure);
 	</c:choose>
               
     </div>
-            <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}"/>
+         <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}" categoryName="${lca.categoryName}" minPoints="${lca.minPoints}" maxPoints= "${lca.maxPoints}"/>
 
   </stripes:layout-component>
   

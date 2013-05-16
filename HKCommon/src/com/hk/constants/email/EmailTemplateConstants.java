@@ -64,7 +64,9 @@ public class EmailTemplateConstants {
 	public static final String operationsTeam = "Operations Team";
 	public static final String poApprovedByWrongPerson = "/poApprovedByWrongPerson.ftl";
     public static final String dropShipEscalationEmail = "/dropShipEscalationEmail.ftl";
-  public static final String extraInventoryCreatedEmailToCategory = "/rtv/extraInventoryCreatedEmailToCategory.ftl";
+    public static final String extraInventoryCreatedEmailToCategory = "/rtv/extraInventoryCreatedEmailToCategory.ftl";
     public static final String adminPaymentFailEmail = "/adminPaymentFailEmail.ftl";
+    public static final String orderConfirmUserEmailLoyalty = "/orderConfirmUserEmailLoyalty.ftl";
+	
 
 }
