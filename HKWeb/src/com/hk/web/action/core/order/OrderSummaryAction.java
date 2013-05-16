@@ -61,7 +61,7 @@ public class OrderSummaryAction extends BaseAction {
 
     @Autowired
     private PincodeCourierService pincodeCourierService;
-    private boolean groundShippingAllowed;
+    private boolean groundShippingAllowed = true;
 
     private PricingDto pricingDto;
     private Order order;
