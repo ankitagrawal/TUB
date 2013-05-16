@@ -12711,6 +12711,33 @@
         <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="credit_note_line_item" constraintName="fk_credit_note_line_item_sku1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku" referencesUniqueColumn="false"/>
     </changeSet>
     
+    <changeSet author="Ajeet (generated)" id="1368641223302-1">
+        <createTable tableName="search_log">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="traffic_tracking_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="keyword" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="results" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="create_dt" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368696491962-1">
+        <addColumn tableName="search_log">
+            <column defaultValue="n/a" name="category" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
         <changeSet author="DeepakC" id="20133001-01">
 		<createTable tableName="loyalty_product">
 			<column autoIncrement="true" name="id" type="INT">

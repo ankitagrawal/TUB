@@ -7,7 +7,7 @@
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 <stripes:layout-definition>
-<html lang="en">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -29,7 +29,7 @@
     $(document).ready(function(){
         $('.brandsContainer').jScrollPane({verticalDragMaxHeight:30, positionDragY:30});
         $(".jspDrag").css("width","7px");
-        $(".jspTrack").css("left","-45px");
+        $(".jspTrack").css("left","-5px");
 
 
         //Top Drop Down
@@ -99,7 +99,7 @@
         <div class="grid_10">
 			<div id="nav" class="nav-menu">
 				<div>
-				<p class="section2" style="float:right;">Hello 
+				<p class="section2" style="float:right; font-weight: bold;">Hello 
                   <shiro:hasAnyRoles name="<%=roles%>">
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>

@@ -383,7 +383,7 @@
   				<div class='loyaltyMessage' >
   				<p>
   				<c:if test="${actionBean.loyaltyPointsEarned > 0}">
-  				You have earned ${actionBean.loyaltyPointsEarned } loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
+  				You have earned ${hk:roundNumberForDisplay(actionBean.loyaltyPointsEarned)} loyalty points. These loyalty points will be transferred to your stellar account once your order has been delivered.
   				</c:if>
                 
   				<c:if test="${actionBean.loyaltyPointsEarned <= 0}">

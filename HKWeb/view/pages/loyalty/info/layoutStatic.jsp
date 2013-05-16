@@ -4,7 +4,7 @@
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 <stripes:layout-definition>
-<html lang="en">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">

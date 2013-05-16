@@ -66,14 +66,14 @@ pageContext.setAttribute("isSecure", isSecure);
 			<div class="sorting">SORT BY CATEGORY</div>
               <div class="brandsContainer " style ="height: 245px;">
                <div class="priceRange">
-			   <span  id= "categoryNameSpan" class="font-caps">
+			   <span  id= "categoryNameSpan" >
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
                   Clear All </s:link></span>
 			     </div>
 			 
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
-			   <span  id= "categoryNameSpan" class="font-caps">
+			   <span  id= "categoryNameSpan" >
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                   ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} ) </s:link></span>
