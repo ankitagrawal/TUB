@@ -341,6 +341,11 @@ public class ExtraInventoryAction extends BasePaginatedAction{
     if(rtvNoteLineItems1!=null && rtvNoteLineItems1.size()!=0){
       rtvNoteLineItems.addAll(rtvNoteLineItems1);
     }
+    if(rtvNote!=null){
+    	 if(rtvNote.getPurchaseInvoices()!=null &&rtvNote.getPurchaseInvoices().get(0)!=null){
+       	  
+         }
+    }
     noCache();
     addRedirectAlertMessage(new SimpleMessage("Rtv Created !!!!"));
     return new ForwardResolution("/pages/admin/createRtvNote.jsp").addParameter("purchaseOrderId",purchaseOrderId).addParameter("wareHouseId",wareHouseId);
