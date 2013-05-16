@@ -66,7 +66,7 @@ $(document).ready(function () {
             return false;
         }
         if (confirm('Are you sure you want to create Short for selected items?')) {
-            $(this).hide();
+        	$(this).hide();
         }
         else {
             return false;
@@ -126,7 +126,7 @@ $(document).ready(function () {
     $(".save").click(function(event) {
     	var id = event.target.id;
         var saveObj = $(this);
-        $(this).hide();
+        //$(this).hide();
         var bool = true;
         $('.productName').each(function() {
             var product = $(this).val();
@@ -182,7 +182,7 @@ $(document).ready(function () {
         	var state = $(this).is(':checked'); //state = true/false depending on state
             if (state){
         		var productVariant = $(this).parent().parent().children('td').children('.variantId').val();
-        		if(productVariant==null||productVariant.trim(variant) == ""){
+        		if(productVariant==null||productVariant.trim(productVariant) == ""){
         			alert("SHORT can not be created if Variant is Unknown!!");
                     bool = false;
                     return false;
@@ -580,7 +580,7 @@ $(document).ready(function () {
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
                             ${eInLineItems.mrp}
                             <s:hidden class="mrp valueChange" name="extraInventoryLineItems[${ctr.index}].mrp"
                                       value="${eInLineItems.mrp}"/>
@@ -593,7 +593,7 @@ $(document).ready(function () {
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
                             ${eInLineItems.costPrice}
                             <s:hidden class="costPrice valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].costPrice"
@@ -608,7 +608,7 @@ $(document).ready(function () {
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated}">
                             ${eInLineItems.receivedQty}
                             <s:hidden class="receivedQuantity valueChange"
                                       name="extraInventoryLineItems[${ctr.index}].receivedQty"
@@ -625,7 +625,7 @@ $(document).ready(function () {
                 <input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 				<c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated or eInLineItems.extraInventoryLineItemType.name == 'Short'}">
+                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated }">
                             ${eInLineItems.tax.name}
                             <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
                                    readonly="readonly" value="${eInLineItems.tax.id}"/>

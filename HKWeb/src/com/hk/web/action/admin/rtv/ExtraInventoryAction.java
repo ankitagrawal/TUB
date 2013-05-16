@@ -259,7 +259,7 @@ public class ExtraInventoryAction extends BasePaginatedAction{
         getExtraInventoryLineItemService().save(extraInventoryLineItem);
         
 		if (extraInventoryLineItem.getPurchaseInvoices() != null
-				&& extraInventoryLineItem.getPurchaseInvoices().get(0) != null) {
+				&& extraInventoryLineItem.getPurchaseInvoices().size() >0 ) {
 			for (PurchaseInvoice pi : extraInventoryLineItem.getPurchaseInvoices()) {
 				List<ExtraInventoryLineItem> eiliList = pi.getEiLineItems();
 				Double shortAmount = 0.0;
@@ -367,14 +367,14 @@ public class ExtraInventoryAction extends BasePaginatedAction{
 		Double rtvAmount = 0.0;
 		List<ExtraInventoryLineItem> eiLi = getExtraInventoryLineItemService()
 				.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-		if (eiLi != null && eiLi.get(0) != null) {
+		if (eiLi != null && eiLi.size()>0) {
 			for (ExtraInventoryLineItem lineItem : eiLi) {
 			if (lineItem.isRtvCreated() != null && lineItem.isRtvCreated()) {
 				rtvAmount += lineItem.getPayableAmount();
 				}
 			}
 		}
-		if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().get(0) != null) {
+		if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().size()>0) {
 		for (PurchaseInvoice pi : rtvNote.getPurchaseInvoices()) {
 			pi.setRtvAmount(rtvAmount);
 			pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount() + rtvAmount);

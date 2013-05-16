@@ -293,6 +293,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 		{
 			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
 			extraInventoryLineItem.setExtraInventory(extraInventory);
+			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal.asEnumExtraInventoryLineItemType());
 			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
 		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount()+purchaseInvoice.getShortAmount()+purchaseInvoice.getRtvAmount());
@@ -378,6 +379,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 			ExtraInventory extraInventory = extraInventoryService.getExtraInventoryById(extraInventoryId);
 			extraInventoryLineItem.setExtraInventory(extraInventory);
 			extraInventoryLineItem.setPurchaseInvoices(invoices);
+			extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short.asEnumExtraInventoryLineItemType());
 			extraInventoryLineItemService.save(extraInventoryLineItem);
 		}
 		purchaseInvoice.setPiRtvShortTotal(purchaseInvoice.getFinalPayableAmount() + purchaseInvoice.getShortAmount()

@@ -217,37 +217,6 @@
 					);
 		});
 		
-		/* function populateRtvTable(){
-			$('#piRtvTable  > .rtvTableTr').each(function(currentInedx, ob) {
-				if($(this).find('.taxableAmount').val()==""||isNaN(parseFloat($(this).find('.taxableAmount').val()))){
-					var costPrice = $(this).find('.costPrice').val();
-					var mrp = $(this).find('.mrp').val();
-					var qty = $(this).find('.receivedQuantity').val();
-					var taxIdentifier = $(this).find('.taxIdentifier').val();
-					var taxCategory;
-					if (taxIdentifier == 'finance') {
-						var taxCat = $(this).find('.taxCategory');
-						var selectedTax = $(this).find('option:selected');
-						taxCategory = selectedTax.text();
-					} else {
-						taxCategory = parseFloat($(this).find('.taxCategory').val().trim());
-					}
-					var taxable = costPrice * qty;
-					var surchargeCategory = 0.0;
-					var stateIdentifier = $('.state').html();
-					surchargeCategory = ${hk:getSurchargeValue(pia.purchaseInvoice.supplier.state, pia.purchaseInvoice.warehouse.state)};
-					var tax = taxable * taxCategory;
-					var surcharge = tax * surchargeCategory;
-					var payable = surcharge + taxable + tax;
-					$(this).find('.taxableAmount').val(taxable.toFixed(2));
-					$(this).find('.taxAmount').val(tax.toFixed(2));
-					$(this).find('.surchargeAmount').val(surcharge.toFixed(2));
-					$(this).find('.payableAmount').val(payable.toFixed(2));
-				}
-			});
-		}; */
-		
-		
 		$('.valueChange').live("change", function() {
 			var table = $(this).parent().parent().parent();
 			var valueChangeRow = $(this).parents('.lineItemRow');
@@ -311,11 +280,12 @@
 			updateTotalPI('.payableAmount', '.finalPayable', 0, table);
 			updateTotalPI('.receivedQuantity', '.totalQuantity', 1, table);
 			var finalPayable = parseFloat(table.parent().find('.finalPayable').val().replace(/,/g, ''));
-			if(valueChangeRow.find('.overallDiscount').length!=0){
-			var overallDiscount = parseFloat(table.parent().find('.overallDiscount').val().replace(/,/g, ''));
+			var freightCharges; var overallDiscount; 
+			if(table.parent().find('.overallDiscount').length!=0){
+			overallDiscount = parseFloat(table.parent().find('.overallDiscount').val().replace(/,/g, ''));
 			}
-			if(valueChangeRow.find('.freightCharges').length!=0){
-				var freightCharges = parseFloat(table.parent().find('.freightCharges').val().replace(/,/g, ''));	
+			if(table.parent().find('.freightCharges').length!=0){
+				freightCharges = parseFloat(table.parent().find('.freightCharges').val().replace(/,/g, ''));	
 			}
 			
 			if (isNaN(overallDiscount)) {
@@ -429,9 +399,9 @@
 		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piTable"));
 		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piShortTable"));
 		updateTotalPI('.payableAmount', '.totalPayable', 0, $("#piRtvTable"));
-		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));
+		/* updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piTable"));*/
 		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piShortTable"));
-		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable"));
+		updateTotalPI('.payableAmount', '.finalPayable', 0, $("#piRtvTable")); 
 		
 		$("#grnTotalQuantity").val($('#piForm').find('.totalQuantity').html());
 		$("#shortTotalQuantity").val($('#shortForm').find('.totalQuantity').html());
@@ -613,7 +583,8 @@
 </table>
 
 <br/>
-
+<p style="font-weight: bold;font-size: medium;">GRN Line Items</p>
+<br/>
 <table border="1">
 	<thead>
 	<tr>
@@ -812,6 +783,7 @@
 <br>
 <br>
 <s:form id="shortForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<hr>
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <p style="font-weight: bold;font-size: medium;">Short Line Items</p>
 <table id="shortTable" class="extraInventoryShortTable">
@@ -851,7 +823,6 @@
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].rtvCreated" value="${extraInventoryShortLineItem.rtvCreated}"/>
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].poLineItem" value="${extraInventoryShortLineItem.poLineItem}"/>
 		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].updateDate" value="${extraInventoryShortLineItem.updateDate}"/>
-		<s:hidden name="extraInventoryShortLineItems[${ctr.index}].extraInventoryLineItemType" value="${extraInventoryShortLineItem.extraInventoryLineItemType}"/>
 		<c:choose>
 						<c:when test="${extraInventoryShortLineItem.sku != null}">
 		<c:set value="${extraInventoryShortLineItem.sku}" var="sku"/>
@@ -1009,6 +980,7 @@
 <br/>
 <br/>
 <s:form id="rtvForm" beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction">
+<hr>
 <s:hidden name="purchaseInvoice" value="${pia.purchaseInvoice}"/>
 <p style="font-weight: bold;font-size: medium;">RTV Line Items</p>
 <table id="rtvTable" class="rtvTable">
@@ -1060,7 +1032,7 @@
 		          
 		
 			<td>${ctr.index+1}</td>
-			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
+			<td><a href="${pageContext.request.contextPath}/admin/rtv/ExtraInventory.action?pre=&purchaseOrderId=${extraInventoryLineItem.extraInventory.purchaseOrder.id}&wareHouseId=${pia.purchaseInvoice.goodsReceivedNotes[0].warehouse.id}" target="_blank">${extraInventoryLineItem.extraInventory.id}</a></td>
 			<td>${extraInventoryLineItem.id}</td>
 			<td>
 				<div class='img48' style="vertical-align:top;">
@@ -1203,6 +1175,7 @@
 <s:submit name="saveRtv" value="Save" class="requiredFieldValidator" id="save-button"/>
 </s:form>
 
+<hr>
 <div id = "finalPayableDiv">
 <fieldset>
 <legend><br/><em>Final Totals</em></legend>
