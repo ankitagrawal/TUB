@@ -266,7 +266,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
         List<Consignment> consignmentList = new ArrayList<Consignment>();
         List<ConsignmentTracking> consignmentTrackingList = new ArrayList<ConsignmentTracking>();
         for (ConsignmentDto consignmentDto : consignmentDtoList) {
-            if (consignmentDto.getAwbNumber() != null  && !consignmentDto.getTransferredToAgent().getId().equals(agent.getId())) {
+            if (!consignmentDto.getTransferredToAgent().getId().equals(agent.getId())) {
                 runsheet = runsheetService.getOpenRunsheetForAgent(consignmentDto.getTransferredToAgent());
                 consignment = getConsignmentByAwbNumber(consignmentDto.getAwbNumber());
                 consignment.setConsignmentStatus(consignmentDao.get(ConsignmentStatus.class, EnumConsignmentStatus.ShipmentOutForDelivery.getId()));
