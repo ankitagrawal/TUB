@@ -15,6 +15,7 @@ import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.Address;
+import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.store.InvalidOrderException;
 
@@ -29,6 +30,8 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	@Autowired
 	private LoyaltyProgramService loyaltyProgramService;
+	@Autowired
+    private OrderEventPublisher orderEventPublisher;
 	
 	@DefaultHandler
 	public Resolution summary() {
@@ -45,6 +48,7 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 		this.shipmentAddress = this.order.getAddress();
 		try {
 			this.getProcessor().makePayment(this.order.getId(), this.getRemoteHostAddr());
+			this.orderEventPublisher.publishOrderPlacedEvent(this.order);
 		} catch (InvalidOrderException e) {
 			this.errorMessage = e.getMessage();
 		}
