@@ -43,7 +43,7 @@ public class ShippingOrderLifecycleDaoImpl extends BaseDaoImpl implements Shippi
 
     @Override
     public List<Reason> getReasonsByType(String type) {
-        String queryString = "from Reason r where r.type=:type";
+        String queryString = "from Classification r where r.primary=:type";
         return findByNamedParams(queryString, new String[]{"type"}, new Object[]{type});
     }
 }
