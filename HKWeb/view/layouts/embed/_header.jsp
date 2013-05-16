@@ -107,16 +107,20 @@
                 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
                   <c:choose>
                     <c:when test="${badge.badgeName == 'PLATINUM'}">
-                      <span style="font-size:1.1em;color:plum;">"Platinum"</span>
+                      <span style="font-size:1.1em;color:white;
+                       background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/platinum1.png');">Platinum</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'GOLD'}">
-                      <span style="font-size:1.1em;color:gold;">"Gold"</span>
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/gold1.png');">Gold</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'SILVER'}">
-                      <span style="font-size:1.1em;color:silver;">"Silver"</span>
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/silver1.png');">Silver</span>
                     </c:when>
                     <c:when test="${badge.badgeName == 'BRONZE'}">
-                      <span style="font-size:1.1em;color:#9C6963 ;">"Bronze"</span>
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/bronze1.png');">Bronze</span>
                     </c:when>
                     
                   </c:choose>
