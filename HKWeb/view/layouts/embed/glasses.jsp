@@ -63,12 +63,11 @@
 			</s:link></div>
 		</c:when>
 		<c:otherwise>
-			<!--<c:if test="${ 'Odysey' != variant.product.brand }">
-				-->
+			
 				<input type="button" id="buyFrame" style="float: left"
 					value="Buy This Frame" class="cta button_green" />
-			<!--</c:if>
-			--><input type="button" id="addLens" style="float: left"
+			
+			<input type="button" id="addLens" style="float: left"
 				value="Add Lens & Buy" class="cta button_green" />
 		</c:otherwise>
 	</c:choose></div>
