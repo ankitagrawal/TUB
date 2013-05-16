@@ -3,18 +3,20 @@ package com.hk.impl.service.search;
 import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.HttpRequestAndSessionConstants;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.*;
+import com.hk.domain.analytics.TrafficTracking;
 import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
-import com.hk.pact.dao.location.LocalityMapDao;
-import com.hk.pact.dao.location.MapIndiaDao;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
 import com.hk.util.ProductReferrerMapper;
+import com.hk.web.filter.WebContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
@@ -44,12 +46,6 @@ class ProductSearchServiceImpl implements ProductSearchService {
     ProductService        productService;
 
     @Autowired
-    LocalityMapDao        localityMapDao;
-
-    @Autowired
-    MapIndiaDao           mapIndiaDao;
-
-    @Autowired
     CommonsHttpSolrServer solr;
 
     @Autowired
@@ -57,6 +53,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
     @Autowired
     LinkManager           linkManager;
+
+    @Autowired
+    BaseDao baseDao;
 
     private final String  SEARCH_SERVER = "SOLR";
 
@@ -71,7 +70,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
 
             List<SolrProduct> products = new ArrayList<SolrProduct>();
             for (Product pr : productList) {
-                if (!pr.getDeleted()) {
+                if (!pr.getDeleted() && !pr.isHidden() && !pr.isGoogleAdDisallowed()) {
                     SolrProduct solrProduct = productService.createSolrProduct(pr);
                     productIndexService.updateExtraProperties(pr, solrProduct);
                     products.add(solrProduct);
@@ -103,14 +102,15 @@ class ProductSearchServiceImpl implements ProductSearchService {
         // resultsMap.getResultSize().longValue());
     }
 
-    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone) throws SearchException {
+    public SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone, boolean showGoogleBannedProducts) throws SearchException {
         SolrQuery query = new SolrQuery("*:*");
         //query.addFilterQuery("{!field f= brand}" + brand);
         //query.addFilterQuery(SolrSchemaConstants.brand + ":" + brand);
         query.addFilterQuery(SolrSchemaConstants.brand + ":\"" + brand+"\"");
         if(topLevelCategory != null)
           query.addFilterQuery(SolrSchemaConstants.category + ":" + topLevelCategory.getName());
-        query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
+        if(!showGoogleBannedProducts)
+          query.addFilterQuery(SolrSchemaConstants.isGoogleAdDisallowed + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isHidden + ":" + 0);
         query.addFilterQuery(SolrSchemaConstants.isDeleted + ":" + 0);
 
@@ -239,7 +239,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         return searchResult;
     }
 
-   private SearchResult getCategoryResults(String category, int page, int perPage) throws SearchException {
+   private SearchResult getCategorySearchResults(String category, int page, int perPage) throws SearchException {
 
      SolrQuery query = new SolrQuery("*:*");
        query.addFilterQuery(SolrSchemaConstants.categoryDisplayName + ":\"" + category+"\"");
@@ -372,9 +372,9 @@ class ProductSearchServiceImpl implements ProductSearchService {
             query = sanitizeQuery(query);
             //Level 1 check Starts - Ajeet
             if (this.isBrandTerm(query)) {
-              return this.getBrandCatalogResults(query, null, page, perPage, null);
+              return this.getBrandCatalogResults(query, null, page, perPage, null, false);
             } else if (this.isCategoryTerm(query)) {
-              return this.getCategoryResults(query, page, perPage);
+              return this.getCategorySearchResults(query, page, perPage);
             }
             //End - Ajeet
             response = solr.query(getResultsQuery(query, searchFilters, page, perPage));
@@ -461,4 +461,31 @@ class ProductSearchServiceImpl implements ProductSearchService {
      private String sanitizeQuery(String query){
         return query.replace(':',' ');
     }
+
+  @Override
+  public void logSearchResult(String keyword, Long results, String category) {
+    try {
+      TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+      if (trafficTracking != null) {
+        Long trafficTrackingId = trafficTracking.getId();
+        SearchLog searchLog = new SearchLog();
+        searchLog.setTrafficTrackingId(trafficTrackingId);
+        searchLog.setKeyword(keyword);
+        searchLog.setKeyword(keyword);
+        searchLog.setResults(results);
+        searchLog.setCategory(category);
+        getBaseDao().save(searchLog);
+      }
+    } catch (Exception e) {
+      logger.error("Exception while logging search results "+e.getMessage());
+    }
+  }
+
+  public BaseDao getBaseDao() {
+    return baseDao;
+  }
+
+  public void setBaseDao(BaseDao baseDao) {
+    this.baseDao = baseDao;
+  }
 }
