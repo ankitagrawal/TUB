@@ -134,16 +134,6 @@
 
                 return false;
             });
-                var clickedLink = $(this);
-                $.getJSON(clickedLink.attr('href'), function(res) {
-                    if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                        alert(res.message);
-                        window.location.reload();
-                    }
-                });
-
-                return false;
-            });
 
         <%--
         Confirm cod order

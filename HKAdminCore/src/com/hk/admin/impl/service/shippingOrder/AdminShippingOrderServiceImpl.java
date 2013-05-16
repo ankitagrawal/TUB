@@ -98,6 +98,7 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
 	            //shippingOrderService.save(shippingOrder);
             }
 			getShippingOrderService().save(shippingOrder);
+            getBucketService().popFromActionQueue(shippingOrder);
         }
         for (LineItem lineItem : shippingOrder.getLineItems()) {
             getInventoryService().checkInventoryHealth(lineItem.getSku().getProductVariant());
