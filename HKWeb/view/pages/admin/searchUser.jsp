@@ -85,6 +85,10 @@
               <s:param name="user" value="${user}"/>
               [Edit User]
             </s:link>
+            <s:link beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction">
+              <s:param name="user" value="${user}"/>
+                [Edit Basket]
+            </s:link>
             <s:link beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction">
                <s:param name="user" value="${user}"/>
                [View Customer LifeCycle]
