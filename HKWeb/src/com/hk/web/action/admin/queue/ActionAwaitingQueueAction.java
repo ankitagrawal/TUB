@@ -135,13 +135,13 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         Long startTime = (new Date()).getTime();
-//        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
-//        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
-//        if (orderPage != null) {
-//            orderList = orderPage.getList();
-//        }
-        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
-        orderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false, getPageNo(), getPerPage());
+        OrderSearchCriteria orderSearchCriteria = getOrderSearchCriteria();
+        orderPage = orderService.searchOrders(orderSearchCriteria, getPageNo(), getPerPage());
+        if (orderPage != null) {
+            orderList = orderPage.getList();
+        }
+//        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
+//        orderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false, getPageNo(), getPerPage());
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
