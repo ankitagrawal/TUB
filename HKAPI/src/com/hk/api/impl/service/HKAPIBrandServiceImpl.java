@@ -11,6 +11,7 @@ import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.HKImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
         HKAPIProductDTO[] hkapiProductDTOs=new HKAPIProductDTO[brandProducts.size()];
         int j=0;
         for(Product product:brandProducts){
+            if (product instanceof Combo) {
+                continue;
+            }
             HKAPIProductDTO productDTO=new HKAPIProductDTO();
 
             productDTO.setName(product.getName());
