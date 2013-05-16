@@ -51,6 +51,7 @@
         CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
         pageContext.setAttribute("categoryList", categoryDao.getPrimaryCategories());
     %>
+
     <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -133,11 +134,6 @@
 
                 return false;
             });
-
-            $('.cancelSO').click(function() {
-                var proceed = confirm('Are you sure you want to cancel shipping order?');
-                if (!proceed) return false;
-
                 var clickedLink = $(this);
                 $.getJSON(clickedLink.attr('href'), function(res) {
                     if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
@@ -249,7 +245,6 @@
     <div class="actionQueue">Action Awaiting Queue</div>
 </s:layout-component>
 <s:layout-component name="content">
-
 <fieldset style="margin: 10px;" class="top_label">
     <ul style="margin-top: 0px;">
         <div class="grouped grid_12">
@@ -623,7 +618,8 @@
                     <c:when test="${not empty shippingOrders}">
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${shippingOrders}" isActionQueue="true"/>
+                                             shippingOrders="${shippingOrders}" isActionQueue="true"  />
+
                         </td>
                     </c:when>
                     <c:otherwise>
