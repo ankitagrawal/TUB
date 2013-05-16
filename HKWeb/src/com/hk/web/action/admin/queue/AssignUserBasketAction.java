@@ -1,16 +1,21 @@
 package com.hk.web.action.admin.queue;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.akube.framework.stripes.controller.Breadcrumb;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.UserService;
+import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.LocalizableError;
 import net.sourceforge.stripes.validation.Validate;
 import net.sourceforge.stripes.validation.ValidationMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +26,8 @@ import java.util.Set;
  * User: Pratham
  * Date: 11/04/13  Time: 09:05
 */
+@Secure(hasAnyPermissions = PermissionConstants.UPDATE_USER, authActionBean = AdminPermissionAction.class)
+@Breadcrumb(level = 2, name = "Edit Basket: {user.login}", context = HealthkartConstants.BreadcrumbContext.admin)
 public class AssignUserBasketAction extends BaseAction {
 
 
