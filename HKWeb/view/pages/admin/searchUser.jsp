@@ -96,8 +96,8 @@
               ${user.email}
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">
-              <s:param name="email" value="${user.login}"/>
+            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+              <s:param name="email" value="${user.email}"/>
               View orders
             </s:link>
           </td>

@@ -28,8 +28,6 @@ public interface OrderService {
 
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
-    public Long getCountOfOrdersWithStatus();
-
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
@@ -44,8 +42,6 @@ public interface OrderService {
 
     public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);
 
-    public Category getBasketCategory(ShippingOrder shippingOrder);
-
     public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
 
     public Order getLatestOrderForUser(User user);
@@ -58,8 +54,6 @@ public interface OrderService {
      * @return set of shipping orders which are split/derived from a base order
      * @throws OrderSplitException
      */
-
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
