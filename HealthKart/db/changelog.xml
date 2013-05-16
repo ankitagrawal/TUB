@@ -12730,5 +12730,11 @@
             </column>
         </createTable>
     </changeSet>
-
+    <changeSet author="Ajeet (generated)" id="1368696491962-1">
+        <addColumn tableName="search_log">
+            <column defaultValue="n/a" name="category" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

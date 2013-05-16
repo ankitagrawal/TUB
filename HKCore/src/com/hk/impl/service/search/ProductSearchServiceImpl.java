@@ -24,7 +24,6 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.params.ModifiableSolrParams;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -463,7 +462,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     }
 
   @Override
-  public void logSearchResult(String keyword, Long results) {
+  public void logSearchResult(String keyword, Long results, String category) {
     try {
       TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
       if (trafficTracking != null) {
@@ -473,6 +472,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
         searchLog.setKeyword(keyword);
         searchLog.setKeyword(keyword);
         searchLog.setResults(results);
+        searchLog.setCategory(category);
         getBaseDao().save(searchLog);
       }
     } catch (Exception e) {
