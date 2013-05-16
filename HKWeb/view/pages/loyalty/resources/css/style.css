@@ -1002,6 +1002,18 @@ background: #FFFFFF;
 font-family: whitneybookSC;
 }
 
+.btnDisabled {
+position: relative;
+float: left;
+border: 2px solid #ddd;
+padding: 9px;
+padding-left: 29px;
+padding-right: 29px;
+font-size: 12px;
+background: #FFFFFF;
+font-family: whitneybookSC;
+	
+}
 .blue {
 	color: #2C0CF7 !important;
 }

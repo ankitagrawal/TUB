@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <%@ page import="com.akube.framework.util.BaseUtils"%>
 <%@ page import="com.hk.constants.core.HealthkartConstants"%>
@@ -7,8 +6,10 @@
 <%@ page import="com.hk.web.HealthkartResponse"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.List"%>
-<%@ page import="java.util.Arrays"%>
 <%@ page import="com.hk.taglibs.Functions"%>
+<%@ page import="java.util.Arrays"%>
+<%@include file="/includes/_taglibInclude.jsp"%>
+<%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
 <stripes:layout-render name="/pages/loyalty/info/layoutStatic.jsp">
 	<stripes:layout-component name="contents">
 	<s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.LoyaltyIntroductionAction" var="lia" />  
@@ -259,8 +260,8 @@
             <div class="qAndA removeBorderBottom">
               <p>Q: I have more questions. Who can help? </p>
               A: Call the HealthKart Customer Support for general questions about the healthkartstellar program, as well as for questions regarding your membership.
-				Contact us 24X 7 @
-				0124-4616444 or mail us your query @ info@healthkart.com.
+				Contact us 24X 7 at
+				0124-4616444 or mail us your query at info@healthkart.com.
 				You can also find us on Facebook and Twitter. We love connecting with you and are here to answer any questions or just enjoy hearing about how your day is going. 
 
             </div>

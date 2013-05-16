@@ -2,7 +2,15 @@ package com.hk.taglibs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import net.sourceforge.stripes.util.CryptoUtil;
 
@@ -197,34 +205,39 @@ public class Functions {
     }
 
     public static String decimal2(Double n) {
-        if (n == null)
-            return "0.00";
+        if (n == null) {
+			return "0.00";
+		}
         return FormatUtils.getDecimalFormat(n);
     }
 
     public static String convertToLettersNumbersUnderscore(String s) {
-        if (s == null)
-            return "";
+        if (s == null) {
+			return "";
+		}
         return s.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContains(Collection c, Object o) {
-        if (c == null)
-            return false;
+        if (c == null) {
+			return false;
+		}
         return c.contains(o);
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsBoth(Collection c, Object o1, Object o2) {
-        if (c == null)
-            return false;
+        if (c == null) {
+			return false;
+		}
         return c.contains(o1) && c.contains(o2);
     }
 
     public static boolean firstStringContainsSecond(String s1, String s2) {
-        if (s1 == null)
-            return false;
+        if (s1 == null) {
+			return false;
+		}
         return s1.contains(s2);
     }
 
@@ -237,8 +250,9 @@ public class Functions {
      */
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
-        if (c1 == null || c2 == null)
-            return false;
+        if (c1 == null || c2 == null) {
+			return false;
+		}
         boolean collectionContainsCollection = true;
 
         for (Object o : c2) {
@@ -866,12 +880,13 @@ public class Functions {
 	}
 	
 	public static String roundNumberForDisplay(double number) {
-		
+		String numberString;
 		if ((number*10)%10==0) {
-			return "" + (Math.round(number));
+			numberString =  (Math.round(number)) + "";
 		} else {
-			return "" + (Math.round(number*10)/10);
+			numberString = (Math.round(number*10)/10.0) + "";
 		}
+		return numberString;
 	}
 
 }

@@ -156,6 +156,8 @@ public class UserOrderKarmaProfile {
 	
 			if (KarmaPointStatus.REWARDED.equals(this.status)) {
 				statusForHistory = "Converted to Reward Points";
+			} else if (KarmaPointStatus.CANCELED.equals(this.status)) {
+				statusForHistory = "Order Cancelled (Points re-added)";
 			} else {
 				statusForHistory = "Redeemed";
 			}

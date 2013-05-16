@@ -123,6 +123,15 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 	}
 
 	@Override
+	public Set<String> getParamSet() {
+		HashSet<String> params = new HashSet<String>();
+		params.add("minPoints");
+		params.add("maxPoints");
+		params.add("categoryName");
+		return params;
+	}
+	
+	@Override
 	public int getPerPageDefault() {
 		return this.defaultPerPage;
 	}
@@ -137,10 +146,7 @@ public class LoyaltyCatalogAction extends AbstractLoyaltyAction {
 		return this.productPage == null ? 0 : this.productPage.getTotalResults();
 	}
 
-	@Override
-	public Set<String> getParamSet() {
-		return new HashSet<String>();
-	}
+	
 
 	public List<LoyaltyProduct> getProductList() {
 		return this.productList;

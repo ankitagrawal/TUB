@@ -90,6 +90,7 @@ pageContext.setAttribute("isSecure", isSecure);
 
     <script type="text/javascript">
       $(document).ready(function() {
+
     	  $(".jspDrag").css("height","30px");
         $('#successToolTipBtn').click(function (resp) {
         	
@@ -100,38 +101,38 @@ pageContext.setAttribute("isSecure", isSecure);
         	
           $('#errorToolTip').attr('style', 'display: none;');
         });
-
+	
+        
         $('.cartFormm').submit(function(event) {
           event.preventDefault();
           var form = $(this);
+          var redeemButton = form.find('.redeemBtn');
+          
           $.ajax({
             type: 'POST',
-            url: '${pageContext.request.contextPath}/core/loyaltypg/Cart.action?addToCart',
+            url: '${pageContext.request.contextPath}/core/loyaltypg/Cart.action?addToCart=',
             data: form.serialize(),
             success: function(resp) {
               if (resp.code == '<%=com.hk.web.HealthkartResponse.STATUS_OK%>') {
-                $("#" + form.context.id + ' input').attr('class', 'btn');
-                $("#" + form.context.id + ' input').attr('value', 'Added to Cart');
-                $("#" + form.context.id + ' input').disabled = true;
+                $("#" + form.context.id + ' input').attr('class', 'btnDisabled');
+                redeemButton.attr('value', 'Added to Cart');
+                redeemButton.removeClass()
+                redeemButton.disabled =true;
+                //$("#" + form.context.id + ' input').disabled = true;
 
                 $('#successToolTip').attr('style', 'display:block;');
                 $('#errorToolTip').attr('style', 'display: none;');
+       		    $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
               } else {
 			  $('#successToolTip').attr('style', 'display: none;');
 			  //  $("#errorMsg").attr('style', 'display:block;');
 	            $("#errorMsg").text(resp.message);
                 $('#errorToolTip').attr('style', 'display:block;');
+	      		$('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
+
               }
-            },
-            error: function (resp) {
-            	$('#successToolTip').attr('style', 'display: none;');
-                $("#errorMsg").text(resp.message);
-                //$("#errorMsg").attr('style', 'display:block;');
-                $('#errorToolTip').attr('style', 'display:block;');
-              }
-            
+            }            
           });
-		  $('html, body').animate({scrollTop:$('#nav').offset().top - 20}, 'fast');
         });
       });
     </script>
@@ -148,7 +149,7 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span7">
         <div class="alert alert-error">
           <button id="errorToolTipBtn1" type="button" class="close" >×</button>
-          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg" style="float: left;">x</span>
+          <strong>Couldn't add to cart!&nbsp;&nbsp;&nbsp;</strong><span id="errorMsg" ></span>
         </div>
       </div>
     </div>
@@ -187,7 +188,7 @@ pageContext.setAttribute("isSecure", isSecure);
                 <form method="post" action="${pageContext.request.contextPath}/core/loyaltypg/Cart.action" id="${variant.id}-cartForm" class="cartFormm">
 				<input type="hidden" value="${variant.id}" name="productVariantId">
 				<input type="hidden" value="1" name="qty">
-				<input type="submit" class="addToCompare font-caps embedMargin5" name="addToCart" value="REDEEM">
+				<input type="submit" class="addToCompare font-caps embedMargin5 redeemBtn" name="addToCart" value="REDEEM">
 				</form>
 				</div>
 			<% if (colCount %3==0) { %>
@@ -206,8 +207,12 @@ pageContext.setAttribute("isSecure", isSecure);
 	</c:choose>
               
     </div>
-         <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}" categoryName="${lca.categoryName}" minPoints="${lca.minPoints}" maxPoints= "${lca.maxPoints}"/>
-
+    <s:form  beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" autocomplete="off">
+    	<s:hidden name = "minPoints"></s:hidden>
+    	<s:hidden name = "maxPoints"></s:hidden>
+    	<s:hidden name = "categoryName"></s:hidden>
+         <s:layout-render name="/pages/loyalty/pagination.jsp" paginatedBean="${lca}"/>
+	</s:form>
   </stripes:layout-component>
   
 </stripes:layout-render>
