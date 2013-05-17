@@ -26,14 +26,13 @@ import java.util.Set;
  * User: Pratham
  * Date: 11/04/13  Time: 09:05
 */
-@Secure(hasAnyPermissions = PermissionConstants.UPDATE_USER, authActionBean = AdminPermissionAction.class)
-@Breadcrumb(level = 2, name = "Edit Basket: {user.login}", context = HealthkartConstants.BreadcrumbContext.admin)
+@Secure(hasAnyPermissions = PermissionConstants.ASSIGN_USER_BASKET, authActionBean = AdminPermissionAction.class)
 public class AssignUserBasketAction extends BaseAction {
-
 
     private List<Bucket> buckets = new ArrayList<Bucket>();
     private String userName;
     private String userLogin;
+    private User user;
 
     @Autowired
     UserDao userDao;
@@ -44,15 +43,15 @@ public class AssignUserBasketAction extends BaseAction {
 
     @DefaultHandler
     public Resolution pre() {
-       User user = getUserService().getUserById(getPrincipal().getId());
         buckets = getBaseDao().getAll(Bucket.class);
-        if (user != null) {
+        if (user == null) {
+             user = getUserService().getUserById(getPrincipal().getId());
+        }
             List<Bucket> userBuckets = user.getBuckets();
             if (userBuckets != null && userBuckets.size() > 0) {
                 for (Bucket bucket : buckets) {
                     if (userBuckets.contains(bucket)) {
                         bucket.setSelected(true);
-                    }
                 }
             }
         }
@@ -62,7 +61,6 @@ public class AssignUserBasketAction extends BaseAction {
     }
 
     public Resolution save() {
-        User user = getUserService().getUserById(getPrincipalUser().getId());
         List<Bucket> userBuckets = new ArrayList<Bucket>();
         for (Bucket bucket : buckets) {
             if (bucket.getId() != null) {
@@ -75,6 +73,14 @@ public class AssignUserBasketAction extends BaseAction {
         userService.save(user);
         addRedirectAlertMessage(new SimpleMessage("Buckets Updated Successfully"));
         return new RedirectResolution(AssignUserBasketAction.class).addParameter("user", user.getId());
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Bucket> getBuckets() {
