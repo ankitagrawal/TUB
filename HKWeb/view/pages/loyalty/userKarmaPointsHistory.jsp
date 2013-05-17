@@ -43,7 +43,7 @@
               <div class="headRowEmptyValue"></div>
 			  <div class="headRowValue">Order Date</div>
               <div class="headRowValue">Order Details</div>
-              <div class="headRowValue">Points </div>
+              <div class="headRowValue" style="text-align: center;">Points </div>
               <div class="headRowValue">Points Status</div>
             </div>
 			<c:set var="count" value="${userkarmaHA.count}" />
@@ -60,7 +60,7 @@
    					${items.productVariant.product.name} 
                 </c:forEach>
 			  </div>
-              <div class="headRowValue">
+              <div class="headRowValue" style="text-align: center;">
               <c:choose>
                     <c:when test="${karmaProfile.karmaPoints >= 0.0}">
                         ${hk:roundNumberForDisplay(karmaProfile.karmaPoints)}
