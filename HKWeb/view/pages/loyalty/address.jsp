@@ -1,13 +1,19 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.hk.constants.courier.StateList" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@include file="/includes/_taglibInclude.jsp"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+</head>
+
 <link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
 
 	<stripes:layout-component name="contents">
+	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
 	<script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/validator.js"></script>
 	 <div style="display:none;">
             <s:link beanclass="com.hk.web.action.core.autocomplete.AutoCompleteAction" event="populateAddress" id="populateaddress">
@@ -173,7 +179,13 @@
 </stripes:layout-render>
 <script type="text/javascript">
 $(document).ready(function() {
- var bool = false;
+
+    var groundShippingAllowed = ${asa.groundShippingAllowed};
+    
+    if (!groundShippingAllowed) {
+    	bootbox.alert("This order is not servicable at this pincode!!");
+    }	
+var bool = false;
  $("#error-row").hide();
  $("#confirmButton").click(validateAddressForm);
 
@@ -195,7 +207,7 @@ $(document).ready(function() {
  				$("#stateSelect").val("");
  				$("#citySelect").val("");
  				$("#error").empty();
-                 alert("We don't Service to this pincode, please Enter a valid Pincode or Contact to Customer Care.");
+                bootbox.alert("We don't Service to this pincode, please Enter a valid Pincode or Contact to Customer Care.");
  				$("#error").html("<br/>We do not service this pincode.<br/>Please enter a valid Pincode<br/>OR <br/>Contact customer care.<br/><br/>");
  				 $("#error-row").show();
  			}

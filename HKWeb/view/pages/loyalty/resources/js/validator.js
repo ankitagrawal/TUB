@@ -10,28 +10,28 @@ function validateAddressForm() {
 	var billingAddressPhone = form["address.phone"].value;
 	if (billingAddressName == null || billingAddressName == "")
 	{
-		alert("Name must be filled out");
+		bootbox.alert("Name must be filled out");
 		return false;
 	}
 	if (billingAddressLine1 == null || billingAddressLine1 == "")
 	{
-		alert("Address Line 1 must be filled out");
+		bootbox.alert("Address Line 1 must be filled out");
 		return false;
 	}
 	if (billingAddressCity == null || billingAddressCity == "")
 	{
-		alert("City must be filled out");
+		bootbox.alert("City must be filled out");
 		return false;
 	}
 	if (billingAddressState == null || billingAddressState == "")
 	{
-		alert("State must be filled out");
+		bootbox.alert("State must be filled out");
 		return false;
 	}
 
 	if (billingAddressPin == null || billingAddressPin == "")
 	{
-		alert("Pincode must be filled out");
+		bootbox.alert("Pincode must be filled out");
 		return false;
 	} else {
 		_validatePincode(billingAddressPin);
@@ -42,7 +42,7 @@ function validateAddressForm() {
 	}
 	
 	if (billingAddressPhone == null || billingAddressPhone == "") {
-		alert("Phone/Mobile must be filled out");
+		bootbox.alert("Phone/Mobile must be filled out");
 		return false;
 	} else {
 		_validateMobile(billingAddressPhone);

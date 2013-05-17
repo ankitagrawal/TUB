@@ -27,7 +27,7 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	private Address deleteAddress;
 	private String pincode;
 	private Long selectedAddressId;
-	private boolean groundShippingAllowed;
+	private boolean groundShippingAllowed = true;
 	@Autowired private PincodeCourierService pincodeCourierService;
 	@Autowired AddressDao addressDao;
 	@Autowired PincodeDao pincodeDao;
@@ -42,6 +42,8 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	public Resolution confirm() {
 		if(this.address == null) {
 			this.address = this.addressDao.get(Address.class, this.selectedAddressId);
+			groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(this.address.getPincode().getPincode());
+			
 		} else {
 			Pincode pin = this.pincodeDao.getByPincode(this.pincode);
 			this.address.setPincode(pin);
@@ -50,9 +52,11 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 			Country country = this.addressDao.get(Country.class, 80l);
 			this.address.setCountry(country);
 		}
-		if (this.getProcessor().getCart(this.getPrincipal().getId()) != null ) {
+		if (this.getProcessor().getCart(this.getPrincipal().getId()) != null && groundShippingAllowed) {
 			Long orderId = this.getProcessor().getCart(this.getPrincipal().getId()).getId();
 			this.getProcessor().setShipmentAddress(orderId, this.address);
+		} else if (!groundShippingAllowed) {
+			return new RedirectResolution(AddressSelectionAction.class).addParameter("groundShippingAllowed", this.groundShippingAllowed);
 		} else {
 			return new RedirectResolution(CartAction.class);
 		}

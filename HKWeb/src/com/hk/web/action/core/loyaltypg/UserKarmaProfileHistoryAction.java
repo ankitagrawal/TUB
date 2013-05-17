@@ -45,7 +45,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	private double validPoints;
 	private String upgradeString;
 	private double pointsConverted;
-	private int count = (this.getPageNo() - 1)*this.getPerPageDefault();
+	private int count ;
 	
 	@Autowired  
 	private LoyaltyProgramService loyaltyProgramService;
@@ -59,6 +59,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 			this.karmaList = this.pointsPage.getList();
 			this.validPoints = this.loyaltyProgramService.calculateLoyaltyPoints(this.user);
 			this.badgeInfo = this.loyaltyProgramService.getUserBadgeInfo(this.user);
+			this.count = (this.getPageNo() - 1)*this.getPerPageDefault();
 			double upgradeAmount =  this.loyaltyProgramService.fetchNextLevelInfo(this.user).getSpendRequired();
 			Calendar cal = Calendar.getInstance();
 			if (this.badgeInfo.getUpdationTime() != null) {
@@ -203,7 +204,7 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 * @return the count
 	 */
 	public int getCount() {
-		return this.count;
+		return count;
 	}
 
 	/**
