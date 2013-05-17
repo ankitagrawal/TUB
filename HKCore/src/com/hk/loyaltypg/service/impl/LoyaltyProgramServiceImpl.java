@@ -213,7 +213,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void debitKarmaPoints(Order order) {
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.DEBIT) {
-			throw new RuntimeException("User order karma profile already exist for given orer and user");
+			throw new RuntimeException("User order karma profile already exist for given orer and user "+ order.getId() + " " + order.getUser().getId());
 		}
 
 		double existingKarmaPoints = this.calculateLoyaltyPoints(order.getUser());
