@@ -163,7 +163,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             Set<ShippingOrder> shippingOrders = order.getShippingOrders();
             if (shippingOrders != null && !shippingOrders.isEmpty()) {
                 for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-                    this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder);
+                    this.getAdminShippingOrderService().cancelShippingOrder(shippingOrder,null);
                 }
             } else {
                 Set<CartLineItem> cartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -262,7 +262,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	        if (!this.shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
 		        if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
 			        shouldUpdate = false;
-			        break;
+					break;
 		        }
 	        }
         }
@@ -318,6 +318,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
                     order = this.orderService.save(order);
                     this.storeOrderService.updateOrderStatusInStore(order);
+
+
+
+
+
+
+
+
+
                 }
                 // to do order delivered mail
                 if (!order.isDeliveryEmailSent() && order.getStore() != null) {
@@ -384,6 +393,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
 
 
+
+
+
     @Transactional
        private boolean updateOrderStatusFromShippingOrdersForInstallation(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess) {
 
@@ -396,6 +408,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 }
             }
 
+
+
+
+
+
+
+
+
+
            for (ShippingOrder shippingOrder : shippingOrderList) {
                if (!this.shippingOrderService.shippingOrderHasReplacementOrder(shippingOrder)) {
                    if (!soStatus.getId().equals(shippingOrder.getOrderStatus().getId())) {
@@ -406,6 +427,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
            }
 
            if (shouldUpdate) {
+
                order.setOrderStatus(this.getOrderStatusService().find(boStatusOnSuccess));
                order = this.getOrderService().save(order);
            }
@@ -481,7 +503,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             payment = this.paymentManager.verifyCodPayment(order.getPayment());
             order.setConfirmationDate(new Date());
             this.orderService.save(order);
-            this.orderService.processOrderForAutoEsclationAfterPaymentConfirmed(order);
+
+            this.orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
             this.getOrderLoggingService().logOrderActivity(order, user, this.getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.ConfirmedAuthorization), source);
         }
         return payment;
