@@ -868,7 +868,7 @@ public class Functions {
 		if(userId == null){
 			return 0.0;
 		}
-		return Math.round(loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId))*100)/100;
+		return loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId));
 	}
 	
 	public static Badge getBadgeInfoForUser(Long userId){

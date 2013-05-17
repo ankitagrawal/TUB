@@ -155,7 +155,7 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-        this.loyaltyPointsEarned = Math.round(this.loyaltyProgramService.creditKarmaPoints(this.order)*10)/10;
+        this.loyaltyPointsEarned= this.loyaltyProgramService.creditKarmaPoints(this.order);
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
