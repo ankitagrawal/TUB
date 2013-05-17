@@ -24,6 +24,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -133,7 +134,9 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
 	            //loyalty program
-	            loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
+                if (shippingOrder.getBaseOrder().getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+                	loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
+                }
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as Delivered"));
         } else {

@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>

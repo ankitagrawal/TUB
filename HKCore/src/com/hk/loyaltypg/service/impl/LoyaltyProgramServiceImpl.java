@@ -236,8 +236,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void approveKarmaPoints(Order order) {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
-		profile.setStatus(KarmaPointStatus.APPROVED);
-		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		if (profile!= null ) {
+			profile.setStatus(KarmaPointStatus.APPROVED);
+			this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		}
 		this.updateUserBadgeInfo(profile.getUser());
 	}
 
@@ -319,8 +321,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Transactional
 	public void cancelLoyaltyPoints(Order order) {
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
-		profile.setStatus(KarmaPointStatus.CANCELED);
-		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		if (profile!=null ) {
+			profile.setStatus(KarmaPointStatus.CANCELED);
+			this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		}
 		this.updateUserBadgeInfo(profile.getUser());
 	}
 

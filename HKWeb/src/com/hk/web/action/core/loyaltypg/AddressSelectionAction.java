@@ -10,6 +10,7 @@ import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.constants.core.RoleConstants;
 import com.hk.domain.core.Country;
 import com.hk.domain.core.Pincode;
@@ -26,7 +27,8 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	private Address deleteAddress;
 	private String pincode;
 	private Long selectedAddressId;
-	
+	private boolean groundShippingAllowed;
+	@Autowired private PincodeCourierService pincodeCourierService;
 	@Autowired AddressDao addressDao;
 	@Autowired PincodeDao pincodeDao;
 	
@@ -43,6 +45,8 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 		} else {
 			Pincode pin = this.pincodeDao.getByPincode(this.pincode);
 			this.address.setPincode(pin);
+			
+			groundShippingAllowed = pincodeCourierService.isGroundShippingAllowed(pin.getPincode());
 			Country country = this.addressDao.get(Country.class, 80l);
 			this.address.setCountry(country);
 		}
@@ -108,5 +112,21 @@ public class AddressSelectionAction extends AbstractLoyaltyAction {
 	 */
 	public void setDeleteAddress(Address deleteAddress) {
 		this.deleteAddress = deleteAddress;
+	}
+
+
+	/**
+	 * @return the groundShippingAllowed
+	 */
+	public boolean isGroundShippingAllowed() {
+		return groundShippingAllowed;
+	}
+
+
+	/**
+	 * @param groundShippingAllowed the groundShippingAllowed to set
+	 */
+	public void setGroundShippingAllowed(boolean groundShippingAllowed) {
+		this.groundShippingAllowed = groundShippingAllowed;
 	}
 }

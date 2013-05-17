@@ -21,6 +21,7 @@ import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
@@ -181,7 +182,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
-            this.loyaltyProgramService.cancelLoyaltyPoints(order);
+            if (order.getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+            	this.loyaltyProgramService.cancelLoyaltyPoints(order);
+            }
             
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) 
