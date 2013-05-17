@@ -203,15 +203,16 @@ public class CheckPaymentAction extends BaseAction {
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
-        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
+        //todo shakti, method to deduce what is considered as a valid payment
+//        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
             getPaymentManager().success(payment.getGatewayOrderId());
+            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
             order.setConfirmationDate(new Date());
             orderService.save(order);
             orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-        }
-        orderService.sendEmailToServiceProvidersForOrder(order);
+            orderService.sendEmailToServiceProvidersForOrder(order);
+//        }
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
     }

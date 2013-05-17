@@ -150,6 +150,13 @@
                </fieldset>
                <div class="clear"></div>
                <fieldset>
+                   <h2>Case Resolved?</h2>
+                   <br>
+                   If the case has been resolved by OPS team, Please press this button, then only the order will move out of your jurisdiction.
+                   <s:submit name="resolveCase" value="Hit me If you are done" id="cSSType"/>
+               </fieldset>
+               <div class="clear"></div>
+               <fieldset>
               <h2>Change Courier</h2>
                <br>
               Courier Name<s:select name="updateCourier" id="updateCourier">
@@ -213,7 +220,6 @@
                      </c:if>
                </c:if>
                </fieldset>
-
                <fieldset>
                <h2>Change Shipment Service Type</h2>
                    <br>
