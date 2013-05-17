@@ -382,7 +382,7 @@ $(document).ready(function () {
 <h2>Purchase Order # ${extraInventory.purchaseOrderId}</h2>
 <c:choose>
     <c:when test="${fn:length(extraInventory.extraInventoryLineItems)!=0}">
-        <h4 style="color:blue"> Edit Extra Inventory Line Items </h4>
+        <h4 style="color:blue"> Edit Extra Inventory Line Items/Report Short/Damaged </h4>
     </c:when>
     <c:otherwise>
         <h4 style="color:blue"> Create Extra Inventory Line Items </h4>

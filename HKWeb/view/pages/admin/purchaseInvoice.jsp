@@ -60,7 +60,11 @@
 	position: relative;
 	left: 40%;
 }
-
+#finalPayableDiv input{
+float: left;
+position: relative;
+width: 80px;
+}
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
@@ -1182,55 +1186,55 @@
 <table >
 <tr>
 <th></th>
-<th>GRN</th>
-<th>SHORT</th>
-<th>RTV</th>
+<th>Quantity</th>
+<th>Taxable</th>
+<th>Tax</th>
+<th>Surcharge</th>
+<th>Total Amount</th>
 </tr>
 
 <tr>
-<td><label>Quantity</label></td>
+<td><label>GRN</label></td>
 <td><input id= "grnTotalQuantity" readonly="readonly" /></td>
-<td><input id= "shortTotalQuantity" readonly="readonly" /></td>
-<td><input id= "rtvTotalQuantity" readonly="readonly" /></td>
-</tr>
-
-<tr>
-<td><label>Taxable</label></td>
 <td><input id= "grnTotalTaxable" readonly="readonly" /></td>
-<td><input id= "shortTotalTaxable" readonly="readonly" /></td>
-<td><input id= "rtvTotalTaxable" readonly="readonly" /></td>
-</tr>
-<tr>
-
-<tr>
-<td><label>Tax</label></td>
 <td><input id= "grnTotalTax" readonly="readonly"/></td>
-<td><input id= "shortTotalTax" readonly="readonly" /></td>
-<td><input id= "rtvTotalTax" readonly="readonly" /></td>
-</tr>
-<tr>
-
-<tr>
-<td><label>Surcharge</label></td>
 <td><input id= "grnTotalSurcharge" readonly="readonly" /></td>
-<td><input id= "shortTotalSurcharge" readonly="readonly" /></td>
-<td><input id= "rtvTotalSurcharge" readonly="readonly" /></td>
+<td><input id= "grnTotal" readonly="readonly" value="${pia.purchaseInvoice.finalPayableAmount }"/></td>
 </tr>
 
 <tr>
-<td><label>Total</label></td>
-<td><input id= "grnTotal" readonly="readonly" value="${pia.purchaseInvoice.finalPayableAmount }"/></td>
+<td><label>SHORT</label></td>
+<td><input id= "shortTotalQuantity" readonly="readonly" /></td>
+<td><input id= "shortTotalTax" readonly="readonly" /></td>
+<td><input id= "shortTotalTaxable" readonly="readonly" /></td>
+<td><input id= "shortTotalSurcharge" readonly="readonly" /></td>
 <td><input id= "shortTotal" readonly="readonly" value="${pia.purchaseInvoice.shortAmount }"/></td>
+
+</tr>
+<tr>
+
+<tr>
+<td><label>RTV</label></td>
+<td><input id= "rtvTotalQuantity" readonly="readonly" /></td>
+<td><input id= "rtvTotalTaxable" readonly="readonly" /></td>
+<td><input id= "rtvTotalTax" readonly="readonly" /></td>
+<td><input id= "rtvTotalSurcharge" readonly="readonly" /></td>
 <td><input id= "rtvTotal" readonly="readonly" value="${pia.purchaseInvoice.rtvAmount }"/></td>
 </tr>
 <tr>
-<td colspan="3"><strong>Overall Total</strong></td>
-<td colspan="1"><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
+
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Overall Total</strong></td>
+<td><strong>${pia.purchaseInvoice.piRtvShortTotal }</strong></td>
 </tr>
 </table>
 </fieldset>
 </div>
-
 
 <div id="closeButtonDiv">
 <s:link beanclass="com.hk.web.action.admin.inventory.PurchaseInvoiceAction" event="close" Value="Close" class="button_green addToCartButton" > Close </s:link>

@@ -374,7 +374,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().size() > 0) {
 				for (PurchaseInvoice pi : rtvNote.getPurchaseInvoices()) {
 					pi.setRtvAmount(pi.getRtvAmount()+rtvamount);
-					pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount()+pi.getRtvAmount()+rtvamount);
+					pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount()+pi.getRtvAmount());
 					purchaseInvoiceService.save(pi);
 					}
 			}
