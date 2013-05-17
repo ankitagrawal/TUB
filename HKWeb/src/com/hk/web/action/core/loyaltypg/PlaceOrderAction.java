@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
 import net.sourceforge.stripes.action.Resolution;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,20 @@ public class PlaceOrderAction extends AbstractLoyaltyAction {
 	
 	@DefaultHandler
 	public Resolution summary() {
+		
 		this.order = this.getProcessor().getCart(this.getPrincipal().getId());
-		this.shipmentAddress = this.order.getAddress();
-		return new ForwardResolution("/pages/loyalty/orderSummary.jsp"); 
+		if (order !=null) {
+			this.shipmentAddress = this.order.getAddress();
+			return new ForwardResolution("/pages/loyalty/orderSummary.jsp"); 
+		} else {
+			return new RedirectResolution(CartAction.class);
+		}
 	}
 	
 	public Resolution confirm() {
 		this.order = this.getProcessor().getCart(this.getPrincipal().getId());
 		if(this.order==null) {
-			return new ForwardResolution("/pages/loyalty/cart.jsp");
+			return new RedirectResolution(CartAction.class);
 		}
 		this.shipmentAddress = this.order.getAddress();
 		try {

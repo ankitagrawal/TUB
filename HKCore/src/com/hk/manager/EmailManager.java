@@ -372,8 +372,14 @@ public class EmailManager {
         HashMap valuesMap = new HashMap();
         valuesMap.put("order", order);
         valuesMap.put("pricingDto", new PricingDto(order.getCartLineItems(), order.getAddress()));
-
-        Template freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderCancelEmailUser);
+        
+        Template freemarkerTemplate;
+        if (order.getStore().getId().equals(StoreService.LOYALTYPG_ID)) {
+        	freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderCancelEmailUserLoyalty);
+        } else {
+        	freemarkerTemplate = this.freeMarkerService.getCampaignTemplate(EmailTemplateConstants.orderCancelEmailUser);
+        }
+        
         return this.emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, order.getUser().getEmail(), order.getUser().getName());
     }
 

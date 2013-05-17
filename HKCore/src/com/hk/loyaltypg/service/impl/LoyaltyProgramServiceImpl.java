@@ -219,7 +219,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		double existingKarmaPoints = this.calculateLoyaltyPoints(order.getUser());
 		double karmaPoints = this.calculateLoyaltyPoints(order);
 		if (existingKarmaPoints < karmaPoints) {
-			throw new HealthkartRuntimeException("Not sufficient karma points") {
+			throw new HealthkartRuntimeException("Not sufficient loyalty points") {
 				private static final long serialVersionUID = 1L;
 			};
 		}

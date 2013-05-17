@@ -1,8 +1,11 @@
 <%@page import="com.hk.constants.catalog.image.EnumImageSize"%>
 <%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes"	uri="http://stripes.sourceforge.net/stripes.tld"%>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+</head>
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
@@ -32,7 +35,10 @@
 								var rowCount = $("#itemRows").val();
 								if (rowCount ==="0") {
 									window.location.reload();
-								} else {									
+								} else {							
+									if ($('.total-shopping-points').html() === (resp.data.totalShoppingPoints + " Points")) {
+										qty_box.val(qty-1);
+									}
 									$('.total-shopping-points').html(resp.data.totalShoppingPoints + " Points");
 								}
 								

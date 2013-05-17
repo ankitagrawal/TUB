@@ -293,6 +293,7 @@
 
 
             <div class="leftPS">
+            <div>
                 <c:choose>
                     <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
                         <%--your cod ka message--%>
@@ -312,6 +313,7 @@
                         <br/>
                     </c:otherwise>
                 </c:choose>
+               </div>
 
                 <jsp:include page="/includes/checkoutNotice.jsp"/>
 

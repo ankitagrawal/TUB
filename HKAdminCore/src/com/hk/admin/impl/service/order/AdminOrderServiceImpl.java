@@ -187,7 +187,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 	        this.loyaltyProgramService.cancelLoyaltyPoints(order);
 
             // Send Email Comm. for HK Users Only
-            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) 
+            		|| order.getStore().getId().equals(StoreService.LOYALTYPG_ID))) {
                 this.emailManager.sendOrderCancelEmailToUser(order);
             }
             this.emailManager.sendOrderCancelEmailToAdmin(order);
