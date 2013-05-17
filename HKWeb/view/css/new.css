@@ -6809,7 +6809,7 @@ slider pager end
 */
 
 /*
-csss for loyalty related message
+css for loyalty related message
 */
 .loyaltyMessage {
 	width: 95%;
@@ -6817,4 +6817,6 @@ csss for loyalty related message
 	font-size: 12px;
 	line-height: 18px;
 	background: rgb(186, 255, 147);
+	position: relative;
+	float: left;
 }
