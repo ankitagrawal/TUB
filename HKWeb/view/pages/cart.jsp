@@ -438,8 +438,15 @@
       </div>
 
 
-    <div class="quantity" style="width: 80px;left: 35px;">
-      <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+    <div class="quantity" style="width:80px;left:${cartLineItem.hkPrice != 0.0 ? 35 : 10}px;">
+      <c:choose>
+        <c:when test="${cartLineItem.hkPrice == 0.0}">
+           ${cartLineItem.qty}
+        </c:when>
+        <c:otherwise>
+           <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+        </c:otherwise>
+      </c:choose>
       <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
       <a style="position: relative;float:left;" class='remove removeLink' href='#'>
         (remove)
@@ -448,6 +455,9 @@
     </div>
     <div class="price">
       <c:choose>
+        <c:when test="${cartLineItem.hkPrice == 0.0}">
+          Free!
+        </c:when>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num">

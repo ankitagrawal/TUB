@@ -40,6 +40,11 @@
     <jsp:include page="/categoryBanners/beautyHatTrickDisocunt.jsp"/>
   </c:if>--%>
 
+
+  <c:if test="${hk:collectionContains(topCategoryNameList, 'home-living')}">
+    <jsp:include page="/categoryBanners/home-livingTopStripBanner.jsp"/>
+  </c:if>
+
     <c:if test="${hk:collectionContains(topCategoryNameList, 'beauty')}">
         <jsp:include page="/categoryBanners/beautyPrepayDiscount.jsp"/>
     </c:if>
@@ -123,7 +128,7 @@
     <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
         <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
         <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
-        <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>
+       <%-- <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>--%>
     </c:if>
 
     <%--<c:if test="${hk:collectionContains(categoryNameList, 'Soulflower')}">--%>
