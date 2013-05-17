@@ -1205,8 +1205,8 @@ width: 80px;
 <tr>
 <td><label>SHORT</label></td>
 <td><input id= "shortTotalQuantity" readonly="readonly" /></td>
-<td><input id= "shortTotalTax" readonly="readonly" /></td>
 <td><input id= "shortTotalTaxable" readonly="readonly" /></td>
+<td><input id= "shortTotalTax" readonly="readonly" /></td>
 <td><input id= "shortTotalSurcharge" readonly="readonly" /></td>
 <td><input id= "shortTotal" readonly="readonly" value="${pia.purchaseInvoice.shortAmount }"/></td>
 

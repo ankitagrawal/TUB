@@ -304,7 +304,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		}
 		noCache();
 		addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully !!!! "));
-		return new RedirectResolution(ExtraInventoryAction.class, "searchExtraInventory");
+		return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+				.addParameter("wareHouseId", wareHouseId);
 	}
 
 	@Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
