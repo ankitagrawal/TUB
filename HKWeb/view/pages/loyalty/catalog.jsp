@@ -68,12 +68,12 @@ pageContext.setAttribute("isSecure", isSecure);
                <div class="priceRange">
 			   <span  id= "categoryNameSpan" >
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" >
-                  Clear All </s:link></span>
+                  clear all </s:link></span>
 			     </div>
 			 
 			<c:forEach items="${lca.categories}" var="loyaltyCategory">  
 			 <div class="priceRange">
-			   <span  id= "categoryNameSpan" >
+			   <span  id= "categoryNameSpan" class="font-small">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
                   ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} ) </s:link></span>
@@ -137,7 +137,7 @@ pageContext.setAttribute("isSecure", isSecure);
       });
     </script>
     <div id="successToolTip" class="row" style="display: none;">
-      <div class="span12">
+      <div class="span7">
         <div class="alert alert-success">
           <button id="successToolTipBtn" type="button" class="close">×</button>
           Product added to Cart!&nbsp;&nbsp;&nbsp;<strong><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View

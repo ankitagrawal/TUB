@@ -42,13 +42,14 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	private List<UserOrderKarmaProfile> karmaList;
 	private Page pointsPage;
 	
+	private double validPoints;
+	private String upgradeString;
+	private double pointsConverted;
+	private int count = (this.getPageNo() - 1)*this.getPerPageDefault();
 	
 	@Autowired  
 	private LoyaltyProgramService loyaltyProgramService;
 	
-	private double validPoints;
-	private String upgradeString;
-	private double pointsConverted;
 	
 	@DefaultHandler
 	public Resolution pre() {
@@ -196,6 +197,20 @@ public class UserKarmaProfileHistoryAction extends BasePaginatedAction {
 	 */
 	public void setPointsConverted(double pointsConverted) {
 		this.pointsConverted = pointsConverted;
+	}
+
+	/**
+	 * @return the count
+	 */
+	public int getCount() {
+		return this.count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

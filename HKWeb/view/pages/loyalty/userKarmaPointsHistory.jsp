@@ -46,12 +46,12 @@
               <div class="headRowValue">Points </div>
               <div class="headRowValue">Points Status</div>
             </div>
-			
-			<% int count = 0;%>
-            <c:forEach items="${userKarmaHA.karmaList}" var="karmaProfile">
-            
+			<c:set var="count" value="${userkarmaHA.count}" />
+		    <c:forEach items="${userKarmaHA.karmaList}" var="karmaProfile">
+			<c:set var="count" value="${count+1}" />
+
             <div class="normalRow">
-              <div class="headRowEmptyValue"><%= ++count %></div>
+              <div class="headRowEmptyValue">${count}</div>
               <div class="headRowValue"><fmt:formatDate value="${karmaProfile.creationTime}" /> 
               <p class="expiryRow"> ${karmaProfile.expiryDate}
               </p></div>
@@ -141,4 +141,3 @@ $(document).ready(function(){
   
  
 </script>
-`

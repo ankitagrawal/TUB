@@ -156,6 +156,9 @@ font-family: "whitneybookSC" !important;
 text-transform: uppercase;
 }
 
+.font-small {
+text-transform: lowercase;
+}
 .leftBlock{
 position: relative;
 float: left;
@@ -899,7 +902,8 @@ button.close {
 }
 
 .span7 {
-  width: 700px;
+  width: 675px;
+  margin-right: 18px;
   float: right;
 }
 

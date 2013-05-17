@@ -74,7 +74,7 @@
                   <span >About stellar</span>
                 </div>
                 <div id="hwItWorks" class="priceRange">
-                  <span >How it works</span>
+                  <span >Program Structure</span>
                 </div>
                 <div id="benefitsLevel" class="priceRange">
                   <span >Benefits levels</span>
@@ -101,7 +101,7 @@
 	
           <div class="aboutContent">
             <p id="about">At HealthKart, we would like to give you more of what you enjoy and redeem to grab your favorite product from our Stellar Store. In fact, we are not shy to confess that this is the most fun part of our job, obviously next to seeing your happy experience while checking out!</p>
-            <p>Here’s how it works- you’ll earn ‘A’ Loyalty Points every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
+            <p>Here’s how it works- you’ll earn certain Loyalty points (depending upon your tier) every time you shop at our site. As you collect more points, you move up to bigger benefits. HealthKart Stellar features four reward levels namely (in ascending order)</p>
             <p class="embedMargin5">-${bronze.badgeName}</p>
             <p class="embedMargin5">-${silver.badgeName}</p>
             <p class="embedMargin5">-${gold.badgeName}</p>
@@ -109,14 +109,21 @@
 
             <p>It is easy to opt-in. Register. Log in. Shop! Stack up Loyalty Points and unlock some very exciting rewards, indeed.</p>
 
-            <h1 id="howItWorks" class="embedMarginTop50">HOW IT WORKS</h1>
-
-            <p>Depending upon your order history of first or last 12 months, you will be assigned a particular level, that is, either Bronze or Silver or Gold or Platinum, and will be credited with 15 Loyalty Points as bonus.</p>
-            <p>On every purchase,</p>
-	        <p class="embedMargin5">For Bronze level, you get ${bronze.loyaltyPercentage} Loyalty Point for every rupee you spend.</p>
-            <p class="embedMargin5">For Silver level, you are awarded ${silver.loyaltyPercentage} Loyalty Points for every rupee you spend.</p>
-            <p class="embedMargin5">For Gold level, you are awarded ${gold.loyaltyPercentage} Loyalty Points for every rupee you spend.</p>
-            <p class="embedMargin5">For Platinum level, you are awarded ${platinum.loyaltyPercentage} Loyalty Points for every rupee you spend.</p>
+            <h1 id="howItWorks" class="embedMarginTop50">PROGRAM STRUCTURE</h1>
+				
+			<p class="embedMarginTop40">•	For existing HealthKart customers</p>
+			<p>After signing up for healthkartstellar, depending upon your order history of last 12 months, you will be assigned a particular benefit tier,
+			 that is, either Bronze or Silver or Gold or Platinum (or none of the above). To show our profuse love you will begin with 15 points as bonus!</p>
+			 
+            <p class="embedMargin5">•	New HealthKart customers</p>
+			<p>For all newbies, once you sign up to our loyalty program, you will be entered into a basic level. To be a part of our privileged group, 
+			shop more than Rs. 1500 or above. At the beginning, as a token of appreciation you will be credited with 15 bonus points</p>
+			
+	        <p>On every purchase, you will earn loyalty points as follows:</p>
+	        <p class="embedMargin5">For ${bronze.badgeName} level, you will earn ${bronze.loyaltyPercentage}% of total amount you spend while shopping. </p>
+            <p class="embedMargin5">For ${silver.badgeName} level, you will earn ${silver.loyaltyPercentage}% of total amount you spend while shopping. </p>
+            <p class="embedMargin5">For ${gold.badgeName} level, you will earn ${gold.loyaltyPercentage}% of total amount you spend while shopping. </p>
+            <p class="embedMargin5">For ${platinum.badgeName} level, you will earn ${platinum.loyaltyPercentage}% of total amount you spend while shopping. </p>
 
             <h1 id="benefits" class="embedMarginTop50">BENEFIT LEVELS</h1>
 
@@ -131,19 +138,27 @@
               </div>
 
               <div class="normalRowWithBorderBottom">
-                <div class="headRowValue"><div class="rowValue">POINTS EARNED PER RUPEE SPENT</div></div>
-                <div class="headRowValue"><div class="rowValue">${bronze.loyaltyPercentage/100}</div></div>
-                <div class="headRowValue"><div class="rowValue">${silver.loyaltyPercentage/100}</div></div>
-                <div class="headRowValue"><div class="rowValue">${gold.loyaltyPercentage/100}</div></div>
-                <div class="headRowValue"><div class="rowValue">${platinum.loyaltyPercentage/100}</div></div>
+                <div class="headRowValue"><div class="rowValue">TIER</div></div>
+                <div class="headRowValue"><div class="rowValue">${bronze.badgeName}</div></div>
+                <div class="headRowValue"><div class="rowValue">${silver.badgeName}</div></div>
+                <div class="headRowValue"><div class="rowValue">${gold.badgeName}</div></div>
+                <div class="headRowValue"><div class="rowValue">${platinum.badgeName}</div></div>
               </div>
 
               <div class="normalRowWithBorderBottom">
-                <div class="headRowValue"><div class="rowValue">FREE NUTRITIONAL COUNSELLING SESSIONS</div></div>
-                <div class="headRowValue"><div class="rowValue">1 Session worth Rs.1000</div></div>
-                <div class="headRowValue"><div class="rowValue">1 Session worth Rs.2000 per 6 months</div></div>
-                <div class="headRowValue"><div class="rowValue">1 Session worth Rs.4000 per 3 months</div></div>
-                <div class="headRowValue"><div class="rowValue">1 Session worth Rs.5000 per 2 months</div></div>
+                <div class="headRowValue"><div class="rowValue">PECENTAGE EARNED ON TOTAL AMOUNT SPENT</div></div>
+                <div class="headRowValue"><div class="rowValue">${bronze.loyaltyPercentage}%</div></div>
+                <div class="headRowValue"><div class="rowValue">${silver.loyaltyPercentage}%</div></div>
+                <div class="headRowValue"><div class="rowValue">${gold.loyaltyPercentage}%</div></div>
+                <div class="headRowValue"><div class="rowValue">${platinum.loyaltyPercentage}%</div></div>
+              </div>
+
+              <div class="normalRowWithBorderBottom">
+                <div class="headRowValue"><div class="rowValue">FREE NUTRITIONAL COUNSELLING SESSIONS PER ANNUM</div></div>
+                <div class="headRowValue"><div class="rowValue">1 Sessions </div></div>
+                <div class="headRowValue"><div class="rowValue">2 Sessions </div></div>
+                <div class="headRowValue"><div class="rowValue">3 Sessions </div></div>
+                <div class="headRowValue"><div class="rowValue">4 Sessions </div></div>
               </div>
 
               <div class="normalRowWithBorderBottom">
@@ -154,15 +169,7 @@
                 <div class="headRowValue"><div class="rowValue">Applicable</div></div>
               </div>
 
-              <div class="normalRowWithBorderBottom removeBorderBottom">
-                <div class="headRowValue"><div class="rowValue">MOVE UP THE SERVICE QUEUE</div></div>
-                <div class="headRowValue"><div class="rowValue">Yes</div></div>
-                <div class="headRowValue"><div class="rowValue">Yes</div></div>
-                <div class="headRowValue"><div class="rowValue">Yes</div></div>
-                <div class="headRowValue"><div class="rowValue">Yes</div></div>
-              </div>
-            </div>
-            <!-- Table Ends -->
+            </div>            <!-- Table Ends -->
 
             <h1 id="faq" class="faq">FAQs <span>(Inquiring and loyal minds want to know)</span></h1>
             <h2 class="genQues">GENERAL QUESTIONS ABOUT THE PROGRAM</h2>
