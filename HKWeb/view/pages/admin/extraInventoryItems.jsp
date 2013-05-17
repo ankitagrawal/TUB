@@ -508,7 +508,7 @@ $(document).ready(function () {
                         <c:set var="bool" value="1"/>
                     </c:if>
                     <c:if test="${eInLineItems.extraInventoryLineItemType!=null && eInLineItems.extraInventoryLineItemType.name == 'Short'}">
-                        ${eInLineItems.id}(SHORT)
+                        ${eInLineItems.id}<label style="color: red">(SHORT)</label>
                         <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType"
                                   value="${eInLineItems.extraInventoryLineItemType}"/>
                         <c:set var="bool" value="1"/>
