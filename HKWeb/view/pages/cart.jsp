@@ -353,7 +353,7 @@
     </div>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
-        ${cartLineItem.productVariant.product.name}
+        <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
       <table style="display: inline-block; font-size: 11px;">
         <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -527,7 +527,7 @@
     </div>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;">
-        ${cartLineItem.comboInstance.combo.name}<br/>
+        <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
       <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
             ${comboVariant.qty} x
