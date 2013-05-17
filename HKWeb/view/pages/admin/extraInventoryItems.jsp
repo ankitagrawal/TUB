@@ -490,7 +490,6 @@ $(document).ready(function () {
     <tbody id="poTable">
     <c:if test="${extraInventory.extraInventoryLineItems!=null}">
         <c:forEach items="${extraInventory.extraInventoryLineItems}" var="eInLineItems" varStatus="ctr">
-        <s:hidden name="extraInventoryLineItems[${ctr.index}].purchaseInvoices" value="${eInLineItems.purchaseInvoices}" />
         <s:hidden name="extraInventoryLineItems[${ctr.index}].extraInventoryLineItemType.id" value="${eInLineItems.extraInventoryLineItemType.id}" />
             <tr count="${ctr.index}" class="${ctr.last ? 'lastRow lineItemRow':'lineItemRow'}">
                 <td>${ctr.index+1}.</td>
@@ -625,10 +624,15 @@ $(document).ready(function () {
                 <input type="hidden" value="finance"
 					       class="taxIdentifier"/>
 				<c:choose>
-                        <c:when test="${eInLineItems.grnCreated or eInLineItems.rtvCreated }">
-                            ${eInLineItems.tax.name}
-                            <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
+                        <c:when test="${(eInLineItems.grnCreated or eInLineItems.rtvCreated) && extraInventory.sameState}">
+                        ${eInLineItems.tax.name}
+                        <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
                                    readonly="readonly" value="${eInLineItems.tax.id}"/>
+                        </c:when>
+                        <c:when test="${(eInLineItems.grnCreated or eInLineItems.rtvCreated) && !extraInventory.sameState}">
+                         ${eInLineItems.surcharge.value}
+                        <input type="hidden" name="extraInventoryLineItems[${ctr.index}].surcharge"
+                                   readonly="readonly" value="${eInLineItems.surcharge.id}"/>
                         </c:when>
 					   <c:otherwise>    
                     <c:choose>                        
