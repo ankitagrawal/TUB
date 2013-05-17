@@ -41,7 +41,7 @@
             <c:if test="${topMenuNode.name != 'Baby'}">
             <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>
             </c:if>
-          </c:forEach>
+          </c:forEach>           
         </ul>
       </div>
       <div class='column'>
@@ -73,9 +73,13 @@
             <h5>
                 Misc
             </h5>
-            <ul>
-                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
-            </ul>
+          <ul>
+            <li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
+                        event="pre">Subscriptions </s:link></li>
+            <li>
+              <a href="${pageContext.request.contextPath}/super-savers"><span class="txt-white">Super Savers</span></a>
+            </li>
+          </ul>
         </div>
       <div style="float:right;">
         <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
