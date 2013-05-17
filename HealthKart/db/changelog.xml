@@ -12737,4 +12737,123 @@
             </column>
         </addColumn>
     </changeSet>
+    
+        <changeSet author="DeepakC" id="20133001-01">
+		<createTable tableName="loyalty_product">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="variant_id" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-02">
+		<addForeignKeyConstraint constraintName="fk_loyalty_product_variant"
+			baseTableName="loyalty_product" baseColumnNames="variant_id"
+			referencedTableName="product_variant" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-03">
+		<createTable tableName="user_order_karma_profile">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="order_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="creation_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="update_time" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
+			<column name="transaction_type" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="points" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-04">
+		<addForeignKeyConstraint constraintName="fk_ukarma_order"
+			baseTableName="user_order_karma_profile" baseColumnNames="order_id"
+			referencedTableName="base_order" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-05">
+		<addForeignKeyConstraint constraintName="fk_ukarma_user"
+			baseTableName="user_order_karma_profile" baseColumnNames="user_id"
+			referencedTableName="user" referencedColumnNames="id" />
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-06">
+		<insert tableName="store">
+			<column name="id" value="4"/>
+			<column name="name" value="LOYALTYPG"/>
+			<column name="prefix" value="LP"/>
+		</insert>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-07">
+		<addColumn tableName="badge">
+			<column name="loyalty_percentage" type="DOUBLE">
+				<constraints nullable="false" />
+			</column>
+			<column name="icon_rel_url" type="VARCHAR(32)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<modifyDataType tableName="badge" columnName="min_score" newDataType="DOUBLE"/>
+		<modifyDataType tableName="badge" columnName="max_score" newDataType="DOUBLE"/>
+	</changeSet>
+	<changeSet author="DeepakC" id="20133001-08">
+		<sql>
+			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
+			('NORMAL', 0, 1500, 0.0),
+			('BRONZE', 1501, 3000, 1.0),
+			('SILVER', 3001, 6000, 1.5),
+			('GOLD', 6001, 12000, 1.75),
+			('PLATINUM', 12001, -1, 2.0);
+		</sql>
+	</changeSet>
+    <changeSet author="DeepakC" id="20133001-09">
+		<insert tableName="reward_point_mode">
+			<column name="id" value="80"/>
+			<column name="name" value="HK Loyalty Points"/>
+		</insert>
+	</changeSet>
+	 <changeSet author="DeepakC" id="20133001-10">
+		<insert tableName="role">
+			<column name="name" value="HK_LOYALTY_USER"/>
+		</insert>
+	</changeSet>
+	    <changeSet author="DeepakC" id="20133001-11">
+		<createTable tableName="user_badge_info">
+			<column autoIncrement="true" name="id" type="INT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="user_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="badge_id" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="creation_time" type="DATETIME">
+				<constraints nullable="true" />
+			</column>
+			<column name="updation_time" type="DATETIME">
+				<constraints nullable="true" />
+			</column>
+			<column name="card_number" type="VARCHAR(25)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>

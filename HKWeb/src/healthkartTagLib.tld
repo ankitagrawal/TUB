@@ -1177,5 +1177,41 @@
             ${hk:getStateFromTin(${o1})}
         </example>
     </function>
+    	<function>
+        <description>
+            returns loyalty karma points for a user
+        </description>
+        <name>getLoyaltyKarmaPointsForUser</name>
+        <function-class>com.hk.taglibs.Functions</function-class>                                
+        <function-signature>double getLoyaltyKarmaPointsForUser(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getLoyaltyKarmaPointsForUser(${userId})}
+        </example>
+    </function>
+	<function>
+        <description>
+            returns loyalty karma points for a user
+
+        </description>
+        <name>getBadgeInfoForUser</name>
+
+        <function-class>com.hk.taglibs.Functions</function-class>                                
+        <function-signature>com.hk.domain.loyaltypg.Badge getBadgeInfoForUser(java.lang.Long))</function-signature>
+        <example>
+            ${hk:getBadgeInfoForUser(${userId})}
+
+        </example>
+	</function>
+	<function>
+        <description>
+            returns rounded number for display on jsp page
+        </description>
+        <name>roundNumberForDisplay</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.lang.String roundNumberForDisplay(double))</function-signature>
+        <example>
+            ${hk:round(${number})}
+        </example>
+    </function>
 
 </taglib>

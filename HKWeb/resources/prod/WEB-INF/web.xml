@@ -119,7 +119,7 @@
         </init-param>
         <init-param>
             <param-name>SSL.Enabled</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
         <init-param>
             <param-name>SSL.SecureHost</param-name>

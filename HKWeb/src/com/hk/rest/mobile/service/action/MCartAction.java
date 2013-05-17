@@ -44,6 +44,7 @@ import com.hk.domain.coupon.Coupon;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
@@ -139,7 +140,7 @@ public class MCartAction extends MBaseAction{
             order = orderManager.getOrCreateOrder(user);
 
             
-            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findCart(user, EnumStore.HEALTHKART.asStore());
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
@@ -252,7 +253,7 @@ public class MCartAction extends MBaseAction{
             user = getUserService().getUserById(((Principal) SecurityUtils.getSubject().getPrincipal()).getId());
         }
         if (user != null) {
-            order = orderService.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findCart(user, EnumStore.HEALTHKART.asStore());
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {
