@@ -36,7 +36,7 @@
         <div class="inputFields">
           <div>Date of Birth</div>
           <div class="welcomeInput noPadding">
-          <s:text size="12" id="inputField" class="welcomeSelect" name="dob" placeholder="yyyy-mm-dd" />
+          <s:text size="12" id="inputField" class="welcomeSelect" name="dob" placeholder="yyyy-mm-dd" autocomplete="off"/>
         	</div>
         </div>
 		<div>By joining stellar program you agree to the

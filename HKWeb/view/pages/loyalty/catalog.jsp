@@ -76,7 +76,16 @@ pageContext.setAttribute("isSecure", isSecure);
 			   <span  id= "categoryNameSpan" class="font-small">
                   <s:link beanclass="com.hk.web.action.core.loyaltypg.LoyaltyCatalogAction" event="listProductsByCategory" >
                   <s:param name="categoryName" value="${loyaltyCategory.name}"/>
-                  ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} ) </s:link></span>
+                    <c:choose>
+                      <c:when test="${lca.categoryName == loyaltyCategory.name}">
+                        <strong>
+                            ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )</strong>
+                      </c:when>
+                      <c:otherwise>
+                        ${loyaltyCategory.displayName} ( ${loyaltyCategory.prodCount} )
+                      </c:otherwise>
+                    </c:choose>
+                   </s:link></span>
 			     </div>
 			 </c:forEach>
 			</div>

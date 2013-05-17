@@ -85,7 +85,7 @@
         
 		<div id="logo" class="grid_6">
             <div class="logo-block">
-              <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target='_blank'>healthkart</s:link></span>
+              <p class="hkpolicy"><span> <s:link href="/" title='go to healthkart home' target='_blank'>Go back to <strong>HealthKart.com</strong></s:link></span>
 			  </p>
               <div class="logoSubblock">
 			  <a title="go to stellar home" href="${pageContext.request.contextPath}/loyaltypg">
