@@ -1,7 +1,9 @@
 package com.hk.web.action.admin.courier;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.engine.ShipmentPricingEngine;
 import com.hk.admin.pact.service.courier.AwbService;
+import com.hk.admin.pact.service.courier.CourierGroupService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -54,6 +56,10 @@ import java.util.List;
     AwbService awbService;
     @Autowired
     ShippingOrderStatusService shippingOrderStatusService;
+    @Autowired
+    CourierGroupService courierGroupService;
+    @Autowired
+    private ShipmentPricingEngine shipmentPricingEngine;
 
     @DontValidate
     @DefaultHandler
@@ -112,6 +118,11 @@ import java.util.List;
             shipmentService.save(shipment);
             if (!shippingOrder.isDropShipping()) {
                 shippingOrder.setOrderStatus(shippingOrderStatusService.find(EnumShippingOrderStatus.SO_Packed));
+            }
+            if (courierGroupService.getCourierGroup(shipment.getAwb().getCourier()) != null) {
+                shipment.setEstmShipmentCharge(shipmentPricingEngine.calculateShipmentCost(shippingOrder));
+                shipment.setEstmCollectionCharge(shipmentPricingEngine.calculateReconciliationCost(shippingOrder));
+                shipment.setExtraCharge(shipmentPricingEngine.calculatePackagingCost(shippingOrder));
             }
             shippingOrderService.save(shippingOrder);
             shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Packed, null, shipment.getAwb().toString());

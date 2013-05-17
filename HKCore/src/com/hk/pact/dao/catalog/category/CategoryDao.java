@@ -20,6 +20,8 @@ public interface CategoryDao extends BaseDao {
 
     public Category getCategoryByName(String name);
 
+    public List<Category> getCategoryByNames(List<String> name);
+
     public List<Category> getPrimaryCategories();
 
     public List<ProductOptionDto> getProductOptions(String primaryCategory, List<String> categoryNames, List<Long> filterOptions, int groupsCount, Double minPrice, Double maxPrice);
