@@ -105,11 +105,12 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
 
-
+    @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
-        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        if(!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
+     /*   loggedOnUser = getUserService().getUserById(getPrincipal().getId());*/
+        loggedOnUser = getPrincipalUser();
+        if(loggedOnUser != null && !loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)){
             hub = hubService.getHubForUser(loggedOnUser);
         }
         runsheetPage = runsheetService.searchRunsheet(runsheet, startDate, endDate, runsheetStatus, agent, hub, getPageNo(), getPerPage());

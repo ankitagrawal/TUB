@@ -173,8 +173,10 @@ public class HKDConsignmentAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.EDIT_NDR,PermissionConstants.VIEW_NDR}, authActionBean = AdminPermissionAction.class)
     public Resolution viewNdr() {
-        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-        ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
+        loggedOnUser = getPrincipalUser();
+        if(loggedOnUser != null){
+            ndrDtoList = consignmentService.getNdrByOwner(loggedOnUser);
+        }
         return new ForwardResolution("/pages/admin/ndrReport.jsp");
     }
 
