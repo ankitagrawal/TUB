@@ -52,7 +52,6 @@ import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.combo.SuperSaverImageService;
 import com.hk.pact.service.image.ProductImageService;
 import com.hk.pact.service.subscription.SubscriptionProductService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.action.core.search.SearchAction;
 import com.hk.web.filter.WebContext;
@@ -171,7 +170,7 @@ public class ProductAction extends BaseAction {
             product.setRelatedProducts(relatedProducts);
         }
         for (Product product : relatedProducts) {
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+            product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.relatedProductsPage.getId()));
         }
         if (product.isProductHaveColorOptions()) {
             Integer outOfStockOrDeletedCtr = 0;
@@ -232,7 +231,7 @@ public class ProductAction extends BaseAction {
             if (getProductService().isComboInStock(relatedCombo)) {
                 relatedCombos.add(relatedCombo);
                 relatedCombo.setProductURL(linkManager.getRelativeProductURL(relatedCombo,
-                        ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                        EnumProductReferrer.relatedProductsPage.getId()));
                 if (relatedCombos.size() == 6) {
                     break;
                 }

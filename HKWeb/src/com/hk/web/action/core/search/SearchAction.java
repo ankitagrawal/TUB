@@ -23,11 +23,10 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.action.core.catalog.product.ProductAction;
 
 @UrlBinding("/search")
@@ -79,7 +78,7 @@ public class SearchAction extends BasePaginatedAction {
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
 				}
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
@@ -87,7 +86,7 @@ public class SearchAction extends BasePaginatedAction {
 				productPage = productDao.getProductByName(query,onlyCOD, includeCombo, getPageNo(), getPerPage());
 				productList = productPage.getList();
 				for (Product product : productList) {
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
 				}
 			}
 		}

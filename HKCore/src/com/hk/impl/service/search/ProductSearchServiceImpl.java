@@ -2,8 +2,8 @@ package com.hk.impl.service.search;
 
 import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.*;
@@ -15,7 +15,6 @@ import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -304,7 +303,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             products = productService.getAllProductsById(productIds);
             sortedProducts = new ArrayList<Product>(products);
             for (Product product : products) {
-                product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+                product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
                 int index = solrProductIndexMap.get(product.getId());
                 sortedProducts.set(index, product);
             }
