@@ -240,7 +240,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			profile.setStatus(KarmaPointStatus.APPROVED);
 			this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 		}
-		this.updateUserBadgeInfo(profile.getUser());
+		this.updateUserBadgeInfo(order.getUser());
 	}
 
 	@Override
@@ -325,7 +325,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 			profile.setStatus(KarmaPointStatus.CANCELED);
 			this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 		}
-		this.updateUserBadgeInfo(profile.getUser());
+		this.updateUserBadgeInfo(order.getUser());
 	}
 
 	@Override
