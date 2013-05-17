@@ -290,6 +290,14 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 
 				} else {
 					extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(extraInventoryLineItem.getId());
+					if (extraInventoryLineItem.getPurchaseInvoices() != null
+							&& extraInventoryLineItem.getPurchaseInvoices().size() > 0) {
+						for (PurchaseInvoice pi : extraInventoryLineItem.getPurchaseInvoices()) {
+							pi.setShortAmount(pi.getShortAmount()-extraInventoryLineItem.getPayableAmount());
+							pi.setPiRtvShortTotal(pi.getPiRtvShortTotal()-extraInventoryLineItem.getPayableAmount());
+							purchaseInvoiceService.save(pi);
+						}
+					}
 					getExtraInventoryLineItemService().delete(extraInventoryLineItem);
 				}
 			}
@@ -303,6 +311,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	public Resolution createRtv() {
 		extraInventory = getExtraInventoryService().getExtraInventoryById(extraInventoryId);
 		List<ExtraInventoryLineItem> extraLineItems = new ArrayList<ExtraInventoryLineItem>();
+		Double rtvamount = 0.0;
 		for (ExtraInventoryLineItem extraInventoryLineItem : extraInventoryLineItemsSelected) {
 			if (extraInventoryLineItem != null) {
 				extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(
@@ -314,11 +323,9 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 						extraInventoryLineItem.setExtraInventoryLineItemType(lineItemType
 								.asEnumExtraInventoryLineItemType());
 					}
-				} else {
-					extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Short
-							.asEnumExtraInventoryLineItemType());
-				}
+				} 
 				extraInventoryLineItem.setRtvCreated(true);
+				rtvamount+=extraInventoryLineItem.getPayableAmount();
 				extraInventoryLineItem.setExtraInventoryLineItemType(EnumExtraInventoryLineItemType.Normal
 						.asEnumExtraInventoryLineItemType());
 				extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
@@ -364,22 +371,12 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			rtvNoteLineItems.addAll(rtvNoteLineItems1);
 		}
 		if (rtvNote != null) {
-			Double rtvAmount = 0.0;
-			List<ExtraInventoryLineItem> eiLi = getExtraInventoryLineItemService()
-					.getExtraInventoryLineItemsByExtraInventoryId(extraInventory.getId());
-			if (eiLi != null && eiLi.size() > 0) {
-				for (ExtraInventoryLineItem lineItem : eiLi) {
-					if (lineItem.isRtvCreated() != null && lineItem.isRtvCreated()) {
-						rtvAmount += lineItem.getPayableAmount();
-					}
-				}
-			}
 			if (rtvNote.getPurchaseInvoices() != null && rtvNote.getPurchaseInvoices().size() > 0) {
 				for (PurchaseInvoice pi : rtvNote.getPurchaseInvoices()) {
-					pi.setRtvAmount(rtvAmount);
-					pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount() + rtvAmount);
+					pi.setRtvAmount(pi.getRtvAmount()+rtvamount);
+					pi.setPiRtvShortTotal(pi.getFinalPayableAmount() + pi.getShortAmount()+pi.getRtvAmount()+rtvamount);
 					purchaseInvoiceService.save(pi);
-				}
+					}
 			}
 		}
 		noCache();
