@@ -21,9 +21,9 @@ public interface AwbService {
 
     public Awb find(Long id);
 
-    public Awb findByCourierAwbNumber(Courier courier ,String awbNumber);
+    public Awb findByCourierAwbNumber(Courier courier, String awbNumber);
 
-		public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber);
+    public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber);
 
     public List<Awb> getAvailableAwbListForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod, AwbStatus awbStatus);
 
@@ -31,10 +31,11 @@ public interface AwbService {
 
     public List<Awb> getAllAwb();
 
-    public List<Awb> getAlreadyPresentAwb(Courier courier,List<String> awbNumberList);
-    
+    public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList);
+
     /**
      * This method should be used for third party courier integrations, please re-factor getAvailableAwbListForCourierByWarehouseCodStatus for simplification when you get time.
+     *
      * @param shippingOrder
      * @param weightInKg
      * @return
@@ -49,13 +50,13 @@ public interface AwbService {
 
     public void delete(Awb awb);
 
-	public Awb save(Awb awb, Integer newStatus);
+    public Awb save(Awb awb, Integer newStatus);
 
-    public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
+    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod);
 
-	public void refresh(Awb awb);
+    public void refresh(Awb awb);
 
-    boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod);
+    public Awb isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod);
 
-    
+
 }

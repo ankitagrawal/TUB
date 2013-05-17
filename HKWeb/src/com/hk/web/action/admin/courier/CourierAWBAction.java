@@ -183,9 +183,9 @@ public class CourierAWBAction extends BaseAction {
             awbListFromExcel = xslAwbParser.readAwbExcel(excelFile);
             if (awbListFromExcel != null && awbListFromExcel.size() > 0) {
                 for (Awb awb : awbListFromExcel) {
-                    boolean delete = awbService.isAwbEligibleForDeletion(awb.getCourier(), awb.getAwbNumber(), awb.getWarehouse(), awb.getCod());
-                    if (delete) {
-                        awbListToBeDeleted.add(awb);
+                   Awb awbFromDb = awbService.isAwbEligibleForDeletion(awb.getCourier(), awb.getAwbNumber(), awb.getWarehouse(), awb.getCod());
+                    if (awbFromDb != null) {
+                        awbListToBeDeleted.add(awbFromDb);
                     } else {
                         wrongEntriesInExcel.add(awb);
                     }

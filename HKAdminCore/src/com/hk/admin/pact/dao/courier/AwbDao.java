@@ -22,6 +22,6 @@ public interface AwbDao extends BaseDao {
 
     public Awb save(Awb awb, Integer newStatus);
 
-    public boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod);
+    public Awb isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod);
 
 }

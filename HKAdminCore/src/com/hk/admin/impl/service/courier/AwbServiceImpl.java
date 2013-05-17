@@ -125,7 +125,7 @@ public class AwbServiceImpl implements AwbService {
         awbDao.refresh(awb);
     }
 
-    public boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
+    public Awb isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
         return awbDao.isAwbEligibleForDeletion(courier, awbNumber, warehouse, cod);
     }
 

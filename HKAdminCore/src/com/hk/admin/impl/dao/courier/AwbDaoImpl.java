@@ -101,7 +101,7 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         return null;
     }
 
-    public boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
+    public Awb isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
         List<AwbStatus> awbStatusList = Arrays.asList(EnumAwbStatus.Unused.getAsAwbStatus(), EnumAwbStatus.Used.getAsAwbStatus());
         String query = "from Awb a where a.awbNumber = :awbNumber and   a.courier.id = :courierId and a.cod = :cod and a.awbStatus in (:awbList) and a.warehouse.id = :warehouseId";
         Awb awbFromDb = (Awb) getSession().createQuery(query).setParameterList("awbList", awbStatusList).setParameter("courierId", courier.getId()).setParameter("cod", cod).
@@ -110,10 +110,10 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
             String shipmentQuery = " select  s.awb from Shipment s where s.awb.id = :awbId";
             List<Awb> awbList = getSession().createQuery(shipmentQuery).setParameter("awbId", awbFromDb.getId()).list();
             if (awbList == null || awbList.size() == 0) {
-                return true;
+                return awbFromDb;
             }
         }
-        return false;
+        return null;
     }
 
 }
