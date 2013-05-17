@@ -128,7 +128,7 @@
     <c:if test="${hk:collectionContains(topCategoryNameList, 'parenting')}">
         <%--<jsp:include page="/categoryBanners/holiBanner.jsp"/>--%>
         <%--<jsp:include page="/categoryBanners/sportsDiscount.jsp"/>--%>
-        <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>
+       <%-- <jsp:include page="/categoryBanners/parentingDiscount.jsp"/>--%>
     </c:if>
 
     <%--<c:if test="${hk:collectionContains(categoryNameList, 'Soulflower')}">--%>
