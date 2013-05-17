@@ -1,22 +1,5 @@
 package com.hk.impl.service.order;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.akube.framework.dao.Page;
 import com.hk.cache.CategoryCache;
 import com.hk.comparator.BasketCategory;
@@ -33,6 +16,7 @@ import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.OrderSplitterFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.core.OrderStatus;
@@ -76,6 +60,16 @@ import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -106,9 +100,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderStatusService orderStatusService;
     @Autowired
     private RewardPointService rewardPointService;
-
-
-
     @Autowired
     private OrderLoggingService orderLoggingService;
     @Autowired
@@ -117,7 +108,6 @@ public class OrderServiceImpl implements OrderService {
     private ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     LineItemDao lineItemDao;
-
     @Autowired
     ShipmentService shipmentService;
     @Autowired
@@ -125,12 +115,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     SubscriptionService subscriptionService;
 
-	/*
-     * @Value("#{hkEnvProps['" + Keys.Env.codMinAmount + "']}") private Double codMinAmount;
-     */
-
-    // @Value("#{hkEnvProps['codMaxAmount']}")
-    // private Double codMaxAmount;
     @Override
 	@Transactional
     public Order save(Order order) {
@@ -165,11 +149,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
 	public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus) {
         return this.getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
-    }
-
-    @Override
-	public Long getCountOfOrdersWithStatus() {
-        return this.getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
     }
 
     /**
@@ -229,8 +208,7 @@ public class OrderServiceImpl implements OrderService {
              }
         }
         order.setTargetDispatchDate(maxSOTargetDispatchDate);
-
-		//todo set target delivery date
+//        Date orderTargetDeliveryDate = HKDateUtil.addToDate(maxSOTargetDispatchDate, Calendar.DAY_OF_MONTH, 3);
         order.setTargetDelDate(maxSOTargetDispatchDate);
         this.getOrderDao().save(order);
     }
@@ -317,17 +295,6 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories;
     }
 
-    @Override
-	public Category getBasketCategory(ShippingOrder shippingOrder) {
-        Set<ShippingOrderCategory> shippingOrderCategories = this.getCategoriesForShippingOrder(shippingOrder);
-
-        for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
-            if (shippingOrderCategory.isPrimary()) {
-                return shippingOrderCategory.getCategory();
-            }
-        }
-        return shippingOrderCategories.iterator().next().getCategory();
-    }
 
     @Override
 	public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories) {
@@ -381,12 +348,6 @@ public class OrderServiceImpl implements OrderService {
          */
 
         return shouldUpdate;
-    }
-
-	@Override
-	public void processOrderForAutoEsclationAfterPaymentConfirmed(Order order) {
-        this.subscriptionService.placeSubscriptions(order);
-        this.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
     }
 
     @Override
@@ -456,9 +417,8 @@ public class OrderServiceImpl implements OrderService {
      * @throws OrderSplitException
      */
 
-    @Override
-	@Transactional
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+    @Transactional
+    private Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {
@@ -698,19 +658,6 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-  
-
-    @Override
-	public boolean isShippingOrderExists(Order order) {
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            if (this.lineItemDao.getLineItem(cartLineItem) != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return this.shippingOrderStatusService;
     }
@@ -774,19 +721,27 @@ public class OrderServiceImpl implements OrderService {
             // auto escalate shipping orders if possible
             if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
                 for (ShippingOrder shippingOrder : shippingOrders) {
-                    this.shippingOrderService.autoEscalateShippingOrder(shippingOrder);
+                    this.getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
                 }
             }
 
             for (ShippingOrder shippingOrder : shippingOrders) {
                 Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
+
+                //auto allocate buckets, based on business use case
+                if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+                    this.bucketService.autoCreateUpdateActionItem(shippingOrder);
+                } else {
+                    this.bucketService.popFromActionQueue(shippingOrder);
+                }
+
                 this.getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
             }
 
+            this.subscriptionService.placeSubscriptions(order);
             this.setTargetDatesOnBO(order);
             shippingOrderAlreadyExists = true;
         }
-
 
         // Check Inventory health of order lineItems
         for (CartLineItem cartLineItem : productCartLineItems) {
@@ -819,7 +774,7 @@ public class OrderServiceImpl implements OrderService {
 	public List<UserCodCall> getAllUserCodCallForToday(){
 	return 	this.orderDao.getAllUserCodCallOfToday();
 	}
-
+	
 	@Override
 	public Order findCart(User user, Store store) {
 		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
@@ -834,4 +789,5 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return null;
 	}
+
 }
