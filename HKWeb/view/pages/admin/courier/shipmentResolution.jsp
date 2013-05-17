@@ -49,7 +49,7 @@
             });
             $('#saveawb').click(function(){
                 var status = $('#status').val();
-                var reasoning = $('#reasoning1').val();
+                var reasoning = $('#awbReasoning').val();
                 var awbBarvalue=  $('#awbNumber').val();
                 if(status == "" || reasoning == "" || awbBarvalue == ""){
                    alert("Please Enter all Values");
@@ -163,7 +163,7 @@
                <s:select name="reasoning" id="reasoning">
                    <s:option value="">-------Select-------</s:option>
                    <c:forEach items="${hk:getReasonsByType('Courier Change Reason')}" var="courierReason" >
-                       <s:option value="${courierReason.id}">${courierReason.classification.primary}</s:option>
+                       <s:option value="${courierReason.id}">${courierReason.classification.secondary}</s:option>
                    </c:forEach>
                 </s:select>
                <br><br>
@@ -194,7 +194,7 @@
                          <s:select name="awbReasoning" id="awbReasoning">
                              <s:option value="">-------Select-------</s:option>
                              <c:forEach items="${hk:getReasonsByType('Awb Change Reason')}" var="awbReason">
-                                 <s:option value="${awbReason.id}"> ${awbReason.classification.primary}</s:option>
+                                 <s:option value="${awbReason.id}"> ${awbReason.classification.secondary}</s:option>
                              </c:forEach>
                          </s:select>
                          <br><br>

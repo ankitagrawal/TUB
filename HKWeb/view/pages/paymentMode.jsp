@@ -37,26 +37,46 @@
             src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
 </s:layout-component>
 <s:layout-component name="steps">
-    <div class='steps'><s:link
+    <div class='logoBox' style="z-index: 50;float:left;top: 50px; left: 12px;position: relative;">
+        <s:link href="/" title='go to healthkart home'>
+            <img src='<hk:vhostImage/>/images/logo.png' alt="healthkart logo"/>
+        </s:link>
+    </div>
+    <div class='steps_new'>
+        <hr noshade class="stepLine">
+        <s:link
             beanclass="com.hk.web.action.core.user.SelectAddressAction"
             style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step1">
-            <h2>Step 1</h2>
+        <div class='newStep' id="step1">
+            <div class="newStepCount">1</div>
 
-            <div class='small'>Select shipping address</div>
+            <div class='newStepText'>
+                Select A shipping address
+            </div>
         </div>
     </s:link> <s:link beanclass="com.hk.web.action.core.order.OrderSummaryAction"
                       style="margin-top: 0; margin-bottom: 0;">
-        <div class='step prev_step' id="step2">
-            <h2>Step 2</h2>
+        <div class='newStep ' id="step2">
+            <div class="newStepCount">2</div>
 
-            <div class='small'>Confirm your order</div>
+            <div class='newStepText'>
+                Confirm your order
+            </div>
         </div>
     </s:link>
-        <div class='step current_step'>
-            <h2>Step 3</h2>
+        <div class='newStep '>
+            <div class="newStepCount current_step">3</div>
 
-            <div class='small'>Choose Payment Method</div>
+            <div class='newStepText'>
+                Choose Payment Method
+            </div>
+        </div>
+        <div class='newStep' style="margin-left: 28px;">
+            <div class="newStepCount">4</div>
+
+            <div class='newStepText'>
+                Completed !
+            </div>
         </div>
     </div>
 </s:layout-component>
@@ -68,11 +88,19 @@
         page="/includes/checkoutNotice.jsp"/>
 
 <div class='pre'>
-    <h4>Your total billable amount is <strong class='num'> <fmt:formatNumber
-            value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
-            currencySymbol="Rs "/> </strong></h4>
+            <div id="CODOption" style="display: none;">
+                <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber
+                        value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}" type="currency"
+                        currencySymbol="Rs "/> </strong></h4>
+            </div>
+
+            <div id="nonCODOption">
+                <h4>Your total billable amount is <strong class='num arialBold'> <fmt:formatNumber
+                        value="${orderSummary.pricingDto.grandTotalPayable}" type="currency"
+                        currencySymbol="Rs "/> </strong></h4>
+            </div>
     <h6>If you have any trouble during the payment process, call our
-        helpline number <strong class='red'> 0124 - 4616444 </strong></h6>
+        helpline number <strong class='arialBlackBold'> 0124 - 4616444 </strong></h6>
 </div>
 
 <div class="alert messages" style="font-size: 14px; color: red">
@@ -145,7 +173,7 @@
     </c:forEach>
     </table>
     <div style="float: right; width: 90%;"><s:submit
-            name="proceed" value="Make Payment >" class="button makePayment"
+            name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
             disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
     </div>
 </s:form></div>
@@ -173,7 +201,7 @@
             </div>
         </div>
         <div style="float: right; width: 90%;"><s:submit
-                name="proceed" value="Make Payment >" class="button makePayment"
+                name="proceed" value="Make Payment" class="button makePayment signUpButtonNew" style="width: 125px;left: 0px !important;"
                 disabled="${fn:length(orderSummary.pricingDto.outOfStockLineItems) > 0 ? 'true':'false'}" />
         </div>
     </s:form></div>
@@ -211,42 +239,59 @@
                 </c:when>
 
                 <c:otherwise>
-                    <div class="grid_5">
+                    <div class="grid_5" style="width: 100%;">
                         <h4>Order Total</h4>
                         <br/>
 
-                        <p><strong><u>Order Total</u></strong> <fmt:formatNumber
-                                value="${orderSummary.pricingDto.grandTotalPayable}"
-                                currencySymbol="Rs. " type="currency"/><strong><u>  (Inclusive of Shipping)</u></strong> <br/>
-                            <u>COD Charges</u> <fmt:formatNumber
+                        <div class="leftCOD">
+                            <p>Order Total</p>
+                            <p>COD Charges</p>
+                            <p><strong class="orangeBold">Grand Total</strong></p>
+                        </div>
+                        <div class="rightCOD">
+                            <p>
+                                <fmt:formatNumber value="${orderSummary.pricingDto.grandTotalPayable}"
+                                    currencySymbol="Rs. " type="currency"/>  (Inclusive of Shipping) <br/>
+                            </p>
+                            <p><fmt:formatNumber
                                     value="${orderSummary.codCharges}" currencySymbol="Rs. "
                                     type="currency"/> <br/>
-                            <strong class="orange"><u>Grand Total</u></strong> <strong
-                                    class="orange"><fmt:formatNumber
+                            </p>
+                            <p>
+                                <strong
+                                    class="orangeBold"><fmt:formatNumber
                                     value="${orderSummary.pricingDto.grandTotalPayable + orderSummary.codCharges}"
-                                    currencySymbol="Rs. " type="currency"/></strong><br/>
-                        </p>
+                                    currencySymbol="Rs. " type="currency"/>
+                                </strong><br/>
+                            </p>
+                        </div>
                     </div>
-                    <h4>Contact Details</h4>
+                    <h4 class="codContact">Contact Details</h4>
 
                     <p>Please verify the name and contact number of the person
-                        who will receive this order. You will receive a phone call within
-                        1 business day to confirm your order before it is sent for
-                        processing.</p>
+                        who would receive this order. <br/>  <br/>
+                        You will receive an automated call on your contact phone. Please take the call and respond as per instructions to verify
+                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
                     <s:form
                             beanclass="com.hk.web.action.core.payment.CodPaymentReceiveAction"
                             method="post">
                         <s:hidden name="order" value="${orderSummary.order}"/>
-                        <div class="label">Contact Name</div>
-                        <s:text name="codContactName"
-                                value="${orderSummary.order.address.name}"/>
-                        <div class="label">Contact Mobile</div>
-                        <s:text name="codContactPhone"
-                                value="${orderSummary.order.address.phone}" id="phoneNo" class="contactMobile"/>
+
+                        <div style="margin-bottom: 15px;">
+                            <div class="label newLabel" style="width: 100px !important;">Contact Name</div>
+                            <s:text class="signUpInputNew2" name="codContactName"
+                                    value="${orderSummary.order.address.name}"/>
+                        </div>
+                        <div>
+                            <div class="label newLabel" style="width: 100px !important;">Contact Phone</div>
+                            <s:text class="signUpInputNew2" name="codContactPhone"
+                                    value="${orderSummary.order.address.phone}" id="phoneNo"/>
+                        </div>
+
                         <div class="buttons" style="font-size: 1.3em;"><br/>
                             <br/>
-                            <s:submit name="pre" value="Place Order"
-                                      class="positive phoneValidation"/></div>
+                            <s:submit  style="left: 90px !important;margin-top: 0px !important;" name="pre" value="PLACE ORDER"
+                                      class="positive phoneValidation placeOrderButtonNew"/></div>
                         <br/>
                         <br/>
 
@@ -256,8 +301,8 @@
 
                         <h4>Terms and Conditions for Cash on Delivery</h4>
 
-                        <p>Please ensure that the above person is available at the
-                            given location for pick-up at all times.<br/>
+                        <p>Please note that COD orders will not be confirmed and shipped from our end untill we manually confirm the order on the phone number provided by you.<br/>
+                            Also please ensure that the above person is available at the given location at all times.
                         </p>
                     </s:form>
                 </c:otherwise>
@@ -267,16 +312,23 @@
         <div id="tabs_content5" class="tab_content" style="display: none;">
             <h2 class="offer">Payment Details</h2>
 
-            <div class="left" style="padding-left: 20px;"><s:form
+            <div class="left" style="width: 415px;">
+                <s:form
                     beanclass="com.hk.web.action.core.payment.ChequeCashPaymentReceiveAction"
                     method="post" id="paymentForm">
                 <s:hidden name="order" value="${orderSummary.order}"/>
-                <div class="label">Bank Name <span class="aster">*</span></div>
-                <s:text name="bankName"/>
-                <div class="label">Bank Branch <span class="aster">*</span></div>
-                <td><s:text name="bankBranch"/></td>
-                <div class="label">City <span class="aster">*</span></div>
-                <td><s:text name="bankCity"/></td>
+                <div style="margin-bottom: 10px;">
+                    <div class="label newLabel2">Bank Name <span class="aster">*</span></div>
+                    <s:text class="signUpInputNew2" name="bankName"/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <div class="label newLabel2">Bank Branch <span class="aster">*</span></div>
+                    <td><s:text class="signUpInputNew2" name="bankBranch"/></td>
+                </div>
+                <div>
+                    <div class="label newLabel2">City <span class="aster">*</span></div>
+                    <td><s:text class="signUpInputNew2" name="bankCity"/></td>
+                </div>
                 <div class="label">Payment Mode <span class="aster">*</span></div>
                 <label><s:radio name='paymentMode'
                                 value='<%=EnumPaymentMode.NEFT.getId()%>' checked="checked"/>&nbsp;Online
@@ -312,9 +364,8 @@
                     <fmt:formatNumber
                             value="${orderSummary.pricingDto.grandTotalPayable}"
                             currencySymbol="Rs. " type="currency"/></div>
-                <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                                 value="Place Order" class="button makePayment"
-                                                                 style="font-size: 1.5em;"/></div>
+                <div style="width: 50%;">
+                    <s:submit name="pre" value="PLACE ORDER" class="button makePayment signUpButtonNew" style="font-size: 1.5em;width: 125px;left: 0px !important;margin: 0px !important;margin-top: 20px !important;"/></div>
             </s:form></div>
             <div class="right"
                  style="width: 30%; padding: 10px; line-height: 21px;">
@@ -357,7 +408,7 @@
                     value="${orderSummary.pricingDto.grandTotalPayable}"
                     currencySymbol="Rs. " type="currency"/></div>
         <div style="width: 50%; float: right;"><s:submit name="pre"
-                                                         value="Place Order" class="button makePayment"
+                                                         value="PLACE ORDER" class="button makePayment placeOrderButtonNew"
                                                          style="font-size: 1.5em;"/></div>
     </s:form></div>
 
@@ -367,6 +418,7 @@
 <c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
     $(document).ready(function() {
+
         $('.tab_content').hide();
         $('.tab_content').first().show();
         $('.tabs ul li').click(function() {
@@ -392,14 +444,33 @@
 
         });
           $("#tab1").click(function(){
+              $("#CODOption").hide();
+              $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
+        $('#tab1').trigger('click');
         $("#tab5").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
         $("#tab3").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
               $("input:radio:checked").attr('checked', false);
           });
+        $("#tab4").click(function(){
+            $("#CODOption").show();
+            $("#nonCODOption").hide();
+        });
+        $("#tab2").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+        });
+        $("#tab6").click(function(){
+            $("#CODOption").hide();
+            $("#nonCODOption").show();
+        });
         if ($.session("selected-tab")) {
             var sTab = $.session("selected-tab");
             $('.tabs ul li').removeClass('selected');

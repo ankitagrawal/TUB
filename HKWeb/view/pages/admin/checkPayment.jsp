@@ -1,6 +1,7 @@
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.constants.order.EnumOrderStatus" %>
-<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.payment.EnumPaymentStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -8,213 +9,210 @@
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Welcome">
 
-  <s:layout-component name="heading">${checkPaymentBean.currentBreadcrumb.name}</s:layout-component>
+    <s:layout-component name="heading">${checkPaymentBean.currentBreadcrumb.name}</s:layout-component>
 
-  <c:set var="orderStatusInCart" value="<%=EnumOrderStatus.InCart.getId()%>"/>
-  <c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
-  <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
-  <c:set var="orderStatusSplit" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
-  <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
-  <c:set var="paymentStatusRequested" value="<%=EnumPaymentStatus.REQUEST.getId()%>"/>
-  <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
-  <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
+    <c:set var="orderStatusInCart" value="<%=EnumOrderStatus.InCart.getId()%>"/>
+    <c:set var="orderStatusCancelled" value="<%=EnumOrderStatus.Cancelled.getId()%>"/>
+    <c:set var="orderStatusPlaced" value="<%=EnumOrderStatus.Placed.getId()%>"/>
+    <c:set var="orderStatusSplit" value="<%=EnumOrderStatus.InProcess.getId()%>"/>
+    <c:set var="paymentStatusAuthPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
+    <c:set var="paymentStatusRequested" value="<%=EnumPaymentStatus.REQUEST.getId()%>"/>
+    <c:set var="paymentStatusSuccess" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
+    <c:set var="paymentModeCod" value="<%=EnumPaymentMode.COD.getId()%>"/>
 
-  <s:layout-component name="content">
+    <s:layout-component name="content">
 
-    <h2>Order Id ${checkPaymentBean.order.id}, Order Status: ${checkPaymentBean.order.orderStatus.name}</h2>
+        <h2>Order Id ${checkPaymentBean.order.id}, Order Status: ${checkPaymentBean.order.orderStatus.name}</h2>
 
-    <h3>
-      <c:if test="${!(checkPaymentBean.order.orderStatus.id == orderStatusCancelled || checkPaymentBean.order.orderStatus.id == orderStatusInCart)}">
-        <s:link beanclass="com.hk.web.action.admin.order.CancelOrderAction" event="pre" onclick="return confirm('Are you sure?')">
-          Cancel Order
-          <s:param name="order" value="${checkPaymentBean.order.id}"/>
-        </s:link>
-      </c:if>
-    </h3>
-    <table class="cont order_summary">
-      <thead>
-      <tr>
-        <th>Product</th>
-        <th>Chosen Options</th>
-        <th>Quantity</th>
-        <th>Subtotal</th>
-      </tr>
-      </thead>
-      <c:forEach items="${checkPaymentBean.pricingDto.productLineItems}" var="lineItem" varStatus="lineItemCtr">
-        <tbody>
-        <tr>
-          <td>${lineItem.productVariant.product.name}</td>
-          <td>
-            <c:forEach items="${lineItem.productVariant.productOptions}" var="productOption">${productOption.name}
-              <br/>${productOption.value}
-            </c:forEach>
-          </td>
-          <td>
-            <fmt:formatNumber value="${lineItem.qty}"/>
-            <c:if test="${checkPaymentBean.pricingDto.shippingLineCount > 1}">
-              x ${checkPaymentBean.pricingDto.shippingLineCount} (addresses)
-            </c:if>
-          </td>
-          <td><fmt:formatNumber value="${lineItem.hkPrice * lineItem.qty}" type="currency" currencySymbol="Rs. "/></td>
-        </tr>
-        </tbody>
-      </c:forEach>
-      <tfoot>
-      <tr>
-        <td colspan="3"><strong>Item total</strong></td>
-        <td>
-          <fmt:formatNumber value="${checkPaymentBean.pricingDto.productsHkSubTotal}" type="currency" currencySymbol="Rs. "/></td>
-      </tr>
-      <tr>
-        <td colspan="3"><strong>Shipping</strong></td>
-        <td>
-          <fmt:formatNumber value="${checkPaymentBean.pricingDto.shippingSubTotal - checkPaymentBean.pricingDto.shippingDiscount}" type="currency" currencySymbol="Rs. "/></td>
-      </tr>
-      <tr>
-        <td colspan="3"><strong>Discount</strong></td>
-        <td>
-          <fmt:formatNumber value="${checkPaymentBean.pricingDto.totalDiscount - checkPaymentBean.pricingDto.shippingDiscount}" type="currency" currencySymbol="Rs. "/></td>
-      </tr>
-      <tr>
-        <td colspan="3"><strong>Grand Total</strong></td>
-        <td>
-          <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency" currencySymbol="Rs. "/></td>
-      </tr>
-      </tfoot>
-    </table>
-    <h3>Address(es)</h3>
+        <div class="leftPS">
 
-    <p>
-      <c:choose>
-        <c:when test="${checkPaymentBean.order.address == null}">
-          No address associated with this order.
-          <s:link beanclass="com.hk.web.action.core.user.SelectAddressAction" event="pre">
-            Please select atleast 1 address to continue.
-            <s:param name="order" value="${checkPaymentBean.order.id}"/>
-          </s:link>
-        </c:when>
-        <c:otherwise>
-          <s:link beanclass="com.hk.web.action.admin.address.ChangeOrderAddressAction" event="pre">
-            Change Address
-            <s:param name="order" value="${checkPaymentBean.order.id}"/>
-          </s:link>
-        </c:otherwise>
-      </c:choose>
-    </p>
+            <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
+                <h2 class="paymentH2">Order Summary</h2>
 
-    <p>
-    <ul>
-      <c:set value="${checkPaymentBean.order.address}" var="address"/>
-        <li>
-            ${address.name}<br/>
-            ${address.line1}<br/>
-          <c:if test="${address.line2 != null}">${address.line2}</c:if>
-            ${address.city} - ${address.pincode.pincode}<br/>
-            ${address.state}<br/>
-          Ph. ${address.phone}
-        </li>
-        <hr/>
-    </ul>
-    </p>
+                <div class="itemSummaryNew">
+                    <s:layout-render name="/layouts/embed/itemSummaryTable.jsp"
+                                     pricingDto="${checkPaymentBean.pricingDto}"
+                                     orderDate="${checkPaymentBean.payment.paymentDate}"/>
+                </div>
 
-    <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
+            </div>
+        </div>
 
-      <div>
-        <table class="cont">
-          <thead>
-          <tr>
-            <th colspan="10">
-              Payment List
-              (
-              <s:link beanclass="com.hk.web.action.admin.payment.NewPaymentAction">
-                <s:param name="order" value="${checkPaymentBean.order}"/>
-                <s:param name="amount" value="${checkPaymentBean.pricingDto.grandTotalPayable}"/>
-                <s:param name="paymentMode" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId()%>"/>
-                <s:param name="paymentStatus" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
-                Create New Payment
-              </s:link>
-              )
-              <br/>
-            </th>
-          </tr>
-          <tr>
-            <th></th>
-            <th>gateway Id</th>
-            <th>Date/time</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Mode</th>
-            <th>Gateway</th>
-            <th>Issuer</th>
-            <th>Response Msg</th>
-            <th>Error log</th>
-            <th>Gateway Transaction Id</th>
-            <th>RRN</th>
-            <th>AuthId Code</th>
-          </tr>
-          </thead>
-          <c:forEach items="${checkPaymentBean.paymentList}" var="payment" varStatus="ctr">
-            <tr>
-              ${checkPaymentBean.pricingDto.grandTotalPayable} = ${payment.amount} | ${checkPaymentBean.order.orderStatus.id} eq ${orderStatusInCart}
+        <div class="rightPS">
 
-              <c:set var="radioDisabled" value="${checkPaymentBean.pricingDto.grandTotalPayable eq payment.amount ? false : true}"/>
+            <div class="orderSummaryNew" style="width: 100%;left: -5px;margin-bottom: 30px;">
+                <s:layout-render name="/layouts/embed/orderSummaryTable.jsp" pricingDto="${checkPaymentBean.pricingDto}"
+                                 orderDate="${checkPaymentBean.payment.paymentDate}"/>
+            </div>
 
-              <td><s:radio value="${payment.id}" name="payment" disabled="${radioDisabled}" /></td>
-              <td>
-                ${payment.gatewayOrderId}
-                (<s:link beanclass="com.hk.web.action.admin.payment.EditPaymentAction">
-                  <s:param name="paymentId" value="${payment.id}"/>
-                  Edit Payment
-                </s:link>)
-                    (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank" event="seekPayment">
-                    <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
-                    Seek Payment
-                </s:link>)
-              </td>
-              <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
-              <td><fmt:formatNumber value="${payment.amount}" currencySymbol="Rs. " type="currency"/></td>
-              <td>${payment.paymentStatus.name}</td>
-              <td>${payment.paymentMode.name}</td>
-                  <c:if test="${payment.gateway != null}">
-                      <td>${payment.gateway.name}</td>
-                  </c:if>
-                  <c:if test="${payment.issuer != null}">
-                      <td>${payment.issuer.name}</td>
-                  </c:if>
-                  <td>
-                          ${payment.responseMessage}
-                  </td>
-                      ${payment.errorLog}
-                  <td>
-                          ${payment.gatewayReferenceId}
-                  </td>
-                  <td>
-                          ${payment.rrn}
-                  </td>
-                  <td>
-                          ${payment.authIdCode}
-                  </td>
-            </tr>
-          </c:forEach>
-        </table>
-      </div>
+            <c:choose>
+                <c:when test="${checkPaymentBean.payment.paymentStatus.id == paymentStatusAuthPending}">
+                    <%--your cod ka message--%>
+                    <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            Pay on delivery:
+                          </span>
+                        <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
+                                                currencySymbol="Rs. "/>
+                            </span>
+                        </strong>
 
-      <div>
-        <s:hidden name="order"/>
+                        <div class='newShippingHandling'>
+                            (inclusive of discounts, shipping, handling and taxes.)
+                        </div>
+                    </h1>
 
-        <c:if test="${checkPaymentBean.order.orderStatus.id eq orderStatusInCart && checkPaymentBean.order.address != null}">
-          <s:submit name="acceptAsAuthPending" value="Accept payment as Auth Pending" onclick="return confirm('Are you sure?')"/>
-          <s:submit name="acceptAsSuccessful" value="Accept payment as Successful" onclick="return confirm('Are you sure?')"/>
-        </c:if>
-        <c:if test="${(checkPaymentBean.order.orderStatus.id eq orderStatusPlaced || checkPaymentBean.order.orderStatus.id eq orderStatusSplit ) && checkPaymentBean.payment.paymentStatus.id != paymentStatusSuccess}">
-          <s:submit name="updateToSuccess" value="Update as successful" onclick="return confirm('Are you sure?')"/>
-        </c:if>
-        <c:if test="${checkPaymentBean.order.address != null}">
-          <s:submit name="associateToPayment" value="Associate to payment" onclick="return confirm('Are you sure?')"/>
-        </c:if>
+                </c:when>
+                <%--your non cod ka message--%>
+                <c:otherwise>
+                    <h1 class="youPaid" style="right: 10px;border-bottom: 1px solid #ddd;width: 100%;">
+                          <span class="youPay">
+                            You paid:
+                          </span>
+                        <strong>
+                            <span id="summaryGrandTotalPayable" class="youPayValue">
+                              <fmt:formatNumber value="${checkPaymentBean.pricingDto.grandTotalPayable}" type="currency"
+                                                currencySymbol="Rs. "/>
+                            </span>
+                        </strong>
 
-      </div>
-    </s:form>
-  </s:layout-component>
+                        <div class='newShippingHandling'>
+                            (inclusive of discounts, shipping, handling and taxes.)
+                        </div>
+                    </h1>
+
+                </c:otherwise>
+            </c:choose>
+
+            <div class="orderShippedTo" style="margin-bottom: 60px;width: 105%;">
+                <h2 class="paymentH2"
+                    style="font-weight:bold;border-bottom: 1px solid rgb(158, 158, 158);padding-bottom: 7px;">ORDER
+                    SHIPPED TO</h2>
+
+                <p>
+                    <c:set var="address" value="${checkPaymentBean.payment.order.address}"/>
+                    <strong>${address.name}</strong> <br/>
+                        ${address.line1},
+                    <c:if test="${not empty address.line2}">
+                        ${address.line2},
+                    </c:if>
+                        ${address.city} - ${address.pincode.pincode}<br/>
+                        ${address.state}, <span class="upc">INDIA</span><br/>
+                    <span class="sml lgry upc">Phone </span> ${address.phone}<br/>
+                </p>
+            </div>
+
+        </div>
+
+        <s:form beanclass="com.hk.web.action.admin.payment.CheckPaymentAction">
+
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <shiro:hasPermission name="<%=PermissionConstants.PAYMENT_RESOLVER%>">
+                            <th colspan="10">
+                                Payment List
+                                (
+                                <s:link beanclass="com.hk.web.action.admin.payment.NewPaymentAction">
+                                    <s:param name="order" value="${checkPaymentBean.order}"/>
+                                    <s:param name="amount" value="${checkPaymentBean.pricingDto.grandTotalPayable}"/>
+                                    <s:param name="paymentMode" value="<%=EnumPaymentMode.ONLINE_PAYMENT.getId()%>"/>
+                                    <s:param name="paymentStatus" value="<%=EnumPaymentStatus.SUCCESS.getId()%>"/>
+                                    Create New Payment
+                                </s:link>
+                                )
+                                <br/>
+                            </th>
+                        </shiro:hasPermission>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>gateway Id</th>
+                        <th>Create Date</th>
+                        <th>Payment Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Mode</th>
+                        <th>Gateway</th>
+                        <th>Issuer</th>
+                        <th>Response Msg</th>
+                        <th>Error log</th>
+                        <th>Gateway Transaction Id</th>
+                        <th>RRN</th>
+                        <th>AuthId Code</th>
+                    </tr>
+                    </thead>
+                    <c:forEach items="${checkPaymentBean.paymentList}" var="payment" varStatus="ctr">
+                        <tr>
+                                <%--<c:set var="radioDisabled" value="${checkPaymentBean.pricingDto.grandTotalPayable eq payment.amount ? false : true}"/>--%>
+                            <td><s:radio value="${payment.id}" name="payment"/></td>
+                                <%--disabled="${radioDisabled}" --%>
+                            <td>
+                                    ${payment.gatewayOrderId}
+                                <shiro:hasPermission name="<%=PermissionConstants.PAYMENT_RESOLVER%>">
+                                    (<s:link beanclass="com.hk.web.action.admin.payment.EditPaymentAction">
+                                    <s:param name="paymentId" value="${payment.id}"/>
+                                    Edit Payment
+                                </s:link>)
+                                </shiro:hasPermission>
+                                (<s:link beanclass="com.hk.web.action.admin.payment.CheckPaymentAction" target="_blank"
+                                         event="seekPayment">
+                                <s:param name="gatewayOrderId" value="${payment.gatewayOrderId}"/>
+                                Seek Payment
+                            </s:link>)
+                            </td>
+                            <td><fmt:formatDate value="${payment.createDate}" type="both"/></td>
+                            <td><fmt:formatDate value="${payment.paymentDate}" type="both"/></td>
+                            <td><fmt:formatNumber value="${payment.amount}" currencySymbol="Rs. " type="currency"/></td>
+                            <td>${payment.paymentStatus.name}</td>
+                            <td>${payment.paymentMode.name}</td>
+                            <td><c:if test="${payment.gateway != null}">
+                                ${payment.gateway.name}
+                            </c:if>
+                            </td>
+                            <td><c:if test="${payment.issuer != null}">
+                                    ${payment.issuer.name}
+                            </c:if></td>
+                            <td>
+                                    ${payment.responseMessage}
+                            </td>
+                                    ${payment.errorLog}
+                            <td>
+                                    ${payment.gatewayReferenceId}
+                            </td>
+                            <td>
+                                    ${payment.rrn}
+                            </td>
+                            <td>
+                                    ${payment.authIdCode}
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+
+            <div>
+                <s:hidden name="order"/>
+
+                <s:submit name="acceptAsSuccessful" value="Accept payment as Successful"
+                          onclick="return confirm('Are you sure?')"/>
+                    <%--
+                            <c:if test="${checkPaymentBean.order.orderStatus.id eq orderStatusInCart && checkPaymentBean.order.address != null}">
+                              <s:submit name="acceptAsAuthPending" value="Accept payment as Auth Pending" onclick="return confirm('Are you sure?')"/>
+                            </c:if>
+                            <c:if test="${(checkPaymentBean.order.orderStatus.id eq orderStatusPlaced || checkPaymentBean.order.orderStatus.id eq orderStatusSplit ) && checkPaymentBean.payment.paymentStatus.id != paymentStatusSuccess}">
+                              <s:submit name="updateToSuccess" value="Update as successful" onclick="return confirm('Are you sure?')"/>
+                            </c:if>
+                            <c:if test="${checkPaymentBean.order.address != null}">
+                              <s:submit name="associateToPayment" value="Associate to payment" onclick="return confirm('Are you sure?')"/>
+                            </c:if>
+                    --%>
+
+            </div>
+        </s:form>
+    </s:layout-component>
 
 </s:layout-render>

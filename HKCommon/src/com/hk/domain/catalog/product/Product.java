@@ -277,7 +277,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Long getMinDays() {
-        return this.minDays;
+      Long min = this.minDays;
+      if (min == null || min.equals(0L)) {
+        min = 1L;
+      }
+      return min;
     }
 
     public void setMinDays(Long minDays) {
@@ -285,7 +289,11 @@ public class Product  implements java.io.Serializable {
     }
 
     public Long getMaxDays() {
-        return this.maxDays;
+      Long max = this.maxDays;
+      if (max == null || max.equals(0L)) {
+        max = 3L;
+      }
+      return max;
     }
 
     public void setMaxDays(Long maxDays) {
