@@ -64,7 +64,7 @@ public class AutoCompleteAction extends BaseAction {
     private Set<String> query(String q, int limit, RegexType regexType, Set<String> suggestedStrings) throws MalformedURLException {
         List<TermsResponse.Term> items = null;
         if(q == null){
-            q = "";
+            return suggestedStrings;
         }
         q = q.trim();
         q = q.replaceAll(",","");
