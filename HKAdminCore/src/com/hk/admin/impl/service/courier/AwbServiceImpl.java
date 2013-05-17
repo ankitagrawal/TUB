@@ -47,9 +47,9 @@ public class AwbServiceImpl implements AwbService {
         ThirdPartyAwbDetails thirdPartyAwbDetails = thirdPartyAwbService.getThirdPartyAwbDetails(shippingOrder, weightInKg);
         if (thirdPartyAwbDetails != null) {
             Awb hkAwb = createAwb(courier, thirdPartyAwbDetails.getTrackingNumber(), shippingOrder.getWarehouse(), shippingOrder.isCOD());
-			if (shippingOrder.getAmount() == 0){
-				thirdPartyAwbDetails.setCod(false);
-			}
+            if (shippingOrder.getAmount() == 0) {
+                thirdPartyAwbDetails.setCod(false);
+            }
             hkAwb = thirdPartyAwbService.syncHKAwbWithThirdPartyAwb(hkAwb, thirdPartyAwbDetails);
             thirdPartyAwbService.syncHKCourierServiceInfo(courier, thirdPartyAwbDetails);
 
@@ -85,14 +85,14 @@ public class AwbServiceImpl implements AwbService {
     }
 
     public Awb save(Awb awb, Integer newStatus) {
-	return awbDao.save(awb,newStatus);
-	}
+        return awbDao.save(awb, newStatus);
+    }
 
     public Awb findByCourierAwbNumber(Courier courier, String awbNumber) {
         return awbDao.findByCourierAwbNumber(courier, awbNumber);
     }
 
-	 public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber) {
+    public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber) {
         return awbDao.findByCourierAwbNumber(couriers, awbNumber);
     }
 
@@ -105,24 +105,28 @@ public class AwbServiceImpl implements AwbService {
     }
 
 
-  	public  Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
+    public Awb createAwb(Courier courier, String trackingNumber, Warehouse warehouse, Boolean isCod) {
         Awb awb = new Awb();
         awb.setCourier(courier);
         awb.setAwbNumber(trackingNumber);
         awb.setAwbStatus(EnumAwbStatus.Unused.getAsAwbStatus());
         awb.setWarehouse(warehouse);
         awb.setCod(isCod);
-        awb.setAwbBarCode(trackingNumber); 
-	    return awb;
+        awb.setAwbBarCode(trackingNumber);
+        return awb;
 
     }
 
-    public void delete(Awb awb){
+    public void delete(Awb awb) {
         awbDao.delete(awb);
     }
 
-	public void refresh(Awb awb){
-		awbDao.refresh(awb);
-	}
+    public void refresh(Awb awb) {
+        awbDao.refresh(awb);
+    }
+
+    public boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
+        return awbDao.isAwbEligibleForDeletion(courier, awbNumber, warehouse, cod);
+    }
 
 }

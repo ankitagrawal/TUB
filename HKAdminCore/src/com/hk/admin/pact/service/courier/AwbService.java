@@ -55,5 +55,7 @@ public interface AwbService {
 
 	public void refresh(Awb awb);
 
+    boolean isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod);
+
     
 }
