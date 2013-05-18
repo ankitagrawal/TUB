@@ -64,6 +64,12 @@ public class PermissionConstants {
     public static final String UPDATE_PRODUCT_CATALOG = "UPDATE_PRODUCT_CATALOG";
     public static final String UPDATE_SEO_METADATA = "UPDATE_SEO_METADATA";
     public static final String UPDATE_PRODUCT_DESCRIPTIONS = "UPDATE_PRODUCT_DESCRIPTIONS";
+    public static final String VIEW_VARIANT_INFO = "VIEW_VARIANT_INFO";
+    public static final String VIEW_PRODUCT_INFO = "VIEW_PRODUCT_INFO";
+    public static final String UPDATE_PRODUCT_INFO = "UPDATE_PRODUCT_INFO";
+    public static final String UPDATE_VARIANT_INFO = "UPDATE_VARIANT_INFO";
+    public static final String VIEW_SKU_INFO = "VIEW_SKU_INFO";
+    public static final String BULK_CATALOG_UPDATE = "BULK_CATALOG_UPDATE";
 
     public static final String COD_NOT_ALLOWED = "COD_NOT_ALLOWED";
 

@@ -76,8 +76,17 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
+    public List<Bucket> listAll() {
+        return actionItemDao.getAll(Bucket.class);
+    }
+
+    @Override
     public ActionItem existsActionItem(ShippingOrder shippingOrder) {
         return actionItemDao.searchActionItem(shippingOrder);
+    }
+
+    public List<ActionItem> createActionQueue(){
+        return actionItemDao.getAll(ActionItem.class);
     }
 
     public ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder) {

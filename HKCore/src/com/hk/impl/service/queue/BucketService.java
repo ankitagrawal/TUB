@@ -31,6 +31,8 @@ public interface BucketService {
 
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
+    List<Bucket> listAll();
+
     /*
       createUpdateActionItem  --> inputs needed (SO, calledAuto/EscalatedBack/manual), (Reporter loggedIn/Admin)
 
@@ -48,6 +50,7 @@ public interface BucketService {
 
      */
 
+    List<ActionItem> createActionQueue();
 
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 
