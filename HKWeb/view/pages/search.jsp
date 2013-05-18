@@ -87,10 +87,10 @@
 			</div>
 
 			<div id="prod_grid" class="grid_19">
-				<c:forEach items="${ca.productList}" var="product">
+				<c:forEach items="${ca.productList}" var="product" varStatus="ctr">
 					<c:if test="${!product.googleAdDisallowed}">
 						<div class="product_box grid_6">
-							<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
+							<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}" position="(${ca.pageNo}, ${ctr.index+1})"/>
 							<div class="clear"></div>
 						</div>
 					</c:if>
