@@ -41,7 +41,15 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
         List<Product> brandProducts=productService.getAllProductByBrand(brand);
         HKAPIBrandProductsDTO hkapiBrandProductsDTO=new HKAPIBrandProductsDTO();
         hkapiBrandProductsDTO.setBrand(brand);
-        HKAPIProductDTO[] hkapiProductDTOs=new HKAPIProductDTO[brandProducts.size()];
+        int normalProducts=0;
+        for(Product product:brandProducts){
+            if (product instanceof Combo) {
+                continue;
+            }
+            normalProducts++;
+        }
+        HKAPIProductDTO[] hkapiProductDTOs=new HKAPIProductDTO[normalProducts];
+
         int j=0;
         for(Product product:brandProducts){
             if (product instanceof Combo) {
