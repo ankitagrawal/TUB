@@ -182,8 +182,10 @@
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
         </a>
+        <a href="${pageContext.request.contextPath}/product/westinghouse-wkfsfs133-food-steamer/WST022?productReferrerId=20">
         <img src="<hk:vhostImage/>/images/banners/Westinghouse.jpg" alt="Product of the Week"
              class="small_banner"/>
+        </a>
       </c:when>
       <c:otherwise>
         <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
