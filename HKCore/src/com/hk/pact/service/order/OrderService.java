@@ -34,8 +34,6 @@ public interface OrderService {
 
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 
-    public Set<ShippingOrder> createShippingOrders(Order order);
-
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
@@ -56,8 +54,6 @@ public interface OrderService {
      */
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
-
-    public void approvePendingRewardPointsForOrder(Order order);
 
     public void sendEmailToServiceProvidersForOrder(Order order);
 
