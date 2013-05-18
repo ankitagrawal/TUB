@@ -94,14 +94,16 @@ public class SearchAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("No results found."));
 		}
     //Logging search results
-    String category = "n/a";
-    if (productList != null && !productList.isEmpty()) {
-      category = productList.get(0).getPrimaryCategory().getName();
-      if (!productList.get(0).getPrimaryCategory().equals(productList.get(productList.size() - 1).getPrimaryCategory())) {
-        category = "mixed";
+    if (getPageNo() == 1) {
+      String category = "n/a";
+      if (productList != null && !productList.isEmpty()) {
+        category = productList.get(0).getPrimaryCategory().getName();
+        if (!productList.get(0).getPrimaryCategory().equals(productList.get(productList.size() - 1).getPrimaryCategory())) {
+          category = "mixed";
+        }
       }
+      productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
     }
-    productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
     if (productList != null && !productList.isEmpty() && productList.size() == 1) {
         Product product = productList.get(0);
         return new RedirectResolution(ProductAction.class).addParameter("productId", product.getId()).addParameter("productSlug", product.getSlug());

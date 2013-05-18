@@ -12,6 +12,7 @@ import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.analytics.SearchLogDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
@@ -54,7 +55,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     LinkManager           linkManager;
 
     @Autowired
-    BaseDao baseDao;
+    SearchLogDao searchLogDao;
 
     private final String  SEARCH_SERVER = "SOLR";
 
@@ -473,18 +474,35 @@ class ProductSearchServiceImpl implements ProductSearchService {
         searchLog.setKeyword(keyword);
         searchLog.setResults(results);
         searchLog.setCategory(category);
-        getBaseDao().save(searchLog);
+        getSearchLogDao().save(searchLog);
       }
     } catch (Exception e) {
       logger.error("Exception while logging search results "+e.getMessage());
     }
   }
 
-  public BaseDao getBaseDao() {
-    return baseDao;
+  @Override
+  public void updatePositionInSearchLog(String position) {
+    try {
+      TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+      if (trafficTracking != null) {
+        Long trafficTrackingId = trafficTracking.getId();
+        SearchLog searchLog = getSearchLogDao().getLatestSearchLog(trafficTrackingId);
+        if (searchLog != null && searchLog.getFirstClickPos() == null) {
+          searchLog.setFirstClickPos(position);
+          getSearchLogDao().save(searchLog);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Exception while updating first click position" + e.getMessage());
+    }
   }
 
-  public void setBaseDao(BaseDao baseDao) {
-    this.baseDao = baseDao;
+  public SearchLogDao getSearchLogDao() {
+    return searchLogDao;
+  }
+
+  public void setSearchLogDao(SearchLogDao searchLogDao) {
+    this.searchLogDao = searchLogDao;
   }
 }
