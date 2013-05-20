@@ -143,10 +143,6 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().get(OrderStatus.class, enumOrderStatus.getId());
     }
 
-    public Long getCountOfOrdersWithStatus() {
-        return getOrderDao().getCountOfOrdersWithStatus(EnumOrderStatus.Placed);
-    }
-
     /**
      * this will return the dispatch date for BO by adding min of dispatch days to refdate honouring the constraints of
      * warehouse like last time a order will be processed in WH each day (say till 4pm),
@@ -289,16 +285,6 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories;
     }
 
-    public Category getBasketCategory(ShippingOrder shippingOrder) {
-        Set<ShippingOrderCategory> shippingOrderCategories = getCategoriesForShippingOrder(shippingOrder);
-
-        for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
-            if (shippingOrderCategory.isPrimary()) {
-                return shippingOrderCategory.getCategory();
-            }
-        }
-        return shippingOrderCategories.iterator().next().getCategory();
-    }
 
     public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories) {
         for (ShippingOrderCategory shippingOrderCategory : shippingOrderCategories) {
@@ -309,10 +295,12 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories.iterator().next().getCategory();
     }
 
-    public Set<ShippingOrder> createShippingOrders(Order order) {
+    private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             shippingOrders = splitOrder(order);
+        } catch (NoSkuException e) {
+            logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
@@ -365,41 +353,6 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    @Transactional
-    public Order markOrderAsShipped(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
-        }
-        return order;
-    }
-
-    @Transactional
-    public Order markOrderAsDelivered(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
-            approvePendingRewardPointsForOrder(order);
-            affilateService.approvePendingAffiliateTxn(order);
-            // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
-            // check if payment mode was COD and email hasn't been sent yet
-            // sendEmailToServiceProvidersForOrder(order);
-        }
-        return order;
-    }
-
-    @Transactional
-    public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
-        } else {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
-        }
-        affilateService.cancelTxn(order);
-        return order;
-    }
-
     public Order getLatestOrderForUser(User user) {
         return getOrderDao().getLatestOrderForUser(user);
     }
@@ -416,7 +369,7 @@ public class OrderServiceImpl implements OrderService {
      */
 
     @Transactional
-    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+    private Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {
@@ -496,10 +449,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return topOrderedVariant;
-    }
-
-    public void approvePendingRewardPointsForOrder(Order order) {
-        rewardPointService.approvePendingRewardPointsForOrder(order);
     }
 
     public void sendEmailToServiceProvidersForOrder(Order order) {
@@ -652,18 +601,6 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-  
-
-    public boolean isShippingOrderExists(Order order) {
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            if (lineItemDao.getLineItem(cartLineItem) != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public ShippingOrderStatusService getShippingOrderStatusService() {
         return shippingOrderStatusService;
     }
@@ -737,6 +674,8 @@ public class OrderServiceImpl implements OrderService {
                 //auto allocate buckets, based on business use case
                 if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
                     bucketService.autoCreateUpdateActionItem(shippingOrder);
+                } else {
+                    bucketService.popFromActionQueue(shippingOrder);
                 }
 
                 getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);

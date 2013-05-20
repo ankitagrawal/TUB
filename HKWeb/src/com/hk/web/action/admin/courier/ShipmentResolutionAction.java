@@ -21,6 +21,8 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.courier.Zone;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.order.ShippingOrderLifecycle;
+import com.hk.impl.service.queue.BucketService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderLifecycleService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
@@ -78,10 +80,13 @@ public class ShipmentResolutionAction extends BaseAction {
     @Autowired
     CourierGroupService courierGroupService;
     @Autowired
-
     private ShipmentPricingEngine shipmentPricingEngine;
     @Autowired
     CourierService courierService;
+    @Autowired
+    BucketService bucketService;
+    @Autowired
+    OrderService orderService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -110,6 +115,12 @@ public class ShipmentResolutionAction extends BaseAction {
 
     public Resolution createAutoShipment() {
         shipment = shipmentService.createShipment(shippingOrder,true);
+        return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
+    }
+
+    public Resolution resolveCase(){
+        shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY,null,"Case Resolved");
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
         return new RedirectResolution(ShipmentResolutionAction.class, "search").addParameter("gatewayOrderId", shippingOrder.getGatewayOrderId());
     }
 

@@ -1,10 +1,6 @@
 package com.hk.impl.service.catalog;
 
 import com.akube.framework.dao.Page;
-import com.akube.framework.gson.JsonUtils;
-import com.akube.framework.util.BaseUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hk.constants.catalog.category.CategoryConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.image.EnumImageType;
@@ -26,7 +22,6 @@ import com.hk.pact.service.review.ReviewService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.controller.StripesFilter;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -34,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.Reflection;
 
 import java.util.*;
 
@@ -600,7 +594,7 @@ public class ProductServiceImpl implements ProductService {
         for (SimilarProduct similarProduct : product.getSimilarProducts()) {
             Product sProduct = similarProduct.getSimilarProduct();
             if (!sProduct.isDeleted() && !sProduct.isOutOfStock()) {
-                sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, ProductReferrerMapper.getProductReferrerid(EnumProductReferrer.relatedProductsPage.getName())));
+                sProduct.setProductURL(linkManager.getRelativeProductURL(sProduct, EnumProductReferrer.relatedProductsPage.getId()));
                 inStockSimilarProducts.add(sProduct);
                 ctr++;
                 if (ctr >= 5)

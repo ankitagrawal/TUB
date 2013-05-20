@@ -42,5 +42,6 @@ select simple => selectsimple
 accu check => accu-check
 free style => freestyle
 dr gene => dr.gene
+protine => protein
 
 
