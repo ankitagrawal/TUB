@@ -1,10 +1,13 @@
 package com.hk.admin.impl.service.order;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.hk.pact.service.review.ReviewCollectionFrameworkService;
-import com.hk.admin.pact.service.courier.PincodeCourierService;
-import com.hk.domain.payment.Payment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +17,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hk.admin.manager.AdminEmailManager;
 import com.hk.admin.pact.service.courier.CourierService;
+import com.hk.admin.pact.service.courier.PincodeCourierService;
 import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.Keys;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.constants.order.EnumOrderStatus;
-import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
 import com.hk.core.fliter.ShippingOrderFilter;
 import com.hk.core.search.OrderSearchCriteria;
 import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.CancellationType;
 import com.hk.domain.core.OrderLifecycleActivity;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.user.Address;
+import com.hk.domain.payment.Payment;
 import com.hk.domain.user.User;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.EmailManager;
 import com.hk.manager.ReferrerProgramManager;
 import com.hk.manager.SMSManager;
@@ -49,6 +53,8 @@ import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
+import com.hk.pact.service.review.ReviewCollectionFrameworkService;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
@@ -110,8 +116,12 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Value("#{hkEnvProps['codMaxAmount']}")
     private Double codMaxAmount;
 
+    
+    @Autowired
+	private LoyaltyProgramService loyaltyProgramService;
 
-    @Transactional
+    @Override
+	@Transactional
     public Order putOrderOnHold(Order order) {
 
         ShippingOrderFilter shippingOrderFilter = new ShippingOrderFilter(order.getShippingOrders());
@@ -131,7 +141,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public void cancelOrder(Order order, CancellationType cancellationType, String cancellationRemark, User loggedOnUser) {
         boolean shouldCancel = true;
 
@@ -171,9 +182,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
+            if (order.getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+            	this.loyaltyProgramService.cancelLoyaltyPoints(order);
+            }
+            
             // Send Email Comm. for HK Users Only
-            if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
-                emailManager.sendOrderCancelEmailToUser(order);
+            if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) 
+            		|| order.getStore().getId().equals(StoreService.LOYALTYPG_ID))) {
+                this.emailManager.sendOrderCancelEmailToUser(order);
             }
             emailManager.sendOrderCancelEmailToAdmin(order);
 
@@ -185,7 +201,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order unHoldOrder(Order order) {
 
         ShippingOrderFilter shippingOrderFilter = new ShippingOrderFilter(order.getShippingOrders());
@@ -212,14 +229,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
-    public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
+    @Override
+	public void logOrderActivity(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity) {
         User user = userService.getLoggedInUser();
         //User user = UserCache.getInstance().getLoggedInUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
         logOrderActivity(order, user, orderLifecycleActivity, null);
     }
 
-    public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
+    @Override
+	public void logOrderActivityByAdmin(Order order, EnumOrderLifecycleActivity enumOrderLifecycleActivity, String comments) {
         //User user = UserCache.getInstance().getAdminUser();
         User user = userService.getAdminUser();
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(enumOrderLifecycleActivity);
@@ -261,7 +280,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return shouldUpdate;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsShipped(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
         if (isUpdated) {
@@ -278,7 +298,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsDelivered(Order order) {
         if (!order.getOrderStatus().getId().equals(EnumOrderStatus.Delivered.getId())) {
             boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
@@ -299,7 +320,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     order = orderService.save(order);
                     storeOrderService.updateOrderStatusInStore(order);
                 }
-                if (!order.isDeliveryEmailSent() && order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+                if (!order.isDeliveryEmailSent() && order.getStore() != null && 
+                		(order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) 
+                				|| order.getStore().getId().equals(StoreService.LOYALTYPG_ID))) {
                     if (getAdminEmailManager().sendOrderDeliveredEmail(order)) {
                         order.setDeliveryEmailSent(true);
                         getOrderService().save(order);
@@ -308,12 +331,14 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
                     reviewCollectionFrameworkService.doUserEntryForReviewMail(order);
                 }
+                
             }
         }
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsRTO(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
         if (isUpdated) {
@@ -324,7 +349,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return order;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsCompletedWithInstallation(Order order) {
 //       boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
         boolean isUpdated = updateOrderStatusFromShippingOrdersForInstallation(order, EnumShippingOrderStatus.SO_Installed, EnumOrderStatus.Installed);
@@ -336,7 +362,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
 
-    @Transactional
+    @Override
+	@Transactional
     public Order markOrderAsLost(Order order) {
         boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Lost, EnumOrderStatus.Lost);
         if (isUpdated) {
@@ -396,7 +423,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     /**
      * TODO:#ankit please make keys in the map as some constants.
      */
-    public Map<String, String> isCODAllowed(Order order, Double payable) {
+    @Override
+	public Map<String, String> isCODAllowed(Order order, Double payable) {
         Map<String, String> codFailureMap = new HashMap<String, String>();
         CartLineItemFilter cartLineItemFilter = new CartLineItemFilter(order.getCartLineItems());
         Set<CartLineItem> productCartLineItems = cartLineItemFilter.addCartLineItemType(EnumCartLineItemType.Product).filter();
@@ -426,13 +454,15 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
             osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
             List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
-            if (rtoOrders.size() >= totalDeliveredOrders.size())
-                codFailureMap.put("MutipleRTOs", "Y");
+            if (rtoOrders.size() >= totalDeliveredOrders.size()) {
+				codFailureMap.put("MutipleRTOs", "Y");
+			}
         }
         return codFailureMap;
     }
 
-    @Transactional
+    @Override
+	@Transactional
     public Payment confirmCodOrder(Order order, String source, User user) {
         Payment payment = null;
         if (user == null) {
