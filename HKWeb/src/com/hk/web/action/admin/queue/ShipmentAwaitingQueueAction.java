@@ -85,7 +85,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   @Autowired
   ReportManager                      reportGenerator;
 
-  private Integer                    defaultPerPage    = 30;
+  private Integer                    defaultPerPage = 30;
 
   private Boolean                    courierDownloadFunctionality;
 
@@ -272,7 +272,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   }
 
   public int getPerPageDefault() {
-    return 30;
+    return defaultPerPage;
   }
 
   public int getPageCount() {
