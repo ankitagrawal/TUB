@@ -44,4 +44,13 @@ public enum EnumProductReferrer {
     return id;
   }
 
+  public static Long getProductReferrerId(String name){
+    for (EnumProductReferrer productReferrer : EnumProductReferrer.values()) {
+      if(productReferrer.getName().equals(name)){
+        return productReferrer.getId();
+      }
+    }
+    return 0L;
+  }
+
 }

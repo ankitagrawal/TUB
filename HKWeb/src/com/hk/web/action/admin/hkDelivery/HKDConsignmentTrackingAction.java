@@ -10,7 +10,6 @@ import com.hk.domain.user.User;
 import com.hk.util.CustomDateTypeConvertor;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
-import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,120 +18,120 @@ import java.util.*;
 @Component
 public class HKDConsignmentTrackingAction extends BasePaginatedAction {
 
-  private Long hubId;
-  private Page consignmentTrackingPage;
-  private Date startDate;
-  private Date endDate;
-  private User loggedOnUser;
-  private Long consignmentLifecycleStatus;
-  private List<ConsignmentTracking> consignmentList = new ArrayList<ConsignmentTracking>();
-  private Integer defaultPerPage = 30;
+    private Long hubId;
+    private Page consignmentTrackingPage;
+    private Date startDate;
+    private Date endDate;
+    private User loggedOnUser;
+    private Long consignmentLifecycleStatus;
+    private List<ConsignmentTracking> consignmentList = new ArrayList<ConsignmentTracking>();
+    private Integer defaultPerPage = 30;
 
-  @Autowired
-  private ConsignmentService consignmentService;
-  @Autowired
-  private HubService hubService;
+    @Autowired
+    private ConsignmentService consignmentService;
+    @Autowired
+    private HubService hubService;
 
-  @DefaultHandler
-  public Resolution pre() {
-    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-    return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
-  }
-
-  @SuppressWarnings("unchecked")
-  public Resolution searchConsignmentTracking() {
-    loggedOnUser = getUserService().getUserById(getPrincipal().getId());
-    if (getStartDate().compareTo(getEndDate()) > 0) {
-       addRedirectAlertMessage(new SimpleMessage("Invalid dates!"));
-    } else {
-      if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
-        hubId = getHubService().getHubForUser(loggedOnUser).getId();
-      }
-      consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
-      if (consignmentTrackingPage != null) {
-        consignmentList = consignmentTrackingPage.getList();
-      }
+    @DefaultHandler
+    public Resolution pre() {
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
     }
-    return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
-  }
 
-  public Long getHubId() {
-    return hubId;
-  }
+    @SuppressWarnings("unchecked")
+    public Resolution searchConsignmentTracking() {
+        loggedOnUser = getUserService().getUserById(getPrincipal().getId());
+        if (getStartDate() != null && getEndDate() != null  && getStartDate().compareTo(getEndDate()) > 0) {
+            addRedirectAlertMessage(new SimpleMessage("Invalid dates!"));
+        } else {
+            if (!loggedOnUser.hasPermission(EnumPermission.SELECT_HUB)) {
+                hubId = getHubService().getHubForUser(loggedOnUser).getId();
+            }
+            consignmentTrackingPage = getConsignmentService().searchConsignmentTracking(startDate, endDate, consignmentLifecycleStatus, hubId, getPageNo(), getPerPage());
+            if (consignmentTrackingPage != null) {
+                consignmentList = consignmentTrackingPage.getList();
+            }
+        }
+        return new ForwardResolution("/pages/admin/hkConsignmentTracking.jsp");
+    }
 
-  public void setHubId(Long hubId) {
-    this.hubId = hubId;
-  }
+    public Long getHubId() {
+        return hubId;
+    }
 
-  public int getPerPageDefault() {
-    return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
-  }
+    public void setHubId(Long hubId) {
+        this.hubId = hubId;
+    }
 
-  public int getPageCount() {
-    return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalPages();
-  }
+    public int getPerPageDefault() {
+        return defaultPerPage; // To change body of implemented methods use File | Settings | File Templates.
+    }
 
-  public int getResultCount() {
-    return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalResults();
-  }
+    public int getPageCount() {
+        return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalPages();
+    }
 
-  public Set<String> getParamSet() {
-    HashSet<String> params = new HashSet<String>();
-    params.add("hubId");
-    params.add("endDate");
-    params.add("startDate");
-    params.add("consignmentLifecycleStatus");
-    return params;
-  }
+    public int getResultCount() {
+        return consignmentTrackingPage == null ? 0 : consignmentTrackingPage.getTotalResults();
+    }
 
-  public Date getStartDate() {
-    return startDate;
-  }
+    public Set<String> getParamSet() {
+        HashSet<String> params = new HashSet<String>();
+        params.add("hubId");
+        params.add("endDate");
+        params.add("startDate");
+        params.add("consignmentLifecycleStatus");
+        return params;
+    }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
-  }
+    public Date getStartDate() {
+        return startDate;
+    }
 
-  public Date getEndDate() {
-    return endDate;
-  }
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-  @Validate(converter = CustomDateTypeConvertor.class)
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
+    public Date getEndDate() {
+        return endDate;
+    }
 
-  public User getLoggedOnUser() {
-    return loggedOnUser;
-  }
+    @Validate(converter = CustomDateTypeConvertor.class)
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
-  public void setLoggedOnUser(User loggedOnUser) {
-    this.loggedOnUser = loggedOnUser;
-  }
+    public User getLoggedOnUser() {
+        return loggedOnUser;
+    }
 
-  public void setConsignmentLifecycleStatus(Long consignmentLifecycleStatus) {
-    this.consignmentLifecycleStatus = consignmentLifecycleStatus;
-  }
+    public void setLoggedOnUser(User loggedOnUser) {
+        this.loggedOnUser = loggedOnUser;
+    }
 
-  public Long getConsignmentLifecycleStatus() {
-    return consignmentLifecycleStatus;
-  }
+    public void setConsignmentLifecycleStatus(Long consignmentLifecycleStatus) {
+        this.consignmentLifecycleStatus = consignmentLifecycleStatus;
+    }
 
-  public List<ConsignmentTracking> getConsignmentList() {
-    return consignmentList;
-  }
+    public Long getConsignmentLifecycleStatus() {
+        return consignmentLifecycleStatus;
+    }
 
-  public void setConsignmentList(List<ConsignmentTracking> consignmentList) {
-    this.consignmentList = consignmentList;
-  }
+    public List<ConsignmentTracking> getConsignmentList() {
+        return consignmentList;
+    }
 
-  public ConsignmentService getConsignmentService() {
-    return consignmentService;
-  }
+    public void setConsignmentList(List<ConsignmentTracking> consignmentList) {
+        this.consignmentList = consignmentList;
+    }
 
-  public HubService getHubService() {
-    return hubService;
-  }
+    public ConsignmentService getConsignmentService() {
+        return consignmentService;
+    }
+
+    public HubService getHubService() {
+        return hubService;
+    }
 
 }

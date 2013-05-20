@@ -110,7 +110,8 @@ public class SearchOrderAndReCheckinReturnInventoryAction extends BaseAction {
 		if(shippingOrder != null){			
 			ShippingOrderStatus status = shippingOrder.getOrderStatus();
 			if(status.equals(EnumShippingOrderStatus.SO_Customer_Return_Refunded.asShippingOrderStatus()) ||
-					status.equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus())){
+					status.equals(EnumShippingOrderStatus.SO_Customer_Return_Replaced.asShippingOrderStatus()) ||
+					status.equals(EnumShippingOrderStatus.SO_ReversePickup_Initiated.asShippingOrderStatus())){
 				reverseOrder = getReverseOrderService().getReverseOrderByShippingOrderId(shippingOrder.getId());
 			}
 			if(!EnumShippingOrderStatus.getStatusForReCheckinReturnItems().contains(status)){

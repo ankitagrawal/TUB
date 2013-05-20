@@ -53,6 +53,18 @@
   <script type="text/javascript" src="${pageContext.request.contextPath}/otherScripts/jquery.session.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+        $('#selectCityWindow').jqm();
+        $('#selectCityWindow').jqmShow();
+
+        $('.jqmOverlay').click(function() {
+            //        alert("Cliking w/o selecting" + $('#topLevelCategory').val());
+            if ($('#topLevelCategory').val() == 'services') {
+                //          alert("Inside");
+                $.getJSON(
+                        $('#setDefaultZoneLink').attr('href')
+                );
+            }
+        });
       var perPage = $('.perPage-span').html();
       if (perPage) {
         $('.per_page').removeClass('active');
@@ -65,6 +77,7 @@
       else {
         $('.per_page').first().addClass('active');
       }
+
 
       $('.compare_checkbox').click(function() {
         var selected = $('.compare_checkbox').filter(':checked').length;
@@ -93,20 +106,6 @@
         }
       });
 
-    });
-    $(document).ready(function() {
-      $('#selectCityWindow').jqm();
-      $('#selectCityWindow').jqmShow();
-
-      $('.jqmOverlay').click(function() {
-        //        alert("Cliking w/o selecting" + $('#topLevelCategory').val());
-        if ($('#topLevelCategory').val() == 'services') {
-          //          alert("Inside");
-          $.getJSON(
-              $('#setDefaultZoneLink').attr('href')
-              );
-        }
-      });
     });
 
   </script>
@@ -183,6 +182,7 @@
 <div style="display: none;">
   <s:link beanclass="com.hk.web.action.core.catalog.category.ServiceAction" id="setDefaultZoneLink" event="setDefaultCookie"/>
 </div>
+
 <div class='catalog_header'>
 
   <div class="content">
@@ -317,10 +317,10 @@
 
 <div id="prod_grid" class="grid_19" style="${ca.rootCategorySlug == "services"?"display:none":""}">
   <s:form beanclass="com.hk.web.action.core.catalog.CompareAction" target="_blank">
-    <c:forEach items="${ca.productList}" var="product">
+    <c:forEach items="${ca.productList}" var="product" varStatus="ctr">
       <c:if test="${!product.googleAdDisallowed}">
 	      <div class="product_box grid_6">
-				<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}"/>
+				<s:layout-render name="/layouts/embed/_productThumb200.jsp" product="${product}" position="${ca.pageNo}/${ctr.index+1}"/>
           <div class="clear"></div>
 
           <%--<div class="compareDiv">

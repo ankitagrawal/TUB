@@ -80,7 +80,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     subscription.setNextShipmentDate(BaseUtils.getCurrentTimestamp());
                 }
                 subscription = subscriptionDao.save(subscription);
-                subscriptionLoggingService.logSubscriptionActivity(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
+                subscriptionLoggingService.logSubscriptionActivityByAdmin(subscription, EnumSubscriptionLifecycleActivity.SubscriptionPlaced);
                 emailManager.sendSubscriptionPlacedEmailToUser(subscription);
                 emailManager.sendSubscriptionPlacedEmailToAdmin(subscription);
             }
