@@ -549,8 +549,8 @@ border-top: 5px solid #5c9dff;
 }
 
 .productImage{
-	height: 165px;
-	width: 165px;
+	max-height: 165px;
+	max-width: 165px;
 
 }
 
