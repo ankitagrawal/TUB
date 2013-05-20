@@ -129,6 +129,8 @@ public class Keys {
         public static final String hkBridgeRestUrl = "hkBridgeRestUrl";
         public static final String userEmailLinksRedirected = "userEmailLinksRedirected";
 
+        public static final String vanillaForumUrl = "vanillaForumUrl";
+
 
     }
 
