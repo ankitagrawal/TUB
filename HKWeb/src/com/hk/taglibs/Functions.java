@@ -889,4 +889,15 @@ public class Functions {
 		return numberString;
 	}
 
+  public static String getAppendedURL(String baseUrl, String parameter, String value) {
+    if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
+      if (baseUrl.contains("?")) {
+        return baseUrl.concat("&" + parameter + "=" + value);
+      } else {
+        return baseUrl.concat("?" + parameter + "=" + value);
+      }
+    }
+    return baseUrl;
+  }
+
 }
