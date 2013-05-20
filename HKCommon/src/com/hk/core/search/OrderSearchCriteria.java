@@ -8,6 +8,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import com.hk.domain.order.ShippingOrderStatus;
+import com.hk.domain.queue.TrafficState;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.*;
 
@@ -49,7 +50,8 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
      */
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private Set<Category> shippingOrderCategories;
-    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;           //addded by someone saying: MAIN HOO DON !!!! please use camel case
+    private List<ShippingOrderLifeCycleActivity> SOLifecycleActivityList;
+    private List<TrafficState> trafficStates;
     private Set<Reason> reasonList;
 
     public OrderSearchCriteria setLogin(String login) {
@@ -241,11 +243,6 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
             orderCategoryCriteria.add(Restrictions.in("category", categories));
         }
-
-        if (isB2BOrder) {
-            criteria.add(Restrictions.eq("b2bOrder", isB2BOrder));
-        }
-
         // criteria.addOrder(org.hibernate.criterion.Order.desc("score"));
         // criteria.addOrder(org.hibernate.criterion.Order.desc("updateDate"));
 
@@ -260,6 +257,9 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
         }
         if (dropShip != null) {
             shippingOrderCriteria.add(Restrictions.eq("isDropShipping", dropShip));
+        }
+        if (isB2BOrder) {
+            criteria.add(Restrictions.eq("b2bOrder", isB2BOrder));
         }
         if (containsJit != null) {
             shippingOrderCriteria.add(Restrictions.eq("containsJitProducts", containsJit));
@@ -301,5 +301,13 @@ public class OrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public void setUserCodCallStatus(Integer userCodCallStatus) {
         this.userCodCallStatus = userCodCallStatus;
+    }
+
+    public List<TrafficState> getTrafficStates() {
+        return trafficStates;
+    }
+
+    public void setTrafficStates(List<TrafficState> trafficStates) {
+        this.trafficStates = trafficStates;
     }
 }

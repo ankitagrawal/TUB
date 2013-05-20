@@ -100,7 +100,7 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 		return trafficTracking;
 	}
 
-	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest) {
+	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest, Long productReferrerId, String productPosition) {
 		if (product != null) {
 			TrafficTracking trafficTracking = (TrafficTracking) httpServletRequest.getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
 			if (trafficTracking != null) {
@@ -114,6 +114,8 @@ public class TrafficAndUserBrowsingServiceImpl extends BaseDaoImpl implements Tr
 					userBrowsingHistory.setProductId(product.getId());
 					userBrowsingHistory.setPageUrl(pageUrl);
 					userBrowsingHistory.setTrafficTrackingId(trafficTracking.getId());
+					userBrowsingHistory.setProductReferrerId(productReferrerId);
+					userBrowsingHistory.setProductPosition(productPosition);
 					userBrowsingHistory.setCreateDt(new Date());
 					userBrowsingHistory.setUpdateDt(new Date());
 					try {

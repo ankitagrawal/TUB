@@ -65,6 +65,12 @@ public class CategoryDaoImpl extends BaseDaoImpl implements CategoryDao {
         return (Category) findUnique(queryString, new Object[] { name });
     }
 
+    public List<Category> getCategoryByNames(List<String> categoryNames){
+        String queryString = "from Category c where c.name in (:categoryNames)";
+        return findByNamedParams(queryString, new String[]{"name"}, new Object[]{categoryNames});
+    }
+
+
     public List<Category> getPrimaryCategories() {
         return findByQuery("select distinct p.primaryCategory from Product p where p.deleted<>1 and p.hidden<>1 order by p.primaryCategory.displayName asc");
     }
