@@ -1,11 +1,7 @@
-<%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
-<%@ page import="com.hk.web.action.core.auth.LoginAction" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
-<%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.Keys" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="com.hk.web.action.core.auth.LoginAction" %>
+<%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -20,7 +16,7 @@
 
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
-        $.ajax('http://${vanillaForumUrl}/book/forums/entry/signin');     //todo
+        $.ajax('http://${vanillaForumUrl}/book/forums/entry/signin');
       $(document).ready(function() {
         $('#forgotPasswordWindow').jqm({trigger: '#forgotPasswordLink', ajax: '@href'});
       });
