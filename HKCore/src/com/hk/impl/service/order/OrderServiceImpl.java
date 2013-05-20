@@ -27,6 +27,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
@@ -58,6 +59,9 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,10 +299,12 @@ public class OrderServiceImpl implements OrderService {
         return shippingOrderCategories.iterator().next().getCategory();
     }
 
-    public Set<ShippingOrder> createShippingOrders(Order order) {
+    private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
             shippingOrders = splitOrder(order);
+        } catch (NoSkuException e) {
+            logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
@@ -348,41 +354,6 @@ public class OrderServiceImpl implements OrderService {
         OrderLifecycleActivity orderLifecycleActivity = getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.EscalatedToProcessingQueue);
         getOrderLoggingService().logOrderActivity(order, loggedOnUser, orderLifecycleActivity, shippingOrderGatewayId + "escalated from action queue");
 
-        return order;
-    }
-
-    @Transactional
-    public Order markOrderAsShipped(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Shipped, EnumOrderStatus.Shipped);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderShipped);
-        }
-        return order;
-    }
-
-    @Transactional
-    public Order markOrderAsDelivered(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_Delivered, EnumOrderStatus.Delivered);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderDelivered);
-            approvePendingRewardPointsForOrder(order);
-            affilateService.approvePendingAffiliateTxn(order);
-            // Currently commented as we aren't doing COD for services as of yet, When we start, We may have to put a
-            // check if payment mode was COD and email hasn't been sent yet
-            // sendEmailToServiceProvidersForOrder(order);
-        }
-        return order;
-    }
-
-    @Transactional
-    public Order markOrderAsRTO(Order order) {
-        boolean isUpdated = updateOrderStatusFromShippingOrders(order, EnumShippingOrderStatus.SO_RTO, EnumOrderStatus.RTO);
-        if (isUpdated) {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderReturned);
-        } else {
-            getOrderLoggingService().logOrderActivity(order, EnumOrderLifecycleActivity.OrderPartiallyReturned);
-        }
-        affilateService.cancelTxn(order);
         return order;
     }
 
@@ -482,10 +453,6 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return topOrderedVariant;
-    }
-
-    public void approvePendingRewardPointsForOrder(Order order) {
-        rewardPointService.approvePendingRewardPointsForOrder(order);
     }
 
     public void sendEmailToServiceProvidersForOrder(Order order) {
@@ -751,5 +718,21 @@ public class OrderServiceImpl implements OrderService {
 	public List<UserCodCall> getAllUserCodCallForToday(){
 	return 	orderDao.getAllUserCodCallOfToday();
 	}
+	
+	@Override
+	public Order findCart(User user, Store store) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.InCart.getId()));
+		criteria.add(Restrictions.eq("store.id", store.getId()));
+
+		@SuppressWarnings("unchecked")
+		List<Order> orders = this.baseDao.findByCriteria(criteria);
+		if(orders != null && orders.size() > 0) {
+			return orders.iterator().next();
+		}
+		return null;
+	}
+
 
 }

@@ -254,6 +254,7 @@
 	    <url-pattern>/feedback</url-pattern>
 	    <url-pattern>/clearance-sale</url-pattern>
         <url-pattern>/valentines-day-2013</url-pattern>
+        <url-pattern>/loyaltypg/*</url-pattern>
     </servlet-mapping>
     
     <servlet>

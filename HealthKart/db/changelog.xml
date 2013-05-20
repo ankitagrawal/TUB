@@ -12736,12 +12736,151 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet author="Shilpa (written)" id="1367842551660-2">
-        <sql>
-            insert into permission(name)  values  ("RECEIVE_CONSIGNMENTS"),("EDIT_RUNSHEET"),("VIEW_CONSIGNMENTS"),("VIEW_PAYMENT_HISTORY"),("TRACK_CONSIGNMENTS"),("CREATE_PAYMENT_RECONCILATION"),("ADD_EDIT_HUB"),("ADD_REMOVE_AGENT"),("CONSIGNMENT_TRACKING_REPORT"),("VIEW_NDR"),("EDIT_NDR")  on duplicate key update name = values(name);
-
-            insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
-        </sql>
+    <changeSet author="Ajeet (generated)" id="1368859876126-1">
+        <addColumn tableName="search_log">
+            <column name="first_click_pos" type="VARCHAR(45)"/>
+        </addColumn>
     </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368859876126-2">
+        <addColumn tableName="user_browsing_history">
+            <column name="product_pos" type="VARCHAR(45)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ajeet (generated)" id="1368860696832-1">
+        <addColumn tableName="user_browsing_history">
+            <column name="product_referrer_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-1">
+        <createTable tableName="loyalty_product">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="variant_id" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-2">
+        <createTable tableName="user_badge_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="badge_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_number" type="VARCHAR(45)"/>
+            <column name="creation_time" type="DATETIME"/>
+            <column name="updation_time" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-3">
+        <createTable tableName="user_order_karma_profile">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="order_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="points" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-4">
+        <addColumn tableName="badge">
+            <column name="icon_rel_url" type="VARCHAR(32)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-5">
+        <addColumn tableName="badge">
+            <column name="loyalty_percentage" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-6">
+        <modifyDataType columnName="max_score" newDataType="DOUBLE" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-7">
+        <dropNotNullConstraint columnDataType="DOUBLE" columnName="max_score" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-8">
+        <modifyDataType columnName="min_score" newDataType="DOUBLE" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-9">
+        <dropNotNullConstraint columnDataType="DOUBLE" columnName="min_score" tableName="badge"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-10">
+        <addNotNullConstraint columnDataType="VARCHAR(100)" columnName="name" tableName="inv_txn_type"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-11">
+        <addForeignKeyConstraint baseColumnNames="variant_id" baseTableName="loyalty_product" constraintName="fk_loyalty_product_variant" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="product_variant" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-12">
+        <addForeignKeyConstraint baseColumnNames="badge_id" baseTableName="user_badge_info" constraintName="fk_user_badge_info_badge" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="badge" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-13">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_badge_info" constraintName="fk_user_badge_info_user" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-14">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_order_karma_profile" constraintName="fk_ukarma_order" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="base_order" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra (generated)" id="1369032364175-15">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_order_karma_profile" constraintName="fk_ukarma_user" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Ankit Chhabra" id="1369032364175-16">
+		<sql>
+			insert into badge (badge_name,min_score,max_score,loyalty_percentage) values 
+			('NORMAL', 0, 1500, 0.0),
+			('BRONZE', 1501, 3000, 1.0),
+			('SILVER', 3001, 6000, 1.5),
+			('GOLD', 6001, 12000, 1.75),
+			('PLATINUM', 12001, -1, 2.0);
+		</sql>
+	</changeSet>
+    <changeSet author="Ankit Chhabra" id="1369032364175-17">
+    	<sql>
+    		insert into reward_point_mode (id,name) values ('80','HK Loyalty Points');
+    	</sql>
+	</changeSet>
+	 <changeSet author="Ankit Chhabra" id="1369032364175-18">
+		 <sql>
+    		insert into role (name) values ('HK_LOYALTY_USER');
+    	</sql>
+	</changeSet>
+    	<changeSet author="Ankit Chhabra" id="1369032364175-19">
+		<sql>
+    		insert into store (id,name,prefix) values ('4','LOYALTYPG', 'LP');
+    	</sql>
+	</changeSet>
+  <changeSet author="Shilpa (written)" id="1367842551660-2">
+    <sql>
+      insert into permission(name)  values  ("RECEIVE_CONSIGNMENTS"),("EDIT_RUNSHEET"),("VIEW_CONSIGNMENTS"),("VIEW_PAYMENT_HISTORY"),("TRACK_CONSIGNMENTS"),("CREATE_PAYMENT_RECONCILATION"),("ADD_EDIT_HUB"),("ADD_REMOVE_AGENT"),("CONSIGNMENT_TRACKING_REPORT"),("VIEW_NDR"),("EDIT_NDR")  on duplicate key update name = values(name);
+
+      insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
+    </sql>
+  </changeSet>
 </databaseChangeLog>
 

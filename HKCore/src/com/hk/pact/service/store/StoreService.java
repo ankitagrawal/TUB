@@ -10,6 +10,7 @@ public interface StoreService {
 
     public static final Long DEFAULT_STORE_ID = 1L;
     public static final Long MIH_STORE_ID     = 2L;
+    public static final Long LOYALTYPG_ID     = 4L;
 	public static final Long PUNJABI_BAGH     = 101L;
 
     public List<Store> getAllStores();
