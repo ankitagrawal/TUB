@@ -127,7 +127,7 @@
             </div>
 
             <div>
-              <p class="section2 font-caps"> <a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">cart</a></p>
+              <p class="section2 font-caps"> <a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">cart</a></p>
             </div>
 
         </div>

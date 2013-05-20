@@ -187,10 +187,8 @@ pageContext.setAttribute("isSecure", isSecure);
 				<c:set var="product" value="${variant.product}"/>
 				<c:set var="imageId" value = "${variant.product.mainImageId }" />
 				<div class="imgContainer">
-					<a href="${hk:getS3ImageUrl(imageLargeSize, imageId ,isSecure)}" class="jqzoom" rel='gal1'
-						title="${product.name}">
 					<img src="${hk:getS3ImageUrl(imageMediumSize, imageId,isSecure)}" alt="${product.name}"
-					     title="${product.name}" class="productImage" ></a>
+					     title="${product.name}" class="productImage" >
 				</div>
                 <div class="productDescription embedMargin">${product.name}</div>
                 <div class="stellarPoints">${hk:roundNumberForDisplay(lp.points)} PTS</div>
