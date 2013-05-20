@@ -129,8 +129,6 @@ public class PurchaseInvoice implements java.io.Serializable {
 	)
 	private List<RtvNote> rtvNotes = new ArrayList<RtvNote>();
 	
-	
-	
 	@JsonSkip
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
@@ -156,6 +154,9 @@ public class PurchaseInvoice implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_form_type_id")
     private PurchaseFormType purchaseFormType;
+    
+    @Column(name = "physical_invoice_amount")
+	private Double physicalInvoiceAmount;
     
 	public Long getId() {
 		return this.id;
@@ -411,6 +412,14 @@ public List<ExtraInventoryLineItem> getEiLineItems() {
 
 public void setEiLineItems(List<ExtraInventoryLineItem> eiLineItems) {
 	this.eiLineItems = eiLineItems;
+}
+
+public Double getPhysicalInvoiceAmount() {
+	return physicalInvoiceAmount;
+}
+
+public void setPhysicalInvoiceAmount(Double physicalInvoiceAmount) {
+	this.physicalInvoiceAmount = physicalInvoiceAmount;
 }
 
 @Override

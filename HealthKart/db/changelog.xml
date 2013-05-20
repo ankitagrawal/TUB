@@ -12736,4 +12736,9 @@
     <changeSet author="Nihal (generated)" id="1368515586650-14">
         <addForeignKeyConstraint baseColumnNames="grn_line_item_id" baseTableName="purchase_invoice_line_item" constraintName="fk_purchase_invoice_line_item_grn_line_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="grn_line_item" referencesUniqueColumn="false"/>
     </changeSet>
+    <changeSet author="Nihal (generated)" id="1368072561962-24">
+        <addColumn tableName="purchase_invoice">
+            <column name="physical_invoice_amount" type="DECIMAL(12,2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
