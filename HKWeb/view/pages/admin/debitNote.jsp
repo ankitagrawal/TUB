@@ -227,7 +227,7 @@
                     <td>${productVariant.product.name}<br/>${productVariant.optionsCommaSeparated}
                     </td>
                     <td>
-                        <fmt:formatNumber value="${sku.tax.value * 100}"
+                        <fmt:formatNumber value="${tax.value * 100}"
                                           maxFractionDigits="2"/>
                     </td>
                     <td>
