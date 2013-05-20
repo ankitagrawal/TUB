@@ -11295,11 +11295,11 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-     <changeSet author="Shrey (generated)" id="29-01-2013-01">
-        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
-            <column name="shipping_order_id"/>
-        </createIndex>
-    </changeSet>
+     <!--<changeSet author="Shrey (generated)" id="29-01-2013-01">-->
+        <!--<createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">-->
+            <!--<column name="shipping_order_id"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
 <!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">

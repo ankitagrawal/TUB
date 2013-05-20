@@ -259,6 +259,11 @@
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Split SO
             </s:link>)
+                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction"
+                                     class="splitShippingOrder">
+                
+                Edit Basket
+            </s:link>)
                 <c:if test="${isSearchShippingOrder == true}">
                     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
                                          class="pseudoSplitBaseOrder" event="splitOrderPractically">
@@ -305,7 +310,7 @@
                    <s:submit name="cancelShippingOrder" value="Cancel SO" class="cancelSO"/>
                 </div>
             </c:if>
-        </s:form>
+        </s:form>                             
         <script type="text/javascript">
             $ ('.cancelSO').click(function(){
                 if($('#soReason').val()==""){

@@ -2,8 +2,18 @@ package com.hk.web.action.admin.queue.action;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.Bucket;
+import com.hk.domain.queue.ActionTask;
+import com.hk.impl.service.queue.BucketService;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+import net.sourceforge.stripes.action.RedirectResolution;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  * User: Pratham
@@ -39,10 +49,87 @@ public class ActionItemCRUD extends BaseAction {
      */
 
     ActionItem actionItem;
+    List<Bucket> buckets = new ArrayList<Bucket>();
+    List<ActionTask> actionTasks = new ArrayList<ActionTask>();
+    ActionTask actionTask;
 
-    public Resolution pre(){
+    @Autowired
+    private BucketService bucketService;
+
+    public Resolution pre() {
         return new ForwardResolution("/pages/admin/queue/actionItemCRUD.jsp");
     }
 
 
+    public Resolution view() {
+        buckets = getBaseDao().getAll(Bucket.class);
+        if (actionItem != null) {
+            List<Bucket> bucketList = actionItem.getBuckets();
+            for (Bucket bucket : bucketList) {
+                if (buckets.contains(bucket)) {
+                    bucket.setSelected(true);
+                }
+            }
+        }
+        return new ForwardResolution("/pages/admin/queue/actionItemCRUD.jsp");
+    }
+
+
+    public Resolution save() {
+        List<Bucket> actionItemBuckets = new ArrayList<Bucket>();
+        for (Bucket bucket : buckets) {
+            if (bucket.getId() != null) {
+                if (bucket.isSelected()) {
+                    actionItemBuckets.add(bucket);
+                }
+            }
+        }
+        actionItem.setBuckets(actionItemBuckets);
+        getBaseDao().save(actionItem);
+       
+
+        return null;
+    }
+
+
+
+    public Resolution updateTask(){
+//      actionItem =  bucketService.autoUpdateActionItem(actionItem, false);
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(actionTask);
+        getBaseDao().save(actionItem);
+        return null;
+    }
+
+    public ActionItem getActionItem() {
+        return actionItem;
+    }
+
+    public void setActionItem(ActionItem actionItem) {
+        this.actionItem = actionItem;
+    }
+
+    public List<Bucket> getBuckets() {
+        return buckets;
+    }
+
+    public void setBuckets(List<Bucket> buckets) {
+        this.buckets = buckets;
+    }
+
+    public List<ActionTask> getActionTasks() {
+        return actionTasks;
+    }
+
+    public void setActionTasks(List<ActionTask> actionTasks) {
+        this.actionTasks = actionTasks;
+    }
+
+    public ActionTask getActionTask() {
+        return actionTask;
+    }
+
+    public void setActionTask(ActionTask actionTask) {
+        this.actionTask = actionTask;
+    }
 }

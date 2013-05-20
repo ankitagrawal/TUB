@@ -60,4 +60,6 @@ public interface BucketService {
     void popFromActionQueue(ShippingOrder shippingOrder);
 
     public Bucket getBucketById(Long bucketId);
+
+    ActionItem autoUpdateActionItem(ActionItem actionItem, boolean autoUpdate);
 }
