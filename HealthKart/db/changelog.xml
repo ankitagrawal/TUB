@@ -12856,4 +12856,15 @@
 			</column>
 		</createTable>
 	</changeSet>
+		<changeSet author="DeepakC" id="20133001-12">
+		<addForeignKeyConstraint constraintName="fk_user_badge_info_user"
+			baseTableName="user_badge_info" baseColumnNames="user_id"
+			referencedTableName="user" referencedColumnNames="id" />
+	</changeSet>
+		<changeSet author="DeepakC" id="20133001-13">
+		<addForeignKeyConstraint constraintName=fk_user_badge_info_badge
+			baseTableName="user_badge_info" baseColumnNames="badge_id"
+			referencedTableName="badge" referencedColumnNames="id" />
+	</changeSet>
+	
 </databaseChangeLog>
