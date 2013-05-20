@@ -28,7 +28,7 @@ pageContext.setAttribute("isSecure", isSecure);
 		
           <div class="congratsText">
             Congratulations. Your order has been placed.
-            <div class="floatRight"><a title="Redeem more points" href="<hk:vhostJs/>/loyaltypg" class="blue">
+            <div class="floatRight"><a title="Redeem more points" href="${pageContext.request.contextPath}/loyaltypg" class="blue">
              Shop more from stellar store. 
             </a></div>
           </div>

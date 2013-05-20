@@ -149,7 +149,7 @@ pageContext.setAttribute("isSecure", isSecure);
       <div class="span7">
         <div class="alert alert-success">
           <button id="successToolTipBtn" type="button" class="close">×</button>
-          Product added to Cart!&nbsp;&nbsp;&nbsp;<strong><a href="<hk:vhostJs/>/core/loyaltypg/Cart.action">View
+          Product added to Cart!&nbsp;&nbsp;&nbsp;<strong><a href="${pageContext.request.contextPath}/core/loyaltypg/Cart.action">View
           your Cart</a></strong>
         </div>
       </div>
