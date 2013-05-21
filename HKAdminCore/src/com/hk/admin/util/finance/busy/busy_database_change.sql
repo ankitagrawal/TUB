@@ -13,7 +13,7 @@ where hks.tin_number = bs.tin_number;
 
 
 create table pi_grn_date_temp
-SELECT pi.id as pi_id, min(grn.create_dt) as grn_date FROM
+SELECT pi.id as pi_id, min(grn.grn_date) as grn_date FROM
  healthkart_stag.purchase_invoice pi, healthkart_stag.goods_received_note grn, healthkart_stag.purchase_invoice_has_grn pigrn
 WHERE pigrn.purchase_invoice_id = pi.id
 AND pigrn.goods_received_note_id = grn.id
