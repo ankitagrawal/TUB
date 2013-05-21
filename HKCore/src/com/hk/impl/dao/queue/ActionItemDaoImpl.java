@@ -1,6 +1,8 @@
 package com.hk.impl.dao.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.Bucket;
@@ -8,7 +10,6 @@ import com.hk.domain.queue.TrafficState;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -35,7 +36,6 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         return (ActionItem) findUniqueByNamedParams(queryString, new String[]{"shippingOrder"}, new Object[]{shippingOrder});
     }
 
-    @Override
     public List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionItem.class);
 
@@ -68,5 +68,11 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     public List<Bucket> findByName(List<String> bucketNames) {
         String queryString = "from Bucket b where b.name in (:bucketNames)";
         return findByNamedParams(queryString, new String[]{"bucketNames"}, new Object[]{bucketNames});
+    }
+
+    @Override
+    public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage) {
+        DetachedCriteria searchCriteria = actionItemSearchCriteria.getSearchCriteria();
+        return list(searchCriteria, pageNo, perPage);
     }
 }

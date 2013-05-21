@@ -3,6 +3,7 @@
 <%@ page import="com.hk.impl.service.queue.BucketService" %>
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.domain.order.ShippingOrder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean"/>
@@ -41,7 +42,7 @@
             }
         </style>
     </s:layout-component>
-    <s:layout-component name="heading">Packing Awaiting Queue</s:layout-component>
+    <s:layout-component name="heading">Action Item Resolution Queue</s:layout-component>
     <s:layout-component name="content">
 
         <fieldset class="top_label">
@@ -64,11 +65,11 @@
                             <label>Push Start
                                 Date </label><s:text class="date_input startDate" style="width:150px"
                                                      formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                     name="pushStartDate"/>
+                                                     name="startPushDate"/>
                             <label>Push End
                                 Date </label><s:text class="date_input endDate" style="width:150px"
                                                      formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                     name="pushEndDate"/>
+                                                     name="endPushDate"/>
                         </div>
 
                         <s:submit style="margin:0 0 10px 25px;" name="pre" value="Search"/>
@@ -96,8 +97,9 @@
                         <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
                         </td>
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
-                            <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                             shippingOrders="${actionItem.shippingOrder}" isActionQueue="true"/>
+                            ${actionItem.shippingOrder.id}
+                            <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp" shippingOrder = "${actionItem.shippingOrder}"
+                                              isActionQueue="true"/>
                         </td>
                     </tr>
                 </c:forEach>

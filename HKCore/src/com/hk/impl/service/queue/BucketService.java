@@ -1,7 +1,9 @@
 package com.hk.impl.service.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
@@ -50,7 +52,7 @@ public interface BucketService {
 
      */
 
-    List<ActionItem> createActionQueue();
+    public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
 
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 

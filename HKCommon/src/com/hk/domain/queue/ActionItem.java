@@ -97,6 +97,12 @@ public class ActionItem implements java.io.Serializable {
         this.trafficState = trafficState;
     }
 
+    public Set<ShippingOrder> getShippingOrders() {
+        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+        shippingOrders.add(this.shippingOrder);
+        return shippingOrders;
+    }
+
     public ShippingOrder getShippingOrder() {
         return shippingOrder;
     }
