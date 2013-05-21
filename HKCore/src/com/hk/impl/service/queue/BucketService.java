@@ -58,4 +58,6 @@ public interface BucketService {
     ActionItem escalateBackToActionQueue(ShippingOrder shippingOrder);
 
     void popFromActionQueue(ShippingOrder shippingOrder);
+
+    public Bucket getBucketById(Long bucketId);
 }

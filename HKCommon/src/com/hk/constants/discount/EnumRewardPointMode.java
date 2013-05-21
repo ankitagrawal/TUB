@@ -7,7 +7,7 @@ import com.hk.domain.offer.rewardPoint.RewardPointMode;
  */
 public enum EnumRewardPointMode {
     TPSL_ADJUSTMENTS(10L, "TPSL Adjustments"), HK_CASHBACK(20L, "HealthKart Cashback"), HK_ADJUSTMENTS(30L, "HealthKart Adjustments"), REFERRAL(40L, "Referral"), FB_SHARING(50L,
-            "Facebook Sharing"), Prepay_Offer(60L, "Prepay"), HKPLUS_POINTS(70L, "HK Plus Points");
+            "Facebook Sharing"), Prepay_Offer(60L, "Prepay"), HKPLUS_POINTS(70L, "HK Plus Points"), HKLOYALTY_POINTS(80L,"HK Loyalty Points");
 
     private String name;
     private Long   id;
@@ -18,11 +18,11 @@ public enum EnumRewardPointMode {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public RewardPointMode asRewardPointMode() {

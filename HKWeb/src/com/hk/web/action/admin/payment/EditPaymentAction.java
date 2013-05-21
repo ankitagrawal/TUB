@@ -61,7 +61,7 @@ public class EditPaymentAction extends BaseAction {
 
   public Resolution update() {
     existingPayment.setAmount(payment.getAmount());
-    existingPayment.setPaymentStatus(payment.getPaymentStatus());
+//    existingPayment.setPaymentStatus(payment.getPaymentStatus());
     existingPayment.setPaymentDate(payment.getPaymentDate());
     paymentDao.save(existingPayment);
 

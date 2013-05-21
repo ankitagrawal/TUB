@@ -38,7 +38,7 @@ public class ProductIndexServiceImpl implements ProductIndexService {
     public void indexProduct(Product product){
         try{
             SolrProduct solrProduct = productService.createSolrProduct(product);
-            if(!product.isDeleted()){
+            if(!product.isDeleted() && !product.isHidden() && !product.isGoogleAdDisallowed()){
                 updateExtraProperties(product, solrProduct);
                 indexProduct(solrProduct);
             }else{

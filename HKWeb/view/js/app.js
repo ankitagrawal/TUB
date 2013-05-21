@@ -83,7 +83,7 @@ function program2(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n        <div class=\"applicableOffer\">    \n          <div class=\"applicableOfferDesc\" style=\"width: 92%;\">");
+  data.buffer.push("\n        <div class=\"applicableOffer minHeight\">\n          <div class=\"applicableOfferDesc\" style=\"width: 92%;\">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "value.description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n          ");
@@ -414,8 +414,8 @@ HK.CartOfferController = Ember.Controller.create({
         });
     },
 
-    removeOffer:function(event){
-        $("#" + event.context).click();
+    removeOffer:function(context){
+        $("#" + context).click();
     },
 
     scrollToOffer:function(){
@@ -423,17 +423,18 @@ HK.CartOfferController = Ember.Controller.create({
     },
 
     getOffer:function(){
-        var self = this;
-        this.get("applicableOffers").clear();
-        this.get("finalApplicableOffers").clear();
-        this.get("array").clear();
-        this.get("totalOffers").clear();
-        self.get("currentlyAppliedOffer").clear();
-        tempArray = [],
+        var self = this,
+            tempArray;
         $.ajax({
             url: HK.contextPath + "/rest/api/cartResource/otherApplicableOffers",
 
             success: function ( data ) {
+                tempArray = [];
+                self.set("applicableOffers",[]);
+                self.set("finalApplicableOffers",[]);
+                self.set("array",[]);
+                self.set("totalOffers",[]);
+                self.set("currentlyAppliedOffer",[]);
                 data.applicableOffers.forEach(function(offer){
                     self.get("totalOffers").pushObject(Ember.Object.create(offer));
                     self.get("applicableOffers").pushObject(Ember.Object.create(offer));

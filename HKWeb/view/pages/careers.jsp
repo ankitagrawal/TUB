@@ -268,12 +268,13 @@
 <div id="tab-container" class='tab-container'>
 <ul class='etabs'>
   <li class='tab'><a href="#tech">Tech</a></li>
+  <li class='tab'><a href="#design">Design</a></li>
   <li class='tab'><a href="#category">Category</a></li>
   <li class='tab'><a href="#cs">Customer Support</a></li>
 </ul>
 <div class='panel-container'>
 <div id="cs">
-  <h3>Position: Customer Counseling Executive
+  <h3>Position: Customer Development Executive
   </h3>
 
   <p>Responsibilities:</p>
@@ -295,7 +296,40 @@
   </ul>
   <p>Compensation:</p>
   <ul>
-    <li>Rs 1.2-1.5 L per annum</li>
+    <li>Rs 1.2 to 2 L per annum</li>
+    <li>High performers would be promoted fast</li>
+  </ul>
+</div>
+
+<div id="design">
+  <h3>Position: Graphic Design Lead
+  </h3>
+
+  <p><strong>Job description:</strong></p>
+  <p>Healthkart is looking for a graphic design lead. Maybe two. Apart from raising the titanic, your job involves</p>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>conceptualizing the overall look and feel and sometimes copy of all our marketing collaterals</li>
+    <li>working with the copywriters and front end engineers to guide the design to fruition</li>
+    <li>conceptualizing the display ads, print ads etc. based on key objectives as needed by the business/campaign</li>
+    <li>building our retail presence with store design and below the line communications</li>
+  </ul>
+  <p><strong>Skills and experience:</strong></p>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>Excellent understanding of typography, color theory and layouts</li>
+    <li>Proficient with Photoshop, Illustrator</li>
+    <li>Branding - a strong understanding of how copy and design go hand in hand. Setting the design guidelines for various media like website, print, banners etc.</li>
+    <li>Ability to lead a team of designers and co-ordinate with engineers and copy writers to get the desired output</li>
+    <li>Ability to improvise and be productive in a time and resource constrained environment</li>
+    <li>We'd like someone who has worked with a design agency, preferably the younger ones</li>
+    <li>We'd also like you to have graduated from some prestigious institution with a Visual Communications Degree</li>
+  </ul>
+  <p><strong>Experience:</strong></p>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>2-5 years in design</li>
+  </ul>
+  <p><strong>Compensation:</strong></p>
+  <ul style="list-style:circle; padding-left:20px">
+    <li>As per industry standards.</li>
     <li>High performers would be promoted fast</li>
   </ul>
 </div>
