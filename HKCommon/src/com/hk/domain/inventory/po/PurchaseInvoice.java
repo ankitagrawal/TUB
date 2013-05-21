@@ -7,11 +7,15 @@ import com.hk.domain.catalog.Supplier;
 import com.hk.domain.core.PurchaseFormType;
 import com.hk.domain.core.Surcharge;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.inventory.rtv.ExtraInventoryLineItem;
+import com.hk.domain.inventory.rtv.RtvNote;
+import com.hk.domain.inventory.rtv.RtvNoteStatus;
 import com.hk.domain.payment.PaymentHistory;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +95,16 @@ public class PurchaseInvoice implements java.io.Serializable {
 
 	@Column(name = "final_payable_amount")
 	private Double finalPayableAmount;
-
+	
+	@Column(name = "short_amount")
+	private Double shortAmount;
+	
+	@Column(name = "rtv_amount")
+	private Double rtvAmount;
+	
+	@Column(name = "pi_rtv_short_total")
+	private Double piRtvShortTotal;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "purchaseInvoice")
 	private List<PurchaseInvoiceLineItem> purchaseInvoiceLineItems = new ArrayList<PurchaseInvoiceLineItem>(0);
   
@@ -107,6 +120,24 @@ public class PurchaseInvoice implements java.io.Serializable {
 	)
 	private List<GoodsReceivedNote> goodsReceivedNotes = new ArrayList<GoodsReceivedNote>();
 
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "purchase_invoice_has_rtv_note",
+	    joinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "rtv_note_id", nullable = false, updatable = false)}
+	)
+	private List<RtvNote> rtvNotes = new ArrayList<RtvNote>();
+	
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	    name = "purchase_invoice_has_extra_inventory_line_item",
+	    joinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)},
+	    inverseJoinColumns = {@JoinColumn(name = "extra_inventory_line_item_id", nullable = false, updatable = false)}
+	)
+	private List<ExtraInventoryLineItem> eiLineItems = new ArrayList<ExtraInventoryLineItem>();
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "surcharge_id")
 	private Surcharge surcharge;
@@ -123,7 +154,10 @@ public class PurchaseInvoice implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_form_type_id")
     private PurchaseFormType purchaseFormType;
-
+    
+    @Column(name = "physical_invoice_amount")
+	private Double physicalInvoiceAmount;
+    
 	public Long getId() {
 		return this.id;
 	}
@@ -339,8 +373,56 @@ public class PurchaseInvoice implements java.io.Serializable {
   public void setPaymentHistories(List<PaymentHistory> paymentHistories) {
     this.paymentHistories = paymentHistories;
   }
+  
+  public List<RtvNote> getRtvNotes() {
+	return rtvNotes;
+  }
 
-  @Override
+  public void setRtvNotes(List<RtvNote> rtvNotes) {
+	this.rtvNotes = rtvNotes;
+  }
+  
+public Double getShortAmount() {
+	return shortAmount;
+}
+
+public void setShortAmount(Double shortAmount) {
+	this.shortAmount = shortAmount;
+}
+
+public Double getRtvAmount() {
+	return rtvAmount;
+}
+
+public void setRtvAmount(Double rtvAmount) {
+	this.rtvAmount = rtvAmount;
+}
+
+public Double getPiRtvShortTotal() {
+	return piRtvShortTotal;
+}
+
+public void setPiRtvShortTotal(Double piRtvShortTotal) {
+	this.piRtvShortTotal = piRtvShortTotal;
+}
+
+public List<ExtraInventoryLineItem> getEiLineItems() {
+	return eiLineItems;
+}
+
+public void setEiLineItems(List<ExtraInventoryLineItem> eiLineItems) {
+	this.eiLineItems = eiLineItems;
+}
+
+public Double getPhysicalInvoiceAmount() {
+	return physicalInvoiceAmount;
+}
+
+public void setPhysicalInvoiceAmount(Double physicalInvoiceAmount) {
+	this.physicalInvoiceAmount = physicalInvoiceAmount;
+}
+
+@Override
   public String toString() {
       return id == null ? "" : id.toString();
   }

@@ -25,6 +25,7 @@ public enum EnumReason {
     InvalidPaymentStatus(160L, "Payment Status is AuthPending/Error", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreated(170L, "Shipment Not Created", EnumReasonType.NotAutoEscalated),
     HighShippingCost(180L, "High Shipping Cost", EnumReasonType.NotAutoEscalated),
+    DiscrepancyInPaymentAmount(190L, "Discrepancy In Payable vs Paid Amount", EnumReasonType.NotAutoEscalated),
     ShipmentNotCreatedManual(210L, "Shipment Not Created", EnumReasonType.NotManualEscalated),
     InvalidPaymentStatusManual(220L, "Payment Status is AuthPending/Error", EnumReasonType.NotManualEscalated),
     InsufficientUnbookedInventoryManual(230L, "Insufficient Unbooked Inventory", EnumReasonType.NotManualEscalated),
