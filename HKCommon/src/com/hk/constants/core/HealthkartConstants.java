@@ -30,5 +30,10 @@ public class HealthkartConstants {
   public static class BreadcrumbContext {
     public static final String admin = "admin";
   }
+
+  public static class URL {
+    public static final String productReferrerId = "productReferrerId";
+    public static final String productPosition = "productPosition";
+  }
   
 }

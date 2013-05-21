@@ -115,17 +115,26 @@ Pass an attribute called pricingDto to render a table with pricing details
 
 
                 <div class='price' style="position: relative;text-align: center;margin-left: 0px;">
-
-                    <div class="cut">
-                        <div class="num lineItemSubTotalMrp arialGrayBold" style="left: 70px;position: relative;margin-bottom: 7px;"> Rs
-                            <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
-                                              pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
-                    </div>
-                    <div style="left: 70px;position: relative;">
-          <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
-                  value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
-                  pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
-                    </div>
+                  <c:choose>
+                    <c:when test="${invoiceLineItem.hkPrice == 0.0}">
+                      <div style="left: 70px;position: relative;">
+                        <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Free!</span>
+                      </div>
+                    </c:when>
+                    <c:otherwise>
+                      <div class="cut">
+                        <div class="num lineItemSubTotalMrp arialGrayBold"
+                             style="left: 70px;position: relative;margin-bottom: 7px;"> Rs
+                          <fmt:formatNumber value="${invoiceLineItem.markedPrice * invoiceLineItem.qty}"
+                                            pattern="<%=FormatUtils.currencyFormatPattern%>"/></div>
+                      </div>
+                      <div style="left: 70px;position: relative;">
+                  <span class="lineItemSubTotalMrp arialBlackBold" style="font-weight:bold;">Rs <fmt:formatNumber
+                      value="${invoiceLineItem.hkPrice * invoiceLineItem.qty}"
+                      pattern="<%=FormatUtils.currencyFormatPattern%>"/></span>
+                      </div>
+                    </c:otherwise>
+                  </c:choose>
                 </div>
                 <div class='floatix'></div>
             </div>
