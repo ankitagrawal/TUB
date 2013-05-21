@@ -14,6 +14,14 @@
 <s:useActionBean beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction" event="pre" var="rpBean"/>
 
 <%
+  PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
+		if(principal != null){
+	        pageContext.setAttribute("userId", principal.getId());
+		}
+		else{
+			pageContext.setAttribute("userId", null);
+		}
+
   String roles = RoleConstants.HK_USER + "," + RoleConstants.HK_UNVERIFIED;
 
   String originalUrlHeader = (String) request.getAttribute("javax.servlet.forward.request_uri");
@@ -81,6 +89,7 @@
         </div>
 
         <div style="margin-top: 2px; float: right; margin-right: 10px; font-size: 12px;">
+           </a>
           Welcome,
             <span class='name'>
               <shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
@@ -94,6 +103,27 @@
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
                 </strong>
+                <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}"/>
+                <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
+                  <c:choose>
+                    <c:when test="${badge.badgeName == 'PLATINUM'}">
+                      <span style="font-size:1.1em;color:white;
+                       background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/platinum1.png');">Platinum</span>
+                    </c:when>
+                    <c:when test="${badge.badgeName == 'GOLD'}">
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/gold1.png');">Gold</span>
+                    </c:when>
+                    <c:when test="${badge.badgeName == 'SILVER'}">
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/silver1.png');">Silver</span>
+                    </c:when>
+                    <c:when test="${badge.badgeName == 'BRONZE'}">
+                      <span style="font-size:1.1em;color:white;
+                      background-image:url('${pageContext.request.contextPath}/pages/loyalty/resources/images/bronze1.png');">Bronze</span>
+                    </c:when>
+                    
+                  </c:choose>
             </span>
           <c:if test="${(rpBean.redeemablePoint - rpBean.user.userAccountInfo.overusedRewardPoints) > 0}">
             <s:link beanclass="com.hk.web.action.core.discount.RewardPointTxnStatementAction"
@@ -132,7 +162,6 @@
                   |
                 </shiro:hasAnyRoles>
                 <%
-                  PrincipalImpl principal = (PrincipalImpl) SecurityUtils.getSubject().getPrincipal();
                   if (principal != null && principal.isAssumed()) {
                 %>
                 <s:link beanclass="com.hk.web.action.admin.user.AssumedLogoutAction" class="sml" rel="noFollow">(Release

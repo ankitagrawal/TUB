@@ -462,7 +462,7 @@ public class PricingEngine {
             }
         }
         if (discountGiven
-                && pricingDto.getGrandTotalProducts() + pricingDto.getOrderLevelDiscount() + pricingDto.getRedeemedRewardPoints() - pricingDto.getShippingTotal() > 0
+                && pricingDto.getGrandTotalProducts() + pricingDto.getOrderLevelDiscount() + pricingDto.getRedeemedRewardPoints() - pricingDto.getShippingTotal() >= 0
                 && pricingDto.getGrandTotalProducts() + pricingDto.getOrderLevelDiscount() + pricingDto.getRedeemedRewardPoints() - pricingDto.getShippingTotal() < shippingFreeAfter) {
             for (CartLineItem lineitem : lineitems) {
                 if (lineitem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.getId())) {

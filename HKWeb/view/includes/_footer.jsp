@@ -15,6 +15,8 @@
           <li>
             <a href="${pageContext.request.contextPath}/pages/aboutCompany.jsp"><span class="txt-white">About Us</span></a>
           </li>
+          
+          <li><a href="${pageContext.request.contextPath}/loyaltypg" target="_blank"><span class="txt-white">Stellar</span></a></li>
           <li><a href="${pageContext.request.contextPath}/affiliate"><span class="txt-white">Affiliate</span></a></li>
           <%--<li><a href="${pageContext.request.contextPath}/b2b"><span class="txt-white">For Business</span></a></li>--%>
           <li><s:link beanclass="com.hk.web.action.pages.ContactAction"><span class="txt-white">Contact Us</span></s:link>
@@ -39,7 +41,7 @@
             <c:if test="${topMenuNode.name != 'Baby'}">
             <li><a href="${pageContext.request.contextPath}${topMenuNode.url}">${topMenuNode.name}</a></li>
             </c:if>
-          </c:forEach>
+          </c:forEach>           
         </ul>
       </div>
       <div class='column'>
@@ -71,9 +73,13 @@
             <h5>
                 Misc
             </h5>
-            <ul>
-                <li>   <s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction" event="pre" >Subscriptions </s:link> </li>
-            </ul>
+          <ul>
+            <li><s:link beanclass="com.hk.web.action.core.subscription.AboutSubscriptionAction"
+                        event="pre">Subscriptions </s:link></li>
+            <li>
+              <a href="${pageContext.request.contextPath}/super-savers"><span class="txt-white">Super Savers</span></a>
+            </li>
+          </ul>
         </div>
       <div style="float:right;">
         <img src="<hk:vhostImage/>/images/banners/home/safe_secure_footer.gif" alt="safe and secure shopping at healthkart">
@@ -105,9 +111,16 @@
       </div>
     </div>
   </div>
+  <div id="bulkOrderModal" class="bulkOrderModal"></div>
   <div class='floatfix'></div>
-  </div>
 
+  <script type="text/javascript">
+    $('#bulkOrderModal').jqm({trigger: '.bulkOrder'});
+    $("#bulkOrderModal").append($('<iframe id="raj_frame" class="bulkModalFrame" src="https://docs.google.com/a/healthkart.com/spreadsheet/viewform?formkey=dDdiX1pReU8zSXk4Y1pqcVMxQU43bnc6MQ#gid=0" width="760" height="760" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>'));
+    $(".bulkOrder").click(function(){
+      $('html, body').animate({scrollTop: $("#bulkOrderModal").offset().top - 50}, 1000);
+    });
+  </script>
   <%--<script type="text/javascript">
 
 	  // Set the number of snowflakes (more than 30 - 40 not recommended)

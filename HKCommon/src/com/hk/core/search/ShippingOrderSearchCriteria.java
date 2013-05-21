@@ -6,8 +6,11 @@ import java.util.Set;
 
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.category.Category;
+import com.hk.domain.core.OrderStatus;
+import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.courier.Zone;
+import com.hk.domain.order.ShippingOrderLifeCycleActivity;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -27,7 +30,13 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private List<Awb> awbList;
     private List<Courier> courierList;
     private Long warehouseId;
+
     private Boolean isServiceOrder = null;
+    private Boolean dropShip;
+    private Boolean containsJit;
+    private Boolean b2bOrder;
+    private Integer userCodCallStatus;
+
     private Date activityStartDate;
     private Date activityEndDate;
     private String basketCategory;
@@ -38,9 +47,10 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     private Date paymentStartDate;
     private Date paymentEndDate ;
 
-    private List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities;
+    private List<ShippingOrderLifeCycleActivity> shippingOrderLifeCycleActivities;
     private List<ShippingOrderStatus> shippingOrderStatusList;
     private List<PaymentStatus>       paymentStatuses;
+    private List<PaymentMode>       paymentModes;
     private List<Reason> reasonList;
 
     private boolean searchForPrinting = false;
@@ -59,7 +69,7 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         return this;
     }
 
-    public ShippingOrderSearchCriteria setShippingOrderLifeCycleActivities(List<EnumShippingOrderLifecycleActivity> shippingOrderLifeCycleActivities) {
+    public ShippingOrderSearchCriteria setShippingOrderLifeCycleActivities(List<ShippingOrderLifeCycleActivity> shippingOrderLifeCycleActivities) {
         this.shippingOrderLifeCycleActivities = shippingOrderLifeCycleActivities;
         return this;
     }
@@ -116,6 +126,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
     public ShippingOrderSearchCriteria setPaymentStatuses(List<PaymentStatus> paymentStatuses) {
         this.paymentStatuses = paymentStatuses;
+        return this;
+    }
+
+    public ShippingOrderSearchCriteria setPaymentModes(List<PaymentMode> paymentModes) {
+        this.paymentModes = paymentModes;
         return this;
     }
 
@@ -227,6 +242,11 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
             baseOrderCriteria.add(Restrictions.eq("gatewayOrderId", baseGatewayOrderId));
         }
 
+        if(userCodCallStatus != null){
+            DetachedCriteria  codCallCriteria  =   baseOrderCriteria.createCriteria("userCodCall");
+            codCallCriteria.add(Restrictions.eq("callStatus", userCodCallStatus));
+        }
+
         DetachedCriteria warehouseCriteria = null;
         if (warehouseId != null) {
             warehouseCriteria = criteria.createCriteria("warehouse");
@@ -235,14 +255,23 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
         if (isServiceOrder != null) {
             criteria.add(Restrictions.eq("isServiceOrder", isServiceOrder));
         }
+        if (dropShip != null) {
+            criteria.add(Restrictions.eq("isDropShipping", dropShip));
+        }
+        if (b2bOrder != null) {
+            criteria.add(Restrictions.eq("b2bOrder", b2bOrder));
+        }
+        if (containsJit != null) {
+            criteria.add(Restrictions.eq("containsJitProducts", containsJit));
+        }
+
 
         DetachedCriteria shippingOrderLifecycleCriteria = null;
         if (shippingOrderLifeCycleActivities != null && shippingOrderLifeCycleActivities.size() > 0) {
-            List<Long> shippingOrderLifeCycleIds = EnumShippingOrderLifecycleActivity.getSOLifecycleActivityIDs(shippingOrderLifeCycleActivities);
             if (shippingOrderLifecycleCriteria == null) {
                 shippingOrderLifecycleCriteria = criteria.createCriteria("shippingOrderLifecycles");
             }
-            shippingOrderLifecycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity.id", shippingOrderLifeCycleIds));
+            shippingOrderLifecycleCriteria.add(Restrictions.in("shippingOrderLifeCycleActivity", shippingOrderLifeCycleActivities));
             DetachedCriteria lifecycleCriteria = null;
             if (reasonList != null && !reasonList.isEmpty()) {
                 if (lifecycleCriteria == null) {
@@ -266,6 +295,9 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
 
         if (paymentStatuses != null && paymentStatuses.size() > 0) {
             paymentCriteria.add(Restrictions.in("paymentStatus", paymentStatuses));
+        }
+        if (paymentModes != null && paymentModes.size() > 0) {
+            paymentCriteria.add(Restrictions.in("paymentMode", paymentModes));
         }
 
         if (paymentStartDate != null || paymentEndDate != null) {
@@ -383,5 +415,21 @@ public class ShippingOrderSearchCriteria extends AbstractOrderSearchCriteria {
     public ShippingOrderSearchCriteria setEndTargetDispatchDate(Date endTargetDispatchDate) {
         this.endTargetDispatchDate = endTargetDispatchDate;
         return this;
+    }
+
+    public void setDropShip(Boolean dropShip) {
+        this.dropShip = dropShip;
+    }
+
+    public void setContainsJit(Boolean containsJit) {
+        this.containsJit = containsJit;
+    }
+
+    public void setB2bOrder(Boolean b2bOrder) {
+        this.b2bOrder = b2bOrder;
+    }
+
+    public void setUserCodCallStatus(Integer userCodCallStatus) {
+        this.userCodCallStatus = userCodCallStatus;
     }
 }
