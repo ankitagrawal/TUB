@@ -9,7 +9,7 @@
 
 <s:useActionBean beanclass="com.hk.web.action.core.loyaltypg.CartAction" var="ca" />
 
-<link href="<hk:vhostJs/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
+<link href="<hk:vhostCss/>/pages/loyalty/resources/css/bootstrap.css" rel="stylesheet">
 <script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/bootbox.js"></script>
 
 <stripes:layout-render name="/pages/loyalty/layout.jsp">
@@ -133,12 +133,12 @@ pageContext.setAttribute("isSecure", isSecure);
 
 								</td>
 								<td width="30%" style="text-align:center;">
-									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
+									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostCss/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
 									&nbsp;&nbsp;
 									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}" maxlength="3"
 								           style="width:30px;height:24px;" disabled="disabled"/>
 								     &nbsp;&nbsp;
-								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostJs/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
+								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostCss/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
 								        <p class="removeLink">(Remove)</p>
 									<br/>
 									<span class="error-message" style="display:none">

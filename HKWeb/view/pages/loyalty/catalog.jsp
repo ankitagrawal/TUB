@@ -167,7 +167,7 @@ pageContext.setAttribute("isSecure", isSecure);
             <div class="grid_12 embedMarginBottom40" id="productCategory">
               <div class="dottedLine"></div>
               <div class="productCategoryText">
-                <img src="<hk:vhostJs/>/pages/loyalty/resources/images/stellarLogo.png" class="stellarLogo" alt="1">
+                <img src="<hk:vhostImage/>/pages/loyalty/resources/images/stellarLogo.png" class="stellarLogo" alt="1">
               </div>
               <div class="dottedLine"></div>
             </div>        

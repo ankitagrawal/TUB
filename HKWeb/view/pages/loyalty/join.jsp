@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/includes/_taglibInclude.jsp"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld"%>
-<link rel="stylesheet" type="text/css" media="all" href="<hk:vhostJs/>/pages/loyalty/resources/css/jsDatePick_ltr.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="<hk:vhostCss/>/pages/loyalty/resources/css/jsDatePick_ltr.min.css" />
 <script type="text/javascript" src="<hk:vhostJs/>/pages/loyalty/resources/js/jsDatePick.min.1.3.js"></script>
 
 <stripes:layout-render name="/pages/loyalty/info/layoutStatic.jsp">
