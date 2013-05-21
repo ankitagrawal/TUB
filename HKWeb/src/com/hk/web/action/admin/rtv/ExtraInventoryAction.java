@@ -505,8 +505,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			}
 		}
 		generatePO();
-		return new ForwardResolution(ExtraInventoryAction.class, "pre")
-				.addParameter("purchaseOrderId", purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+		return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+				.addParameter("wareHouseId", wareHouseId);
 	}
 
 	@Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
@@ -570,8 +570,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				}
 				noCache();
 				addRedirectAlertMessage(new SimpleMessage("PO is not in Generated State"));
-				return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
-						purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+				return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+						.addParameter("wareHouseId", wareHouseId);
 			}
 		}
 
@@ -583,6 +583,14 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				extraInventoryLineItem = getExtraInventoryLineItemService().getExtraInventoryLineItemById(
 						extraInventoryLineItem.getId());
 				extraInventoryLineItem.setGrnCreated(true);
+				if (extraInventoryLineItem.getExtraInventoryLineItemType() != null) {
+					Long id = extraInventoryLineItem.getExtraInventoryLineItemType().getId();
+					if (id != null) {
+						EnumExtraInventoryLineItemType lineItemType = EnumExtraInventoryLineItemType.getById(id);
+						extraInventoryLineItem.setExtraInventoryLineItemType(lineItemType
+								.asEnumExtraInventoryLineItemType());
+					}
+				}
 				extraInventoryLineItem = getExtraInventoryLineItemService().save(extraInventoryLineItem);
 				PoLineItem poLineItem = new PoLineItem();
 				poLineItem.setExtraInventoryLineItem(extraInventoryLineItem);
@@ -607,8 +615,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		noCache();
 		addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - "
 				+ newPurchaseOrder.getId()));
-		return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
-				purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+		return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+				.addParameter("wareHouseId", wareHouseId);
 	}
 
 	@Secure(hasAnyPermissions = { PermissionConstants.PO_MANAGEMENT }, authActionBean = AdminPermissionAction.class)
