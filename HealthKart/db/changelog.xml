@@ -12876,12 +12876,6 @@
     		insert into store (id,name,prefix) values ('4','LOYALTYPG', 'LP');
     	</sql>
 	</changeSet>
-    <changeSet author="Nihal (generated)" id="1367933059204-2">
-        <addColumn tableName="grn_line_item">
-            <column name="weight" type="DOUBLE">
-            </column>
-        </addColumn>
-    </changeSet>
     <changeSet author="Nihal (generated)" id="1367838930686-3">
         <createTable tableName="purchase_invoice_has_rtv_note">
             <column name="purchase_invoice_id" type="INT">
