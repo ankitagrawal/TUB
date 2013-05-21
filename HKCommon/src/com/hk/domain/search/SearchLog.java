@@ -30,6 +30,9 @@ public class SearchLog implements java.io.Serializable {
   @Column(name = "category", nullable = false, length = 200)
   private String category;
 
+  @Column(name = "first_click_pos", length = 45)
+  private String firstClickPos;
+
   public Long getId() {
     return this.id;
   }
@@ -68,6 +71,14 @@ public class SearchLog implements java.io.Serializable {
 
   public void setCategory(String category) {
     this.category = category;
+  }
+
+  public String getFirstClickPos() {
+    return firstClickPos;
+  }
+
+  public void setFirstClickPos(String firstClickPos) {
+    this.firstClickPos = firstClickPos;
   }
 }
 

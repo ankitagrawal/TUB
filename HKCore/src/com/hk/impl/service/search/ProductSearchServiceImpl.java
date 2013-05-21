@@ -2,8 +2,8 @@ package com.hk.impl.service.search;
 
 import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
 import com.hk.constants.HttpRequestAndSessionConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.*;
@@ -12,10 +12,10 @@ import com.hk.dto.search.SearchResult;
 import com.hk.exception.SearchException;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.analytics.SearchLogDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductIndexService;
 import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.filter.WebContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -55,7 +55,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
     LinkManager           linkManager;
 
     @Autowired
-    BaseDao baseDao;
+    SearchLogDao searchLogDao;
 
     private final String  SEARCH_SERVER = "SOLR";
 
@@ -304,7 +304,7 @@ class ProductSearchServiceImpl implements ProductSearchService {
             products = productService.getAllProductsById(productIds);
             sortedProducts = new ArrayList<Product>(products);
             for (Product product : products) {
-                product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+                product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
                 int index = solrProductIndexMap.get(product.getId());
                 sortedProducts.set(index, product);
             }
@@ -474,18 +474,35 @@ class ProductSearchServiceImpl implements ProductSearchService {
         searchLog.setKeyword(keyword);
         searchLog.setResults(results);
         searchLog.setCategory(category);
-        getBaseDao().save(searchLog);
+        getSearchLogDao().save(searchLog);
       }
     } catch (Exception e) {
       logger.error("Exception while logging search results "+e.getMessage());
     }
   }
 
-  public BaseDao getBaseDao() {
-    return baseDao;
+  @Override
+  public void updatePositionInSearchLog(String position) {
+    try {
+      TrafficTracking trafficTracking = (TrafficTracking) WebContext.getRequest().getSession().getAttribute(HttpRequestAndSessionConstants.TRAFFIC_TRACKING);
+      if (trafficTracking != null) {
+        Long trafficTrackingId = trafficTracking.getId();
+        SearchLog searchLog = getSearchLogDao().getLatestSearchLog(trafficTrackingId);
+        if (searchLog != null && searchLog.getFirstClickPos() == null) {
+          searchLog.setFirstClickPos(position);
+          getSearchLogDao().save(searchLog);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Exception while updating first click position" + e.getMessage());
+    }
   }
 
-  public void setBaseDao(BaseDao baseDao) {
-    this.baseDao = baseDao;
+  public SearchLogDao getSearchLogDao() {
+    return searchLogDao;
+  }
+
+  public void setSearchLogDao(SearchLogDao searchLogDao) {
+    this.searchLogDao = searchLogDao;
   }
 }

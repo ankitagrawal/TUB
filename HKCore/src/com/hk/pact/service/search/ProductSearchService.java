@@ -34,4 +34,6 @@ public interface ProductSearchService {
     SearchResult getBrandCatalogResults(String brand, Category topLevelCategory, int page, int perPage, String preferredZone, boolean showGoogleBannedProducts) throws SearchException;
 
     public void logSearchResult(String keyword, Long results, String category);
+
+    public void updatePositionInSearchLog(String position);
 }
