@@ -85,10 +85,7 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                                     ${productLineItem.qty}
                                 </td>
                                 <td>
-	                                <#if productLineItem.markedPrice &gt; productLineItem.hkPrice>
-	                                <span
-                                        style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
-	                                </#if>
+	                                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
 	                                0
                                 </td>
                                 <td> 0 </td>
