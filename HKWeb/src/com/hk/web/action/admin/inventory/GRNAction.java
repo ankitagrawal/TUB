@@ -14,6 +14,7 @@ import com.hk.admin.pact.dao.inventory.PurchaseInvoiceDao;
 import com.hk.admin.pact.service.inventory.PoLineItemService;
 import com.hk.admin.pact.service.inventory.PurchaseOrderService;
 import com.hk.admin.pact.service.rtv.ExtraInventoryService;
+import com.hk.admin.pact.service.rtv.RtvNoteService;
 import com.hk.admin.util.TaxUtil;
 import com.hk.constants.core.EnumSurcharge;
 import com.hk.constants.core.Keys;
@@ -32,6 +33,8 @@ import com.hk.domain.inventory.po.PurchaseInvoice;
 import com.hk.domain.inventory.po.PurchaseInvoiceLineItem;
 import com.hk.domain.inventory.po.PurchaseInvoiceStatus;
 import com.hk.domain.inventory.po.PurchaseOrder;
+import com.hk.domain.inventory.rtv.ExtraInventory;
+import com.hk.domain.inventory.rtv.RtvNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
@@ -94,8 +97,8 @@ public class GRNAction extends BasePaginatedAction {
     private ExtraInventoryService extraInventoryService;
     @Autowired
 	PoLineItemDao poLineItemDao;
-
-
+    @Autowired
+    RtvNoteService rtvNoteService;
 
 	@Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
 	String adminDownloads;
@@ -394,6 +397,7 @@ public class GRNAction extends BasePaginatedAction {
 				Double discountPercentage = 0D;
 				PurchaseInvoiceLineItem purchaseInvoiceLineItem = new PurchaseInvoiceLineItem();
 				purchaseInvoiceLineItem.setPurchaseInvoice(purchaseInvoice);
+				purchaseInvoiceLineItem.setGrnLineItem(grnLineItem);
 				if (grnLineItem.getCostPrice() != null) {
 					purchaseInvoiceLineItem.setCostPrice(grnLineItem.getCostPrice());
 				}
@@ -441,6 +445,7 @@ public class GRNAction extends BasePaginatedAction {
 			grn.setReconciled(true);
 			goodsReceivedNoteDao.save(grn);
 		}
+		
 		purchaseInvoice.setDiscount(overallDiscount);
 		purchaseInvoice.setGoodsReceivedNotes(grnListForPurchaseInvoice);
 		purchaseInvoice.setTaxableAmount(totalTaxable);
@@ -448,6 +453,9 @@ public class GRNAction extends BasePaginatedAction {
 		purchaseInvoice.setSurchargeAmount(totalSurcharge);
 		purchaseInvoice.setPayableAmount(totalPayable);
 		purchaseInvoice.setFinalPayableAmount(totalPayable - overallDiscount);
+		purchaseInvoice.setShortAmount(0.0);
+		purchaseInvoice.setRtvAmount(0.0);
+		purchaseInvoice.setPiRtvShortTotal(totalPayable - overallDiscount);
 		purchaseInvoiceDao.save(purchaseInvoice);
 
 		addRedirectAlertMessage(new SimpleMessage("Purchase Invoice generated from GRN(s). Please adjust it according to invoice"));

@@ -9,7 +9,10 @@
     pageContext.setAttribute("topCategory", topCategory);
     if (AnalyticsConstants.analytics) {
 %>
+    <%--
+
 <c:if test="${topCategory == 'nutrition' || topCategory == 'diabetes' || topCategory == 'health-devices'}">
+
   <script type="text/javascript">
   window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=
   z.s=d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o
@@ -37,6 +40,7 @@
       $zopim.livechat.setEmail($('.email').html());
     });
   </script>
+
 </c:if>
 <script id="_webengage_script_tag" type="text/javascript">
   window.webengageWidgetInit = window.webengageWidgetInit || function(){
@@ -56,6 +60,7 @@
     _sNode.parentNode.insertBefore(_we, _sNode);
   })(document);
 </script>
+--%>
 
 <%
     }
