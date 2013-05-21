@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -23,6 +24,7 @@ import com.hk.admin.pact.service.courier.AwbService;
 import com.hk.admin.pact.service.courier.CourierService;
 import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.courier.EnumAwbStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
@@ -54,6 +56,10 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     Page shippingOrderPage;
     @Autowired
     CourierService courierService;
+
+
+    @Autowired
+    LoyaltyProgramService loyaltyProgramService;
 
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
@@ -127,6 +133,10 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
+	            //loyalty program
+                if (shippingOrder.getBaseOrder().getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+                	loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
+                }
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as Delivered"));
         } else {
