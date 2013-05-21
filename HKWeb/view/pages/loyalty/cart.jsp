@@ -173,7 +173,7 @@ pageContext.setAttribute("isSecure", isSecure);
 			<c:otherwise>
 				<div class="row">
 					<div class="span12">
-						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="<hk:vhostJs/>/loyaltypg"> Click here</a> to go back to shop something.
+						<h4>Cart is Empty! </h4> <a title="stellar" class="blue" href="${pageContext.request.contextPath}/loyaltypg"> Click here</a> to go back to shop something.
 					</div>
 				</div>
 			</c:otherwise>
