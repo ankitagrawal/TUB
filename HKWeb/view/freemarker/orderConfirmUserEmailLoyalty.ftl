@@ -85,7 +85,8 @@ Order Confirmation for Order ID ${order.gatewayOrderId}
                                     ${productLineItem.qty}
                                 </td>
                                 <td>
-	                                    style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
+	                                <span
+                                        style="text-decoration: line-through;">${productLineItem.markedPrice}</span>
 	                                0
                                 </td>
                                 <td> 0 </td>
