@@ -121,6 +121,13 @@ public class ActionTask implements java.io.Serializable {
     public int hashCode() {
         return id.hashCode();
     }
+    
+    @Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
+	}
+
+
 }
 
 

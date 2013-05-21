@@ -78,12 +78,14 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.User;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.core.Country;
+import com.hk.domain.queue.ActionItem;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
@@ -102,6 +104,7 @@ import com.hk.service.ServiceLocatorFactory;
 import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
+import com.hk.impl.service.queue.BucketService;
 
 public class Functions {
 
@@ -845,6 +848,12 @@ public class Functions {
 
   public static String getStateFromTin(String tin){
     return StateList.getStateByTin(tin);
+  }
+
+
+    public static ActionItem getActionItem(ShippingOrder shippingOrder) {
+    ActionItemDao actionItemDao = ServiceLocatorFactory.getService(ActionItemDao.class);
+    return actionItemDao.searchActionItem(shippingOrder);
   }
 
 }

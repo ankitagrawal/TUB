@@ -49,6 +49,15 @@ public enum EnumActionTask {
         return actionTaskIds;
     }
 
+    public static ActionTask getActionTaskById(Long actionTaskId){
+      for(EnumActionTask enumActionTask : values()){
+         if(enumActionTask.getId().equals(actionTaskId)){
+             return enumActionTask.asActionTask();
+         }
+      }
+        return null;
+    }
+
     public Long getId() {
         return id;
     }

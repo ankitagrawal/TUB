@@ -1177,5 +1177,17 @@
             ${hk:getStateFromTin(${o1})}
         </example>
     </function>
+      <function>
+        <description>
+            returns appropriate Action Item based on SO
+        </description>
+        <name>getActionItem</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>com.hk.domain.queue.ActionItem getActionItem(com.hk.domain.order.ShippingOrder))</function-signature>
+        <example>
+            ${hk:getActionItem(${o1})}
+        </example>
+    </function>
+
 
 </taglib>

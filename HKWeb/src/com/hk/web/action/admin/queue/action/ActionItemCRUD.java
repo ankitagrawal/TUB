@@ -5,13 +5,13 @@ import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.ActionTask;
 import com.hk.impl.service.queue.BucketService;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
+import com.hk.constants.queue.EnumActionTask;
+import com.hk.constants.queue.EnumTrafficState;
+import net.sourceforge.stripes.action.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,22 +51,20 @@ public class ActionItemCRUD extends BaseAction {
     ActionItem actionItem;
     List<Bucket> buckets = new ArrayList<Bucket>();
     List<ActionTask> actionTasks = new ArrayList<ActionTask>();
-    ActionTask actionTask;
+    List<ActionItem> actionItems = new ArrayList<ActionItem>();
+    Long actionTaskId;
+
 
     @Autowired
     private BucketService bucketService;
 
-    public Resolution pre() {
-        return new ForwardResolution("/pages/admin/queue/actionItemCRUD.jsp");
-    }
-
-
+    @DefaultHandler
     public Resolution view() {
         buckets = getBaseDao().getAll(Bucket.class);
         if (actionItem != null) {
             List<Bucket> bucketList = actionItem.getBuckets();
-            for (Bucket bucket : bucketList) {
-                if (buckets.contains(bucket)) {
+            for (Bucket bucket : buckets) {
+                if (bucketList.contains(bucket)) {
                     bucket.setSelected(true);
                 }
             }
@@ -80,26 +78,86 @@ public class ActionItemCRUD extends BaseAction {
         for (Bucket bucket : buckets) {
             if (bucket.getId() != null) {
                 if (bucket.isSelected()) {
-                    actionItemBuckets.add(bucket);
+                    actionItemBuckets.add(bucketService.getBucketById(bucket.getId()));
                 }
             }
         }
         actionItem.setBuckets(actionItemBuckets);
         getBaseDao().save(actionItem);
-       
-
-        return null;
+        addRedirectAlertMessage(new SimpleMessage("Action Item Updated Successfully"));
+        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
     }
 
 
-
-    public Resolution updateTask(){
+    public Resolution updateTask() {
 //      actionItem =  bucketService.autoUpdateActionItem(actionItem, false);
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        ActionTask actionTask = EnumActionTask.getActionTaskById(actionTaskId);
         actionItem.setCurrentActionTask(actionTask);
         getBaseDao().save(actionItem);
+        addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
+        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+    }
+
+
+    public Resolution flagActionItems() {
+        if(actionItem == null){
+            addRedirectAlertMessage(new SimpleMessage("Please select the action Item"));
+            return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+
+        }
+        actionItem.setFlagged(true);
+        getBaseDao().save(actionItem);
+        addRedirectAlertMessage(new SimpleMessage("Action Item marked flagged"));
+        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+
+    }
+
+
+    public Resolution acknowledgeActionTask() {
+        ActionTask actionTask = actionItem.getCurrentActionTask();
+        actionTask.setAcknowledged(true);
+        actionTask.setAcknowledgedBy(getUserService().getUserById(getPrincipal().getId()));
+        getBaseDao().save(actionTask);
+        addRedirectAlertMessage(new SimpleMessage("Current action Task has been acknowledged"));
+        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+
+    }
+
+
+    public Resolution changeTrafficState (){
+      Date firstPushDate =actionItem.getFirstPushDate();
+      Date currDate = new Date();
+       Long noOfDaysLapse = Math.round( (currDate.getTime() - firstPushDate.getTime())/86400000D);
+        int priority = 1;
+        if ( noOfDaysLapse.intValue() < 2){
+               priority = 1;
+        } else {
+             priority = 2;
+        }
+        switch(priority){
+            case 1 :
+                actionItem.setTrafficState(EnumTrafficState.NORMAL.asTrafficState());
+                break;
+            case 2:
+              
+                actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
+                break ;
+        }
+         getBaseDao().save(actionItem);
+        addRedirectAlertMessage(new SimpleMessage("Traffic State has been changed"));
+        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+
+    }
+
+
+
+    public Resolution prioritizeActionItems (){
+
         return null;
     }
+    
+    
 
     public ActionItem getActionItem() {
         return actionItem;
@@ -125,11 +183,19 @@ public class ActionItemCRUD extends BaseAction {
         this.actionTasks = actionTasks;
     }
 
-    public ActionTask getActionTask() {
-        return actionTask;
+    public Long getActionTaskId() {
+        return actionTaskId;
     }
 
-    public void setActionTask(ActionTask actionTask) {
-        this.actionTask = actionTask;
+    public void setActionTaskId(Long actionTaskId) {
+        this.actionTaskId = actionTaskId;
+    }
+
+    public List<ActionItem> getActionItems() {
+        return actionItems;
+    }
+
+    public void setActionItems(List<ActionItem> actionItems) {
+        this.actionItems = actionItems;
     }
 }

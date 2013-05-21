@@ -69,4 +69,6 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         String queryString = "from Bucket b where b.name in (:bucketNames)";
         return findByNamedParams(queryString, new String[]{"bucketNames"}, new Object[]{bucketNames});
     }
+
+
 }

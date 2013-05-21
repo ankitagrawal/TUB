@@ -195,4 +195,10 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.get(Bucket.class,bucketId);
     }
 
+     @Override
+    public ActionItem getActionItemById (Long actionItemId){
+        return actionItemDao.get(ActionItem.class, actionItemId);
+    }
+
+
 }

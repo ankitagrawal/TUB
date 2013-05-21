@@ -26,5 +26,6 @@ public interface ActionItemDao extends BaseDao
 
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
-    List<Bucket> findByName(List<String> bucketNames);
+    List<Bucket> findByName(List<String> bucketNames);       
+
 }

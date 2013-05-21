@@ -62,4 +62,7 @@ public interface BucketService {
     public Bucket getBucketById(Long bucketId);
 
     ActionItem autoUpdateActionItem(ActionItem actionItem, boolean autoUpdate);
+
+    public ActionItem getActionItemById (Long actionItemId);
+
 }
