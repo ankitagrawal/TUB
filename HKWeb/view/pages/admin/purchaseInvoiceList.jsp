@@ -93,6 +93,7 @@
         <th>Actions</th>
       </tr>
       </thead>
+      <tbody>
       <c:forEach items="${pia.purchaseInvoiceList}" var="purchaseInvoice" varStatus="ctr">
         <tr>
           <td>${purchaseInvoice.id}</td>
@@ -156,6 +157,7 @@
           </td>
         </tr>
       </c:forEach>
+      </tbody>
     </table>
 
     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${pia}"/>
