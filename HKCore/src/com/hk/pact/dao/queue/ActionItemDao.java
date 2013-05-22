@@ -1,6 +1,8 @@
 package com.hk.pact.dao.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.Bucket;
@@ -22,10 +24,11 @@ public interface ActionItemDao extends BaseDao
 
     ActionItem searchActionItem(ShippingOrder shippingOrder);
 
-    List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter);
+//    List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter);
 
     List<Bucket> getBuckets(List<EnumBucket> enumBuckets);
 
-    List<Bucket> findByName(List<String> bucketNames);       
+    List<Bucket> findByName(List<String> bucketNames);
 
+    Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
 }

@@ -41,7 +41,7 @@ import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.web.HealthkartResponse;
 import com.hk.web.action.error.AdminPermissionAction;
 
-@Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PRODUCT_CATALOG}, authActionBean = AdminPermissionAction.class)
+@Secure(hasAnyPermissions = {PermissionConstants.BULK_CATALOG_UPDATE}, authActionBean = AdminPermissionAction.class)
 @Component
 public class BulkEditProductAction extends BasePaginatedAction {
 

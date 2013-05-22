@@ -11,65 +11,69 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
-
+<s:layout-definition>
 <%
-    Set<ShippingOrder> shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
+    Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+    ShippingOrder shippingOrder = (ShippingOrder) pageContext.getAttribute("shippingOrder");
+    if (shippingOrder != null) {
+        shippingOrders.add(shippingOrder);
+    } else {
+        shippingOrders.addAll((Collection<? extends ShippingOrder>) pageContext.getAttribute("shippingOrders"));
+    }
     pageContext.setAttribute("shippingOrders", shippingOrders);
-    Boolean isActionQueue = (Boolean) pageContext.getAttribute("isActionQueue");
-    Boolean isProcessingQueue = (Boolean) pageContext.getAttribute("isProcessingQueue");
-    Boolean isDropShipQueue = (Boolean) pageContext.getAttribute("isDropShipQueue");
-    Boolean isServiceQueue = (Boolean) pageContext.getAttribute("isServiceQueue");
-    Boolean isShipmentQueue = (Boolean) pageContext.getAttribute("isShipmentQueue");
-
-
-    if (isActionQueue!=null) {
-        pageContext.setAttribute("isActionQueue", isActionQueue);
+    String isActionQueue = (String) pageContext.getAttribute("isActionQueue");
+    String isProcessingQueue = (String) pageContext.getAttribute("isProcessingQueue");
+    String isDropShipQueue = (String) pageContext.getAttribute("isDropShipQueue");
+    String isServiceQueue = (String) pageContext.getAttribute("isServiceQueue");
+    String isShipmentQueue = (String) pageContext.getAttribute("isShipmentQueue");
+    if (isActionQueue != null) {
+        pageContext.setAttribute("isActionQueue", Boolean.valueOf(isActionQueue));
     } else {
         pageContext.setAttribute("isActionQueue", false);
     }
     if (isShipmentQueue != null) {
-        pageContext.setAttribute("isShipmentQueue", isShipmentQueue);
+        pageContext.setAttribute("isShipmentQueue", Boolean.valueOf(isShipmentQueue));
     } else {
         pageContext.setAttribute("isShipmentQueue", false);
     }
     if (isProcessingQueue != null) {
-        pageContext.setAttribute("isProcessingQueue", isProcessingQueue);
+        pageContext.setAttribute("isProcessingQueue", Boolean.valueOf(isProcessingQueue));
     } else {
         pageContext.setAttribute("isProcessingQueue", false);
     }
     if (isDropShipQueue != null) {
-        pageContext.setAttribute("isDropShipQueue", isDropShipQueue);
+        pageContext.setAttribute("isDropShipQueue", Boolean.valueOf(isDropShipQueue));
     } else {
         pageContext.setAttribute("isDropShipQueue", false);
     }
     if (isServiceQueue != null) {
-        pageContext.setAttribute("isServiceQueue", isServiceQueue);
+        pageContext.setAttribute("isServiceQueue", Boolean.valueOf(isServiceQueue));
     } else {
         pageContext.setAttribute("isServiceQueue", false);
     }
-    Boolean showCourier = (Boolean) pageContext.getAttribute("showCourier");
+    String showCourier = (String) pageContext.getAttribute("showCourier");
     if (showCourier != null) {
-        pageContext.setAttribute("showCourier", showCourier);
+        pageContext.setAttribute("showCourier", Boolean.valueOf(showCourier));
     } else {
         pageContext.setAttribute("showCourier", false);
     }
-    Boolean hasAction = (Boolean) pageContext.getAttribute("hasAction");
+    String hasAction = (String) pageContext.getAttribute("hasAction");
     if (hasAction != null) {
-        pageContext.setAttribute("hasAction", hasAction);
+        pageContext.setAttribute("hasAction", Boolean.valueOf(hasAction));
     } else {
         pageContext.setAttribute("hasAction", true);
     }
-    Boolean isSearchShippingOrder = (Boolean) pageContext.getAttribute("isSearchShippingOrder");
+    String isSearchShippingOrder = (String) pageContext.getAttribute("isSearchShippingOrder");
     if (isSearchShippingOrder != null) {
-        pageContext.setAttribute("isSearchShippingOrder", isSearchShippingOrder);
+        pageContext.setAttribute("isSearchShippingOrder", Boolean.valueOf(isSearchShippingOrder));
     } else {
         pageContext.setAttribute("isSearchShippingOrder", false);
     }
 %>
-
-<s:layout-definition>
 <c:set var="shippingOrderStatusActionAwaiting" value="<%=EnumShippingOrderStatus.SO_ActionAwaiting.getId()%>"/>
 <c:set var="orderStatusHold" value="<%=EnumOrderStatus.OnHold.getId()%>"/>
 <c:set var="shippingOrderStatusHold" value="<%=EnumShippingOrderStatus.SO_OnHold.getId()%>"/>
@@ -112,6 +116,7 @@
     </tr>
     </thead>
 </c:if>
+${shippingOrder.id}
 <c:forEach items="${shippingOrders}" var="shippingOrder" varStatus="shippingOrderCtr">
 <c:set var="baseOrder" value="${shippingOrder.baseOrder}"/>
 <c:set var="payment" value="${shippingOrder.baseOrder.payment}"/>
@@ -465,7 +470,7 @@
 
         <div class="clear"></div>
         <div class="floatleft" style="margin-top:3px;">
-            Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}
+            <%--Processed Orders# ${hk:getProcessedOrdersCount(baseOrder.user)}--%>
         </div>
       <span style="margin-left:10px;">
         (<s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders"

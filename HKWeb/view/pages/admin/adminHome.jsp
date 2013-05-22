@@ -82,9 +82,13 @@
     <c:if test="${whAction.setWarehouse == null}">
         <h3><s:link
                 beanclass="com.hk.web.action.admin.queue.ActionAwaitingQueueAction">Action Awaiting Queue</s:link></h3>
-        <h3><s:link
-                beanclass="com.hk.web.action.admin.queue.action.JITManagementQueueAction">JIT Mgmt Queue</s:link></h3>
     </c:if>
+
+    <shiro:hasPermission name="<%=PermissionConstants.ACTION_ITEM_RESOLVER%>">
+        <h3><s:link
+                beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction">Action Item Resolution Queue</s:link></h3>
+    </shiro:hasPermission>
+
     <h3><s:link beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction"> Notify Me List </s:link></h3>
     <shiro:hasRole name="<%=RoleConstants.DEVELOPER%>">
         <h3><s:link beanclass="com.hk.web.action.admin.TaskManagerAction">Run Ant Tasks </s:link></h3>

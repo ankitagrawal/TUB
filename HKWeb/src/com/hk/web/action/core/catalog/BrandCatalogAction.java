@@ -21,7 +21,7 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.content.SeoData;
@@ -34,7 +34,6 @@ import com.hk.pact.dao.catalog.product.ProductDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 
 @UrlBinding("/brand/{topLevelCategory}/{brand}")
@@ -114,7 +113,7 @@ public class BrandCatalogAction extends BasePaginatedAction {
 			  productList = productPage.getList();
 			  if (productList != null) {
 				  for (Product product : productList) {
-					  product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.BRAND_PAGE)));
+					  product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.brandPage.getId()));
 					  menuNode = menuHelper.getMenoNodeFromProduct(product);
 					  menuNodes.add(menuNode);
 				  }
