@@ -26,6 +26,11 @@ public class Surcharge implements java.io.Serializable {
 
 	@Column(name = "value", nullable = false, precision = 12)
 	private Double value;
+	
+	@Override
+	public String toString(){
+		return this.id!=null ? this.id.toString() : "";
+	}
 
 	public Long getId() {
 		return this.id;

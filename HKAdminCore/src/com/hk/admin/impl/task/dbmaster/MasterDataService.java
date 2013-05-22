@@ -142,6 +142,8 @@ public class MasterDataService {
 	PickupStatusSeedData pickupStatusSeedData;
 	@Autowired
 	StockTransferStatusSeed stockTransferStatusSeed;
+	@Autowired
+	ExtraInventoryLineItemTypeSeedData extraInventoryLineItemTypeSeedData;
 
 	public void insert() {
 
@@ -311,5 +313,8 @@ public class MasterDataService {
 
 		logger.debug("inserting Stock Transfer Status");
 		stockTransferStatusSeed.invokeInsert();
+		
+		logger.debug("inserting Extra Inventory Line Item Type");
+		extraInventoryLineItemTypeSeedData.invokeInsert();
 	}
 }
