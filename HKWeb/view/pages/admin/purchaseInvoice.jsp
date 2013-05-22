@@ -391,11 +391,11 @@ width: 80px;
 				  $(this).find(':input:disabled') 
 				    .prop('disabled', false); 
 				});
-			$('#piRtvForm').submit(function() {
+			$('#rtvForm').submit(function() {
 				  $(this).find(':input:disabled') 
 				    .prop('disabled', false); 
 				});
-			$('#piShortForm').submit(function() {
+			$('#shortForm').submit(function() {
 				  $(this).find(':input:disabled') 
 				    .prop('disabled', false); 
 				});

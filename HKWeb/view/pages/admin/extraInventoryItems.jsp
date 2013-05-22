@@ -381,7 +381,7 @@ $(document).ready(function () {
 	});
     
     if(${(extraInventory.reconciledStatus!=null && extraInventory.reconciledStatus == 'reconciled')
-    	||extraInventory.piReconciled}){
+    	||extraInventory.isPiReconciled}){
     	$("#eiForm :input").each(function(){
     		 $(this).attr('readonly', true);;
     		});
