@@ -174,6 +174,9 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         User adminUser = getUserService().getAdminUser();
         List<Reason> reasons = new ArrayList<Reason>();
         if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
+            if(!payment.getAmount().equals(shippingOrder.getBaseOrder().getAmount())){
+              reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
+            }
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
                 if(shippingOrder.isServiceOrder()){
                     return true;

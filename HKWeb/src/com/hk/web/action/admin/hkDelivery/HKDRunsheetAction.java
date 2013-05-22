@@ -38,6 +38,7 @@ import com.hk.constants.hkDelivery.EnumConsignmentStatus;
 import com.hk.constants.hkDelivery.HKDeliveryConstants;
 import com.hk.constants.hkDelivery.EnumConsignmentLifecycleStatus;
 import com.hk.manager.SMSManager;
+import org.stripesstuff.plugin.security.Secure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +46,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Secure
 @Component
 public class HKDRunsheetAction extends BasePaginatedAction {
 
