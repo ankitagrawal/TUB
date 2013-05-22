@@ -386,6 +386,20 @@ width: 80px;
 			}
 			
 			if (!bool) return false;
+			
+			$('#piForm').submit(function() {
+				  $(this).find(':input:disabled') 
+				    .prop('disabled', false); 
+				});
+			$('#piRtvForm').submit(function() {
+				  $(this).find(':input:disabled') 
+				    .prop('disabled', false); 
+				});
+			$('#piShortForm').submit(function() {
+				  $(this).find(':input:disabled') 
+				    .prop('disabled', false); 
+				});
+			
 		});
 		
 		updateTotalPI('.receivedQuantity', '.totalQuantity', 1, $("#piTable"));
@@ -423,8 +437,29 @@ width: 80px;
 		$("#shortTotalSurcharge").val($("#shortSurchargeAmount").val());
 		$("#rtvTotalSurcharge").val($("#rtvSurchargeAmount").val());
 		
-		
-		
+		if(${pia.purchaseInvoice.reconciled}){
+			$("#piTable :input").each(function(){
+	    		 $(this).attr('readonly', true);
+	    		});
+			
+			$("#piShortTable :input").each(function(){
+	    		 $(this).attr('readonly', true);
+	    		});
+			
+			$("#piRtvTable :input").each(function(){
+	    		 $(this).attr('readonly', true);
+	    		});
+			$("#piTable .taxValues").each(function(){
+				$(this).prop('disabled', true);
+	    		});
+			$("#piRtvTable .taxValues").each(function(){
+				$(this).prop('disabled', true);
+	    		});
+			$("#piShortTable .taxValues").each(function(){
+				$(this).prop('disabled', true);
+	    		});
+			
+		}
 		
 	});
 </script>
@@ -672,7 +707,7 @@ width: 80px;
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
 							<s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
-							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange">
+							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
@@ -680,7 +715,7 @@ width: 80px;
 						</c:when>
 						<c:otherwise>
 							<s:select name="purchaseInvoiceLineItems[${ctr.index}].surcharge"
-							          value="${purchaseInvoiceLineItem.surcharge.id}" class="valueChange">
+							          value="${purchaseInvoiceLineItem.surcharge.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="surchargeList" value="id"
 								                           label="value"/>
@@ -692,11 +727,11 @@ width: 80px;
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state==pia.purchaseInvoice.warehouse.state}">
 							<s:text name="purchaseInvoiceLineItems[${ctr.index}].tax"
-							        value="${purchaseInvoiceLineItem.tax.value}" class="taxCategory"/>
+							        value="${purchaseInvoiceLineItem.tax.value}" class="taxCategory taxValues"/>
 						</c:when>
 						<c:otherwise>
 							<s:text name="purchaseInvoiceLineItems[${ctr.index}].surcharge"
-							        value="${purchaseInvoiceLineItem.surcharge.value}" class="taxCategory"/>
+							        value="${purchaseInvoiceLineItem.surcharge.value}" class="taxCategory taxValues"/>
 						</c:otherwise>
 					</c:choose>
 				</shiro:lacksPermission>
@@ -886,16 +921,16 @@ width: 80px;
 					       class="taxIdentifier"/>
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
-							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax" id="taxValues"
-							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange">
+							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax" 
+							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
 						</c:when>
 						<c:otherwise>
-							<s:select name="extraInventoryShortLineItems[${ctr.index}].surcharge" id="taxValues"
-							          value="${extraInventoryShortLineItem.surcharge.id}" class="valueChange">
+							<s:select name="extraInventoryShortLineItems[${ctr.index}].surcharge"
+							          value="${extraInventoryShortLineItem.surcharge.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="surchargeList" value="id"
 								                           label="value"/>
@@ -907,11 +942,11 @@ width: 80px;
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state==pia.purchaseInvoice.warehouse.state}">
 							<s:text name="extraInventoryShortLineItems[${ctr.index}].tax"
-							        value="${extraInventoryShortLineItem.tax.value}" class="taxCategory"/>
+							        value="${extraInventoryShortLineItem.tax.value}" class="taxCategory taxValues"/>
 						</c:when>
 						<c:otherwise>
 							<s:text name="extraInventoryShortLineItems[${ctr.index}].surcharge"
-							        value="${extraInventoryShortLineItem.surcharge.value}" class="taxCategory"/>
+							        value="${extraInventoryShortLineItem.surcharge.value}" class="taxCategory taxValues"/>
 						</c:otherwise>
 					</c:choose>
 				</shiro:lacksPermission>
@@ -1085,16 +1120,16 @@ width: 80px;
 					       class="taxIdentifier"/>
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
-							<s:select name="extraInventoryLineItems[${ctr.index}].tax" id="taxValues"
-							          value="${extraInventoryLineItem.tax.id}" class="valueChange">
+							<s:select name="extraInventoryLineItems[${ctr.index}].tax" 
+							          value="${extraInventoryLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
 						</c:when>
 						<c:otherwise>
-							<s:select name="extraInventoryLineItems[${ctr.index}].surcharge" id="taxValues"
-							          value="${extraInventoryLineItem.surcharge.id}" class="valueChange">
+							<s:select name="extraInventoryLineItems[${ctr.index}].surcharge" 
+							          value="${extraInventoryLineItem.surcharge.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="surchargeList" value="id"
 								                           label="value"/>
@@ -1106,11 +1141,11 @@ width: 80px;
 					<c:choose>
 						<c:when test="${pia.purchaseInvoice.supplier.state==pia.purchaseInvoice.warehouse.state}">
 							<s:text name="extraInventoryLineItems[${ctr.index}].tax"
-							        value="${extraInventoryLineItem.tax.value}" class="taxCategory"/>
+							        value="${extraInventoryLineItem.tax.value}" class="taxCategory taxValues"/>
 						</c:when>
 						<c:otherwise>
 							<s:text name="extraInventoryLineItems[${ctr.index}].surcharge"
-							        value="${extraInventoryLineItem.surcharge.value}" class="taxCategory"/>
+							        value="${extraInventoryLineItem.surcharge.value}" class="taxCategory taxValues"/>
 						</c:otherwise>
 					</c:choose>
 				</shiro:lacksPermission>

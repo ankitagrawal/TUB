@@ -83,6 +83,7 @@
         <th>Warehouse</th>
         <th>Last Update Date</th>
 	    <th>Adv Payment</th>
+	    <th>Physical Inv. Amt.</th>
         <th>Payable</th>
         <th>Est. Payment Date</th>
         <th>Payment Date</th>
@@ -118,6 +119,8 @@
 	        <td><fmt:formatDate value="${purchaseInvoice.createDate}" type="both" timeStyle="short"/></td>
 	        <td>
 		        <fmt:formatNumber value="${advPayment}" type="currency" currencySymbol=" "
+		                          maxFractionDigits="0"/></td>
+		    <td><fmt:formatNumber value="${purchaseInvoice.physicalInvoiceAmount}" type="currency" currencySymbol=" "
 		                          maxFractionDigits="0"/></td>
 	        <td>
 		        <fmt:formatNumber value="${purchaseInvoice.finalPayableAmount - advPayment}" type="currency" currencySymbol=" "

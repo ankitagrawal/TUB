@@ -253,6 +253,11 @@ $(document).ready(function () {
             return false;
         }
         if (!bool) return false;
+        
+        $('#eiForm').submit(function() {
+			  $(this).find(':input:disabled') 
+			    .prop('disabled', false); 
+			});
     });
 
 
@@ -374,6 +379,15 @@ $(document).ready(function () {
 		valueChangeRow.find('.surchargeAmount').val(surcharge.toFixed(2));
 		valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
 	});
+    
+    if(${extraInventory.reconciledStatus!=null && extraInventory.reconciledStatus == 'reconciled'}){
+    	$("#eiForm :input").each(function(){
+    		 $(this).attr('readonly', true);;
+    		});
+    	$("#eiForm .taxValues").each(function(){
+			$(this).prop('disabled', true);
+    		});
+    }
 
 });
 </script>
@@ -393,7 +407,7 @@ $(document).ready(function () {
     <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" id="skuCheck" event="getSku"></s:link>
 </div>
 <br><br>
-<s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">
+<s:form beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" id="eiForm">
 <h2>Extra Inventory</h2>
 <table>
     <thead>
@@ -638,7 +652,7 @@ $(document).ready(function () {
                     <c:choose>                        
 						<c:when test="${extraInventory.sameState}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
-							          value="${eInLineItems.tax.id}" class="valueChange">
+							          value="${eInLineItems.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
@@ -646,7 +660,7 @@ $(document).ready(function () {
 						</c:when>
 						<c:otherwise>
 							<s:select name="extraInventoryLineItems[${ctr.index}].surcharge"
-							          value="${eInLineItems.surcharge.id}" class="valueChange">
+							          value="${eInLineItems.surcharge.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
 								                           serviceProperty="surchargeList" value="id"
 								                           label="value"/>
