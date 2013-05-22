@@ -3,16 +3,19 @@ package com.hk.store.loyalty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.store.EnumStore;
 import com.hk.domain.store.Store;
@@ -67,6 +70,15 @@ public class LoyaltyStoreProcessor extends AbstractStoreProcessor {
 		Payment payment = this.paymentManager.createNewPayment(order, EnumPaymentMode.FREE_CHECKOUT.asPaymenMode(), remoteIp, null, null, null);
 		this.loyaltyProgramService.debitKarmaPoints(order);
 		order = this.paymentManager.success(payment.getGatewayOrderId());
+		
+		for (CartLineItem lineItem : order.getCartLineItems()) {
+			if(lineItem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.asCartLineItemType().getId())) {
+				lineItem.setDiscountOnHkPrice(lineItem.getHkPrice());
+				this.cartLineItemService.save(lineItem);
+				break;
+			}
+		}
+		
 		return order.getPayment();
 	}
 
