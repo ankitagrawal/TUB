@@ -286,6 +286,13 @@
 					</td>
 				</tr>
 			</table>
+			
+			<div> 
+			Presently you have (To bbe mentioned) loyalty points.
+			
+ 			Click here to convert your loyaty points to reward points.
+			
+			</div>
 		</fieldset>
 		<c:if test="${pos.order.id == null}">
 			<fieldset class="right_label">
