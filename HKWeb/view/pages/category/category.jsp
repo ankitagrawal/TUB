@@ -156,24 +156,36 @@
   <div class='grid_6'>
     <c:set var="sportsNutrition" value="<%=CategoryConstants.SPORTS_NUTRITION%>"/>
     <c:set var="healthNutrition" value="<%=CategoryConstants.HEALTH_NUTRITION%>"/>
+    <c:set var="homeLiving" value="<%=CategoryConstants.HOME_LIVING%>"/>
     <c:choose>
       <c:when test="${categoryBean.category.name eq sportsNutrition}">
         <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
         <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/Shipping.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/muscleblaze">
-          <img src="${pageContext.request.contextPath}/images/banners/Muscleblaze_small.jpg" alt="Brand Of the Week - MuscleBlaze"
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Universal+Nutrition">
+          <img src="${pageContext.request.contextPath}/images/banners/Brand-of-the-week2.jpg" alt="Brand Of the Week - Universal Nutrition"
                class="small_banner"/>
         </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq healthNutrition}">
         <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
         <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/Shipping.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
         <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
              class="small_banner"/>
+      </c:when>
+      <c:when test="${categoryBean.category.name eq homeLiving}">
+        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
+        <a class="bulkOrder" href="#" style="cursor: pointer;">
+          <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+               class="small_banner"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/product/westinghouse-wkfsfs133-food-steamer/WST022?productReferrerId=20">
+        <img src="<hk:vhostImage/>/images/banners/Westinghouse.jpg" alt="Product of the Week"
+             class="small_banner"/>
+        </a>
       </c:when>
       <c:otherwise>
         <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">

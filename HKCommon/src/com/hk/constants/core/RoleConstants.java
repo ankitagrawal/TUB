@@ -78,5 +78,6 @@ public class RoleConstants {
     public static final String REWARD_POINT_MANAGER_L2       = "REWARD_POINT_MANAGER_L2";
 
     public static final String STORE_MANAGER                 = "STORE_MANAGER";
+    public static final String HK_LOYALTY_USER               = "HK_LOYALTY_USER";
     public static final String NOTIFY_ME_EMAIL               ="NOTIFY_ME_EMAIL";
 }

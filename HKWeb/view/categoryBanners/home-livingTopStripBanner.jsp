@@ -23,9 +23,9 @@
             src="${pageContext.request.contextPath}/images/banners/top/bajaj-strip-banner.jpg"
             alt="Flat 20% Off on these 3 appliances from BAJAJ" usemap="#Map">
       <map name="Map" id="Map">
-        <area shape="rect" coords="262,-7,453,94" href="http://www.healthkart.com/home-living/mix-grind-chop/juicer-mixer-grinder?brand=Bajaj" />
+        <area shape="rect" coords="262,-7,453,94" href="http://www.healthkart.com/home-living/mix-grind-chop/food-processor?brand=Bajaj" />
         <area shape="rect" coords="468,-1,655,98" href="http://www.healthkart.com/home-living/cook-fry/induction-cooker?brand=Bajaj" />
-        <area shape="rect" coords="667,1,874,80" href="http://www.healthkart.com/home-living/mix-grind-chop/food-processor?brand=Bajaj" />
+        <area shape="rect" coords="667,1,874,80" href="http://www.healthkart.com/home-living/mix-grind-chop/juicer-mixer-grinder?brand=Bajaj" />
       </map>
 </div>
 

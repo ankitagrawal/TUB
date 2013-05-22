@@ -16,6 +16,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
@@ -33,8 +34,6 @@ public interface OrderService {
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage);
 
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
-
-    public Set<ShippingOrder> createShippingOrders(Order order);
 
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
@@ -57,8 +56,6 @@ public interface OrderService {
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
-    public void approvePendingRewardPointsForOrder(Order order);
-
     public void sendEmailToServiceProvidersForOrder(Order order);
 
     public ProductVariant getTopDealVariant(Order order);
@@ -74,5 +71,7 @@ public interface OrderService {
 	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
 	public List<UserCodCall> getAllUserCodCallForToday();
+	
+	public Order findCart(User user, Store store);
 }
 

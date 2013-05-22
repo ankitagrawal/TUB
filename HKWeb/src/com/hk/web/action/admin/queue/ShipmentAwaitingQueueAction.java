@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.domain.courier.Zone;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -85,7 +86,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   @Autowired
   ReportManager                      reportGenerator;
 
-  private Integer                    defaultPerPage    = 30;
+  private Integer                    defaultPerPage = 30;
 
   private Boolean                    courierDownloadFunctionality;
 
@@ -94,6 +95,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   private Date                       endDate;
   @Autowired
   private UserService                userService;
+	
   private Warehouse                  warehouse;
 
   private Zone zone;
@@ -272,7 +274,7 @@ public class ShipmentAwaitingQueueAction extends BasePaginatedAction {
   }
 
   public int getPerPageDefault() {
-    return 30;
+    return defaultPerPage;
   }
 
   public int getPageCount() {
