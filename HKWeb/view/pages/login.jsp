@@ -1,19 +1,22 @@
-<%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.Keys" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.action.core.auth.LoginAction" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
-<%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
-<%@ page import="com.hk.constants.core.HealthkartConstants" %>
+<%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <c:set var="redirectParam" value="<%=J2EESecurityManager.redirectAfterLoginParam%>"/>
 <c:set var="source_checkout" value="<%=LoginAction.SOURCE_CHECKOUT%>"/>
+<%
+    String vanillaForumUrl = (String) ServiceLocatorFactory.getProperty(Keys.Env.vanillaForumUrl);
+    pageContext.setAttribute("vanillaForumUrl", vanillaForumUrl);
+%>
 
 <s:layout-render name="/layouts/loginLayout.jsp" pageTitle="Login or Signup to HealthKart.com">
 
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
+        $.ajax('http://${vanillaForumUrl}/book/forums/entry/signin');
       $(document).ready(function() {
         $('#forgotPasswordWindow').jqm({trigger: '#forgotPasswordLink', ajax: '@href'});
       });
