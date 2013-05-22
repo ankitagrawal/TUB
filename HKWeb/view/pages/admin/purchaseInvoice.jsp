@@ -437,7 +437,7 @@ width: 80px;
 		$("#shortTotalSurcharge").val($("#shortSurchargeAmount").val());
 		$("#rtvTotalSurcharge").val($("#rtvSurchargeAmount").val());
 		
-		if(${pia.purchaseInvoice.reconciled}){
+		if(${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled}){
 			$("#piTable :input").each(function(){
 	    		 $(this).attr('readonly', true);
 	    		});
