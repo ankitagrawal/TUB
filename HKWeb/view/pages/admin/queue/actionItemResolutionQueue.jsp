@@ -4,6 +4,9 @@
 <%@ page import="com.hk.constants.shippingOrder.EnumShippingOrderStatus" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.domain.order.ShippingOrder" %>
+<%@ page import="com.hk.pact.dao.BaseDao" %>
+<%@ page import="com.hk.domain.queue.Bucket" %>
+<%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean"/>
@@ -11,10 +14,10 @@
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Item Resolution Queue">
     <s:layout-component name="htmlHead">
         <%
-            ShippingOrderStatusService shippingOrderStatusService = ServiceLocatorFactory.getService(ShippingOrderStatusService.class);
-            BucketService bucketService = ServiceLocatorFactory.getService(BucketService.class);
-            pageContext.setAttribute("applicableOrderStatusList", shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForProcessingQueue()));
-            pageContext.setAttribute("bucketList", bucketService.listAll());
+            BaseDao baseDao = ServiceLocatorFactory.getService(BaseDao.class);
+            pageContext.setAttribute("bucketList", baseDao.getAll(Bucket.class));
+            pageContext.setAttribute("currentATList", baseDao.getAll(ActionTask.class));
+            pageContext.setAttribute("previousATList", baseDao.getAll(ActionTask.class));
         %>
 
         <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
@@ -59,8 +62,21 @@
                                     <s:option value="${bucket.id}">${bucket.name}</s:option>
                                 </c:forEach>
                             </s:select>
+                            <label>Current AT </label>
+                            <s:select name="currentActionTasks">
+                                <option value="">Any CAT</option>
+                                <c:forEach items="${currentATList}" var="currentAT">
+                                    <s:option value="${currentAT.id}">${currentAT.name}</s:option>
+                                </c:forEach>
+                            </s:select>
+                            <label>Previous AT </label>
+                            <s:select name="previousActionTasks">
+                                <option value="">Any PAT</option>
+                                <c:forEach items="${previousATList}" var="previousAT">
+                                    <s:option value="${previousAT.id}">${previousAT.name}</s:option>
+                                </c:forEach>
+                            </s:select>
                         </div>
-
                         <div style="width:1120px; margin:20px;">
                             <label>Push Start
                                 Date </label><s:text class="date_input startDate" style="width:150px"
@@ -72,7 +88,7 @@
                                                      name="endPushDate"/>
                         </div>
 
-                        <s:submit style="margin:0 0 10px 25px;" name="pre" value="Search"/>
+                        <s:submit style="margin:0 0 10px 25px;" name="search" value="Search"/>
                     </s:form>
                 </div>
             </ul>
@@ -95,6 +111,14 @@
                 <c:forEach items="${actionItemQueueBean.actionItems}" var="actionItem" varStatus="ctr">
                     <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
                         <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
+                            <c:forEach items="${actionItem.buckets}" var="bucket">
+                                ${bucket.name}
+                            </c:forEach>
+                            PAT : ${actionItem.previousActionTask.name}
+                            CAT : ${actionItem.currentActionTask.name}
+                            <div class="floatleft">
+                                Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}" type="date"/>
+                            </div>
                         </td>
                         <td width="60%" style="border:1px solid darkgreen; padding:3px;">
                             ${actionItem.shippingOrder.id}

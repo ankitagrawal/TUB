@@ -135,8 +135,9 @@ public class ActionItemSearchCriteria {
         return this;
     }
 
-    public void setShippingOrderId(String shippingOrderId) {
+    public ActionItemSearchCriteria setShippingOrderId(String shippingOrderId) {
         this.shippingOrderId = shippingOrderId;
+        return this;
     }
 
     public void setBaseOrderId(String baseOrderId) {

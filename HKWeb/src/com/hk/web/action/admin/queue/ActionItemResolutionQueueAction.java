@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.hk.constants.core.PermissionConstants;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
@@ -11,15 +12,16 @@ import com.hk.domain.queue.TrafficState;
 import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.service.UserService;
+import com.hk.web.action.error.AdminPermissionAction;
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.DontValidate;
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.stripesstuff.plugin.security.Secure;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /*
  * User: Pratham
@@ -41,24 +43,46 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     private Date endPushDate;
     private List<User> reporters;
     private Integer defaultPerPage = 4;
+    Map<String, Object> bucketParameters = new HashMap<String, Object>();
 
     @Autowired
     BucketService bucketService;
     @Autowired
     UserService userService;
 
+    @DontValidate
+    @DefaultHandler
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
+        User user = getPrincipalUser();
+        if (user != null) {
+            buckets = user.getBuckets();
+            if (buckets != null && !buckets.isEmpty()) {
+                bucketParameters = bucketService.getParamMap(user.getBuckets());
+            }
+        }
+        return new ForwardResolution(ActionItemResolutionQueueAction.class, "search");
+//                .addParameters(bucketParameters);
+    }
+
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution search() {
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
         if (actionItemsPage != null) actionItems = actionItemsPage.getList();
         return new ForwardResolution("/pages/admin/queue/actionItemResolutionQueue.jsp");
     }
 
+
     private ActionItemSearchCriteria getActionItemSearchCriteria() {
         User loggedOnUser = userService.getLoggedInUser();
         ActionItemSearchCriteria actionItemSearchCriteria = new ActionItemSearchCriteria();
-        actionItemSearchCriteria.setReporters(Arrays.asList(userService.getAdminUser()));
-        actionItemSearchCriteria.setBuckets(loggedOnUser.getBuckets());
+        actionItemSearchCriteria.setShippingOrderId(shippingOrderId).setFlagged(flagged);
+        actionItemSearchCriteria.setReporters(reporters);
+        buckets = buckets != null ? buckets : loggedOnUser.getBuckets();
+        actionItemSearchCriteria.setBuckets(buckets);
         actionItemSearchCriteria.setTrafficStates(trafficStates);
+        actionItemSearchCriteria.setStartPushDate(startPushDate).setEndPushDate(endPushDate);
+        actionItemSearchCriteria.setCurrentActionTasks(currentActionTasks).setPreviousActionTasks(previousActionTasks);
         return actionItemSearchCriteria;
     }
 
