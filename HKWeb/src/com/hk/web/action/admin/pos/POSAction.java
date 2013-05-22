@@ -29,6 +29,7 @@ import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
 import com.hk.helper.InvoiceNumHelper;
+import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
@@ -128,6 +129,8 @@ public class POSAction extends BaseAction {
 	private SkuGroupService skuGroupService;
 	@Autowired
 	private ReverseOrderService reverseOrderService;
+	@Autowired
+	private LoyaltyProgramService loyaltyProgramService;
 
 	@DefaultHandler
 	public Resolution pre() {
@@ -356,6 +359,11 @@ public class POSAction extends BaseAction {
 
 	}
 
+	private void addLoyaltyUser (User customer) {
+		loyaltyProgramService.createNewUserBadgeInfo(customer);
+		
+		
+	}
 	public String getPhone() {
 		return phone;
 	}

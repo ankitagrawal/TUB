@@ -288,7 +288,7 @@
 			</table>
 			
 			<div> 
-			Presently you have (To bbe mentioned) loyalty points.
+			Presently you have (To be mentioned) loyalty points.
 			
  			Click here to convert your loyaty points to reward points.
 			
