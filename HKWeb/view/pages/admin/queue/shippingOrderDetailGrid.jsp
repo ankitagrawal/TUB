@@ -12,6 +12,7 @@
 <%@ page import="com.hk.constants.analytics.EnumReasonType" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Collection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -21,7 +22,7 @@
     if (shippingOrder != null) {
         shippingOrders.add(shippingOrder);
     } else {
-        shippingOrders = (Set) pageContext.getAttribute("shippingOrders");
+        shippingOrders.addAll((Collection<? extends ShippingOrder>) pageContext.getAttribute("shippingOrders"));
     }
     pageContext.setAttribute("shippingOrders", shippingOrders);
     String isActionQueue = (String) pageContext.getAttribute("isActionQueue");
