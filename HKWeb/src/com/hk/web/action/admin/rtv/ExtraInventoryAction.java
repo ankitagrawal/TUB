@@ -111,6 +111,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	private Long extraInventoryStatusId;
 	private Boolean isDebitToSupplier;
 	private Boolean isReconciled;
+	private Boolean piReconciled;
 	private String reconciledStatus;
 	private Long newPurchaseOrderId;
 	private String destinationAddress;
@@ -151,6 +152,14 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 						|| rtvNote.getRtvNoteStatus().getId().equals(EnumRtvNoteStatus.SentToSupplier.getId())
 						|| rtvNote.isReconciled()) {
 					reconciledStatus = "reconciled";
+				}
+			}
+		}
+		piReconciled=Boolean.FALSE;
+		for(ExtraInventoryLineItem eili:extraInventoryLineItems){
+			for(PurchaseInvoice pi : eili.getPurchaseInvoices()){
+				if(pi.getReconciled()){
+					piReconciled=Boolean.TRUE;
 				}
 			}
 		}

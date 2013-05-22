@@ -380,7 +380,8 @@ $(document).ready(function () {
 		valueChangeRow.find('.payableAmount').val(payable.toFixed(2));
 	});
     
-    if(${extraInventory.reconciledStatus!=null && extraInventory.reconciledStatus == 'reconciled'}){
+    if(${(extraInventory.reconciledStatus!=null && extraInventory.reconciledStatus == 'reconciled')
+    	||extraInventory.piReconciled}){
     	$("#eiForm :input").each(function(){
     		 $(this).attr('readonly', true);;
     		});
