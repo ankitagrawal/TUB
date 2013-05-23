@@ -95,6 +95,7 @@
             </ul>
         </fieldset>
 
+
         <s:form beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" autocomplete="off">
 
 
@@ -111,45 +112,55 @@
                 </thead>
                 <c:forEach items="${actionItemQueueBean.actionItems}" var="actionItem" varStatus="ctr">
                     <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
-                        <td width="40%" style="border:1px solid darkgoldenrod; padding:3px;">
+                        <td width="30%" style="border:1px solid darkgoldenrod; padding:3px;">
                             <c:forEach items="${actionItem.buckets}" var="bucket">
-                            <label><s:checkbox name="buckets[${ctr.index}].selected" disabled="true"
-                                               checked="true"/> ${bucket.name}
-                                    <%--<s:hidden name="buckets[${ctr.index}].id" value="${bucket.id}"/>--%>
-                            </label
+                                <label><s:checkbox name="buckets[${ctr.index}].checked" disabled="true" /> ${bucket.name}</label
                             </c:forEach>
-
-
-                                    
-                                    (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                                         class="splitShippingOrder" event="view">
-                                <s:param name="actionItem" value="${hk:getActionItem(shippingOrder).id}"/>
-                                    Edit Action Item
+                            <div>
+                                (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" event="view">
+                                <s:param name="actionItem" value="${actionItem.id}"/> Edit Action Item
                             </s:link>)
-
-                            <br/>
-
-                            <p>
-                                PAT : ${actionItem.previousActionTask.name} ,
-                                CAT : ${actionItem.currentActionTask.name} ,
-                                <s:form  beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" method="post">
-                                    <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
-                                        <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
-                                            <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
-                                        </c:forEach>
-                                    </s:select>
-                                    <s:submit name="updateTask" value="Update Task"/>
-                                </s:form>
-
-                            </p>
-                            <br>
-
-                            <div class="floatleft">
-                                Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"
-                                                                  type="date"/>
                             </div>
+                            <div>
+                                <s:hidden name="actionItem" value="${actionItem.id}"/>
+                                PAT : ${actionItem.previousActionTask.name} <br>
+                                CAT : <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
+                                    <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
+                                        <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
+                                    </c:forEach>
+                                </s:select>
+                                <s:submit name="updateTask" value="Update Task"/>
+                           </div>
+
+                            <div>
+                                Current Priority
+                                 <s:select name="priorityId"  value = "${actionItem.priority}">
+                                 <c:forEach var="i" begin="1" end="10">
+                                     <s:option value="${i}">${i}</s:option>
+                                 </c:forEach>
+                                 </s:select>
+                                  <s:submit name="setPriority" value="Change Priority"/>
+                            </div>
+
+                               ( <s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                                        event="flagActionItems">
+                                    <s:param name="actionItem" value="${actionItem.id}"/>
+                                    Mark Flag
+                                </s:link>)
+
+
+                                (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                                        event="changeTrafficState">
+                                    <s:param name="actionItem" value="${actionItem.id}"/>
+                                    Assign Trafic State
+                                </s:link>)
+                            
+                            <%--<div class="floatleft">--%>
+                                <%--Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"--%>
+                                                                  <%--type="date"/>--%>
+                            <%--</div>--%>
                         </td>
-                        <td width="60%" style="border:1px solid darkgreen; padding:3px;">
+                        <td width="70%" style="border:1px solid darkgreen; padding:3px;">
                                 ${actionItem.shippingOrder.id}
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                              shippingOrder="${actionItem.shippingOrder}"

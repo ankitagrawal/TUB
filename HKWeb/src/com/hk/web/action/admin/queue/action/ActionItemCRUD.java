@@ -7,6 +7,7 @@ import com.hk.domain.queue.ActionTask;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumTrafficState;
+import com.hk.web.action.admin.queue.ActionItemResolutionQueueAction;
 import net.sourceforge.stripes.action.*;
 
 import java.util.List;
@@ -96,7 +97,8 @@ public class ActionItemCRUD extends BaseAction {
         actionItem.setCurrentActionTask(actionTask);
         getBaseDao().save(actionItem);
         addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
-        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+//        return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
+         return new RedirectResolution("ActionItemResolutionQueue.class");
     }
 
 

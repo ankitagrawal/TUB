@@ -3,6 +3,7 @@ package com.hk.web.action.admin.queue;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.PermissionConstants;
+import com.hk.constants.queue.EnumActionTask;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
@@ -13,10 +14,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -44,6 +42,9 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     private List<User> reporters;
     private Integer defaultPerPage = 4;
     Map<String, Object> bucketParameters = new HashMap<String, Object>();
+    private ActionItem actionItem;
+    Long actionTaskId;
+    Long priorityId;
 
     @Autowired
     BucketService bucketService;
@@ -85,6 +86,25 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         actionItemSearchCriteria.setCurrentActionTasks(currentActionTasks).setPreviousActionTasks(previousActionTasks);
         return actionItemSearchCriteria;
     }
+
+
+    public Resolution updateTask() {
+           actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+           ActionTask actionTask = EnumActionTask.getActionTaskById(actionTaskId);
+           actionItem.setCurrentActionTask(actionTask);
+           getBaseDao().save(actionItem);
+           addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
+           return new RedirectResolution(ActionItemResolutionQueueAction.class);
+       }
+
+
+    public Resolution setPriority() {
+        actionItem.setPriority(priorityId);
+        getBaseDao().save(actionItem);
+        addRedirectAlertMessage(new SimpleMessage("Action Item priority has been changed"));
+        return new RedirectResolution(ActionItemResolutionQueueAction.class);
+    }
+
 
     public List<ActionItem> getActionItems() {
         return actionItems;
@@ -205,5 +225,29 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 
     public void setReporters(List<User> reporters) {
         this.reporters = reporters;
+    }
+
+    public ActionItem getActionItem() {
+        return actionItem;
+    }
+
+    public void setActionItem(ActionItem actionItem) {
+        this.actionItem = actionItem;
+    }
+
+    public Long getActionTaskId() {
+        return actionTaskId;
+    }
+
+    public void setActionTaskId(Long actionTaskId) {
+        this.actionTaskId = actionTaskId;
+    }
+
+    public Long getPriorityId() {
+        return priorityId;
+    }
+
+    public void setPriorityId(Long priorityId) {
+        this.priorityId = priorityId;
     }
 }
