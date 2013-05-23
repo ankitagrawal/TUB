@@ -108,9 +108,9 @@
         <div class="leftHalf">
     <jsp:include page="/includes/checkoutNotice.jsp"/>
 
-    <c:if test="${orderSummary.availableCourierList == null}">
-      <div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>
-    </c:if>
+    <%--<c:if test="${orderSummary.availableCourierList == null}">--%>
+      <%--<div align="center" style="color:red; font-size:1.2em;">This pincode is serviced only through Speed Post. Delivery may take 5-7 days</div>--%>
+    <%--</c:if>--%>
     <h3 style="margin-bottom: 15px;" class="arialBlackBold">
         Your Order
     </h3>
@@ -234,7 +234,7 @@
       </div>
       </div>
     <c:choose>
-    <c:when test="${orderSummary.groundShippedItemPresent && !(orderSummary.groundShippingAllowed)}">
+    <c:when test="${!(orderSummary.groundShippingAllowed)}">
       <script type="text/javascript">
           $(document).ready(function () {
               ShowDialog(true);
@@ -490,7 +490,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
 
-                 <c:if test="${orderSummary.sizeOfCLI > 0}">
+                 <c:if test="${fn:length(orderSummary.trimCartLineItems)>0}">
                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
                      </td><td>
                    </c:if>
