@@ -214,9 +214,9 @@
             <br/>
             <span class="large gry">(VARIANT_ID, QTY, BATCH_NUMBER, EXP_DATE(yyyy/MM), MFG_DATE(yyyy/MM), MRP, COST) as excel headers</span>
             <br/><br/>
-            <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+            <h2>File to Upload: <s:file  id="fileBean" name="fileBean" size="30"/></h2>
             <div class="buttons">
-                <s:submit name="parseAddRVExcel" value="Create RV LineItems"/>
+                <s:submit id="excelUpload" name="parseAddRVExcel" value="Create RV LineItems"/>
             </div>
         </fieldset>
         </shiro:hasRole>
@@ -257,6 +257,14 @@
 			    }
 			    $(this).css("display", "none");
 		    });
+		    
+		    $('#excelUpload').live("click", function() {
+                var filebean = $('#fileBean').val();
+                if (filebean == null || filebean == '') {
+                  alert('choose file');
+                  return false;
+                }
+              });
 	    });
     </script>
 </s:layout-component>

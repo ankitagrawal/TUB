@@ -63,5 +63,5 @@
     <c:if test="${hk:collectionContains(topCategoryNameList, 'personal-care')}">
         <jsp:include page="/categoryBanners/personalCareStripBanner.jsp"/>
     </c:if>
-    
+
 </s:layout-definition>
