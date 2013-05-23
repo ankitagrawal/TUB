@@ -94,7 +94,7 @@ public class SearchAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("No results found."));
 		}
     //Logging search results
-    if (getPageNo() == 1) {
+    if (StringUtils.isNotEmpty(query) && getPageNo() == 1) {
       String category = "n/a";
       if (productList != null && !productList.isEmpty()) {
         category = productList.get(0).getPrimaryCategory().getName();
