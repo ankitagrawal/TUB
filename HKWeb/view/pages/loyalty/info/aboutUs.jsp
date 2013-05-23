@@ -176,7 +176,8 @@
             
             <div class="qAndA">
               <p>Q: First things first. What is HealthKart Stellar?</p>
-              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. Click here to find out
+              A: HealthKart Stellar is our loyalty program. You get great benefits. Oh, yes, there are some goodies too. 
+              <a href="${pageContext.request.contextPath}/loyaltypg" class="blue">Click here</a> to find out
               more.
             </div>
 
@@ -208,11 +209,6 @@
 	 		 cumulative value of 1500 INR or above processed in the last 12 months. However, if you are a new customer with no orders processed to your name,
 	 		   you will have no membership level until your order history value sums up to 1500 INR or above. 
 		 </div>
-
-			<div class="qAndA">
-              <p>Q: Can I transfer my points to my friends? </p>
-              A: No, points are non-transferrable.
-            </div>
 			
 			<div class="qAndA">
               <p>Q: How much time does it take to update my information? </p>
