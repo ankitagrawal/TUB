@@ -212,7 +212,7 @@ public class CourierAWBAction extends BaseAction {
 
         }
         catch (Exception ex) {
-                addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
+                addRedirectAlertMessage(new SimpleMessage("Either Awb is attached with shipment or AWB doesnot exists"));
         }
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
     }
