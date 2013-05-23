@@ -106,6 +106,7 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	private User createdBy;
 	private String productVariantId;
 	private Boolean reconciled;
+	private Boolean isRtvReconciled;
 	private Warehouse warehouse;
 	private Boolean saveEnabled = true;
 	private Date grnDate;
@@ -205,6 +206,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 	                toImportShortEiLiList.add(lineItem);
 	            }
 	        }
+			isRtvReconciled=Boolean.FALSE;
+			if(purchaseInvoice.getRtvNotes()!=null && purchaseInvoice.getRtvNotes().size()>0){
+				for(RtvNote rtv : purchaseInvoice.getRtvNotes()){
+					if(rtv.getReconciled()!=null && rtv.isReconciled()){
+						isRtvReconciled=Boolean.TRUE;
+					}
+				}
+			}
 			
 			return new ForwardResolution("/pages/admin/purchaseInvoice.jsp");
 		} else {
@@ -781,6 +790,14 @@ public class PurchaseInvoiceAction extends BasePaginatedAction {
 
 	public void setExtraInventoryShortLineItems(List<ExtraInventoryLineItem> extraInventoryShortLineItems) {
 		this.extraInventoryShortLineItems = extraInventoryShortLineItems;
+	}
+	
+	public Boolean getIsRtvReconciled() {
+		return isRtvReconciled;
+	}
+
+	public void setIsRtvReconciled(Boolean isRtvReconciled) {
+		this.isRtvReconciled = isRtvReconciled;
 	}
 
 	@Validate(converter = CustomDateTypeConvertor.class)

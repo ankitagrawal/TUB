@@ -437,15 +437,13 @@ width: 80px;
 		$("#shortTotalSurcharge").val($("#shortSurchargeAmount").val());
 		$("#rtvTotalSurcharge").val($("#rtvSurchargeAmount").val());
 		
-		if(${pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled}){
+		if(${(pia.purchaseInvoice.reconciled!=null && pia.purchaseInvoice.reconciled)}){
 			$("#piForm :input").each(function(){
 	    		 $(this).attr('readonly', true);
 	    		});
-			
 			$("#shortForm :input").each(function(){
 	    		 $(this).attr('readonly', true);
 	    		});
-			
 			$("#rtvForm :input").each(function(){
 	    		 $(this).attr('readonly', true);
 	    		});
@@ -459,6 +457,21 @@ width: 80px;
 				$(this).prop('disabled', true);
 	    		});
 			
+		}
+		
+		if(${(pia.isRtvReconciled)}){
+			$("#shortForm :input").each(function(){
+	    		 $(this).attr('readonly', true);
+	    		});
+			$("#rtvForm :input").each(function(){
+	    		 $(this).attr('readonly', true);
+	    		});
+			$("#shortForm .taxValues").each(function(){
+				$(this).prop('disabled', true);
+	    		});
+			$("#rtvForm .taxValues").each(function(){
+				$(this).prop('disabled', true);
+	    		});
 		}
 		
 	});
