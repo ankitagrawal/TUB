@@ -456,6 +456,7 @@
 		</div>
 	</c:if>
 	<input type="hidden" id="productReferrerId" value="${pa.productReferrerId}"/>
+	<input type="hidden" id="productPosition" value="${pa.productPosition}"/>
 	<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_DESCRIPTIONS%>">
 		<div>
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" event="editOverview"

@@ -1,198 +1,281 @@
 package com.hk.domain.inventory.rtv;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.accounting.PoLineItem;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.core.Surcharge;
 import com.hk.domain.core.Tax;
+import com.hk.domain.inventory.po.PurchaseInvoice;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Shrey
- * Date: Dec 18, 2012
- * Time: 4:27:33 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: Shrey Date: Dec 18, 2012 Time: 4:27:33 PM To
+ * change this template use File | Settings | File Templates.
  */
 
 @Entity
-@Table(name = "extra_inventory_line_item", uniqueConstraints = @UniqueConstraint(columnNames = {"extra_inventory_id", "sku_id"}))
-
+@Table(name = "extra_inventory_line_item", uniqueConstraints = @UniqueConstraint(columnNames = { "extra_inventory_id",
+		"sku_id" }))
 @NamedQueries({
-    @NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId"),
-    @NamedQuery(name = "getExtraInventoryLineItemById", query = "select eilt from ExtraInventoryLineItem  eilt where id = :extraInventoryLineItemId")
-})
+		@NamedQuery(name = "getExtraInventoryLineItemsByExtraInventoryId", query = "select eilt from ExtraInventoryLineItem eilt where extraInventory.id = :extraInventoryId"),
+		@NamedQuery(name = "getExtraInventoryLineItemById", query = "select eilt from ExtraInventoryLineItem  eilt where id = :extraInventoryLineItemId") })
+public class ExtraInventoryLineItem implements Serializable {
 
-public class ExtraInventoryLineItem implements Serializable{
-
-  @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 
-  @OneToOne
-  @JoinColumn (name="po_line_item_id")
-  private PoLineItem poLineItem;
+	@OneToOne
+	@JoinColumn(name = "po_line_item_id")
+	private PoLineItem poLineItem;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "extra_inventory_id", nullable = false)
-  private ExtraInventory extraInventory;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "extra_inventory_id", nullable = false)
+	private ExtraInventory extraInventory;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sku_id")
 	private Sku sku;
 
-  @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "tax_id", nullable = false)
-  private Tax tax;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tax_id")
+	private Tax tax;
 
-  @Column (name = "product_name")
-  private String productName;
+	@Column(name = "product_name")
+	private String productName;
 
-  @Column (name = "received_qty", nullable = false)
-  private Long receivedQty;
+	@Column(name = "received_qty", nullable = false)
+	private Long receivedQty;
 
-  @Column (name = "cost_price", nullable = false)
-  private Double costPrice;
+	@Column(name = "cost_price", nullable = false)
+	private Double costPrice;
 
-  @Column (name = "mrp" , nullable = false)
-  private Double mrp;
+	@Column(name = "mrp", nullable = false)
+	private Double mrp;
 
-  @Column (name = "remarks")
-  private String remarks;
+	@Column(name = "taxable_amount")
+	private Double taxableAmount;
 
-  @Column (name = "is_rtv_created")
-  private Boolean isRtvCreated;
+	@Column(name = "tax_amount")
+	private Double taxAmount;
 
-  @Column (name ="is_grn_created")
-  private Boolean isGrnCreated;
+	@Column(name = "surcharge_amount")
+	private Double surchargeAmount;
 
-  @Temporal (TemporalType.TIMESTAMP)
-	@Column (name = "create_dt", nullable = false, length = 19)
+	@Column(name = "payable_amount")
+	private Double payableAmount;
+
+	@Column(name = "remarks")
+	private String remarks;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "surcharge_id")
+	private Surcharge surcharge;
+
+	@Column(name = "is_rtv_created")
+	private Boolean isRtvCreated;
+
+	@Column(name = "is_grn_created")
+	private Boolean isGrnCreated;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_dt", nullable = false, length = 19)
 	private Date createDate = new Date();
 
-	@Temporal (TemporalType.TIMESTAMP)
-	@Column (name = "update_dt", length = 19)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "update_dt", length = 19)
 	private Date updateDate;
 
-  public Long getId() {
-    return id;
-  }
+	@JsonSkip
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "purchase_invoice_has_extra_inventory_line_item", joinColumns = { @JoinColumn(name = "extra_inventory_line_item_id", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false) })
+	private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+	@ManyToOne
+	@JoinColumn(name = "extra_inventory_line_item_type_id")
+	private ExtraInventoryLineItemType extraInventoryLineItemType;
 
-  public PoLineItem getPoLineItem() {
-    return poLineItem;
-  }
+	public Long getId() {
+		return id;
+	}
 
-  public void setPoLineItem(PoLineItem poLineItem) {
-    this.poLineItem = poLineItem;
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-  public ExtraInventory getExtraInventory() {
-    return extraInventory;
-  }
+	public PoLineItem getPoLineItem() {
+		return poLineItem;
+	}
 
-  public void setExtraInventory(ExtraInventory extraInventory) {
-    this.extraInventory = extraInventory;
-  }
+	public void setPoLineItem(PoLineItem poLineItem) {
+		this.poLineItem = poLineItem;
+	}
 
-  public Sku getSku() {
-    return sku;
-  }
+	public ExtraInventory getExtraInventory() {
+		return extraInventory;
+	}
 
-  public void setSku(Sku sku) {
-    this.sku = sku;
-  }
+	public void setExtraInventory(ExtraInventory extraInventory) {
+		this.extraInventory = extraInventory;
+	}
 
-  public Tax getTax() {
-    return tax;
-  }
+	public Sku getSku() {
+		return sku;
+	}
 
-  public void setTax(Tax tax) {
-    this.tax = tax;
-  }
+	public void setSku(Sku sku) {
+		this.sku = sku;
+	}
 
-  public String getProductName() {
-    return productName;
-  }
+	public Tax getTax() {
+		return tax;
+	}
 
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
+	public void setTax(Tax tax) {
+		this.tax = tax;
+	}
 
-  public Long getReceivedQty() {
-    return receivedQty;
-  }
+	public String getProductName() {
+		return productName;
+	}
 
-  public void setReceivedQty(Long receivedQty) {
-    this.receivedQty = receivedQty;
-  }
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 
-  public Double getCostPrice() {
-    return costPrice;
-  }
+	public Long getReceivedQty() {
+		return receivedQty;
+	}
 
-  public void setCostPrice(Double costPrice) {
-    this.costPrice = costPrice;
-  }
+	public void setReceivedQty(Long receivedQty) {
+		this.receivedQty = receivedQty;
+	}
 
-  public Double getMrp() {
-    return mrp;
-  }
+	public Double getCostPrice() {
+		return costPrice;
+	}
 
-  public void setMrp(Double mrp) {
-    this.mrp = mrp;
-  }
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+	public Double getMrp() {
+		return mrp;
+	}
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+	public void setMrp(Double mrp) {
+		this.mrp = mrp;
+	}
 
-  public Date getUpdateDate() {
-    return updateDate;
-  }
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-  public void setUpdateDate(Date updateDate) {
-    this.updateDate = updateDate;
-  }
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-  public Boolean isRtvCreated() {
-    return isRtvCreated;
-  }
+	public Date getUpdateDate() {
+		return updateDate;
+	}
 
-  public Boolean getRtvCreated() {
-    return isRtvCreated;
-  }
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
 
-  public void setRtvCreated(Boolean rtvCreated) {
-    isRtvCreated = rtvCreated;
-  }
+	public Boolean isRtvCreated() {
+		return isRtvCreated;
+	}
 
-  public Boolean isGrnCreated() {
-    return isGrnCreated;
-  }
+	public Boolean getRtvCreated() {
+		return isRtvCreated;
+	}
 
-  public void setGrnCreated(Boolean grnCreated) {
-    isGrnCreated = grnCreated;
-  }
+	public void setRtvCreated(Boolean rtvCreated) {
+		isRtvCreated = rtvCreated;
+	}
 
-   public Boolean getGrnCreated() {
-    return isGrnCreated;
-  }
+	public Boolean isGrnCreated() {
+		return isGrnCreated;
+	}
 
-  public String getRemarks() {
-    return remarks;
-  }
+	public void setGrnCreated(Boolean grnCreated) {
+		isGrnCreated = grnCreated;
+	}
 
-  public void setRemarks(String remarks) {
-    this.remarks = remarks;
-  }
+	public Boolean getGrnCreated() {
+		return isGrnCreated;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public Double getTaxableAmount() {
+		return taxableAmount;
+	}
+
+	public void setTaxableAmount(Double taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+
+	public Double getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public Double getSurchargeAmount() {
+		return surchargeAmount;
+	}
+
+	public void setSurchargeAmount(Double surchargeAmount) {
+		this.surchargeAmount = surchargeAmount;
+	}
+
+	public Double getPayableAmount() {
+		return payableAmount;
+	}
+
+	public void setPayableAmount(Double payableAmount) {
+		this.payableAmount = payableAmount;
+	}
+
+	public Surcharge getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(Surcharge surcharge) {
+		this.surcharge = surcharge;
+	}
+
+	public List<PurchaseInvoice> getPurchaseInvoices() {
+		return purchaseInvoices;
+	}
+
+	public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
+		this.purchaseInvoices = purchaseInvoices;
+	}
+
+	public ExtraInventoryLineItemType getExtraInventoryLineItemType() {
+		return extraInventoryLineItemType;
+	}
+
+	public void setExtraInventoryLineItemType(ExtraInventoryLineItemType extraInventoryLineItemType) {
+		this.extraInventoryLineItemType = extraInventoryLineItemType;
+	}
+
 }
