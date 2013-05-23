@@ -5,7 +5,7 @@
   <div class="modal_header">
     <div class="jqDrag" style="padding: 5px 3px;"><s:layout-component name="heading"/></div>
 
-    <a href="#" class="modal_close jqmClose" style=" margin-top: 0px;"><img src="<hk:vhostImage/>/images/spacer.gif" width="21" height="21"/></a>
+    <a href="#" class="modal_close jqmClose" style=" margin-top: 0px;">X</a>
   </div>
 
   <div class="modal_content">
