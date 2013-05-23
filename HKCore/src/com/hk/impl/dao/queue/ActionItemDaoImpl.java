@@ -73,6 +73,6 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage) {
         DetachedCriteria searchCriteria = actionItemSearchCriteria.getSearchCriteria();
-        return list(searchCriteria, pageNo, perPage);
+        return list(searchCriteria, true, pageNo, perPage);
     }
 }

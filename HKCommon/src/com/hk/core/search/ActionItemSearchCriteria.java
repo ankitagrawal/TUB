@@ -21,8 +21,8 @@ import java.util.List;
 public class ActionItemSearchCriteria {
 
     private Long actionItemId;
-    private String shippingOrderId;
-    private String baseOrderId;
+    private Long shippingOrderId;
+    private Long baseOrderId;
 
     private List<ShippingOrder> shippingOrders;
 
@@ -135,12 +135,12 @@ public class ActionItemSearchCriteria {
         return this;
     }
 
-    public ActionItemSearchCriteria setShippingOrderId(String shippingOrderId) {
+    public ActionItemSearchCriteria setShippingOrderId(Long shippingOrderId) {
         this.shippingOrderId = shippingOrderId;
         return this;
     }
 
-    public void setBaseOrderId(String baseOrderId) {
+    public void setBaseOrderId(Long baseOrderId) {
         this.baseOrderId = baseOrderId;
     }
 
