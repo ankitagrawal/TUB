@@ -316,7 +316,7 @@ public class AdminEmailManager {
                     success = false;
                 }
             }
-            boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, "nihal@healthkart.com",
+            boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, PURCHASE_REPORTING_EMAILS,
                     category.getName() + " Category Admin");
             if(!sent){
             	success = false;
