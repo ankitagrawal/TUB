@@ -211,8 +211,9 @@ public class CourierAWBAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage(dup.getMessage() + " AWB_Number  : " + dup.getAwbNumber() + "  is present in Excel twice for Courier ::   " + dup.getCourier().getId()));
 
         }
+
         catch (Exception ex) {
-                addRedirectAlertMessage(new SimpleMessage("Either Awb is attached with shipment or AWB doesnot exists"));
+                addRedirectAlertMessage(new SimpleMessage("Deletion Failed ::: Awb is attached with shipment "));
         }
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
     }
