@@ -164,4 +164,5 @@ public class PermissionConstants {
     public static final String CONSIGNMENT_TRACKING_REPORT = "CONSIGNMENT_TRACKING_REPORT";
     public static final String VIEW_NDR = "VIEW_NDR";
     public static final String EDIT_NDR = "EDIT_NDR";
+    public static final String ASSIGN_USER_BASKET = "ASSIGN_USER_BASKET";
 }

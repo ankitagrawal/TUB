@@ -68,7 +68,7 @@
                         <tr>
                             <td>For Warehouse</td>
                             <td>
-                                    ${pa.reconciliationVoucher.warehouse.name}
+                                    ${pa.reconciliationVoucher.warehouse.identifier}
                             </td>
                         </tr>
                     </table>
@@ -183,10 +183,10 @@
 
                 <br/><br/>
 
-                <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+                <h2>File to Upload: <s:file id="fileBean" name="fileBean" size="30"/></h2>
 
                 <div class="buttons">
-                    <s:submit name="parseSubtractRVExcel" value="Create RV LineItems"/>
+                    <s:submit id="excelUpload" name="parseSubtractRVExcel" value="Create RV LineItems"/>
                 </div>
 
             </fieldset>
@@ -227,6 +227,14 @@
                 }
 
             });
+            
+            $('#excelUpload').live("click", function() {
+                var filebean = $('#fileBean').val();
+                if (filebean == null || filebean == '') {
+                  alert('choose file');
+                  return false;
+                }
+              });
 
         });
     </script>

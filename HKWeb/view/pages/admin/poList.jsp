@@ -154,6 +154,9 @@
                     <s:param name="wareHouseId" value="${purchaseOrder.warehouse.id}" />
                 </s:link>
                 </c:if>
+		        <br/>
+		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
+			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>
 	        </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventoryCreated}">
