@@ -102,14 +102,19 @@ public class BucketServiceImpl implements BucketService {
         if (actionItem == null) {
             actionItem = autoCreateActionItem(shippingOrder);
         } else {
-            actionItem = autoUpdateActionItem(actionItem); //normally would be called afterCodConfirmation/payment-authorization/manual-split
+            actionItem = autoUpdateActionItem(actionItem ,true); //normally would be called afterCodConfirmation/payment-authorization/manual-split
         }
         actionItem.setReporter(userService.getAdminUser());
         return saveActionItem(actionItem);
     }
 
-    protected ActionItem autoUpdateActionItem(ActionItem actionItem) {
-        List<Bucket> actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+      public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
+        List<Bucket> actionableBuckets = new ArrayList<Bucket>();
+        if(autoUpdate){
+         actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+        }else {
+           actionableBuckets = actionItem.getBuckets();
+        }
         actionItem.setBuckets(actionableBuckets);
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
         actionItem.setCurrentActionTask(find(assignActionTask(actionableBuckets)));
@@ -206,5 +211,11 @@ public class BucketServiceImpl implements BucketService {
     public Bucket getBucketById(Long bucketId){
         return actionItemDao.get(Bucket.class,bucketId);
     }
+
+     @Override
+    public ActionItem getActionItemById (Long actionItemId){
+        return actionItemDao.get(ActionItem.class, actionItemId);
+    }
+
 
 }

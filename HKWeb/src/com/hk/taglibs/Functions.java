@@ -79,6 +79,7 @@ import com.hk.domain.sku.SkuItem;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.queue.ActionItem;
 import com.hk.dto.menu.MenuNode;
 import com.hk.helper.MenuHelper;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
@@ -86,6 +87,7 @@ import com.hk.manager.LinkManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
 import com.hk.pact.dao.BaseDao;
+import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.dao.catalog.category.CategoryDao;
 import com.hk.pact.dao.catalog.product.ProductVariantDao;
 import com.hk.pact.dao.reward.RewardPointDao;
@@ -118,8 +120,8 @@ public class Functions {
     @SuppressWarnings("unused")
     private static final PeriodFormatter formatter;
 
-    private static final String          DEFAULT_DELIEVERY_DAYS = "1-3";
-    private static final String          BUSINESS_DAYS          = " business days";
+    private static final String DEFAULT_DELIEVERY_DAYS = "1-3";
+    private static final String BUSINESS_DAYS = " business days";
 
     // TODO: rewrite
     static {
@@ -132,7 +134,7 @@ public class Functions {
         // TODO: rewrite
     }
 
-    private static Logger                logger                 = LoggerFactory.getLogger(Functions.class);
+    private static Logger logger = LoggerFactory.getLogger(Functions.class);
 
     public static boolean isNotBlank(String str) {
         return StringUtils.isNotBlank(str);
@@ -206,44 +208,44 @@ public class Functions {
 
     public static String decimal2(Double n) {
         if (n == null) {
-			return "0.00";
-		}
+            return "0.00";
+        }
         return FormatUtils.getDecimalFormat(n);
     }
 
     public static String convertToLettersNumbersUnderscore(String s) {
         if (s == null) {
-			return "";
-		}
+            return "";
+        }
         return s.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9_]", "");
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContains(Collection c, Object o) {
         if (c == null) {
-			return false;
-		}
+            return false;
+        }
         return c.contains(o);
     }
 
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsBoth(Collection c, Object o1, Object o2) {
         if (c == null) {
-			return false;
-		}
+            return false;
+        }
         return c.contains(o1) && c.contains(o2);
     }
 
     public static boolean firstStringContainsSecond(String s1, String s2) {
         if (s1 == null) {
-			return false;
-		}
+            return false;
+        }
         return s1.contains(s2);
     }
 
     /**
      * checks if c1 contains all elements of c2
-     * 
+     *
      * @param c1
      * @param c2
      * @return
@@ -251,8 +253,8 @@ public class Functions {
     @SuppressWarnings("unchecked")
     public static boolean collectionContainsCollection(Collection c1, Collection c2) {
         if (c1 == null || c2 == null) {
-			return false;
-		}
+            return false;
+        }
         boolean collectionContainsCollection = true;
 
         for (Object o : c2) {
@@ -273,9 +275,9 @@ public class Functions {
     @SuppressWarnings("unchecked")
     public static boolean urlContainsAnyCategory(String url, String categoryPipeSeparatedList) {
         String[] categories = null;
-        if(categoryPipeSeparatedList.contains(",")){
+        if (categoryPipeSeparatedList.contains(",")) {
             categories = categoryPipeSeparatedList.split(",");
-        }else if (categoryPipeSeparatedList.contains("|")){
+        } else if (categoryPipeSeparatedList.contains("|")) {
             categories = categoryPipeSeparatedList.split(",");
         }
         /*
@@ -283,8 +285,8 @@ public class Functions {
          * collectionContains(c, o); } }
          */
 
-        for (String category : categories){
-            if (url.contains(category.trim())){
+        for (String category : categories) {
+            if (url.contains(category.trim())) {
                 return true;
             }
         }
@@ -307,17 +309,17 @@ public class Functions {
         }
     }
 
-	public static Long netInventoryAtServiceableWarehouses(Object o) {
-		AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
+    public static Long netInventoryAtServiceableWarehouses(Object o) {
+        AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
 
-		if (o instanceof Sku) {
-			Sku sku = (Sku) o;
-			return adminInventoryService.getNetInventory(sku);
-		} else {
-			ProductVariant productVariant = (ProductVariant) o;
-			return adminInventoryService.getNetInventoryAtServiceableWarehouses(productVariant);
-		}
-	}
+        if (o instanceof Sku) {
+            Sku sku = (Sku) o;
+            return adminInventoryService.getNetInventory(sku);
+        } else {
+            ProductVariant productVariant = (ProductVariant) o;
+            return adminInventoryService.getNetInventoryAtServiceableWarehouses(productVariant);
+        }
+    }
 
     public static Long bookedQty(Object o) {
         AdminInventoryService adminInventoryService = ServiceLocatorFactory.getService(AdminInventoryService.class);
@@ -336,10 +338,10 @@ public class Functions {
     }
 
     public static boolean hasProductAnyCategory(Object product, String pipeSeparatedCategory) {
-        Product pr = (Product)product;
-        for (Category category : pr.getCategories()){
-            if (pipeSeparatedCategory.contains(category.getName())){
-                 return true;
+        Product pr = (Product) product;
+        for (Category category : pr.getCategories()) {
+            if (pipeSeparatedCategory.contains(category.getName())) {
+                return true;
             }
         }
         return false;
@@ -349,7 +351,7 @@ public class Functions {
         Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
-        
+
         //return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
     }
 
@@ -697,30 +699,30 @@ public class Functions {
 
     public static boolean renderNewCatalogFilter(String child, String secondChild) {
         List<String> categoriesForNewCatalogFilter = Arrays.asList("lenses", "sunglasses", "eyeglasses", "protein", "creatine", "weight-gainer", "dietary-supplements",
-                "shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
+                "shop-by-concern", "shop-by-need", "weight-management", "alternative-remedies", "healthy-food");
         boolean renderNewCatalogFilter = (Functions.collectionContains(categoriesForNewCatalogFilter, child) || Functions.collectionContains(categoriesForNewCatalogFilter,
                 secondChild));
         return renderNewCatalogFilter;
     }
 
-	public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
-		List<String> thirdChildList = Arrays.asList("sunglasses", "weight-gainer");
-        List<String> secondChildList = Arrays.asList("dietary-supplements","shop-by-concern","shop-by-need","weight-management","alternative-remedies","healthy-food");
-		if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
-			return true;
-		} else if (secondChild.equalsIgnoreCase("protein")){
+    public static boolean hideFilterHeads(String secondChild, String thirdChild, String attribute) {
+        List<String> thirdChildList = Arrays.asList("sunglasses", "weight-gainer");
+        List<String> secondChildList = Arrays.asList("dietary-supplements", "shop-by-concern", "shop-by-need", "weight-management", "alternative-remedies", "healthy-food");
+        if (thirdChildList.contains(thirdChild) && attribute.equalsIgnoreCase("size")) {
+            return true;
+        } else if (secondChild.equalsIgnoreCase("protein")) {
             List<String> attributeListProtein = Arrays.asList("age");
             if (attributeListProtein.contains(attribute.toLowerCase())) {
                 return true;
             }
-        } else if(secondChildList.contains(secondChild)){
-            List<String> attributesHealthNutrition = Arrays.asList("age","strength","size","type");
-            if(attributesHealthNutrition.contains(attribute.toLowerCase())){
+        } else if (secondChildList.contains(secondChild)) {
+            List<String> attributesHealthNutrition = Arrays.asList("age", "strength", "size", "type");
+            if (attributesHealthNutrition.contains(attribute.toLowerCase())) {
                 return true;
             }
         }
-		return false;
-	}
+        return false;
+    }
 
     public static Long searchProductImages(Product product, ProductVariant productVariant, Long imageTypeId, boolean showVariantImages, Object showHiddenImages) {
         ProductImageService productImageService = ServiceLocatorFactory.getService(ProductImageService.class);
@@ -732,7 +734,7 @@ public class Functions {
     public static List<Warehouse> getApplicableWarehouses(ProductVariant productVariant, Order order) {
         SkuService skuService = ServiceLocatorFactory.getService(SkuService.class);
         //List<Sku> applicableSkus = skuService.getSKUsForProductVariant(productVariant);
-	    List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant, order);
+        List<Sku> applicableSkus = skuService.getSKUsForProductVariantAtServiceableWarehouses(productVariant, order);
         List<Warehouse> applicableWarehouses = new ArrayList<Warehouse>();
         for (Sku applicableSku : applicableSkus) {
             applicableWarehouses.add(applicableSku.getWarehouse());
@@ -741,8 +743,8 @@ public class Functions {
     }
 
     public static boolean showOptionOnUI(String optionType) {
-    /*    List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
-		        "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");*/
+        /*    List<String> allowedOptions = Arrays.asList("BABY WEIGHT", "CODE", "COLOR", "FLAVOR", "FRAGRANCE", "NET WEIGHT",
+                  "OFFER", "PRODUCT CODE", "QUANTITY", "SIZE", "TYPE", "WEIGHT", "QTY");*/
         boolean showOptionOnUI = ProductUtil.getVariantValidOptions().contains(optionType.toUpperCase());
         return showOptionOnUI;
     }
@@ -752,152 +754,158 @@ public class Functions {
         return courierStatusUpdateHelper.getHkDeliveryStatusForUser(status);
     }
 
-		public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
-				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
-				return grnLineItemService.getPoLineItemQty(grnLineItem);
-		}
-
-		public static Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote goodsReceivedNote, Sku sku) {
-				GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
-				return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
-		}
-
-    public static ProductVariant validTryOnProductVariant(Product product){
-        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
-        return  productService.validTryOnProductVariant(product);
+    public static Long getPoLineItemQty(GrnLineItem grnLineItem) {
+        GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+        return grnLineItemService.getPoLineItemQty(grnLineItem);
     }
 
-  public static List<HeadingProduct> getHeadingProductsSortedByRank(Long headingId){
-    HeadingProductService  headingProductService = ServiceLocatorFactory.getService(HeadingProductService.class);
-    return headingProductService.getHeadingProductsSortedByRank(headingId);
-  }
+    public static Long getGrnLineItemQtyAlreadySet(GoodsReceivedNote goodsReceivedNote, Sku sku) {
+        GrnLineItemService grnLineItemService = ServiceLocatorFactory.getService(GrnLineItemService.class);
+        return grnLineItemService.getGrnLineItemQtyAlreadySet(goodsReceivedNote, sku);
+    }
 
-    public static List<Reason> getReasonsByType(String type){
+    public static ProductVariant validTryOnProductVariant(Product product) {
+        ProductService productService = ServiceLocatorFactory.getService(ProductService.class);
+        return productService.validTryOnProductVariant(product);
+    }
+
+    public static List<HeadingProduct> getHeadingProductsSortedByRank(Long headingId) {
+        HeadingProductService headingProductService = ServiceLocatorFactory.getService(HeadingProductService.class);
+        return headingProductService.getHeadingProductsSortedByRank(headingId);
+    }
+
+    public static List<Reason> getReasonsByType(String type) {
         ShippingOrderLifecycleService shippingOrderLifecycleService = ServiceLocatorFactory.getService(ShippingOrderLifecycleService.class);
         return shippingOrderLifecycleService.getReasonByType(type);
     }
 
     public static Country getCountry(Long countryId) {
         AddressService addressService = ServiceLocatorFactory.getService(AddressService.class);
-         return addressService.getCountry(countryId);
+        return addressService.getCountry(countryId);
     }
 
-    public static String encryptOrderId(Long orderId){
-        Long encryptOrderId_1 = ( orderId * 99 ) + 10;
+    public static String encryptOrderId(Long orderId) {
+        Long encryptOrderId_1 = (orderId * 99) + 10;
         String encryptOrderId_2 = encryptOrderId_1.toString();
         String encryptedOrderId = "";
         Random randomGenerator = new Random();
-        for(int i= 0 ;i<encryptOrderId_2.length();i++){
-            if(i==0){
-              encryptedOrderId +='@';
+        for (int i = 0; i < encryptOrderId_2.length(); i++) {
+            if (i == 0) {
+                encryptedOrderId += '@';
             }
 
-                char random =  (char)(randomGenerator.nextInt(26) + 'a');
-                char value = encryptOrderId_2.charAt(i);
-                encryptedOrderId += value;
-                encryptedOrderId +=  random;
+            char random = (char) (randomGenerator.nextInt(26) + 'a');
+            char value = encryptOrderId_2.charAt(i);
+            encryptedOrderId += value;
+            encryptedOrderId += random;
 
         }
-        logger.debug("\n encrypted order id is"+encryptedOrderId + "\n");
+        logger.debug("\n encrypted order id is" + encryptedOrderId + "\n");
         return encryptedOrderId;
     }
-    public static Long decryptOrderId(String encryptedOrderId){
+
+    public static Long decryptOrderId(String encryptedOrderId) {
         String decryptOrderId = "";
         Long orderId = null;
-        for(int i=1;i<encryptedOrderId.length();i = i + 2){
+        for (int i = 1; i < encryptedOrderId.length(); i = i + 2) {
             decryptOrderId += encryptedOrderId.charAt(i);
         }
-        logger.debug("\n decrypted order id is"+decryptOrderId + "\n");
+        logger.debug("\n decrypted order id is" + decryptOrderId + "\n");
         orderId = Long.parseLong(decryptOrderId);
         orderId = orderId - 10;
-        orderId = orderId/99;
-        logger.debug("\n decrypted order id is"+ orderId + "\n");
+        orderId = orderId / 99;
+        logger.debug("\n decrypted order id is" + orderId + "\n");
         return orderId;
     }
 
-    public static String readIssuerImageIcon(byte [] imageByteArray, String filename){
+    public static String readIssuerImageIcon(byte[] imageByteArray, String filename) {
         GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
-        return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
+        return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray, filename);
     }
-    
-    public static Boolean isOrderForDiscretePackaging(ShippingOrder shippingOrder){
+
+    public static Boolean isOrderForDiscretePackaging(ShippingOrder shippingOrder) {
         Category discretePackagingCategory = new Category("discrete-packaging", "Discrete Packaging");
         for (LineItem lineItem : shippingOrder.getLineItems()) {
-            if(lineItem.getCartLineItem().getProductVariant().getProduct().getCategories().contains(discretePackagingCategory)){
+            if (lineItem.getCartLineItem().getProductVariant().getProduct().getCategories().contains(discretePackagingCategory)) {
                 return true;
             }
         }
         return false;
     }
 
-	public static ProductVariantSupplierInfo getPVSupplierInfo(Supplier supplier, ProductVariant productVariant) {
-		if (supplier != null && productVariant != null) {
-			ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
-			return productVariantSupplierInfoService.getOrCreatePVSupplierInfo(productVariant, supplier);
-		} else {
-			return null;
-		}
-	}
+    public static ProductVariantSupplierInfo getPVSupplierInfo(Supplier supplier, ProductVariant productVariant) {
+        if (supplier != null && productVariant != null) {
+            ProductVariantSupplierInfoService productVariantSupplierInfoService = ServiceLocatorFactory.getService(ProductVariantSupplierInfoService.class);
+            return productVariantSupplierInfoService.getOrCreatePVSupplierInfo(productVariant, supplier);
+        } else {
+            return null;
+        }
+    }
 
-    public static List<ShippingOrder> getActionAwaitingSO(Order order){
-       List<ShippingOrder> actionAwaitingSO = new ArrayList<ShippingOrder>();
+    public static List<ShippingOrder> getActionAwaitingSO(Order order) {
+        List<ShippingOrder> actionAwaitingSO = new ArrayList<ShippingOrder>();
         for (ShippingOrder shippingOrder : order.getShippingOrders()) {
-            if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+            if (EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())) {
                 actionAwaitingSO.add(shippingOrder);
             }
         }
         return actionAwaitingSO;
     }
 
-  public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
-    WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
-    return warehouseService.findShippingWarehouse(shippingOrder);
-  }
-
-  public static B2bUserDetails getB2bUserDetails(User user){
-    B2bUserDetailsDao b2bUserDetailsDao = ServiceLocatorFactory.getService(B2bUserDetailsDao.class);
-    return b2bUserDetailsDao.getB2bUserDetails(user);
-  }
-
-  public static String getStateFromTin(String tin){
-    return StateList.getStateByTin(tin);
-  }
-  
-	public static double getLoyaltyKarmaPointsForUser(Long userId){
-		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
-		if(userId == null){
-			return 0.0;
-		}
-		return loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId));
-	}
-	
-	public static Badge getBadgeInfoForUser(Long userId){
-		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
-		if(userId == null){
-			return null;
-		}
-		return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
-	}
-	
-	public static String roundNumberForDisplay(double number) {
-		String numberString;
-		if ((number*10)%10==0) {
-			numberString =  (Math.round(number)) + "";
-		} else {
-			numberString = (Math.round(number*10)/10.0) + "";
-		}
-		return numberString;
-	}
-
-  public static String getAppendedURL(String baseUrl, String parameter, String value) {
-    if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
-      if (baseUrl.contains("?")) {
-        return baseUrl.concat("&" + parameter + "=" + value);
-      } else {
-        return baseUrl.concat("?" + parameter + "=" + value);
-      }
+    public static Warehouse getShippingWarehouse(ShippingOrder shippingOrder) {
+        WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);
+        return warehouseService.findShippingWarehouse(shippingOrder);
     }
-    return baseUrl;
-  }
+
+    public static B2bUserDetails getB2bUserDetails(User user) {
+        B2bUserDetailsDao b2bUserDetailsDao = ServiceLocatorFactory.getService(B2bUserDetailsDao.class);
+        return b2bUserDetailsDao.getB2bUserDetails(user);
+    }
+
+    public static String getStateFromTin(String tin) {
+        return StateList.getStateByTin(tin);
+    }
+
+    public static double getLoyaltyKarmaPointsForUser(Long userId) {
+        LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
+        if (userId == null) {
+            return 0.0;
+        }
+        return loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId));
+    }
+
+    public static Badge getBadgeInfoForUser(Long userId) {
+        LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
+        if (userId == null) {
+            return null;
+        }
+        return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
+    }
+
+    public static String roundNumberForDisplay(double number) {
+        String numberString;
+        if ((number * 10) % 10 == 0) {
+            numberString = (Math.round(number)) + "";
+        } else {
+            numberString = (Math.round(number * 10) / 10.0) + "";
+        }
+        return numberString;
+    }
+
+    public static String getAppendedURL(String baseUrl, String parameter, String value) {
+        if (StringUtils.isNotBlank(baseUrl) && StringUtils.isNotBlank(parameter) && StringUtils.isNotBlank(value)) {
+            if (baseUrl.contains("?")) {
+                return baseUrl.concat("&" + parameter + "=" + value);
+            } else {
+                return baseUrl.concat("?" + parameter + "=" + value);
+            }
+        }
+        return baseUrl;
+    }
+
+    public static ActionItem getActionItem(ShippingOrder shippingOrder) {
+        ActionItemDao actionItemDao = ServiceLocatorFactory.getService(ActionItemDao.class);
+        return actionItemDao.searchActionItem(shippingOrder);
+    }
 
 }
