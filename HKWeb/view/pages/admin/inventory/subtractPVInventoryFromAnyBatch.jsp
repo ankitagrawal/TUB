@@ -185,6 +185,14 @@
                 });
                 return false
             });
+            
+            $('#excelUpload').live("click", function() {
+                var filebean = $('#fileBean').val();
+                if (filebean == null || filebean == '') {
+                  alert('choose file');
+                  return false;
+                }
+              });
 
         });
 
@@ -319,10 +327,10 @@
                     (VARIANT_ID, QTY) as excel headers
                     <br/><br/>
 
-                    <h2>File to Upload: <s:file name="fileBean" size="30"/></h2>
+                    <h2>File to Upload: <s:file id="fileBean" name="fileBean" size="30"/></h2>
 
                     <div class="buttons">
-                        <s:submit name="uploadSubtractExcelForProductAuditedForAnyBatch" value="Upload"/>
+                        <s:submit id="excelUpload" name="uploadSubtractExcelForProductAuditedForAnyBatch" value="Upload"/>
                     </div>
 
                 </fieldset>
