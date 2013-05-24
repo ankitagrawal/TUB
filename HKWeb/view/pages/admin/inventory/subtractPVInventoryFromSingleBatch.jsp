@@ -192,6 +192,7 @@
             	$(this).hide();
                 var filebean = $('#fileBean').val();
                 if (filebean == null || filebean == '') {
+                	$(this).show();
                   alert('choose file');
                   return false;
                 }
