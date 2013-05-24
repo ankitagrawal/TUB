@@ -81,7 +81,6 @@ import com.hk.util.CartLineItemUtil;
 import com.hk.util.HKImageUtils;
 import com.hk.util.OrderUtil;
 import com.hk.util.ProductUtil;
-import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.util.CryptoUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -434,14 +433,13 @@ public class Functions {
         return userManager.getProcessedOrdersCount(user);
     }
 
-    public static String getS3ImageUrl(Object o1, Object o2, boolean isSecure) {
-	    String isSecureString = WebContext.getRequest().getHeader("x-proto");
+    public static String getS3ImageUrl(Object o1, Object o2) {
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {
             return "";
         }
-        return HKImageUtils.getS3ImageUrl(imageSize, imageId, isSecure);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId);
     }
 
     public static Boolean isFreeVariant(Object o) {

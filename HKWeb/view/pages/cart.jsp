@@ -4,6 +4,7 @@
 <%@ page import="com.hk.constants.catalog.product.EnumProductVariantPaymentType" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -12,7 +13,7 @@
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
 <c:set var="product" value="${pa.product}"/>
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = SslUtil.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/cartLayout.jsp" pageTitle="Shopping Cart">

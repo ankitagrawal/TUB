@@ -1,3 +1,4 @@
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 
@@ -8,7 +9,7 @@
 <s:layout-render name="/layouts/checkoutLayout.jsp" pageTitle="Select a shipping address">
 <%@ include file="/layouts/_userData.jsp" %>
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = SslUtil.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <c:set var="countryId" value="80"/>

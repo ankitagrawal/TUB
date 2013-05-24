@@ -1,9 +1,10 @@
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.pages.ClearanceSaleAction" var="csaBean"/>
 
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+	boolean isSecure = SslUtil.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding-ny2013.jsp"

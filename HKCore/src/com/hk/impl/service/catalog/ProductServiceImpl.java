@@ -548,7 +548,7 @@ public class ProductServiceImpl implements ProductService {
 
         solrProduct.setProductUrl(convertToWww(getProductUrl(product, false)));
         if (product.getMainImageId() != null) {
-            solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(), false));
+            solrProduct.setSmallImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
         }
 
         Double price = null;

@@ -1,9 +1,10 @@
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.domain.affiliate.Affiliate" %>
 <%@ page import="com.hk.domain.catalog.product.Product" %>
+<%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
 <%@ page import="com.hk.pact.dao.affiliate.AffiliateDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.domain.catalog.product.combo.Combo" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -20,7 +21,7 @@
           affiliate = affiliateDao.getAffiliateById(affiliateId);
       }
       pageContext.setAttribute("affiliate", affiliate);
-      boolean isSecure = pageContext.getRequest().isSecure();
+	    boolean isSecure = SslUtil.isSecure();
       pageContext.setAttribute("isSecure", isSecure);
   %>
   <div class="jqmWindow" style="width:700px;" id="getBannerLinkWindow">

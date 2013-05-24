@@ -1,9 +1,10 @@
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 <s:layout-definition>
     <%
-	    boolean isSecure = pageContext.getRequest().isSecure();
+	    boolean isSecure = SslUtil.isSecure();
 	    pageContext.setAttribute("isSecure", isSecure);
 	    String label = (String) pageContext.getAttribute("label");
 	    pageContext.setAttribute("label", label);

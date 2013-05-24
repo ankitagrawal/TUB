@@ -1,13 +1,13 @@
 package com.hk.util;
 
-import javax.annotation.PostConstruct;
-
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.core.Keys;
+import net.sourceforge.stripes.util.ssl.SslUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.hk.constants.catalog.image.EnumImageSize;
-import com.hk.constants.core.Keys;
+import javax.annotation.PostConstruct;
 
 @Component
 public class HKImageUtils {
@@ -58,35 +58,36 @@ public class HKImageUtils {
         return (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "com_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
-    public static String getS3CategoryImageUrl(EnumImageSize imageSize, Long imageId, boolean isSecure) {
+    public static String getS3CategoryImageUrl(EnumImageSize imageSize, Long imageId) {
         String prefix = "http://";
-        if (isSecure) {
+        if (SslUtil.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
-    public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId, boolean isSecure) {
+    public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId) {
+
         String prefix = "http://";
-        if (isSecure) {
+        if (SslUtil.isSecure()) {
             prefix = "https://";
         }
 
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize.getSuffix() + ".jpg";
     }
 
-    public static String getS3ImageUrl(String imageSize, Object imgId, boolean isSecure) {
+    public static String getS3ImageUrl(String imageSize, Object imgId) {
         Long imageId = Long.parseLong(imgId.toString());
         String prefix = "http://";
-        if (isSecure) {
+        if (SslUtil.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize + ".jpg";
     }
 
-    public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId, boolean isSecure) {
+    public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId) {
         String prefix = "http://";
-        if (isSecure) {
+        if (SslUtil.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);

@@ -1,8 +1,8 @@
-<%@ page import="com.hk.domain.catalog.product.Product" %>
-<%@ page import="com.hk.pact.dao.catalog.product.ProductDao" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.affiliate.Affiliate" %>
+<%@ page import="com.hk.domain.catalog.product.Product" %>
 <%@ page import="com.hk.pact.dao.affiliate.AffiliateDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -18,7 +18,7 @@
           affiliate = affiliateDao.getAffiliateById(affiliateId);
       }
       pageContext.setAttribute("affiliate", affiliate);
-      boolean isSecure = pageContext.getRequest().isSecure();
+	  boolean isSecure = SslUtil.isSecure();
       pageContext.setAttribute("isSecure", isSecure);
   %>
 

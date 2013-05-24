@@ -1,11 +1,11 @@
 package com.hk.web.tag;
 
-import java.io.IOException;
+import net.sourceforge.stripes.tag.HtmlTagSupport;
+import net.sourceforge.stripes.util.ssl.SslUtil;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-
-import net.sourceforge.stripes.tag.HtmlTagSupport;
+import java.io.IOException;
 
 /**
  * @author vaibhav.adlakha
@@ -18,9 +18,8 @@ public class ProductVideoTag extends HtmlTagSupport {
     public int doEndTag() throws JspException {
 
         JspWriter out = getPageContext().getOut();
-        boolean isSecure = pageContext.getRequest().isSecure();
-        
-        if(isSecure){
+
+        if(SslUtil.isSecure()){
             videoCode = videoCode.replace("http", "https");
         }
         

@@ -1,9 +1,10 @@
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
 
 <%
-  boolean isSecure = pageContext.getRequest().isSecure();
+  boolean isSecure = SslUtil.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 <s:layout-render name="/layouts/categoryBlankLanding-glossary.jsp"
