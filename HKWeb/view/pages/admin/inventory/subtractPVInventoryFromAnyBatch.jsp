@@ -187,6 +187,7 @@
             });
             
             $('#excelUpload').live("click", function() {
+            	$(this).hide();
                 var filebean = $('#fileBean').val();
                 if (filebean == null || filebean == '') {
                   alert('choose file');
