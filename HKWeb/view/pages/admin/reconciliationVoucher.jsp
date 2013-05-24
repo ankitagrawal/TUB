@@ -253,6 +253,7 @@
 				    return false;
 			    }
 			    else {
+			    	$(this).hide();
 				    return $(this).submit();
 			    }
 			    $(this).css("display", "none");
@@ -268,9 +269,6 @@
                 }
               });
 		    
-		    $("#reconcileAdd").click(function(){
-		  		$(this).hide();
-		  	});
 	    });
     </script>
 </s:layout-component>
