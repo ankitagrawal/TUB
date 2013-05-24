@@ -1,16 +1,15 @@
 package com.hk.web.tag;
 
-import java.io.IOException;
+import com.hk.constants.core.Keys;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.web.filter.WebContext;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.springframework.stereotype.Component;
-
-import com.hk.constants.core.Keys;
-import com.hk.service.ServiceLocatorFactory;
+import java.io.IOException;
 
 @Component
 public class VirtualHostImageTag extends TagSupport {
@@ -32,7 +31,7 @@ public class VirtualHostImageTag extends TagSupport {
 		JspWriter out = pageContext.getOut();
 		try {
 			if (useVirtualHosts) {
-				if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
+				if (useSslVirtualHosts && WebContext.isSecure()) {
 					out.write(sslHost);
 				} else {
 					out.write(host);
