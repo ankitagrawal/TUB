@@ -181,7 +181,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
         }
         /*
-		if (shippingOrderActivityList.size() == 0) {
+        if (shippingOrderActivityList.size() == 0) {
 			shippingOrderActivityList = shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue());
 		}
 		*/
@@ -250,6 +250,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
 
 
+
 //        if (basketCategoryList.size() == 0) {
 //            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
 //        }
@@ -264,7 +265,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
 
         List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
         shippingOrderStatusList.addAll(shippingOrderStatuses);
-        if (shippingOrderStatusList.isEmpty()) shippingOrderStatusList.addAll(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+        if (shippingOrderStatusList.isEmpty())
+            shippingOrderStatusList.addAll(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
 
         Set<Category> basketCategoryList = new HashSet<Category>();
         basketCategoryList.addAll(categoryDao.getCategoryByNames(basketCategories));
@@ -274,10 +276,10 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(shippingOrderLifecycleActivities);
         shippingOrderSearchCriteria.setReasonList(reasons);
 
-        if(!paymentModes.isEmpty()){
+        if (!paymentModes.isEmpty()) {
             shippingOrderSearchCriteria.setPaymentModes(paymentModes);
         }
-        if(!paymentStatuses.isEmpty()){
+        if (!paymentStatuses.isEmpty()) {
             shippingOrderSearchCriteria.setPaymentStatuses(paymentStatuses);
         }
         if (startDate != null && endDate != null) {
@@ -457,6 +459,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("dropShip");
         params.add("containsJit");
         params.add("b2bOrder");
+        params.add("buckets");
 
         params.add("bucketParameters");
 
@@ -517,6 +520,14 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 params.add("reasons[" + ctr8 + "]");
             }
             ctr8++;
+        }
+
+        int ctr9 = 0;
+        for (Bucket bucket : buckets) {
+            if (bucket != null) {
+                params.add("buckets[" + ctr9 + "]");
+            }
+            ctr9++;
         }
 
         return params;
