@@ -324,6 +324,7 @@ ${shippingOrder.id}
                 }
                  var proceed = confirm('Are you sure you want to cancel shipping order?');
                  if (!proceed) return false;
+                $(this).hide();
              });
         </script>
     </c:if>
