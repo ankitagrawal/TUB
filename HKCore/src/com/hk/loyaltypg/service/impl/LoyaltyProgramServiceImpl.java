@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.akube.framework.dao.Page;
+import com.hk.constants.core.RoleConstants;
 import com.hk.constants.discount.EnumRewardPointMode;
 import com.hk.constants.discount.EnumRewardPointStatus;
 import com.hk.constants.discount.OfferConstants;
@@ -52,6 +53,8 @@ import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.loyaltypg.service.NextLevelInfo;
 import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.order.OrderDao;
+import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.store.CategoryDto;
 import com.hk.store.SearchCriteria;
@@ -70,6 +73,11 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Autowired
 	private RewardPointService rewardPointService;
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private UserService userService;
+	
 
 	private final double LOYALTY_JOINING_BONUS = 15.0;
 
@@ -271,6 +279,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void createNewUserBadgeInfo(User user) {
+		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
+		this.userService.save(user);
+
 		double annualSpend = this.calculateAnualSpend(user);
 		Order bonusOrder = this.baseDao.get(Order.class, -1l);
 		List<Badge> badges = this.baseDao.getAll(Badge.class);
@@ -642,6 +653,17 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return flag;
 	}
 
+	@Override
+	public String updateCardNumber (UserBadgeInfo info, String cardNumber) {
+		
+		if (info != null) {
+			info.setCardNumber(cardNumber);
+			this.loyaltyProductDao.save(info);
+			return cardNumber;
+		} else {
+			return null;
+		}
+	}
 	/**
 	 * 
 	 * Setters and getters start from here.

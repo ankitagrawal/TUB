@@ -22,6 +22,7 @@ import com.hk.domain.offer.OfferAction;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.CartLineItemConfig;
+import com.hk.domain.order.Order;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.user.Address;
 import com.hk.dto.pricing.PricingDto;
@@ -556,4 +557,8 @@ public class PricingEngine {
                         + pricingDto.getPrepaidServicesTotal() + shipping : redeemRewardPoints).build();
     }
 
+    public CartLineItem createRewardPointLineItemPOS (Order order, Double redeemRewardPoints) {
+    	return new CartLineItemBuilder().ofType(EnumCartLineItemType.RewardPoint).discountOnHkPrice(
+                order.getAmount()  < redeemRewardPoints ? order.getAmount() : redeemRewardPoints).build();
+    }
 }

@@ -59,4 +59,6 @@ public interface LoyaltyProgramService {
 
 	public void createNewUserBadgeInfo(User user);
 
+	public String updateCardNumber(UserBadgeInfo info, String cardNumber);
+
 }

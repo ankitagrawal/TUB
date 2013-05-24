@@ -140,6 +140,13 @@
 								$('#pincode').val(res.data.pincode);
 								$('#address').val(res.data.address.id);
 								$('#phone').val(res.data.address.phone);
+								if (res.data.isLoyaltyUser) {
+									$('#loyaltyCustomerName').text(res.data.customer.name);
+									$('#badgeName').text(res.data.badgeName);
+									$('#loyaltyPoints').text(res.data.loyaltyPoints);
+									$('#cardNumber').val(res.data.cardNumber);
+									$('#addLoyaltyUser').vale(false);
+								}
 							} else {
 								//$('.orderDetails').html('<h2>' + res.message + '</h2>');
 							}
@@ -206,6 +213,48 @@
 				var grandTotal = $('.grandTotal').val();
 				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
 			});
+
+		    // Reward points conversion
+		  	$("#rewardLink").click(function(e) {
+		  		e.preventDefault();
+		  		if(confirm("Please note that by clicking OK all loyalty points of the customer will be converted to reward points." +
+		  				" These points will be valid for next six months only. Convert Points?")) {
+			  		$.getJSON($('#rewardLink').attr('href'), 
+			  				function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+									alert(res.message);
+									$('#rewardPoints').text(res.data.totalRewardPoints);
+									$('#rewardPointsRow').show();
+								} else {
+									//
+									alert(res.message);
+									}
+							});
+		  		} else {
+		  			return false;
+		  		}
+		  		
+		  	});
+		  	 
+		    $('#useRewardPoints').click(function() {
+	    	//	var rewardPoints = parseFloat($('#rewardPoints').val());
+	    	//	var grandTotal = $('.grandTotal').val();
+		    	if($(this).val()) {
+/* 		    		if (grandTotal > rewardPoints) {
+			    		$('#finalPayable').val(grandTotal - rewardPoints);
+		    		} else {
+		    			$('#finalPayable').val(0);
+		    		}
+		    	} else {
+		    		if (grandTotal > rewardPoints) {
+		    			var prevFinalVal = $('#finalPayable').val();
+		    			
+		    		}
+ */		    	alert("Max possible reward points will be used.");
+ 				}
+		    });
+		    
+		  	$('#rewardPointsRow').hide();
 
 		});
 	</script>
@@ -288,10 +337,22 @@
 			</table>
 			
 			<div> 
-			Presently you have (To be mentioned) loyalty points.
-			
- 			Click here to convert your loyaty points to reward points.
-			
+			<c:choose>
+				<c:when test="${pos.addLoyaltyCustomer }">
+					<br><s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" value="true"></s:checkbox> Add as Loyalty User 
+				
+				</c:when>
+				<c:otherwise>
+					<span id="loyaltyCustomer">Presently <span id="loyaltyCustomerName"> </span>  has <span id="badgeName"> </span> 
+					status and <span id="loyaltyPoints"> </span> loyalty points.</span>
+ 					<s:link id="rewardLink" beanclass="com.hk.web.action.admin.pos.POSAction" event="convertLoyaltyPoints" >Click here </s:link>
+ 					to convert customer's loyalty points to reward points.
+					<br>Customer Loyalty Card number <s:text name="cardNumber" /> 
+				
+				</c:otherwise>
+			</c:choose>
+				<br> <s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="updateCustomerLink" event="updateCustomerInfo"> abdf</s:link> 
+				<input type="button" value="Update Customer Info"></input>
 			</div>
 		</fieldset>
 		<c:if test="${pos.order.id == null}">
@@ -347,6 +408,13 @@
 						<hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="discountsForPOS" />
 					</s:select></td>
 				</tr>
+				<tr id="rewardPointsRow">
+					<td align="right"><b>Reward Points available</b></td>
+					<td colspan="3"><span id="rewardPoints"> </span></td>
+                    <td> Use Reward Points</td><td> <s:checkbox name="useRewardPoints" id="useRewardPoints" /></td>
+					
+				</tr>
+				
 				<tr>
 					<td colspan="5" align="right"><b>Final Payable</b></td>
 					<td><input type="text" id="finalPayable" readonly="readonly"/></td>
