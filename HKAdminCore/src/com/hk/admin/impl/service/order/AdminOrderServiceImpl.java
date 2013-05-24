@@ -433,16 +433,13 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         for (CartLineItem productCartLineItem : productCartLineItems) {
             Product product = productCartLineItem.getProductVariant().getProduct();
+
             if (product.isCodAllowed() != null && !product.isCodAllowed()) {
                 codAllowedonProduct = false;
                 break;
             }
         }
-
-        OrderSearchCriteria osc = new OrderSearchCriteria();
-        osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.RTO.asOrderStatus()));
-        List<Order> rtoOrders = getOrderService().searchOrders(osc);
-
+        Long rtoOrdersCount = orderService.getCountOfOrdersByStatus(order.getUser(),EnumOrderStatus.RTO);
         if (payable < codMinAmount || payable > codMaxAmount) {
             codFailureMap.put("CodOnAmount", "N");
         } else if (subscriptionCartLineItems != null && subscriptionCartLineItems.size() > 0) {
@@ -451,12 +448,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             codFailureMap.put("CodAllowedOnProduct", "N");
         } else if (!pincodeCourierService.isCourierAvailable(order.getAddress().getPincode(), null, pincodeCourierService.getShipmentServiceType(productCartLineItems, true), true)) {
             codFailureMap.put("OverallCodAllowedByPincodeProduct", "N");
-        } else if (!rtoOrders.isEmpty() && rtoOrders.size() >= 2) {
-            osc.setEmail(order.getUser().getLogin()).setOrderStatusList(Arrays.asList(EnumOrderStatus.Delivered.asOrderStatus()));
-            List<Order> totalDeliveredOrders = getOrderService().searchOrders(osc);
-            if (rtoOrders.size() >= totalDeliveredOrders.size()) {
-				codFailureMap.put("MutipleRTOs", "Y");
-			}
+        } else if (rtoOrdersCount >= 2) {
+            Long totalDelieveredOrdersCount= orderService.getCountOfOrdersByStatus(order.getUser(),EnumOrderStatus.Delivered);
+            if (rtoOrdersCount >= totalDelieveredOrdersCount)
+                codFailureMap.put("MutipleRTOs", "Y");
         }
         return codFailureMap;
     }

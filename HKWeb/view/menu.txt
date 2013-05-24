@@ -545,104 +545,116 @@
 --/eye/what-s-new/eye-care-services:Eye Care Services
 
 /personal-care
--/personal-care/elderly-care:Elderly Care
---/personal-care/elderly-care/adult-diapers
----/personal-care/elderly-care/adult-diapers/pull-ups-diapers: Pull Ups Diapers
----/personal-care/elderly-care/adult-diapers/diapers
----/personal-care/elderly-care/adult-diapers/underpads
----/personal-care/elderly-care/adult-diapers/diaper-rash-cream: Diaper Rash Cream
---/personal-care/elderly-care/support-systems
----/personal-care/elderly-care/support-systems/crepe-bandages:Crepe Bandages
----/personal-care/elderly-care/support-systems/cervical-supports:Cervical Supports
----/personal-care/elderly-care/support-systems/shoulder-clavicle-supports:Shoulder & Clavicle Supports
----/personal-care/elderly-care/support-systems/chest-supports:Chest Supports
----/personal-care/elderly-care/support-systems/wrist-forearm-supports:Wrist & Forearm Supports
----/personal-care/elderly-care/support-systems/elbow-thumb-supports:Elbow & Thumb Supports
----/personal-care/elderly-care/support-systems/arm-supports:Arm Supports
----/personal-care/elderly-care/support-systems/abdominal-supports:Abdominal Supports
----/personal-care/elderly-care/support-systems/back-supports:Back Supports
----/personal-care/elderly-care/support-systems/compression-supports:Compression Supports
----/personal-care/elderly-care/support-systems/knee-supports:Knee Supports
----/personal-care/elderly-care/support-systems/ankle-supports:Ankle Supports
----/personal-care/elderly-care/support-systems/traction-accessories:Traction Accessories
----/personal-care/elderly-care/support-systems/premium-range:Premium Range
---/personal-care/elderly-care/nutrition
---/personal-care/elderly-care/diagnostics
----/personal-care/elderly-care/diagnostics/bp-monitor: BP Monitors
----/personal-care/elderly-care/diagnostics/strips
----/personal-care/elderly-care/diagnostics/meters: Blood Glucose Meters
---/personal-care/elderly-care/massagers
---/personal-care/elderly-care/mobility-aids: Mobility Aids
----/personal-care/elderly-care/mobility-aids/power-wheel-chairs: Power Wheel Chairs
----/personal-care/elderly-care/mobility-aids/manual-wheel-chairs: Manual Wheel Chairs
----/personal-care/elderly-care/mobility-aids/commode : Commode Wheel Chairs/Stools
----/personal-care/elderly-care/mobility-aids/walking-sticks: Walking Sticks
----/personal-care/elderly-care/mobility-aids/walkers
---/personal-care/elderly-care/orthopedic-care: Orthopedic Care
---/personal-care/elderly-care/hot-cold-therapy: Hot & Cold Therapy
---/personal-care/elderly-care/respiratory-care: Respiratory Care
---/personal-care/elderly-care/hearing-aids: Hearing Aids
---/personal-care/elderly-care/mobiles
---/personal-care/elderly-care/elderly-care-services: Elderly Care Services
+-/personal-care/pain-relief
+--/personal-care/pain-relief/supports
+---/personal-care/pain-relief/supports/crepe-bandages
+---/personal-care/pain-relief/supports/cervical-supports
+---/personal-care/pain-relief/supports/shoulder-clavicle-supports
+---/personal-care/pain-relief/supports/chest-supports
+---/personal-care/pain-relief/supports/wrist-forearm-supports
+---/personal-care/pain-relief/supports/elbow-thumb-supports
+---/personal-care/pain-relief/supports/arm-supports
+---/personal-care/pain-relief/supports/abdominal-supports
+---/personal-care/pain-relief/supports/back-supports
+---/personal-care/pain-relief/supports/compression-supports
+---/personal-care/pain-relief/supports/knee-supports
+---/personal-care/pain-relief/supports/ankle-supports
+---/personal-care/pain-relief/supports/traction-accessories
+---/personal-care/pain-relief/supports/premium-range
+---/personal-care/pain-relief/bandages
+--/personal-care/pain-relief/sprays
+--/personal-care/pain-relief/first-aid-kits
+--/personal-care/pain-relief/heating-belt
+--/personal-care/pain-relief/hot-cold-therapy
+--/personal-care/pain-relief/physiotherapy-aids
+--/personal-care/pain-relief/patches
+--/personal-care/pain-relief/balms-creams: Balms & Creams
 -/personal-care/women
+--/personal-care/women/self-defense
+---/personal-care/women/pepper-spray
+---/personal-care/women/alarms
 --/personal-care/women/sanitary-napkins
 --/personal-care/women/tampons
---/personal-care/women/panty-liners:Panty Liners
+--/personal-care/women/panty-liners
 --/personal-care/women/ovulation-kits
 --/personal-care/women/menopause-kits
 --/personal-care/women/pregnancy
 ---/personal-care/women/pregnancy/pregnancy-kits
----/personal-care/women/pregnancy/pre-pregnancy : Pre Pregnancy
----/personal-care/women/pregnancy/post-pregnancy : Post Pregnancy
+---/personal-care/women/pregnancy/pre-pregnancy
+---/personal-care/women/pregnancy/post-pregnancy
 --/personal-care/women/chlamydia-test
 --/personal-care/women/condoms
---/personal-care/women/intimate-care:Intimate Care
+--/personal-care/women/intimate-care
 --/personal-care/women/combo-offers
--/personal-care/sexual-care
---/personal-care/sexual-care/accessories
---/personal-care/sexual-care/condoms
---/personal-care/sexual-care/female-condoms: Female Condoms
---/personal-care/sexual-care/fertility
----/personal-care/sexual-care/fertility/men
----/personal-care/sexual-care/fertility/women
---/personal-care/sexual-care/combo-offers
+-/personal-care/sexual-wellness
+--/personal-care/sexual-wellness/accessories
+--/personal-care/sexual-wellness/condoms
+---/personal-care/sexual-wellness/condoms/dotted
+---/personal-care/sexual-wellness/condoms/ultra-thin
+---/personal-care/sexual-wellness/condoms/flavoured
+---/personal-care/sexual-wellness/condoms/long-lasting
+---/personal-care/sexual-wellness/condoms/others
+--/personal-care/sexual-wellness/female-condoms
+--/personal-care/sexual-wellness/sexual-enhancers
+--/personal-care/sexual-wellness/supplements
+--/personal-care/sexual-wellness/fertility
+---/personal-care/sexual-wellness/fertility/men
+---/personal-care/sexual-wellness/fertility/women
+--/personal-care/sexual-wellness/combo-offers
 -/personal-care/foot-care-pedicure : Foot Care/Pedicure
---/personal-care/foot-care-pedicure/fresh-feet
---/personal-care/foot-care-pedicure/beautiful-feet
---/personal-care/foot-care-pedicure/comfortable-feet
---/personal-care/foot-care-pedicure/nail-care : Nail Care
----/personal-care/foot-care-pedicure/nail-care/nail-clippers : Nail Clippers
----/personal-care/foot-care-pedicure/nail-care/nail-cleaners : Nail Cleaners
----/personal-care/foot-care-pedicure/nail-care/nail-file : Nail File
----/personal-care/foot-care-pedicure/nail-care/miscellaneous
+--/personal-care/foot-care-pedicure/fresh-beautiful-feet: Fresh & Beautiful Feet
+--/personal-care/foot-care-pedicure/foot-care-devices-podiatry
+--/personal-care/foot-care-pedicure/insoles
+---/personal-care/foot-care-pedicure/insoles/gel-insoles
+---/personal-care/foot-care-pedicure/insoles/latex-insoles
+---/personal-care/foot-care-pedicure/insoles/fashion-insoles
+---/personal-care/foot-care-pedicure/insoles/silicon-insoles
+---/personal-care/foot-care-pedicure/shoe-care
+--/personal-care/foot-care-pedicure/nail-care
+---/personal-care/foot-care-pedicure/nail-care/nail-clippers
+---/personal-care/foot-care-pedicure/nail-care/nail-cleaners
+---/personal-care/foot-care-pedicure/nail-care/nail-file
+--/personal-care/foot-care-pedicure/nail-care/miscellaneous
 --/personal-care/foot-care-pedicure/combo-offers
 -/personal-care/oral-hygiene
---/personal-care/oral-hygiene/special-toothbrushes : Special Toothbrushes
---/personal-care/oral-hygiene/electronic-toothbrushes : Electronic Toothbrushes
+--/personal-care/oral-hygiene/manual-toothbrushes
+--/personal-care/oral-hygiene/electronic-toothbrushes
 ---/personal-care/oral-hygiene/electronic-toothbrushes/juniors
 ---/personal-care/oral-hygiene/electronic-toothbrushes/Adults
 ---/personal-care/oral-hygiene/electronic-toothbrushes/refills
---/personal-care/oral-hygiene/interdental-brush : Interdental Brush
---/personal-care/oral-hygiene/mini-flosser : Mini Flosser
---/personal-care/oral-hygiene/tongue-cleaner : Tongue Cleaner
---/personal-care/oral-hygiene/mouth-wash-freshener : Mouth Wash & Freshener
+--/personal-care/oral-hygiene/interdental-brush
+--/personal-care/oral-hygiene/mini-flosser
+--/personal-care/oral-hygiene/tongue-cleaner
+--/personal-care/oral-hygiene/mouth-wash-freshener :  Mouth Wash & Freshener
 --/personal-care/oral-hygiene/toothpaste
 --/personal-care/oral-hygiene/accessories
 -/personal-care/misc
---/personal-care/misc/deals
---/personal-care/misc/mosquito-repellents : Mosquito Repellents
---/personal-care/misc/smoking-cessation: Smoking Cessation
---/personal-care/misc/wipes-tissues: Wipes & Tissues
---/personal-care/misc/self-defense : Self Defense
----/personal-care/misc/pepper-spray:Pepper Spray
----/personal-care/misc/alarms
---/personal-care/misc/travel-kits:Travel Kits
+--/personal-care/misc/adult-diapers
+---/personal-care/misc/adult-diapers/pull-ups-diapers
+---/personal-care/misc/adult-diapers/diapers
+---/personal-care/misc/adult-diapers/underpads
+---/personal-care/misc/adult-diapers/diaper-rash-cream
+--/personal-care/misc/elderly-mobiles
+--/personal-care/misc/mosquito-repellents
+---/personal-care/misc/mosquito-repellents/mosquito-nets
+---/personal-care/misc/mosquito-repellents/mosquito-coils
+---/personal-care/misc/mosquito-repellents/mosquito-machines-refills: Mosquito Machines & Refills
+---/personal-care/misc/mosquito-repellents/mosquito-mats
+--/personal-care/misc/grooming
+---/personal-care/misc/grooming/Shavers-trimmers: Shavers & Trimmers
+---/personal-care/misc/grooming/razors-blades: Razors & Blades
+---/personal-care/misc/grooming/shaving-cream-gel: Shaving Cream & Gel
+---/personal-care/misc/grooming/shaving-brushes
+---/personal-care/misc/grooming/scissors
+---/personal-care/misc/grooming/after-shave-lotion: After Shave Lotion
+--/personal-care/misc/smoking-cessation
+--/personal-care/misc/wipes-tissues:Wipes & Tissues
+--/personal-care/misc/travel-kits
 --/personal-care/misc/sanitizers
---/personal-care/misc/safety-scissors
---/personal-care/misc/pain-relief : Pain Relief
---/personal-care/misc/air-freshener : Air Freshener
+--/personal-care/misc/air-freshener
 --/personal-care/misc/buds
-
+--/personal-care/misc/hair-builders-fibres
+--/personal-care/misc/anti-snoring-sprays
 
 /beauty
 -/beauty/what-s-new: What's New
