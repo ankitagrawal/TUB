@@ -133,6 +133,11 @@ public class OrderServiceImpl implements OrderService {
         return getOrderDao().findByUserAndOrderStatus(user, orderStatus);
     }
 
+      public Long getCountOfOrdersByStatus(User user, EnumOrderStatus enumOrderStatus) {
+        return getOrderDao().getCountOfOrdersWithStatus( user, enumOrderStatus);
+    }
+    
+
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
         return getOrderDao().searchOrders(orderSearchCriteria, pageNo, perPage);
@@ -373,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
      */
 
     @Transactional
-    private Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {

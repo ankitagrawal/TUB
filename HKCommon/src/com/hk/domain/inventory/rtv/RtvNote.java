@@ -1,11 +1,17 @@
 package com.hk.domain.inventory.rtv;
 
+import com.akube.framework.gson.JsonSkip;
 import com.hk.domain.user.User;
 
 import javax.persistence.*;
+
 import com.hk.domain.courier.CourierPickupDetail;
+import com.hk.domain.inventory.po.PurchaseInvoice;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,6 +72,15 @@ public class RtvNote implements Serializable{
   @Column (name = "update_dt", nullable = false, length = 19)
   private Date updateDate = new Date();
 
+  @JsonSkip
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+          name = "purchase_invoice_has_rtv_note",
+          joinColumns = {@JoinColumn(name = "rtv_note_id", nullable = false, updatable = false)},
+          inverseJoinColumns = {@JoinColumn(name = "purchase_invoice_id", nullable = false, updatable = false)}
+  )
+  private List<PurchaseInvoice> purchaseInvoices = new ArrayList<PurchaseInvoice>();
+  
   public Long getId() {
     return id;
   }
@@ -161,4 +176,14 @@ public class RtvNote implements Serializable{
   public void setCourierPickupDetail(CourierPickupDetail courierPickupDetail) {
     this.courierPickupDetail = courierPickupDetail;
   }
+
+  public List<PurchaseInvoice> getPurchaseInvoices() {
+	return purchaseInvoices;
+  }
+
+  public void setPurchaseInvoices(List<PurchaseInvoice> purchaseInvoices) {
+	this.purchaseInvoices = purchaseInvoices;
+  }
+  
+  	
 }

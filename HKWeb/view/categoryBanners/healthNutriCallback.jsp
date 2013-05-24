@@ -14,16 +14,18 @@
   }
 </style>
 <div style="margin-left: auto; margin-right: auto; width:960px;">
-  <s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">
-    <img src="${pageContext.request.contextPath}/images/banners/top/health-Nutrition-promotional-banner.jpg" alt="Get Expert Advice on Nutrition for Optimal Health">
-  </s:link>  
-  <script type="text/javascript">
-    var params = {};
-    params['srcUrl'] = document.location.href;
-    params['topLevelCategory'] = $('#topCategoryContainer').html();
-    $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
+  <%--<s:link beanclass="com.hk.web.action.core.user.RequestCallbackAction" id="sendCouponLink">--%>
+  <a href='${pageContext.request.contextPath}/product/penguin-india-the-diet-doctor/HNUT27?productReferrerId=22'>
+    <img src="${pageContext.request.contextPath}/images/banners/top/health-Nutrition-diet-banner.jpg" alt="DIET DOCTOR">
+  </a>
+  <%--</s:link>  --%>
+  <%-- <script type="text/javascript">
+     var params = {};
+     params['srcUrl'] = document.location.href;
+     params['topLevelCategory'] = $('#topCategoryContainer').html();
+     $('#sendCouponLink').attr('href', $('#sendCouponLink').attr('href') + '?' + $.param(params));
 
-    $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
+     $('#discountCouponModal').jqm({trigger: '#sendCouponLink', ajax: '@href'});
 
-  </script>
+   </script>--%>
 </div>
