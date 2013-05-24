@@ -675,7 +675,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
 
-                 <c:if test="${orderSummary.sizeOfCLI > 0}">
+                 <c:if test="${fn:length(orderSummary.order.cartLineItems) > 0}">
                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
                      </td><td>
                    </c:if>

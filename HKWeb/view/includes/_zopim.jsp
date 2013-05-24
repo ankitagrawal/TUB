@@ -9,9 +9,8 @@
     pageContext.setAttribute("topCategory", topCategory);
     if (AnalyticsConstants.analytics) {
 %>
-    <%--
 
-<c:if test="${topCategory == 'nutrition' || topCategory == 'diabetes' || topCategory == 'health-devices'}">
+<%--<c:if test="${topCategory == 'nutrition' || topCategory == 'diabetes' || topCategory == 'health-devices'}">
 
   <script type="text/javascript">
   window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=
@@ -41,7 +40,7 @@
     });
   </script>
 
-</c:if>
+</c:if>--%>
 <script id="_webengage_script_tag" type="text/javascript">
   window.webengageWidgetInit = window.webengageWidgetInit || function(){
     webengage.init({
@@ -60,7 +59,6 @@
     _sNode.parentNode.insertBefore(_we, _sNode);
   })(document);
 </script>
---%>
 
 <%
     }
