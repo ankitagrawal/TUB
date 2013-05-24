@@ -223,7 +223,6 @@
                     return false;
                 }
                 else {
-                	$(this).hide();
                     return $(this).submit();
                 }
 
@@ -238,7 +237,9 @@
                   return false;
                 }
               });
-            
+            $("#SubtractReconciled").click(function(){
+            	$(this).hide();
+            });
 
         });
     </script>
