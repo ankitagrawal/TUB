@@ -2,13 +2,14 @@
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.HomeAction" var="homeBean" event="pre"/>
 
 <%
-	boolean isSecure = SslUtil.isSecure();
+	boolean isSecure = WebContext.isSecure();
   pageContext.setAttribute("isSecure", isSecure);
 %>
 

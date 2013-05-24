@@ -2,7 +2,7 @@ package com.hk.util;
 
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.Keys;
-import net.sourceforge.stripes.util.ssl.SslUtil;
+import com.hk.web.filter.WebContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ public class HKImageUtils {
 
     public static String getS3CategoryImageUrl(EnumImageSize imageSize, Long imageId) {
         String prefix = "http://";
-        if (SslUtil.isSecure()) {
+        if (WebContext.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + "c_" + imageId + "_" + imageSize.getSuffix() + ".jpg";
@@ -69,7 +69,7 @@ public class HKImageUtils {
     public static String getS3ImageUrl(EnumImageSize imageSize, Long imageId) {
 
         String prefix = "http://";
-        if (SslUtil.isSecure()) {
+        if (WebContext.isSecure()) {
             prefix = "https://";
         }
 
@@ -79,7 +79,7 @@ public class HKImageUtils {
     public static String getS3ImageUrl(String imageSize, Object imgId) {
         Long imageId = Long.parseLong(imgId.toString());
         String prefix = "http://";
-        if (SslUtil.isSecure()) {
+        if (WebContext.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + (imageId / noOfImagesInRepositorySubDir + 1) + "/" + imageId + "_" + imageSize + ".jpg";
@@ -87,7 +87,7 @@ public class HKImageUtils {
 
     public static String getS3SuperSaverImageUrl(EnumImageSize imageSize, Long imageId) {
         String prefix = "http://";
-        if (SslUtil.isSecure()) {
+        if (WebContext.isSecure()) {
             prefix = "https://";
         }
         return prefix + awsReadBucket + ".s3.amazonaws.com/" + getS3SuperSaverImageKey(imageSize, imageId);

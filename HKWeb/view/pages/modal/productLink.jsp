@@ -3,6 +3,7 @@
 <%@ page import="com.hk.pact.dao.affiliate.AffiliateDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 
@@ -18,7 +19,7 @@
           affiliate = affiliateDao.getAffiliateById(affiliateId);
       }
       pageContext.setAttribute("affiliate", affiliate);
-	  boolean isSecure = SslUtil.isSecure();
+	  boolean isSecure = WebContext.isSecure();
       pageContext.setAttribute("isSecure", isSecure);
   %>
 

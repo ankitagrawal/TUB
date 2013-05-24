@@ -6,6 +6,7 @@
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -24,7 +25,7 @@
     pageContext.setAttribute("productService", productService);
     pageContext.setAttribute("eyeGlass", eyeGlass);
 
-	boolean isSecure = SslUtil.isSecure();
+	boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
     Category stethoscope = categoryDao.getCategoryByName("stethoscope");
     pageContext.setAttribute("stethoscope", stethoscope);

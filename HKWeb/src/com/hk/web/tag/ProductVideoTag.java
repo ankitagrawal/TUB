@@ -1,7 +1,7 @@
 package com.hk.web.tag;
 
+import com.hk.web.filter.WebContext;
 import net.sourceforge.stripes.tag.HtmlTagSupport;
-import net.sourceforge.stripes.util.ssl.SslUtil;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -19,7 +19,7 @@ public class ProductVideoTag extends HtmlTagSupport {
 
         JspWriter out = getPageContext().getOut();
 
-        if(SslUtil.isSecure()){
+        if(WebContext.isSecure()){
             videoCode = videoCode.replace("http", "https");
         }
         

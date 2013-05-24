@@ -1,11 +1,12 @@
 <html>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.catalog.product.ProductAction" var="pa" event="pre"/>
 <%
-		boolean isSecure = SslUtil.isSecure();
+		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 %>
 

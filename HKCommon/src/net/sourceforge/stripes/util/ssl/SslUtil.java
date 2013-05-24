@@ -75,7 +75,7 @@ public class SslUtil {
         Class<? extends ActionBean> clazz = StripesFilter.getConfiguration().getActionResolver()
             .getActionBeanType(urlInfoPath);
 
-        if (clazz != null && clazz.isAnnotationPresent(Ssl.class) != isSecure()) {
+        if (clazz != null && clazz.isAnnotationPresent(Ssl.class) != WebContext.isSecure()) {
           boolean targetSecure = clazz.isAnnotationPresent(Ssl.class);
           log
               .debug("Current protection state and destination protection state differ - therefore, SSL rewriting is applied");
@@ -88,14 +88,14 @@ public class SslUtil {
 
           log.debug("default values: " + protocol + host);
 
-          if (targetSecure && !isSecure()) {
+          if (targetSecure && !WebContext.isSecure()) {
             log.debug("Rewriting url from http to https");
             protocol = "https://";
             String sslHost = StripesFilter.getConfiguration().getSslConfiguration().getSecureHost();
             if (sslHost != null) {
               host = sslHost;
             }
-          } else if (!targetSecure && isSecure()) {
+          } else if (!targetSecure && WebContext.isSecure()) {
             log.debug("Rewriting url from https to http");
             protocol = "http://";
             String unsecureHost = StripesFilter.getConfiguration().getSslConfiguration().getUnsecureHost();
@@ -307,8 +307,4 @@ public class SslUtil {
     return sessionMode;
   }
 
-	public static boolean isSecure() {
-		String isSecureString = WebContext.getRequest().getHeader("x-proto");
-		return isSecureString != null ? isSecureString.equals("SSL") : false;
-	}
 }

@@ -28,7 +28,7 @@
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
 
-	  boolean isSecure = SslUtil.isSecure();
+	  boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);

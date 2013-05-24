@@ -7,6 +7,7 @@
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="org.joda.time.DateTime" %>
+<%@ page import="com.hk.web.filter.WebContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -22,7 +23,7 @@
     Double codMinAmount = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codMinAmount));
     Double codCharges = Double.parseDouble((String) ServiceLocatorFactory.getProperty(Keys.Env.codCharges));
     Long defaultGateway = Long.parseLong((String) ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-		boolean isSecure = SslUtil.isSecure();
+		boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 %>
 <c:set var="codMaxAmount" value="<%=codMaxAmount%>"/>
