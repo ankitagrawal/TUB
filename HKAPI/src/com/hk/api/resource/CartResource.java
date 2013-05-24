@@ -16,6 +16,7 @@ import com.hk.domain.offer.OfferEmailDomain;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
+import com.hk.domain.store.EnumStore;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
 import com.hk.manager.UserManager;
@@ -223,7 +224,7 @@ public class CartResource extends BaseAction {
     if (getPrincipal() != null) {
       User user = getUserService().getUserById(getPrincipal().getId());
       if (user != null) {
-        order = getOrderService().findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+        order = getOrderService().findCart(user, EnumStore.HEALTHKART.asStore());
         if (order != null) {
           if (order.getOfferInstance() != null) {
             appliedOffer = order.getOfferInstance().getOffer();

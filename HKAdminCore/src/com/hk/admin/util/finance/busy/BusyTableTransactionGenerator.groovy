@@ -67,13 +67,15 @@ public class BusyTableTransactionGenerator {
                        ,s.state as supState, s.pincode as supPincode , s.tin_number as supTin
                         ,w.name  as warehouseName ,w.state as warehouseState  , pv.final_payable_amount as finalPayable , pv.warehouse_id  as warehouseId
                           ,pv.id  as purchaseInvoiceId, pv.freight_forwarding_charges  as freight_forwarding_charges ,s.id as suppId, pv.invoice_date as purInvoiceDate
-                          ,pv.discount as purchaseleveldiscount
+                          ,pv.discount as purchaseleveldiscount, min(grn.grn_date) as grn_date
                            FROM purchase_invoice pv  INNER JOIN  supplier s ON  pv.supplier_id = s.id
-
+      	                    INNER JOIN purchase_invoice_has_grn pigrn ON pigrn.purchase_invoice_id = pv.id
+      	                    INNER JOIN goods_received_note grn ON grn.id = pigrn.goods_received_note_id
                             INNER JOIN  warehouse w ON  w.id=pv.warehouse_id  WHERE
                            pv.reconcilation_date > ${lastUpdateDate}
                            and pv.reconciled = 1
-                           and pv.create_dt > '2011-11-08 16:10:50'   """) {
+                           and pv.create_dt > '2011-11-08 16:10:50'
+                           GROUP BY pv.id  """) {
 
         purchaseRow ->
 
@@ -133,12 +135,12 @@ public class BusyTableTransactionGenerator {
 
         def key = sqlReport.executeInsert(""" INSERT INTO transaction_header (  series,
       date ,vch_no  ,  vch_type,   sale_type ,   account_name, debtors ,  address_1,   address_2,   address_3 ,   address_4  ,
-      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no
+      tin_number ,  material_centre  ,    out_of_state  ,    net_amount ,  imported ,  create_date , hk_ref_no, goods_receiving_date
     )
         VALUES(   ${series} , ${invoiceDate} , substring(${invoiceNumber} ,1,25) ,  2 , 'VAT TAX INC'  , substring(${supplierName},1,40)
      , substring(${purchaseRow.suppId },1,40)  , substring(${purchaseRow.supAddress1 },1,40) ,  substring(${purchaseRow.supAddress2 },1,40) , ${supplierState}
           , substring(${purchaseRow.supPincode },1,40),${purchaseRow.supTin} ,substring(${warehouseName},1,40)  , ${sameState} , ${purchaseRow.finalPayable}
-         ,0 , NOW() , ${purchaseRow.purchaseInvoiceId} )
+         ,0 , NOW() , ${purchaseRow.purchaseInvoiceId}, ${purchaseRow.grn_date} )
 
 
  """);
