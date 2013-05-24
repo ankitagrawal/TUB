@@ -104,7 +104,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <div style="float:left;"><s:submit name="SubtractReconciled" value="Subtract"/></div>
+                                <div style="float:left;"><s:submit id="SubtractReconciled" name="SubtractReconciled" value="Subtract"/></div>
                             </td>
                         </tr>
 
@@ -235,6 +235,9 @@
                   return false;
                 }
               });
+            $("#SubtractReconciled").click(function(){
+		  		$(this).hide();
+		  	});
 
         });
     </script>

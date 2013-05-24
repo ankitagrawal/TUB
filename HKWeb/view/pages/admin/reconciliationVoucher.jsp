@@ -206,7 +206,7 @@
         <br/>
         <a href="reconciliationVoucher.jsp#" class="addRowButton" style="font-size:1.2em">Add new row</a>
 
-        <s:submit name="reconcileAdd" value="Save" class="saveButton"/>
+        <s:submit id="reconcileAdd" name="reconcileAdd" value="Save" class="saveButton"/>
         <shiro:hasRole name="<%=RoleConstants.WH_MANAGER%>">
         <hr/>
         <fieldset>
@@ -265,6 +265,10 @@
                   return false;
                 }
               });
+		    
+		    $("#reconcileAdd").click(function(){
+		  		$(this).hide();
+		  	});
 	    });
     </script>
 </s:layout-component>
