@@ -107,7 +107,7 @@ public class HKDRunsheetAction extends BasePaginatedAction {
     @Value("#{hkEnvProps['" + Keys.Env.adminDownloads + "']}")
     String adminDownloads;
 
-
+    @SuppressWarnings("unchecked")
     @DefaultHandler
     public Resolution pre() {
         loggedOnUser = getUserService().getUserById(getPrincipal().getId());

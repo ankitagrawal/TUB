@@ -28,7 +28,7 @@ public interface OrderDao extends BaseDao {
 
     public Order save(Order order);
 
-    public Long getCountOfOrdersWithStatus(EnumOrderStatus enumOrderStatus);
+    public Long getCountOfOrdersWithStatus(User user ,EnumOrderStatus enumOrderStatus);
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
 
