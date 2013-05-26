@@ -13,6 +13,7 @@ public class HKAPIProductDTO {
     private HKAPIProductVariantDTO[] productVariantDTOs;
     private boolean deleted;
     private boolean outOfStock;
+    private boolean hidden;
 
     public String getProductID() {
         return productID;
@@ -76,5 +77,13 @@ public class HKAPIProductDTO {
 
     public void setThumbUrl(String thumbUrl) {
         this.thumbUrl = thumbUrl;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }
