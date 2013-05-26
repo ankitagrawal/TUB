@@ -22,16 +22,19 @@
 <div class="grid_12" style="text-align: center;">
   <h4>
     <c:choose>
-      <c:when test="${isB2BOrder&&orderSummary.invoiceDto.warehouseState == 'HARYANA'}">
+      <c:when test="${!isB2BOrder||orderSummary.invoiceDto.warehouseState == 'MAHARASHTRA'}">
+           RETAIL INVOICE            
+      </c:when>
+      <c:when test="${isB2BOrder && orderSummary.invoiceDto.warehouseState != 'MAHARASHTRA' && (fn:toLowerCase(orderSummary.invoiceDto.warehouseState) eq fn:toLowerCase(address.state))}">
            TAX INVOICE            
       </c:when>
       <c:otherwise>
-        RETAIL INVOICE
-      </c:otherwise>
+      RETAIL INVOICE
+    </c:otherwise>
     </c:choose>
   </h4>
 </div>
-
+<c:set var="taxDiscount" scope="page" value="${0}"></c:set>
 <div class="clear"></div>
 
 <div class="grid_12" style="border: 1px black solid;">
@@ -106,7 +109,7 @@
 <div style="margin-top: 20px;"></div>
 
 <div class="grid_12">
-  <table cellspacing="0">
+  <table cellspacing="0" id="mainTable">
     <tr>
       <th>Item</th>
       <th>Qty</th>
@@ -159,11 +162,11 @@
         </td>
 
         <td> ${invoiceLineItem.taxRate}</td>
-        <td>
+        <td class="taxAmount">
           <fmt:formatNumber
               value="${invoiceLineItem.taxable}"
               maxFractionDigits="2"/></td>
-        <td>
+        <td class="taxAmount">
           <fmt:formatNumber
               value="${invoiceLineItem.tax}"
               maxFractionDigits="2"/></td>
@@ -171,7 +174,11 @@
             <fmt:formatNumber
                 value="${invoiceLineItem.surcharge}"
                 maxFractionDigits="2"/></td>
+                
       </tr>
+      <c:if test="${invoiceLineItem.taxable==0 }">
+      <c:set var="taxDiscount" value="${taxDiscount+invoiceLineItem.tax }" ></c:set>
+      </c:if>
     </c:forEach>
     <tr>
       <td colspan="5"><b>Total</b></td>
@@ -197,10 +204,18 @@
       <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.cod}" maxFractionDigits="2"/></td>
 
     </tr>
+    <c:if test="${isB2BOrder && taxDiscount>0}"><tr>
+    <td width="70%"><strong>Tax Discount</strong></td>
+      <td width="20%">
+      (-)${taxDiscount}
+      </td>
+    </tr></c:if>
+    
     <tr>
       <td width="70%"><strong>Grand Total</strong></td>
       <%-- <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" maxFractionDigits="2"/></td> --%>
-      <td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td>
+      <c:if test="${!isB2BOrder }"><td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge}" maxFractionDigits="2"/></td></c:if>
+      <c:if test="${isB2BOrder}"><td width="20%"><fmt:formatNumber value="${orderSummary.invoiceDto.totalTaxable+orderSummary.invoiceDto.totalTax+orderSummary.invoiceDto.totalSurcharge-taxDiscount}" maxFractionDigits="2"/></td></c:if>
     </tr>
   </table>
 
@@ -256,7 +271,7 @@
     <tr>
       <td colspan="6"></td>
     </tr>
-    <tr>
+     <tr>
       <td><strong>Total</strong></td>
       <td>${orderSummary.invoiceDto.totalSummaryQty}</td>
       <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryAmount}" maxFractionDigits="2"/></td>
@@ -264,7 +279,20 @@
       <td><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummarySurcharge}" maxFractionDigits="2"/></td>
       <td><Strong><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryPayable}"
                                     maxFractionDigits="2"/></Strong></td>
+      
     </tr>
+    <c:if test="${isB2BOrder && taxDiscount>0}">
+     <tr>
+      <td colspan="5"><strong>Discount On Tax(if any)</strong></td>
+      <td><Strong>(-)<fmt:formatNumber value="${taxDiscount }"
+                                    maxFractionDigits="2"/></Strong></td>
+      </tr>
+      <tr>
+      <td colspan="5"><strong>Grand Total</strong></td>
+      <td><Strong><fmt:formatNumber value="${orderSummary.invoiceDto.totalSummaryPayable-taxDiscount}"
+                                    maxFractionDigits="2"/></Strong></td>
+      </c:if>
+   
   </table>
 </div>
 

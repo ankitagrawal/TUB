@@ -28,9 +28,9 @@ import org.stripesstuff.plugin.session.Session;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
-import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -57,7 +57,6 @@ import com.hk.pact.dao.location.MapIndiaDao;
 import com.hk.pact.dao.user.UserDao;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.search.ProductSearchService;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.AppConstants;
 import com.hk.web.ConvertEncryptedToNormalDouble;
@@ -238,7 +237,7 @@ public class CatalogAction extends BasePaginatedAction {
             if (productPage != null) {
                 productList = productPage.getList();
                 for (Product product : productList) {
-                    product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                    product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
                 }
             }
             category = categoryDao.getCategoryByName(smallestCategory);
@@ -284,7 +283,7 @@ public class CatalogAction extends BasePaginatedAction {
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                        product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
                     }
                 }
                 productList = trimListByCategory(productList, secondaryCategory);
@@ -297,7 +296,7 @@ public class CatalogAction extends BasePaginatedAction {
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(rootCategorySlug)));
+                        product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.getProductReferrerId(rootCategorySlug)));
                     }
                 }
                 trimListByCategory(productList, secondaryCategory);

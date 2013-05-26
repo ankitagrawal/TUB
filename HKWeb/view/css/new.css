@@ -6774,13 +6774,14 @@ color: #e62580;
     overflow: hidden;
     height: 500px;
     padding: 15px;
-    left: 25%;
+    left: 21%;
 }
 
 .bulkModalFrame{
     position: relative;
     float: left;
     height: 100%;
+    width: 630px;
 }
 
 .topHeadingBillingAddress{
@@ -6795,6 +6796,27 @@ color: #e62580;
 .goBackButtonNew2:hover {
     color: white;
 }
+
+.sports_frameNew{
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
 /*
 slider pager end
 */
+
+/*
+css for loyalty related message
+*/
+.loyaltyMessage {
+	width: 95%;
+	padding: 5px;
+	font-size: 12px;
+	line-height: 18px;
+	background: rgb(186, 255, 147);
+	position: relative;
+	float: left;
+}

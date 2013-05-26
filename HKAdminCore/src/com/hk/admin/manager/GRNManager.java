@@ -159,6 +159,7 @@ public class GRNManager {
 		Double totalTaxable = 0.0;
 		Double totalPayable = 0.0;
 		Double marginMrpVsCP = 0.0;
+        Long   totalQty=0L;
 
 		@SuppressWarnings("unused")
 		Warehouse warehouse = grn.getWarehouse();
@@ -199,6 +200,7 @@ public class GRNManager {
 			totalTax += tax;
 			totalSurcharge += surcharge;
 			totalPayable += payable;
+            totalQty+= grnLineItem.getQty();
 
 		}
 		grnDto.setGrnLineItemDtoList(grnLineItemDtoList);
@@ -208,11 +210,12 @@ public class GRNManager {
 		grnDto.setTotalPayable(totalPayable);
 		double overallDiscount = grn.getDiscount() == null ? 0.0 : grn.getDiscount();
 		grnDto.setFinalPayable(totalPayable - overallDiscount);
-
+        grnDto.setTotalQty(totalQty);
 		grn.setTaxableAmount(totalTaxable);
 		grn.setTaxAmount(totalTax);
 		grn.setSurchargeAmount(totalSurcharge);
 		goodsReceivedNoteDao.save(grn);
+
 
 		return grnDto;
 

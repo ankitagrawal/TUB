@@ -105,7 +105,6 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
             }
         }
         shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
-        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(EnumShippingOrderLifecycleActivity.getActivitiesForPackingQueue());
         shippingOrderSearchCriteria.setActivityStartDate(startDate).setActivityEndDate(endDate);
         //introduced paymentDate as another filter as escalation filter is not working properly, temporary solution
         shippingOrderSearchCriteria.setPaymentStartDate(paymentStartDate).setPaymentEndDate(paymentEndDate);

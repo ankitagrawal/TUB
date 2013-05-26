@@ -234,7 +234,10 @@ public class DispatchLotServiceImpl implements DispatchLotService {
 				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
 			} else if (!dispatchLotHasShipment(dispatchLot, shipment)) {
 				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
-			} else {
+			} else if(getDispatchLotHasShipment(dispatchLot, shipment).getShipmentStatus().equalsIgnoreCase(DispatchLotConstants.SHIPMENT_RECEIVED)){
+				invalidGatewayOrderIds += "  " + shippingOrder.getGatewayOrderId();
+			}
+			else if(getDispatchLotHasShipment(dispatchLot, shipment).getShipmentStatus().equalsIgnoreCase(DispatchLotConstants.SHIPMENT_DISPATCHED)) {
 				validShipmentSet.add(shipment);
 			}
 		}

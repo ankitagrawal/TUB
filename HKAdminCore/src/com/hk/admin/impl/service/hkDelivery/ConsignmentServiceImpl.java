@@ -368,6 +368,7 @@ public class ConsignmentServiceImpl implements ConsignmentService {
                 }
             });
         }
+
         List<NdrDto> ndrDtoList = new ArrayList<NdrDto>();
         Date currentDate = new Date();
         List<ConsignmentTracking> consignmentTrackingList;

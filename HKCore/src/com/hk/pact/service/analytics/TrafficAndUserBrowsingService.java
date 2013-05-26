@@ -21,6 +21,6 @@ public interface TrafficAndUserBrowsingService {
 
 	public TrafficTracking saveTrafficTracking(HttpServletRequest httpRequest, User user);
 
-	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest);
+	public void saveBrowsingHistory(Product product, HttpServletRequest httpServletRequest, Long productReferrerId, String productPosition);
 
 }
