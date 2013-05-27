@@ -2,6 +2,7 @@ package com.hk.web.action.core.payment;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.Ssl;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
 
 @Component
+@Ssl
 public class PaymentSuccessAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);

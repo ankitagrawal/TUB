@@ -1,49 +1,36 @@
 package com.hk.web.action.core.order;
 
-import java.util.*;
-
+import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.pact.service.courier.PincodeCourierService;
+import com.hk.constants.core.HealthkartConstants;
+import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.core.fliter.CartLineItemFilter;
+import com.hk.domain.order.CartLineItem;
+import com.hk.domain.order.Order;
+import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
+import com.hk.manager.OrderManager;
+import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.order.OrderService;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.LocalizableMessage;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
+import com.hk.pact.service.order.RewardPointService;
+import com.hk.pricing.PricingEngine;
+import com.hk.web.action.core.payment.PaymentModeAction;
+import com.hk.web.action.core.user.SelectAddressAction;
 import net.sourceforge.stripes.action.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
 import org.stripesstuff.plugin.session.Session;
 
-import com.akube.framework.stripes.action.BaseAction;
-import com.hk.admin.pact.service.courier.CourierService;
-import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.constants.core.HealthkartConstants;
-import org.apache.commons.collections.CollectionUtils;
-import com.hk.constants.core.Keys;
-import com.hk.constants.order.EnumCartLineItemType;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.courier.Courier;
-import com.hk.domain.order.CartLineItem;
-import com.hk.domain.order.Order;
-import com.hk.domain.user.Address;
-import com.hk.domain.user.User;
-import com.hk.dto.pricing.PricingDto;
-import com.hk.manager.OrderManager;
-import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.payment.PaymentModeDao;
-import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.service.order.RewardPointService;
-import com.hk.pricing.PricingEngine;
-import com.hk.web.action.core.cart.CartAction;
-import com.hk.web.action.core.payment.PaymentModeAction;
-import com.hk.web.action.core.user.SelectAddressAction;
+import java.util.HashSet;
+import java.util.Set;
 
 @Secure
 @Component
 @HttpCache(allow = false)
+@Ssl
 public class OrderSummaryAction extends BaseAction {
 
     @Autowired

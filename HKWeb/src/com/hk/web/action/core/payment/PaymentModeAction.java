@@ -1,36 +1,30 @@
 package com.hk.web.action.core.payment;
 
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.order.AdminOrderService;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumIssuerType;
-import com.hk.core.fliter.CartLineItemFilter;
-import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.payment.GatewayIssuerMapping;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.user.User;
+import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OrderManager;
-import com.hk.pact.dao.payment.GatewayIssuerMappingDao;
 import com.hk.pact.service.payment.GatewayIssuerMappingService;
+import com.hk.pricing.PricingEngine;
 import com.hk.web.action.core.auth.LoginAction;
 import com.hk.web.action.core.cart.CartAction;
 import com.hk.web.action.core.user.SelectAddressAction;
-import com.hk.admin.pact.service.order.AdminOrderService;
-import com.hk.dto.pricing.PricingDto;
-import com.hk.pricing.PricingEngine;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.stripesstuff.plugin.security.Secure;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @HttpCache(allow = false)
+@Ssl
 public class PaymentModeAction extends BaseAction {
 
     List<Issuer> bankIssuers;

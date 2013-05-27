@@ -29,6 +29,7 @@ import com.hk.web.action.core.order.OrderSummaryAction;
 @Secure(hasAnyRoles = { RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER }, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @Component
 @HttpCache(allow = false)
+@Ssl
 public class SelectAddressAction extends BaseAction {
 
     //private static Logger logger    = LoggerFactory.getLogger(SelectAddressAction.class);
