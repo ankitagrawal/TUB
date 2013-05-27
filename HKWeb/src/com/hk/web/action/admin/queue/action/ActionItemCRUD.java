@@ -118,8 +118,8 @@ public class ActionItemCRUD extends BaseAction {
 
     public Resolution acknowledgeActionTask() {
         ActionTask actionTask = actionItem.getCurrentActionTask();
-        actionTask.setAcknowledged(true);
-        actionTask.setAcknowledgedBy(getUserService().getUserById(getPrincipal().getId()));
+//        actionTask.setAcknowledged(true);
+//        actionTask.setAcknowledgedBy(getUserService().getUserById(getPrincipal().getId()));
         getBaseDao().save(actionTask);
         addRedirectAlertMessage(new SimpleMessage("Current action Task has been acknowledged"));
         return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());

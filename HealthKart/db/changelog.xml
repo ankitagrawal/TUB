@@ -12999,4 +12999,36 @@
        insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
       </sql>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-1">
+        <createTable tableName="action_path_workflow">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-28">
+        <addForeignKeyConstraint baseColumnNames="action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-30">
+        <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-31">
+        <dropColumn columnName="acknowledged" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-32">
+        <dropColumn columnName="acknowledged_by" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-33">
+        <dropColumn columnName="next_action_task_id" tableName="action_task"/>
+    </changeSet>
 </databaseChangeLog>
