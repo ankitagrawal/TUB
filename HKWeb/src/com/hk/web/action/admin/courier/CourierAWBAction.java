@@ -166,8 +166,12 @@ public class CourierAWBAction extends BaseAction {
 
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_COURIER_INFO}, authActionBean = AdminPermissionAction.class)
     public Resolution uploadCourierAWBExcelForDelete() {
-        if (fileBean == null) {
+        if (fileBean == null ) {
             addRedirectAlertMessage(new SimpleMessage("Select choose file to upload"));
+            return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
+        }
+        if(!(fileBean.getContentType().equals("xls"))){
+            addRedirectAlertMessage(new SimpleMessage("upload xls file only"));
             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
 
