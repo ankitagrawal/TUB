@@ -16,7 +16,6 @@
 
   <s:layout-component name="htmlHead">
     <script type="text/javascript">
-        $.ajax('http://${vanillaForumUrl}/book/forums/entry/signin');
       $(document).ready(function() {
         $('#forgotPasswordWindow').jqm({trigger: '#forgotPasswordLink', ajax: '@href'});
       });
