@@ -1,21 +1,15 @@
 package com.hk.web.filter;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.util.PatternMatcher;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class HttpSchemeFilter implements Filter {
 
@@ -95,12 +89,12 @@ public class HttpSchemeFilter implements Filter {
 			}
 		}
 
-		if (request.getScheme().equalsIgnoreCase(RequestScheme.HTTPS.scheme) && !pathMatches) {
+		if (WebContext.isSecure() && !pathMatches) {
 			issueRedirect(request, response, RequestScheme.HTTP);
 			return;
 		}
 
-		if (request.getScheme().equalsIgnoreCase(RequestScheme.HTTP.scheme) && pathMatches) {
+		if (!WebContext.isSecure() && pathMatches) {
 			issueRedirect(request, response, RequestScheme.HTTPS);
 			return;
 		}
