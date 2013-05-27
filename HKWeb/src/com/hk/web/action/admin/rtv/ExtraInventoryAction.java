@@ -111,6 +111,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 	private Long extraInventoryStatusId;
 	private Boolean isDebitToSupplier;
 	private Boolean isReconciled;
+	private Boolean isPiReconciled;
 	private String reconciledStatus;
 	private Long newPurchaseOrderId;
 	private String destinationAddress;
@@ -154,6 +155,17 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				}
 			}
 		}
+		isPiReconciled=Boolean.FALSE;
+		for(ExtraInventoryLineItem eili:extraInventoryLineItems){
+			if(eili.getPurchaseInvoices()!=null && eili.getPurchaseInvoices().size()>0){
+				for(PurchaseInvoice pi : eili.getPurchaseInvoices()){
+					if(pi.getReconciled()!=null && pi.getReconciled()){
+						isPiReconciled=Boolean.TRUE;
+					}
+				}
+			}
+			
+		}
 		taxList = getMasterDataDao().getTaxList();
 		return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
 				purchaseOrderId).addParameter("wareHouseId", wareHouseId);
@@ -171,8 +183,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		} else {
 			addRedirectAlertMessage(new SimpleMessage(
 					"There is no warehouse attached with the logged in user. Please check with the admin."));
-			return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
-					purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+			return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+					.addParameter("wareHouseId", wareHouseId);
 		}
 
 		extraInventory = getExtraInventoryService().getExtraInventoryByPoId(purchaseOrderId);
@@ -201,8 +213,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 				}
 				noCache();
 				addRedirectAlertMessage(new SimpleMessage("Same Sku is present more than once !!!! "));
-				return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter("purchaseOrderId",
-						purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+				return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+						.addParameter("wareHouseId", wareHouseId);
 			} else if (extraInventoryLineItem.getSku() != null) {
 				skus.add(extraInventoryLineItem.getSku().getId());
 			}
@@ -498,8 +510,8 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 					noCache();
 					addRedirectAlertMessage(new SimpleMessage(
 							"One of the selected Line Item sku is null, please Enter Sku and then press create PO !!!"));
-					return new ForwardResolution("/pages/admin/extraInventoryItems.jsp").addParameter(
-							"purchaseOrderId", purchaseOrderId).addParameter("wareHouseId", wareHouseId);
+					return new RedirectResolution(ExtraInventoryAction.class).addParameter("purchaseOrderId", purchaseOrderId)
+							.addParameter("wareHouseId", wareHouseId);
 				}
 				// skus.add(extraInventoryLineItem.getSku().getId());
 			}
@@ -828,6 +840,14 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 
 	public void setReconciled(Boolean reconciled) {
 		isReconciled = reconciled;
+	}
+	
+	public Boolean getIsPiReconciled() {
+		return isPiReconciled;
+	}
+
+	public void setIsPiReconciled(Boolean isPiReconciled) {
+		this.isPiReconciled = isPiReconciled;
 	}
 
 	public Boolean isDebitToSupplier() {
