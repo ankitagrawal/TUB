@@ -5,6 +5,7 @@ import com.hk.constants.queue.EnumBucket;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
+import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.TrafficState;
 import com.hk.domain.user.User;
@@ -31,4 +32,6 @@ public interface ActionItemDao extends BaseDao
     List<Bucket> findByName(List<String> bucketNames);
 
     Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
+
+    List<ActionTask> listNextActionTasks(ActionTask currentActionTask, List<Bucket> buckets);
 }

@@ -217,5 +217,10 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.get(ActionItem.class, actionItemId);
     }
 
+    @Override
+    public List<ActionTask> listNextActionTasks(ActionItem actionItem) {
+        return actionItemDao.listNextActionTasks(actionItem.getCurrentActionTask(), actionItem.getBuckets());
+    }
+
 
 }

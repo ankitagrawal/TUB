@@ -70,4 +70,6 @@ public interface BucketService {
 
     public ActionItem getActionItemById (Long actionItemId);
 
+    public List<ActionTask> listNextActionTasks(ActionItem actionItem);
+
 }
