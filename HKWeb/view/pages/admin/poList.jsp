@@ -148,12 +148,15 @@
 			        <s:link beanclass="com.hk.web.action.admin.inventory.POAction" event="generateGRNCheck">Create GRN
 				        <s:param name="purchaseOrder" value="${purchaseOrder.id}"/></s:link>
 		        </c:if>
-                <c:if test="${purchaseOrder.purchaseOrderStatus.id == received and purchaseOrder.extraInventory == null}">
+                <c:if test="${(purchaseOrder.purchaseOrderStatus.id == sentToSupplier) || (purchaseOrder.purchaseOrderStatus.id == received)}">
                 <s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction">Create/Edit Extra Inventory
                    <s:param name="purchaseOrderId" value="${purchaseOrder.id}"/>
                     <s:param name="wareHouseId" value="${purchaseOrder.warehouse.id}" />
                 </s:link>
                 </c:if>
+		        <br/>
+		                    <s:link beanclass="com.hk.web.action.admin.inventory.CreatePurchaseOrderAction">Create PO
+			                    <s:param name="supplier" value="${purchaseOrder.supplier.id}"/></s:link>
 	        </td>
             <td>
                 <c:if test="${purchaseOrder.extraInventoryCreated}">

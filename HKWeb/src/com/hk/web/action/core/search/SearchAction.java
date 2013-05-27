@@ -23,11 +23,10 @@ import org.stripesstuff.plugin.session.Session;
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.manager.LinkManager;
 import com.hk.pact.dao.catalog.product.ProductDao;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.action.core.catalog.product.ProductAction;
 
 @UrlBinding("/search")
@@ -79,7 +78,7 @@ public class SearchAction extends BasePaginatedAction {
 				productPage = new Page(sr.getSolrProducts(), getPerPage(), getPageNo(), (int) sr.getResultSize());
 				productList = productPage.getList();
 				for (Product product : productList) {
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
 				}
 				searchSuggestion = sr.getSearchSuggestions();
 			} catch (Exception e) {
@@ -87,7 +86,7 @@ public class SearchAction extends BasePaginatedAction {
 				productPage = productDao.getProductByName(query,onlyCOD, includeCombo, getPageNo(), getPerPage());
 				productList = productPage.getList();
 				for (Product product : productList) {
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.SEARCH_PAGE)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.searchPage.getId()));
 				}
 			}
 		}
@@ -95,14 +94,16 @@ public class SearchAction extends BasePaginatedAction {
 			addRedirectAlertMessage(new SimpleMessage("No results found."));
 		}
     //Logging search results
-    String category = "n/a";
-    if (productList != null && !productList.isEmpty()) {
-      category = productList.get(0).getPrimaryCategory().getName();
-      if (!productList.get(0).getPrimaryCategory().equals(productList.get(productList.size() - 1).getPrimaryCategory())) {
-        category = "mixed";
+    if (StringUtils.isNotEmpty(query) && getPageNo() == 1) {
+      String category = "n/a";
+      if (productList != null && !productList.isEmpty()) {
+        category = productList.get(0).getPrimaryCategory().getName();
+        if (!productList.get(0).getPrimaryCategory().equals(productList.get(productList.size() - 1).getPrimaryCategory())) {
+          category = "mixed";
+        }
       }
+      productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
     }
-    productSearchService.logSearchResult(query, Long.valueOf(productPage != null ? productPage.getTotalResults() : 0), category);
     if (productList != null && !productList.isEmpty() && productList.size() == 1) {
         Product product = productList.get(0);
         return new RedirectResolution(ProductAction.class).addParameter("productId", product.getId()).addParameter("productSlug", product.getSlug());

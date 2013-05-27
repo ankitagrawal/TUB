@@ -339,7 +339,7 @@
   <div class="lineItemRow product" style="border: 1px solid #ddd;border-top: none;">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+    <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}" style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -350,10 +350,10 @@
                alt="${cartLineItem.productVariant.product.name}"/>
         </c:otherwise>
       </c:choose>
-    </div>
+    </a>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
-        ${cartLineItem.productVariant.product.name}
+        <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
       <table style="display: inline-block; font-size: 11px;">
         <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -438,8 +438,15 @@
       </div>
 
 
-    <div class="quantity" style="width: 80px;left: 35px;">
-      <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+    <div class="quantity" style="width:80px;left:${cartLineItem.hkPrice != 0.0 ? 35 : 10}px;">
+      <c:choose>
+        <c:when test="${cartLineItem.hkPrice == 0.0}">
+           ${cartLineItem.qty}
+        </c:when>
+        <c:otherwise>
+           <input value="${cartLineItem.qty}" size="1" class="lineItemQty" style="width: 20px; height: 18px;"/>
+        </c:otherwise>
+      </c:choose>
       <c:if test="${cartLineItem.productVariant.id != cartAction.order.offerInstance.offer.offerAction.freeVariant.id}">
       <a style="position: relative;float:left;" class='remove removeLink' href='#'>
         (remove)
@@ -448,6 +455,9 @@
     </div>
     <div class="price">
       <c:choose>
+        <c:when test="${cartLineItem.hkPrice == 0.0}">
+          Free!
+        </c:when>
         <c:when test="${cartLineItem.markedPrice == cartLineItem.hkPrice}">
           <div class="hk">
             <div class="num">
@@ -513,7 +523,7 @@
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+    <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}" style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -524,10 +534,10 @@
                alt="${cartLineItem.comboInstance.combo.name}"/>
         </c:otherwise>
       </c:choose>
-    </div>
+    </a>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;">
-        ${cartLineItem.comboInstance.combo.name}<br/>
+        <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
       <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
             ${comboVariant.qty} x

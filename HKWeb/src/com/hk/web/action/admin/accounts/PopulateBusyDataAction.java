@@ -115,7 +115,7 @@ public class PopulateBusyDataAction extends BaseAction {
 			BusyTableTransactionGenerator busyTableTransactionGenerator = new BusyTableTransactionGenerator(dbHostName, dbName, dbUser, dbPassword);
 
 			logger.info("Populating Purchases ");
-			busyTableTransactionGenerator.populatePurchaseData();
+	//		busyTableTransactionGenerator.populatePurchaseData();
 		} catch (Exception e) {
 			logger.error("Unable to insert: ", e);
 		}

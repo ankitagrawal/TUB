@@ -164,7 +164,9 @@
   </tbody>
   <tfoot>
   <tr>
-    <td colspan="8">Total</td>
+    <td colspan="4">Total</td>
+    <td><fmt:formatNumber value="${orderSummary.grnDto.totalQty}" maxFractionDigits="2"/></td>
+      <td colspan="3"></td>
     <td><fmt:formatNumber value="${orderSummary.grnDto.totalTaxable}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${orderSummary.grnDto.totalTax}" maxFractionDigits="2"/></td>
     <td><fmt:formatNumber value="${orderSummary.grnDto.totalSurcharge}" maxFractionDigits="2"/></td>

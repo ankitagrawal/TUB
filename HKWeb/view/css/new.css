@@ -6807,3 +6807,16 @@ color: #e62580;
 /*
 slider pager end
 */
+
+/*
+css for loyalty related message
+*/
+.loyaltyMessage {
+	width: 95%;
+	padding: 5px;
+	font-size: 12px;
+	line-height: 18px;
+	background: rgb(186, 255, 147);
+	position: relative;
+	float: left;
+}
