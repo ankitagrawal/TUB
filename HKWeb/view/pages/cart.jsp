@@ -339,7 +339,7 @@
   <div class="lineItemRow product" style="border: 1px solid #ddd;border-top: none;">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+    <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}" style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.productVariant.product.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.productVariant.product.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -350,10 +350,10 @@
                alt="${cartLineItem.productVariant.product.name}"/>
         </c:otherwise>
       </c:choose>
-    </div>
+    </a>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;" :>
-        ${cartLineItem.productVariant.product.name}
+        <a href="${pageContext.request.contextPath}${cartLineItem.productVariant.product.productURL}">${cartLineItem.productVariant.product.name}  </a>
         ${cartLineItem.productVariant.variantName}<br/>
       <table style="display: inline-block; font-size: 11px;">
         <c:forEach items="${cartLineItem.productVariant.productOptions}" var="productOption" varStatus="ctr">
@@ -523,7 +523,7 @@
   <div class="lineItemRow product">
     <input type="hidden" value="${cartLineItem.id}" class="lineItemId" id="item_${cartLineItem.id}"/>
 
-    <div style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
+    <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}" style="width: 48px; height: 48px; display: inline-block; text-align: center; vertical-align: top;position: relative;float: left;">
       <c:choose>
         <c:when test="${cartLineItem.comboInstance.combo.mainImageId != null}">
           <hk:productImage imageId="${cartLineItem.comboInstance.combo.mainImageId}" size="<%=EnumImageSize.TinySize%>"/>
@@ -534,10 +534,10 @@
                alt="${cartLineItem.comboInstance.combo.name}"/>
         </c:otherwise>
       </c:choose>
-    </div>
+    </a>
 
     <div class="name" style="font-size: 10px; line-height: 21px;width: 200px;position: relative;float: left;">
-        ${cartLineItem.comboInstance.combo.name}<br/>
+        <a href="${pageContext.request.contextPath}${cartLineItem.comboInstance.combo.productURL}">${cartLineItem.comboInstance.combo.name}</a><br/>
       <c:forEach items="${cartLineItem.comboInstance.comboInstanceProductVariants}" var="comboVariant">
             <span style="font-size:10px;">
             ${comboVariant.qty} x

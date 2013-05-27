@@ -232,7 +232,13 @@
     </script>
 </s:layout-component>
 <s:layout-component name="heading">
-    <div class="actionQueue">Action Awaiting Queue</div>
+    <div class="actionQueue">Action Awaiting Queue &nbsp
+    <c:forEach items="${actionQueueBean.buckets}" var="bucket">
+        <s:link beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction" >
+            ${bucket.name}
+        </s:link>
+    </c:forEach>
+    </div>
 </s:layout-component>
 <s:layout-component name="content">
 <fieldset style="margin: 10px;" class="top_label">

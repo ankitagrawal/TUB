@@ -24,11 +24,12 @@ public interface OrderDao extends BaseDao {
     @SuppressWarnings("unchecked")
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 
+    @Deprecated
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
     public Order save(Order order);
 
-    public Long getCountOfOrdersWithStatus(EnumOrderStatus enumOrderStatus);
+    public Long getCountOfOrdersWithStatus(User user ,EnumOrderStatus enumOrderStatus);
 
     public Long getBookedQtyOfProductVariantInQueue(ProductVariant productVariant);
 

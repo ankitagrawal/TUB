@@ -113,7 +113,7 @@
                         <td>
                             <shiro:hasPermission name="<%=PermissionConstants.EDIT_NDR%>">
                                 <s:submit name="saveNdr" value="Save NDR" class="submit"/>
-                                <s:hidden name="ndrDtoList[${ctr.index}].consignmentid"
+                                <s:hidden name="ndrDtoList[${ctr.index}].consignmentId"
                                           value="${ndrDto.consignmentId}"/>
                                 <s:hidden name="ndrDtoList[${ctr.index}].consignmentTrackingId"
                                           value="${ndrDto.consignmentTrackingId}"/>
