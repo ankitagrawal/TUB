@@ -254,18 +254,18 @@
 		  	});
 		  	 
 		    $('#useRewardPoints').click(function() {
-		    	var rwdPoints = parseFloat($('.rewardPoints').text());
-	    		var grandTotal = parseFloat($('.grandTotal').val());
-	    		var finalPayable = $('#finalPayable');
+		    // 	var rwdPoints = parseFloat($('.rewardPoints').text());
+	    	//	var grandTotal = parseFloat($('.grandTotal').val());
+	    	//	var finalPayable = $('#finalPayable');
 		    	if (this.checked == true) {
 		    		alert("Max possible reward points will be used.");
-		    		if (grandTotal > rwdPoints) {
-		    			finalPayable.val(finalPayable.val() - rwdPoints);
-			    	} else {
-			    		finalPayable.val(0);
-			    	}
-				} else {
-						finalPayable.val(parseFloat(finalPayable.val()) + rwdPoints);
+		    //		if (grandTotal > rwdPoints) {
+		    	//		finalPayable.val(finalPayable.val() - rwdPoints);
+			    //	} else {
+			    //		finalPayable.val(0);
+			    	//}
+			//	} else {
+				//		finalPayable.val(parseFloat(finalPayable.val()) + rwdPoints);
 		    	}
 	    	});
 		    
