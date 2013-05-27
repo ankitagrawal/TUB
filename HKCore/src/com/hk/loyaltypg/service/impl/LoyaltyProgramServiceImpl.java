@@ -154,6 +154,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public double creditKarmaPoints(Order order) {
+		if (!order.getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+			// not a loyalty user, no points credited
+			return 0.0;
+		}
 		double karmaPoints = 0d;
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {

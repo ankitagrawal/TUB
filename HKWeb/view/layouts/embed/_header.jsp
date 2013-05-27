@@ -103,7 +103,7 @@
                     <shiro:principal property="firstName"/>
                   </shiro:hasAnyRoles>
                 </strong>
-              	<shiro:hasRole name="<%=RoleConstants.TEMP_USER%>">
+              	<shiro:hasRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
                 <c:set var="badge" value="${hk:getBadgeInfoForUser(userId)}"/>
           		 <a href="${pageContext.request.contextPath}/loyaltypg" target="_blank">
                   <c:choose>
