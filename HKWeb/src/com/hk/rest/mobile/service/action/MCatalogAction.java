@@ -36,7 +36,7 @@ import com.hk.cache.CategoryCache;
 import com.hk.constants.catalog.SolrSchemaConstants;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.core.HealthkartConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.LocalityMap;
 import com.hk.domain.MapIndia;
 import com.hk.domain.catalog.Manufacturer;
@@ -64,7 +64,6 @@ import com.hk.pact.service.search.ProductSearchService;
 import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.util.SeoManager;
 import com.hk.web.ConvertEncryptedToNormalDouble;
 import com.hk.web.HealthkartResponse;
@@ -292,7 +291,7 @@ public class MCatalogAction extends MBaseAction {
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
+                        product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.mobile_catalog.getId()));
                     }
                 }
                 trimListByCategory(productList, secondaryCategory);
@@ -306,7 +305,7 @@ public class MCatalogAction extends MBaseAction {
                 if (productPage != null) {
                     productList = productPage.getList();
                     for (Product product : productList) {
-                        product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
+                        product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.mobile_catalog.getId()));
                     }
                 }
                 trimListByCategory(productList, secondaryCategory);
@@ -322,7 +321,7 @@ public class MCatalogAction extends MBaseAction {
             catalogResponse = new MCatalogJSONResponse();
             catalogResponse = populateCatalogResponse(product, catalogResponse);
             catalogResponse.setCurrentCategory(secondaryCat);
-            product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG)));
+            product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.mobile_catalog.getId()));
             catalogResponse.setProductURL(product.getProductURL());
 
             catalogList.add(catalogResponse);
@@ -428,7 +427,7 @@ public class MCatalogAction extends MBaseAction {
             catalogJSONResponse.setMarkedPrice(priceFormat.format(product.getMinimumMRPProducVariant().getMarkedPrice()));
         if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
             catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent() * 100)));
-        catalogJSONResponse.setProductReferrerId(ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_CATALOG));
+        catalogJSONResponse.setProductReferrerId(EnumProductReferrer.mobile_catalog.getId());
         return catalogJSONResponse;
     }
 

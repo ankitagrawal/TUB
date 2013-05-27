@@ -3,7 +3,7 @@
 <s:layout-definition>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
-    <head>
+    <head>                                                                                 bulk
         <title>${pageTitle} | HealthKart.com</title>
         <jsp:include page="/includes/_style.jsp"/>
         <link href="${pageContext.request.contextPath}/css/fluid.css" rel="stylesheet" type="text/css"/>

@@ -1,9 +1,6 @@
 package com.hk.admin.manager;
 
-import com.hk.admin.dto.inventory.DebitNoteDto;
-import com.hk.admin.dto.inventory.DebitNoteLineItemDto;
-import com.hk.admin.dto.inventory.GRNDto;
-import com.hk.admin.dto.inventory.GrnLineItemDto;
+import com.hk.admin.dto.inventory.*;
 import com.hk.admin.pact.dao.inventory.GoodsReceivedNoteDao;
 import com.hk.admin.pact.dao.inventory.PurchaseOrderDao;
 import com.hk.admin.pact.service.inventory.AdminInventoryService;
@@ -14,10 +11,15 @@ import com.hk.domain.catalog.product.ProductOption;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.inventory.GoodsReceivedNote;
 import com.hk.domain.inventory.GrnLineItem;
+import com.hk.domain.inventory.creditNote.CreditNoteLineItem;
+import com.hk.domain.inventory.creditNote.CreditNote;
 import com.hk.domain.sku.Sku;
 import com.hk.domain.warehouse.Warehouse;
+import com.hk.domain.user.B2bUserDetails;
 import com.hk.dto.TaxComponent;
 import com.hk.pact.service.inventory.SkuService;
+import com.hk.pact.dao.user.B2bUserDetailsDao;
+import com.hk.constants.courier.StateList;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ public class GRNManager {
 	private SkuService skuService;
 	@Autowired
 	private PurchaseOrderDao purchaseOrderDao;
+  @Autowired
+	private B2bUserDetailsDao b2bUserDetailsDao;
 
 	private List<GoodsReceivedNote> grnList = new ArrayList<GoodsReceivedNote>();
 	private List<GrnLineItem> grnLineItemList = new ArrayList<GrnLineItem>();
@@ -155,6 +159,7 @@ public class GRNManager {
 		Double totalTaxable = 0.0;
 		Double totalPayable = 0.0;
 		Double marginMrpVsCP = 0.0;
+        Long   totalQty=0L;
 
 		@SuppressWarnings("unused")
 		Warehouse warehouse = grn.getWarehouse();
@@ -195,6 +200,7 @@ public class GRNManager {
 			totalTax += tax;
 			totalSurcharge += surcharge;
 			totalPayable += payable;
+            totalQty+= grnLineItem.getQty();
 
 		}
 		grnDto.setGrnLineItemDtoList(grnLineItemDtoList);
@@ -204,11 +210,12 @@ public class GRNManager {
 		grnDto.setTotalPayable(totalPayable);
 		double overallDiscount = grn.getDiscount() == null ? 0.0 : grn.getDiscount();
 		grnDto.setFinalPayable(totalPayable - overallDiscount);
-
+        grnDto.setTotalQty(totalQty);
 		grn.setTaxableAmount(totalTaxable);
 		grn.setTaxAmount(totalTax);
 		grn.setSurchargeAmount(totalSurcharge);
 		goodsReceivedNoteDao.save(grn);
+
 
 		return grnDto;
 
@@ -274,6 +281,57 @@ public class GRNManager {
 		debitNoteDto.setTotalSurcharge(totalSurcharge);
 		debitNoteDto.setTotalPayable(totalPayable);
 		return debitNoteDto;
+
+	}
+
+  public CreditNoteDto generateCreditNoteDto(CreditNote creditNote) {
+		CreditNoteDto creditNoteDto = new CreditNoteDto();
+		List<CreditNoteLineItemDto> creditNoteLineItemDtoList = new ArrayList<CreditNoteLineItemDto>();
+		Double totalTax = 0.0;
+		Double totalSurcharge = 0.0;
+		Double totalTaxable = 0.0;
+		Double totalPayable = 0.0;
+
+		for (CreditNoteLineItem creditNoteLineItem : creditNote.getCreditNoteLineItems()) {
+
+			Double taxable = 0.0;
+			Double tax = 0.0;
+			Double surcharge = 0.0;
+			Double payable = 0.0;
+
+			Sku sku = creditNoteLineItem.getSku();
+			CreditNoteLineItemDto creditNoteLineItemDto = new CreditNoteLineItemDto();
+			creditNoteLineItemDto.setCreditNoteLineItem(creditNoteLineItem);
+			if (creditNoteLineItem != null && creditNoteLineItem.getCostPrice() != null && creditNoteLineItem.getQty() != null) {
+				taxable = creditNoteLineItem.getCostPrice() * creditNoteLineItem.getQty();
+			}
+      if (creditNote.getUser() != null) {
+        B2bUserDetails b2bUserDetails = b2bUserDetailsDao.getB2bUserDetails(creditNote.getUser());
+        if (b2bUserDetails != null) {
+          TaxComponent taxComponent = TaxUtil.getStateTaxForPV(StateList.getStateByTin(b2bUserDetails.getTin()), sku, taxable);
+          tax = taxComponent.getTax();
+          surcharge = taxComponent.getSurcharge();
+        }
+      }
+			payable = taxable + tax + surcharge;
+			creditNoteLineItemDto.setTaxable(taxable);
+			creditNoteLineItemDto.setPayable(payable);
+			creditNoteLineItemDto.setSurcharge(surcharge);
+			creditNoteLineItemDto.setTax(tax);
+
+			creditNoteLineItemDtoList.add(creditNoteLineItemDto);
+			totalTaxable += taxable;
+			totalTax += tax;
+			totalSurcharge += surcharge;
+			totalPayable += payable;
+
+		}
+		creditNoteDto.setCreditNoteLineItemDtoList(creditNoteLineItemDtoList);
+		creditNoteDto.setTotalTaxable(totalTaxable);
+		creditNoteDto.setTotalTax(totalTax);
+		creditNoteDto.setTotalSurcharge(totalSurcharge);
+		creditNoteDto.setTotalPayable(totalPayable);
+		return creditNoteDto;
 
 	}
 

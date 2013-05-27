@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import java.util.*;
 
+import com.hk.core.search.ShippingOrderSearchCriteria;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.queue.Bucket;
@@ -88,6 +89,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
     BucketService bucketService;
 
     private Long orderId;
+    private Long shippingOrderId;
     private Long storeId;
     private String gatewayOrderId;
     private Date startDate;
@@ -138,6 +140,8 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         if (orderPage != null) {
             orderList = orderPage.getList();
         }
+//        ShippingOrderSearchCriteria shippingOrderSearchCriteria = getShippingOrderSearchCriteria();
+//        orderPage = shippingOrderService.searchShippingOrders(shippingOrderSearchCriteria, false, getPageNo(), getPerPage());
         logger.debug("Time to get list = " + ((new Date()).getTime() - startTime));
         return new ForwardResolution("/pages/admin/actionAwaitingQueue.jsp");
     }
@@ -177,7 +181,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
             }
         }
         /*
-		if (shippingOrderActivityList.size() == 0) {
+        if (shippingOrderActivityList.size() == 0) {
 			shippingOrderActivityList = shippingOrderLifecycleService.getOrderActivities(EnumShippingOrderLifecycleActivity.getActivitiesForActionQueue());
 		}
 		*/
@@ -246,11 +250,55 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         }
 
 
+
 //        if (basketCategoryList.size() == 0) {
 //            basketCategoryList.addAll(categoryDao.getPrimaryCategories());
 //        }
         orderSearchCriteria.setShippingOrderCategories(basketCategoryList);
         return orderSearchCriteria;
+    }
+
+    private ShippingOrderSearchCriteria getShippingOrderSearchCriteria() {
+        ShippingOrderSearchCriteria shippingOrderSearchCriteria = new ShippingOrderSearchCriteria();
+        shippingOrderSearchCriteria.setBaseOrderId(orderId).setOrderId(shippingOrderId).setStoreId(storeId).setSortByUpdateDate(false);
+        shippingOrderSearchCriteria.setSortByPaymentDate(sortByPaymentDate).setSortByDispatchDate(sortByDispatchDate).setSortByScore(sortByScore);
+
+        List<ShippingOrderStatus> shippingOrderStatusList = new ArrayList<ShippingOrderStatus>();
+        shippingOrderStatusList.addAll(shippingOrderStatuses);
+        if (shippingOrderStatusList.isEmpty())
+            shippingOrderStatusList.addAll(shippingOrderStatusService.getOrderStatuses(EnumShippingOrderStatus.getStatusForActionQueue()));
+
+        Set<Category> basketCategoryList = new HashSet<Category>();
+        basketCategoryList.addAll(categoryDao.getCategoryByNames(basketCategories));
+        shippingOrderSearchCriteria.setShippingOrderCategories(basketCategoryList);
+
+        shippingOrderSearchCriteria.setShippingOrderStatusList(shippingOrderStatusList);
+        shippingOrderSearchCriteria.setShippingOrderLifeCycleActivities(shippingOrderLifecycleActivities);
+        shippingOrderSearchCriteria.setReasonList(reasons);
+
+        if (!paymentModes.isEmpty()) {
+            shippingOrderSearchCriteria.setPaymentModes(paymentModes);
+        }
+        if (!paymentStatuses.isEmpty()) {
+            shippingOrderSearchCriteria.setPaymentStatuses(paymentStatuses);
+        }
+        if (startDate != null && endDate != null) {
+            shippingOrderSearchCriteria.setPaymentStartDate(startDate).setPaymentEndDate(endDate);
+        }
+        if (dropShip != null) {
+            shippingOrderSearchCriteria.setDropShip(dropShip);
+        }
+        if (containsJit != null) {
+            shippingOrderSearchCriteria.setContainsJit(containsJit);
+        }
+        if (b2bOrder) {
+            shippingOrderSearchCriteria.setB2bOrder(b2bOrder);
+        }
+        if (codCallStatus != 0) {
+            shippingOrderSearchCriteria.setUserCodCallStatus(codCallStatus);
+        }
+
+        return shippingOrderSearchCriteria;
     }
 
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
@@ -411,6 +459,7 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
         params.add("dropShip");
         params.add("containsJit");
         params.add("b2bOrder");
+        params.add("buckets");
 
         params.add("bucketParameters");
 
@@ -471,6 +520,14 @@ public class ActionAwaitingQueueAction extends BasePaginatedAction {
                 params.add("reasons[" + ctr8 + "]");
             }
             ctr8++;
+        }
+
+        int ctr9 = 0;
+        for (Bucket bucket : buckets) {
+            if (bucket != null) {
+                params.add("buckets[" + ctr9 + "]");
+            }
+            ctr9++;
         }
 
         return params;
