@@ -217,6 +217,9 @@ public class UserOrderResource {
             } else if (action.equalsIgnoreCase(HKAPIConstants.NON_CONTACTABLE)) {
                 userCodCall.setRemark(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getName());
                 userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getId());
+            } else if (action.equalsIgnoreCase(HKAPIConstants.HEALTHKART)) {
+                userCodCall.setRemark(source);
+                userCodCall.setCallStatus(EnumUserCodCalling.PENDING_WITH_HEALTHKART.getId());
             }
 
             orderService.saveUserCodCall(userCodCall);
