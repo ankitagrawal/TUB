@@ -8,6 +8,7 @@ import com.hk.api.dto.order.*;
 import com.hk.api.pact.service.HKAPIOrderService;
 import com.hk.api.pact.service.HKAPIUserService;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.fliter.CartLineItemFilter;
@@ -20,11 +21,13 @@ import com.hk.domain.courier.Shipment;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.BaseDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.payment.PaymentModeDao;
 import com.hk.pact.dao.payment.PaymentStatusDao;
@@ -87,6 +90,8 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
     PincodeService pincodeService;
     @Autowired
     StoreService storeService;
+    @Autowired
+    BaseDao basedao;
 
     public static final Long INDIA_COUNTRY_ID=80L;
 
@@ -153,7 +158,15 @@ public class HKAPIOrderServiceImpl implements HKAPIOrderService {
             orderAmount=orderAmount+cartLineItem.getHkPrice()*cartLineItem.getQty()-cartLineItem.getDiscountOnHkPrice();
         }
         PaymentMode paymentMode = getPaymentModeDao().getPaymentModeById(new Long(hkapiPaymentDTO.getPaymentmodeId()));
-        return automatedOrderService.createNewPayment(order,orderAmount, paymentMode);
+        Payment payment= automatedOrderService.createNewPayment(order,orderAmount, paymentMode);
+        if(hkapiPaymentDTO.getGatewayId()!=null){
+              Gateway gateway= basedao.get(Gateway.class, hkapiPaymentDTO.getGatewayId()) ;
+            if(gateway!=null){
+                payment.setGateway(gateway);
+                payment=paymentService.save(payment);
+            }
+        }
+        return  payment;
     }
 
     public Set<CartLineItem> addCartLineItems(HKAPIOrderDetailsDTO HKAPIOrderDetailsDTO, Order order) {

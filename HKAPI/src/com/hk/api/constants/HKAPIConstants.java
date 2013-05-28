@@ -12,6 +12,7 @@ public class HKAPIConstants {
     public static final String CANCELLED = "CANCELLED";
     public static final String CONFIRMED = "CONFIRMED";
     public static final String NON_CONTACTABLE = "NON_CONTACTABLE";
+    public static final String HEALTHKART = "HEALTHKART";
 
 
 }

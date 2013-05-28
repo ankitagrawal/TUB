@@ -185,6 +185,12 @@ public class SkuGroupDaoImpl extends BaseDaoImpl implements SkuGroupDao {
                 .setParameter("grn", grnLineItem.getGoodsReceivedNote()).setParameter("sku", grnLineItem.getSku()).list();
         return skuGroups;
     }
+    
+    public List<SkuGroup> getAllCheckedInBatchForGrn(GoodsReceivedNote grn){
+    	return (List<SkuGroup>) getSession().
+				createQuery("from SkuGroup sg where sg.goodsReceivedNote = :grn").
+				setParameter("grn", grn).list();
+    }
 
 
 }

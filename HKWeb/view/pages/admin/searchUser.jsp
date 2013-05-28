@@ -85,6 +85,10 @@
               <s:param name="user" value="${user}"/>
               [Edit User]
             </s:link>
+            <s:link beanclass="com.hk.web.action.admin.queue.AssignUserBasketAction">
+              <s:param name="user" value="${user}"/>
+                [Edit Bucket]
+            </s:link>
             <s:link beanclass="com.hk.web.action.admin.user.CustomerLifeCycleAction">
                <s:param name="user" value="${user}"/>
                [View Customer LifeCycle]
@@ -96,8 +100,8 @@
               ${user.email}
           </td>
           <td>
-            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction">
-              <s:param name="email" value="${user.login}"/>
+            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction" event="searchOrders">
+              <s:param name="email" value="${user.email}"/>
               View orders
             </s:link>
           </td>

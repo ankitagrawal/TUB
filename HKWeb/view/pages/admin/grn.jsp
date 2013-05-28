@@ -414,9 +414,9 @@ $(document).ready(function() {
         <th>Surcharge</th>
         <th>Payable</th>
         <th>Weight <br/>(in gms)</th>
-        <th>Length</th>
-        <th>Breadth</th>
-        <th>Height</th>
+        <th>Length <br/>(in cm)</th>
+        <th>Breadth <br/>(in cm)</th>
+        <th>Height <br/>(in cm)</th>
 
     </tr>
     </thead>
@@ -543,7 +543,7 @@ $(document).ready(function() {
         <td>
             <s:text readonly="readonly" class="payableAmount" name="grnLineItems[${ctr.index}].payableAmount" value="${grnLineItemDto.payable}" />
         </td>
-        <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.weight" id="variantWeight" class="weight" value="${productVariant.weight}"/></td>
+        <td><s:text name="grnLineItems[${ctr.index}].weight" id="variantWeight" class="weight" value="${grnLineItemDto.grnLineItem.weight}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.length" value="${productVariant.length}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.breadth" value="${productVariant.breadth}"/></td>
         <td><s:text name="grnLineItems[${ctr.index}].sku.productVariant.height" value="${productVariant.height}"/></td>

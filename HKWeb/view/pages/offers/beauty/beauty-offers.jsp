@@ -45,20 +45,25 @@
            <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Manicure Kit With Purchase Of L'oreal Paris Skin Care and Make Up Worth Rs 2200/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE L'oreal Paris Glamshine 6h Lipgloss Worth Rs 875/- With Purchase Of L’oreal Paris Skin Care and Make Up Worth
              </br> Rs 3000/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin  and Make Up Worth Rs 4500/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/L%27Oreal+Paris">FREE Trousseau Box With Purchase Of L’oreal Paris Skin and Make Up Worth Rs 2500/-</a></p>
 
          <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Auto Eye Pencil Worth  Rs 225/- With Purchase of NYX Products Worth Rs 1000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Diamond Sparkle Lip Gloss  Worth Rs 600/- With Purchase  of NYX Products Worth Rs 2000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/NYX">FREE NYX Luscious Lip Gloss Pallet Worth Rs 900/- With Purchase  of NYX Products Worth Rs 3500/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/Colorbar">FREE Colorbar Precision Waterproof Liquid Eye Line Worth Rs 350/- With Purchase  of  Colorbar Products Worth Rs 1000/-</a></p>
+         <p><a href="http://www.healthkart.com/brand/beauty/Colorbar">FREE Colorbar Precision Waterproof Liquid Eye Line Worth Rs 350/- With Purchase of Colorbar Products Worth Rs 700/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/VLCC">FREE VEGA Set of 7 Make-up Brushes Worth Rs 450/- With Purchase  of VLCC Products Worth Rs 3000/-</a></p>
          <p><a href="http://www.healthkart.com/brand/beauty/Lotus+Herbals">FREE Lotus Herbals Jojobawash Active Milli Capsules Nourishing Face Wash Worth Rs 75/- With Purchase  of Lotus Herbals Products Worth Rs 500/-</a></p>
          <p><a href="http://www.healthkart.com/search?query=Schwarzkopf&search.x=-815&search.y=-54">FREE Vega Premium Collection  Straightening Hair Brush Worth Rs 450/- With Purchase  of Schwarzkopf Products Worth
-             </br> Rs 3000/-</a></p>
+             </br> Rs 1500/-</a></p>
          <p><a href="http://www.healthkart.com/beauty/make-up/eyes">FREE Basicare Syling Eyelash Worth Rs 200/- With Purchase  of Eye Makeup Worth Rs 1000/-</a></p>
-         <p><a href="http://www.healthkart.com/brand/beauty/Kent">FREE Herbal Essences Shampoo Worth Rs 190/- With Purchase  of Any Kent Hairbrush</a></p>
 
-         <p><a href="http://www.healthkart.com/brand/beauty/Vichy">FREE Vichy Bi-White Med Foam Cleanser Worth Rs 1290/- With Purchase of Vichy Products Worth Rs 2500/-</a></p>
+         <p><a href="http://www.healthkart.com/beauty">FREE  Basicare Perfume Atomizer Worth Rs.240/- With  Purchase of Beauty Products Worth Rs 1000/-</a></p>
+
+       <p><a href="http://www.healthkart.com/beauty">FREE Faces Emery Boards Small Worth Rs.65/- With Purchase of Beauty products Worth Rs 500/- (Prepaid Order) </a></p>
+
+       <p><a href="https://www.healthkart.com/brand/beauty/shahnaz+husain">FREE  Revlon Touch & Glow Advanced Fairness Daily Moisturising Cream SPF 15 Worth Rs 180/- With Purchase of  Shahnaz Hussain Products Worth Rs 1000/-</a></p>
+
+       <p><a href="https://www.healthkart.com/brand/beauty/kaya+skin+clinic">FREE Basicare 24 Round Make-Up Sponges Value Pack Worth Rs 225/- With Purchase of Kaya Products Worth Rs 1000/- </a></p>
 
          <div class="cl"></div>
 

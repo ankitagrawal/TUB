@@ -105,6 +105,13 @@
         <h3><s:link
                 beanclass="com.hk.web.action.admin.roles.AddRolePermissionAction"> Add/Assign Roles and Permissions </s:link></h3>
     </shiro:hasRole>
+<%--
+	<shiro:hasRole name="<%=RoleConstants.ADMIN%>">
+        <h3><s:link
+                beanclass="com.hk.web.action.admin.util.RunGenericGroovyScriptAction"> Run generic groovy script </s:link></h3>
+    </shiro:hasRole>
+--%>
+
         <%--<h3><s:link beanclass="com.hk.web.action.admin.payment.PaymentHistoryAction"> Check Payment History </s:link></h3>--%>
 </div>
 
@@ -197,30 +204,25 @@
     </h3>
     <c:if test="${whAction.setWarehouse != null}">
 
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
+      <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.DebitNoteAction">Debit Note List</s:link></h3>
 
-        <h3>
-            <%--<s:link beanclass="com.hk.web.action.admin.inventory.BrandsToAuditAction">Brand Audit List</s:link></h3>--%>
+      <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.CreditNoteAction">Credit Note List</s:link></h3>
 
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
+      <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.CycleCountAction">Cycle Count List</s:link></h3>
 
-	<h3><s:link beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
+      <h3><s:link
+          beanclass="com.hk.web.action.admin.courier.ReverseOrdersManageAction">Reverse Pickup List</s:link></h3>
 
-    <%--<h3><s:link beanclass="com.hk.web.action.admin.courier.CityCourierTatAction">Upload City Courier TAT</s:link></h3>--%>
+      <h3>
+        <s:link
+            beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
+      </h3>
 
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.ReconciliationVoucherAction">Reconciliation Voucher List</s:link>
-        </h3>
-
-        <h3>
-            <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
-
-    <%--<h3><s:link beanclass="com.hk.web.action.admin.queue.ShipmentAwaitingQueueAction"--%>
-	            <%--event="generateCourierReport">Download Courier Excel--%>
-		<%--<s:param name="courierDownloadFunctionality" value="false"/>--%>
-	<%--</s:link></h3>--%>
+      <h3>
+        <s:link beanclass="com.hk.web.action.admin.inventory.StockTransferAction">Stock Transfer List</s:link></h3>
 
     </c:if>
     <h3>

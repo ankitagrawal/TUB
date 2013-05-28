@@ -10,31 +10,34 @@ import com.hk.admin.pact.dao.inventory.DebitNoteDao;
 import com.hk.domain.accounting.DebitNote;
 import com.hk.domain.accounting.DebitNoteStatus;
 import com.hk.domain.inventory.GoodsReceivedNote;
+import com.hk.domain.warehouse.Warehouse;
 import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
 public class DebitNoteDaoImpl extends BaseDaoImpl implements DebitNoteDao {
 
-    public Page searchDebitNote(GoodsReceivedNote grn, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, int pageNo, int perPage) {
+  public Page searchDebitNote(GoodsReceivedNote grn, DebitNoteStatus debitNoteStatus, String tinNumber, String supplierName, Warehouse warehouse, int pageNo, int perPage) {
 
-        DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
-        if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
-            DetachedCriteria supplierCriteria = debitNoteCriteria.createCriteria("supplier");
-            if (StringUtils.isNotBlank(tinNumber)) {
-                supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
-            }
-            if (StringUtils.isNotBlank(supplierName)) {
-                supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
-            }
-        }
-
-        if (debitNoteStatus != null) {
-            debitNoteCriteria.add(Restrictions.eq("debitNoteStatus", debitNoteStatus));
-        }
-        debitNoteCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
-        return list(debitNoteCriteria, pageNo, perPage);
-
+    DetachedCriteria debitNoteCriteria = DetachedCriteria.forClass(DebitNote.class);
+    if (StringUtils.isNotBlank(tinNumber) || StringUtils.isNotBlank(supplierName)) {
+      DetachedCriteria supplierCriteria = debitNoteCriteria.createCriteria("supplier");
+      if (StringUtils.isNotBlank(tinNumber)) {
+        supplierCriteria.add(Restrictions.eq("tinNumber", tinNumber));
+      }
+      if (StringUtils.isNotBlank(supplierName)) {
+        supplierCriteria.add(Restrictions.like("name", "%" + supplierName + "%"));
+      }
     }
+    if (warehouse != null) {
+      debitNoteCriteria.add(Restrictions.eq("warehouse", warehouse));
+    }
+    if (debitNoteStatus != null) {
+      debitNoteCriteria.add(Restrictions.eq("debitNoteStatus", debitNoteStatus));
+    }
+    debitNoteCriteria.addOrder(org.hibernate.criterion.Order.desc("id"));
+    return list(debitNoteCriteria, pageNo, perPage);
+
+  }
 
 }

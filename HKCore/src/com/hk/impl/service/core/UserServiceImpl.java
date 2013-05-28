@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hk.constants.user.EnumEmailSubscriptions;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,11 +68,14 @@ public class UserServiceImpl implements UserService {
 
     public User getLoggedInUser() {
         User loggedOnUser = null;
-        if (getPrincipal() != null) {
-            loggedOnUser = getUserDao().getUserById(getPrincipal().getId());
+        try {
+            if (getPrincipal() != null) {
+                loggedOnUser = getUserDao().getUserById(getPrincipal().getId());
+            }
+        } catch (UnavailableSecurityManagerException unavailableSecurityManagerException) {
+            //just in case this is called out of web context, hence giving db from user, //todo rewrite
+            loggedOnUser = getAdminUser();
         }
-
-        // TODO: #warehouse this can be null, fix this
         return loggedOnUser;
     }
 

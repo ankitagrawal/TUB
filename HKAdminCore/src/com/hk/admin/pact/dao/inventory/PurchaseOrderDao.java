@@ -26,4 +26,6 @@ public interface PurchaseOrderDao extends BaseDao {
     public List<PurchaseOrder> listPurchaseOrdersIncludingStatus(List<Long> purchaseOrderStatusList);
 
     public List<PurchaseOrder> listPurchaseOrdersExcludingStatusInTimeFrame(List<Long> purchaseOrderStatusList, Date startDate, Date endDate);
+
+    public boolean isPiCreated(PurchaseOrder purchaseOrder);
 }

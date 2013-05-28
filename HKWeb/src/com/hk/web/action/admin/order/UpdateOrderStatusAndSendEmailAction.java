@@ -12,7 +12,6 @@ import org.stripesstuff.plugin.security.Secure;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.impl.service.shippingOrder.ShipmentServiceImpl;
-import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.domain.courier.Shipment;
@@ -21,6 +20,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.manager.EmailManager;
 import com.hk.manager.LinkManager;
 import com.hk.manager.SMSManager;
+import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.store.StoreService;
 import com.hk.pact.service.subscription.SubscriptionOrderService;
@@ -44,29 +44,32 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     private SMSManager smsManager;
 
     public Resolution pre() {
-        List<ShippingOrder> shippingOrderList = shippingOrderService.getShippingOrdersToSendShipmentEmail();
+        List<ShippingOrder> shippingOrderList = this.shippingOrderService.getShippingOrdersToSendShipmentEmail();
 
         for (ShippingOrder shippingOrder : shippingOrderList) {
             Shipment shipment = shippingOrder.getShipment();
             Order order = shippingOrder.getBaseOrder();
             boolean isEmailSent = false;
             if (order.getStore() != null && order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) && !order.isSubscriptionOrder()) {
-                isEmailSent = emailManager.sendOrderShippedEmail(shippingOrder, linkManager.getShippingOrderInvoiceLink(shippingOrder));
-	            smsManager.sendOrderShippedSMS(shippingOrder);
+                isEmailSent = this.emailManager.sendOrderShippedEmail(shippingOrder, this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
+	            this.smsManager.sendOrderShippedSMS(shippingOrder);
 
+            }else if(order.getStore() != null && order.getStore().getId().equals(StoreService.LOYALTYPG_ID)) {
+            	isEmailSent = this.emailManager.sendOrderShippedEmail(shippingOrder, this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
+  	            this.smsManager.sendOrderShippedSMS(shippingOrder);
             }else if(order.isSubscriptionOrder()){
-                isEmailSent = emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), linkManager.getShippingOrderInvoiceLink(shippingOrder));
+                isEmailSent = this.emailManager.sendSubscriptionOrderShippedEmail(shippingOrder,this.getSubscriptionOrderService().findSubscriptionOrderByBaseOrder(shippingOrder.getBaseOrder()).getSubscription(), this.linkManager.getShippingOrderInvoiceLink(shippingOrder));
             }else {
                 isEmailSent = true; // Incase on non HK order
             }
             if (isEmailSent && shipment != null) {
                 shipment.setEmailSent(true);
-                shipmentService.save(shipment);
+                this.shipmentService.save(shipment);
             }
-            shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShippedEmailFired);
+            this.shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShippedEmailFired);
         }
 
-        addRedirectAlertMessage(new SimpleMessage("Shipping emails for [" + shippingOrderList.size() + "] Shipping Orders have been sent."));
+        this.addRedirectAlertMessage(new SimpleMessage("Shipping emails for [" + shippingOrderList.size() + "] Shipping Orders have been sent."));
         return new RedirectResolution(AdminHomeAction.class);
     }
 
@@ -87,7 +90,7 @@ public class UpdateOrderStatusAndSendEmailAction extends BaseAction {
     }
 
     public SubscriptionOrderService getSubscriptionOrderService() {
-        return subscriptionOrderService;
+        return this.subscriptionOrderService;
     }
 
     public void setSubscriptionOrderService(SubscriptionOrderService subscriptionOrderService) {

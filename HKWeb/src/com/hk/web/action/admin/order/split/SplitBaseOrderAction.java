@@ -96,8 +96,8 @@ public class SplitBaseOrderAction extends BaseAction {
 						ShippingOrder shippingOrder = adminShippingOrderService.createSOforManualSplit(warehouseSetEntry.getValue(), warehouseSetEntry.getKey());
 						if (shippingOrder != null) {
 							orderLoggingService.logOrderActivity(baseOrder, userService.getLoggedInUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderManualSplit), null);
+                            getOrderService().splitBOCreateShipmentEscalateSOAndRelatedTasks(shippingOrder.getBaseOrder());
 						}
-
 					} catch (NoSkuException e) {
 						logger.error("No sku found", e);
 						addRedirectAlertMessage(new SimpleMessage(e.getMessage()));

@@ -16,6 +16,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
@@ -26,9 +27,10 @@ public interface OrderService {
 
     public Order find(Long orderId);
 
+    @Deprecated
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
-    public Long getCountOfOrdersWithStatus();
+    public Long getCountOfOrdersByStatus(User user,EnumOrderStatus enumOrderStatus);
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
@@ -36,15 +38,11 @@ public interface OrderService {
 
     public List<Order> searchOrders(OrderSearchCriteria orderSearchCriteria);
 
-    public Set<ShippingOrder> createShippingOrders(Order order);
-
     public Order escalateOrderFromActionQueue(Order order, String shippingOrderGatewayId);
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
 
-    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);
-
-    public Category getBasketCategory(ShippingOrder shippingOrder);
+    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);   
 
     public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
 
@@ -63,20 +61,14 @@ public interface OrderService {
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
-    public void approvePendingRewardPointsForOrder(Order order);
-
     public void sendEmailToServiceProvidersForOrder(Order order);
 
     public ProductVariant getTopDealVariant(Order order);
 
     public Order findByGatewayOrderId(String gatewayOrderId);
 
-    // public boolean isCODAllowed(Order order);
-
      public ShippingOrder createSOForService(CartLineItem serviceCartLineItem);
 
-    public boolean isShippingOrderExists (Order order);
-    
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order);
 
 	public UserCodCall saveUserCodCall(UserCodCall userCodCall);
@@ -84,5 +76,7 @@ public interface OrderService {
 	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
 	public List<UserCodCall> getAllUserCodCallForToday();
+	
+	public Order findCart(User user, Store store);
 }
 

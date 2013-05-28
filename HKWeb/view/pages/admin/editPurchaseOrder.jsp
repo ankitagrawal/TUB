@@ -5,6 +5,7 @@
 <%@ page import="com.hk.pact.dao.warehouse.WarehouseDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.inventory.EditPurchaseOrderAction" var="pa"/>
@@ -86,6 +87,17 @@ $(document).ready(function () {
 
 		return false;
 	});
+            $('#saveSupplier').click(function(){
+                        var supplier=$('#supplier').val();
+                        if(supplier==null || supplier==""){
+                            alert("Please select correct supplier!!")
+                            return false;
+                        }
+                       if(${pa.piCreated}){
+                           alert("Purchase Invoice Already created, You cannot change supplier!!!");
+                           return false;
+                        }
+                      });
 
 	$('.valueChange').live("change", function () {        
 		var valueChangeRow = $(this).parents('.lineItemRow');
@@ -213,7 +225,9 @@ $(document).ready(function () {
 		$('.finalPayable').val(finalPayable.toFixed(2));
 	});
 	updateTotal('.quantity', '.totalQuantity', 1);
+
 });
+
 
 function validateSubmitForm() {
 
@@ -243,6 +257,7 @@ function validateSubmitForm() {
 			return false;
 		}
 	});
+
 
 	var statusSelected = $('.status').find('option:selected');
 	var approver = $('.approver').find('option:selected');
@@ -283,10 +298,27 @@ function temp() {
 <s:hidden name="previousPurchaseOrderStatus" value="${pa.purchaseOrder.purchaseOrderStatus}"/>
 <table>
 	<tr>
-		<td>Supplier Name</td>
-		<td>${pa.purchaseOrder.supplier.name}</td>
+        <td>Supplier Name</td>
+        <td>${pa.purchaseOrder.supplier.name}</td>
 
-		<td>Supplier State</td>
+    <shiro:hasRole name="<%=PermissionConstants.PO_APPROVER%>">
+        <td>New Supplier Name</td>
+        <td>
+        <s:select name="supplier" id ="supplier" >
+            <s:option value="">-------Select New Supplier-------</s:option>
+            <c:forEach items="${pa.suppliers}" var ="supplierName" >
+             <s:option value="${supplierName.id}">${supplierName.name}</s:option>
+            </c:forEach>
+         </s:select>
+        </td>
+
+        <td><s:submit name="saveSupplier" value="Save" id="saveSupplier"/></td>
+    </shiro:hasRole>
+
+        </tr>
+
+		<tr>
+            <td>Supplier State</td>
 		<td>${pa.purchaseOrder.supplier.state}</td>
 		<td>Tax</td>
 		<td>

@@ -12,6 +12,7 @@ public class ShippingCostCutOff {
 
     private static final Double percentageOfSOAmount = 0.5D;
     private static final Double maxShippingCharges = 5000D;
+    public static final Double minAllowedShippingCharges = 150D;
 
     public static Double calculateCutoffAmount(ShippingOrder shippingOrder) {
         Double shippingOrderAmount = 0D;
