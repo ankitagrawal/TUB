@@ -217,7 +217,7 @@ public class CourierAWBAction extends BaseAction {
         }
 
         catch (Exception ex) {
-                addRedirectAlertMessage(new SimpleMessage("Deletion Failed ::: Awb is attached with shipment "));
+                addRedirectAlertMessage(new SimpleMessage("Error in uploading file"));
         }
         return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
     }
