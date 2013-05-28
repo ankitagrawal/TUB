@@ -31,4 +31,6 @@ public interface ActionItemDao extends BaseDao
     List<Bucket> findByName(List<String> bucketNames);
 
     Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage);
+
+     public List<ActionItem> getActionItemsOfActionQueue ();
 }

@@ -22,7 +22,7 @@
                     </label>
                     <br/>
                 </c:forEach>
-                  <s:submit name="save" value="Save"/>
+                  <s:submit name="saveBuckets" value="Save"/>
             </div>
 
             <div align="justify" >
