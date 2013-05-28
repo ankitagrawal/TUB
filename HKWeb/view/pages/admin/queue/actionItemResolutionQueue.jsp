@@ -8,6 +8,7 @@
 <%@ page import="com.hk.domain.queue.Bucket" %>
 <%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page import="com.hk.constants.queue.EnumActionTask" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean"/>
@@ -125,12 +126,14 @@
                                 <s:hidden name="actionItem" value="${actionItem.id}"/>
                                 PAT : ${actionItem.previousActionTask.name} <br>
                                 CAT : <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
-                                    <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
+                                    <c:forEach items="${currentATList}" var="enumActionTask">
                                         <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
                                     </c:forEach>
                                 </s:select>
                                 <s:submit name="updateTask" value="Update Task"/>
                            </div>
+
+                            <shiro:hasPermission name="<%=PermissionConstants.ACTION_ITEM_RESOLVER%>">
 
                             <div>
                                 Current Priority
@@ -154,14 +157,16 @@
                                     <s:param name="actionItem" value="${actionItem.id}"/>
                                     Assign Trafic State
                                 </s:link>)
-                            
-                            <%--<div class="floatleft">--%>
-                                <%--Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"--%>
-                                                                  <%--type="date"/>--%>
-                            <%--</div>--%>
+
+                            </shiro:hasPermission>
+
                         </td>
                         <td width="70%" style="border:1px solid darkgreen; padding:3px;">
-                                ${actionItem.shippingOrder.id}
+                            <s:link beanclass="com.hk.web.action.admin.order.search.SearchOrderAction"
+                                    event="searchOrders"
+                                    target="_blank">
+                                <s:param name="orderId" value="${actionItem.shippingOrder.baseOrder.id}"/>
+                            </s:link>
                             <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
                                              shippingOrder="${actionItem.shippingOrder}"
                                              isActionQueue="true"/>
