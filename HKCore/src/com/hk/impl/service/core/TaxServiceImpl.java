@@ -8,6 +8,8 @@ import com.hk.domain.core.Tax;
 import com.hk.pact.dao.TaxDao;
 import com.hk.pact.service.core.TaxService;
 
+import java.util.List;
+
 @Service
 public class TaxServiceImpl implements TaxService {
 
@@ -30,8 +32,18 @@ public class TaxServiceImpl implements TaxService {
         return getTaxDao().findByName(EnumTax.SERVICE_10_3.getName());
     }
 
-    
-    public TaxDao getTaxDao() {
+
+		@Override
+		public List<Tax> getTaxList() {
+			return getTaxDao().getTaxList();
+		}
+
+		@Override
+		public List<Tax> getSurchargeList() {
+			return getTaxDao().getSurchargeList();
+		}
+
+	public TaxDao getTaxDao() {
         return taxDao;
     }
 

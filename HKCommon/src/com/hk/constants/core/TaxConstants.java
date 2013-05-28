@@ -10,5 +10,6 @@ public class TaxConstants {
   public static final String B2B_MAHARASHTRA_TIN = "TIN# 27210893736";
   public static final String NON_B2B_TIN = "TIN#06101832327";
   public static final String B2B_DL_NUMBER = "D. L. No. HR-6600-219-OW(H),HR-6600-219-W(H)";
-
+	public static final String TAX_TYPE = "tax";
+	public static final String SURCHARGE_TYPE = "surcharge";
 }

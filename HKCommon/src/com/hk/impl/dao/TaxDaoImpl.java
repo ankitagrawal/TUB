@@ -3,6 +3,7 @@ package com.hk.impl.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hk.constants.core.TaxConstants;
 import org.springframework.stereotype.Repository;
 
 import com.hk.constants.core.EnumTax;
@@ -36,16 +37,16 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
     }
 
     public List<Tax> getTaxList() {
-        List<Tax> taxList = new ArrayList<Tax>();
-        taxList.add(this.findByName(EnumTax.VAT_0.getName()));
-        taxList.add(this.findByName(EnumTax.VAT_5.getName()));
-        taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
-        taxList.add(this.findByName(EnumTax.SERVICE_10_3.getName()));
-        taxList.add(this.findByName(EnumTax.VAT_12_36.getName()));
-        taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
-        return taxList;
+        return getTaxListByType(TaxConstants.TAX_TYPE);
     }
-    
-    
 
+		public List<Tax> getSurchargeList() {
+				return getTaxListByType(TaxConstants.SURCHARGE_TYPE);
+		}
+
+		@SuppressWarnings("unchecked")
+		public List<Tax> getTaxListByType(String type) {
+				String query = "from Tax t where t.type = :type";
+        return (List<Tax>) findByNamedParams(query, new String[]{"type"}, new Object[]{type});
+		}
 }
