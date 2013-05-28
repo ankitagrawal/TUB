@@ -13,9 +13,12 @@ public enum EnumActionTask {
     Payment_Confirmation(10L, "Payment_Confirmation",1L, 100L, 1L),
     Online_Authorization(20L, "Online_Authorization",1L, 100L, 1L),
     Create_Shipment(30L, "Create_Shipment",1L, 100L, 1L),
+    Payment_Amount_Validation(50L, "Payment Amount Validated",1L, 100L, 1L),
+    Process_DropShip(100L, "Process DropShip",1L, 100L, 1L),
     Create_PO(110L, "Create_PO",1L, 100L, 1L),
     AD_HOC(210L, "AD_HOC",1L, 100L, 1L),
-    WH_Processing(310L, "WH_Processing",1L, 100L, 1L);
+    WH_Processing(310L, "WH_Processing",1L, 100L, 1L),
+    Insufficient_Inventory(700L, "Insufficient Inventory ",1L, 100L, 1L);
 
     private Long id;
     private String name;

@@ -6,16 +6,18 @@ import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.BucketAllocator;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,9 @@ public class BucketServiceImpl implements BucketService {
 
     @Autowired
     ActionItemDao actionItemDao;
+
+    @Autowired
+    InventoryService inventoryService;
 
     @Override
     public List<Param> getParamsForBucket(List<Bucket> bucketList) {
@@ -93,7 +98,7 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.searchActionItem(shippingOrder);
     }
 
-    public List<ActionItem> createActionQueue(){
+    private List<ActionItem> createActionQueue(){
         return actionItemDao.getAll(ActionItem.class);
     }
 
@@ -109,7 +114,7 @@ public class BucketServiceImpl implements BucketService {
     }
 
       public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
-        List<Bucket> actionableBuckets = new ArrayList<Bucket>();
+        List<Bucket> actionableBuckets;
         if(autoUpdate){
          actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
         }else {
@@ -134,7 +139,9 @@ public class BucketServiceImpl implements BucketService {
     }
 
     protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
-        return BucketAllocator.allocateBuckets(shippingOrder);
+        List<EnumBucket> actionableBuckets = BucketAllocator.allocateBuckets(shippingOrder);
+        actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
+        return actionableBuckets;
     }
 
     protected List<Bucket> computeEscalateBackBuckets(ShippingOrder shippingOrder) {
@@ -188,11 +195,19 @@ public class BucketServiceImpl implements BucketService {
         actionItem.setReporter(userService.getLoggedInUser());
         actionItem.setBuckets(computeEscalateBackBuckets(shippingOrder));
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-        actionItem.setCurrentActionTask(find(assignActionTask(actionItem.getBuckets())));
+        actionItem.setCurrentActionTask(computeEscalateBackActionTask(shippingOrder));
         actionItem.setLastPushDate(new Date());
         actionItem.setFlagged(true);
         actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
         return saveActionItem(actionItem);
+    }
+
+    private ActionTask computeEscalateBackActionTask(ShippingOrder shippingOrder){
+        Reason reason = shippingOrder.getReason();
+        if (reason != null){
+            return reason.getActionTask() != null ? reason.getActionTask() : EnumActionTask.AD_HOC.asActionTask();
+        }
+        return EnumActionTask.AD_HOC.asActionTask();
     }
 
     @Override
@@ -220,6 +235,24 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public List<ActionTask> listNextActionTasks(ActionItem actionItem) {
         return actionItemDao.listNextActionTasks(actionItem.getCurrentActionTask(), actionItem.getBuckets());
+    }
+
+    @Override
+    public List<EnumBucket> getCategoryDefaultersBuckets(ShippingOrder shippingOrder) {
+        List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
+        Set<String> categoryNames = new HashSet<String>();
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku());
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (availableUnbookedInv < 0) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+        }
+        actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
+        return actionableBuckets;
     }
 
 

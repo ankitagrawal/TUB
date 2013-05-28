@@ -1,12 +1,13 @@
 package com.hk.util;
 
+import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Payment;
-import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 
@@ -26,12 +27,22 @@ public class BucketAllocator {
         List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
 
         //decide on the basis of payment status, whether the bucket lies with customer support or category team
-        Payment payment = shippingOrder.getBaseOrder().getPayment();
+        Order baseOrder = shippingOrder.getBaseOrder();
+        Payment payment = baseOrder.getPayment();
         if(!EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
             //assign on the basis of payment mode
             if (payment.getPaymentStatus().getId().equals(EnumPaymentStatus.AUTHORIZATION_PENDING.getId())) {
                 if (payment.getPaymentMode().getId().equals(EnumPaymentMode.COD.getId())) {
-                    actionableBuckets.add(EnumBucket.Cod_Confirmation);
+                    Integer userCodCallStatus = baseOrder.getUserCodCall() != null ? baseOrder.getUserCodCall().getCallStatus() : null;
+                    if(userCodCallStatus != null){
+                        if (userCodCallStatus.equals(EnumUserCodCalling.PENDING_WITH_KNOWLARITY.getId())) {
+                            actionableBuckets.add(EnumBucket.Knowlarity);
+                        } else if (userCodCallStatus.equals(EnumUserCodCalling.PENDING_WITH_EFFORT_BPO.getId())) {
+                            actionableBuckets.add(EnumBucket.Effort_BPO);
+                        } else {
+                            actionableBuckets.add(EnumBucket.Cod_Confirmation);
+                        }
+                    }
                 } else if (EnumPaymentMode.getAuthorizationPendingPaymentModes().contains(payment.getPaymentMode().getId())) {
                     actionableBuckets.add(EnumBucket.Cheque_Cash_Neft);
                 }
@@ -43,11 +54,14 @@ public class BucketAllocator {
                 }
             }
         } else {
-
             // now that its decided that its category call, decide which category buckets is the order applicable
-            actionableBuckets.addAll(getBucketsFromSOC(shippingOrder));
+            // actionableBuckets.addAll(getBucketsFromSOC(shippingOrder)); --> moved to an upper call chain
 
-            //assign buckets on the basis of shipping_order_properties
+            if(SOFirewall.isAmountMismatch(baseOrder)){
+               actionableBuckets.add(EnumBucket.Tech_Support);
+            }
+
+             //assign buckets on the basis of shipping_order_properties
             if (shippingOrder.containsJitProducts()) {
                 actionableBuckets.add(EnumBucket.Jit);
             }
@@ -61,6 +75,11 @@ public class BucketAllocator {
             //assign buckets based on different issues
             if ((!shippingOrder.isDropShipping() || !shippingOrder.isServiceOrder()) && shippingOrder.getShipment() == null) {
                 actionableBuckets.add(EnumBucket.Dispatch_Issues);
+            } else {
+                Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
+                if (estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
+                    actionableBuckets.add(EnumBucket.Dispatch_Issues);
+                }
             }
 
         }
@@ -92,8 +111,19 @@ public class BucketAllocator {
         if(buckets.contains(EnumBucket.AD_HOC.asBucket()) || buckets.contains(EnumBucket.CM.asBucket())){
             return EnumActionTask.AD_HOC;
         }
-        if(buckets.contains(EnumBucket.Jit.asBucket()) || buckets.contains(EnumBucket.DropShip.asBucket())){
+        if(buckets.contains(EnumBucket.DropShip.asBucket())){
+            return EnumActionTask.Process_DropShip;
+        }
+        if(buckets.contains(EnumBucket.Jit.asBucket())){
             return EnumActionTask.Create_PO;
+        }
+        if(buckets.contains(EnumBucket.Tech_Support.asBucket())){
+            return EnumActionTask.Payment_Amount_Validation;
+        }
+        for (Bucket bucket : buckets) {
+            if(EnumBucket.getCategoryBuckets().contains(bucket)){
+                return EnumActionTask.Insufficient_Inventory;
+            }
         }
         return EnumActionTask.AD_HOC;
     }

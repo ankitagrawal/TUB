@@ -13037,4 +13037,17 @@
     <changeSet author="Pratham (generated)" id="1369648289023-33">
         <dropColumn columnName="next_action_task_id" tableName="action_task"/>
     </changeSet>
+    <changeSet author="Pratham (generated)" id="1369727618286-2">
+        <createTable tableName="reason_has_action_task">
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369727618286-9">
+        <addPrimaryKey columnNames="reason_id, action_task_id" tableName="reason_has_action_task"/>
+    </changeSet>
 </databaseChangeLog>
