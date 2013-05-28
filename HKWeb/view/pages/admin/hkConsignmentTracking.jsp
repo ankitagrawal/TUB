@@ -21,7 +21,7 @@
   <s:layout-component name="content">
 
     <fieldset class="right_label">
-      <legend>Search Consignment</legend>
+      <legend>Search Consignment Tracking</legend>
       <s:form beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentTrackingAction">
         <label style="margin-left: 10px;margin-right:10px;">Start Date:</label>
         <s:text class="date_input startDate" formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
@@ -71,6 +71,8 @@
         <th>Runsheet Agent</th>
         <th>Runsheet Id</th>
         <th>Lifecycle Status</th>
+        <th>NDR Action</th>
+        <th>Action</th>
       </tr>
       </thead>
       <c:forEach items="${consignmentTrackingAction.consignmentList}" var="consignmentTracking">
@@ -82,6 +84,13 @@
           <td>${consignmentTracking.runsheet.agent.name}</td>
           <td>${consignmentTracking.consignment.runsheet.id}</td>
           <td>${consignmentTracking.consignmentLifecycleStatus.status}</td>
+          <td>${consignmentTracking.ndrResolution}</td>
+          <td>
+            <s:link beanclass="com.hk.web.action.admin.hkDelivery.HKDConsignmentAction" event="trackConsignment" target="_blank">
+              <s:param name="consignmentNumber" value="${consignmentTracking.consignment.awbNumber}" />
+              <s:param name="doTracking" value="true" />Track Consignment
+            </s:link>
+          </td>
         </tr>
       </c:forEach>
     </table>

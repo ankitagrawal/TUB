@@ -12,6 +12,7 @@
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
+<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -26,10 +27,10 @@
     CategoryDao categoryDao = (CategoryDao)ServiceLocatorFactory.getService(CategoryDao.class);
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
-    
+
     boolean isSecure = pageContext.getRequest().isSecure();
     pageContext.setAttribute("isSecure", isSecure);
-    
+
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);
     Cookie preferredZoneCookie = BaseUtils.getCookie(WebContext.getRequest(), HealthkartConstants.Cookie.preferredZone);
     if (preferredZoneCookie != null && preferredZoneCookie.getValue() != null) {
@@ -49,11 +50,9 @@
   <!-- YAHOO marketing -->
   <s:layout-render name="/layouts/embed/_yahooMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}"/>
   <s:layout-render name="/layouts/embed/_ozoneMarketing.jsp" pageType="category" topLevelCategory="${categoryBean.category.name}" />
-
-    <c:if test="${categoryBean.category.name == 'services'}">
+  <c:if test="${categoryBean.category.name == 'services'}">
     <script type="text/javascript">
       $(document).ready(function() {
-
         $('#selectCityWindow').jqm();
         $('#selectCityWindow').jqmShow();
 
@@ -63,10 +62,9 @@
             //          alert("Inside");
             $.getJSON(
                 $('#setDefaultZoneLink').attr('href')
-                );
+            );
           }
         });
-
       });
     </script>
   </c:if>
@@ -156,26 +154,47 @@
     </ul>
   </div>
   <div class='grid_6'>
-    <c:set var="sportsNutrition" value="sports-nutrition"/>
+    <c:set var="sportsNutrition" value="<%=CategoryConstants.SPORTS_NUTRITION%>"/>
+    <c:set var="healthNutrition" value="<%=CategoryConstants.HEALTH_NUTRITION%>"/>
+    <c:set var="homeLiving" value="<%=CategoryConstants.HOME_LIVING%>"/>
     <c:choose>
-        <c:when test="${categoryBean.category.name eq sportsNutrition}">
-            <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">
-                <img src="${pageContext.request.contextPath}/images/banners/Gym-Breaking-Deals.jpg" alt="Gym breaking deals on Nutritional Supplements"
-                     class="small_banner"/>
-            </a>
-             <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
-            <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab"
-                 class="small_banner"/>
-            </a>
-        </c:when>
-        <c:otherwise>
-            <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
-                <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
-                     class="small_banner"/>
-            </a>
-            <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
-                 class="small_banner"/>
-        </c:otherwise>
+      <c:when test="${categoryBean.category.name eq sportsNutrition}">
+        <%-- <a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
+        <a class="bulkOrder" href="#" style="cursor: pointer;">
+          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
+          <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek.jpg" alt="Brand Of the Week - DYMATIZE!"
+               class="small_banner"/>
+        </a>
+      </c:when>
+      <c:when test="${categoryBean.category.name eq healthNutrition}">
+        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
+        <a class="bulkOrder" href="#" style="cursor: pointer;">
+          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+        </a>
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+             class="small_banner"/>
+      </c:when>
+      <c:when test="${categoryBean.category.name eq homeLiving}">
+        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
+        <a class="bulkOrder" href="#" style="cursor: pointer;">
+          <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+               class="small_banner"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/product/westinghouse-wkfsfs133-food-steamer/WST022?productReferrerId=20">
+        <img src="<hk:vhostImage/>/images/banners/Westinghouse.jpg" alt="Product of the Week"
+             class="small_banner"/>
+        </a>
+      </c:when>
+      <c:otherwise>
+        <a href="${pageContext.request.contextPath}/pages/returnAndCancellations.jsp">
+          <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
+               class="small_banner"/>
+        </a>
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+             class="small_banner"/>
+      </c:otherwise>
     </c:choose>
   </div>
 
@@ -282,28 +301,28 @@
 
   <div class="clear"></div>
 
-<c:if test="${hk:isNotBlank(categoryBean.seoData.description)}">
-  <div style="margin-top: 45px; background-color: #FAFCFE; padding: 10px; float: none; clear: both;">
-    <h2><i>${categoryBean.seoData.descriptionTitle}</i>: </h2>
-      ${categoryBean.seoData.description}
-  </div>
-</c:if>
-		
-	<c:choose>
-		<c:when test="${not isSecure}">
-		</c:when>
-		<c:otherwise>
-			<iframe
-					src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
-					scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
-					frameborder="0"></iframe>
-		</c:otherwise>
-	</c:choose>
-		<%--<c:if test="${not isSecure }">
-			<iframe
-				src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
-				scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
-				frameborder="0"></iframe>
-		</c:if>--%>
-	</s:layout-component>
+  <c:if test="${hk:isNotBlank(categoryBean.seoData.description)}">
+    <div style="margin-top: 45px; background-color: #FAFCFE; padding: 10px; float: none; clear: both;">
+      <h2><i>${categoryBean.seoData.descriptionTitle}</i>: </h2>
+        ${categoryBean.seoData.description}
+    </div>
+  </c:if>
+
+  <c:choose>
+    <c:when test="${not isSecure}">
+    </c:when>
+    <c:otherwise>
+      <iframe
+          src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1&uid=${user_hash}"
+          scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+          frameborder="0"></iframe>
+    </c:otherwise>
+  </c:choose>
+  <%--<c:if test="${not isSecure }">
+      <iframe
+          src="http://www.vizury.com/analyze/analyze.php?account_id=VIZVRM112&param=e200&catid=${categoryBean.category.name}&subcat1id=&subcat2id=&section=1&level=1"
+          scrolling="no" width="1" height="1" marginheight="0" marginwidth="0"
+          frameborder="0"></iframe>
+  </c:if>--%>
+</s:layout-component>
 </s:layout-render>

@@ -190,4 +190,6 @@ public class SignupAction extends BaseAction {
 	public String getName() {
 		return name;
 	}
+
+
 }

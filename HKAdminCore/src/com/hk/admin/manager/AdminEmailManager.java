@@ -28,6 +28,7 @@ import com.hk.domain.inventory.po.PurchaseOrder;
 import com.hk.domain.marketing.NotifyMe;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
+import com.hk.domain.sku.SkuGroup;
 import com.hk.domain.user.Role;
 import com.hk.domain.user.User;
 import com.hk.manager.EmailManager;
@@ -42,6 +43,7 @@ import com.hk.pact.service.UserService;
 import com.hk.pact.service.catalog.ProductService;
 import com.hk.pact.service.catalog.ProductVariantService;
 import com.hk.pact.service.discount.CouponService;
+import com.hk.pact.service.inventory.SkuGroupService;
 import com.hk.service.impl.FreeMarkerService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.SendGridUtil;
@@ -75,6 +77,7 @@ public class AdminEmailManager {
     private static Logger logger = LoggerFactory.getLogger(EmailManager.class);
 
     public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
+    public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
 
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
@@ -117,6 +120,8 @@ public class AdminEmailManager {
     private AdminEmailService adminEmailService;
     @Autowired
     private EmailManager emailManager;
+    @Autowired
+    SkuGroupService skuGroupService;
 
 
     private final int COMMIT_COUNT = 100;
@@ -296,7 +301,9 @@ public class AdminEmailManager {
 
     public boolean sendGRNEmail(GoodsReceivedNote grn) {
         HashMap valuesMap = new HashMap();
+        List<SkuGroup> skuGroups = skuGroupService.getAllCheckedInBatchForGrn(grn);;
         valuesMap.put("grn", grn);
+        valuesMap.put("skuGroups", skuGroups);
         boolean success = true;
         if (grn.getGrnLineItems() != null && grn.getGrnLineItems().get(0) != null) {
             Category category = grn.getGrnLineItems().get(0).getSku().getProductVariant().getProduct().getPrimaryCategory();
@@ -308,6 +315,11 @@ public class AdminEmailManager {
                 if (!sent) {
                     success = false;
                 }
+            }
+            boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, PURCHASE_REPORTING_EMAIL,
+                    category.getName() + " Purchase Report Admin");
+            if(!sent){
+            	success = false;
             }
             return success;
         } else {

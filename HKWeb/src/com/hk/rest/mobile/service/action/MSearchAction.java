@@ -2,9 +2,9 @@ package com.hk.rest.mobile.service.action;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.gson.JsonUtils;
-import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.constants.catalog.SolrSchemaConstants;
-import com.hk.constants.marketing.ProductReferrerConstants;
+import com.hk.constants.catalog.image.EnumImageSize;
+import com.hk.constants.marketing.EnumProductReferrer;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.search.SearchFilter;
 import com.hk.dto.search.SearchResult;
@@ -14,7 +14,6 @@ import com.hk.pact.service.search.ProductSearchService;
 import com.hk.rest.mobile.service.model.MCatalogJSONResponse;
 import com.hk.rest.mobile.service.utils.MHKConstants;
 import com.hk.util.HKImageUtils;
-import com.hk.util.ProductReferrerMapper;
 import com.hk.web.HealthkartResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -30,11 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA. User: Satish Date: Sep 21, 2012 Time: 11:32:59 AM
@@ -94,7 +89,7 @@ public class MSearchAction extends MBaseAction {
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
 					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.mobile_search.getId()));
 					catalogJSONResponse.setProductURL(product.getProductURL());
 					catalogList.add(catalogJSONResponse);
 				}
@@ -105,7 +100,7 @@ public class MSearchAction extends MBaseAction {
 				productList = productPage.getList();
 				for (Product product : productList) {
 					catalogJSONResponse = new MCatalogJSONResponse();
-					product.setProductURL(linkManager.getRelativeProductURL(product, ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH)));
+					product.setProductURL(linkManager.getRelativeProductURL(product, EnumProductReferrer.mobile_search.getId()));
 					catalogJSONResponse = populateCatalogResponse(product, catalogJSONResponse);
 					catalogJSONResponse.setProductURL(product.getProductURL());
 					catalogList.add(catalogJSONResponse);
@@ -188,7 +183,7 @@ public class MSearchAction extends MBaseAction {
 			catalogJSONResponse.setMarkedPrice(priceFormat.format(product.getMinimumMRPProducVariant().getMarkedPrice()));
 		if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
 			catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent() * 100)));
-		catalogJSONResponse.setProductReferrerId(ProductReferrerMapper.getProductReferrerid(ProductReferrerConstants.MOBILE_SEARCH));
+		catalogJSONResponse.setProductReferrerId(EnumProductReferrer.mobile_search.getId());
 		return catalogJSONResponse;
 	}
 
