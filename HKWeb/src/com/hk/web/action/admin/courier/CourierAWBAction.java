@@ -170,7 +170,7 @@ public class CourierAWBAction extends BaseAction {
             addRedirectAlertMessage(new SimpleMessage("Select choose file to upload"));
             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
-        if(!(fileBean.getContentType().equals("xls"))){
+        if(!(fileBean.getContentType().equals("application/vnd.ms-excel"))){
             addRedirectAlertMessage(new SimpleMessage("upload xls file only"));
             return new RedirectResolution("/pages/admin/updateCourierAWB.jsp");
         }
