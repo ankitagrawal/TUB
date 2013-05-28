@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.hk.domain.queue.ActionTask;
+import com.hk.impl.service.queue.BucketService;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -906,6 +908,11 @@ public class Functions {
     public static ActionItem getActionItem(ShippingOrder shippingOrder) {
         ActionItemDao actionItemDao = ServiceLocatorFactory.getService(ActionItemDao.class);
         return actionItemDao.searchActionItem(shippingOrder);
+    }
+
+    public static List<ActionTask> listNextActionTasks(ActionItem actionItem) {
+        BucketService bucketService = ServiceLocatorFactory.getService(BucketService.class);
+        return bucketService.listNextActionTasks(actionItem);
     }
 
 }

@@ -5,9 +5,7 @@ import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.queue.ActionItem;
-import com.hk.domain.queue.Bucket;
-import com.hk.domain.queue.TrafficState;
+import com.hk.domain.queue.*;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
@@ -17,8 +15,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /*
  * User: Pratham
@@ -75,7 +72,27 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage) {
         DetachedCriteria searchCriteria = actionItemSearchCriteria.getSearchCriteria();
-        return list(searchCriteria, pageNo, perPage);
+        return list(searchCriteria, true, pageNo, perPage);
+    }
+
+    @Override
+    public List<ActionTask> listNextActionTasks(ActionTask currentActionTask, List<Bucket> buckets) {
+        Set<ActionTask> nextActionTasks = new HashSet<ActionTask>();
+        List<ActionPathWorkflow> actionPathWorkFlows = searchActionPathWorkflow(currentActionTask, buckets);
+        for (ActionPathWorkflow actionPathWorkFlow : actionPathWorkFlows) {
+            nextActionTasks.add(actionPathWorkFlow.getNextActionTask());
+        }
+        return new ArrayList<ActionTask>(nextActionTasks);
+    }
+
+
+    private List<ActionPathWorkflow> searchActionPathWorkflow(ActionTask currentActionTask, List<Bucket> buckets) {
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionPathWorkflow.class);
+        if(buckets != null){
+            detachedCriteria.add(Restrictions.in("bucket", buckets));
+        }
+        detachedCriteria.add(Restrictions.eq("actionTask", currentActionTask));
+        return findByCriteria(detachedCriteria);
     }
 
 

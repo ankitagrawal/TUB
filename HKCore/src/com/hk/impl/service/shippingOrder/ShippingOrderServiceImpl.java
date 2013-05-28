@@ -6,12 +6,12 @@ import com.hk.constants.analytics.EnumReason;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.courier.Shipment;
-import com.hk.domain.courier.Zone;
 import com.hk.domain.order.*;
 import com.hk.domain.payment.Payment;
+import com.hk.domain.queue.Bucket;
 import com.hk.domain.shippingOrder.LifecycleReason;
 import com.hk.impl.service.queue.BucketService;
-import com.hk.util.ShippingCostCutOff;
+import com.hk.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,9 @@ import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ShippingOrderSearchCriteria;
-import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.helper.OrderDateUtil;
 import com.hk.pact.dao.ReconciliationStatusDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.dao.shippingOrder.ReplacementOrderDao;
@@ -40,9 +38,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.service.ServiceLocatorFactory;
-import com.hk.util.HKDateUtil;
-import com.hk.util.OrderUtil;
-import com.hk.util.TokenUtils;
 import com.hk.manager.EmailManager;
 
 /**
@@ -152,29 +147,12 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
         getShippingOrderDao().save(shippingOrder);
     }
 
-    private List<EnumBucket> getActionableBuckets(ShippingOrder shippingOrder) {
-        List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
-        Set<String> categoryNames = new HashSet<String>();
-        for (LineItem lineItem : shippingOrder.getLineItems()) {
-            Long availableUnbookedInv = getInventoryService().getAvailableUnbookedInventory(lineItem.getSku());
-            ProductVariant productVariant = lineItem.getSku().getProductVariant();
-            if (availableUnbookedInv < 0) {
-                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-            }
-            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
-                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
-            }
-        }
-        actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
-        return actionableBuckets;
-    }
 
     private boolean isShippingOrderAutoEscalable(ShippingOrder shippingOrder) {
         Payment payment = shippingOrder.getBaseOrder().getPayment();
-        User adminUser = getUserService().getAdminUser();
         List<Reason> reasons = new ArrayList<Reason>();
         if (payment != null && EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())) {
-            if(!payment.getAmount().equals(shippingOrder.getBaseOrder().getAmount())){
+            if(SOFirewall.isAmountMismatch(payment.getOrder())){
               reasons.add(EnumReason.DiscrepancyInPaymentAmount.asReason());
             }
             if (shippingOrder.getOrderStatus().getId().equals(EnumShippingOrderStatus.SO_ActionAwaiting.getId())) {
@@ -184,7 +162,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 if (shippingOrder.isDropShipping()) {
                     reasons.add(EnumReason.DROP_SHIPPED_ORDER.asReason());
                 }
-                List<EnumBucket> enumBuckets = getActionableBuckets(shippingOrder);
+                List<EnumBucket> enumBuckets = bucketService.getCategoryDefaultersBuckets(shippingOrder);
                 if (!enumBuckets.isEmpty()) {
                     reasons.add(EnumReason.InsufficientUnbookedInventory.asReason());
                 }
@@ -193,7 +171,7 @@ public class ShippingOrderServiceImpl implements ShippingOrderService {
                 } else {
                     //putting checks for shipping cost
                     Double estimatedShippingCharges = shippingOrder.getShipment().getEstmShipmentCharge();
-                    if (estimatedShippingCharges != null && estimatedShippingCharges > ShippingCostCutOff.minAllowedShippingCharges && estimatedShippingCharges >= ShippingCostCutOff.calculateCutoffAmount(shippingOrder)) {
+                    if (estimatedShippingCharges != null && estimatedShippingCharges > SOFirewall.minAllowedShippingCharges && estimatedShippingCharges >= SOFirewall.calculateCutoffAmount(shippingOrder)) {
                         reasons.add(EnumReason.HighShippingCost.asReason());
                     }
                 }

@@ -13,6 +13,7 @@
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Collection" %>
+<%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:layout-definition>
@@ -324,6 +325,7 @@ ${shippingOrder.id}
                 }
                  var proceed = confirm('Are you sure you want to cancel shipping order?');
                  if (!proceed) return false;
+                $(this).hide();
              });
         </script>
     </c:if>

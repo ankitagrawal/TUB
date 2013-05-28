@@ -1,6 +1,3 @@
-<%@ page import="com.hk.pact.dao.BaseDao" %>
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
-<%@ page import="com.hk.domain.queue.Bucket" %>
 <%@ page import="com.hk.constants.queue.EnumActionTask" %>
 <%@ taglib prefix="s" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -28,7 +25,7 @@
             <div align="justify" >
                 Select the Action Task  <br>
                  <s:select name="actionTaskId" value="${actionItemBean.actionItem.currentActionTask.id}">
-                    <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
+                    <c:forEach items="${hk:listNextActionTasks(actionItemBean.actionItem)}" var="enumActionTask">
                         <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
                     </c:forEach>
                 </s:select>

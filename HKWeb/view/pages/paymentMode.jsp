@@ -210,7 +210,7 @@
         <div id="tabs_content4" class="tab_content" style="display: none;">
             <c:set var="message"
                    value=" <h4 style=\"text-align: center;\">We are sorry Cash on Delivery is not available for your order</h4>"/>
-            <c:set var="codFailureMap" value="${orderSummary.codFailureMap}"/>
+            <c:set var="codFailureMap" value="${paymentModeBean.codFailureMap}"/>
 
             <c:choose>
                  <c:when test='${codFailureMap["MutipleRTOs"] == "Y"}'>
@@ -418,13 +418,13 @@
 <c:set var="url" value="${pageContext.request.contextPath}/core/user/BillingAddress.action" />
 <script type="text/javascript">
     $(document).ready(function() {
-
+         
         $('.tab_content').hide();
         $('.tab_content').first().show();
         $('.tabs ul li').click(function() {
             $('.tabs ul li').removeClass('selected');
             $(this).addClass('selected');
-            /*if(this.id == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+            /*if(this.id == "tab4" && ${false} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
              $('.offer-banner').css("visibility", "visible");
              $.getJSON(
              $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
@@ -475,7 +475,7 @@
             var sTab = $.session("selected-tab");
             $('.tabs ul li').removeClass('selected');
             $('#' + sTab).addClass('selected');
-            /*if(sTab == "tab4" && ${orderSummary.codAllowed} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
+            /*if(sTab == "tab4" && ${false} && ${orderSummary.pricingDto.grandTotalPayable < 1000.0}){
              $('.offer-banner').css("visibility", "visible");
              $.getJSON(
              $('#setInCookieLink').attr('href'), {wantedCOD: "true"},
@@ -675,7 +675,7 @@
            <tr>
                <td colspan="2" style="text-align: center;">
 
-                 <c:if test="${orderSummary.sizeOfCLI > 0}">
+                 <c:if test="${fn:length(orderSummary.order.cartLineItems) > 0}">
                    <a class="button_green" style="width:120px; height: 18px;">Continue</a>
                      </td><td>
                    </c:if>

@@ -8,12 +8,11 @@
 <%@ page import="com.hk.domain.queue.Bucket" %>
 <%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page import="com.hk.constants.queue.EnumActionTask" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean"/>
-<s:useActionBean beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" var="actionItemBean" event="view"/>
-<%--<s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean" event="view"/>--%>
 
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Action Item Resolution Queue">
 <s:layout-component name="htmlHead">
@@ -48,7 +47,7 @@
             background-color: #b8ffcf;
         }
 
-        .bucketContainer {
+         .bucketContainer {
             display: none;
             border: 2px solid #ccc;
             width: 300px;
@@ -60,207 +59,209 @@
 <s:layout-component name="heading">Action Item Resolution Queue</s:layout-component>
 <s:layout-component name="content">
 
-    <fieldset class="top_label">
-        <ul>
-            <div class="grouped grid_12">
-                <s:form beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" method="get"
-                        autocomplete="false">
-                    <div style="width:1100px; margin:10px;">
-                        <label>SO Order ID </label> <s:text name="shippingOrderId"/>
-                        <label>Buckets </label>
-                        <s:select name="buckets">
-                            <option value="">Any Bucket</option>
-                            <c:forEach items="${bucketList}" var="bucket">
-                                <s:option value="${bucket.id}">${bucket.name}</s:option>
-                            </c:forEach>
-                        </s:select>
-                        <label>Current AT </label>
-                        <s:select name="currentActionTasks">
-                            <option value="">Any CAT</option>
-                            <c:forEach items="${currentATList}" var="currentAT">
-                                <s:option value="${currentAT.id}">${currentAT.name}</s:option>
-                            </c:forEach>
-                        </s:select>
-                        <label>Previous AT </label>
-                        <s:select name="previousActionTasks">
-                            <option value="">Any PAT</option>
-                            <c:forEach items="${previousATList}" var="previousAT">
-                                <s:option value="${previousAT.id}">${previousAT.name}</s:option>
-                            </c:forEach>
-                        </s:select>
-                    </div>
-                    <div style="width:1120px; margin:20px;">
-                        <label>Push Start
-                            Date </label><s:text class="date_input startDate" style="width:150px"
-                                                 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                 name="startPushDate"/>
-                        <label>Push End
-                            Date </label><s:text class="date_input endDate" style="width:150px"
-                                                 formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
-                                                 name="endPushDate"/>
-                    </div>
-
-                    <s:submit style="margin:0 0 10px 25px;" name="search" value="Search"/>
-                </s:form>
-            </div>
-        </ul>
-    </fieldset>
-
-
-    <s:form beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" name="bucketsForm" autocomplete="off">
-
-
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionItemQueueBean}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionItemQueueBean}"/>
-        <div class="clear"></div>
-        <div class="clear"></div>
-        <table class="align_top" width="100%" cellspacing="1">
-            <thead>
-            <tr>
-                <th style="text-align:center">Action Item Details</th>
-                <th style="text-align:center">Shipping Order Details</th>
-            </tr>
-            </thead>
-            <c:forEach items="${actionItemQueueBean.actionItems}" var="actionItem" varStatus="ctr">
-                <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
-                    <td width="30%" style="border:1px solid darkgoldenrod; padding:3px;">
-                        <div id="div1"><h2></h2></div>
-                        Current Buckets :
-                        <c:forEach items="${actionItem.buckets}" var="bucket">
-                            <%--<label><s:checkbox name="buckets[${ctr.index}].checked"--%>
-                                               <%--disabled="true"/> ${bucket.name}</label--%>
-                           <label class="abc" > ${bucket.name} </label> ,
+<fieldset class="top_label">
+    <ul>
+        <div class="grouped grid_12">
+            <s:form beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" method="get"
+                    autocomplete="false">
+                <div style="width:1100px; margin:10px;">
+                    <label>SO Order ID </label> <s:text name="shippingOrderId"/>
+                    <label>Buckets </label>
+                    <s:select name="buckets">
+                        <option value="">Any Bucket</option>
+                        <c:forEach items="${bucketList}" var="bucket">
+                            <s:option value="${bucket.id}">${bucket.name}</s:option>
                         </c:forEach>
-                        <div>
-                            <%--<a href="javascript:void(0)" id="editBuckets"> edit action item--%>
-                            <%--<s:param name="actionItem" value="${actionItem.id}"/></a>--%>
+                    </s:select>
+                    <label>Current AT </label>
+                    <s:select name="currentActionTasks">
+                        <option value="">Any CAT</option>
+                        <c:forEach items="${currentATList}" var="currentAT">
+                            <s:option value="${currentAT.id}">${currentAT.name}</s:option>
+                        </c:forEach>
+                    </s:select>
+                    <label>Previous AT </label>
+                    <s:select name="previousActionTasks">
+                        <option value="">Any PAT</option>
+                        <c:forEach items="${previousATList}" var="previousAT">
+                            <s:option value="${previousAT.id}">${previousAT.name}</s:option>
+                        </c:forEach>
+                    </s:select>
+                </div>
+                <div style="width:1120px; margin:20px;">
+                    <label>Push Start
+                        Date </label><s:text class="date_input startDate" style="width:150px"
+                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                             name="startPushDate"/>
+                    <label>Push End
+                        Date </label><s:text class="date_input endDate" style="width:150px"
+                                             formatPattern="<%=FormatUtils.defaultDateFormatPattern%>"
+                                             name="endPushDate"/>
+                </div>
 
-                            (<s:link  beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" event="view" id="editBuckets">
-                            <s:param name="actionItem" value="${actionItem.id}"/> Edit Action Item
-                        </s:link>)
-                        </div>
-
-                        <div class="bucketContainer">
-                            <s:hidden name="actionItem" value="${actionItem.id}"> </s:hidden>
-                                <div class="checkBoxList">
-
-
-                                </div>
-                                <s:submit name="saveBuckets" id="saveBuckets" value="Save"/>
-                        </div>
-
-                        <div>
-                            <s:hidden name="actionItem" value="${actionItem.id}"/>
-                            PAT : ${actionItem.previousActionTask.name} <br>
-                            CAT : <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
-                            <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
-                                <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
-                            </c:forEach>
-                        </s:select>
-                            <s:submit name="updateTask" value="Update Task"/>
-                        </div>
-
-                        <div>
-                            Current Priority
-                            <s:select name="priorityId" value="${actionItem.priority}">
-                                <c:forEach var="i" begin="1" end="10">
-                                    <s:option value="${i}">${i}</s:option>
-                                </c:forEach>
-                            </s:select>
-                            <s:submit name="setPriority" value="Change Priority"/>
-                        </div>
-
-                        <div>
-                            Status : ${actionItem.trafficState.name}
-                        </div>
-
-                        ( <s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                  event="flagActionItems">
-                        <s:param name="actionItem" value="${actionItem.id}"/>
-                        Mark Flag
-                    </s:link>)
-
-
-                        (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                 event="changeTrafficState">
-                        <s:param name="actionItem" value="${actionItem.id}"/>
-                        Assign Trafic State
-                    </s:link>)
-
-                        (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                 event="changeBulkTrafficState">
-                        Change Bulk Traffic State
-                    </s:link>)
-
-                            <%--<div class="floatleft">--%>
-                            <%--Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"--%>
-                            <%--type="date"/>--%>
-                            <%--</div>--%>
-                    </td>
-                    <td width="70%" style="border:1px solid darkgreen; padding:3px;">
-                            ${actionItem.shippingOrder.id}
-                        <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
-                                         shippingOrder="${actionItem.shippingOrder}"
-                                         isActionQueue="true"/>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-
-        <div id="hiddenShippingIds"></div>
-
-        <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionItemQueueBean}"/>
-        <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionItemQueueBean}"/>
-        <div style="display:inline;float:left;">
-                <%--<s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>--%>
+                <s:submit style="margin:0 0 10px 25px;" name="search" value="Search"/>
+            </s:form>
         </div>
-    </s:form>
-    <script type="text/javascript">
-        $(document).ready(function(){
+    </ul>
+</fieldset>
 
-            $('.bckts').live('click',function(){
-                alert(this.checked);
-              if(!this.checked){
-                   $(this).removeAttr('checked');
-              }else{
-                  $(this).attr('value',true);
+
+<s:form beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" name="bucketsForm" autocomplete="off">
+
+
+      <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionItemQueueBean}"/>
+      <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionItemQueueBean}"/>
+      <div class="clear"></div>
+      <div class="clear"></div>
+      <table class="align_top" width="100%" cellspacing="1">
+          <thead>
+          <tr>
+              <th style="text-align:center">Action Item Details</th>
+              <th style="text-align:center">Shipping Order Details</th>
+          </tr>
+          </thead>
+          <c:forEach items="${actionItemQueueBean.actionItems}" var="actionItem" varStatus="ctr">
+              <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
+                  <td width="30%" style="border:1px solid darkgoldenrod; padding:3px;">
+                      <div id="div1"><h2></h2></div>
+                      Current Buckets :
+                      <c:forEach items="${actionItem.buckets}" var="bucket">
+                          <%--<label><s:checkbox name="buckets[${ctr.index}].checked"--%>
+                                             <%--disabled="true"/> ${bucket.name}</label--%>
+                         <label class="abc" > ${bucket.name} </label> ,
+                      </c:forEach>
+                      <div>
+                          <%--<a href="javascript:void(0)" id="editBuckets"> edit action item--%>
+                          <%--<s:param name="actionItem" value="${actionItem.id}"/></a>--%>
+
+                          (<s:link  beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" event="view" id="editBuckets">
+                          <s:param name="actionItem" value="${actionItem.id}"/> Edit Action Item
+                      </s:link>)
+                      </div>
+
+                      <div class="bucketContainer">
+                          <s:hidden name="actionItem" value="${actionItem.id}"> </s:hidden>
+                              <div class="checkBoxList">
+
+
+                              </div>
+                              <s:submit name="saveBuckets" id="saveBuckets" value="Save"/>
+                      </div>
+
+                      <div>
+                          <s:hidden name="actionItem" value="${actionItem.id}"/>
+                          PAT : ${actionItem.previousActionTask.name} <br>
+                          CAT : <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
+                          <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
+                              <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
+                          </c:forEach>
+                      </s:select>
+                          <s:submit name="updateTask" value="Update Task"/>
+                      </div>
+
+                      <div>
+                          Current Priority
+                          <s:select name="priorityId" value="${actionItem.priority}">
+                              <c:forEach var="i" begin="1" end="10">
+                                  <s:option value="${i}">${i}</s:option>
+                              </c:forEach>
+                          </s:select>
+                          <s:submit name="setPriority" value="Change Priority"/>
+                      </div>
+
+                      <div>
+                          Status : ${actionItem.trafficState.name}
+                      </div>
+
+                      ( <s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                                event="flagActionItems">
+                      <s:param name="actionItem" value="${actionItem.id}"/>
+                      Mark Flag
+                  </s:link>)
+
+
+                      (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                               event="changeTrafficState">
+                      <s:param name="actionItem" value="${actionItem.id}"/>
+                      Assign Trafic State
+                  </s:link>)
+
+                      (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
+                               event="changeBulkTrafficState">
+                      Change Bulk Traffic State
+                  </s:link>)
+
+                          <%--<div class="floatleft">--%>
+                          <%--Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"--%>
+                          <%--type="date"/>--%>
+                          <%--</div>--%>
+                  </td>
+                  <td width="70%" style="border:1px solid darkgreen; padding:3px;">
+                          ${actionItem.shippingOrder.id}
+                      <s:layout-render name="/pages/admin/queue/shippingOrderDetailGrid.jsp"
+                                       shippingOrder="${actionItem.shippingOrder}"
+                                       isActionQueue="true"/>
+                  </td>
+              </tr>
+          </c:forEach>
+      </table>
+
+      <div id="hiddenShippingIds"></div>
+
+      <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${actionItemQueueBean}"/>
+      <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${actionItemQueueBean}"/>
+      <div style="display:inline;float:left;">
+              <%--<s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>--%>
+      </div>
+  </s:form>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.bckts').live('click', function() {
+            alert(this.checked);
+            if (!this.checked) {
+                $(this).removeAttr('checked');
+            } else {
+                $(this).attr('value', true);
             }
         });
-//            $('[name=bucketsForm]').submit(function(e){
-//
-//                               e.preventDefault();
-//
-//                             var ele = $(this);
-//                             var bucket = {selected :false,id :0};
-//                             var chldEle = {};
-//                             ele.find('label').each(function(){
-//                                 var chld = $(this);
-//
-//                                 chld.find('input').each(function(){
-//                                     var iEle = $(this);
-//
-//                                     if(iEle.attr('type')=='checkbox'){
-//                                         console.log(iEle.is(':checked'));
-//                                         chldEle[iEle.attr('name')] = 'false';
-//                                            if(iEle.is(':checked')){
-//                                                chldEle[iEle.attr('name')] = 'true';
-//                                                console.log('saki naka'+iEle.attr('name'));
-//                                            }
-//                                     } else {
-//                                         chldEle[iEle.attr('name')] = iEle.val();
-//                                     }
-//                                 }
-//
-//                                         )
-//                             });
-//                console.log(chldEle);
-//                         });
+        //            $('[name=bucketsForm]').submit(function(e){
+        //
+        //                               e.preventDefault();
+        //
+        //                             var ele = $(this);
+        //                             var bucket = {selected :false,id :0};
+        //                             var chldEle = {};
+        //                             ele.find('label').each(function(){
+        //                                 var chld = $(this);
+        //
+        //                                 chld.find('input').each(function(){
+        //                                     var iEle = $(this);
+        //
+        //                                     if(iEle.attr('type')=='checkbox'){
+        //                                         console.log(iEle.is(':checked'));
+        //                                         chldEle[iEle.attr('name')] = 'false';
+        //                                            if(iEle.is(':checked')){
+        //                                                chldEle[iEle.attr('name')] = 'true';
+        //                                                console.log('saki naka'+iEle.attr('name'));
+        //                                            }
+        //                                     } else {
+        //                                         chldEle[iEle.attr('name')] = iEle.val();
+        //                                     }
+        //                                 }
+        //
+        //                                         )
+        //                             });
+        //                console.log(chldEle);
+        //                         });
 
-//            $('#saveBuckets').click (function(){
-//               $(".bckts").each (function(){
-//                  alert (this.checked);
-//               })
-//            });
+        //            $('#saveBuckets').click (function(){
+        //               $(".bckts").each (function(){
+        //                  alert (this.checked);
+        //               })
+        //            });
 
         $('.shippingOrderActionBtn').click(function () {
             var index = 0;
@@ -278,48 +279,48 @@
             return true;
         });
 
-         $('#editBuckets').click(function() {
-                var elem = this;
-                 $.getJSON($(this).attr('href'), function(res) {
-                    _editBuckets(res, elem);
-                });
-                return false;
-                });
-
-
-
-        function _editBuckets(res , elem) {
-                           if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
-                               $(elem).siblings().show();
-                               var checkedBuckets = res.data.name;
-                               var checkedBucketsId = "";
-                               for(var i = 0; i<checkedBuckets.length; i++){
-                                    checkedBucketsId += checkedBuckets[i].id + "," ;
-                               }
-                               $('.checkBoxList').html('');
-//                               alert(checkedBucketsId);
-                                   var allBuckets = "";
-                               <c:forEach items="${actionItemBean.buckets}" var="bucket" varStatus="ctr">
-                                    var bucketId = "${bucket.id}";
-                                     if(checkedBucketsId.indexOf(bucketId)!=-1){
-                                         allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" checked="checked" />';
-                                     }else{
-                                         allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" />';
-                                     }
-                                         allBuckets +='${bucket.name}' +
-                                            '<input type="hidden" name="buckets[${ctr.index}].id" value="${bucket.id}"/>' +
-                                        '</label>' +
-                                        '<br/>';
-                                   </c:forEach>
-                                   $('.checkBoxList').append(allBuckets);
-                               $(".bucketContainer").show();
-//                               alert(buckets.get(0).name);
-//                               $("#div1").text("Buckets-->" + checkedBucket.length);
-                           }
-
-                       }
+        $('#editBuckets').click(function() {
+            var elem = this;
+            $.getJSON($(this).attr('href'), function(res) {
+                _editBuckets(res, elem);
+            });
+            return false;
         });
-    </script>
+
+
+        function _editBuckets(res, elem) {
+            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                $(elem).siblings().show();
+                var checkedBuckets = res.data.name;
+                var checkedBucketsId = "";
+                for (var i = 0; i < checkedBuckets.length; i++) {
+                    checkedBucketsId += checkedBuckets[i].id + ",";
+                }
+                $('.checkBoxList').html('');
+                //                               alert(checkedBucketsId);
+                var allBuckets = "";
+            <c:forEach items="${actionItemBean.buckets}" var="bucket" varStatus="ctr">
+                var bucketId = "${bucket.id}";
+                if (checkedBucketsId.indexOf(bucketId) != -1) {
+                    allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" checked="checked" />';
+                } else {
+                    allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" />';
+                }
+                allBuckets += '${bucket.name}' +
+                              '<input type="hidden" name="buckets[${ctr.index}].id" value="${bucket.id}"/>' +
+                              '</label>' +
+                              '<br/>';
+            </c:forEach>
+                $('.checkBoxList').append(allBuckets);
+                $(".bucketContainer").show();
+                //                               alert(buckets.get(0).name);
+                //                               $("#div1").text("Buckets-->" + checkedBucket.length);
+            }
+
+        }
+    });
+</script>
+
 
 </s:layout-component>
 </s:layout-render>

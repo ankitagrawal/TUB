@@ -1263,4 +1263,16 @@
             ${hk:getActionItem(${o1})}
         </example>
     </function>
+    <function>
+        <description>
+            returns appropriate Action Item based on SO
+        </description>
+        <name>listNextActionTasks</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List listNextActionTasks(com.hk.domain.queue.ActionItem)
+        </function-signature>
+        <example>
+            ${hk:listNextActionTasks(${o1})}
+        </example>
+    </function>
 </taglib>

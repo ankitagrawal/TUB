@@ -70,6 +70,9 @@ public interface BucketService {
 
     public ActionItem getActionItemById (Long actionItemId);
 
-    public List<ActionItem> getActionItemsOfActionQueue ();
+    public List<ActionTask> listNextActionTasks(ActionItem actionItem);
 
+    List<EnumBucket> getCategoryDefaultersBuckets(ShippingOrder shippingOrder);
+
+    public List<ActionItem> getActionItemsOfActionQueue ();
 }
