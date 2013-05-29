@@ -15,7 +15,7 @@
                 <h4 class="strikeline"> Email Subscriptions</h4>
                 <div style="margin-top: 15px"></div>
                 <c:choose>
-                <c:when test="${!accountAction.getUser().isSubscribedForNotify()}">
+                <c:when test="${!maa.user.subscribedForNotify}">
                 <div style="float: right; font-size: 0.7em;">
                     <s:submit name="subscribeForNotifications" value="Update" disabled="true" class="button_orange"/>
                 </div>
