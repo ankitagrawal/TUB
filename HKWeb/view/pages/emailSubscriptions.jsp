@@ -17,10 +17,12 @@
                 <c:choose>
                 <c:when test="${!maa.user.subscribedForNotify}">
                 <div style="float: right; font-size: 0.7em;">
-                    <s:submit name="subscribeForNotifications" value="Update" disabled="true" class="button_orange"/>
+                    <s:label class="rowLabel" name="You are already subscribed for emails" />
                 </div>
                 </c:when>
                 <c:otherwise>
+                    <s:label class="rowLabel" name="Click here to subscribe for emails" />
+                    </br>
                     <div style="float: right; font-size: 0.7em;">
                         <s:submit name="" value="Update" class="button_orange"/>
                     </div>
@@ -39,28 +41,6 @@
 
     $(document).ready(function() {
         $('.error').hide();
-        $('#userName').change(_validateUserName);
-
-        $(document).click(function() {
-            $('.error').fadeOut();
-        });
-
-        function _validateUserName() {
-            if ($('#userName').val().length > 80) {
-                $('.error').fadeIn();
-                //        var position = $('#userName').position();
-                //        var width = $('#userName').innerWidth();
-                //        var height = $('#userName').innerHeight();
-                //        $('.errorMessage .line1').html("Name cannot be greater than 80 characters!");
-                //        $('.errorMessage').css("top", position.top);
-                //        $('.errorMessage').css("height",height);
-                //        $('.errorMessage').css("left", position.left + width);
-                //        $('.errorMessage').css("left", position.left + width);
-                //        $('.errorMessage').animate({
-                //          opacity: 1
-                //        }, 500);
-            }
-        }
     });
 </script>
 <style type="text/css">
