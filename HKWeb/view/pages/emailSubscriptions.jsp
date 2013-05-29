@@ -4,7 +4,6 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.core.user.MyAccountAction" var="maa"/>
 <s:layout-render name="/layouts/default.jsp">
-    <s:layout-component name="heading">Your Account</s:layout-component>
     <s:layout-component name="lhsContent">
         <jsp:include page="myaccount-nav.jsp"/>
     </s:layout-component>

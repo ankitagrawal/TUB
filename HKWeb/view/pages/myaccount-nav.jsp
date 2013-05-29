@@ -17,7 +17,7 @@
       </li>
       <li>
           <s:link beanclass="com.hk.web.action.core.user.MyAccountAction" event="subscribeForEmails" title="My Email Subscriptions"> <span
-                  id="shLink">My Email Subscriptions</span> </s:link>
+                  id="emailLink">My Email Subscriptions</span> </s:link>
       </li>
     <%--<li>
       <s:link beanclass="com.hk.web.action.core.referral.ReferralProgramAction" title="Referral Program"> <span
