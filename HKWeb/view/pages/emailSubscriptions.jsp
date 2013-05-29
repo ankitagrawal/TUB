@@ -17,7 +17,7 @@
                 <c:choose>
                 <c:when test="${!maa.user.subscribedForNotify}">
                 <div style="float: right; font-size: 0.7em;">
-                    <s:label class="rowLabel" name="You are already subscribed for emails" />
+                    You are already subscribed for emails
                 </div>
                 </c:when>
                 <c:otherwise>
