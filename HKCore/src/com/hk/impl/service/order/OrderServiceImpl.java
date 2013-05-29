@@ -27,6 +27,7 @@ import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
 import com.hk.domain.sku.Sku;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.domain.warehouse.Warehouse;
@@ -58,6 +59,9 @@ import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
 import com.hk.util.OrderUtil;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +132,11 @@ public class OrderServiceImpl implements OrderService {
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus) {
         return getOrderDao().findByUserAndOrderStatus(user, orderStatus);
     }
+
+      public Long getCountOfOrdersByStatus(User user, EnumOrderStatus enumOrderStatus) {
+        return getOrderDao().getCountOfOrdersWithStatus( user, enumOrderStatus);
+    }
+    
 
     @Override
     public Page searchOrders(OrderSearchCriteria orderSearchCriteria, int pageNo, int perPage) {
@@ -369,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
      */
 
     @Transactional
-    private Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException {
         Map<String, List<CartLineItem>> bucketCartLineItems = OrderSplitterFilter.classifyOrder(order);
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         for (Map.Entry<String, List<CartLineItem>> bucketCartLineItemMap : bucketCartLineItems.entrySet()) {
@@ -714,5 +723,21 @@ public class OrderServiceImpl implements OrderService {
 	public List<UserCodCall> getAllUserCodCallForToday(){
 	return 	orderDao.getAllUserCodCallOfToday();
 	}
+	
+	@Override
+	public Order findCart(User user, Store store) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(Order.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		criteria.add(Restrictions.eq("orderStatus.id", EnumOrderStatus.InCart.getId()));
+		criteria.add(Restrictions.eq("store.id", store.getId()));
+
+		@SuppressWarnings("unchecked")
+		List<Order> orders = this.baseDao.findByCriteria(criteria);
+		if(orders != null && orders.size() > 0) {
+			return orders.iterator().next();
+		}
+		return null;
+	}
+
 
 }

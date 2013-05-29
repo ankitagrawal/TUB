@@ -27,6 +27,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.subscription.Subscription;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
+import com.hk.domain.store.EnumStore;
 import com.hk.dto.pricing.PricingDto;
 import com.hk.manager.OfferManager;
 import com.hk.manager.OrderManager;
@@ -38,6 +39,7 @@ import com.hk.pact.dao.order.OrderDao;
 import com.hk.pact.dao.shippingOrder.LineItemDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.order.CartFreebieService;
+import com.hk.pact.service.order.OrderService;
 import com.hk.pricing.PricingEngine;
 import com.hk.report.dto.pricing.PricingSubDto;
 import com.hk.web.HealthkartResponse;
@@ -82,6 +84,8 @@ public class CartAction extends BaseAction {
     OfferManager                offerManager;
     @Autowired
     private OrderDao            orderDao;
+    @Autowired
+    private OrderService        orderService;
     @Autowired
     private CartFreebieService  cartFreebieService;
 
@@ -147,7 +151,7 @@ public class CartAction extends BaseAction {
             // user = UserCache.getInstance().getUserById(getPrincipal().getId()).getUser();
         }
         if (user != null) {
-            order = orderDao.findByUserAndOrderStatus(user, EnumOrderStatus.InCart);
+            order = orderService.findCart(user, EnumStore.HEALTHKART.asStore());
             if (order != null) {
                 Set<CartLineItem> cartLineItems = order.getCartLineItems();
                 if (cartLineItems != null && !cartLineItems.isEmpty()) {

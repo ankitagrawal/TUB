@@ -16,6 +16,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.order.OrderCategory;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.ShippingOrderCategory;
+import com.hk.domain.store.Store;
 import com.hk.domain.user.User;
 import com.hk.domain.user.UserCodCall;
 import com.hk.exception.OrderSplitException;
@@ -26,7 +27,10 @@ public interface OrderService {
 
     public Order find(Long orderId);
 
+    @Deprecated
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
+
+    public Long getCountOfOrdersByStatus(User user,EnumOrderStatus enumOrderStatus);
 
     public OrderStatus getOrderStatus(EnumOrderStatus enumOrderStatus);
 
@@ -38,7 +42,7 @@ public interface OrderService {
 
     public Set<OrderCategory> getCategoriesForBaseOrder(Order order);
 
-    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);
+    public Set<ShippingOrderCategory> getCategoriesForShippingOrder(ShippingOrder shippingOrder);   
 
     public Category getBasketCategory(Set<ShippingOrderCategory> shippingOrderCategories);
 
@@ -52,6 +56,8 @@ public interface OrderService {
      * @return set of shipping orders which are split/derived from a base order
      * @throws OrderSplitException
      */
+
+    public Set<ShippingOrder> splitOrder(Order order) throws OrderSplitException;
 
     public boolean updateOrderStatusFromShippingOrders(Order order, EnumShippingOrderStatus soStatus, EnumOrderStatus boStatusOnSuccess);
 
@@ -70,5 +76,7 @@ public interface OrderService {
 	public UserCodCall createUserCodCall(Order order , EnumUserCodCalling enumUserCodCalling);
 
 	public List<UserCodCall> getAllUserCodCallForToday();
+	
+	public Order findCart(User user, Store store);
 }
 

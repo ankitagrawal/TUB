@@ -77,6 +77,7 @@ public class AdminEmailManager {
     private static Logger logger = LoggerFactory.getLogger(EmailManager.class);
 
     public static final String GOOGLE_BANNED_WORD_LIST = "googleBannedWordList";
+    public static final String PURCHASE_REPORTING_EMAIL = "purchase.reporting@healthkart.com";
 
     private Set<String> hkReportAdminEmails = null;
     private Set<String> marketingAdminEmails = null;
@@ -314,6 +315,11 @@ public class AdminEmailManager {
                 if (!sent) {
                     success = false;
                 }
+            }
+            boolean sent = emailService.sendHtmlEmail(freemarkerTemplate, valuesMap, PURCHASE_REPORTING_EMAIL,
+                    category.getName() + " Purchase Report Admin");
+            if(!sent){
+            	success = false;
             }
             return success;
         } else {
