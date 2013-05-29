@@ -6,9 +6,14 @@ package com.hk.api.dto.product;
  */
 public class HKAPIProductDTO {
     private String productID;
+    private String imageUrl;
+    private String thumbUrl;
+    private String name;
+    private String overview;
     private HKAPIProductVariantDTO[] productVariantDTOs;
     private boolean deleted;
     private boolean outOfStock;
+    private boolean hidden;
 
     public String getProductID() {
         return productID;
@@ -40,5 +45,45 @@ public class HKAPIProductDTO {
 
     public void setOutOfStock(boolean outOfStock) {
         this.outOfStock = outOfStock;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }
