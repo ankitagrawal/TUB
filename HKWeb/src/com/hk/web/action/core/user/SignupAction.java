@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
+@Ssl
 public class SignupAction extends BaseAction {
 
 	@Validate(required = true)

@@ -67,7 +67,7 @@
         </filter-class>
         <init-param>
             <param-name>urlPattern</param-name>
-            <param-value>/core/auth/*</param-value>
+            <param-value>/core/auth/* /core/user/Signup.action</param-value>
         </init-param>
         <init-param>
             <param-name>http</param-name>
