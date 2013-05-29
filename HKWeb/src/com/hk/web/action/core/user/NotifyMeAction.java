@@ -85,7 +85,7 @@ public class NotifyMeAction extends BaseAction {
         User user = userService.findByLogin(notifyMe.getEmail());
         if (user != null) {
             if (!(user.isSubscribedForNotify())) {
-                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You Have Unsubscribed for all emails , Contact Customer Care", dataMap);
+                healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ACCESS_DENIED, "You have unsubscribed for all emails, Please go to 'My Account' to Subscribe again", dataMap);
                 return new JsonResolution(healthkartResponse);
             }
         } else {
