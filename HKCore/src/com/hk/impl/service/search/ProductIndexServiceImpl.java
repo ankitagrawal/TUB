@@ -87,9 +87,9 @@ public class ProductIndexServiceImpl implements ProductIndexService {
         try{
             solr.addBean(product);
         }catch(SolrServerException ex){
-            logger.error("Solr error during indexing the product", ex);
+            logger.error("Solr error during indexing the product");
         }catch(IOException ex){
-            logger.error("Solr error during indexing the product", ex);
+            logger.error("Solr error during indexing the product");
         }
     }
 
