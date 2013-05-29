@@ -13022,7 +13022,7 @@
     <changeSet author="Pratham (generated)" id="1369648289023-30">
         <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Pratham (generated)" id="1369649792220-8">
+<!--    <changeSet author="Pratham (generated)" id="1369649792220-8">
         <dropForeignKeyConstraint baseTableName="action_task" constraintName="fk_action_item_user1"/>
     </changeSet>
     <changeSet author="Pratham (generated)" id="1369649792220-9">
@@ -13036,7 +13036,7 @@
     </changeSet>
     <changeSet author="Pratham (generated)" id="1369648289023-33">
         <dropColumn columnName="next_action_task_id" tableName="action_task"/>
-    </changeSet>
+    </changeSet>-->
     <changeSet author="Pratham (generated)" id="1369727618286-2">
         <createTable tableName="reason_has_action_task">
             <column name="reason_id" type="INT">
