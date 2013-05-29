@@ -24,7 +24,7 @@
                         <s:label class="rowLabel" name="Click here to subscribe for emails" />
                         </br>
                         <div style="float: right; font-size: 0.7em;">
-                            <s:submit name="" value="Update" class="button_orange"/>
+                            <s:submit name="subscribeForNotifications" value="Subscribe" class="button_orange"/>
                         </div>
                     </c:otherwise>
                 </c:choose>
