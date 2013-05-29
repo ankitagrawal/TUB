@@ -125,7 +125,7 @@
             <tr class="${ctr.index % 2 == 0 ? '' : 'alt'} addressRow orderRow">
                 <td width="30%" style="border:1px solid darkgoldenrod; padding:3px;">
                     <div id="div1"><h2></h2>
-
+                    Action Item : ${actionItem.id}  <br>
                     Current Buckets :
                       <span class="current-buckets">  
                     <c:forEach items="${actionItem.buckets}" var="bucket">
@@ -333,7 +333,7 @@
                       ele.parents('.addressRow').find('.current-buckets').html(str);
                      
                   } else{
-                      alert("hello");
+//                      alert("hello");
                   }
                     }
                });
@@ -389,13 +389,14 @@
                var checkedBuckets = res.data.name;
                 var checkedBucketsId = "";
                 for (var i = 0; i < checkedBuckets.length; i++) {
-                    checkedBucketsId += checkedBuckets[i].id + ",";
+                    checkedBucketsId += "[" +checkedBuckets[i].id + "],";
                 }
-                //                               alert(checkedBucketsId);
+
                 var allBuckets = "";
             <c:forEach items="${actionItemBean.buckets}" var="bucket" varStatus="ctr">
-                var bucketId = "${bucket.id}";
+                var bucketId = "[${bucket.id}]";
                 if (checkedBucketsId.indexOf(bucketId) != -1) {
+//                    alert("buckets id " + bucketId );
                     allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" checked="checked" />';
                 } else {
                     allBuckets += '<label><input type="checkbox" class="bckts" name="buckets[${ctr.index}].selected" />';
