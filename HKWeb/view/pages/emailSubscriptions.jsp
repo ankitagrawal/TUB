@@ -15,18 +15,18 @@
                 <h4 class="strikeline"> Email Subscriptions</h4>
                 <div style="margin-top: 15px"></div>
                 <c:choose>
-                <c:when test="${!maa.user.subscribedForNotify}">
-                <div style="float: left; font-size: 0.7em;">
-                    You are already subscribed for emails
-                </div>
-                </c:when>
-                <c:otherwise>
-                    <s:label class="rowLabel" name="Click here to subscribe for emails" />
-                    </br>
-                    <div style="float: right; font-size: 0.7em;">
-                        <s:submit name="" value="Update" class="button_orange"/>
+                    <c:when test="${maa.user.subscribedForNotify}">
+                    <div style="float: left; font-size: 0.7em;">
+                        You are already subscribed for emails
                     </div>
-                </c:otherwise>
+                    </c:when>
+                    <c:otherwise>
+                        <s:label class="rowLabel" name="Click here to subscribe for emails" />
+                        </br>
+                        <div style="float: right; font-size: 0.7em;">
+                            <s:submit name="" value="Update" class="button_orange"/>
+                        </div>
+                    </c:otherwise>
                 </c:choose>
             </div>
         </s:form>
