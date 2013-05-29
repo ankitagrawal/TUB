@@ -166,8 +166,8 @@
                     <div>
                         <s:hidden name="actionItem" value="${actionItem.id}"/>
                         PAT : ${actionItem.previousActionTask.name} <br>
-                        CAT : <s:select name="actionTaskId" value="${actionItem.currentActionTask.id}">
-                        <c:forEach items="<%=EnumActionTask.values()%>" var="enumActionTask">
+                        CAT : <s:select name="currentActionTask" value="${actionItem.currentActionTask.id}">
+                        <c:forEach items="${currentATList}" var="enumActionTask">
                             <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
                         </c:forEach>
                     </s:select>

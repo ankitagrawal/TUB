@@ -48,6 +48,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     Map<String, Object> bucketParameters = new HashMap<String, Object>();
     private ActionItem actionItem;
     Long actionTaskId;
+    ActionTask currentActionTask;
     Long priorityId;
 
     @Autowired
@@ -94,8 +95,7 @@ public Resolution pre() {
 
     public Resolution updateTask() {
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-        ActionTask actionTask = EnumActionTask.getActionTaskById(actionTaskId);
-        actionItem.setCurrentActionTask(actionTask);
+        actionItem.setCurrentActionTask(currentActionTask);
         getBaseDao().save(actionItem);
         addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
         return new RedirectResolution(ActionItemResolutionQueueAction.class);
@@ -364,5 +364,13 @@ public Resolution pre() {
 
     public void setPriorityId(Long priorityId) {
         this.priorityId = priorityId;
+    }
+
+    public ActionTask getCurrentActionTask() {
+        return currentActionTask;
+    }
+
+    public void setCurrentActionTask(ActionTask currentActionTask) {
+        this.currentActionTask = currentActionTask;
     }
 }
