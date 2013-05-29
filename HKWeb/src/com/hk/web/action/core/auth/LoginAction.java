@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.session.Session;
 
 @Component
-@Ssl
 public class LoginAction extends BaseAction {
 
     @Validate(required = true)

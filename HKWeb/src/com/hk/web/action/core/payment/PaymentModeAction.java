@@ -24,7 +24,6 @@ import java.util.Map;
 
 @Secure(hasAnyRoles = {RoleConstants.HK_UNVERIFIED, RoleConstants.HK_USER}, authUrl = "/core/auth/Login.action?source=" + LoginAction.SOURCE_CHECKOUT, disallowRememberMe = true)
 @HttpCache(allow = false)
-@Ssl
 public class PaymentModeAction extends BaseAction {
 
     List<Issuer> bankIssuers;

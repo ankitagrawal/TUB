@@ -32,7 +32,6 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.util.ga.GAUtil;
 
 @Component
-@Ssl
 public class PaymentSuccessAction extends BaseAction {
 
     private static Logger logger = LoggerFactory.getLogger(PaymentSuccessAction.class);

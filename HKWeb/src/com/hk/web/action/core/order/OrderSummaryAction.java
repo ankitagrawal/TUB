@@ -30,7 +30,6 @@ import java.util.Set;
 @Secure
 @Component
 @HttpCache(allow = false)
-@Ssl
 public class OrderSummaryAction extends BaseAction {
 
     @Autowired

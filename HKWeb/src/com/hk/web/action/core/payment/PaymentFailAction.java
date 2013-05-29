@@ -7,7 +7,6 @@ import net.sourceforge.stripes.action.Ssl;
 import org.springframework.stereotype.Component;
 
 @Component
-@Ssl
 public class PaymentFailAction extends BaseAction {
 
 	public Resolution pre() {
