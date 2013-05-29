@@ -213,13 +213,15 @@
 			</s:link>
 			&nbsp;|&nbsp;
 		</shiro:hasPermission>
-		<shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_CATALOG%>">
+		<shiro:hasPermission name="<%=PermissionConstants.VIEW_VARIANT_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editProductVariantDetails"
 			        target="_blank" class="popup">
 				Edit Variant Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_PRODUCT_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction"
 			        event="editProductDetails"
 			        target="_blank"
@@ -227,6 +229,8 @@
 				Edit Product Attributes
 				<s:param name="product" value="${product}"/>
 			</s:link>
+        </shiro:hasPermission>
+        <shiro:hasPermission name="<%=PermissionConstants.VIEW_SKU_INFO%>">
 			<s:link beanclass="com.hk.web.action.admin.sku.SkuAction" event="searchSKUs" target="_blank" class="popup">
 				Edit Sku Attributes
 				<s:param name="productId" value="${product.id}"/>
