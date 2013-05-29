@@ -1,5 +1,6 @@
 package com.hk.web.action.core.user;
 
+import com.hk.pact.service.UserService;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.SimpleError;
 
@@ -56,6 +57,8 @@ public class MyAccountAction extends BaseAction {
   UserManager userManager;
   @Autowired
   RoleDao roleDao;
+  @Autowired
+  UserService userService;
   
   /*@Autowired
   private RoleService roleService;*/
@@ -130,6 +133,17 @@ public class MyAccountAction extends BaseAction {
     }
 
     addRedirectAlertMessage(new SimpleMessage("Your basic information has been updated"));
+    return new RedirectResolution(MyAccountAction.class);
+  }
+
+    public Resolution subscribeForEmails() {
+        return new ForwardResolution("/pages/emailSubscriptions.jsp");
+    }
+
+  public Resolution subscribeForNotifications() {
+    user = getUserService().getUserById(getPrincipal().getId());
+    userService.subscribeAllNotifications(user.getLogin());
+    addRedirectAlertMessage(new SimpleMessage("You have successfully subscribed to HealthKart Mails"));
     return new RedirectResolution(MyAccountAction.class);
   }
 

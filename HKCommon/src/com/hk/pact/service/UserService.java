@@ -46,4 +46,6 @@ public interface UserService {
   public void subscribeUserForOffers(String login, boolean subscribe);
 
   boolean unsubscribeUser(String unsubscribeToken);
+
+  void subscribeAllNotifications(String login);
 }
