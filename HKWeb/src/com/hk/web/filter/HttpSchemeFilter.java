@@ -5,8 +5,6 @@ import org.apache.shiro.util.PatternMatcher;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -75,12 +73,6 @@ public class HttpSchemeFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
-		String requestURI = getPathWithinApplication(request);
-		/*if (requestURI.endsWith(".js") || requestURI.endsWith(".css") || requestURI.endsWith(".jpg")
-				|| requestURI.endsWith(".png") || requestURI.endsWith(".gif")) {
-			chain.doFilter(request, response);
-			return;
-		}*/
 
 		boolean pathMatches = false;
 		for (String url : urlPatterns) {
@@ -90,12 +82,7 @@ public class HttpSchemeFilter implements Filter {
 			}
 		}
 
-	/*	if (isSecure() && !pathMatches) {
-			issueRedirect(request, response, RequestScheme.HTTP);
-			return;
-		}*/
-
-		if (!isSecure() && pathMatches) {
+		if (!isSecure(request) && pathMatches) {
 			issueRedirect(request, response, RequestScheme.HTTPS);
 			return;
 		}
@@ -112,9 +99,8 @@ public class HttpSchemeFilter implements Filter {
 		return WebUtils.getPathWithinApplication(WebUtils.toHttp(request));
 	}
 
-	public static boolean isSecure() {
-			HttpServletRequest curRequest =((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-			String isSecureString = curRequest.getHeader("x-proto");
+	public static boolean isSecure(ServletRequest request) {
+			String isSecureString = ((HttpServletRequest)request).getHeader("x-proto");
 			return isSecureString != null ? isSecureString.equals("SSL") : false;
 		}
 
