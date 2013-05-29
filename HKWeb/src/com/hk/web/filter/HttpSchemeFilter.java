@@ -10,7 +10,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class HttpSchemeFilter implements Filter {
@@ -77,11 +76,11 @@ public class HttpSchemeFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
 		String requestURI = getPathWithinApplication(request);
-		if (requestURI.endsWith(".js") || requestURI.endsWith(".css") || requestURI.endsWith(".jpg")
+		/*if (requestURI.endsWith(".js") || requestURI.endsWith(".css") || requestURI.endsWith(".jpg")
 				|| requestURI.endsWith(".png") || requestURI.endsWith(".gif")) {
 			chain.doFilter(request, response);
 			return;
-		}
+		}*/
 
 		boolean pathMatches = false;
 		for (String url : urlPatterns) {
@@ -91,10 +90,10 @@ public class HttpSchemeFilter implements Filter {
 			}
 		}
 
-		if (isSecure() && !pathMatches) {
+	/*	if (isSecure() && !pathMatches) {
 			issueRedirect(request, response, RequestScheme.HTTP);
 			return;
-		}
+		}*/
 
 		if (!isSecure() && pathMatches) {
 			issueRedirect(request, response, RequestScheme.HTTPS);
@@ -102,12 +101,6 @@ public class HttpSchemeFilter implements Filter {
 		}
 
 		chain.doFilter(request, response);
-	}
-
-	protected void unsecureSessionCookie(HttpServletRequest request, HttpServletResponse response) {
-		String sessionid = request.getSession().getId();
-		String contextPath = request.getContextPath();
-		response.setHeader("SET-COOKIE", "JSESSIONID=" + sessionid + "; Path=" + contextPath + "; HttpOnly");
 	}
 
 	protected boolean pathsMatch(String path, ServletRequest request) {
