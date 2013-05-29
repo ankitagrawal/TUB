@@ -16,7 +16,7 @@
                 <div style="margin-top: 15px"></div>
                 <c:choose>
                 <c:when test="${!maa.user.subscribedForNotify}">
-                <div style="float: center; font-size: 0.7em;">
+                <div style="float: left; font-size: 0.7em;">
                     You are already subscribed for emails
                 </div>
                 </c:when>
