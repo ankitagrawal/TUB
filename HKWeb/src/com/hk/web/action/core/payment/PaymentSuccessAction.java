@@ -2,6 +2,7 @@ package com.hk.web.action.core.payment;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.Ssl;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;

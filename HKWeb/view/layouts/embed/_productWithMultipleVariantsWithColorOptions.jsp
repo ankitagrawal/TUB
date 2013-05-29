@@ -14,8 +14,6 @@
       Product product = (Product) pageContext.getAttribute("product");
       pageContext.setAttribute("product", product);
 
-      boolean isSecure = pageContext.getRequest().isSecure();
-      pageContext.setAttribute("isSecure", isSecure);
   %>
   <div class='variants' itemprop="offerDetails" itemscope itemtype="http://data-vocabulary.org/Offer-aggregate">
     <div class='add_to_cart'>
@@ -83,7 +81,7 @@
                                       <c:choose>
                                           <c:when test="${variant.mainProductImageId != null}">
                                               <li><a href='javascript:void(0);'
-                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}">
+                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId)}'}">
                                                   <div style="height: 40px; width: 40px; background-color:${variant.colorHex};"
                                                        title="${variant.colorOptionsValue}">
                                                       &nbsp;</div>
@@ -108,8 +106,8 @@
                                       <c:choose>
                                           <c:when test="${variant.mainProductImageId != null}">
                                               <li><a href='javascript:void(0);'
-                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                                      src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}'
+                                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId)}'}"><img
+                                                      src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId)}'
                                                       title="${variant.colorOptionsValue}"></a>
                                                   <s:checkbox name="productVariantList[${ctr.index}].selected"
                                                               class="checkbox" style="align:center;padding-left:2px;"/>
@@ -117,7 +115,7 @@
                                           </c:when>
                                           <c:otherwise>
                                               <div class="color_box">
-                                                  <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}"
+                                                  <img src="${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId)}"
                                                        alt="${product.name}"
                                                        title="${variant.colorOptionsValue}">
                                                   <s:checkbox name="productVariantList[${ctr.index}].selected"

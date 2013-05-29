@@ -1,18 +1,18 @@
-<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.akube.framework.util.BaseUtils" %>
+<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page import="com.hk.constants.catalog.image.EnumImageSize" %>
 <%@ page import="com.hk.constants.core.HealthkartConstants" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
-<%@ page import="com.hk.domain.catalog.category.Category" %>
+<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="com.hk.domain.MapIndia" %>
+<%@ page import="com.hk.domain.catalog.category.Category" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.pact.dao.location.MapIndiaDao" %>
+<%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.web.filter.WebContext" %>
+<%@ page import="net.sourceforge.stripes.util.ssl.SslUtil" %>
 <%@ page import="org.stripesstuff.plugin.security.J2EESecurityManager" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.hk.constants.marketing.EnumProductReferrer" %>
-<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <%@ include file="/layouts/_userData.jsp" %>
@@ -28,7 +28,7 @@
     Category services = categoryDao.getCategoryByName("services");
     pageContext.setAttribute("services", services);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
+	  boolean isSecure = WebContext.isSecure();
     pageContext.setAttribute("isSecure", isSecure);
 
     MapIndiaDao mapIndiaDao = (MapIndiaDao)ServiceLocatorFactory.getService(MapIndiaDao.class);

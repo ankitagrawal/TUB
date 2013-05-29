@@ -31,4 +31,9 @@ public class WebContext {
   public static HttpServletResponse getResponse() {
     return responseThreadLocal.get();
   }
+
+	public static boolean isSecure() {
+		String isSecureString = getRequest().getHeader("x-proto");
+		return isSecureString != null ? isSecureString.equals("SSL") : false;
+	}
 }
