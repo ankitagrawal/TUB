@@ -56,6 +56,9 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public List<Bucket> getBuckets(List<EnumBucket> enumBuckets) {
         List<Long> bucketIds = EnumBucket.getBucketIDs(enumBuckets);
+        if(bucketIds != null && !bucketIds.isEmpty()){
+            return new ArrayList<Bucket>();
+        }
         Criteria criteria = getSession().createCriteria(Bucket.class);
         criteria.add(Restrictions.in("id", bucketIds));
         return criteria.list();
