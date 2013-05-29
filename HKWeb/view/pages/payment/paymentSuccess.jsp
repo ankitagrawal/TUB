@@ -18,6 +18,7 @@
     pageContext.setAttribute("isSecure", isSecure);
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
+<c:set var="paymentModeCOD" value="<%=EnumPaymentMode.COD.getId()%>"/>
 <c:set var="paymentModeId_DefaultGateway" value="<%=defaultGateway%>"/>
 <c:set var="cashBackPercentage" value="<%=cashBackPercentage%>"/>
 <c:set var="codPaymentModeId" value="<%=EnumPaymentMode.COD.getId()%>"/>
@@ -296,14 +297,24 @@
             <div>
                 <c:choose>
                     <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
-                        <%--your cod ka message--%>
-                        <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
-                        <h2 class="orderIdText">
-                            Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                        </h2>
-                        <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
-                        your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
-                        <br/>
+                        <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
+                            <%--your cod ka message--%>
+                            <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                            <h2 class="orderIdText">
+                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                            </h2>
+                            <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
+                            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                            <br/>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="congratsText">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
+                            <h2 class="orderIdText">
+                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                            </h2>
+                            <p class="codMessage">We would update you with the status of your payment within 48hours. Once authorized, your order will go into processing.</p>
+                            <br/>
+                        </c:otherwise>
                     </c:when>
                     <%--your non cod ka message--%>
                     <c:otherwise>
@@ -421,8 +432,8 @@
                 </c:if>
 
                 <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
-                    <div style="padding: 10px; border: 1px solid gray; background-color: lightgoldenrodyellow;">
-                        <h2>Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong></h2>
+                    <div style="padding: 10px; position:relative;float: left;left: 5px;">
+                        Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong>
                         <p>
                             Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
                             - in case of online payment through credit card, debit card or internet banking, the cashback is credited to your account already.<br/>
@@ -451,7 +462,7 @@
                             - The time taken for delivery after dispatch from our warehouse varies with location.
                         </li>
                         <li>
-                            - For Metroes: 1-3 business days
+                            - For Metros: 1-3 business days
                         </li>
                         <li>
                             - For Major Cities: 2-4 business days
