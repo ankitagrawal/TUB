@@ -93,6 +93,7 @@
 				} else {
 					$(toTotalClass).val(total.toFixed(2));
 				}
+				updateFinalPayable();
 			}
 
 			function createNewRow() {
@@ -201,7 +202,11 @@
 
 				var discount = $('#discount').find('option:selected').val();
 				var grandTotal = $('.grandTotal').val();
-				if(parseFloat(discount) > grandTotal) {
+				var rewardPts = 0;
+				if($('#useRewardPoints').checked) {
+					rewardPts = parseFloat($('#rewardPoints').text());
+				}
+				if((parseFloat(discount) + rewardPts) > grandTotal) {
 					alert('Discount cannot be more than the total amount');
 					return false;
 				}
@@ -226,9 +231,10 @@
 			});
 
 			$('#discount').change(function() {
-				var discount = $('#discount').find('option:selected').val();
+				/* var discount = $('#discount').find('option:selected').val();
 				var grandTotal = $('.grandTotal').val();
-				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0));
+				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0)); */
+				updateFinalPayable();
 			});
 
 		    // Reward points conversion
@@ -254,19 +260,10 @@
 		  	});
 		  	 
 		    $('#useRewardPoints').click(function() {
-		    // 	var rwdPoints = parseFloat($('.rewardPoints').text());
-	    	//	var grandTotal = parseFloat($('.grandTotal').val());
-	    	//	var finalPayable = $('#finalPayable');
-		    	if (this.checked == true) {
+		    	/* if (this.checked == true) {
 		    		alert("Max possible reward points will be used.");
-		    //		if (grandTotal > rwdPoints) {
-		    	//		finalPayable.val(finalPayable.val() - rwdPoints);
-			    //	} else {
-			    //		finalPayable.val(0);
-			    	//}
-			//	} else {
-				//		finalPayable.val(parseFloat(finalPayable.val()) + rwdPoints);
-		    	}
+		    	} */
+		    	updateFinalPayable();
 	    	});
 		    
 		    $('#updateCustomerInfo').click(function () {
@@ -285,6 +282,15 @@
 			    $('#loyaltyDiv').hide();
 		    }
 
+		    function updateFinalPayable() {
+		    	var discount = $('#discount').find('option:selected').val();
+				var grandTotal = $('.grandTotal').val();
+				var rewardPts = 0;
+				if($('#useRewardPoints').is(':checked')) {
+					rewardPts = parseFloat($('#rewardPoints').text());
+				}
+				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0) - rewardPts.toFixed(2));
+		    }
 		});
 	</script>
 </s:layout-component>
