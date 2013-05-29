@@ -375,7 +375,6 @@
             </td>
         </tr>
     </table>
-    <br>
     <c:if test="${orderSummary.order.basketCategory==eyeCat}">
         <br><td>*Sale Price includes value of Glasses/ Frames and Cover</td>
     </c:if>
