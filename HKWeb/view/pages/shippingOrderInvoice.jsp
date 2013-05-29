@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.hk.constants.core.EnumRole" %>
 <%@ page import="com.hk.constants.payment.EnumPaymentMode" %>
+<%@ page import="com.hk.constants.catalog.category.CategoryConstants" %>
 <%@ page import="com.hk.pact.dao.catalog.category.CategoryDao" %>
 <%@ page import="com.hk.service.ServiceLocatorFactory" %>
 <%@ page import="com.hk.domain.catalog.product.VariantConfigOptionParam" %>
@@ -71,7 +72,7 @@
     </style>
     <link href="<hk:vhostCss/>/css/960.css" rel="stylesheet" type="text/css"/>
     <%
-        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);        
+        CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         pageContext.setAttribute("sexualCare", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("sexual-care")));
         pageContext.setAttribute("personalCareWomen", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("women")));
         pageContext.setAttribute("discretePackaging", Arrays.asList(categoryDao.getCategoryByName("personal-care"), categoryDao.getCategoryByName("discrete-packaging")));
@@ -79,6 +80,7 @@
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
+<c:set var="eyeCat" value="<%=CategoryConstants.EYE%>"/>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
@@ -86,7 +88,7 @@
 <c:set var="fedExSurface" value="<%=EnumCourier.FedEx_Surface.getId()%>"/>
 <c:set var="groundShipped" value="${orderSummary.groundShipped}"/>
 <c:set var="courierId" value="${orderSummary.shipment.awb.courier.id}"/>
-<c:set var="shippingWarehouse" value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}" />
+<c:set var="shippingWarehouse" value="${hk:getShippingWarehouse(orderSummary.shippingOrder)}"/>
 <c:set var="supplier" value="${orderSummary.supplier}"/>
 
 
@@ -119,13 +121,13 @@
 
 <div class="grid_4">
     <div style="text-align: center;">
-ORDER INVOICE <c:choose>
-<c:when
-        test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
+        ORDER INVOICE <c:choose>
+        <c:when
+                test="${orderSummary.printable && hk:isOrderForDiscretePackaging(orderSummary.shippingOrder)}"><b>(OUT)</b></c:when>
         <c:otherwise><b>(IN)</b>
         </c:otherwise>
-        </c:choose>
-</div>
+    </c:choose>
+    </div>
 </div>
 <div class="grid_4">
     <div style="float: right;">
@@ -148,7 +150,6 @@ ORDER INVOICE <c:choose>
 </div>
 
 
-
 <c:choose>
     <c:when test="${courierId == fedEx || courierId == fedExSurface}">
         <div class="grid_12">
@@ -165,7 +166,8 @@ ORDER INVOICE <c:choose>
                 <c:if test="${orderSummary.shippingOrder.COD && orderSummary.invoiceDto.grandTotal > 0}">
                     COD
                 </c:if>
-                &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T Sender
+                &nbsp;&nbsp;wt:${orderSummary.estimatedWeightOfPackage}Kg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill Sender&nbsp;&nbsp;&nbsp;D/T
+                Sender
             </div>
 
             <div class="clear"></div>
@@ -230,9 +232,9 @@ ORDER INVOICE <c:choose>
         <div class="clear"></div>
         <div style="margin-top:5px;"></div>
         <img src="${pageContext.request.contextPath}/barcodes/${orderSummary.shippingOrder.gatewayOrderId}.png"/>
-        <c:if test="${!orderSummary.shippingOrder.dropShipping}">  
-        <p>Fulfillment Centre: ${shippingWarehouse.identifier}</p>
-       </c:if>
+        <c:if test="${!orderSummary.shippingOrder.dropShipping}">
+            <p>Fulfillment Centre: ${shippingWarehouse.identifier}</p>
+        </c:if>
         <c:if test="${orderSummary.shippingOrder.warehouse.id == 1}">
             <p>Return Location: <b>DEL/ITG/111117</b></p>
         </c:if>
@@ -270,19 +272,20 @@ ORDER INVOICE <c:choose>
     <div style="font-size:.8em">
         <h3 style="margin:0;">Please do not accept if the box is tampered</h3>
 
-        Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are meant for personal use only and are not for resale.
+        Note: This is to certify that items inside do not contain any prohibited or hazardous material. These items are
+        meant for personal use only and are not for resale.
     </div>
     <hr/>
     <c:choose>
         <c:when test="${orderSummary.shippingOrder.dropShipping}">
-         <p style="font-size: .8em;"> ${supplier.name} | ${supplier.line1}, ${supplier.line2} |
-            ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN: 
-             ${supplier.tinNumber}  </p>
+            <p style="font-size: .8em;"> ${supplier.name} | ${supplier.line1}, ${supplier.line2} |
+                    ${supplier.city}, ${supplier.state}- ${supplier.pincode} | TIN:
+                    ${supplier.tinNumber}  </p>
         </c:when>
-      <c:otherwise>
-        ${shippingWarehouse.name} | ${shippingWarehouse.line1} | ${shippingWarehouse.line2} |
-        ${shippingWarehouse.city} | ${shippingWarehouse.state} - ${shippingWarehouse.pincode} |
-        TIN: ${shippingWarehouse.tin}
+        <c:otherwise>
+            ${shippingWarehouse.name} | ${shippingWarehouse.line1} | ${shippingWarehouse.line2} |
+            ${shippingWarehouse.city} | ${shippingWarehouse.state} - ${shippingWarehouse.pincode} |
+            TIN: ${shippingWarehouse.tin}
         </c:otherwise>
     </c:choose>
 
@@ -364,7 +367,7 @@ ORDER INVOICE <c:choose>
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
 
-	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                            <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
                                                     test="${  fn:startsWith(side,'R' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
@@ -381,7 +384,7 @@ ORDER INVOICE <c:choose>
                                                    var="configValue" varStatus="configValueCtr">
                                             <c:set var="additinalParam"
                                                    value="${configValue.variantConfigOption.additionalParam}"/>
-	                                        <c:set var="side" value="${configValue.variantConfigOption.name}"/>
+                                            <c:set var="side" value="${configValue.variantConfigOption.name}"/>
                                             <c:if
                                                     test="${fn:startsWith(side,'L' ) && !( additinalParam == TH || additinalParam == THBF
 								|| additinalParam == CO || additinalParam == COBF || additinalParam == BRANDCO || additinalParam == BRANDTH 
@@ -422,8 +425,9 @@ ORDER INVOICE <c:choose>
     </table>
 
     <c:if test="${orderSummary.shippingOrder.dropShipping && orderSummary.installableItemPresent}">
-    <h4> You have ordered an equipment that requires installation/configuration.
-        <br/>Please contact HealthKart Customer Care at 0124-4616444 - so that we can arrange for the Technician's visit.</h4>
+        <h4> You have ordered an equipment that requires installation/configuration.
+            <br/>Please contact HealthKart Customer Care at 0124-4616444 - so that we can arrange for the Technician's
+            visit.</h4>
     </c:if>
 
     <h3>Order Summary</h3>
@@ -469,14 +473,22 @@ ORDER INVOICE <c:choose>
             </tr>
         </c:if>
         <tr>
-            <td><strong>Grand Total</strong></td>
+            <c:choose><c:when test="${orderSummary.shippingOrder.basketCategory==eyeCat}">
+                <td><strong>Grand Total*</strong></td>
+            </c:when>
+                <c:otherwise>
+                    <td><strong>Grand Total</strong></td>
+                </c:otherwise>
+            </c:choose>
             <td>
                 <strong><fmt:formatNumber value="${orderSummary.invoiceDto.grandTotal}" type="currency"
                                           currencySymbol="Rs. " maxFractionDigits="0"/> </strong>
             </td>
         </tr>
     </table>
-
+    <c:if test="${orderSummary.shippingOrder.basketCategory==eyeCat}">
+        <br><td>*Sale Price includes value of Glasses/ Frames and Cover</td>
+    </c:if>
 </div>
 
 <div class="clear"></div>
