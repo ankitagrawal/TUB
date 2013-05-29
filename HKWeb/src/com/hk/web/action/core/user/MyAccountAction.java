@@ -137,6 +137,7 @@ public class MyAccountAction extends BaseAction {
   }
 
     public Resolution subscribeForEmails() {
+        user = getUserService().getUserById(getPrincipal().getId());
         return new ForwardResolution("/pages/emailSubscriptions.jsp");
     }
 
