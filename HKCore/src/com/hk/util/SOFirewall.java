@@ -1,14 +1,23 @@
 package com.hk.util;
 
-
+import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.shippingOrder.LineItem;
 
 /*
  * User: Pratham
- * Date: 06/05/13  Time: 13:54
+ * Date: 28/05/13  Time: 11:43
 */
-public class ShippingCostCutOff {
+public class SOFirewall {
+
+    private static Double tolerancePaymentAmount = 0.01;
+
+    public static boolean isAmountMismatch(Order order) {
+        Double paymentAmount = order.getPayment().getAmount();
+        Double orderAmount = order.getAmount();
+        Double tolerancePayableAmount = paymentAmount * tolerancePaymentAmount;
+        return Math.abs(paymentAmount - orderAmount) > tolerancePayableAmount;
+    }
 
     private static final Double percentageOfSOAmount = 0.5D;
     private static final Double maxShippingCharges = 5000D;
