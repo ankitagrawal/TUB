@@ -349,6 +349,10 @@ public class User {
         return EnumEmailSubscriptions.isSubscribed(EnumEmailSubscriptions.NOTIFY_ME, getSubscribedMask());
     }
 
+    public boolean getSubscribedForNotify() {
+        return isSubscribedForNotify();
+    }
+
     public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }

@@ -27,6 +27,7 @@ public interface OrderService {
 
     public Order find(Long orderId);
 
+    @Deprecated
     public Order findByUserAndOrderStatus(User user, EnumOrderStatus orderStatus);
 
     public Long getCountOfOrdersByStatus(User user,EnumOrderStatus enumOrderStatus);
