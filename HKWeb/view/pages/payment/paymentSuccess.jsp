@@ -318,7 +318,7 @@
                     </c:when>
                     <%--your non cod ka message--%>
                     <c:otherwise>
-                        <div class="congratsText">Your order is <span class="greenBold">confirmed</span>.</div>
+                        <div class="congratsText">Congratulations! your order is <span class="greenBold">confirmed</span>.</div>
                         <h2 class="orderIdText">
                             Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.</h2>
                         <br/>
@@ -383,7 +383,7 @@
                 
 			<shiro:lacksRole name="<%=RoleConstants.HK_LOYALTY_USER%>">
 				<div class='loyaltyMessage' >
-  				<p>Congratulations! Your payment is successful. Did you know about our Loyalty Program yet?<br>
+  				<p>Did you know about our Loyalty Program yet?<br>
   				It is an easy way to earn points and redeem goodies. To begin with, let us tempt you by passing on <strong>15 bonus</strong> loyalty points on joining now!
   				<br> 
 				<a href="${pageContext.request.contextPath}/core/loyaltypg/LoyaltyIntroduction.action" target="_blank">Click here</a>, to know more.		
@@ -431,18 +431,7 @@
                     </div>
                 </c:if>
 
-                <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
-                    <div style="padding: 10px; position:relative;float: left;left: 5px;">
-                        Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong>
-                        <p>
-                            Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
-                            - in case of online payment through credit card, debit card or internet banking, the cashback is credited to your account already.<br/>
-                            - in case of cash on delivery (COD) payment mode, the cashback is credited upon delivery of the order.<br/>
-                        </p>
-                    </div>
-                </c:if>
-
-                <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;">
+                <div class="step2 success_order_summary" style="padding: 5px; float: left; margin-right: 5px;margin-bottom: 20px;">
                     <h2 class="paymentH2">Order Summary</h2>
 
                     <div class="itemSummaryNew">
@@ -451,6 +440,17 @@
                     </div>
 
                 </div>
+
+                <c:if test="${actionBean.pricingDto.totalCashback > 0.0}">
+                    <div style="padding: 10px;background-color: lightgoldenrodyellow; position:relative;float: left;width: 622px;">
+                        Cashback Pending <strong>(Rs. <fmt:formatNumber pattern="<%=FormatUtils.currencyFormatPattern%>" value="${actionBean.pricingDto.totalCashback}"/>)</strong>
+                        <p>
+                            Your cashback will be automatically credited into your HealthKart account depending on the payment mode :<br/>
+                            - in case of online payment through credit card, debit card or internet banking, the cashback is credited to your account already.<br/>
+                            - in case of cash on delivery (COD) payment mode, the cashback is credited upon delivery of the order.<br/>
+                        </p>
+                    </div>
+                </c:if>
 
 
               <div style="clear:both;"></div>
