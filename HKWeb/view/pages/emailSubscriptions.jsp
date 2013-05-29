@@ -15,7 +15,7 @@
                 <h4 class="strikeline"> Email Subscriptions</h4>
                 <div style="margin-top: 15px"></div>
 
-                <c:if test="${maa.user.subscribedMask}">
+                <c:if test="${maa.user.subscribedMask > 1}">
                     <div style="float: left; font-size: 0.7em;">
                         You are already subscribed for emails
                     </div>
