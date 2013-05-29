@@ -86,6 +86,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             HKAPIProductDTO productDTO=new HKAPIProductDTO();
             productDTO.setDeleted(product.isDeleted());
             productDTO.setOutOfStock(product.getOutOfStock());
+            productDTO.setHidden(product.getHidden());
             productDTO.setProductID(product.getId());
             List<ProductVariant> productVariantList=product.getProductVariants();
             HKAPIProductVariantDTO[] productVariantDTOs = new HKAPIProductVariantDTO[productVariantList.size()];
