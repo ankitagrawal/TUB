@@ -15,10 +15,10 @@
                 <h4 class="strikeline"> Email Subscriptions</h4>
                 <div style="margin-top: 15px"></div>
                 <c:choose>
-                    <c:when test="${maa.user.subscribedForNotify}">
-                    <div style="float: left; font-size: 0.7em;">
-                        You are already subscribed for emails
-                    </div>
+                    <c:when test="${maa.user.subscribedMask > 1}">
+                        <div style="float: left; font-size: 0.7em;">
+                            You are already subscribed for emails
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <s:label class="rowLabel" name="Click here to subscribe for emails" />
