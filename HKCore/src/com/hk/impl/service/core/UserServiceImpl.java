@@ -146,6 +146,11 @@ public class UserServiceImpl implements UserService {
         return getUserDao().findByLoginAndStoreId(login, storeId);
     }
 
+    public void subscribeAllNotifications(String login){
+        int subscriptionMask = EnumEmailSubscriptions.SUBSCRIBE_ALL;
+        getUserDao().updateUserSubscription(login, subscriptionMask);
+    }
+
     public void subscribeUserForOffers(String login, boolean subscribe) {
         int subscriptionMask = 0;
         if (subscribe){
