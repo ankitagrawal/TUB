@@ -71,6 +71,14 @@ public class HttpSchemeFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
       ServletException {
 
+    String requestURI = getPathWithinApplication(request);
+    if (requestURI.endsWith(".js") || requestURI.endsWith(".css") || requestURI.endsWith(".jpg")
+        || requestURI.endsWith(".png") || requestURI.endsWith(".gif")) {
+      chain.doFilter(request, response);
+      return;
+    }
+
+
     boolean pathMatches = false;
     for (String url : urlPatterns) {
       if (pathsMatch(url, request)) {
