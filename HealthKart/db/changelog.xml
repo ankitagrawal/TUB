@@ -11295,11 +11295,11 @@
             UPDATE courier SET operations_bitset = operations_bitset * 13 where id in (70,170,220,650,660);
         </sql>
     </changeSet>
-     <changeSet author="Shrey (generated)" id="29-01-2013-01">
-        <createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">
-            <column name="shipping_order_id"/>
-        </createIndex>
-    </changeSet>
+     <!--<changeSet author="Shrey (generated)" id="29-01-2013-01">-->
+        <!--<createIndex indexName="uniq_shipment_shippingorder" tableName="shipment" unique="true">-->
+            <!--<column name="shipping_order_id"/>-->
+        <!--</createIndex>-->
+    <!--</changeSet>-->
 <!--
      <changeSet author="Shrey (generated)" id="29-01-2013-02">
         <createIndex indexName="uniq_shipment_awb" tableName="shipment" unique="true">
@@ -11732,22 +11732,22 @@
             ALTER TABLE user_cod_call ADD UNIQUE(order_id);
         </sql>
     </changeSet>
-    <changeSet author="Ankit (generated)" id="1359711888969-1">
-        <addColumn tableName="rv_line_item">
-            <column name="sku_group_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-1">
-        <addColumn tableName="cycle_count_item">
-            <column name="sku_item_id" type="INT"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-2">
-        <dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>
-    </changeSet>
-    <changeSet author="Ankit (generated)" id="1360921695034-3">
-        <addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Ankit (generated)" id="1359711888969-1">-->
+        <!--<addColumn tableName="rv_line_item">-->
+            <!--<column name="sku_group_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-1">-->
+        <!--<addColumn tableName="cycle_count_item">-->
+            <!--<column name="sku_item_id" type="INT"/>-->
+        <!--</addColumn>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-2">-->
+        <!--<dropNotNullConstraint columnDataType="INT" columnName="sku_group_id" tableName="cycle_count_item"/>-->
+    <!--</changeSet>-->
+    <!--<changeSet author="Ankit (generated)" id="1360921695034-3">-->
+        <!--<addForeignKeyConstraint baseColumnNames="sku_item_id" baseTableName="cycle_count_item" constraintName="fk_cycle_count_item_sku_item1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="sku_item" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="Ankur (generated)" id="1358841573903-1">
         <createTable tableName="mail">
             <column autoIncrement="true" name="id" type="INT">
@@ -12524,9 +12524,9 @@
     <changeSet author="Ajeet (generated)" id="1366966901739-4">
         <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="bucket" constraintName="fk_bucket_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
     </changeSet>
-    <changeSet author="Ajeet (generated)" id="1366966901739-5">
-        <addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>
-    </changeSet>
+    <!--<changeSet author="Ajeet (generated)" id="1366966901739-5">-->
+        <!--<addForeignKeyConstraint baseColumnNames="classification_id" baseTableName="reason" constraintName="fk_reason_classification1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="classification" referencesUniqueColumn="false"/>-->
+    <!--</changeSet>-->
     <changeSet author="marut (generated)" id="1366356450756-01">
         <createTable tableName="marketing_feed">
             <column autoIncrement="true" name="id" type="INT">
@@ -12998,5 +12998,56 @@
 
        insert into role_has_permission (role_name, permission_name)  values  ("ADMIN","RECEIVE_CONSIGNMENTS"),("ADMIN","EDIT_RUNSHEET"),("ADMIN","VIEW_CONSIGNMENTS"),("ADMIN","VIEW_PAYMENT_HISTORY"),("ADMIN","TRACK_CONSIGNMENTS"),("ADMIN","CREATE_PAYMENT_RECONCILATION"),("ADMIN","ADD_EDIT_HUB"),("ADMIN","ADD_REMOVE_AGENT"),("ADMIN",                   "CONSIGNMENT_TRACKING_REPORT"),("ADMIN","VIEW_NDR"),("ADMIN","EDIT_NDR"),("OPS_MANAGER_L1","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT","VIEW_NDR"),("CUSTOMER_SUPPORT",             "EDIT_NDR"),("CUSTOMER_SUPPORT","TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L2","VIEW_NDR"),("CUSTOMER_SUPPORT_L2","EDIT_NDR"),("CUSTOMER_SUPPORT_L2",                               "TRACK_CONSIGNMENTS"),("CUSTOMER_SUPPORT_L3","VIEW_NDR"),("CUSTOMER_SUPPORT_L3","EDIT_NDR"),("CUSTOMER_SUPPORT_L3","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN",                    "RECEIVE_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","EDIT_RUNSHEET"),("HK_DELIVERY_ADMIN","VIEW_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","VIEW_PAYMENT_HISTORY"),                             ("HK_DELIVERY_ADMIN","TRACK_CONSIGNMENTS"),("HK_DELIVERY_ADMIN","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_ADMIN","ADD_EDIT_HUB"),("HK_DELIVERY_ADMIN",                        "ADD_REMOVE_AGENT"),("HK_DELIVERY_ADMIN","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_ADMIN","VIEW_NDR"),("HK_DELIVERY_ADMIN","EDIT_NDR"),("HK_DELIVERY_HUB_MANAGER",             "EDIT_RUNSHEET"),("HK_DELIVERY_HUB_MANAGER","VIEW_CONSIGNMENTS"),("HK_DELIVERY_HUB_MANAGER","VIEW_PAYMENT_HISTORY"),("HK_DELIVERY_HUB_MANAGER","TRACK_CONSIGNMENTS"),             ("HK_DELIVERY_HUB_MANAGER","CREATE_PAYMENT_RECONCILATION"),("HK_DELIVERY_HUB_MANAGER","ADD_EDIT_HUB"),("HK_DELIVERY_HUB_MANAGER","ADD_REMOVE_AGENT"),                             ("HK_DELIVERY_HUB_MANAGER","CONSIGNMENT_TRACKING_REPORT"),("HK_DELIVERY_HUB_MANAGER","VIEW_NDR")  on duplicate key update permission_name = values(permission_name);
       </sql>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-1">
+        <createTable tableName="action_path_workflow">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="bucket_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="next_action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-28">
+        <addForeignKeyConstraint baseColumnNames="action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-30">
+        <addForeignKeyConstraint baseColumnNames="next_action_task_id" baseTableName="action_path_workflow" constraintName="fk_action_path_workflow_action_task2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="action_task" referencesUniqueColumn="false"/>
+    </changeSet>
+<!--    <changeSet author="Pratham (generated)" id="1369649792220-8">
+        <dropForeignKeyConstraint baseTableName="action_task" constraintName="fk_action_item_user1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369649792220-9">
+        <dropForeignKeyConstraint baseTableName="action_task" constraintName="fk_action_task_action_task1"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-31">
+        <dropColumn columnName="acknowledged" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-32">
+        <dropColumn columnName="acknowledged_by" tableName="action_task"/>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369648289023-33">
+        <dropColumn columnName="next_action_task_id" tableName="action_task"/>
+    </changeSet>-->
+    <changeSet author="Pratham (generated)" id="1369727618286-2">
+        <createTable tableName="reason_has_action_task">
+            <column name="reason_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_task_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Pratham (generated)" id="1369727618286-9">
+        <addPrimaryKey columnNames="reason_id, action_task_id" tableName="reason_has_action_task"/>
     </changeSet>
 </databaseChangeLog>

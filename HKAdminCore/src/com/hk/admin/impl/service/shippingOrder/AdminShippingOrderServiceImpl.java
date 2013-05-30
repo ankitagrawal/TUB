@@ -197,7 +197,8 @@ public class AdminShippingOrderServiceImpl implements AdminShippingOrderService 
     }
 
     @Transactional
-    public ShippingOrder markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
+    public ShippingOrder
+    markShippingOrderAsDelivered(ShippingOrder shippingOrder) {
         shippingOrder.setOrderStatus(getShippingOrderStatusService().find(EnumShippingOrderStatus.SO_Delivered));
         getShippingOrderService().save(shippingOrder);
         getShippingOrderService().logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SO_Delivered);
