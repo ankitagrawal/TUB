@@ -116,7 +116,7 @@ public class POSAction extends BaseAction {
 	private String cardNumber ;
 	private boolean useRewardPoints;
 	private User loyaltyCustomer;
-	private boolean loyaltyCustomerAdded;
+	private boolean isLoyaltyCustomer;
 	
 	@Autowired
 	private UserService userService;
@@ -224,13 +224,13 @@ public class POSAction extends BaseAction {
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
 					dataMap.put("pincode", address.getPincode().getPincode());
-					dataMap.put("isLoyaltyUser", false);
+					dataMap.put("isLoyaltyCustomer", false);
 				}
 				if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 					// if already a loyalty user then fill params
 					this.addLoyaltyUser = false;
 					this.loyaltyCustomer = customer;
-					dataMap.put("isLoyaltyUser", true);
+					dataMap.put("isLoyaltyCustomer", true);
 					dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
 					UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
 					dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
@@ -429,7 +429,7 @@ public class POSAction extends BaseAction {
 			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
 		}
 		
-		return new ForwardResolution("/pages/pos/pos.jsp").addParameter("loyaltyCustomerAdded", loyaltyCustomerAdded);
+		return new ForwardResolution("/pages/pos/pos.jsp").addParameter("isLoyaltyCustomer", isLoyaltyCustomer).addParameter("customer", updatedCustomer);
 	}
 	
 	private User updateCustomerDetails (Warehouse warehouse) {
@@ -456,7 +456,7 @@ public class POSAction extends BaseAction {
 		}
 		 if (addLoyaltyUser) {
 			 loyaltyProgramService.createNewUserBadgeInfo(customer);
-			 loyaltyCustomerAdded = true;
+			 isLoyaltyCustomer = true;
 		 } else if (cardNumber != null && !cardNumber.isEmpty()) {
 			 UserBadgeInfo info = loyaltyProgramService.getUserBadgeInfo(customer);
 			 if (!cardNumber.trim().equalsIgnoreCase(info.getCardNumber())) {
@@ -771,16 +771,17 @@ public class POSAction extends BaseAction {
 	}
 
 	/**
-	 * @return the loyaltyCustomerAdded
+	 * @return the isLoyaltyCustomer
 	 */
-	public boolean isLoyaltyCustomerAdded() {
-		return loyaltyCustomerAdded;
+	public boolean isLoyaltyCustomer() {
+		return isLoyaltyCustomer;
 	}
 
 	/**
-	 * @param loyaltyCustomerAdded the loyaltyCustomerAdded to set
+	 * @param isLoyaltyCustomer the isLoyaltyCustomer to set
 	 */
-	public void setLoyaltyCustomerAdded(boolean loyaltyCustomerAdded) {
-		this.loyaltyCustomerAdded = loyaltyCustomerAdded;
+	public void setLoyaltyCustomer(boolean isLoyaltyCustomer) {
+		this.isLoyaltyCustomer = isLoyaltyCustomer;
 	}
+
 }

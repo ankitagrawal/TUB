@@ -141,8 +141,8 @@
 								$('#pincode').val(res.data.pincode);
 								$('#address').val(res.data.address.id);
 								$('#phone').val(res.data.address.phone);
-								$('#loyaltyDiv').show();
-								if (res.data.isLoyaltyUser) {
+								//$('#loyaltyDiv').show();
+								if (res.data.isLoyaltyCustomer) {
 									$('#oldLoyaltyCustomer').show();
 									$('#newLoyaltyCustomer').hide();
 									$('#loyaltyCustomer').val(res.data.customer.id);
@@ -257,9 +257,6 @@
 		  	});
 		  	 
 		    $('#useRewardPoints').click(function() {
-		    	/* if (this.checked == true) {
-		    		alert("Max possible reward points will be used.");
-		    	} */
 		    	updateFinalPayable();
 	    	});
 		    
@@ -271,12 +268,13 @@
 		    });
 		    
 		    $('#rewardPointsRow').hide();
-		    if (${pos.loyaltyCustomerAdded} ) {
-		    	$('#loyaltyDiv').show();
+		    if (${pos.isLoyaltyCustomer} ) {
+		    	//$('#loyaltyDiv').show();
 		    	$('#oldLoyaltyCustomer').show();
 		    	$('#newLoyaltyCustomer').hide();
 		    } else {
-			    $('#loyaltyDiv').hide();
+		    	$('#newLoyaltyCustomer').show();//			    $('#loyaltyDiv').hide();
+		    	$('#oldLoyaltyCustomer').hide();
 		    }
 
 		    function updateFinalPayable() {
