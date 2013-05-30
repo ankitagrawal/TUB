@@ -495,7 +495,7 @@
     </table>
     <c:if test="${eyeBool}">
         <br>
-        <td>*Sale Price includes value of Glasses/ Frames and Cover</td>
+        <td>*Sale Price of Eyeglasses includes value of Glasses/ Frames and Cover</td>
     </c:if>
 </div>
 
