@@ -58,8 +58,8 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 
     @DontValidate
     @DefaultHandler
-//    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
-public Resolution pre() {
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    public Resolution pre() {
         User user = getPrincipalUser();
         if (user != null) {
             buckets = user.getBuckets();
@@ -71,7 +71,7 @@ public Resolution pre() {
 //                .addParameters(bucketParameters);
     }
 
-    //    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+        @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
         if (actionItemsPage != null) actionItems = actionItemsPage.getList();
@@ -146,7 +146,6 @@ public Resolution pre() {
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Added", datamap);
         noCache();
         return new JsonResolution(healthkartResponse);
-
 
 //            return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
     }

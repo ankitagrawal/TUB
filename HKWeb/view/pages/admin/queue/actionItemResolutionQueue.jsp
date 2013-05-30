@@ -9,6 +9,7 @@
 <%@ page import="com.hk.domain.queue.ActionTask" %>
 <%@ page import="com.hk.constants.queue.EnumActionTask" %>
 <%@ page import="com.hk.web.HealthkartResponse" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" var="actionItemQueueBean"/>
@@ -174,6 +175,7 @@
                         <s:submit name="updateTask" value="Update Task"/>
                     </div>
 
+                     <shiro:hasPermission name="<%=PermissionConstants.ACTION_ITEM_RESOLVER%>">
                     <div>
                         Current Priority
                         <s:select name="priorityId" value="${actionItem.priority}">
@@ -205,7 +207,7 @@
                              event="changeBulkTrafficState">
                     Change Bulk Traffic State
                 </s:link>)
-
+               </shiro:hasPermission>
                         <%--<div class="floatleft">--%>
                         <%--Target Dispatch : <fmt:formatDate value="${actionItem.shippingOrder.targetDispatchDate}"--%>
                         <%--type="date"/>--%>
