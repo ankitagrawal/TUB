@@ -1,7 +1,11 @@
 package com.hk.web.action.admin.payment;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hk.constants.payment.EnumPaymentMode;
+import com.hk.constants.payment.GatewayResponseKeys;
+import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.util.PaymentFinder;
@@ -112,6 +116,37 @@ public class CheckPaymentAction extends BaseAction {
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
+    @DontValidate
+    public Resolution bulkSeekPayment() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            Date startDate = sdf.parse(txnStartDate);
+            Date endDate = sdf.parse(txnEndDate);
+            List orderStatuses = Arrays.asList(EnumOrderStatus.Placed.asOrderStatus(), EnumOrderStatus.InProcess.asOrderStatus());
+            paymentList = paymentService.searchPayments(null, EnumPaymentStatus.getSeekPaymentStatuses(), null, Arrays.asList(EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode()), startDate, endDate, orderStatuses);
+            HkPaymentService hkPaymentService;
+            for (Payment seekPayment : paymentList) {
+                if (seekPayment != null) {
+                    Gateway gateway = seekPayment.getGateway();
+                    if (gateway != null) {
+                        hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+                        try {
+                            paymentResultMap = hkPaymentService.seekHkPaymentResponse(seekPayment.getGatewayOrderId());
+                        } catch (Exception e) {
+                            logger.info("Payment Seek exception for gateway order id" + seekPayment.getGatewayOrderId(), e);
+                        }
+                    }
+                }
+                transactionList.add(paymentResultMap);
+            }
+
+        } catch (Exception e) {
+            logger.info("Payment Seek Date conversion exception", e);
+        }
+
+        return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
+    }
+
 
 
     @DontValidate
@@ -207,18 +242,34 @@ public class CheckPaymentAction extends BaseAction {
     @Secure(hasAnyPermissions = {PermissionConstants.UPDATE_PAYMENT}, authActionBean = AdminPermissionAction.class)
     public Resolution acceptAsSuccessful() {
         User loggedOnUser = null;
+        Gateway gateway = payment.getGateway();
+        String gatewayOrderId = payment.getGatewayOrderId();
+        Map<String, Object> hkrespObj = null;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
         //todo shakti, method to deduce what is considered as a valid payment
 //        if(EnumPaymentStatus.getEscalablePaymentStatusIds().contains(payment.getPaymentStatus().getId())){
-            getPaymentManager().success(payment.getGatewayOrderId());
-            getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
-                    getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
-            order.setConfirmationDate(new Date());
-            orderService.save(order);
-            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
-            orderService.sendEmailToServiceProvidersForOrder(order);
+
+        if (gateway != null && gatewayOrderId != null) {
+            hkrespObj = paymentManager.getHkPaymentServiceByGateway(gateway).seekHkPaymentResponse(gatewayOrderId);
+            PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
+            EnumPaymentStatus hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+            PaymentStatus hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
+            boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+            if (!isValid) {
+                // send email to admin
+                paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+            }
+        }
+
+        getPaymentManager().success(payment.getGatewayOrderId());
+        getOrderLoggingService().logOrderActivity(payment.getOrder(), loggedOnUser,
+                getOrderLoggingService().getOrderLifecycleActivity(EnumOrderLifecycleActivity.PaymentMarkedSuccessful), null);
+        order.setConfirmationDate(new Date());
+        orderService.save(order);
+        orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+        orderService.sendEmailToServiceProvidersForOrder(order);
 //        }
         addRedirectAlertMessage(new LocalizableMessage("/admin/CheckPayment.action.payment.received"));
         return new RedirectResolution(CheckPaymentAction.class).addParameter("order", order.getId());
