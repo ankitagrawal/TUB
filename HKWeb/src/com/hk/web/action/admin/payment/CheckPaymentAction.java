@@ -2,10 +2,14 @@ package com.hk.web.action.admin.payment;
 
 import java.util.*;
 
+import com.hk.domain.payment.Gateway;
+import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.stripesstuff.plugin.security.Secure;
@@ -33,6 +37,8 @@ import com.hk.web.action.error.AdminPermissionAction;
 
 @Component
 public class CheckPaymentAction extends BaseAction {
+
+    private static Logger logger = LoggerFactory.getLogger(CheckPaymentAction.class);
 
     @Validate(required = true)
     private Order order;
@@ -90,27 +96,23 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     public Resolution seekPayment() {
         payment = paymentService.findByGatewayOrderId(gatewayOrderId);
+        HkPaymentService hkPaymentService;
         if (payment != null) {
-            int gatewayId = payment.getGateway().getId().intValue();
-
-            switch (gatewayId) {
-                case 80:
-                    paymentResultMap = PaymentFinder.findCitrusPayment(gatewayOrderId);
-                    if (paymentResultMap.isEmpty()) {
-                        paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007751");
-                    }
-                    break;
-                case 90:
-                    paymentResultMap = PaymentFinder.findEbsTransaction(gatewayOrderId, null, null, EbsPaymentGatewayWrapper.TXN_ACTION_STATUS);
-                    break;
-                case 100:
-                    paymentResultMap = PaymentFinder.findIciciPayment(gatewayOrderId, "00007518");
-                    break;
+            Gateway gateway = payment.getGateway();
+            if (gateway != null) {
+                hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
+                try {
+                    paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
+                } catch (Exception e) {
+                    logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+                }
             }
         }
         transactionList.add(paymentResultMap);
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
+
+
 
     @DontValidate
     public Resolution searchTransactionByDate() {
@@ -132,6 +134,9 @@ public class CheckPaymentAction extends BaseAction {
             switch (gatewayId) {
                 case 80:
                     paymentResultMap = PaymentFinder.refundCitrusPayment(payment);
+                    if (paymentResultMap.isEmpty()) {
+                        paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007751");
+                    }
                     break;
                 case 90:
                     if (paymentId == null || StringUtils.isEmpty(paymentId) || amount == null || StringUtils.isEmpty(amount)) {
@@ -140,10 +145,12 @@ public class CheckPaymentAction extends BaseAction {
                     }
                     paymentResultMap = PaymentFinder.findEbsTransaction(null, paymentId, amount, EbsPaymentGatewayWrapper.TXN_ACTION_REFUND);
                     break;
+                case 100:
+                    paymentResultMap = PaymentFinder.refundIciciPayment(payment, "00007518");
             }
 
         }
-         transactionList.add(paymentResultMap);
+        transactionList.add(paymentResultMap);
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 
