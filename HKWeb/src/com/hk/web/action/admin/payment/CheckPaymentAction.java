@@ -244,7 +244,9 @@ public class CheckPaymentAction extends BaseAction {
         User loggedOnUser = null;
         Gateway gateway = payment.getGateway();
         String gatewayOrderId = payment.getGatewayOrderId();
-        Map<String, Object> hkrespObj = null;
+        Map<String, Object> hkrespObj;
+        EnumPaymentStatus hkRespPayStatus;
+        PaymentStatus hkPaymentStatus;
         if (getPrincipal() != null) {
             loggedOnUser = getUserService().getUserById(getPrincipal().getId());
         }
@@ -254,12 +256,15 @@ public class CheckPaymentAction extends BaseAction {
         if (gateway != null && gatewayOrderId != null) {
             hkrespObj = paymentManager.getHkPaymentServiceByGateway(gateway).seekHkPaymentResponse(gatewayOrderId);
             PaymentStatus changedStatus = paymentService.findPaymentStatus(EnumPaymentStatus.SUCCESS);
-            EnumPaymentStatus hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
-            PaymentStatus hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
-            boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
-            if (!isValid) {
-                // send email to admin
-                paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+
+            if(hkrespObj != null){
+                hkRespPayStatus = EnumPaymentStatus.valueOf((String) hkrespObj.get(GatewayResponseKeys.HKConstants.RESPONSE_CODE.getKey()));
+                hkPaymentStatus = paymentService.findPaymentStatus(hkRespPayStatus);
+                boolean isValid = paymentManager.verifyPaymentStatus(changedStatus, hkPaymentStatus);
+                if (!isValid) {
+                    // send email to admin
+                    paymentManager.sendUnVerifiedPaymentStatusChangeToAdmin(hkPaymentStatus, changedStatus, gatewayOrderId);
+                }
             }
         }
 
