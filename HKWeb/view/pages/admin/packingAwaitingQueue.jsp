@@ -155,7 +155,7 @@
     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${shipmentQueueBean}"/>
   </div>
   <div style="display:inline;float:left;">
-    <s:submit name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
+    <s:submit id="moveToWaiting" name="moveToActionAwaiting" class="shippingOrderActionBtn" value="Move Back to Action Awaiting"/>
     <s:submit name="reAssignToPackingQueue" id="reAssignToPackingQueue" class="shippingOrderActionBtn"
               value="Re-Assign for process" style="display:none;"/>
   </div>
@@ -210,7 +210,9 @@
         });
         return false;
     });
-
+$("#moveToWaiting").click(function(){
+	$(this).hide();
+});
 
     /*$('.lineItemCheckBox').click(function() {
      $(this).parent().parent("tr").toggleClass('highlight');
