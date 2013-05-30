@@ -50,6 +50,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     Long actionTaskId;
     ActionTask currentActionTask;
     Long priorityId;
+    List<Bucket> userBuckets = new ArrayList<Bucket>();
 
     @Autowired
     BucketService bucketService;
@@ -61,6 +62,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution pre() {
         User user = getPrincipalUser();
+
         if (user != null) {
             buckets = user.getBuckets();
             if (buckets != null && !buckets.isEmpty()) {
@@ -73,6 +75,8 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 
         @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
+             User user = getPrincipalUser();
+            userBuckets = user.getBuckets();
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
         if (actionItemsPage != null) actionItems = actionItemsPage.getList();
         return new ForwardResolution("/pages/admin/queue/actionItemResolutionQueue.jsp");
@@ -375,5 +379,13 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 
     public void setCurrentActionTask(ActionTask currentActionTask) {
         this.currentActionTask = currentActionTask;
+    }
+
+     public List<Bucket> getUserBuckets() {
+        return userBuckets;
+    }
+
+    public void setUserBuckets(List<Bucket> userBuckets) {
+        this.userBuckets = userBuckets;
     }
 }
