@@ -61,7 +61,7 @@ public class ActionItemCRUD extends BaseAction {
     @Autowired
     private BucketService bucketService;
 
-    @DefaultHandler
+
     @JsonHandler
     public Resolution view() {
         Map dataMap = new HashMap();

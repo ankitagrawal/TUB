@@ -92,13 +92,17 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         return actionItemSearchCriteria;
     }
 
-
+       @JsonHandler
     public Resolution updateTask() {
+
+        Map datamap = new HashMap();
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
         actionItem.setCurrentActionTask(currentActionTask);
         getBaseDao().save(actionItem);
-        addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
-        return new RedirectResolution(ActionItemResolutionQueueAction.class);
+        datamap.put("name",actionItem.getId());
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Task has been updated", datamap);
+        noCache();
+        return new JsonResolution(healthkartResponse);
     }
 
 

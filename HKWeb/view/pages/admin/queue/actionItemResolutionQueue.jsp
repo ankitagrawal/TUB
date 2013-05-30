@@ -165,14 +165,20 @@
                     </div>
 
                     <div>
-                        <s:hidden name="actionItem" value="${actionItem.id}"/>
+                        <input type="hidden" class="selActItemId" name="actionItem" value="${actionItem.id}"/>
                         PAT : ${actionItem.previousActionTask.name} <br>
-                        CAT : <s:select name="currentActionTask" value="${actionItem.currentActionTask.id}">
+                        CAT : <s:select class="actionTask" name="currentActionTask" value="${actionItem.currentActionTask.id}">
                         <c:forEach items="${currentATList}" var="enumActionTask">
                             <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
                         </c:forEach>
                     </s:select>
-                        <s:submit name="updateTask" value="Update Task"/>
+                        <s:submit name="updateTask" value="Update Task" class="updateTask"/>
+
+                        <%--(<s:link beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" event="updateTask"--%>
+                                 <%--class="updateTask button_orange">--%>
+                        <%--<s:param name="actionItem" value="${actionItem.id}"/>--%>
+                        <%--<s:param name="currentActionTask" value="${actionItem.currentActionTask.id}"/> Update Task--%>
+                    <%--</s:link>)--%>
                     </div>
 
                      <shiro:hasPermission name="<%=PermissionConstants.ACTION_ITEM_RESOLVER%>">
@@ -233,6 +239,10 @@
     <div style="display:none">
         <s:link beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" event="saveBuckets" id="actionItemRes"></s:link>
     </div>
+     <div style="display:none">
+        <s:link beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" event="updateTask" id="updateTasks"></s:link>
+    </div>
+
 </s:form>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -322,7 +332,7 @@
 //            alert(buckets);
             $.ajax({
                 url:$('#actionItemRes').attr('href'),
-                    data : chldEle,       
+                    data : chldEle,
                     type: 'post',
                     dataType: 'json',
                     success : function(res){
@@ -375,6 +385,26 @@
         });
 
 
+
+        $('.updateTask').click(function() {
+            var elem = $(this);
+            var actionItemId = $(this).parent().children('.selActItemId').val();
+            var actionTaskId = $(this).parent().children('.actionTask').val();
+            $.ajax({
+                url:$('#updateTasks').attr('href'),
+                data: {actionItem : actionItemId, currentActionTask : actionTaskId},
+                    type: 'post',
+                    dataType: 'json',
+                    success : function(res) {
+                if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+                     $(elem).siblings().show();
+                    alert(  res.message+ " for Action Item : "+actionItemId );
+                }
+
+            }
+            });
+            return false;
+        });
 
 
         function _saveBuckets(res, elem) {
