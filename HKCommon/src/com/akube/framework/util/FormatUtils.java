@@ -80,10 +80,10 @@ public class FormatUtils {
     try {
       String currencyString = currencyFormat.format(n);
       parsed = currencyFormat.parse(currencyString).doubleValue();
-    } catch (ParseException e) {
-      logger.error("error parsing " + n + " for currecny precision", e);
+    }  catch (ParseException e) {
+      logger.error("error parsing " + n + " for currecny precision", e.getMessage());
     } catch (NumberFormatException nfe) {
-      logger.error("number format exception " + n + " for currecny precision", nfe);
+      logger.error("number format exception " + n + " for currecny precision", nfe.getMessage());
     }
     return parsed ;
   }

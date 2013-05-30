@@ -42,7 +42,7 @@
 		<div>By joining stellar program you agree to the
 		 <a href="${pageContext.request.contextPath}/pages/loyalty/info/stellarTerms.jsp" class="blue makeCursor" target="_blank" >Terms and Conditions</a>
 		  for the stellar.</div>
-		<div><br><br><s:submit name="continueProgram" value="JOIN NOW" class="btn"/></div>
+		<div><br><br><s:submit name="continueProgram" value="JOIN NOW" class="btn joinNowButton"/></div>
 		</s:form>
 	</div>
 	</div>
@@ -58,6 +58,12 @@
 			weekStartDay:1
 		});
 	};
+
+    $(document).ready(function() {
+      $('.joinNowButton').click(function disableButton() {
+        $(this).css("display", "none");
+      });
+    });
 	 
 	 
   	</script>
