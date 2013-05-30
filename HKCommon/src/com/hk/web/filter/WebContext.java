@@ -34,6 +34,11 @@ public class WebContext {
 
 	public static boolean isSecure() {
 		String isSecureString = getRequest().getHeader("x-proto");
-		return isSecureString != null ? isSecureString.equals("SSL") : false;
+    if (isSecureString != null && isSecureString.equals("SSL"))//Request coming from HAProxy
+      return true;
+    else if (getRequest().isSecure())// Direct Request
+      return true;
+
+    return false;
 	}
 }
