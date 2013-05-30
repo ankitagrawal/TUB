@@ -948,6 +948,15 @@ public class EmailManager {
         }
     return true;
   }
+    public boolean sendAdminPaymentStatusChangeEmail(String actualStatus, String changedStatus, String gatewayOrderId){
+        HashMap valueMap = new HashMap();
+        valueMap.put("username","Admin");
+        valueMap.put("gatewayOrderId", gatewayOrderId);
+        valueMap.put("oldStatus", actualStatus);
+        valueMap.put("newStatus", changedStatus);
+        Template freemarkerTemplate = freeMarkerService.getCampaignTemplate(EmailTemplateConstants.adminPaymentStatusChangeEmail);
+        return emailService.sendHtmlEmail(freemarkerTemplate, valueMap, "pratham@healthkart.com", "Admin");
+    }
 
     /*
      * public boolean sendProductStatusMail(Product product, String stockStatus) { HashMap valuesMap = new HashMap();
