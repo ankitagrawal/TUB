@@ -35,7 +35,37 @@
         </listener-class>
     </listener>
 
+    <listener>
+	        <display-name>Request Context</display-name>
+	        <listener-class>
+		        org.springframework.web.context.request.RequestContextListener
+	        </listener-class>
+	    </listener>
+
     <!--  Listeners End -->
+
+    <filter>
+        <filter-name>httpSchemeFilter</filter-name>
+        <filter-class>
+            com.hk.web.filter.HttpSchemeFilter
+        </filter-class>
+        <init-param>
+            <param-name>urlPattern</param-name>
+            <param-value>/core/auth/Login.action /core/user/Signup.action</param-value>
+        </init-param>
+        <init-param>
+            <param-name>http</param-name>
+            <param-value>80</param-value>
+        </init-param>
+        <init-param>
+            <param-name>https</param-name>
+            <param-value>443</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>httpSchemeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 
     <filter>
