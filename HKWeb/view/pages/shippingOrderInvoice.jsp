@@ -474,8 +474,8 @@
         </c:if>
         <tr>
             <c:set var="eyeBool" value="false"/>
-            <c:forEach items="${orderSummary.shippingOrder.baseOrder.cartLineItems}" var="cartLineItems">
-                <c:if test="${cartLineItems.productVariant.product.secondaryCategory.name eq eyeCat}">
+            <c:forEach items="${orderSummary.shippingOrder.lineItems}" var="lineItems">
+                <c:if test="${lineItems.cartLineItem.productVariant.product.secondaryCategory.name eq eyeCat}">
                     <c:set var="eyeBool" value="true"/>
                 </c:if>
             </c:forEach>
