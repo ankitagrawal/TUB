@@ -32,6 +32,8 @@
                     $('#is-rto').slideDown();
                 });
 	            $('.createReplacementOrderButton').click(function(event){
+	            	 $(this).hide();
+	            	 var button = $(this);
 		            event.preventDefault();
 		            var shippingOrderId= $('#shippingOrderIdText').val();
 		            var formName;
@@ -48,6 +50,7 @@
 					            if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 						            var confirm_action = confirm("A replacement order exists for given shipping order, are you sure you want to create another replacement order?");
 						            if (confirm_action == false) {
+						            	button.show();
 							            event.preventDefault();
 						            }
 						            else{
