@@ -1,10 +1,14 @@
 package com.hk.web.action.admin.catalog.product;
 
 import com.akube.framework.stripes.action.BaseAction;
-import net.sourceforge.stripes.action.DefaultHandler;
-import net.sourceforge.stripes.action.DontValidate;
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.Resolution;
+import com.hk.constants.core.Keys;
+import net.sourceforge.stripes.action.*;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +19,32 @@ import net.sourceforge.stripes.action.Resolution;
  */
 public class BulkUploadRelatedProductAction extends BaseAction {
 
-    @DefaultHandler
-     @DontValidate
-     public Resolution pre() {
-       return new ForwardResolution("/pages/bulkUploadRelatedProduct.jsp");
-     }
+    @Value("#{hkEnvProps['" + Keys.Env.adminUploads + "']}")
+    String adminUploadsPath;
 
+    String category;
+                 FileBean fileBean;
+
+    @DefaultHandler
+    @DontValidate
+    public Resolution pre() {
+        return new ForwardResolution("/pages/bulkUploadRelatedProduct.jsp");
+    }
+
+    public Resolution save() throws IOException {
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+        String excelFilePath = adminUploadsPath + "/relatedProductFiles/" + sdf.format(new Date()) + "/" + category + "_" + sdf.format(new Date()) + ".xls";
+        File excelFile= new File(excelFilePath);
+        excelFile.getParentFile().mkdirs();
+        fileBean.save(excelFile);
+        try{
+
+        }
+        catch (Exception ex){
+
+        }
+
+        addRedirectAlertMessage(new SimpleMessage("Database Successfully Updated."));
+        return new ForwardResolution("/pages/admin/bulkUploadRelatedProduct.jsp");
+    }
 }
