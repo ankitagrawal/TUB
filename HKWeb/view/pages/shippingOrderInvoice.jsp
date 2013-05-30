@@ -80,7 +80,7 @@
 </head>
 <body>
 <s:useActionBean beanclass="com.hk.web.action.core.accounting.SOInvoiceAction" event="pre" var="orderSummary"/>
-<c:set var="eyeCat" value="<%=CategoryConstants.EYE%>"/>
+<c:set var="eyeCat" value="<%=CategoryConstants.eyeGlasses.getName()%>"/>
 <c:set var="b2bUser" value="<%=EnumRole.B2B_USER.getRoleName()%>"/>
 <c:set var="baseOrder" value="${orderSummary.shippingOrder.baseOrder}"/>
 <c:set var="address" value="${baseOrder.address}"/>
@@ -473,9 +473,16 @@
             </tr>
         </c:if>
         <tr>
-            <c:choose><c:when test="${orderSummary.shippingOrder.basketCategory==eyeCat}">
-                <td><strong>Grand Total*</strong></td>
-            </c:when>
+            <c:set var="eyeBool" value="false"/>
+            <c:forEach items="${orderSummary.shippingOrder.baseOrder.cartLineItems}" var="cartLineItems">
+                <c:if test="${cartLineItems.productVariant.product.secondaryCategory.name eq eyeCat}">
+                    <c:set var="eyeBool" value="true"/>
+                </c:if>
+            </c:forEach>
+            <c:choose>
+                <c:when test="${eyeBool}">
+                    <td><strong>Grand Total*</strong></td>
+                </c:when>
                 <c:otherwise>
                     <td><strong>Grand Total</strong></td>
                 </c:otherwise>
@@ -486,8 +493,9 @@
             </td>
         </tr>
     </table>
-    <c:if test="${orderSummary.shippingOrder.basketCategory==eyeCat}">
-        <br><td>*Sale Price includes value of Glasses/ Frames and Cover</td>
+    <c:if test="${eyeBool}">
+        <br>
+        <td>*Sale Price includes value of Glasses/ Frames and Cover</td>
     </c:if>
 </div>
 
