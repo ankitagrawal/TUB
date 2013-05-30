@@ -130,6 +130,16 @@
         });
         return false;
       });
+      $("#moveToActionAwaiting").click(function(){
+    		$(this).hide();
+    		$("#markShippingOrdersAsShipped").hide();
+    	});
+      
+      $("#markShippingOrdersAsShipped").click(function(){
+  		$(this).hide();
+  		$("#moveToActionAwaiting").hide();
+  	});
+    
 
     </script>
   </s:layout-component>

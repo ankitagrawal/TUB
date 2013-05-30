@@ -4,6 +4,7 @@
 <%@ page import="com.akube.framework.util.FormatUtils" %>
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.admin.pact.service.courier.CourierService" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultAdmin.jsp" pageTitle="Calculate Shipment Cost">
     <s:useActionBean beanclass="com.hk.web.action.admin.shipment.ShipmentCostCalculatorAction" var="calculator"/>
@@ -107,11 +108,11 @@
 
                         <div style="margin-top:15px;"></div>
                         <s:submit name="calculateCourierCostingForShippingOrder" value="Calculate Shipping Cost"/>
-                        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
+                        <shiro:hasPermission name="<%=PermissionConstants.SAVE_SHIPPING_COST%>">
                             <s:submit name="saveHistoricalShipmentCost" value="Save Shipping Cost (By Date)"/>
                             <s:submit name="saveActualShippingCostForShippingOrder"
                                       value="Save Shipping Cost (Single SO)"/>
-                        </shiro:hasAnyRoles>
+                        </shiro:hasPermission>
                     </fieldset>
                 </s:form>
             </div>

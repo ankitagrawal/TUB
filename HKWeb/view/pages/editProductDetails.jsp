@@ -1,4 +1,5 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" var="pa"/>
@@ -74,9 +75,14 @@
         </ul>
       </fieldset>
 
-      <div class="buttons">
-        <s:submit  class="save" name="saveProductDetails" value="Save"/>
-      </div>
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_PRODUCT_INFO%>">
+
+            <div class="buttons">
+                <s:submit class="save" name="saveProductDetails" value="Save"/>
+            </div>
+
+        </shiro:hasPermission>
+
     </s:form>
   </s:layout-component>
 </s:layout-render>
