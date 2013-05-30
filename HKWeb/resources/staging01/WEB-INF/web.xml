@@ -50,7 +50,7 @@
         </filter-class>
         <init-param>
             <param-name>urlPattern</param-name>
-            <param-value>/core/auth/Login.action /core/user/Signup.action</param-value>
+            <param-value>/core/auth/Login.action /core/user/Signup.action /core/user/ForgotPassword.action</param-value>
         </init-param>
         <init-param>
             <param-name>http</param-name>
