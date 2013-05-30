@@ -288,7 +288,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             subscriptionOrderService.markSubscriptionOrderAsShipped(order);
 
             // incase of other store orders
-            if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            if (order.getStore().getCallbackRestUrl() != null ) {
                 order = orderService.save(order);
                 storeOrderService.updateOrderStatusInStore(order);
             }
