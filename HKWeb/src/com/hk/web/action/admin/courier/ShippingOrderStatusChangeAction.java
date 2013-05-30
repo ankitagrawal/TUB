@@ -1,6 +1,21 @@
 package com.hk.web.action.admin.courier;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sourceforge.stripes.action.DefaultHandler;
+import net.sourceforge.stripes.action.ForwardResolution;
+import net.sourceforge.stripes.action.RedirectResolution;
+import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.SimpleMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
+
 import com.akube.framework.stripes.action.BaseAction;
+import com.hk.admin.pact.service.shippingOrder.AdminShippingOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.shippingOrder.EnumShippingOrderLifecycleActivity;
 import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
@@ -9,13 +24,6 @@ import com.hk.domain.shippingOrder.ShippingOrderStatusMapping;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.web.action.error.AdminPermissionAction;
-import net.sourceforge.stripes.action.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
-
-import java.util.*;
 
 
 /**
@@ -40,6 +48,9 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     ShippingOrderStatusService shippingOrderStatusService;
     @Autowired
     ShippingOrderService shippingOrderService;
+    
+    @Autowired
+	AdminShippingOrderService adminShippingOrderService;
 
     @DefaultHandler
     public Resolution pre() {
@@ -65,9 +76,13 @@ public class ShippingOrderStatusChangeAction extends BaseAction{
     public Resolution saveStatus(){
         if(shippingOrder!=null){
            currentStatus=shippingOrder.getShippingOrderStatus().getName();
-          shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());
-          getBaseDao().save(shippingOrder);
-          shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null,"Current Status-->"+currentStatus +" New Status-->"+enumSoUpdatedStatusId.getName());
+           if(enumSoUpdatedStatusId == EnumShippingOrderStatus.SO_Delivered) {
+        	   adminShippingOrderService.markShippingOrderAsDelivered(shippingOrderService.find(shippingOrder.getId()));
+           } else {
+        	   shippingOrder.setOrderStatus(enumSoUpdatedStatusId.asShippingOrderStatus());
+        	   getBaseDao().save(shippingOrder);
+        	   shippingOrderService.logShippingOrderActivity(shippingOrder, EnumShippingOrderLifecycleActivity.SHIPMENT_RESOLUTION_ACTIVITY, null,"Current Status-->"+currentStatus +" New Status-->"+enumSoUpdatedStatusId.getName());
+           }
         }
         addRedirectAlertMessage(new SimpleMessage("Changes Saved Successfully!!!"));
         return new RedirectResolution(ShippingOrderStatusChangeAction.class);

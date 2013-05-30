@@ -15,6 +15,7 @@ import com.hk.constants.core.Keys;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
@@ -155,7 +156,10 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-        this.loyaltyPointsEarned= this.loyaltyProgramService.creditKarmaPoints(this.order);
+        UserOrderKarmaProfile karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
+        if (karmaProfile!=null) {
+        	loyaltyPointsEarned = karmaProfile.getKarmaPoints(); 
+        }
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }
