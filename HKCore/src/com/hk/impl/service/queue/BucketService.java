@@ -4,6 +4,7 @@ import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.core.search.ActionItemSearchCriteria;
+import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
@@ -57,6 +58,8 @@ public interface BucketService {
     ActionItem existsActionItem(ShippingOrder shippingOrder);
 
     ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder);
+
+    void confirmCOD(Order order);
 
     ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
 

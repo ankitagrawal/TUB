@@ -7,6 +7,7 @@ import com.hk.constants.queue.EnumTrafficState;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.product.ProductVariant;
+import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
@@ -113,7 +114,14 @@ public class BucketServiceImpl implements BucketService {
         return saveActionItem(actionItem);
     }
 
-      public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
+    @Override
+    public void confirmCOD(Order order) {
+        for (ShippingOrder shippingOrder : order.getShippingOrders()) {
+            autoCreateUpdateActionItem(shippingOrder);
+        }
+    }
+
+    public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
         List<Bucket> actionableBuckets;
         if(autoUpdate){
          actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
