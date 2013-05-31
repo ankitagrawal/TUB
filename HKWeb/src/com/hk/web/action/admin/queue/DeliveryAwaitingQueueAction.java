@@ -57,10 +57,6 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
     @Autowired
     CourierService courierService;
 
-
-    @Autowired
-    LoyaltyProgramService loyaltyProgramService;
-
     List<ShippingOrder> shippingOrderList = new ArrayList<ShippingOrder>();
 
     private Long orderId;
@@ -133,10 +129,6 @@ public class DeliveryAwaitingQueueAction extends BasePaginatedAction {
         if (shippingOrderList != null && !shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
                 getAdminShippingOrderService().markShippingOrderAsDelivered(shippingOrder);
-	            //loyalty program
-                if (shippingOrder.getBaseOrder().getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
-                	loyaltyProgramService.approveKarmaPoints(shippingOrder.getBaseOrder());
-                }
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been marked as Delivered"));
         } else {
