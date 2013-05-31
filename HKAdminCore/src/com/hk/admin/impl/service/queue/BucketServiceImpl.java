@@ -256,4 +256,9 @@ public class BucketServiceImpl implements BucketService {
     }
 
 
+
+    public List<ActionItem> getActionItemsOfActionQueue (){
+
+        return actionItemDao.getActionItemsOfActionQueue ();
+    }
 }
