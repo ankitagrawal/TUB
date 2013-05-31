@@ -96,7 +96,7 @@
                     <label>Current AT </label>
                     <s:select name="currentActionTasks">
                         <option value="">Any CAT</option>
-                        <c:forEach items="${currentATList}" var="currentAT">
+                        <c:forEach items="${actionItemQueueBean.currentActionTaskFilter}" var="currentAT">
                             <s:option value="${currentAT.id}">${currentAT.name}</s:option>
                         </c:forEach>
                     </s:select>
@@ -203,12 +203,17 @@
                     <div>
                         <input type="hidden" class="selActItemId" name="actionItem" value="${actionItem.id}"/>
                         PAT : ${actionItem.previousActionTask.name} <br>
-                        CAT : <s:select class="actionTask" name="currentActionTask"
+                        SAT : <c:forEach items="${hk:listNextActionTasks(actionItem)}" var="systemActionTask">
+                        ${systemActionTask.name},
+                    </c:forEach>
+                       <br> CAT : <s:select class="actionTask" name="currentActionTask"
                                         value="${actionItem.currentActionTask.id}">
                         <c:forEach items="${currentATList}" var="enumActionTask">
                             <s:option value="${enumActionTask.id}">${enumActionTask.name}</s:option>
                         </c:forEach>
                     </s:select>
+
+
                         <s:submit name="updateTask" value="Update Task" class="updateTask"/>
 
                             <%--(<s:link beanclass="com.hk.web.action.admin.queue.ActionItemResolutionQueueAction" event="updateTask"--%>
