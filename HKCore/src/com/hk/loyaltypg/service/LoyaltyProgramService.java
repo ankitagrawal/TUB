@@ -9,6 +9,7 @@ import com.akube.framework.dao.Page;
 import com.hk.domain.loyaltypg.Badge;
 import com.hk.domain.loyaltypg.LoyaltyProduct;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.user.User;
@@ -23,7 +24,7 @@ public interface LoyaltyProgramService {
 	
 	public LoyaltyProduct getProductByVariantId(String variantId);
 	
-	public double creditKarmaPoints(Order order);
+	public void creditKarmaPoints(Order order);
 	
 	public void debitKarmaPoints(Order order);
 
@@ -58,6 +59,8 @@ public interface LoyaltyProgramService {
 	public void uploadBadgeInfoCSV(FileBean csvFileReader, List<String> errorMessages);
 
 	public void createNewUserBadgeInfo(User user);
+	
+	public UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId);
 
 	public String updateCardNumber(UserBadgeInfo info, String cardNumber);
 

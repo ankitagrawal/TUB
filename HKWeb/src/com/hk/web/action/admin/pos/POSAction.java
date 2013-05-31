@@ -360,9 +360,10 @@ public class POSAction extends BaseAction {
 		
 		double loyaltyPointsEarned = 0.0;
 		if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
-			loyaltyPointsEarned = loyaltyProgramService.creditKarmaPoints(order);
+			loyaltyProgramService.creditKarmaPoints(order);
 			loyaltyProgramService.approveKarmaPoints(order);
 			loyaltyProgramService.updateUserBadgeInfo(customer);
+			loyaltyPointsEarned = loyaltyProgramService.getUserOrderKarmaProfile(order.getId()).getKarmaPoints();
 		}
 		shippingOrderToPrint = shippingOrder;
 		StringBuilder redirectMessage = new StringBuilder("Order processed successfully. ");

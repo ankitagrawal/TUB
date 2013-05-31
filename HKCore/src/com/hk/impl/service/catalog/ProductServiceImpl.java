@@ -286,6 +286,10 @@ public class ProductServiceImpl implements ProductService {
         return isComboInStock;
     }
 
+    public List<Product> getOOSHiddenDeletedProducts(){
+         return productDAO.getOOSHiddenDeletedProducts();
+    }
+
     public List<Combo> getRelatedCombos(Product product) {
         return getComboDao().getCombos(product);
     }

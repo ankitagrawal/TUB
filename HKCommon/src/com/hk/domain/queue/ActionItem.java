@@ -48,6 +48,9 @@ public class ActionItem implements java.io.Serializable {
 
     @Column(name = "flagged")
     private boolean flagged;
+    
+    @Column(name = "priority")
+    private Long priority;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "first_push_date", length = 19)
@@ -95,6 +98,12 @@ public class ActionItem implements java.io.Serializable {
 
     public void setTrafficState(TrafficState trafficState) {
         this.trafficState = trafficState;
+    }
+
+    public Set<ShippingOrder> getShippingOrders() {
+        Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
+        shippingOrders.add(this.shippingOrder);
+        return shippingOrders;
     }
 
     public ShippingOrder getShippingOrder() {
@@ -159,6 +168,14 @@ public class ActionItem implements java.io.Serializable {
 
     public void setWatchers(List<User> watchers) {
         this.watchers = watchers;
+    }
+
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
     }
 
     @Override

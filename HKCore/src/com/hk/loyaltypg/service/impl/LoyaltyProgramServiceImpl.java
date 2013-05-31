@@ -45,6 +45,7 @@ import com.hk.domain.offer.OfferInstance;
 import com.hk.domain.offer.rewardPoint.RewardPoint;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.store.EnumStore;
 import com.hk.domain.user.User;
 import com.hk.exception.HealthkartRuntimeException;
 import com.hk.loyaltypg.dao.LoyaltyProductDao;
@@ -153,15 +154,14 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 
 	@Override
 	@Transactional
-	public double creditKarmaPoints(Order order) {
-		if (!order.getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
-			// not a loyalty user, no points credited
-			return 0.0;
+	public void creditKarmaPoints(Order order) {
+		if(!isLoyaltyUser(order.getUser()) || order.getStore().getId().equals(EnumStore.LOYALTYPG.asStore().getId())) {
+			return;
 		}
 		double karmaPoints = 0d;
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.CREDIT) {
-			return karmaPoints = karmaProfile.getKarmaPoints();
+			return;
 		}
 
 		UserBadgeInfo badgeInfo = this.getUserBadgeInfo(order.getUser());
@@ -172,13 +172,15 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		if (offerInstance != null) {
 			Coupon coupon = offerInstance.getCoupon();
 			if (coupon != null && coupon.getCode().equalsIgnoreCase(OfferConstants.HK_EMPLOYEE_CODE)) {
-				return 0d;
+				return;
 			}
 		}
+
 		karmaPoints = (amount * loyaltyPercentage) / 100;
 		if (karmaPoints == 0d) {
-			return 0d;
+			return;
 		}
+
 		UserOrderKarmaProfile profile = new UserOrderKarmaProfile();
 		profile.setStatus(KarmaPointStatus.PENDING);
 		profile.setTransactionType(TransactionType.CREDIT);
@@ -186,7 +188,6 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setUser(order.getUser());
 		profile.setOrder(order);
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
-		return karmaPoints;
 	}
 
 	@Override
@@ -247,12 +248,14 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void approveKarmaPoints(Order order) {
-		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
-		if (profile!= null ) {
-			profile.setStatus(KarmaPointStatus.APPROVED);
-			this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+		if(isLoyaltyUser(order.getUser())) {
+			UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
+			if (profile!= null) {
+				profile.setStatus(KarmaPointStatus.APPROVED);
+				this.userOrderKarmaProfileDao.saveOrUpdate(profile);
+			}
+			this.updateUserBadgeInfo(order.getUser());
 		}
-		this.updateUserBadgeInfo(order.getUser());
 	}
 
 	@Override
@@ -285,6 +288,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void createNewUserBadgeInfo(User user) {
 		user.getRoles().add(this.roleService.getRoleByName(RoleConstants.HK_LOYALTY_USER));
 		this.userService.save(user);
+		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
+		if(userBadgeInfo.getId() != null &&  userBadgeInfo.getId() != 0l) {
+			return;
+		}
 
 		double annualSpend = this.calculateAnualSpend(user);
 		Order bonusOrder = this.baseDao.get(Order.class, -1l);
@@ -297,14 +304,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 				break;
 			}
 		}
-		UserBadgeInfo userBadgeInfo = this.getUserBadgeInfo(user);
+
 		if (calculatedBadge.compareTo(userBadgeInfo.getBadge()) > 0) {
 			userBadgeInfo.setBadge(calculatedBadge);
 			userBadgeInfo.setUpdationTime(currentTime);
-			this.baseDao.save(userBadgeInfo);
-		} else {
-			this.baseDao.save(userBadgeInfo);
 		}
+		this.baseDao.save(userBadgeInfo);
+
 		UserOrderKarmaProfile bonusProfile = new UserOrderKarmaProfile();
 		bonusProfile.setUser(user);
 		bonusProfile.setOrder(bonusOrder);
@@ -335,6 +341,9 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	@Override
 	@Transactional
 	public void cancelLoyaltyPoints(Order order) {
+		if(!isLoyaltyUser(order.getUser())) {
+			return;
+		}
 		UserOrderKarmaProfile profile = this.getUserOrderKarmaProfile(order.getId());
 		if (profile!=null ) {
 			profile.setStatus(KarmaPointStatus.CANCELED);
@@ -479,9 +488,10 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return (Double) vList.get(0);
 	}
 
-	private UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
+	@Override
+	public UserOrderKarmaProfile getUserOrderKarmaProfile(Long orderId) {
 		if (orderId == -1l) {
-			throw new RuntimeException("This API is not supposed to query order id with -1");
+			return null;
 		}
 		Order order = this.orderDao.get(Order.class, orderId);
 		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
@@ -667,6 +677,13 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		} else {
 			return null;
 		}
+	}
+	
+	private boolean isLoyaltyUser (User user) {
+		if (user!=null && user.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER) ) {
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * 

@@ -18,29 +18,17 @@ public class ActionTask implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_action_task_id")
-    private ActionTask nextActionTask;
-
     @Column(name = "name", nullable = false, length = 90)
     private String name;
 
     @Column(name = "priority")
     private Long priority;
 
-    //todo bucket need to drop it here, and move it to actionItem
-    @Column(name = "acknowledged", columnDefinition="boolean default false")
-    private boolean acknowledged = false;
-
     @Column(name = "range")
     private Long range;
 
     @Column(name = "hierarchy")
     private Long hierarchy;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "acknowledged_by", nullable = false)
-    private User acknowledgedBy;
 
     public Long getId() {
         return this.id;
@@ -66,14 +54,6 @@ public class ActionTask implements java.io.Serializable {
         this.priority = priority;
     }
 
-    public boolean isAcknowledged() {
-        return acknowledged;
-    }
-
-    public void setAcknowledged(boolean acknowledged) {
-        this.acknowledged = acknowledged;
-    }
-
     public Long getRange() {
         return this.range;
     }
@@ -88,22 +68,6 @@ public class ActionTask implements java.io.Serializable {
 
     public void setHierarchy(Long hierarchy) {
         this.hierarchy = hierarchy;
-    }
-
-    public ActionTask getNextActionTask() {
-        return nextActionTask;
-    }
-
-    public void setNextActionTask(ActionTask nextActionTask) {
-        this.nextActionTask = nextActionTask;
-    }
-
-    public User getAcknowledgedBy() {
-        return acknowledgedBy;
-    }
-
-    public void setAcknowledgedBy(User acknowledgedBy) {
-        this.acknowledgedBy = acknowledgedBy;
     }
 
     @Override
@@ -121,6 +85,13 @@ public class ActionTask implements java.io.Serializable {
     public int hashCode() {
         return id.hashCode();
     }
+    
+    @Override
+	public String toString() {
+		return this.id != null ? this.id.toString() : "";
+	}
+
+
 }
 
 

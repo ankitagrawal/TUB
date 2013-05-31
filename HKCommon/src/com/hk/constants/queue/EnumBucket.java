@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ public enum EnumBucket {
     SPORTS_NUTRITION(100L, CategoryConstants.SPORTS_NUTRITION, EnumClassification.BASKET_CATEGORY_SPORTS_NUTRITION),
     Cheque_Cash_Neft(110L, "Cheque_Cash_Neft", EnumClassification.Cheque_Cash_Neft),
     Online_Payment_Disputes(120L, "Online_Payment_Disputes", EnumClassification.Online_Payment_Disputes),
+    Knowlarity(200L, "Knowlarity", EnumClassification.COD),
+    Effort_BPO(205L, "Effort BPO", EnumClassification.COD),
     Cod_Confirmation(210L, "Cod", EnumClassification.COD),
     Jit(220L, "Jit", EnumClassification.JIT),
     DropShip(230L, "DropShip", EnumClassification.DropShip),
@@ -37,7 +40,11 @@ public enum EnumBucket {
     Warehouse(410L, "Warehouse_Processing", EnumClassification.Warehouse),
     AD_HOC(460L, "AD_HOC Cases", EnumClassification.Warehouse),
     CM(470L,"CM",EnumClassification.AD_HOC),
-    Vendor(510L, "Vendor", EnumClassification.Vendor);
+    Customer_Service(480L,"Customer Service",EnumClassification.Customer_Service),
+    Tech_Support(490L,"Tech Support",EnumClassification.Tech_Support),
+    Vendor(510L, "Vendor", EnumClassification.Vendor),
+    Logistics(520L, "Logistics", EnumClassification.Logistics),
+    Receiving(530L, "Receiving", EnumClassification.Vendor);
 
     private static Logger logger        = LoggerFactory.getLogger(EnumBucket.class);
 
@@ -91,6 +98,23 @@ public enum EnumBucket {
             }
         }
         return applicableBuckets;
+    }
+
+    public static List<Bucket> getCategoryBuckets(){
+        return Arrays.asList(
+                EnumBucket.HOME_LIVING.asBucket(),
+                EnumBucket.NUTRITION.asBucket(),
+                EnumBucket.PARENTING.asBucket(),
+                EnumBucket.BEAUTY.asBucket(),
+                EnumBucket.DIABETES.asBucket(),
+                EnumBucket.EYE.asBucket(),
+                EnumBucket.HEALTH_DEVICES.asBucket(),
+                EnumBucket.PERSONAL_CARE.asBucket(),
+                EnumBucket.SERVICES.asBucket(),
+                EnumBucket.SPORTS.asBucket(),
+                EnumBucket.HEALTH_NUTRITION.asBucket(),
+                EnumBucket.SPORTS_NUTRITION.asBucket()
+        );
     }
 
     public Long getId() {
