@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
+import com.hk.impl.dao.email.NotifyMeDto;
 import com.hk.web.action.core.user.NotifyMeAction;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.DontValidate;
@@ -83,14 +84,17 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
     Page notifyMePage;
     private Integer defaultPerPage = 30;
     private List<NotifyMe> notifyMeList = new ArrayList<NotifyMe>();
+    private List<NotifyMeDto> notifyMeDtoList = new ArrayList<NotifyMeDto>();
     private List<NotifyMe> notifyMeListForProductVariantInStock = new ArrayList<NotifyMe>();
     private ProductVariant productVariant;
     private Product product;
     private Category primaryCategory;
     private Boolean productInStock;
     private Boolean productDeleted;
+    private Boolean productHidden;
     private Float conversionRate = 0.01f;
     private int bufferRate = 2;
+    private int totalProductVariant;
 
 
     @DefaultHandler
@@ -206,13 +210,35 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         return new RedirectResolution(NotifyMeListAction.class);
     }
 
-    public Resolution sendAllNotifyMails() {
+    /*According to conversion logic*/
+    public Resolution sendAllNotifyMailsForAvailableProductVariant() {
         if (conversionRate > 1) {
             addRedirectAlertMessage(new SimpleMessage("enter conversion rate less than 1"));
             return new RedirectResolution(NotifyMeListAction.class);
         }
-        productVariantNotifyMeEmailService.sendNotifyMeEmail(conversionRate, bufferRate);
+        productVariantNotifyMeEmailService.sendNotifyMeEmailForInStockProducts(conversionRate, bufferRate);
         return new RedirectResolution(NotifyMeListAction.class);
+    }
+
+    /*pre method for similar product screen*/
+    public Resolution notifyMeListForDeletedHiddenOOSProduct() {
+        Page page = notifyMeDao.getNotifyMeListForDeletedHiddenOOSProduct(startDate, endDate, getPageNo(), getPerPage(), product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+        notifyMeDtoList = page.getList();
+        totalProductVariant = notifyMeDtoList.size();
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+    }
+
+
+    /*For Similar Products*/
+    public Resolution sendAllMailsForDeletedProducts() {
+        if (!productDeleted && productInStock && !productHidden) {
+            addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
+            return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
+        }
+        notifyMeList = notifyMeDao.searchNotifyMe(startDate, endDate, product, productVariant, primaryCategory, productInStock, productDeleted, productHidden);
+        int countOfSentMail = productVariantNotifyMeEmailService.sendNotifyMeEmailForDeletedOOSHidden(conversionRate, bufferRate, notifyMeList);
+        addRedirectAlertMessage(new SimpleMessage("Total Emails Sent" + countOfSentMail));
+        return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
     }
 
     public List<NotifyMe> getNotifyMeList() {
@@ -265,6 +291,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
         params.add("primaryCategory");
         params.add("productInStock");
         params.add("productDeleted");
+        params.add("productHidden");
         return params;
     }
 
@@ -358,5 +385,29 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     public void setBufferRate(int bufferRate) {
         this.bufferRate = bufferRate;
+    }
+
+    public List<NotifyMeDto> getNotifyMeDtoList() {
+        return notifyMeDtoList;
+    }
+
+    public void setNotifyMeDtoList(List<NotifyMeDto> notifyMeDtoList) {
+        this.notifyMeDtoList = notifyMeDtoList;
+    }
+
+    public Boolean getProductHidden() {
+        return productHidden;
+    }
+
+    public void setProductHidden(Boolean productHidden) {
+        this.productHidden = productHidden;
+    }
+
+    public int getTotalProductVariant() {
+        return totalProductVariant;
+    }
+
+    public void setTotalProductVariant(int totalProductVariant) {
+        this.totalProductVariant = totalProductVariant;
     }
 }

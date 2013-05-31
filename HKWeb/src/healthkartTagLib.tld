@@ -1225,4 +1225,16 @@
             ${hk:round(${number})}
 		</example>
 	</function>
+    <function>
+        <description>
+            returns n number of similar product with  max inventory
+        </description>
+        <name>similarProductWithUnbookedInventory</name>
+        <function-class>com.hk.taglibs.Functions</function-class>
+        <function-signature>java.util.List similarProductWithUnbookedInventory(com.hk.domain.catalog.product.ProductVariant)</function-signature>
+        <example>
+            ${hk:similarProductWithUnbookedInventory(${productVariant})}
+        </example>
+    </function>
+
 </taglib>

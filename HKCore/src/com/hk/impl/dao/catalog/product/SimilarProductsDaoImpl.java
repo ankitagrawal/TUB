@@ -1,11 +1,12 @@
 package com.hk.impl.dao.catalog.product;
 
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.catalog.product.SimilarProduct;
 import com.hk.domain.catalog.product.Product;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.catalog.product.SimilarProductsDao;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,11 +18,10 @@ import org.springframework.stereotype.Repository;
  * To change this template use File | Settings | File Templates.
  */
 @Repository
-public class SimilarProductsDaoImpl extends BaseDaoImpl implements SimilarProductsDao{
+public class SimilarProductsDaoImpl extends BaseDaoImpl implements SimilarProductsDao {
 
-    public List<SimilarProduct> getSimProdsFromDB (Product inputProduct){
-      return (List<SimilarProduct>) findByNamedParams("from SimilarProduct sp where sp.product =  :inputProduct", new String[] { "inputProduct" },
-                   new Object[] { inputProduct });
-    }
+
+
+
 
 }

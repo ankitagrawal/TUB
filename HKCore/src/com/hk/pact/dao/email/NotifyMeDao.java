@@ -8,15 +8,18 @@ import com.hk.domain.catalog.category.Category;
 import com.hk.domain.catalog.product.Product;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.marketing.NotifyMe;
+import com.hk.impl.dao.email.NotifyMeDto;
 import com.hk.pact.dao.BaseDao;
 
 public interface NotifyMeDao extends BaseDao {
 
     public NotifyMe save(NotifyMe notifyMe);
 
-    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted);
+    public Page searchNotifyMe(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
 
-	public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory,  Boolean productInStock, Boolean productDeleted);
+    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted);
+
+    public List<NotifyMe> searchNotifyMe(Date startDate, Date endDate, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden);
 
     public List<String> getPendingNotifyMeProductVariant();
 
@@ -29,5 +32,8 @@ public interface NotifyMeDao extends BaseDao {
     public List<NotifyMe> getPendingNotifyMeList(String notifyMeEmail, ProductVariant productVariant);
 
     public List<NotifyMe> getPendingNotifyMeListByVariant(String notifyMeEmail, List<ProductVariant> productVariantList);
+
+    public Page getNotifyMeListForDeletedHiddenOOSProduct(Date startDate, Date endDate, int pageNo, int perPage, Product product, ProductVariant productVariant, Category primaryCategory, Boolean productInStock, Boolean productDeleted, Boolean productHidden);
+
 
 }

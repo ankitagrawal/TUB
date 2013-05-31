@@ -14,5 +14,5 @@ import java.util.List;
  */
 public interface SimilarProductsDao {
 
-    public List<SimilarProduct> getSimProdsFromDB (Product inputProduct);
+   // public List<SimilarProduct> getSimProdsFromDB (Product inputProduct);
 }

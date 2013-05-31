@@ -78,7 +78,7 @@ public class EditSimilarProductsAction extends BaseAction {
 
     public Resolution search() {
         if (inputProduct != null && inputProduct.getId() != null) {
-            similarProductsList = similarProductsDao.getSimProdsFromDB(inputProduct);
+            similarProductsList = inputProduct.getSimilarProducts();
         } else {
             similarProductsList = new ArrayList<SimilarProduct>();
             addRedirectAlertMessage(new SimpleMessage("Please enter a valid product in the text field above."));

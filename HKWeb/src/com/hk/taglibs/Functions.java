@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.hk.admin.impl.service.email.ProductInventoryDomain;
+import com.hk.admin.pact.service.email.ProductVariantNotifyMeEmailService;
+import com.hk.domain.catalog.product.*;
 import net.sourceforge.stripes.util.CryptoUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -50,13 +53,6 @@ import com.hk.domain.analytics.Reason;
 import com.hk.domain.catalog.ProductVariantSupplierInfo;
 import com.hk.domain.catalog.Supplier;
 import com.hk.domain.catalog.category.Category;
-import com.hk.domain.catalog.product.Product;
-import com.hk.domain.catalog.product.ProductImage;
-import com.hk.domain.catalog.product.ProductVariant;
-import com.hk.domain.catalog.product.VariantConfig;
-import com.hk.domain.catalog.product.VariantConfigOption;
-import com.hk.domain.catalog.product.VariantConfigOptionParam;
-import com.hk.domain.catalog.product.VariantConfigValues;
 import com.hk.domain.catalog.product.combo.Combo;
 import com.hk.domain.content.HeadingProduct;
 import com.hk.domain.core.Country;
@@ -243,7 +239,7 @@ public class Functions {
 
     /**
      * checks if c1 contains all elements of c2
-     * 
+     *
      * @param c1
      * @param c2
      * @return
@@ -349,7 +345,7 @@ public class Functions {
         Category primaryCategory = (Category) o;
         CategoryDao categoryDao = ServiceLocatorFactory.getService(CategoryDao.class);
         return categoryDao.getBrandsByPrimaryCategory(primaryCategory);
-        
+
         //return CategoryCache.getInstance().getBrandsInCategory(primaryCategory.getName());
     }
 
@@ -819,7 +815,7 @@ public class Functions {
         GatewayIssuerMappingService gatewayIssuerMappingService = ServiceLocatorFactory.getService(GatewayIssuerMappingService.class);
         return gatewayIssuerMappingService.getImageOfIssuer(imageByteArray,filename);
     }
-    
+
     public static Boolean isOrderForDiscretePackaging(ShippingOrder shippingOrder){
         Category discretePackagingCategory = new Category("discrete-packaging", "Discrete Packaging");
         for (LineItem lineItem : shippingOrder.getLineItems()) {
@@ -862,7 +858,7 @@ public class Functions {
   public static String getStateFromTin(String tin){
     return StateList.getStateByTin(tin);
   }
-  
+
 	public static double getLoyaltyKarmaPointsForUser(Long userId){
 		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
 		if(userId == null){
@@ -870,7 +866,7 @@ public class Functions {
 		}
 		return loyaltyProgramService.calculateLoyaltyPoints(ServiceLocatorFactory.getService(UserService.class).getUserById(userId));
 	}
-	
+
 	public static Badge getBadgeInfoForUser(Long userId){
 		LoyaltyProgramService loyaltyProgramService = ServiceLocatorFactory.getService(LoyaltyProgramService.class);
 		if(userId == null){
@@ -878,7 +874,7 @@ public class Functions {
 		}
 		return loyaltyProgramService.getUserBadgeInfo(ServiceLocatorFactory.getService(UserService.class).getUserById(userId)).getBadge();
 	}
-	
+
 	public static String roundNumberForDisplay(double number) {
 		String numberString;
 		if ((number*10)%10==0) {
@@ -899,5 +895,10 @@ public class Functions {
     }
     return baseUrl;
   }
+
+    public static List<ProductInventoryDomain> similarProductWithUnbookedInventory(ProductVariant productVariant) {
+        ProductVariantNotifyMeEmailService productVariantNotifyMeEmailService = ServiceLocatorFactory.getService(ProductVariantNotifyMeEmailService.class);
+        return productVariantNotifyMeEmailService.getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
+    }
 
 }

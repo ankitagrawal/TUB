@@ -64,12 +64,12 @@
 </s:layout-component>
 <s:layout-component name="heading">Notify Me List</s:layout-component>
 <s:layout-component name="content">
-    <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-        <s:submit name="getNotifyMeProductVariantListInStock" value="Get Product Variant In Stock"/>
-        <shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">
-            <s:submit name="sendEmailToNotifiedUsersForProductVariantInStock" value="Fire Emails for PV In Stock"/>
-        </shiro:hasAnyRoles>
-    </s:form>
+    <%--<s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">--%>
+        <%--<s:submit name="getNotifyMeProductVariantListInStock" value="Get Product Variant In Stock"/>--%>
+        <%--<shiro:hasAnyRoles name="<%=RoleConstants.ADMIN%>">--%>
+            <%--<s:submit name="sendEmailToNotifiedUsersForProductVariantInStock" value="Fire Emails for PV In Stock"/>--%>
+        <%--</shiro:hasAnyRoles>--%>
+    <%--</s:form>--%>
     <br/><br/>
 
     <h2>Quick Search <i>(by Primary Category)</i>: <input type="text" id="liveSearchBox"/></h2>
@@ -109,22 +109,22 @@
         </s:form>
     </fieldset>
 
-    <fieldset>
-        <legend>Send Notification Email</legend>
-        <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-            <label>Start
-                Date:</label><s:text class="date_input startDate" style="width:150px"
-                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-            &nbsp; &nbsp;
-            <label>End
-                Date:</label><s:text class="date_input endDate" style="width:150px"
-                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-            <label>Product Id</label><s:text style="width:150px" name="product"/>
-            <label>Product Variant Id</label><s:text style="width:150px" name="productVariant"/>
-            <s:submit name="sendMailToNotifiedUsers" value="Send Email" onclick="return confirm('Are you sure?')"/>
+    <%--<fieldset>--%>
+        <%--<legend>Send Notification Email</legend>--%>
+        <%--<s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">--%>
+            <%--<label>Start--%>
+                <%--Date:</label><s:text class="date_input startDate" style="width:150px"--%>
+                                     <%--formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>--%>
+            <%--&nbsp; &nbsp;--%>
+            <%--<label>End--%>
+                <%--Date:</label><s:text class="date_input endDate" style="width:150px"--%>
+                                     <%--formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>--%>
+            <%--<label>Product Id</label><s:text style="width:150px" name="product"/>--%>
+            <%--<label>Product Variant Id</label><s:text style="width:150px" name="productVariant"/>--%>
+            <%--<s:submit name="sendMailToNotifiedUsers" value="Send Email" onclick="return confirm('Are you sure?')"/>--%>
 
-        </s:form>
-    </fieldset>
+        <%--</s:form>--%>
+    <%--</fieldset>--%>
 
 
     <fieldset>
@@ -141,9 +141,16 @@
                     </li>
                 </ol>
             </shiro:hasPermission>
-            <s:submit name="sendAllNotifyMails" value="send all mails"/>
+            <s:submit name="sendAllNotifyMails" value="Send Notify Mails For Instock Live Products"/>
         </s:form>
 
+    </fieldset>
+
+    <fieldset>
+        <legend>Notify Similar Products For Deleted/OOS/Hidden Products</legend>
+        <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+            <s:submit name="notifyMeListForDeletedHiddenOOSProduct" value="Notify Me List for Similar Product" />
+        </s:form>
     </fieldset>
 
 
@@ -225,5 +232,6 @@
             </s:form>
         </c:otherwise>
     </c:choose>
+
 </s:layout-component>
 </s:layout-render>
