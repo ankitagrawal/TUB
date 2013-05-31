@@ -86,13 +86,13 @@
                     autocomplete="false">
                 <div style="width:1100px; margin:10px;">
                     <label>SO Order ID </label> <s:text name="shippingOrderId"/>
-                    <label>Buckets </label>
-                    <s:select name="buckets">
-                        <option value="">Any Bucket</option>
-                        <c:forEach items="${bucketList}" var="bucket">
-                            <s:option value="${bucket.id}">${bucket.name}</s:option>
-                        </c:forEach>
-                    </s:select>
+                    <%--<label>Buckets </label>--%>
+                    <%--<s:select name="buckets">--%>
+                        <%--<option value="">Any Bucket</option>--%>
+                        <%--<c:forEach items="${bucketList}" var="bucket">--%>
+                            <%--<s:option value="${bucket.id}">${bucket.name}</s:option>--%>
+                        <%--</c:forEach>--%>
+                    <%--</s:select>--%>
                     <label>Current AT </label>
                     <s:select name="currentActionTasks">
                         <option value="">Any CAT</option>

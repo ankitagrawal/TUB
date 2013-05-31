@@ -73,10 +73,10 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 //                .addParameters(bucketParameters);
     }
 
-        @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
-             User user = getPrincipalUser();
-            userBuckets = user.getBuckets();
+        User user = getPrincipalUser();
+        userBuckets = user.getBuckets();
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
         if (actionItemsPage != null) actionItems = actionItemsPage.getList();
         return new ForwardResolution("/pages/admin/queue/actionItemResolutionQueue.jsp");
@@ -88,7 +88,13 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         ActionItemSearchCriteria actionItemSearchCriteria = new ActionItemSearchCriteria();
         actionItemSearchCriteria.setShippingOrderId(shippingOrderId).setFlagged(flagged);
         actionItemSearchCriteria.setReporters(reporters);
-        buckets = buckets != null ? buckets : loggedOnUser.getBuckets();
+        List<Bucket> criteriaBuckets = new ArrayList<Bucket>();
+        for (Bucket bucket : buckets) {
+            if (bucket.isSelected()) {
+                criteriaBuckets.add(bucket);
+            }
+        }
+        buckets = criteriaBuckets.size() > 0 ? criteriaBuckets : loggedOnUser.getBuckets();
         actionItemSearchCriteria.setBuckets(buckets);
         actionItemSearchCriteria.setTrafficStates(trafficStates);
         actionItemSearchCriteria.setStartPushDate(startPushDate).setEndPushDate(endPushDate);
@@ -96,14 +102,14 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         return actionItemSearchCriteria;
     }
 
-       @JsonHandler
+    @JsonHandler
     public Resolution updateTask() {
 
         Map datamap = new HashMap();
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
         actionItem.setCurrentActionTask(currentActionTask);
         getBaseDao().save(actionItem);
-        datamap.put("name",actionItem.getId());
+        datamap.put("name", actionItem.getId());
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Task has been updated", datamap);
         noCache();
         return new JsonResolution(healthkartResponse);
@@ -150,7 +156,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 
         actionItem.setBuckets(actionItemBuckets);
         getBaseDao().save(actionItem);
-        datamap.put("name",actionItemBuckets);
+        datamap.put("name", actionItemBuckets);
         HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Added", datamap);
         noCache();
         return new JsonResolution(healthkartResponse);
@@ -381,7 +387,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         this.currentActionTask = currentActionTask;
     }
 
-     public List<Bucket> getUserBuckets() {
+    public List<Bucket> getUserBuckets() {
         return userBuckets;
     }
 
