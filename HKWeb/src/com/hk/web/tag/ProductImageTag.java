@@ -1,12 +1,11 @@
 package com.hk.web.tag;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-
-import net.sourceforge.stripes.tag.HtmlTagSupport;
-
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.util.HKImageUtils;
+import net.sourceforge.stripes.tag.HtmlTagSupport;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 
 public class ProductImageTag extends HtmlTagSupport {
   public int doStartTag() throws JspException {
@@ -16,8 +15,7 @@ public class ProductImageTag extends HtmlTagSupport {
   public int doEndTag() throws JspException {
 
     JspWriter out = getPageContext().getOut();
-    boolean isSecure = pageContext.getRequest().isSecure();
-    set("src", HKImageUtils.getS3ImageUrl(size, imageId,isSecure));
+    set("src", HKImageUtils.getS3ImageUrl(size, imageId));
     writeSingletonTag(out, "img");
 
     return EVAL_PAGE;

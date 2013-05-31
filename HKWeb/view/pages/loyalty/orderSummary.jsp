@@ -15,10 +15,7 @@
  <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
  <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
  <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
-<%
-boolean isSecure = pageContext.getRequest().isSecure();
-pageContext.setAttribute("isSecure", isSecure);
-%>
+
 
 		<table class="table table-bordered">
 			<thead>
@@ -33,7 +30,7 @@ pageContext.setAttribute("isSecure", isSecure);
 					<tr>
 						<td>
 						<c:set var="imageId" value = "${lp.variant.product.mainImageId }" />
-						<img src="${hk:getS3ImageUrl(imageSmallSize, imageId,isSecure)}" alt="${lp.variant.product.name}"/>
+						<img src="${hk:getS3ImageUrl(imageSmallSize, imageId)}" alt="${lp.variant.product.name}"/>
 						<h8>${lp.variant.product.name}</h8>
 						</td>
 						<td>${lp.qty}</td>
