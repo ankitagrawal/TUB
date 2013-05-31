@@ -11,7 +11,7 @@
 	<s:layout-component name="htmlHead">
 		<%
 		    TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-					List<Tax> taxList = taxDao.getTaxList();
+					List<Tax> taxList = taxDao.getLocalTaxList();
 					pageContext.setAttribute("taxList", taxList);
 
 					WarehouseService warehouseService = ServiceLocatorFactory.getService(WarehouseService.class);

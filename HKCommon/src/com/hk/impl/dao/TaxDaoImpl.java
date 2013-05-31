@@ -36,17 +36,22 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
         return taxList;
     }
 
-    public List<Tax> getTaxList() {
-        return getTaxListByType(TaxConstants.TAX_TYPE);
+    public List<Tax> getLocalTaxList() {
+	      List<String> type = new ArrayList<String>();
+	      type.add(TaxConstants.VAT_TYPE);
+        return getTaxListByType(type);
     }
 
-		public List<Tax> getSurchargeList() {
-				return getTaxListByType(TaxConstants.SURCHARGE_TYPE);
+		public List<Tax> getCentralTaxList() {
+				List<String> type = new ArrayList<String>();
+	      type.add(TaxConstants.CST_TYPE);
+				type.add(TaxConstants.VAT_SECONDARY_TYPE);
+				return getTaxListByType(type);
 		}
 
 		@SuppressWarnings("unchecked")
-		public List<Tax> getTaxListByType(String type) {
-				String query = "from Tax t where t.type = :type";
+		public List<Tax> getTaxListByType(List<String> type) {
+				String query = "from Tax t where t.type in (:type)";
         return (List<Tax>) findByNamedParams(query, new String[]{"type"}, new Object[]{type});
 		}
 }

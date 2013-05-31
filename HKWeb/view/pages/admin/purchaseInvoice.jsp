@@ -18,12 +18,12 @@
 
 <%
 	TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-	List<Tax> taxList = taxDao.getTaxList();
+	List<Tax> taxList = taxDao.getLocalTaxList();
 	pageContext.setAttribute("taxList", taxList);
 
 	MasterDataDao masterDataDao = (MasterDataDao) ServiceLocatorFactory.getService(MasterDataDao.class);
 	List<PurchaseFormType> purchaseFormTypes = masterDataDao.getPurchaseInvoiceFormTypes();
-	List<Tax> surchargeList = taxDao.getSurchargeList();
+	List<Tax> surchargeList = taxDao.getCentralTaxList();
 	pageContext.setAttribute("purchaseFormTypes", purchaseFormTypes);
 	pageContext.setAttribute("surchargeList", surchargeList);
 %>
@@ -721,7 +721,7 @@ width: 80px;
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
 							<s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
 							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
@@ -730,7 +730,7 @@ width: 80px;
 							<s:select name="purchaseInvoiceLineItems[${ctr.index}].tax"
 							          value="${purchaseInvoiceLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=TaxDao.class%>"
-								                           serviceProperty="surchargeList" value="id"
+								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
 						</c:otherwise>
@@ -936,7 +936,7 @@ width: 80px;
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
 							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax" 
 							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
@@ -945,7 +945,7 @@ width: 80px;
 							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax"
 							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-								                           serviceProperty="surchargeList" value="id"
+								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
 						</c:otherwise>
@@ -1135,7 +1135,7 @@ width: 80px;
 						<c:when test="${pia.purchaseInvoice.supplier.state == pia.purchaseInvoice.warehouse.state}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax" 
 							          value="${extraInventoryLineItem.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
@@ -1144,7 +1144,7 @@ width: 80px;
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
 							          value="${extraInventoryLineItem.tax.id}" class="valueChange taxValues">
 								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-								                           serviceProperty="surchargeList" value="id"
+								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
 						</c:otherwise>

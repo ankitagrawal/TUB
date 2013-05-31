@@ -35,12 +35,12 @@ public class TaxServiceImpl implements TaxService {
 
 		@Override
 		public List<Tax> getTaxList() {
-			return getTaxDao().getTaxList();
+			return getTaxDao().getLocalTaxList();
 		}
 
 		@Override
 		public List<Tax> getSurchargeList() {
-			return getTaxDao().getSurchargeList();
+			return getTaxDao().getCentralTaxList();
 		}
 
 	public TaxDao getTaxDao() {

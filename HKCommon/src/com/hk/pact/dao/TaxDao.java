@@ -11,12 +11,12 @@ public interface TaxDao extends BaseDao{
         
     public List<Tax> taxListForReport() ;
 
-    public List<Tax> getTaxList() ;
+    public List<Tax> getLocalTaxList() ;
 
-		public List<Tax> getSurchargeList();
+		public List<Tax> getCentralTaxList();
 
-		public List<Tax> getTaxListByType(String taxType);
+		public List<Tax> getTaxListByType(List<String> taxType);
 //    public Tax findByValue(Double taxValue);
-       
+
 
 }

@@ -13006,18 +13006,31 @@
     </changeSet>
 		<changeSet author="Tarun" id="1369725542349-2">
 				<sql>
-					UPDATE `tax` SET type='tax';
+					UPDATE `tax` SET type='VAT';
 
 					INSERT INTO `tax` (`id`, `name`, `value`, `type`) VALUES
-					(110, 'ZeroPercent', '0.00000', 'surcharge'),
-					(120, 'OnePercent', '0.01000', 'surcharge'),
-					(130, 'TwoPercent', '0.02000', 'surcharge'),
-					(135, 'FourPercent', '0.04000', 'surcharge'),
-					(140, 'FivePercent', '0.05000', 'surcharge'),
-					(150, 'TwelveDotFivePercent', '0.12500', 'surcharge'),
-					(160, 'ThirteenDotOneTwoFivePercent', '0.13125', 'surcharge'),
-					(165, 'FourteenDotFive', '0.14500', 'surcharge'),
-					(170, 'TwentyPercent', '0.20000', 'surcharge');
+					(110, 'ZeroPercent', '0.00000', 'VAT_SECONDARY'),
+					(120, 'OnePercent', '0.01000', 'VAT_SECONDARY'),
+					(130, 'TwoPercent', '0.02000', 'CST'),
+					(135, 'FourPercent', '0.04000', 'VAT_SECONDARY'),
+					(140, 'FivePercent', '0.05000', 'VAT_SECONDARY'),
+					(150, 'TwelveDotFivePercent', '0.12500', 'VAT_SECONDARY'),
+					(160, 'ThirteenDotOneTwoFivePercent', '0.13125', 'VAT_SECONDARY'),
+					(165, 'FourteenDotFive', '0.14500', 'VAT_SECONDARY'),
+					(170, 'TwentyPercent', '0.20000', 'VAT_SECONDARY')
+					on duplicate key update
+					name = values(name),
+					value = values(value),
+					type = values(type);
 				</sql>
+		</changeSet>
+		<changeSet author="Tarun" id="1369725542349-3">
+				UPDATE purchase_invoice_line_item
+				SET tax_id= surcharge_id+100
+				WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
+
+				UPDATE extra_inventory_line_item
+				SET tax_id= surcharge_id+100
+				WHERE tax_id IS NULL and surcharge_id IS NOT NULL;
 		</changeSet>
 </databaseChangeLog>

@@ -7,7 +7,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.hk.domain.core.Tax" %>
 <%@include file="/includes/_taglibInclude.jsp" %>
-<%@ page import="com.hk.web.HealthkartResponse" %>
 <%@ page import="com.hk.constants.rtv.EnumExtraInventoryStatus" %>
 <%@ page import="com.hk.constants.core.PermissionConstants" %>
 
@@ -17,14 +16,14 @@
 	<%
 
 	TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-	List<Tax> taxList = taxDao.getTaxList();
+	List<Tax> taxList = taxDao.getLocalTaxList();
 	pageContext.setAttribute("taxList", taxList);
 
 	MasterDataDao masterDataDao = (MasterDataDao) ServiceLocatorFactory.getService(MasterDataDao.class);
     response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
     response.setHeader("pragma", "no-cache");
     response.setDateHeader("Expires", -1);
-    List<Surcharge> surchargeList = masterDataDao.getSurchargeList();
+    List<Tax> surchargeList = taxDao.getCentralTaxList();
 	pageContext.setAttribute("surchargeList", surchargeList);
 %>
 	<s:layout-component name="htmlHead">
@@ -282,7 +281,7 @@ $(document).ready(function () {
 	</c:forEach>
 	</c:when>
 	<c:otherwise>
-		taxOptions = '<select class="taxCategory valueChange" name="extraInventoryLineItems[' + nextIndex + '].surcharge">';
+		taxOptions = '<select class="taxCategory valueChange" name="extraInventoryLineItems[' + nextIndex + '].tax">';
 	<c:forEach items="${surchargeList}" var="surcharge">
 		taxOptions += '<option value="'+${surcharge.id}+
 		'">' + ${surcharge.value} + '</option>';
@@ -645,25 +644,25 @@ $(document).ready(function () {
                                    readonly="readonly" value="${eInLineItems.tax.id}"/>
                         </c:when>
                         <c:when test="${(eInLineItems.grnCreated or eInLineItems.rtvCreated) && !extraInventory.sameState}">
-                         ${eInLineItems.surcharge.value}
-                        <input type="hidden" name="extraInventoryLineItems[${ctr.index}].surcharge"
-                                   readonly="readonly" value="${eInLineItems.surcharge.id}"/>
+                         ${eInLineItems.tax.value}
+                        <input type="hidden" name="extraInventoryLineItems[${ctr.index}].tax"
+                                   readonly="readonly" value="${eInLineItems.tax.id}"/>
                         </c:when>
 					   <c:otherwise>    
                     <c:choose>                        
 						<c:when test="${extraInventory.sameState}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
 							          value="${eInLineItems.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
 						</c:when>
 						<c:otherwise>
-							<s:select name="extraInventoryLineItems[${ctr.index}].surcharge"
-							          value="${eInLineItems.surcharge.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=MasterDataDao.class%>"
-								                           serviceProperty="surchargeList" value="id"
+							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
+							          value="${eInLineItems.tax.id}" class="valueChange taxValues">
+								<hk:master-data-collection service="<%=TaxDao.class%>"
+								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
 						</c:otherwise>
