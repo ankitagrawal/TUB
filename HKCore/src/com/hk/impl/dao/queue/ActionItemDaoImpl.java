@@ -1,21 +1,21 @@
 package com.hk.impl.dao.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
-import com.hk.domain.queue.ActionItem;
-import com.hk.domain.queue.Bucket;
-import com.hk.domain.queue.TrafficState;
+import com.hk.domain.queue.*;
 import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /*
  * User: Pratham
@@ -35,7 +35,6 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         return (ActionItem) findUniqueByNamedParams(queryString, new String[]{"shippingOrder"}, new Object[]{shippingOrder});
     }
 
-    @Override
     public List<ActionItem> searchActionItem(ShippingOrder shippingOrder, List<Bucket> buckets, Date startPushDate, Date startPopDate, List<TrafficState> trafficStates, User watcher, Boolean flagged, User reporter) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionItem.class);
 
@@ -59,6 +58,9 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
     @Override
     public List<Bucket> getBuckets(List<EnumBucket> enumBuckets) {
         List<Long> bucketIds = EnumBucket.getBucketIDs(enumBuckets);
+        if(bucketIds == null || bucketIds.isEmpty()){
+            return new ArrayList<Bucket>();
+        }
         Criteria criteria = getSession().createCriteria(Bucket.class);
         criteria.add(Restrictions.in("id", bucketIds));
         return criteria.list();
@@ -69,4 +71,39 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         String queryString = "from Bucket b where b.name in (:bucketNames)";
         return findByNamedParams(queryString, new String[]{"bucketNames"}, new Object[]{bucketNames});
     }
+
+    @Override
+    public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage) {
+        DetachedCriteria searchCriteria = actionItemSearchCriteria.getSearchCriteria();
+        return list(searchCriteria, true, pageNo, perPage);
+    }
+
+    @Override
+    public List<ActionTask> listNextActionTasks(ActionTask currentActionTask, List<Bucket> buckets) {
+        Set<ActionTask> nextActionTasks = new HashSet<ActionTask>();
+        List<ActionPathWorkflow> actionPathWorkFlows = searchActionPathWorkflow(currentActionTask, buckets);
+        for (ActionPathWorkflow actionPathWorkFlow : actionPathWorkFlows) {
+            nextActionTasks.add(actionPathWorkFlow.getNextActionTask());
+        }
+        return new ArrayList<ActionTask>(nextActionTasks);
+    }
+
+
+    private List<ActionPathWorkflow> searchActionPathWorkflow(ActionTask currentActionTask, List<Bucket> buckets) {
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionPathWorkflow.class);
+        if(buckets != null){
+            detachedCriteria.add(Restrictions.in("bucket", buckets));
+        }
+        detachedCriteria.add(Restrictions.eq("actionTask", currentActionTask));
+        return findByCriteria(detachedCriteria);
+    }
+
+
+     public List<ActionItem> getActionItemsOfActionQueue (){
+         String hql = "select DISTINCT ai from ActionItem ai  where ai.shippingOrder.shippingOrderStatus.id in( :actionAwaitingStatus)" ;
+         Query actionItemListQuery = getSession().createQuery(hql.toString()).setParameterList("actionAwaitingStatus", EnumShippingOrderStatus.getStatusIdsForActionQueue());
+         return (List<ActionItem>) actionItemListQuery.list();
+
+     }
+
 }

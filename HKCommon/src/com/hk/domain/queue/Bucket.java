@@ -91,6 +91,10 @@ public class Bucket implements java.io.Serializable {
         return this.selected;
     }
 
+    public boolean getSelected(){
+        return this.selected;
+    }
+
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
