@@ -141,21 +141,7 @@
 								$('#pincode').val(res.data.pincode);
 								$('#address').val(res.data.address.id);
 								$('#phone').val(res.data.address.phone);
-								//$('#loyaltyDiv').show();
-								if (res.data.isLoyaltyCustomer) {
-									$('#oldLoyaltyCustomer').show();
-									$('#newLoyaltyCustomer').hide();
-									$('#loyaltyCustomer').val(res.data.customer.id);
-									$('#loyaltyCustomerName').text(res.data.customer.name);
-									$('#badgeName').text(res.data.badgeName);
-									$('#loyaltyPoints').text(res.data.loyaltyPoints);
-									$('#cardNumber').val(res.data.cardNumber);
-									$('#addLoyaltyUser').removeAttr('checked');
-								} else {
-									$('#addLoyaltyUser').attr('checked','checked');
-									$('#newLoyaltyCustomer').show();
-									$('#oldLoyaltyCustomer').hide();
-								}
+								fillPOSLoyaltyDetails(res);
 								if(res.data.rewardPoints > 0) {
 									$('#rewardPoints').text(res.data.rewardPoints);
 									$('#rewardPointsRow').show();
@@ -260,23 +246,33 @@
 		    	updateFinalPayable();
 	    	});
 		    
-		    $('#updateCustomerInfo').click(function () {
+		    $('#updateCustomerInfo').click(function (e) {
+		    	e.preventDefault();
 				if(!validateCustomerDetails()) { 
 					return false;
 					}
-				return true;
+				var form = $('#posForm');
+				var dataUrl = form.attr('action') + "?" + $(this).attr('name') + "=";
+				$.ajax({
+						url: dataUrl,
+						data: form.serialize(),
+						success: function (res) {
+								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
+								alert(res.message);
+								fillPOSLoyaltyDetails(res);
+								}
+							},
+						error: 	function(res) {
+							alert(res.message);
+						}
+						
+				});
+					return false;
 		    });
 		    
 		    $('#rewardPointsRow').hide();
-		    if (${pos.isLoyaltyCustomer} ) {
-		    	//$('#loyaltyDiv').show();
-		    	$('#oldLoyaltyCustomer').show();
-		    	$('#newLoyaltyCustomer').hide();
-		    } else {
-		    	$('#newLoyaltyCustomer').show();//			    $('#loyaltyDiv').hide();
-		    	$('#oldLoyaltyCustomer').hide();
-		    }
-
+		    $('#oldLoyaltyCustomer').hide();
+		    
 		    function updateFinalPayable() {
 		    	var discount = $('#discount').find('option:selected').val();
 				var grandTotal = $('.grandTotal').val();
@@ -285,6 +281,23 @@
 					rewardPts = parseFloat($('#rewardPoints').text());
 				}
 				$('#finalPayable').val((parseFloat(grandTotal) - discount).toFixed(0) - rewardPts.toFixed(2));
+		    }
+		    
+		    function fillPOSLoyaltyDetails(res) {
+		    	if (res.data.loyaltyUser) {
+					$('#oldLoyaltyCustomer').show();
+					$('#newLoyaltyCustomer').hide();
+					$('#loyaltyCustomer').val(res.data.customer.id);
+					$('#loyaltyCustomerName').text(res.data.customer.name);
+					$('#badgeName').text(res.data.badgeName);
+					$('#loyaltyPoints').text(res.data.loyaltyPoints);
+					$('#cardNumber').val(res.data.cardNumber);
+					$('#addLoyaltyUser').removeAttr('checked');
+				} else {
+					$('#addLoyaltyUser').attr('checked','checked');
+					$('#newLoyaltyCustomer').show();
+					$('#oldLoyaltyCustomer').hide();
+				}
 		    }
 		});
 	</script>
@@ -367,7 +380,7 @@
 			</table>
 			
 			<div id="loyaltyDiv" style="font-size: 14px;"> 
-					<span id="newLoyaltyCustomer">&nbsp;<s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" checked="true"></s:checkbox> Add as Loyalty User</span> 
+					<span id="newLoyaltyCustomer">&nbsp;<s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" ></s:checkbox> Add as Loyalty User</span> 
 				
 				<span id="oldLoyaltyCustomer" style="float:left;">
 					Presently <span id="loyaltyCustomerName"> </span>  has <span id="badgeName"> </span> 
@@ -377,7 +390,7 @@
  					</s:link>
  					to convert customer's loyalty points to reward points.
 				</span>	
-					<span style="float:right; margin-right:150px;">Customer Loyalty Card number <s:text name="cardNumber" id="cardNumber" /></span> 
+				<span style="float:right; margin-right:150px;">Customer Loyalty Card number <s:text name="cardNumber" id="cardNumber" /></span> 
 				
 			</div>
 				<br/>  

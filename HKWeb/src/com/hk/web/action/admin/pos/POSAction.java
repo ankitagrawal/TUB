@@ -116,8 +116,9 @@ public class POSAction extends BaseAction {
 	private String cardNumber ;
 	private boolean useRewardPoints;
 	private User loyaltyCustomer;
-	private boolean isLoyaltyCustomer;
-	
+	private boolean loyaltyUser;
+	private UserBadgeInfo customerBadgeInfo = null;
+	private String loyaltyPoints = null;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -224,21 +225,23 @@ public class POSAction extends BaseAction {
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
 					dataMap.put("pincode", address.getPincode().getPincode());
-					dataMap.put("isLoyaltyCustomer", false);
+					dataMap.put("loyaltyUser", false);
 				}
 				if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 					// if already a loyalty user then fill params
 					this.addLoyaltyUser = false;
 					this.loyaltyCustomer = customer;
-					dataMap.put("isLoyaltyCustomer", true);
+					this.loyaltyUser = true;
 					dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
 					UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
 					dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
 					dataMap.put("cardNumber", badgeInfo.getCardNumber());
 				} else {
 					this.addLoyaltyUser = true;
+					this.loyaltyUser = false;
 					dataMap.put("cardNumber", null);
 				}
+				dataMap.put("loyaltyUser", loyaltyUser);
 				// Did not use getEligibleRewardPointsForUser(login) API of rewardPointService to save a db hit to find the user again
 				double rewardPoints = 0.0;
 				if (customer.getUserAccountInfo()==null) {
@@ -426,10 +429,28 @@ public class POSAction extends BaseAction {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 		User updatedCustomer = this.updateCustomerDetails(warehouse);
 		if (updatedCustomer != null) {
-			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
+//			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
+			Map dataMap = new HashMap();
+			if(loyaltyUser) {
+				this.addLoyaltyUser = false;
+		//		this.loyaltyCustomer = customer;
+				dataMap.put("customer", updatedCustomer);
+				dataMap.put("loyaltyUser", true);
+				dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
+				UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
+				dataMap.put("badgeName", badgeInfo.getBadge().getBadgeName());
+				dataMap.put("cardNumber", badgeInfo.getCardNumber());
+			} else {
+				this.addLoyaltyUser = true;
+				dataMap.put("cardNumber", null);
+			}
+			noCache();
+			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
+			return new JsonResolution(healthkartResponse);
 		}
-		
-		return new ForwardResolution("/pages/pos/pos.jsp").addParameter("isLoyaltyCustomer", isLoyaltyCustomer).addParameter("customer", updatedCustomer);
+		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found");
+		noCache();
+		return new JsonResolution(healthkartResponse);
 	}
 	
 	private User updateCustomerDetails (Warehouse warehouse) {
@@ -454,13 +475,18 @@ public class POSAction extends BaseAction {
 				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
 			}
 		}
-		 if (addLoyaltyUser) {
+		 if (addLoyaltyUser && !loyaltyUser) {
 			 loyaltyProgramService.createNewUserBadgeInfo(customer);
-			 isLoyaltyCustomer = true;
-		 } else if (cardNumber != null && !cardNumber.isEmpty()) {
-			 UserBadgeInfo info = loyaltyProgramService.getUserBadgeInfo(customer);
-			 if (!cardNumber.trim().equalsIgnoreCase(info.getCardNumber())) {
-				 loyaltyProgramService.updateCardNumber(loyaltyProgramService.getUserBadgeInfo(customer), cardNumber.trim());
+			 loyaltyUser = true;
+			 addLoyaltyUser = false;
+			 customerBadgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
+	//		 loyaltyPoints = Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer));
+		 } else if(loyaltyUser) {
+			 loyaltyUser =true;
+			 if(cardNumber != null && !cardNumber.isEmpty()) {
+		 			 if (!cardNumber.trim().equalsIgnoreCase(customerBadgeInfo.getCardNumber())) {
+		 				 loyaltyProgramService.updateCardNumber(loyaltyProgramService.getUserBadgeInfo(customer), cardNumber.trim());
+		 			 }
 			 }
 		 }
 		 	
@@ -771,17 +797,47 @@ public class POSAction extends BaseAction {
 	}
 
 	/**
-	 * @return the isLoyaltyCustomer
+	 * @return the loyaltyUser
 	 */
-	public boolean isLoyaltyCustomer() {
-		return isLoyaltyCustomer;
+	public boolean isLoyaltyUser() {
+		return loyaltyUser;
 	}
 
 	/**
-	 * @param isLoyaltyCustomer the isLoyaltyCustomer to set
+	 * @param loyaltyUser the loyaltyUser to set
 	 */
-	public void setLoyaltyCustomer(boolean isLoyaltyCustomer) {
-		this.isLoyaltyCustomer = isLoyaltyCustomer;
+	public void setLoyaltyUser(boolean loyaltyUser) {
+		this.loyaltyUser = loyaltyUser;
 	}
+
+	/**
+	 * @return the customerBadgeInfo
+	 */
+	public UserBadgeInfo getCustomerBadgeInfo() {
+		return customerBadgeInfo;
+	}
+
+	/**
+	 * @param customerBadgeInfo the customerBadgeInfo to set
+	 */
+	public void setCustomerBadgeInfo(UserBadgeInfo customerBadgeInfo) {
+		this.customerBadgeInfo = customerBadgeInfo;
+	}
+
+	/**
+	 * @return the loyaltyPoints
+	 */
+	public String getLoyaltyPoints() {
+		return loyaltyPoints;
+	}
+
+	/**
+	 * @param loyaltyPoints the loyaltyPoints to set
+	 */
+	public void setLoyaltyPoints(String loyaltyPoints) {
+		this.loyaltyPoints = loyaltyPoints;
+	}
+
+	
 
 }
