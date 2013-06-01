@@ -40,7 +40,7 @@
         </div>
       </c:otherwise>
     </c:choose>
-
+    <a href="/" class="backTOHomeButton">GO BACK TO HEALTHKART.COM</a>
   </s:layout-component>
 
 </s:layout-render>
