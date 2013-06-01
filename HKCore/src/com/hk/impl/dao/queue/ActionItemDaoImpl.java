@@ -101,7 +101,7 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
 
     private List<ActionPathWorkflow> searchActionPathWorkflow(ActionTask currentActionTask, List<Bucket> buckets) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(ActionPathWorkflow.class);
-        if (buckets != null) {
+        if (buckets != null && !buckets.isEmpty()) {
             detachedCriteria.add(Restrictions.in("bucket", buckets));
         }
         if (currentActionTask != null) {
