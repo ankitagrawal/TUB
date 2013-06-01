@@ -11,7 +11,7 @@
 
 	%>
 	<div class="prod_table">
-		<div style="font-size: .9em; margin-bottom:15px; font-weight:bold;" align="center">
+		<div style="font-size: .8em; margin-bottom:15px; font-weight:bold;" align="center">
 			We also have the following similar products
 		</div>
 		<c:forEach items="${similarProducts}" var="sProduct">
