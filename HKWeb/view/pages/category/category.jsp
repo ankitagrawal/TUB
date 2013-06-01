@@ -173,7 +173,7 @@
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
              class="small_banner"/>
       </c:when>
       <c:when test="${categoryBean.category.name eq homeLiving}">
@@ -192,7 +192,7 @@
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-400.jpg" alt="Free shipping and COD"
+        <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
              class="small_banner"/>
       </c:otherwise>
     </c:choose>

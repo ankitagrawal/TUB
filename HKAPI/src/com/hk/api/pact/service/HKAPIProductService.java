@@ -21,4 +21,6 @@ public interface HKAPIProductService {
 
 	public String getProductsWithLowResolutionImages();
 
+    public HKAPIBaseDTO getOOSHiddenDeletedProducts();
+
 }

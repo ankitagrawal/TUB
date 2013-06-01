@@ -653,6 +653,13 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		return new ForwardResolution("/pages/admin/extraInventoryList.jsp");
 	}
 
+	public Resolution rtvNotePrintPreview(){
+		rtvNote = getRtvNoteService().getRtvNoteById(rtvNoteId);
+		purchaseOrder = rtvNote.getExtraInventory().getPurchaseOrder();
+		rtvNoteLineItems = getRtvNoteLineItemService().getRtvNoteLineItemsByRtvNote(rtvNote);
+		return new ForwardResolution("/pages/admin/rtvNotePrintPreview.jsp");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Resolution getSku() {
 
@@ -970,4 +977,13 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 			List<ExtraInventoryLineItem> extraInventoryShortLineItemsSelected) {
 		this.extraInventoryShortLineItemsSelected = extraInventoryShortLineItemsSelected;
 	}
+
+	public PurchaseOrder getPurchaseOrder() {
+		return purchaseOrder;
+	}
+
+	public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+		this.purchaseOrder = purchaseOrder;
+	}
+	
 }

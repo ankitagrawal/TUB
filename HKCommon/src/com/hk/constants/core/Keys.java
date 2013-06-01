@@ -38,6 +38,7 @@ public class Keys {
         public static final String hkSMSPassword                   = "hkSMSPassword";
         public static final String hkSMSSender                     = "hkSMSSender";
 
+        public static final String shippingCharges                 = "shippingCharges";
         public static final String shippingFreeAfter               = "shippingFreeAfter";
 
         public static final String codCharges                      = "codCharges";

@@ -2,6 +2,7 @@ package com.hk.impl.dao.queue;
 
 import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumBucket;
+import com.hk.constants.shippingOrder.EnumShippingOrderStatus;
 import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.*;
@@ -9,6 +10,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.dao.BaseDaoImpl;
 import com.hk.pact.dao.queue.ActionItemDao;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
@@ -95,4 +97,13 @@ public class ActionItemDaoImpl extends BaseDaoImpl implements ActionItemDao {
         detachedCriteria.add(Restrictions.eq("actionTask", currentActionTask));
         return findByCriteria(detachedCriteria);
     }
+
+
+     public List<ActionItem> getActionItemsOfActionQueue (){
+         String hql = "select DISTINCT ai from ActionItem ai  where ai.shippingOrder.shippingOrderStatus.id in( :actionAwaitingStatus)" ;
+         Query actionItemListQuery = getSession().createQuery(hql.toString()).setParameterList("actionAwaitingStatus", EnumShippingOrderStatus.getStatusIdsForActionQueue());
+         return (List<ActionItem>) actionItemListQuery.list();
+
+     }
+
 }
