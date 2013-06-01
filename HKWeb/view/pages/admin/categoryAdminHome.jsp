@@ -89,10 +89,6 @@
                     beanclass="com.hk.web.action.core.loyaltypg.LoyaltyBulkUploadAction">Add new loyalty Products/ User Badges</s:link>
             </h3>
 
-            <h3><s:link
-                    beanclass="com.hk.web.action.admin.catalog.product.BulkUploadRelatedProductAction">Upload bulk related product</s:link>
-            </h3>
-
         </div>
 
         <div class="cl"></div>
@@ -113,6 +109,11 @@
                     <s:link beanclass="com.hk.web.action.admin.sku.SkuAction">Add/Edit SKUs</s:link></h3>
 
                 <h3>
+
+                    <h3><s:link
+                            beanclass="com.hk.web.action.admin.catalog.product.BulkUploadRelatedProductAction">Upload bulk related product</s:link>
+                    </h3>
+
         </div>
 
         <div class="cl"></div>

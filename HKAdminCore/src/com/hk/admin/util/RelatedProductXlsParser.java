@@ -11,13 +11,12 @@ package com.hk.admin.util;
 import com.hk.constants.XslConstants;
 import com.hk.domain.catalog.product.Product;
 import com.hk.exception.ExcelBlankFieldException;
+import com.hk.pact.service.catalog.ProductService;
 import com.hk.util.io.ExcelSheetParser;
 import com.hk.util.io.HKRow;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -29,12 +28,62 @@ public class RelatedProductXlsParser {
 
     private static Logger logger = LoggerFactory.getLogger(RelatedProductXlsParser.class);
 
-        public Set<Product> readProductDispatchDateExcel(File file) throws Exception {
-            logger.debug("parsing DispatchDate info : " + file.getAbsolutePath());
-            Set<Product> productSet = new HashSet<Product>();
-            ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
-            Iterator<HKRow> rowiterator = excel.parse();
-            int rowCount = 1;
-            try {
+    @Autowired
+    private ProductService productService;
 
+
+    public Set<Product> readRelatedProductExcel(File file) throws Exception {
+        logger.debug("parsing RelatedProduct info : " + file.getAbsolutePath());
+        Set<Product> productSet = new HashSet<Product>();
+        ExcelSheetParser excel = new ExcelSheetParser(file.getAbsolutePath(), "Sheet1", true);
+        Iterator<HKRow> rowiterator = excel.parse();
+        int rowCount = 1;
+        try {
+            while (rowiterator.hasNext()) {
+                rowCount++;
+                HKRow row = rowiterator.next();
+                String productId = row.getColumnValue(XslConstants.PRODUCT_ID);
+                String relatedProductStr = row.getColumnValue(XslConstants.RELATED_PRODUCTS);
+                List<Product> relatedProducts = new ArrayList<Product>();
+
+                if (StringUtils.isEmpty(productId)) {
+                    logger.error("product id cannot be null/empty");
+                    throw new ExcelBlankFieldException("product id  cannot be empty" + "    ", rowCount);
+                }
+                if (StringUtils.isEmpty(relatedProductStr)) {
+                    logger.error("Related Product cannot be null/empty");
+                    throw new ExcelBlankFieldException("Related Product  cannot be empty" + "    ", rowCount);
+                }
+                Product product = getProductService().getProductById(productId);
+
+                String[] relatedProductStrArray = StringUtils.split(relatedProductStr, "|");
+                for (String relatedProductId : relatedProductStrArray) {
+                    Product relatedProduct = getProductService().getProductById(relatedProductId);
+                    if (relatedProduct != null && !relatedProduct.equals(product) && !relatedProduct.isDeleted() && !relatedProducts.contains(relatedProduct)) {
+                        relatedProducts.add(relatedProduct);
+                        product.setRelatedProducts(relatedProducts);
+                        getProductService().save(product);
+                        productSet.add(product);
+                    }
+                }
+                product.setId(productId);
+                relatedProducts.add(product);
+
+            }
+
+        } catch (ExcelBlankFieldException e) {
+            throw new ExcelBlankFieldException(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public ProductService getProductService() {
+        return productService;
+    }
+
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
 }
+
