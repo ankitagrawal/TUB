@@ -17,7 +17,7 @@ import com.hk.constants.core.Keys;
 public class SeoManager {
 
     @Value("#{hkEnvProps['" + Keys.Env.shippingFreeAfter + "']}")
-    private Double shippingFreeAfter;
+    private String shippingFreeAfter;
 
     public static final String KEY_BRAND_IN_CAT = "#brand=";
     @Autowired
