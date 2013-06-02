@@ -225,10 +225,11 @@
 		  		e.preventDefault();
 		  		if(confirm("Please note that by clicking OK all loyalty points of the customer will be converted to reward points." +
 		  				" These points will be valid for next six months only. Convert Points?")) {
-			  		$.getJSON($('#rewardLink').attr('href'), {loyaltyCustomer:$('#loyaltyCustomer').val()},
+			  		$.getJSON($('#rewardLink').attr('href'), {customer:$('#customer').val()},
 			  				function (res) {
 								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 									alert(res.message);
+									$('#loyaltyPoints').text(0);
 									$('#rewardPoints').text(res.data.totalRewardPoints);
 									$('#rewardPointsRow').show();
 								} else {
@@ -287,8 +288,8 @@
 		    	if (res.data.loyaltyUser) {
 					$('#oldLoyaltyCustomer').show();
 					$('#newLoyaltyCustomer').hide();
-					$('#loyaltyCustomer').val(res.data.customer.id);
-					$('#loyaltyCustomerName').text(res.data.customer.name);
+					$('.loyaltyUser').val(res.data.loyaltyUser);
+					$('#loyaltyCustomerName').text(res.data.customerName);
 					$('#badgeName').text(res.data.badgeName);
 					$('#loyaltyPoints').text(res.data.loyaltyPoints);
 					$('#cardNumber').val(res.data.cardNumber);
@@ -394,6 +395,7 @@
 				
 			</div>
 				<br/>  
+				<s:hidden name="loyaltyUser" class="loyaltyUser"/>
 				<s:submit name="updateCustomerInfo" value="Update Customer Info" id="updateCustomerInfo" style="float:right; clear:both;"/>
 				<br/>
 		</fieldset>

@@ -9,9 +9,7 @@ import com.hk.admin.pact.service.pos.POSService;
 import com.hk.admin.pact.service.reverseOrder.ReverseOrderService;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.core.RoleConstants;
-import com.hk.constants.courier.ReverseOrderTypeConstants;
 import com.hk.constants.inventory.EnumReconciliationStatus;
-import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderStatus;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
@@ -32,18 +30,15 @@ import com.hk.domain.store.Store;
 import com.hk.domain.user.Address;
 import com.hk.domain.user.User;
 import com.hk.domain.warehouse.Warehouse;
-import com.hk.dto.pricing.PricingDto;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.helper.ShippingOrderHelper;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.manager.OrderManager;
 import com.hk.manager.payment.PaymentManager;
-import com.hk.pact.dao.BaseDao;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.core.AddressService;
 import com.hk.pact.service.core.PincodeService;
 import com.hk.pact.service.inventory.SkuGroupService;
-import com.hk.pact.service.order.CartLineItemService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.PaymentService;
@@ -51,10 +46,7 @@ import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
 import com.hk.pricing.PricingEngine;
 import com.hk.taglibs.Functions;
-import com.hk.util.CartLineItemWrapper;
 import com.hk.web.HealthkartResponse;
-import com.hk.web.action.admin.courier.CreateReverseOrderAction;
-import com.hk.web.action.admin.courier.ReversePickupCourierAction;
 import com.hk.web.action.admin.order.search.SearchShippingOrderAction;
 import com.hk.web.action.core.accounting.AccountingInvoiceAction;
 import com.hk.web.action.error.AdminPermissionAction;
@@ -115,9 +107,7 @@ public class POSAction extends BaseAction {
 	private boolean addLoyaltyUser;
 	private String cardNumber ;
 	private boolean useRewardPoints;
-	private User loyaltyCustomer;
 	private boolean loyaltyUser;
-	private UserBadgeInfo customerBadgeInfo = null;
 	private String loyaltyPoints = null;
 	@Autowired
 	private UserService userService;
@@ -225,12 +215,11 @@ public class POSAction extends BaseAction {
 					address = addressList.get(addressList.size() - 1);
 					dataMap.put("address", address);
 					dataMap.put("pincode", address.getPincode().getPincode());
-					dataMap.put("loyaltyUser", false);
+					
 				}
 				if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
 					// if already a loyalty user then fill params
 					this.addLoyaltyUser = false;
-					this.loyaltyCustomer = customer;
 					this.loyaltyUser = true;
 					dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
 					UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
@@ -359,7 +348,7 @@ public class POSAction extends BaseAction {
 		
 		
 		double loyaltyPointsEarned = 0.0;
-		if (customer.getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
+		if (loyaltyUser) {
 			loyaltyProgramService.creditKarmaPoints(order);
 			loyaltyProgramService.approveKarmaPoints(order);
 			loyaltyProgramService.updateUserBadgeInfo(customer);
@@ -426,16 +415,18 @@ public class POSAction extends BaseAction {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Resolution updateCustomerInfo () {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
-		User updatedCustomer = this.updateCustomerDetails(warehouse);
-		if (updatedCustomer != null) {
+		customer = this.updateCustomerDetails(warehouse);
+		if (customer != null) {
 //			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
 			Map dataMap = new HashMap();
+//			dataMap.put("customerName", customer.getName());
+			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
+			dataMap.put("customerName", customer.getName());
 			if(loyaltyUser) {
 				this.addLoyaltyUser = false;
-		//		this.loyaltyCustomer = customer;
-				dataMap.put("customer", updatedCustomer);
 				dataMap.put("loyaltyUser", true);
 				dataMap.put("loyaltyPoints", Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer)));
 				UserBadgeInfo badgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
@@ -446,7 +437,7 @@ public class POSAction extends BaseAction {
 				dataMap.put("cardNumber", null);
 			}
 			noCache();
-			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
+			//HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
 			return new JsonResolution(healthkartResponse);
 		}
 		HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_ERROR, "Customer Not found");
@@ -476,13 +467,13 @@ public class POSAction extends BaseAction {
 				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
 			}
 		}
-		 if (addLoyaltyUser && !loyaltyUser) {
+		 if (addLoyaltyUser) {
 			 loyaltyProgramService.createNewUserBadgeInfo(customer);
-			 loyaltyUser = true;
 			 addLoyaltyUser = false;
-			 customerBadgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
-	//		 loyaltyPoints = Functions.roundNumberForDisplay(loyaltyProgramService.calculateLoyaltyPoints(customer));
-		 } else if(loyaltyUser) {
+			 loyaltyUser = true;
+		 } 
+		 if(loyaltyUser) {
+			 UserBadgeInfo customerBadgeInfo = loyaltyProgramService.getUserBadgeInfo(customer);
 			 loyaltyUser =true;
 			 if(cardNumber != null && !cardNumber.isEmpty()) {
 		 			 if (!cardNumber.trim().equalsIgnoreCase(customerBadgeInfo.getCardNumber())) {
@@ -491,22 +482,23 @@ public class POSAction extends BaseAction {
 			 }
 		 }
 		 	
+		userService.save(customer);
 		return customer;
 	}
 	
 	public Resolution convertLoyaltyPoints () {
 		double convertedPoints = 0.0;
 		Map dataMap = new HashMap();
-		if (loyaltyCustomer!= null) {
-			convertedPoints= loyaltyProgramService.convertLoyaltyToRewardPoints(loyaltyCustomer);
+		if (customer!= null) {
+			convertedPoints= loyaltyProgramService.convertLoyaltyToRewardPoints(customer);
 		}
 		if (convertedPoints > 0 ) {
 			double totalRewardPoints = 0.0; 
-			if (loyaltyCustomer.getUserAccountInfo()==null) {
-				totalRewardPoints = rewardPointService.getTotalRedeemablePoints(loyaltyCustomer);
+			if (customer.getUserAccountInfo()==null) {
+				totalRewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
 			} else {
-				totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(loyaltyCustomer)
-						- loyaltyCustomer.getUserAccountInfo().getOverusedRewardPoints());
+				totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(customer)
+						- customer.getUserAccountInfo().getOverusedRewardPoints());
 			}
 			
 			dataMap.put("totalRewardPoints", Functions.roundNumberForDisplay(totalRewardPoints));
@@ -531,20 +523,6 @@ public class POSAction extends BaseAction {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-
-	/**
-	 * @return the loyaltyCustomer
-	 */
-	public User getLoyaltyCustomer() {
-		return loyaltyCustomer;
-	}
-
-	/**
-	 * @param loyaltyCustomer the loyaltyCustomer to set
-	 */
-	public void setLoyaltyCustomer(User loyaltyCustomer) {
-		this.loyaltyCustomer = loyaltyCustomer;
 	}
 
 	public String getEmail() {
@@ -809,20 +787,6 @@ public class POSAction extends BaseAction {
 	 */
 	public void setLoyaltyUser(boolean loyaltyUser) {
 		this.loyaltyUser = loyaltyUser;
-	}
-
-	/**
-	 * @return the customerBadgeInfo
-	 */
-	public UserBadgeInfo getCustomerBadgeInfo() {
-		return customerBadgeInfo;
-	}
-
-	/**
-	 * @param customerBadgeInfo the customerBadgeInfo to set
-	 */
-	public void setCustomerBadgeInfo(UserBadgeInfo customerBadgeInfo) {
-		this.customerBadgeInfo = customerBadgeInfo;
 	}
 
 	/**
