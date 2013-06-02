@@ -36,6 +36,9 @@ public class PricingEngine {
     @Value("#{hkEnvProps['" + Keys.Env.shippingFreeAfter + "']}")
     private Double shippingFreeAfter;
 
+    @Value("#{hkEnvProps['" + Keys.Env.shippingCharges + "']}")
+    private Double shippingCharges;
+
     @Autowired
     SkuService     skuService;
 
@@ -527,17 +530,8 @@ public class PricingEngine {
      * @return
      */
     protected CartLineItemWrapper initShippingLineItem(Set<CartLineItem> cartLineItems, Address address) {
-
-        Double shippingAmount = 30.0; // Default Shipping for order size < 500
-
-        /*
-         * for (LineItem lineItem : cartLineItems) { shippingAmount +=
-         * lineItem.getProductVariantId().getShippingForQty(lineItem.getQty()); }
-         */
-
         CartLineItem lineItem = new CartLineItemBuilder().ofType(EnumCartLineItemType.Shipping)
-                // .tax(serviceTaxProvider.get())
-                .hkPrice(shippingAmount).discountOnHkPrice(PricingConstants.DEFAULT_DISCOUNT).build();
+                .hkPrice(shippingCharges).discountOnHkPrice(PricingConstants.DEFAULT_DISCOUNT).build();
 
         return new CartLineItemWrapper(lineItem, address);
     }

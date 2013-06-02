@@ -8,7 +8,8 @@ import com.hk.domain.queue.TrafficState;
 */
 public enum EnumTrafficState {
     NORMAL(10L, "Chill"),
-    RED(20L, "Red");
+    YELLOW(20L, "Mild"),
+    RED(30L, "Red");
 
     private Long id;
     private String trafficState;
