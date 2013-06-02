@@ -46,7 +46,7 @@
                         <g:image_link>
                             <c:set var="imageId" value="${product.mainImageId}"/>
                             <%Long imageId = (Long) pageContext.getAttribute("imageId");%>
-                            <%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId,false)%>
+                            <%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, imageId)%>
                         </g:image_link>
                         </item>
                     </c:if>

@@ -60,7 +60,7 @@ import com.hk.web.HealthkartResponse;
             ArrayList <String> paths = new ArrayList<String>();
             for(SuperSaverImage image:superSaverImages){
                 Product product = image.getProduct();
-                paths.add(HKImageUtils.getS3SuperSaverImageUrl(EnumImageSize.Original, image.getId(), false));
+                paths.add(HKImageUtils.getS3SuperSaverImageUrl(EnumImageSize.Original, image.getId()));
                 if(null!=product){
                 catalogResponse = populateCatalogResponse(product, catalogResponse);
                 catalogResponse.setProductURL(product.getProductURL());
@@ -129,7 +129,7 @@ import com.hk.web.HealthkartResponse;
             catalogJSONResponse.setProductSlug(product.getSlug());
         if (null != product.getId ()){
             if(null!=product.getMainImageId())
-                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId()));
             else
                 catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
         }
@@ -175,7 +175,7 @@ import com.hk.web.HealthkartResponse;
         if (null != product.getMinimumMRPProducVariant().getDiscountPercent())
             catalogJSONResponse.setDiscountPercentage(Double.valueOf(decimalFormat.format(product.getMinimumMRPProducVariant().getDiscountPercent()*100)));
         if(null!=product.getMainImageId())
-            catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.Original,product.getMainImageId(),false));
+            catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.Original,product.getMainImageId()));
         else
             catalogJSONResponse.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
         return catalogJSONResponse;
