@@ -944,7 +944,7 @@ width: 80px;
 						<c:otherwise>
 							<s:select name="extraInventoryShortLineItems[${ctr.index}].tax"
 							          value="${extraInventoryShortLineItem.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+								<hk:master-data-collection service="<%=TaxDao.class%>"
 								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
@@ -1143,7 +1143,7 @@ width: 80px;
 						<c:otherwise>
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
 							          value="${extraInventoryLineItem.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=MasterDataDao.class%>"
+								<hk:master-data-collection service="<%=TaxDao.class%>"
 								                           serviceProperty="centralTaxList" value="id"
 								                           label="value"/>
 							</s:select>
