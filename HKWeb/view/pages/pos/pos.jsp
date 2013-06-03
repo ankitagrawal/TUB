@@ -47,7 +47,7 @@
 
 			$('#productVariantBarcode').change(function (event) {
 				var productVariantBarcode = $('#productVariantBarcode').val();
-
+				$('.orderDetails').html(' ');
 				var skuItemList = [];
 				var idx = 0;
 				$("#skuItemHidden option").each(function() {
