@@ -55,6 +55,7 @@ import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.shippingOrder.ShipmentService;
 import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.pact.service.shippingOrder.ShippingOrderStatusService;
+import com.hk.pact.service.splitter.OrderSplitter;
 import com.hk.pact.service.subscription.SubscriptionService;
 import com.hk.pojo.DummyOrder;
 import com.hk.util.HKDateUtil;
@@ -114,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
     BucketService bucketService;
     @Autowired
     SubscriptionService subscriptionService;
+
+    @Autowired OrderSplitter orderSplitter;
 
     @Transactional
     public Order save(Order order) {
@@ -307,7 +310,7 @@ public class OrderServiceImpl implements OrderService {
     private Set<ShippingOrder> createShippingOrders(Order order) {
         Set<ShippingOrder> shippingOrders = new HashSet<ShippingOrder>();
         try {
-            shippingOrders = splitOrder(order);
+            shippingOrders = orderSplitter.split(order.getId());
         } catch (NoSkuException e) {
             logger.error("Sku could not be found" + e.getMessage());
         } catch (OrderSplitException e) {

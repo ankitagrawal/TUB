@@ -1,32 +1,33 @@
 package com.hk.impl.service.codbridge;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.akube.framework.gson.JsonUtils;
 import com.akube.framework.util.StringUtils;
 import com.google.gson.Gson;
 import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.domain.order.CartLineItem;
-import com.hk.hkjunction.observers.OrderSplitterMessage;
-import com.hk.hkjunction.observers.OrderType;
-import com.hk.pact.service.codbridge.UserCallResponseObserver;
-import com.hk.pact.service.codbridge.UserCartDetail;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.hk.domain.order.Order;
-
-
+import com.hk.hkjunction.observers.OrderStatusMessage;
+import com.hk.hkjunction.observers.OrderType;
+import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.hkjunction.producer.ProducerTypeEnum;
-import com.hk.hkjunction.producer.Producer;
-import com.hk.hkjunction.observers.OrderStatusMessage;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import com.hk.pact.service.codbridge.UserCallResponseObserver;
+import com.hk.pact.service.codbridge.UserCartDetail;
+import com.hk.pact.service.order.OrderService;
 
 
 /**
@@ -39,16 +40,26 @@ import java.util.Set;
 @Component
 public class OrderEventPublisher {
 
-    @Autowired
+	private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
+
+	@Autowired
     ProducerFactory producerFactory;
     @Autowired
     UserCallResponseObserver userCallResponseObserver;
-
-    private static Logger logger = LoggerFactory.getLogger(OrderEventPublisher.class);
+    @Autowired
+    OrderService orderService;
+    
+    @Autowired Properties hkEnvProps;
+    
+    private ExecutorService splitExecutorService = null;
 
     @PostConstruct
-    void init(){
-        //userCallResponseObserver.subscribe();
+    void init() {
+    	int poolSize = 50;
+    	if(hkEnvProps.getProperty("splitter.threadpool.size") != null) {
+    		poolSize = Integer.valueOf(hkEnvProps.getProperty("splitter.threadpool.size"));
+    	}
+    	splitExecutorService = Executors.newFixedThreadPool(poolSize);
     }
 
     private String getCartDetailsJson(Order order) {
@@ -124,14 +135,17 @@ public class OrderEventPublisher {
         return messagePublished;
     }
 
-    public boolean publishOrderPlacedEvent(Order order){
+    public boolean publishOrderPlacedEvent(final Order order){
         boolean messagePublished = false;
         try{
-            OrderSplitterMessage orderSplitterMessage = new OrderSplitterMessage();
-            orderSplitterMessage.setOrderId(String.valueOf(order.getId()));
-            orderSplitterMessage.setPushDate(new Date());
-            Producer producer = producerFactory.getProducer(ProducerTypeEnum.ORDER_SPLITTER_PRODUCER);
-            messagePublished = producer.publishMessage(orderSplitterMessage);
+        	splitExecutorService.submit(new Runnable() {
+				@Override
+				public void run() {
+					Order o = orderService.find(order.getId());
+					orderService.splitOrder(o);
+					
+				}
+			});
         }catch (Exception ex){
             logger.error("Error while publishing event for Order " + order.getId() );
         }
