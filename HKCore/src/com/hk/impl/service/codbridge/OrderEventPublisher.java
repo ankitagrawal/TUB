@@ -142,7 +142,7 @@ public class OrderEventPublisher {
 				@Override
 				public void run() {
 					Order o = orderService.find(order.getId());
-					orderService.splitOrder(o);
+					orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(o);
 					
 				}
 			});

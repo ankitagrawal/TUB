@@ -625,6 +625,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
+    	order = this.find(order.getId());
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = false;
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
