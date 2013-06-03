@@ -537,8 +537,8 @@ public class POSAction extends BaseAction {
 	
 	
 	public Resolution getCustomerLoyaltyHistory() {
-		if (customer != null) {
-				loyaltyCustomer = userService.findByLogin(customer.getLogin());
+		if (loyaltyCustomer == null) {
+				loyaltyCustomer = userService.findByLogin(email);
 		}
 		
 		customerKarmaList = loyaltyProgramService.getUserLoyaltyProfileHistory(loyaltyCustomer);

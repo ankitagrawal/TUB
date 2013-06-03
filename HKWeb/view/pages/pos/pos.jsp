@@ -243,9 +243,6 @@
 		  		
 		  	});
 
-		  	$("#historyLink").click(function(e) {
-		  	});
-
 		    $('#useRewardPoints').click(function() {
 		    	updateFinalPayable();
 	    	});
@@ -297,7 +294,9 @@
 					$('#loyaltyPoints').text(res.data.loyaltyPoints);
 					$('#cardNumber').val(res.data.cardNumber);
 					$('#addLoyaltyUser').removeAttr('checked');
-					$('#loyaltyCustomer').val(res.data.customer.id);
+					var historyUrl = $('#historyLink').attr('href') + "&" + "email=" + $('#email').val();
+			  		$('#historyLink').attr('href', historyUrl);
+			  		$('#loyaltyCustomer').val(res.data.customer.id);
 				} else {
 					$('#addLoyaltyUser').attr('checked','checked');
 					$('#newLoyaltyCustomer').show();
@@ -392,10 +391,10 @@
 					status and <span id="loyaltyPoints"> </span> loyalty points.
 					<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="historyLink" event="getCustomerLoyaltyHistory"
 					 target="_blank" style="color:red; font-size:1;">Customer History
-					 <s:hidden id="loyaltyCustomer" name="loyaltyCustomer"  />
 					 </s:link>
  					<br/>
  					<s:link id="rewardLink" beanclass="com.hk.web.action.admin.pos.POSAction" event="convertLoyaltyPoints" >Click here 
+ 					<s:hidden id="loyaltyCustomer" name="loyaltyCustomer"  />
  					</s:link>
  					to convert customer's loyalty points to reward points.
 				</span>	

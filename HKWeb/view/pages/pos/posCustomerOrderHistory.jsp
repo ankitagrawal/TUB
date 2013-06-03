@@ -19,7 +19,15 @@
 		table tr th {
 			text-align: left;
 		}
-
+		
+		table th {
+		background-color: #6D7B8D;
+    	color: white;
+		}
+		table {
+		margin-left: auto;
+		margin-right: auto;
+		}
 		.apply-border td {
 			border: 1px solid #DDD;
 		}
@@ -32,17 +40,17 @@
  <c:choose>
       <c:when test="${!empty pos.customerKarmaList}">
   
-<div id="historyTable">
+<div id="historyTable" style="">
 	<table>
 		<tr>
 			<th>S No.</th>
 			<th>Order Id</th>
-			<th>Order Details</th>
+			<th style="width:200px;">Order Details</th>
 			<th>Order Date</th>
 			<th>Total Amount</th>
 			<th>Customer badge</th>
 			<th>Loyalty Points</th>
-			<th>Points Status</th>
+			<th style="width:180px;">Points Status</th>
 		</tr>
 		<%int count=0; %>
 		<c:forEach items="${pos.customerKarmaList}" var="karmaProfile">
