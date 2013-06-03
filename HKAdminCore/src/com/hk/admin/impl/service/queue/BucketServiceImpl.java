@@ -1,17 +1,22 @@
 package com.hk.admin.impl.service.queue;
 
+import com.akube.framework.dao.Page;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.constants.queue.EnumBucket;
 import com.hk.constants.queue.EnumTrafficState;
+import com.hk.core.search.ActionItemSearchCriteria;
 import com.hk.domain.analytics.Reason;
+import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.queue.ActionItem;
 import com.hk.domain.queue.ActionTask;
 import com.hk.domain.queue.Bucket;
 import com.hk.domain.queue.Param;
+import com.hk.domain.shippingOrder.LineItem;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.dao.queue.ActionItemDao;
 import com.hk.pact.service.UserService;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.util.BucketAllocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +35,9 @@ public class BucketServiceImpl implements BucketService {
 
     @Autowired
     ActionItemDao actionItemDao;
+
+    @Autowired
+    InventoryService inventoryService;
 
     @Override
     public List<Param> getParamsForBucket(List<Bucket> bucketList) {
@@ -76,8 +84,22 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
+    public List<Bucket> listAll() {
+        return actionItemDao.getAll(Bucket.class);
+    }
+
+    @Override
+    public Page searchActionItems(ActionItemSearchCriteria actionItemSearchCriteria, int pageNo, int perPage) {
+        return actionItemDao.searchActionItems(actionItemSearchCriteria, pageNo, perPage);
+    }
+
+    @Override
     public ActionItem existsActionItem(ShippingOrder shippingOrder) {
         return actionItemDao.searchActionItem(shippingOrder);
+    }
+
+    private List<ActionItem> createActionQueue(){
+        return actionItemDao.getAll(ActionItem.class);
     }
 
     public ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder) {
@@ -85,14 +107,19 @@ public class BucketServiceImpl implements BucketService {
         if (actionItem == null) {
             actionItem = autoCreateActionItem(shippingOrder);
         } else {
-            actionItem = autoUpdateActionItem(actionItem); //normally would be called afterCodConfirmation/payment-authorization/manual-split
+            actionItem = autoUpdateActionItem(actionItem ,true); //normally would be called afterCodConfirmation/payment-authorization/manual-split
         }
         actionItem.setReporter(userService.getAdminUser());
         return saveActionItem(actionItem);
     }
 
-    protected ActionItem autoUpdateActionItem(ActionItem actionItem) {
-        List<Bucket> actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+      public ActionItem autoUpdateActionItem(ActionItem actionItem , boolean autoUpdate) {
+        List<Bucket> actionableBuckets;
+        if(autoUpdate){
+         actionableBuckets = getBuckets(autoCreateDefaultBuckets(actionItem.getShippingOrder()));
+        }else {
+           actionableBuckets = actionItem.getBuckets();
+        }
         actionItem.setBuckets(actionableBuckets);
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
         actionItem.setCurrentActionTask(find(assignActionTask(actionableBuckets)));
@@ -112,7 +139,9 @@ public class BucketServiceImpl implements BucketService {
     }
 
     protected List<EnumBucket> autoCreateDefaultBuckets(ShippingOrder shippingOrder) {
-        return BucketAllocator.allocateBuckets(shippingOrder);
+        List<EnumBucket> actionableBuckets = BucketAllocator.allocateBuckets(shippingOrder);
+        actionableBuckets.addAll(getCategoryDefaultersBuckets(shippingOrder));
+        return actionableBuckets;
     }
 
     protected List<Bucket> computeEscalateBackBuckets(ShippingOrder shippingOrder) {
@@ -166,11 +195,19 @@ public class BucketServiceImpl implements BucketService {
         actionItem.setReporter(userService.getLoggedInUser());
         actionItem.setBuckets(computeEscalateBackBuckets(shippingOrder));
         actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-        actionItem.setCurrentActionTask(find(assignActionTask(actionItem.getBuckets())));
+        actionItem.setCurrentActionTask(computeEscalateBackActionTask(shippingOrder));
         actionItem.setLastPushDate(new Date());
         actionItem.setFlagged(true);
         actionItem.setTrafficState(EnumTrafficState.RED.asTrafficState());
         return saveActionItem(actionItem);
+    }
+
+    private ActionTask computeEscalateBackActionTask(ShippingOrder shippingOrder){
+        Reason reason = shippingOrder.getReason();
+        if (reason != null){
+            return reason.getActionTask() != null ? reason.getActionTask() : EnumActionTask.AD_HOC.asActionTask();
+        }
+        return EnumActionTask.AD_HOC.asActionTask();
     }
 
     @Override
@@ -190,4 +227,38 @@ public class BucketServiceImpl implements BucketService {
         return actionItemDao.get(Bucket.class,bucketId);
     }
 
+     @Override
+    public ActionItem getActionItemById (Long actionItemId){
+        return actionItemDao.get(ActionItem.class, actionItemId);
+    }
+
+    @Override
+    public List<ActionTask> listNextActionTasks(ActionItem actionItem) {
+        return actionItemDao.listNextActionTasks(actionItem.getCurrentActionTask(), actionItem.getBuckets());
+    }
+
+    @Override
+    public List<EnumBucket> getCategoryDefaultersBuckets(ShippingOrder shippingOrder) {
+        List<EnumBucket> actionableBuckets = new ArrayList<EnumBucket>();
+        Set<String> categoryNames = new HashSet<String>();
+        for (LineItem lineItem : shippingOrder.getLineItems()) {
+            Long availableUnbookedInv = inventoryService.getAvailableUnbookedInventory(lineItem.getSku());
+            ProductVariant productVariant = lineItem.getSku().getProductVariant();
+            if (availableUnbookedInv < 0) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+            if (lineItem.getCartLineItem().getCartLineItemConfig() != null || !productVariant.getProductExtraOptions().isEmpty()) {
+                categoryNames.add(productVariant.getProduct().getPrimaryCategory().getName());
+            }
+        }
+        actionableBuckets.addAll(EnumBucket.findByName(categoryNames));
+        return actionableBuckets;
+    }
+
+
+
+    public List<ActionItem> getActionItemsOfActionQueue (){
+
+        return actionItemDao.getActionItemsOfActionQueue ();
+    }
 }

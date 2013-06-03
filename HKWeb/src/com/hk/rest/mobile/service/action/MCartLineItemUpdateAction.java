@@ -147,7 +147,7 @@ public class MCartLineItemUpdateAction extends MBaseAction {
                 cartItemResponse.setId(lineItem.getId());
                 cartItemResponse.setName(productVariant.getProduct().getName());
                 if(null!=productVariant.getProduct() && null!=productVariant.getProduct().getMainImageId())
-                	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId(),false));
+                	cartItemResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,productVariant.getProduct().getMainImageId()));
                 else
                 	cartItemResponse.setImageUrl(getImageUrl()+productVariant.getProduct().getId()+MHKConstants.IMAGETYPE);
                 if(null!=lineItem.getLineItemType())

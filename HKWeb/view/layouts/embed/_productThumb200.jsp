@@ -23,8 +23,6 @@
 		Combo combo = comboDao.get(Combo.class, product_productThumb.getId());
 		pageContext.setAttribute("combo", combo);
 
-    boolean isSecure = pageContext.getRequest().isSecure();
-    pageContext.setAttribute("isSecure", isSecure);
 	%>
 	<style type="text/css">
 		.opaque {
@@ -43,7 +41,7 @@
         <c:set var="urlParameter" value="<%=HealthkartConstants.URL.productPosition%>"/>
 				<div class='img180 ${product.outOfStock ? 'opaque' : ''}' style="margin-bottom:20px;">
 					<s:link href="${hk:getAppendedURL(product.productURL, urlParameter, position)}" class="prod_link" title="${product.name}">
-						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+						<img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId)}" alt="${product.name}"
 				     title="${product.name}">
 					</s:link>
 				</div>

@@ -29,7 +29,11 @@ public enum EnumClassification {
     Dispatch_Issues(310L, "Dispatch Issue", "Shipment Not Created"),
     Warehouse(410L, "Warehouse Processing" , "In Process"),
     AD_HOC(460L, "AD_HOC" , "Pending with CC"),
-    Vendor(510L, "Vendor", "Procurement");
+    Customer_Service(480L, "Customer_Service" , "Pending with CC"),
+    Tech_Support(490L, "Tech_Support" , "Bug"),
+    Vendor(510L, "Vendor", "Procurement"),
+    Logistics(520L, "Logistics", "Pickup/Delivery"),
+    Receiving(530L, "Receiving", "GRN");
 
     private Long id;
     private String primary;

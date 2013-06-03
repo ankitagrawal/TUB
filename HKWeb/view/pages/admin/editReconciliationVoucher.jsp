@@ -104,7 +104,7 @@
 
                         <tr>
                             <td colspan="2">
-                                <div style="float:left;"><s:submit name="SubtractReconciled" value="Subtract"/></div>
+                                <div style="float:left;"><s:submit id="SubtractReconciled" name="SubtractReconciled" value="Subtract"/></div>
                             </td>
                         </tr>
 
@@ -229,12 +229,17 @@
             });
             
             $('#excelUpload').live("click", function() {
+            	$(this).hide();
                 var filebean = $('#fileBean').val();
                 if (filebean == null || filebean == '') {
+                	$(this).show();
                   alert('choose file');
                   return false;
                 }
               });
+            $("#SubtractReconciled").click(function(){
+            	$(this).hide();
+            });
 
         });
     </script>

@@ -382,7 +382,7 @@ public class MCatalogAction extends MBaseAction {
             catalogJSONResponse.setProductSlug(product.getSlug());
         if (null != product.getId()) {
             if (null != product.getMainImageId())
-                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(), false));
+                catalogJSONResponse.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
             else
                 catalogJSONResponse.setImageUrl(getImageUrl() + product.getId() + MHKConstants.IMAGETYPE);
         }
