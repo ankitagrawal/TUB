@@ -15,8 +15,7 @@ public class SuperSaverImageTag extends HtmlTagSupport {
 
     public int doEndTag() throws JspException {
         JspWriter out = getPageContext().getOut();
-        boolean isSecure = pageContext.getRequest().isSecure();
-        set("src", HKImageUtils.getS3SuperSaverImageUrl(size, imageId, isSecure));
+        set("src", HKImageUtils.getS3SuperSaverImageUrl(size, imageId));
         writeSingletonTag(out, "img");
 
         return EVAL_PAGE;

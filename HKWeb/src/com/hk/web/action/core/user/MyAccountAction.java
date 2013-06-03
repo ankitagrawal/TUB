@@ -1,15 +1,5 @@
 package com.hk.web.action.core.user;
 
-import com.hk.pact.service.UserService;
-import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.validation.SimpleError;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.stripesstuff.plugin.security.Secure;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.akube.framework.util.BaseUtils;
 import com.hk.cache.RoleCache;
@@ -26,7 +16,14 @@ import com.hk.pact.dao.affiliate.AffiliateDao;
 import com.hk.pact.dao.core.AddressDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.dao.user.UserDao;
-import com.hk.pact.service.RoleService;
+import com.hk.pact.service.UserService;
+import net.sourceforge.stripes.action.*;
+import net.sourceforge.stripes.validation.SimpleError;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.stripesstuff.plugin.security.Secure;
 
 import java.util.List;
 
