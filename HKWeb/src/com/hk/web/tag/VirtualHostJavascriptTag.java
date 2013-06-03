@@ -1,14 +1,14 @@
 package com.hk.web.tag;
 
-import java.io.IOException;
+import com.hk.constants.core.Keys;
+import com.hk.service.ServiceLocatorFactory;
+import com.hk.web.filter.WebContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import com.hk.constants.core.Keys;
-import com.hk.service.ServiceLocatorFactory;
+import java.io.IOException;
 
 public class VirtualHostJavascriptTag extends TagSupport {
 
@@ -28,7 +28,7 @@ public class VirtualHostJavascriptTag extends TagSupport {
         JspWriter out = pageContext.getOut();
         try {
             if (useVirtualHosts) {
-                if (useSslVirtualHosts && pageContext.getRequest().isSecure()) {
+                if (useSslVirtualHosts && WebContext.isSecure()) {
                     out.write(sslHost);
                 } else {
                     out.write(host);

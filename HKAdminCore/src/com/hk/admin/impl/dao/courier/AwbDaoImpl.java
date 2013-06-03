@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
+import com.hk.constants.courier.EnumAwbStatus;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -19,15 +20,15 @@ import com.hk.impl.dao.BaseDaoImpl;
 
 @SuppressWarnings("unchecked")
 @Repository
-public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {   
+public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
 
 
- 	public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
-	     List couriers= new ArrayList<Courier>();
-		 if(courier != null){
-			 couriers.add(courier);
-		 }
-		 return getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,warehouse,isCod,awbStatus);
+    public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(Courier courier, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
+        List couriers = new ArrayList<Courier>();
+        if (courier != null) {
+            couriers.add(courier);
+        }
+        return getAvailableAwbForCourierByWarehouseCodStatus(couriers, awbNumber, warehouse, isCod, awbStatus);
     }
 
     public List<Awb> getAvailableAwbForCourierByWarehouseCodStatus(List<Courier> couriers, String awbNumber, Warehouse warehouse, Boolean isCod, AwbStatus awbStatus) {
@@ -53,22 +54,22 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         return (List<Awb>) findByCriteria(detachedCriteria);
     }
 
-     public Awb findByCourierAwbNumber(Courier courier ,String awbNumber){
-      List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(courier,awbNumber,null,null,null);
-       if(awbList != null && awbList.size() > 0){
-           return awbList.get(0);
-       }
-         return null;
-     }
+    public Awb findByCourierAwbNumber(Courier courier, String awbNumber) {
+        List<Awb> awbList = getAvailableAwbForCourierByWarehouseCodStatus(courier, awbNumber, null, null, null);
+        if (awbList != null && awbList.size() > 0) {
+            return awbList.get(0);
+        }
+        return null;
+    }
 
-	 public Awb findByCourierAwbNumber(List<Courier> couriers ,String awbNumber){
-      List<Awb> awbList= getAvailableAwbForCourierByWarehouseCodStatus(couriers,awbNumber,null,null,null);
-       if(awbList != null && awbList.size() > 0){
-           return awbList.get(0);
-       }
-         return null;
+    public Awb findByCourierAwbNumber(List<Courier> couriers, String awbNumber) {
+        List<Awb> awbList = getAvailableAwbForCourierByWarehouseCodStatus(couriers, awbNumber, null, null, null);
+        if (awbList != null && awbList.size() > 0) {
+            return awbList.get(0);
+        }
+        return null;
 
-     }
+    }
 
     public List<Awb> getAlreadyPresentAwb(Courier courier, List<String> awbNumberList) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Awb.class);
@@ -96,6 +97,21 @@ public class AwbDaoImpl extends BaseDaoImpl implements AwbDao {
         } else {
             awb = (Awb) save(awb);
             return awb;
+        }
+        return null;
+    }
+
+    public Awb isAwbEligibleForDeletion(Courier courier, String awbNumber, Warehouse warehouse, Boolean cod) {
+        List<AwbStatus> awbStatusList = Arrays.asList(EnumAwbStatus.Unused.getAsAwbStatus(), EnumAwbStatus.Used.getAsAwbStatus());
+        String query = "from Awb a where a.awbNumber = :awbNumber and   a.courier.id = :courierId and a.cod = :cod and a.awbStatus in (:awbList) and a.warehouse.id = :warehouseId";
+        Awb awbFromDb = (Awb) getSession().createQuery(query).setParameterList("awbList", awbStatusList).setParameter("courierId", courier.getId()).setParameter("cod", cod).
+                setParameter("warehouseId", warehouse.getId()).setParameter("awbNumber", awbNumber).uniqueResult();
+        if (awbFromDb != null) {
+            String shipmentQuery = " select  s.awb from Shipment s where s.awb.id = :awbId";
+            List<Awb> awbList = getSession().createQuery(shipmentQuery).setParameter("awbId", awbFromDb.getId()).list();
+            if (awbList == null || awbList.size() == 0) {
+                return awbFromDb;
+            }
         }
         return null;
     }

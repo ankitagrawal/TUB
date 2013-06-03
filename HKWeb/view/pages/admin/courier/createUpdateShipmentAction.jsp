@@ -72,7 +72,7 @@
                 <c:if test="${userDeliveryComment eq cusa.shippingOrder.baseOrder.commentType}">
                     User comment and Type Related to Base Order # <h2 style="color:blue">${cusa.shippingOrder.baseOrder.id}</h2> is :-
                     <br>
-                    User Comment :- <h3 style="color:red;">${cusa.shippingOrder.baseOrder.comments}</h3>
+                    User Comment :- <h3 style="color:red;">${cusa.shippingOrder.baseOrder.userComments}</h3>
                 </c:if>
             </c:if>
             </fieldset>

@@ -1,6 +1,7 @@
 <%@ page import="com.hk.pact.dao.MasterDataDao" %>
 <%@ page import="com.hk.constants.core.RoleConstants" %>
 <%@ page import="com.akube.framework.util.FormatUtils" %>
+<%@ page import="com.hk.constants.core.PermissionConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/includes/_taglibInclude.jsp" %>
 <s:useActionBean beanclass="com.hk.web.action.admin.catalog.product.EditProductAttributesAction" var="pa"/>
@@ -182,13 +183,19 @@
       </table>
       <br/>
 
-      <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction" event="select" target="_blank">
-        <s:param name="product" value="${pa.product.id}"/> Create New Variant
-      </s:link>
+        <shiro:hasPermission name="<%=PermissionConstants.UPDATE_VARIANT_INFO%>">
 
-      <div class="buttons">
-        <s:submit name="saveProductVariantDetails" value="Save"/>
-      </div>
+            <s:link beanclass="com.hk.web.action.admin.catalog.product.CreateOrSelectProductAction" event="select"
+                    target="_blank">
+                <s:param name="product" value="${pa.product.id}"/> Create New Variant
+            </s:link>
+
+            <div class="buttons">
+                <s:submit name="saveProductVariantDetails" value="Save"/>
+            </div>
+
+        </shiro:hasPermission>
+
     </s:form>
   </s:layout-component>
 </s:layout-render>

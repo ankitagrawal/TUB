@@ -86,6 +86,7 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             HKAPIProductDTO productDTO=new HKAPIProductDTO();
             productDTO.setDeleted(product.isDeleted());
             productDTO.setOutOfStock(product.getOutOfStock());
+            productDTO.setHidden(product.getHidden());
             productDTO.setProductID(product.getId());
             List<ProductVariant> productVariantList=product.getProductVariants();
             HKAPIProductVariantDTO[] productVariantDTOs = new HKAPIProductVariantDTO[productVariantList.size()];
@@ -107,6 +108,17 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
             return new HKAPIBaseDTO(EnumHKAPIErrorCode.ProductDoesNotExist);
         }
         return hkAPIBaseDto;
+    }
+
+    public HKAPIBaseDTO getOOSHiddenDeletedProducts(){
+       List<Product> products= productService.getOOSHiddenDeletedProducts();
+       List<String> productIDs= new ArrayList<String>();
+        for(Product product : products){
+            productIDs.add(product.getId());
+        }
+        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+        baseDTO.setData(productIDs);
+        return baseDTO;
     }
 
 	public Product getProductById(String productId) {
