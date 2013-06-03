@@ -20,7 +20,7 @@
                     <br>
                     <s:submit name="save" value="Save"/>
         </s:form>
-        <p>Columns in Excel - PRODUCT_ID,RELATED_PRODUCT_ID </p>
+        <p>Columns in Excel - PRODUCT_ID,RELATED_PRODUCTS(Separated by "|" )</p>
         </fieldset>
         </div>
 

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Component
 public class RelatedProductXlsParser {
 
     private static Logger logger = LoggerFactory.getLogger(RelatedProductXlsParser.class);
@@ -85,5 +86,6 @@ public class RelatedProductXlsParser {
     public void setProductService(ProductService productService) {
         this.productService = productService;
     }
+
 }
 
