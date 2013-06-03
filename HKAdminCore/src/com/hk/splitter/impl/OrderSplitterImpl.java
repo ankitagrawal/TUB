@@ -138,7 +138,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 				}
 			}
 		}
-		logger.debug("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] "  + (System.currentTimeMillis() - startTime));
+		logger.info("Total time to split order[" + order.getId() + "] " + "Shipping Orders Size [" + shippingOrders.size() + "] "  + (System.currentTimeMillis() - startTime));
 		return shippingOrders;
 	}
 
