@@ -40,7 +40,7 @@
                 <div style="border-bottom: 1px solid #f0f0f0;">
                   <s:hidden name="productVariantList[${ctr.index}]" value="${variant.id}"/>
                   <s:checkbox name="productVariantList[${ctr.index}].selected" class="lineItemCheckBox"/>
-                  <s:hidden name="productVariantList[${ctr.index}}].qty" value="1" class="lineItemQty"/>
+                  <s:hidden name="productVariantList[${ctr.index}].qty" value="1" class="lineItemQty"/>
                   <s:link beanclass="com.hk.web.action.core.catalog.product.ProductAction" class="prod_link">
                     <s:param name="productId" value="${variant.product.id}"/>
                     <s:param name="productSlug" value="${variant.product.slug}"/>

@@ -33,8 +33,8 @@
                 <%Long frontFacingEyeImageId = (Long) pageContext.getAttribute("frontFacingEyeImageId");%>
                 <%Long sideFacingEyeImageId = (Long) pageContext.getAttribute("sideFacingEyeImageId");%>
                 <Glass type="${type}" gender="${gender}" color="${color}" id="${productVariant.id}">
-                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId, false)%></imgPath>
-                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId, false)%></thumbPath>
+                    <imgPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, frontFacingEyeImageId)%></imgPath>
+                    <thumbPath><%=HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, sideFacingEyeImageId)%></thumbPath>
                     <price>${productVariant.hkPrice}</price>
                     <name>${hk:escapeHtml(product.name)}</name>
                     <producturl>${hk:getProductURL(product,0)}</producturl>

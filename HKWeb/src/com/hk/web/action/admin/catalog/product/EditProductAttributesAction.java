@@ -393,7 +393,7 @@ public class EditProductAttributesAction extends BaseAction {
         product = getProductService().getProductById(productId);
         productImages = product.getProductImages();
         if (productImageId != null) {
-            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId), isSecureRequest());
+            String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(productImageId));
             HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
             return new JsonResolution(healthkartResponse);
         } else {

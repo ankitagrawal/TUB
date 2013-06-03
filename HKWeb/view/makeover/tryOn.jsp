@@ -2,10 +2,7 @@
 <%@include file="/includes/_taglibInclude.jsp" %>
 <s:layout-render name="/layouts/defaultG.jsp"
                  pageTitle="HealthKart.com: Buy Nutrition, Health Care, Beauty & Personal Care Products Online in India">
-    <%
-        boolean isSecure = pageContext.getRequest().isSecure();
-        pageContext.setAttribute("isSecure", isSecure);
-    %>
+
     <s:layout-component name="htmlHead">
         <meta name="description"
               content="Online Shopping for Nutrition, Health, Beauty & Personal Care Products in India: Buy Nutrition Supplements, Health Equipments, Diabetes supplies, Lenses, Home Devices & Other Products online at Lowest Price & Free Shipping in India – Healthkart.com"/>
