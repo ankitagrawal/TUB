@@ -4,11 +4,14 @@ import com.akube.framework.util.BaseUtils;
 import com.hk.constants.core.EnumUserCodCalling;
 import com.hk.constants.core.Keys;
 import com.hk.constants.order.EnumCartLineItemType;
+import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
+import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
+import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Issuer;
 import com.hk.domain.payment.Payment;
@@ -24,6 +27,7 @@ import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pact.service.shippingOrder.ShippingOrderService;
 import com.hk.service.ServiceLocatorFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -36,6 +40,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,6 +73,8 @@ public class PaymentManager {
     OrderEventPublisher orderEventPublisher;
     @Autowired
     EmailManager emailManager;
+    @Autowired
+    private ShippingOrderService shippingOrderService;
 
     @Value("#{hkEnvProps['" + Keys.Env.cashBackLimit + "']}")
     private Double cashBackLimit;
@@ -529,6 +536,131 @@ public class PaymentManager {
 
     public boolean sendUnVerifiedPaymentStatusChangeToAdmin(PaymentStatus actualStatus, PaymentStatus changedStatus,String gatewayOrderId){
         return emailManager.sendAdminPaymentStatusChangeEmail(actualStatus.getName(),changedStatus.getName(),gatewayOrderId);
+    }
+
+    public List<Payment> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+        List<Payment> payments = paymentService.seekPayment(gatewayOrderId);
+        Double actualAmt=null; //will be used in sending mails
+        Double gatewayAmount=null; //will be used in sending mails
+        String gatewayOrderIdForFaultyPayments=null;// will be used in sending mails
+
+        // verify payment amount what we have and what gateway returns
+        try{
+
+            for(Payment gatewayPayment : payments) {
+                Payment actualPayment;
+                if(gatewayPayment.getTransactionType().equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
+                    actualPayment = paymentService.findByGatewayOrderId(gatewayPayment.getGatewayOrderId());
+                } else {
+                    actualPayment = paymentService.findByGatewayReferenceIdAndRrn(gatewayPayment.getGatewayReferenceId(),gatewayPayment.getRrn());
+                }
+                actualAmt = actualPayment.getAmount();
+                gatewayAmount = gatewayPayment.getAmount();
+                gatewayOrderIdForFaultyPayments = actualPayment.getGatewayOrderId();
+                paymentService.verifyPaymentAmount(gatewayAmount, actualAmt);
+            }
+
+        } catch (HealthkartPaymentGatewayException e){
+              if(e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)){
+                  paymentService.sendPaymentMisMatchMailToAdmin(actualAmt,gatewayAmount,gatewayOrderIdForFaultyPayments);
+              }
+        }
+
+        return payments;
+    }
+
+    public boolean updatePayment(String gatewayOrderId, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException {
+        boolean isUpdated = false;
+        PaymentStatus gatewayPaymentStatus=null;
+        String gatewayOrderIdForFaultyPayments=null;
+        Payment actualPayment=null;
+
+        try{
+            List<Payment> gatewayPayments = paymentService.seekPayment(gatewayOrderId);
+
+
+            for(Payment gatewayPayment : gatewayPayments) {
+
+                if(gatewayPayment.getTransactionType().equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
+                    actualPayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+                } else {
+                    actualPayment = paymentService.findByGatewayReferenceIdAndRrn(gatewayPayment.getGatewayReferenceId(),gatewayPayment.getRrn());   // in case of refund
+                }
+
+                // verify intended payment status
+                gatewayOrderIdForFaultyPayments= gatewayPayment.getGatewayOrderId();
+                gatewayPaymentStatus=gatewayPayment.getPaymentStatus();
+                paymentService.verifyPaymentStatus(gatewayPaymentStatus, paymentStatus);
+
+                // update payment object
+                // no wrong flow
+                //isUpdated=paymentService.updatePayment(gatewayPayment,actualPayment);
+
+                if(gatewayPaymentStatus != null && EnumPaymentStatus.SUCCESS.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+                    success(actualPayment.getGatewayOrderId(), gatewayPayment.getGatewayReferenceId(), gatewayPayment.getRrn(), gatewayPayment.getResponseMessage(), gatewayPayment.getAuthIdCode());
+                } else if (gatewayPaymentStatus != null && EnumPaymentStatus.FAILURE.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+                    fail(actualPayment.getGatewayOrderId(), gatewayPayment.getGatewayReferenceId(), gatewayPayment.getResponseMessage());
+                } else if (gatewayPaymentStatus != null && EnumPaymentStatus.AUTHORIZATION_PENDING.getName().equalsIgnoreCase(gatewayPaymentStatus.getName())){
+                    pendingApproval(actualPayment.getGatewayOrderId(),gatewayPayment.getGatewayReferenceId());
+                }  else {
+                    throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_RESPONSE);
+                }
+                isUpdated = true;
+            }
+
+        } catch (HealthkartPaymentGatewayException e){
+            if(e.getError().equals(HealthkartPaymentGatewayException.Error.INVALID_STATUS_CHANGE)){
+                paymentService.sendInValidPaymentStatusChangeToAdmin(gatewayPaymentStatus,paymentStatus,gatewayOrderIdForFaultyPayments);
+            } else {
+                error(actualPayment.getGatewayOrderId(),e);
+            }
+        }
+
+
+
+        return isUpdated;
+    }
+
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
+        Double gatewayAmount =null;
+
+        try{
+            Payment refundGatewayPayment = paymentService.refundPayment(gatewayOrderId,amount);
+            // verify this refund gateway Payment
+            Payment basePayment = paymentService.findByGatewayOrderId(gatewayOrderId);
+
+            //Do verification on refund amount, it should not be greater than (sale amount-sum(refund amounts))
+            // from gateway order Id, we will get the base sale amount
+            // from base payment gateway reference id, Since it is very gateway specific we will go to respective gateway
+
+            List<Payment> paymentList = paymentService.findByBasePayment(basePayment);
+
+            paymentService.verifyIfRefundAmountValid(paymentList, amount);
+
+            // Also verify if payment amount refunded be gateway and amount requested for refund is same, if not send mail to admin
+            gatewayAmount = refundGatewayPayment.getAmount();
+            paymentService.verifyPaymentAmount(gatewayAmount, amount);
+
+            // create a refund Payment Object
+            Payment refundPayment = createNewPayment(basePayment.getOrder(),EnumPaymentMode.ONLINE_PAYMENT.asPaymenMode(),
+                    basePayment.getIp(),basePayment.getGateway(),basePayment.getIssuer(),basePayment.getBillingAddress());
+
+            PaymentStatus gatewayPaymentStatus = refundGatewayPayment.getPaymentStatus();
+            // update newly created payment object based on the gateway Payment object
+            paymentService.updatePayment(refundGatewayPayment,refundPayment);
+
+            // TODO: logging needs to be implemented
+
+
+
+        } catch(HealthkartPaymentGatewayException e){
+            if(e.getError().equals(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH)){
+                paymentService.sendPaymentMisMatchMailToAdmin(amount,gatewayAmount,gatewayOrderId);
+            }
+
+        }
+
+        return null;
     }
 
     public OrderManager getOrderManager() {

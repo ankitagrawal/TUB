@@ -17,6 +17,10 @@ public class HealthkartPaymentGatewayException extends Exception {
     REJECTED_BY_GATEWAY(25, "Rejected By Gateway"),
     REJECTED_BY_ISSUER(30, "Rejected By Issuer"),
     UNKNOWN(100,"Unknown"),
+    BAD_ENQUIRY_CIT(35,"Bad enquiry be merchant"),
+    INVALID_STATUS_CHANGE(40,"Invalid Payment Status Change"),
+    MANDATORY_FIELD_MISSING(45,"Mandatory fields missing"),
+    INVALID_REFUND_AMOUNT(50,"Requested Refund amount exceeds total amount(sale amount - sum(existing refund amounts))"),
     ;
 
     private int code;

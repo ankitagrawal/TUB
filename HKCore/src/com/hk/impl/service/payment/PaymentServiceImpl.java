@@ -3,8 +3,13 @@ package com.hk.impl.service.payment;
 import java.util.Date;
 import java.util.List;
 
+import com.hk.constants.payment.EnumGateway;
+import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.domain.core.OrderStatus;
+import com.hk.domain.payment.Gateway;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.manager.SMSManager;
+import com.hk.pact.service.payment.HkPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +92,44 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses) {
-        return getPaymentModeDao().searchPayments(order,paymentStatuses,gatewayOrderId,paymentModes,startCreateDate, endCreateDate, orderStatuses);
+        return getPaymentModeDao().searchPayments(order, paymentStatuses, gatewayOrderId, paymentModes, startCreateDate, endCreateDate, orderStatuses);
+    }
+
+    @Override
+    public List<Payment> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException {
+
+        Payment basePayment = findByGatewayOrderId(gatewayOrderId);
+        if(basePayment != null){
+            Gateway gateway = basePayment.getGateway();
+            HkPaymentService hkPaymentService = getHkPaymentService(gateway);
+
+            if(hkPaymentService != null){
+                return hkPaymentService.seekPaymentFromGateway(basePayment);
+            }
+        }
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public HkPaymentService getHkPaymentService(Gateway gateway) {
+        if(gateway != null){
+            return ServiceLocatorFactory.getBean(gateway.getName() + "Service", HkPaymentService.class);
+        }
+        return null;
+    }
+
+    @Override
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException {
+        Payment basePayment = findByGatewayOrderId(gatewayOrderId);
+        if(basePayment != null){
+            Gateway gateway = basePayment.getGateway();
+            HkPaymentService hkPaymentService = getHkPaymentService(gateway);
+
+            if(hkPaymentService != null){
+                return hkPaymentService.refundPayment(basePayment,amount);
+            }
+        }
+        return null;
     }
 
     /**
@@ -127,6 +169,80 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return paymentEmailSent;
+    }
+
+    @Override
+    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException {
+        if(!gatewayAmount.equals(actualAmount)){
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.AMOUNT_MISMATCH);
+        }
+    }
+
+    @Override
+    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderIdForFaultyPayments) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void verifyPaymentStatus(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException {
+        if(!(gatewayPaymentStatus!= null && paymentStatus!= null && gatewayPaymentStatus.equals(paymentStatus))){
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_STATUS_CHANGE);
+        }
+    }
+
+    @Override
+    public void sendInValidPaymentStatusChangeToAdmin(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus, String gatewayOrderIdForFaultyPayments) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean updatePayment(Payment gatewayPayment, Payment actualPayment) {
+        boolean isUpdated = false;
+        if(actualPayment != null && gatewayPayment != null){
+            actualPayment.setAmount(gatewayPayment.getAmount());
+            actualPayment.setGatewayReferenceId(gatewayPayment.getGatewayReferenceId());
+            actualPayment.setRrn(gatewayPayment.getRrn());
+            actualPayment.setAuthIdCode(gatewayPayment.getAuthIdCode());
+            actualPayment.setResponseMessage(gatewayPayment.getResponseMessage());
+            actualPayment.setPaymentStatus(gatewayPayment.getPaymentStatus());
+
+            save(actualPayment);
+            isUpdated = true;
+        }
+        return isUpdated;
+    }
+
+    @Override
+    public List<Payment> findByBasePayment(Payment basePayment) {
+        Gateway gateway = basePayment.getGateway();
+        if(gateway!=null && EnumGateway.CITRUS.getId().equals(gateway.getId())){
+            return getPaymentDao().listByRRN(basePayment.getRrn());
+        } else if(gateway != null && EnumGateway.EBS.getId().equals(gateway.getId())){
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException {
+        Double totalAmount = null;
+        for(Payment payment : paymentList){
+            //TODO: change comparison with id
+            if(EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(payment.getTransactionType())){
+                totalAmount -= payment.getAmount();
+            } else {
+                totalAmount += payment.getAmount();
+            }
+        }
+
+        if (totalAmount < amount){
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.INVALID_REFUND_AMOUNT);
+        }
     }
 
     public EmailManager getEmailManager() {

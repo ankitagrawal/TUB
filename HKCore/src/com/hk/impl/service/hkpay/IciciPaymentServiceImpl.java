@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -98,6 +95,16 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
             }
         }
         return paymentService.findByGatewayOrderId(gatewayOrderId);
+    }
+
+    @Override
+    public List<Payment> seekPaymentFromGateway(Payment basePayment) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Payment refundPayment(Payment basePayment,Double amount) throws HealthkartPaymentGatewayException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private Map<String, Object> createHKPaymentResponseObject(Map<String, Object> hkrespObject, PGResponse oPgResp) {

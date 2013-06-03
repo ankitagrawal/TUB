@@ -46,4 +46,9 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
           return (CurrencyConverter) getSession().createQuery(query).uniqueResult();
     }
 
+    @Override
+    public List<Payment> listByRRN(String rrn) {
+        return (List<Payment>) getSession().createQuery("from Payment p where p.rrn = :rrn").setString("rrn",rrn);
+    }
+
 }

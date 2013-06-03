@@ -11,7 +11,9 @@ import com.hk.domain.core.PaymentMode;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.core.ProductVariantPaymentType;
 import com.hk.domain.order.Order;
+import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
+import com.hk.exception.HealthkartPaymentGatewayException;
 
 public interface PaymentService {
 
@@ -39,6 +41,11 @@ public interface PaymentService {
 
     public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses);
 
+    public List<Payment> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;// returns a non-persistable Payment object, created by what we get from gateway
+
+    public HkPaymentService getHkPaymentService(Gateway gateway);
+
+    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
     /**
      * Send payment emails and return true if emails sent successfully
      *
@@ -46,4 +53,20 @@ public interface PaymentService {
      * @return
      */
     public boolean sendPaymentEmailForOrder(Order order);
+
+    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn);
+
+    public void verifyPaymentAmount(Double gatewayAmount, Double actualAmount) throws HealthkartPaymentGatewayException;
+
+    public void sendPaymentMisMatchMailToAdmin(Double actualAmt, Double gatewayAmount, String gatewayOrderIdForFaultyPayments);
+
+    public void verifyPaymentStatus(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus) throws HealthkartPaymentGatewayException;
+
+    public void sendInValidPaymentStatusChangeToAdmin(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus, String gatewayOrderIdForFaultyPayments);
+
+    public boolean updatePayment(Payment gatewayPayment, Payment actualPayment);
+
+    public List<Payment> findByBasePayment(Payment basePayment);
+
+    public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException;
 }

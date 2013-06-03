@@ -115,6 +115,16 @@ public class EbsPaymentServiceImpl implements HkPaymentService {
         return paymentService.findByGatewayOrderId(gatewayOrderId);
     }
 
+    @Override
+    public List<Payment> seekPaymentFromGateway(Payment basePayment) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Payment refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private Map<String, Object> createHKPaymentResponseObject(Map<String, Object> hkrespObject, Element ele) {
 
         if (ele != null) {

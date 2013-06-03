@@ -85,7 +85,9 @@ public class GatewayResponseKeys {
         REJECTED_BY_ISSUER("1"),
         REJECTED_BY_GATEWAY("2"),
         CANCELLED_BY_USER("3"),
-        FAIL("FAIL");
+        FAIL("FAIL"),
+        REFUND_SUCCESS_CODE("11"),
+        ;
 
         private String key;
 
