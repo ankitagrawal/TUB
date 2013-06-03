@@ -176,6 +176,7 @@ public class OrderSplitterImpl implements OrderSplitter {
 	}
 
 	private void validate(Order order) {
+		logger.info("IN THE SPLITTER WITH ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
 		if (!EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
 			logger.debug("order with gatewayId:" + order.getGatewayOrderId()
 					+ " is not in placed status. abort system split and do a manual split");
