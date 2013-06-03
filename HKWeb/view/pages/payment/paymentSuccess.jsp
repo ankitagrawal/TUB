@@ -297,24 +297,26 @@
             <div>
                 <c:choose>
                     <c:when test="${actionBean.payment.paymentStatus.id == paymentStatusPending}">
-                        <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
-                            <%--your cod ka message--%>
-                            <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
-                            <h2 class="orderIdText">
-                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                            </h2>
-                            <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
-                            your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
-                            <br/>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="congratsText">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
-                            <h2 class="orderIdText">
-                                Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
-                            </h2>
-                            <p class="codMessage">We would update you with the status of your payment within 48hours. Once authorized, your order will go into processing.</p>
-                            <br/>
-                        </c:otherwise>
+                        <c:choose>
+                            <c:when test="${actionBean.payment.paymentMode.id == paymentModeCOD}">
+                                <%--your cod ka message--%>
+                                <div class="congratsText">Your order has been received and is <span class="orangeBold">pending verification</span></div>
+                                <h2 class="orderIdText">
+                                    Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                                </h2>
+                                <p class="codMessage">You will shortly get an automated <span class="orangeBold">verification call</span>. Please take the call and respond as per instructions to verify
+                                your order instantly. In case you miss the call, our agent will call you again to verify. Once verified, your order will go into processing.</p>
+                                <br/>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="congratsText">Your order has been received and is <span class="orangeBold">pending authorization</span> from the gateway.</div>
+                                <h2 class="orderIdText">
+                                    Your Order ID is: ${actionBean.payment.order.gatewayOrderId}.
+                                </h2>
+                                <p class="codMessage">We would update you with the status of your payment within 48hours. Once authorized, your order will go into processing.</p>
+                                <br/>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <%--your non cod ka message--%>
                     <c:otherwise>
