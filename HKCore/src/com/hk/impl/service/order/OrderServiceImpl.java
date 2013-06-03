@@ -626,6 +626,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
     	boolean shippingOrderAlreadyExists = false;
+    	User adminUser = getUserService().getAdminUser();
     	try {
     		order = this.find(order.getId());
     		logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
@@ -637,8 +638,6 @@ public class OrderServiceImpl implements OrderService {
     		}
     		
     		logger.debug("Trying to split order " + order.getId());
-    		
-    		User adminUser = getUserService().getAdminUser();
     		
     		if (shippingOrderAlreadyExists) {
     			if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
@@ -700,6 +699,8 @@ public class OrderServiceImpl implements OrderService {
     			subscriptionService.placeSubscriptions(order);
     			setTargetDatesOnBO(order);
     			shippingOrderAlreadyExists = true;
+    		} else {
+    			orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Number of shipping order are zero");
     		}
     		
     		// Check Inventory health of order lineItems
@@ -710,7 +711,8 @@ public class OrderServiceImpl implements OrderService {
     		logger.info("SPLIT END ORDER-ID: " + order.getId());
     		
     	} catch (Exception e) {
-    		 logger.error("Error while Splitting the order", e );
+    		orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), e.getMessage());
+    		logger.error("Error while Splitting the order", e );
     	}
     	return shippingOrderAlreadyExists;
     }
