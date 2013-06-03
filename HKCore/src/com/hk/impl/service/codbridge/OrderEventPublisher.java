@@ -145,7 +145,7 @@ public class OrderEventPublisher {
 				}
 			});
         }catch (Exception ex){
-            logger.error("Error while publishing event for Order " + order.getId() );
+            logger.error("SPLIT EVENT: Error while publishing event for Order " + order.getId() );
         }
         return messagePublished;
     }

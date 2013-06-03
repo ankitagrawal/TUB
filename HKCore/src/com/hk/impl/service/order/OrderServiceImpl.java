@@ -625,88 +625,94 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
-    	order = this.find(order.getId());
-    	logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
-        Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
-        boolean shippingOrderAlreadyExists = false;
-        Set<ShippingOrder> shippingOrders = order.getShippingOrders();
-        if(!shippingOrders.isEmpty()) {
-            shippingOrderAlreadyExists = true;
-        }
-
-        logger.debug("Trying to split order " + order.getId());
-
-        User adminUser = getUserService().getAdminUser();
-
-        if (shippingOrderAlreadyExists) {
-            if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
-                order = save(order);
-            }
-        } else {
-            //DO Nothing for B2B Orders
-            if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
-            } else {
-                if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
-                    shippingOrders = createShippingOrders(order);
-                }
-            }
-        }
-
-        if (shippingOrders != null && shippingOrders.size() > 0) {
-            if (!shippingOrderAlreadyExists) {
-                // save order with InProcess status since shipping orders have been created
-                order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
-                order.setShippingOrders(shippingOrders);
-                order = save(order);
-                String comments = "No. of Shipping Orders created  " + shippingOrders.size();
-                orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
-            }
-            for (ShippingOrder shippingOrder : shippingOrders) {
-                if (!shippingOrder.isDropShipping()) {
-                    if (shippingOrder.getShipment() == null) {
-                        shipmentService.createShipment(shippingOrder, true);
-                    }
-                } else {
-                    shippingOrder.setDropShipping(true);
-                    shippingOrder = shippingOrderService.save(shippingOrder);
-                    getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
-                            EnumReason.DROP_SHIPPED_ORDER.asReason());
-                }
-            }
-            // auto escalate shipping orders if possible
-            if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
-                for (ShippingOrder shippingOrder : shippingOrders) {
-                    getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
-                }
-            }
-
-            for (ShippingOrder shippingOrder : shippingOrders) {
-                Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
-
-                //auto allocate buckets, based on business use case
-                if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
-                    bucketService.autoCreateUpdateActionItem(shippingOrder);
-                } else {
-                    bucketService.popFromActionQueue(shippingOrder);
-                }
-
-                getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
-            }
-
-            subscriptionService.placeSubscriptions(order);
-            setTargetDatesOnBO(order);
-            shippingOrderAlreadyExists = true;
-        }
-
-        // Check Inventory health of order lineItems
-        for (CartLineItem cartLineItem : productCartLineItems) {
-            inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
-        }
-        
-        logger.info("SPLIT END ORDER-ID: " + order.getId());
-        return shippingOrderAlreadyExists;
+    	boolean shippingOrderAlreadyExists = false;
+    	try {
+    		order = this.find(order.getId());
+    		logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
+    		Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
+    		
+    		Set<ShippingOrder> shippingOrders = order.getShippingOrders();
+    		if(!shippingOrders.isEmpty()) {
+    			shippingOrderAlreadyExists = true;
+    		}
+    		
+    		logger.debug("Trying to split order " + order.getId());
+    		
+    		User adminUser = getUserService().getAdminUser();
+    		
+    		if (shippingOrderAlreadyExists) {
+    			if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+    				order.setOrderStatus(EnumOrderStatus.InProcess.asOrderStatus());
+    				order = save(order);
+    			}
+    		} else {
+    			//DO Nothing for B2B Orders
+    			if (order.isB2bOrder() != null && order.isB2bOrder().equals(Boolean.TRUE)) {
+    				orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), "Aboring Split for B2B Order");
+    			} else {
+    				if (EnumOrderStatus.Placed.getId().equals(order.getOrderStatus().getId())) {
+    					shippingOrders = createShippingOrders(order);
+    				}
+    			}
+    		}
+    		
+    		if (shippingOrders != null && shippingOrders.size() > 0) {
+    			if (!shippingOrderAlreadyExists) {
+    				// save order with InProcess status since shipping orders have been created
+    				order.setOrderStatus(getOrderStatusService().find(EnumOrderStatus.InProcess));
+    				order.setShippingOrders(shippingOrders);
+    				order = save(order);
+    				String comments = "No. of Shipping Orders created  " + shippingOrders.size();
+    				orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderSplit), comments);
+    			}
+    			for (ShippingOrder shippingOrder : shippingOrders) {
+    				if (!shippingOrder.isDropShipping()) {
+    					if (shippingOrder.getShipment() == null) {
+    						shipmentService.createShipment(shippingOrder, true);
+    					}
+    				} else {
+    					shippingOrder.setDropShipping(true);
+    					shippingOrder = shippingOrderService.save(shippingOrder);
+    					getShippingOrderService().logShippingOrderActivityByAdmin(shippingOrder, EnumShippingOrderLifecycleActivity.SO_ShipmentNotCreated,
+    							EnumReason.DROP_SHIPPED_ORDER.asReason());
+    				}
+    			}
+    			// auto escalate shipping orders if possible
+    			if (EnumPaymentStatus.getEscalablePaymentStatusIds().contains(order.getPayment().getPaymentStatus().getId())) {
+    				for (ShippingOrder shippingOrder : shippingOrders) {
+    					getShippingOrderService().autoEscalateShippingOrder(shippingOrder);
+    				}
+    			}
+    			
+    			for (ShippingOrder shippingOrder : shippingOrders) {
+    				Date confirmationDate = order.getConfirmationDate() != null ? order.getConfirmationDate() : order.getPayment().getPaymentDate();
+    				
+    				//auto allocate buckets, based on business use case
+    				if(EnumShippingOrderStatus.getStatusIdsForActionQueue().contains(shippingOrder.getOrderStatus().getId())){
+    					bucketService.autoCreateUpdateActionItem(shippingOrder);
+    				} else {
+    					bucketService.popFromActionQueue(shippingOrder);
+    				}
+    				
+    				getShippingOrderService().setTargetDispatchDelDatesOnSO(confirmationDate, shippingOrder);
+    			}
+    			
+    			subscriptionService.placeSubscriptions(order);
+    			setTargetDatesOnBO(order);
+    			shippingOrderAlreadyExists = true;
+    		}
+    		
+    		// Check Inventory health of order lineItems
+    		for (CartLineItem cartLineItem : productCartLineItems) {
+    			inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+    		}
+    		
+    		logger.info("SPLIT END ORDER-ID: " + order.getId());
+    		
+    	} catch (Exception e) {
+    		 logger.error("Error while Splitting the order", e );
+    	}
+    	return shippingOrderAlreadyExists;
     }
 
 
