@@ -13009,15 +13009,16 @@
 					UPDATE `tax` SET type='VAT';
 
 					INSERT INTO `tax` (`id`, `name`, `value`, `type`) VALUES
-					(110, 'ZeroPercent', '0.00000', 'VAT_SECONDARY'),
-					(120, 'OnePercent', '0.01000', 'VAT_SECONDARY'),
-					(130, 'TwoPercent', '0.02000', 'CST'),
-					(135, 'FourPercent', '0.04000', 'VAT_SECONDARY'),
-					(140, 'FivePercent', '0.05000', 'VAT_SECONDARY'),
-					(150, 'TwelveDotFivePercent', '0.12500', 'VAT_SECONDARY'),
-					(160, 'ThirteenDotOneTwoFivePercent', '0.13125', 'VAT_SECONDARY'),
-					(165, 'FourteenDotFive', '0.14500', 'VAT_SECONDARY'),
-					(170, 'TwentyPercent', '0.20000', 'VAT_SECONDARY')
+						(110, 'ZeroPercent', 0.00000, 'VAT_SECONDARY'),
+						(120, 'OnePercent', 0.01000, 'VAT_SECONDARY'),
+						(125, 'OneDotFivePercent', 0.01500, 'VAT_SECONDARY'),
+						(130, 'TwoPercent', 0.02000),
+						(135, 'FourPercent', 0.04000, 'VAT_SECONDARY'),
+						(140, 'FivePercent', 0.05000, 'VAT_SECONDARY'),
+						(150, 'TwelveDotFivePercent', 0.12500, 'VAT_SECONDARY'),
+						(160, 'ThirteenDotOneTwoFivePercent', 0.13125, 'VAT_SECONDARY'),
+						(165, 'FourteenDotFive', 0.14500, 'VAT_SECONDARY'),
+						(170, 'TwentyPercent', 0.20000, 'VAT_SECONDARY');
 					on duplicate key update
 					name = values(name),
 					value = values(value),
