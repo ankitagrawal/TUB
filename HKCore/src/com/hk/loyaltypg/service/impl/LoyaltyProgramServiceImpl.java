@@ -187,6 +187,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setKarmaPoints(karmaPoints);
 		profile.setUser(order.getUser());
 		profile.setOrder(order);
+		profile.setBadge(badgeInfo.getBadge());
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -226,7 +227,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 	public void debitKarmaPoints(Order order) {
 		UserOrderKarmaProfile karmaProfile = this.getUserOrderKarmaProfile(order.getId());
 		if (karmaProfile != null && karmaProfile.getTransactionType() == TransactionType.DEBIT) {
-			throw new RuntimeException("User order karma profile already exist for given orer and user "+ order.getId() + " " + order.getUser().getId());
+			throw new RuntimeException("User order karma profile already exist for given order and user "+ order.getId() + " " + order.getUser().getId());
 		}
 
 		double existingKarmaPoints = this.calculateLoyaltyPoints(order.getUser());
@@ -242,6 +243,7 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		profile.setKarmaPoints(-(karmaPoints));
 		profile.setUser(order.getUser());
 		profile.setOrder(order);
+		profile.setBadge(this.getUserBadgeInfo(order.getUser()).getBadge());
 		this.userOrderKarmaProfileDao.saveOrUpdate(profile);
 	}
 
@@ -357,6 +359,24 @@ public class LoyaltyProgramServiceImpl implements LoyaltyProgramService {
 		return this.userOrderKarmaProfileDao.listKarmaPointsForUser(user, page, perPage);
 	}
 
+	
+	/**
+	 * This overloaded method is used to fetch user's userOrderKarmaProfile history based on user id only
+	 * and without any provision of pagination.
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public List<UserOrderKarmaProfile> getUserLoyaltyProfileHistory(User user) {
+		DetachedCriteria criteria = DetachedCriteria.forClass(UserOrderKarmaProfile.class);
+		criteria.add(Restrictions.eq("user.id", user.getId()));
+		criteria.addOrder(org.hibernate.criterion.Order.desc("creationTime"));
+		
+		List<UserOrderKarmaProfile> profiles = loyaltyProductDao.findByCriteria(criteria);
+		
+		return profiles;
+	}
+	
 	@Override
 	public double calculateLoyaltyPoints(User user) {
 		Double credits = this.calculatePoints(user.getId(), TransactionType.CREDIT, KarmaPointStatus.APPROVED,

@@ -18,6 +18,7 @@ import com.hk.constants.sku.EnumSkuItemStatus;
 import com.hk.domain.catalog.product.ProductVariant;
 import com.hk.domain.core.PaymentMode;
 import com.hk.domain.loyaltypg.UserBadgeInfo;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.order.ShippingOrder;
@@ -53,6 +54,8 @@ import com.hk.web.action.error.AdminPermissionAction;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +112,10 @@ public class POSAction extends BaseAction {
 	private boolean useRewardPoints;
 	private boolean loyaltyUser;
 	private String loyaltyPoints = null;
+	private User loyaltyCustomer;
+	private List<UserOrderKarmaProfile> customerKarmaList;
+	
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -420,11 +427,15 @@ public class POSAction extends BaseAction {
 		Warehouse warehouse = userService.getWarehouseForLoggedInUser();
 		customer = this.updateCustomerDetails(warehouse);
 		if (customer != null) {
+			Hibernate.initialize(customer);
+			HibernateProxy proxy = (HibernateProxy)customer;                                                          
+			customer = (User)proxy.getHibernateLazyInitializer().getImplementation();
+
 //			addRedirectAlertMessage(new SimpleMessage("Customer Info updated."));
 			Map dataMap = new HashMap();
-//			dataMap.put("customerName", customer.getName());
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Customer Info updated.", dataMap);
 			dataMap.put("customerName", customer.getName());
+			dataMap.put("customer", customer);
 			if(loyaltyUser) {
 				this.addLoyaltyUser = false;
 				dataMap.put("loyaltyUser", true);
@@ -448,9 +459,13 @@ public class POSAction extends BaseAction {
 	private User updateCustomerDetails (Warehouse warehouse) {
 
 		if (customer == null) {
-			customer = posService.createUserForStore(email, name, null, RoleConstants.HK_USER);
+			customer = userService.findByLogin(email);
+			// Still customer not found that means new user
+			if (customer == null) {
+				customer = posService.createUserForStore(email, name, null, RoleConstants.HK_USER);
+			}
 		}
-
+		customer.setName(name);
 		if (newAddress) {
 			if (StringUtils.isBlank(addressLine1) || StringUtils.isBlank(addressCity) || StringUtils.isBlank(addressPincode)) {
 				address = posService.createDefaultAddressForUser(customer, phone, warehouse);
@@ -489,16 +504,22 @@ public class POSAction extends BaseAction {
 	public Resolution convertLoyaltyPoints () {
 		double convertedPoints = 0.0;
 		Map dataMap = new HashMap();
-		if (customer!= null) {
-			convertedPoints= loyaltyProgramService.convertLoyaltyToRewardPoints(customer);
+		
+		if (loyaltyCustomer == null) {
+			if(!StringUtils.isBlank(email)) {
+				loyaltyCustomer = userService.findByLogin(email);
+			}
+		}
+		if (loyaltyCustomer!=null) {
+			convertedPoints= loyaltyProgramService.convertLoyaltyToRewardPoints(loyaltyCustomer);
 		}
 		if (convertedPoints > 0 ) {
 			double totalRewardPoints = 0.0; 
-			if (customer.getUserAccountInfo()==null) {
-				totalRewardPoints = rewardPointService.getTotalRedeemablePoints(customer);
+			if (loyaltyCustomer.getUserAccountInfo()==null) {
+				totalRewardPoints = rewardPointService.getTotalRedeemablePoints(loyaltyCustomer);
 			} else {
-				totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(customer)
-						- customer.getUserAccountInfo().getOverusedRewardPoints());
+				totalRewardPoints = (rewardPointService.getTotalRedeemablePoints(loyaltyCustomer)
+						- loyaltyCustomer.getUserAccountInfo().getOverusedRewardPoints());
 			}
 			
 			dataMap.put("totalRewardPoints", Functions.roundNumberForDisplay(totalRewardPoints));
@@ -514,6 +535,15 @@ public class POSAction extends BaseAction {
 		}
 	}
 	
+	
+	public Resolution getCustomerLoyaltyHistory() {
+		if (customer != null) {
+				loyaltyCustomer = userService.findByLogin(customer.getLogin());
+		}
+		
+		customerKarmaList = loyaltyProgramService.getUserLoyaltyProfileHistory(loyaltyCustomer);
+		return new ForwardResolution("/pages/pos/posCustomerOrderHistory.jsp");
+	}
 	/**
 	 * Setters and getters begin 
 	 */
@@ -801,6 +831,34 @@ public class POSAction extends BaseAction {
 	 */
 	public void setLoyaltyPoints(String loyaltyPoints) {
 		this.loyaltyPoints = loyaltyPoints;
+	}
+
+	/**
+	 * @return the loyaltyCustomer
+	 */
+	public User getLoyaltyCustomer() {
+		return loyaltyCustomer;
+	}
+
+	/**
+	 * @param loyaltyCustomer the loyaltyCustomer to set
+	 */
+	public void setLoyaltyCustomer(User loyaltyCustomer) {
+		this.loyaltyCustomer = loyaltyCustomer;
+	}
+
+	/**
+	 * @return the customerKarmaList
+	 */
+	public List<UserOrderKarmaProfile> getCustomerKarmaList() {
+		return customerKarmaList;
+	}
+
+	/**
+	 * @param customerKarmaList the customerKarmaList to set
+	 */
+	public void setCustomerKarmaList(List<UserOrderKarmaProfile> customerKarmaList) {
+		this.customerKarmaList = customerKarmaList;
 	}
 
 	

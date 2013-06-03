@@ -225,7 +225,7 @@
 		  		e.preventDefault();
 		  		if(confirm("Please note that by clicking OK all loyalty points of the customer will be converted to reward points." +
 		  				" These points will be valid for next six months only. Convert Points?")) {
-			  		$.getJSON($('#rewardLink').attr('href'), {customer:$('#customer').val()},
+			  		$.getJSON($('#rewardLink').attr('href'), {loyaltyCustomer:$('#loyaltyCustomer').val(),email:$('#email').val()},
 			  				function (res) {
 								if (res.code == '<%=HealthkartResponse.STATUS_OK%>') {
 									alert(res.message);
@@ -242,7 +242,10 @@
 		  		}
 		  		
 		  	});
-		  	 
+
+		  	$("#historyLink").click(function(e) {
+		  	});
+
 		    $('#useRewardPoints').click(function() {
 		    	updateFinalPayable();
 	    	});
@@ -294,6 +297,7 @@
 					$('#loyaltyPoints').text(res.data.loyaltyPoints);
 					$('#cardNumber').val(res.data.cardNumber);
 					$('#addLoyaltyUser').removeAttr('checked');
+					$('#loyaltyCustomer').val(res.data.customer.id);
 				} else {
 					$('#addLoyaltyUser').attr('checked','checked');
 					$('#newLoyaltyCustomer').show();
@@ -385,9 +389,13 @@
 				
 				<span id="oldLoyaltyCustomer" style="float:left;">
 					Presently <span id="loyaltyCustomerName"> </span>  has <span id="badgeName"> </span> 
-					status and <span id="loyaltyPoints"> </span> loyalty points.<br/>
+					status and <span id="loyaltyPoints"> </span> loyalty points.
+					<s:link beanclass="com.hk.web.action.admin.pos.POSAction" id="historyLink" event="getCustomerLoyaltyHistory"
+					 target="_blank" style="color:red; font-size:1;">Customer History
+					 <s:hidden id="loyaltyCustomer" name="loyaltyCustomer"  />
+					 </s:link>
+ 					<br/>
  					<s:link id="rewardLink" beanclass="com.hk.web.action.admin.pos.POSAction" event="convertLoyaltyPoints" >Click here 
- 					<s:hidden id="loyaltyCustomer" name="loyaltyCustomer"  />
  					</s:link>
  					to convert customer's loyalty points to reward points.
 				</span>	
@@ -396,7 +404,7 @@
 			</div>
 				<br/>  
 				<s:hidden name="loyaltyUser" class="loyaltyUser"/>
-				<s:submit name="updateCustomerInfo" value="Update Customer Info" id="updateCustomerInfo" style="float:right; clear:both;"/>
+				<s:button name="updateCustomerInfo" value="Update Customer Info" id="updateCustomerInfo" style="float:right; clear:both;"/>
 				<br/>
 		</fieldset>
 		<c:if test="${pos.order.id == null}">
