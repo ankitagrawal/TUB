@@ -130,12 +130,12 @@
 
 								</td>
 								<td width="30%" style="text-align:center;">
-									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostCss/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
+									<span class="minus" style="cursor:pointer;"><img src="<hk:vhostImage/>/pages/loyalty/resources/images/minus.png" style="height: 20px; width:20px;"></span>
 									&nbsp;&nbsp;
 									<input id="${lp.variant.id}" class="lineItemQty" type=text value="${lp.qty}" maxlength="3"
 								           style="width:30px;height:24px;" disabled="disabled"/>
 								     &nbsp;&nbsp;
-								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostCss/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
+								     <span class="plus" style="cursor:pointer;"><img src="<hk:vhostImage/>/pages/loyalty/resources/images/plus.png" style="height: 20px; width:20px;"></span>
 								        <p class="removeLink">(Remove)</p>
 									<br/>
 									<span class="error-message" style="display:none">
