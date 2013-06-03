@@ -65,8 +65,8 @@ public class HKAPIBrandServiceImpl implements HKAPIBrandService {
             productDTO.setProductID(product.getId());
 
             if(product.getMainImageId()!=null){
-                productDTO.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId(),false));
-                productDTO.setThumbUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId(),false));
+                productDTO.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, product.getMainImageId()));
+                productDTO.setThumbUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, product.getMainImageId()));
             }
 
             List<ProductVariant> productVariantList=product.getProductVariants();
