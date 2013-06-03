@@ -264,12 +264,7 @@ ${shippingOrder.id}
                                      class="splitShippingOrder">
                 <s:param name="shippingOrder" value="${shippingOrder}"/>
                 Split SO
-            </s:link>)
-                 &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD"
-                                     class="splitShippingOrder" event="view" >
-                <s:param name="actionItem" value="${hk:getActionItem(shippingOrder).id}"/>
-                Edit Action Item
-            </s:link>)
+            </s:link>)               
                 <c:if test="${isSearchShippingOrder == true}">
                     &nbsp;&nbsp;(<s:link beanclass="com.hk.web.action.admin.order.split.PseudoOrderSplitAction"
                                          class="pseudoSplitBaseOrder" event="splitOrderPractically">
