@@ -59,7 +59,7 @@ public interface BucketService {
 
     ActionItem autoCreateUpdateActionItem(ShippingOrder shippingOrder);
 
-    void confirmCOD(Order order);
+    void updateCODBucket(Order order);
 
     ActionItem escalateOrderFromActionQueue(ShippingOrder shippingOrder);
 
