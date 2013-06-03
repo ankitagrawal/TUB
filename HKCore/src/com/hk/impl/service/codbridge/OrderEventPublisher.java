@@ -141,10 +141,7 @@ public class OrderEventPublisher {
         	splitExecutorService.submit(new Runnable() {
 				@Override
 				public void run() {
-					Order o = orderService.find(order.getId());
-					logger.info("SPLIT START ORDER-ID: " + o.getId() + " ORDER STATUS: " + o.getOrderStatus().getName());
-					orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(o);
-					logger.info("SPLIT END ORDER-ID: " + o.getId());
+					orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 				}
 			});
         }catch (Exception ex){

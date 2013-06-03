@@ -626,6 +626,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public boolean splitBOCreateShipmentEscalateSOAndRelatedTasks(Order order) {
     	order = this.find(order.getId());
+    	logger.info("SPLIT START ORDER-ID: " + order.getId() + " ORDER STATUS: " + order.getOrderStatus().getName());
         Set<CartLineItem> productCartLineItems = new CartLineItemFilter(order.getCartLineItems()).addCartLineItemType(EnumCartLineItemType.Product).filter();
         boolean shippingOrderAlreadyExists = false;
         Set<ShippingOrder> shippingOrders = order.getShippingOrders();
@@ -703,7 +704,8 @@ public class OrderServiceImpl implements OrderService {
         for (CartLineItem cartLineItem : productCartLineItems) {
             inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
         }
-
+        
+        logger.info("SPLIT END ORDER-ID: " + order.getId());
         return shippingOrderAlreadyExists;
     }
 
