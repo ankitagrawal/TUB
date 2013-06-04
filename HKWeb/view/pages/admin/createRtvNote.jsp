@@ -11,6 +11,15 @@
 <c:set var="createdStatus" value="<%=EnumRtvNoteStatus.Created.getName()%>"/>
     <s:layout-component name="htmlHead">
  <link href="${pageContext.request.contextPath}/css/calendar-blue.css" rel="stylesheet" type="text/css"/>
+ <style>
+ 
+ #closeButtonDiv{
+	float: left;
+	position: relative;
+	left: 40%;
+}
+ </style>
+ 
  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dynDateTime.pack.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/calendar-en.js"></script>
 <jsp:include page="/includes/_js_labelifyDynDateMashup.jsp"/>
@@ -221,5 +230,10 @@
         <br/>
         <s:submit name="editRtvNote" value="SAVE" id="save" />
     </s:form>
+    <div id="closeButtonDiv">
+	<s:link beanclass="com.hk.web.action.admin.rtv.ExtraInventoryAction" event="rtvNotePrintPreview" Value="Print Rtv" class="button_green addToCartButton" target="_blank"> Print RTV
+	<s:param name="rtvNoteId" value="${rtvNote.rtvNote.id}"/>
+	</s:link>
+	</div>
     </s:layout-component>
     </s:layout-render>

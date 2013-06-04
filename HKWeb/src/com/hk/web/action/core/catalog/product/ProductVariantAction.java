@@ -1,17 +1,5 @@
 package com.hk.web.action.core.catalog.product;
 
-import java.util.List;
-
-import net.sourceforge.stripes.action.ForwardResolution;
-import net.sourceforge.stripes.action.JsonResolution;
-import net.sourceforge.stripes.action.RedirectResolution;
-import net.sourceforge.stripes.action.Resolution;
-import net.sourceforge.stripes.action.SimpleMessage;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.catalog.image.EnumImageSize;
 import com.hk.domain.catalog.product.ProductImage;
@@ -21,6 +9,12 @@ import com.hk.pact.service.image.ProductImageService;
 import com.hk.util.HKImageUtils;
 import com.hk.util.ImageManager;
 import com.hk.web.HealthkartResponse;
+import net.sourceforge.stripes.action.*;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class ProductVariantAction extends BaseAction {
@@ -77,7 +71,7 @@ public class ProductVariantAction extends BaseAction {
 
 	public Resolution changeProductLink() {
 		if (mainProductImageId != null) {
-			String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId), isSecureRequest());
+			String productImageLink = HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, Long.parseLong(mainProductImageId));
 			HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "success", productImageLink);
 			return new JsonResolution(healthkartResponse);
 		} else {

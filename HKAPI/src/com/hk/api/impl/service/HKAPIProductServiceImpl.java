@@ -110,6 +110,17 @@ public class HKAPIProductServiceImpl implements HKAPIProductService {
         return hkAPIBaseDto;
     }
 
+    public HKAPIBaseDTO getOOSHiddenDeletedProducts(){
+       List<Product> products= productService.getOOSHiddenDeletedProducts();
+       List<String> productIDs= new ArrayList<String>();
+        for(Product product : products){
+            productIDs.add(product.getId());
+        }
+        HKAPIBaseDTO baseDTO=new HKAPIBaseDTO();
+        baseDTO.setData(productIDs);
+        return baseDTO;
+    }
+
 	public Product getProductById(String productId) {
 		try {
 			ClientRequest request = new ClientRequest(healthkartRestUrl + "product/" + productId);
