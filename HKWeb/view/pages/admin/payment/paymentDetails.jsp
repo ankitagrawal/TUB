@@ -34,10 +34,16 @@
             </fieldset>
         </s:form>
 
-        <c:forEach  items="${cpa.transactionList}" var="paymentResultMap">
-            <c:forEach items="${paymentResultMap}" var="paymentMapEntry">
-                ${paymentMapEntry.key}  -->   ${paymentMapEntry.value}  <br/>
-            </c:forEach>
+        <c:forEach  items="${cpa.paymentList}" var="payment">
+            Gateway Order Id --> ${payment.gatewayOrderId}  <br/>
+            Gateway Reference Id --> ${payment.gatewayReferenceId} <br/>
+            Transaction Type --> ${payment.transactionType}<br/>
+            Amount --> ${payment.amount} <br/>
+            Payment Status --> ${payment.paymentStatus.name}<br/>
+            Response Message --> ${payment.responseMessage}  <br/>
+            Root Reference No --> ${payment.rrn}<br/>
+            Gateway --> ${payment.gateway.name}<br/>
+            Issuer --> ${payment.issuer.name}<br/>
             <br/>
         </c:forEach>
 

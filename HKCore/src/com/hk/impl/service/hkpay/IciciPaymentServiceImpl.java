@@ -9,6 +9,7 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pojo.HkPaymentResponse;
 import com.hk.web.AppConstants;
 import com.opus.epg.sfa.java.PGResponse;
 import com.opus.epg.sfa.java.PGSearchResponse;
@@ -98,12 +99,12 @@ public class IciciPaymentServiceImpl implements HkPaymentService {
     }
 
     @Override
-    public List<Payment> seekPaymentFromGateway(Payment basePayment) {
+    public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Payment refundPayment(Payment basePayment,Double amount) throws HealthkartPaymentGatewayException {
+    public HkPaymentResponse refundPayment(Payment basePayment,Double amount) throws HealthkartPaymentGatewayException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

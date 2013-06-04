@@ -17,4 +17,10 @@ public interface PaymentDao extends BaseDao {
     public CurrencyConverter findLatestConversionRate (String baseCurrencyCode , String foreignCurrencyCode );
 
     public List<Payment> listByRRN(String rrn);
+
+    public List<Payment> listByGatewayReferenceOrderId(String gatewayReferenceOrderId);
+
+    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn);
+
+    public List<Payment> listAllDependentPaymentByBasePaymentGatewayOrderId(String basePaymentGatewayOrderId);
 }

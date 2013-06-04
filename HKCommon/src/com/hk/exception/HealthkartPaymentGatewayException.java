@@ -21,6 +21,10 @@ public class HealthkartPaymentGatewayException extends Exception {
     INVALID_STATUS_CHANGE(40,"Invalid Payment Status Change"),
     MANDATORY_FIELD_MISSING(45,"Mandatory fields missing"),
     INVALID_REFUND_AMOUNT(50,"Requested Refund amount exceeds total amount(sale amount - sum(existing refund amounts))"),
+    NO_REQUEST_PAYMENT_FOUND(60,"No request payment found for gateway order id"),
+    NO_RESPONSE_PAYMENT_FOUND(70,"No response payment found for gateway order id"),
+    REQUEST_RESPONSE_SIZE_MISMATCH(75,"Request and Response payment have different sizes"),
+    REQUEST_RESPONSE_INCONSISTENCY(80,"Request and Response payments are inconsistent"),
     ;
 
     private int code;

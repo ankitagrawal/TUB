@@ -87,6 +87,9 @@ public class GatewayResponseKeys {
         CANCELLED_BY_USER("3"),
         FAIL("FAIL"),
         REFUND_SUCCESS_CODE("11"),
+        MANDATORY_FIELD_MISSING_COD("400"),
+        GOOD_ENQ_COD("200"),
+        BAD_ENQ_COD("401"),
         ;
 
         private String key;

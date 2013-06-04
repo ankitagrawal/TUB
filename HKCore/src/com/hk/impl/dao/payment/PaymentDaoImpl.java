@@ -2,6 +2,8 @@ package com.hk.impl.dao.payment;
 
 import java.util.List;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +51,29 @@ public class PaymentDaoImpl extends BaseDaoImpl implements PaymentDao {
     @Override
     public List<Payment> listByRRN(String rrn) {
         return (List<Payment>) getSession().createQuery("from Payment p where p.rrn = :rrn").setString("rrn",rrn);
+    }
+
+    @Override
+    public List<Payment> listByGatewayReferenceOrderId(String gatewayReferenceOrderId) {
+        return (List<Payment>) getSession().createQuery("from Payment p where p.gatewayReferenceId = :gatewayReferenceOrderId").setString("gatewayReferenceOrderId",gatewayReferenceOrderId);
+    }
+
+    @Override
+    public Payment findByGatewayReferenceIdAndRrn(String gatewayReferenceId, String rrn) {
+        /*DetachedCriteria paymentCriteria = DetachedCriteria.forClass(Payment.class);
+        if(gatewayReferenceId != null){
+            paymentCriteria.add(Restrictions.eq("gatewayReferenceId", gatewayReferenceId));
+        }
+        if(gatewayReferenceId != null){
+            paymentCriteria.add(Restrictions.eq("rrn", rrn));
+        }*/
+
+        return (Payment)getSession().createQuery("from Payment p where p.gatewayReferenceId = gatewayReferenceId and p.rrn = rrn").uniqueResult();
+    }
+
+    @Override
+    public List<Payment> listAllDependentPaymentByBasePaymentGatewayOrderId(String basePaymentGatewayOrderId) {
+        return (List<Payment>) getSession().createQuery("from Payment p where p.basePaymentGatewayOrderId = :basePaymentGatewayOrderId").setString("basePaymentGatewayOrderId",basePaymentGatewayOrderId);
     }
 
 }

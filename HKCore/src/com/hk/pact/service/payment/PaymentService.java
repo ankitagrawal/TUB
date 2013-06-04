@@ -2,6 +2,7 @@ package com.hk.pact.service.payment;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.hk.constants.catalog.product.EnumProductVariantPaymentType;
 import com.hk.constants.payment.EnumPaymentMode;
@@ -14,6 +15,7 @@ import com.hk.domain.order.Order;
 import com.hk.domain.payment.Gateway;
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pojo.HkPaymentResponse;
 
 public interface PaymentService {
 
@@ -41,11 +43,11 @@ public interface PaymentService {
 
     public List<Payment> searchPayments(Order order, List<PaymentStatus> paymentStatuses, String gatewayOrderId, List<PaymentMode> paymentModes, Date startCreateDate, Date endCreateDate, List<OrderStatus> orderStatuses);
 
-    public List<Payment> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;// returns a non-persistable Payment object, created by what we get from gateway
+    public List<HkPaymentResponse> seekPayment(String gatewayOrderId) throws HealthkartPaymentGatewayException;// returns a non-persistable Payment object, created by what we get from gateway
 
     public HkPaymentService getHkPaymentService(Gateway gateway);
 
-    public Payment refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
+    public HkPaymentResponse refundPayment(String gatewayOrderId, Double amount) throws HealthkartPaymentGatewayException;
     /**
      * Send payment emails and return true if emails sent successfully
      *
@@ -64,9 +66,25 @@ public interface PaymentService {
 
     public void sendInValidPaymentStatusChangeToAdmin(PaymentStatus gatewayPaymentStatus, PaymentStatus paymentStatus, String gatewayOrderIdForFaultyPayments);
 
-    public boolean updatePayment(Payment gatewayPayment, Payment actualPayment);
+    public boolean updatePaymentBasedOnResponse(HkPaymentResponse gatewayPayment, Payment actualPayment);
 
     public List<Payment> findByBasePayment(Payment basePayment);
 
     public void verifyIfRefundAmountValid(List<Payment> paymentList, Double amount) throws HealthkartPaymentGatewayException;
+
+    public List<Payment> listPaymentFamily(String gatewayOrderId);
+
+    public void verifyHkRequestAndResponse(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) throws HealthkartPaymentGatewayException;
+
+    public boolean updatePaymentFamily(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
+
+    public List<Map<String,Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
+
+    public void verifyForConsistencyOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
+
+    public void verifyForConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
+
+    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;
+
+    public Map<String,Object> verifyForAmountConsistencyOfRequestAndResponse(Payment request, HkPaymentResponse response) throws HealthkartPaymentGatewayException;
 }

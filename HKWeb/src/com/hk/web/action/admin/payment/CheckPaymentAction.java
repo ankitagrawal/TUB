@@ -7,6 +7,7 @@ import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.GatewayResponseKeys;
 import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
+import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
@@ -99,20 +100,14 @@ public class CheckPaymentAction extends BaseAction {
 
     @DontValidate
     public Resolution seekPayment() {
-        payment = paymentService.findByGatewayOrderId(gatewayOrderId);
-        HkPaymentService hkPaymentService;
-        if (payment != null) {
-            Gateway gateway = payment.getGateway();
-            if (gateway != null) {
-                hkPaymentService = paymentManager.getHkPaymentServiceByGateway(gateway);
-                try {
-                    paymentResultMap = hkPaymentService.seekHkPaymentResponse(gatewayOrderId);
-                } catch (Exception e) {
-                    logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
-                }
-            }
+        try{
+            paymentList = paymentManager.seekPayment(gatewayOrderId);
+
+        } catch (HealthkartPaymentGatewayException e){
+            logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
+            // redirect to error page
         }
-        transactionList.add(paymentResultMap);
+
         return new ForwardResolution("/pages/admin/payment/paymentDetails.jsp");
     }
 

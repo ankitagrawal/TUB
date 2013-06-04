@@ -5,6 +5,7 @@ import com.citruspay.pg.exception.CitruspayException;
 import com.citruspay.pg.model.Enquiry;
 import com.citruspay.pg.model.EnquiryCollection;
 import com.citruspay.pg.model.Refund;
+import com.hk.constants.payment.EnumGateway;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.constants.payment.EnumPaymentTransactionType;
 import com.hk.constants.payment.GatewayResponseKeys;
@@ -16,9 +17,9 @@ import com.hk.manager.payment.PaymentManager;
 import com.hk.pact.service.UserService;
 import com.hk.pact.service.payment.HkPaymentService;
 import com.hk.pact.service.payment.PaymentService;
+import com.hk.pojo.HkPaymentResponse;
 import com.hk.web.AppConstants;
 import org.apache.commons.lang.math.NumberUtils;
-import org.dbunit.dataset.datatype.StringIgnoreCaseDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,28 +108,21 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
     }
 
     @Override
-    public List<Payment> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {
+    public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException {
         String gatewayOrderId = basePayment.getGatewayOrderId();
-
+        List<HkPaymentResponse> hkPaymentResponseList = null;
         try{
-
             EnquiryCollection enquiryCollection = callPaymentGateway(gatewayOrderId);
-
-            // get List of enquiry object from citrus
             List<Enquiry> enquiryList = verifyGatewayAndReturnListOfEnquiryObject(enquiryCollection);
-
-
-            return createHkPaymentResponse(enquiryList, gatewayOrderId);
-
-
+            hkPaymentResponseList = createHkPaymentResponse(enquiryList, gatewayOrderId);
         }  catch (Exception e){
             logger.debug("Citrus Payment gateway exception :",e);
         }
-        return null;
+        return hkPaymentResponseList;
     }
 
     @Override
-    public Payment refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
+    public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException {
 
         Map<String, Object> paymentSearchMap = new HashMap<String, Object>();
         String propertyLocatorFileLocation = AppConstants.getAppClasspathRootPath() + CITRUS_LIVE_PROPERTIES;
@@ -153,51 +147,55 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
 
         } catch (CitruspayException e){
             logger.debug("Citrus Exception occurred : ",e);
-            new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
         }
         return null;
     }
 
-    private Payment verifyRefundPaymentStatusAndReturnPayment(Refund refund) throws HealthkartPaymentGatewayException {
-        if("0".equalsIgnoreCase(refund.getRespCode())){
-            //TODO: populate gatewayOrderId of the base payment, as for now
-            return createPayment(refund.getMerTxnId(),refund.getTxnId(),refund.getRRN(),refund.getRespMessage(),EnumPaymentTransactionType.REFUND.getName(),refund.getAmount(),refund.getAuthIdCode());
-        } else if ("400".equalsIgnoreCase(refund.getRespCode())){
+    private HkPaymentResponse verifyRefundPaymentStatusAndReturnPayment(Refund refund) throws HealthkartPaymentGatewayException {
+        HkPaymentResponse hkPaymentResponse = null;
+        if(GatewayResponseKeys.CitrusConstants.REFUND_SUCCESS_CODE.getKey().equalsIgnoreCase(refund.getRespCode())){
+            hkPaymentResponse = createPayment(refund.getMerTxnId(),refund.getTxnId(),refund.getRRN(),refund.getRespMessage(),EnumPaymentTransactionType.REFUND.getName(),refund.getAmount(),refund.getAuthIdCode());
+        } else if (GatewayResponseKeys.CitrusConstants.MANDATORY_FIELD_MISSING_COD.getKey().equalsIgnoreCase(refund.getRespCode())){
             logger.debug("Citrus Refund : Mandatory Fields missing "+ refund.getRespCode() + ":" + refund.getRespMessage());
-            new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
+            throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
         }
-        return null;
+        return hkPaymentResponse;
     }
 
     private List<Enquiry> verifyGatewayAndReturnListOfEnquiryObject(EnquiryCollection enquiryCollection) throws HealthkartPaymentGatewayException{
-
+        List<Enquiry> enquiryList = null;
         if(enquiryCollection != null){
-            if("200".equalsIgnoreCase(enquiryCollection.getRespCode())){
-                return enquiryCollection.getEnquiry();
-            } else if ("400".equalsIgnoreCase(enquiryCollection.getRespCode()) || "401".equalsIgnoreCase(enquiryCollection.getRespCode())) {
+            if(GatewayResponseKeys.CitrusConstants.GOOD_ENQ_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())){
+                enquiryList = enquiryCollection.getEnquiry();
+            } else if (GatewayResponseKeys.CitrusConstants.MANDATORY_FIELD_MISSING_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())
+                    || GatewayResponseKeys.CitrusConstants.BAD_ENQ_COD.getKey().equalsIgnoreCase(enquiryCollection.getRespCode())) {
                 logger.debug("Citrus Payment bad enquiry "+ enquiryCollection.getRespCode() + ":" + enquiryCollection.getRespMsg());
-                new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.BAD_ENQUIRY_CIT);
+                throw new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.MANDATORY_FIELD_MISSING);
             } else {
                 logger.debug("Unknown error from citrus end "+ enquiryCollection.getRespCode() + ":" + enquiryCollection.getRespMsg());
-                new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
+                //new HealthkartPaymentGatewayException(HealthkartPaymentGatewayException.Error.UNKNOWN);
             }
         }
 
-        return null;
+        return enquiryList;
     }
 
-    private List<Payment> createHkPaymentResponse(List<Enquiry> enquiryList, String gatewayOrderId) throws HealthkartPaymentGatewayException {
+    private List<HkPaymentResponse> createHkPaymentResponse(List<Enquiry> enquiryList, String gatewayOrderId) throws HealthkartPaymentGatewayException {
+        List<HkPaymentResponse> paymentList = null;
+
         if (enquiryList != null && !enquiryList.isEmpty()){
-            List<Payment> paymentList = new ArrayList<Payment>();
+
+            paymentList = new ArrayList<HkPaymentResponse>();
 
             for(Enquiry enquiry : enquiryList){
                 // create a payment object
-                Payment payment = createPayment(gatewayOrderId, enquiry.getPgTxnId(), enquiry.getRrn(), enquiry.getRespMsg(), enquiry.getTxnType(), enquiry.getAmount(),enquiry.getAuthIdCode());
+                HkPaymentResponse hkPaymentResponse = createPayment(gatewayOrderId, enquiry.getPgTxnId(), enquiry.getRrn(), enquiry.getRespMsg(), enquiry.getTxnType(), enquiry.getAmount(),enquiry.getAuthIdCode());
 
                 // set payment status based on enquiry respCode
-                verifyAndSetPaymentStatus(enquiry.getRespCode(),payment);
+                verifyAndSetPaymentStatus(enquiry.getRespCode(),hkPaymentResponse);
 
-                paymentList.add(payment);
+                paymentList.add(hkPaymentResponse);
             }
 
             return paymentList;
@@ -205,37 +203,31 @@ public class CitrusPaymentServiceImpl implements HkPaymentService {
         } else {
             logger.debug("Seek from Citrus returns either empty or null enquiry list");
         }
-        return null;
+        return paymentList;
     }
 
-    private void verifyAndSetPaymentStatus(String respCode, Payment payment){
+    private void verifyAndSetPaymentStatus(String respCode, HkPaymentResponse hkPaymentResponse){
         if (respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.SUCCESS_CODE.getKey()) || respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REFUND_SUCCESS_CODE.getKey())) {
-            payment.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.SUCCESS.asPaymenStatus());
         } else if (respCode.equalsIgnoreCase(GatewayResponseKeys.CitrusConstants.REJECTED_BY_ISSUER.getKey())) {
-           payment.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.FAILURE.asPaymenStatus());
         } else {
-           payment.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
+            hkPaymentResponse.setPaymentStatus(EnumPaymentStatus.ERROR.asPaymenStatus());
         }
     }
 
-    private Payment createPayment(String gatewayOrderId, String gatewayReferenceId, String rrn , String respMsg, String txnType, String amount, String authIdCode){
-        Payment payment = new Payment();
+    private HkPaymentResponse createPayment(String gatewayOrderId, String gatewayReferenceId, String rrn , String respMsg, String txnType, String amount, String authIdCode){
 
-        payment.setAmount(NumberUtils.toDouble(amount));
-        payment.setGatewayReferenceId(gatewayReferenceId);
-        payment.setRrn(rrn);
-        payment.setAuthIdCode(authIdCode);
-        payment.setResponseMessage(respMsg);
+        HkPaymentResponse hkPaymentResponse = new HkPaymentResponse(gatewayOrderId,gatewayReferenceId,respMsg,
+                                                                    EnumGateway.CITRUS.asGateway(),null,null,rrn,authIdCode,NumberUtils.toDouble(amount));
 
-        // case of base payment object
         if(txnType.equalsIgnoreCase(EnumPaymentTransactionType.SALE.getName())){
-            payment.setGatewayOrderId(gatewayOrderId);
-            payment.setTransactionType(null);
+            hkPaymentResponse.setGatewayOrderId(gatewayOrderId);
+            hkPaymentResponse.setTransactionType(EnumPaymentTransactionType.SALE.getName());
         } else if (txnType.equalsIgnoreCase(EnumPaymentTransactionType.REFUND.getName())){
-            payment.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
+            hkPaymentResponse.setTransactionType(EnumPaymentTransactionType.REFUND.getName());
         }
-
-        return payment;
+        return hkPaymentResponse;
     }
 
     //TODO: Citrus doesn't return gatewayOrder Id, hence bind the same value from which seek is called

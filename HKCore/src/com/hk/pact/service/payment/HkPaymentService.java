@@ -2,6 +2,7 @@ package com.hk.pact.service.payment;
 
 import com.hk.domain.payment.Payment;
 import com.hk.exception.HealthkartPaymentGatewayException;
+import com.hk.pojo.HkPaymentResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public interface HkPaymentService {
 
     public Payment updatePayment(String gatewayOrderId);
 
-    public List<Payment> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException;
+    public List<HkPaymentResponse> seekPaymentFromGateway(Payment basePayment) throws HealthkartPaymentGatewayException;
 
-    public Payment refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException;
+    public HkPaymentResponse refundPayment(Payment basePayment, Double amount) throws HealthkartPaymentGatewayException;
 }
