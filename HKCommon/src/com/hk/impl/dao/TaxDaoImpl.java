@@ -25,8 +25,12 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
 //       else
 //          return null;
 //    }
-    
-    //TODO: change these querry styles execute one query only.  
+
+
+	@Override
+	public Tax findById(Long id) {
+		return this.get(Tax.class, id);
+	}//TODO: change these querry styles execute one query only.
     public List<Tax> taxListForReport() {
         List<Tax> taxList = new ArrayList<Tax>();
         taxList.add(this.findByName(EnumTax.VAT_0.getName()));
@@ -57,12 +61,12 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
 
 	public List<Tax> getTaxList() {
 		List<Tax> taxList = new ArrayList<Tax>();
-		taxList.add(this.findByName(EnumTax.VAT_0.getName()));
-		taxList.add(this.findByName(EnumTax.VAT_5.getName()));
-		taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
-		taxList.add(this.findByName(EnumTax.SERVICE_10_3.getName()));
-		taxList.add(this.findByName(EnumTax.VAT_12_36.getName()));
-		taxList.add(this.findByName(EnumTax.VAT_12_5.getName()));
+		taxList.add(this.findById(EnumTax.VAT_0.getId()));
+		taxList.add(this.findById(EnumTax.VAT_5.getId()));
+		taxList.add(this.findById(EnumTax.VAT_12_5.getId()));
+		taxList.add(this.findById(EnumTax.SERVICE_10_3.getId()));
+		taxList.add(this.findById(EnumTax.VAT_12_36.getId()));
+		taxList.add(this.findById(EnumTax.VAT_12_5.getId()));
 		return taxList;
 	}
 }

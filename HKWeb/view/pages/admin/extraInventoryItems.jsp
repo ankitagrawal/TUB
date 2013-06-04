@@ -653,7 +653,7 @@ $(document).ready(function () {
 						<c:when test="${extraInventory.sameState}">
 							<s:select name="extraInventoryLineItems[${ctr.index}].tax"
 							          value="${eInLineItems.tax.id}" class="valueChange taxValues">
-								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="localTaxList"
+								<hk:master-data-collection service="<%=TaxDao.class%>" serviceProperty="taxList"
 								                           value="id"
 								                           label="name"/>
 							</s:select>
