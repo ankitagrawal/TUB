@@ -2,6 +2,7 @@ package com.hk.web.action.admin.queue;
 
 import com.akube.framework.dao.Page;
 import com.akube.framework.stripes.action.BasePaginatedAction;
+import com.akube.framework.stripes.controller.JsonHandler;
 import com.hk.constants.core.PermissionConstants;
 import com.hk.constants.queue.EnumActionTask;
 import com.hk.core.search.ActionItemSearchCriteria;
@@ -15,6 +16,7 @@ import com.hk.domain.user.User;
 import com.hk.impl.service.queue.BucketService;
 import com.hk.pact.service.UserService;
 import com.hk.web.action.error.AdminPermissionAction;
+import com.hk.web.HealthkartResponse;
 import net.sourceforge.stripes.action.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,9 +48,8 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
     Map<String, Object> bucketParameters = new HashMap<String, Object>();
     private ActionItem actionItem;
     Long actionTaskId;
-    Long priorityId;
-
     ActionTask currentActionTask;
+    Long priorityId;
 
     @Autowired
     BucketService bucketService;
@@ -70,7 +71,7 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
 //                .addParameters(bucketParameters);
     }
 
-    @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
+        @Secure(hasAnyPermissions = {PermissionConstants.VIEW_ACTION_QUEUE}, authActionBean = AdminPermissionAction.class)
     public Resolution search() {
         actionItemsPage = bucketService.searchActionItems(getActionItemSearchCriteria(), getPageNo(), getPerPage());
         if (actionItemsPage != null) actionItems = actionItemsPage.getList();
@@ -91,14 +92,18 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         return actionItemSearchCriteria;
     }
 
-
+       @JsonHandler
     public Resolution updateTask() {
-           actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
-           actionItem.setCurrentActionTask(currentActionTask);
-           getBaseDao().save(actionItem);
-           addRedirectAlertMessage(new SimpleMessage("Action Task  Updated Successfully"));
-           return new RedirectResolution(ActionItemResolutionQueueAction.class);
-       }
+
+        Map datamap = new HashMap();
+        actionItem.setPreviousActionTask(actionItem.getCurrentActionTask());
+        actionItem.setCurrentActionTask(currentActionTask);
+        getBaseDao().save(actionItem);
+        datamap.put("name",actionItem.getId());
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Task has been updated", datamap);
+        noCache();
+        return new JsonResolution(healthkartResponse);
+    }
 
 
     public Resolution setPriority() {
@@ -106,6 +111,47 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
         getBaseDao().save(actionItem);
         addRedirectAlertMessage(new SimpleMessage("Action Item priority has been changed"));
         return new RedirectResolution(ActionItemResolutionQueueAction.class);
+    }
+
+
+    @JsonHandler
+    public Resolution saveBuckets() {
+        HashMap datamap = new HashMap();
+
+        List<Bucket> actionItemBuckets = new ArrayList<Bucket>();
+        List<Bucket> currentActionItemBuckets = actionItem.getBuckets();
+        if (currentActionItemBuckets == null || currentActionItemBuckets.size() < 1) {
+            addRedirectAlertMessage(new SimpleMessage("There should be one bucket asscociated with action Item"));
+            return new RedirectResolution(ActionItemResolutionQueueAction.class);
+        }
+        User user = getUserService().getUserById(getPrincipal().getId());
+        List<Bucket> userBuckets = user.getBuckets();
+        // other user Buckets
+        currentActionItemBuckets.removeAll(userBuckets);
+        if (currentActionItemBuckets.size() > 0) {
+            actionItemBuckets.addAll(currentActionItemBuckets);
+        }
+
+        for (Bucket bucket : buckets) {
+            if (bucket.getId() != null) {
+                if (bucket.isSelected()) {
+//      Now add only new Buckets
+                    if (!currentActionItemBuckets.contains(bucket)) {
+                        actionItemBuckets.add(bucketService.getBucketById(bucket.getId()));
+                    }
+
+                }
+            }
+        }
+
+        actionItem.setBuckets(actionItemBuckets);
+        getBaseDao().save(actionItem);
+        datamap.put("name",actionItemBuckets);
+        HealthkartResponse healthkartResponse = new HealthkartResponse(HealthkartResponse.STATUS_OK, "Added", datamap);
+        noCache();
+        return new JsonResolution(healthkartResponse);
+
+//            return new RedirectResolution(ActionItemCRUD.class).addParameter("actionItem", actionItem.getId());
     }
 
 
@@ -174,13 +220,13 @@ public class ActionItemResolutionQueueAction extends BasePaginatedAction {
             }
         }
         int ctr3 = 0;
-        if(previousActionTasks != null){
-        for (ActionTask previousActionTask : previousActionTasks) {
-            if (previousActionTask != null) {
-                params.add("previousActionTasks[" + ctr3 + "]");
+        if (previousActionTasks != null) {
+            for (ActionTask previousActionTask : previousActionTasks) {
+                if (previousActionTask != null) {
+                    params.add("previousActionTasks[" + ctr3 + "]");
+                }
+                ctr3++;
             }
-            ctr3++;
-        }
         }
         int ctr4 = 0;
         if (buckets != null) {

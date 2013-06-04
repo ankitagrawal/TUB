@@ -250,7 +250,7 @@ public class MProductAction extends MBaseAction{
 */
            
                 if(null!=product.getMainImageId())
-                	productJSON.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId(),false));
+                	productJSON.setImageUrl(HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize,product.getMainImageId()));
                 else
                 	productJSON.setImageUrl(getImageUrl()+product.getId()+MHKConstants.IMAGETYPE);
                 productJSON.setAmazonProduct(product.getAmazonProduct());

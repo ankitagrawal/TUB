@@ -412,15 +412,15 @@ public class GRNAction extends BasePaginatedAction {
 					purchaseInvoiceLineItem.setDiscountPercent(discountPercentage);
 				}
 				sku = grnLineItem.getSku();
-				if (sku != null) {
+				
+				if (supplier != null && supplier.getState() != null && !supplier.getState().equals(sku.getWarehouse().getState())) {
+					purchaseInvoiceLineItem.setSurcharge(EnumSurcharge.TwoPercent.asSurcharge());
+
+				}else if (sku != null) {
 					purchaseInvoiceLineItem.setSku(sku);
 					purchaseInvoiceLineItem.setTax(sku.getTax());
 				}
-				if (supplier != null && supplier.getState() != null && !supplier.getState().equals(sku.getWarehouse().getState())) {
 
-					purchaseInvoiceLineItem.setSurcharge(EnumSurcharge.TwoPercent.asSurcharge());
-
-				}
 				if (grnLineItem.getQty() != null && grnLineItem.getCostPrice() != null) {
 					taxableAmount = (grnLineItem.getQty() * (grnLineItem.getCostPrice() - grnLineItem.getCostPrice() * discountPercentage / 100));
 					totalTaxable += taxableAmount;

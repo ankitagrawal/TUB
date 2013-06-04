@@ -34,6 +34,7 @@
               <th>Batch No.</th>
               <th>Mfg. Date</th>
               <th>Expiry Date</th>
+              <th>Cost Price</th>
               <th>MRP</th>
               <th>Checkin Date</th>
               <th>Checked-In Units</th>
@@ -71,6 +72,7 @@
                 <td>${skuGroup.batchNumber}</td>
                 <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
                 <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
+	            <td>${skuGroup.costPrice}</td>
 	            <td>${skuGroup.mrp}</td>
                 <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>
@@ -118,6 +120,7 @@
               <th>Batch No.</th>
               <th>Mfg. Date</th>
               <th>Expiry Date</th>
+              <th>Cost Price</th>
               <th>MRP</th>
               <th>Checkin Date</th>
               <th>Checked-In Units <br/>
@@ -148,6 +151,7 @@
                 <td>${skuGroup.batchNumber}</td>
                 <td><fmt:formatDate value="${skuGroup.mfgDate}" pattern="dd/MM/yyyy"/></td>
                 <td><fmt:formatDate value="${skuGroup.expiryDate}" pattern="dd/MM/yyyy"/></td>
+	            <td>${skuGroup.costPrice}</td>
 	            <td>${skuGroup.mrp}</td>
                 <td><fmt:formatDate value="${skuGroup.createDate}" pattern="dd/MM/yyyy"/></td>
                 <td>${fn:length(skuGroup.skuItems)}</td>

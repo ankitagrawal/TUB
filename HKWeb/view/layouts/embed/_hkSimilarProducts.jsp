@@ -11,8 +11,8 @@
 
 	%>
 	<div class="prod_table">
-		<div style="font-size: 1.0em;margin-bottom:15px;font-weight:bold;" align="center">
-			We also have the following similar products from other brands:
+		<div style="font-size: .8em; margin-bottom:15px; font-weight:bold;" align="center">
+			We also have the following similar products
 		</div>
 		<c:forEach items="${similarProducts}" var="sProduct">
 			<s:link href="${sProduct.productURL}" class="prod_link" title="${sProduct.name}">

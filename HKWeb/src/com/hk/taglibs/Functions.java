@@ -455,13 +455,13 @@ public class Functions {
         return userManager.getProcessedOrdersCount(user);
     }
 
-    public static String getS3ImageUrl(Object o1, Object o2, boolean isSecure) {
+    public static String getS3ImageUrl(Object o1, Object o2) {
         EnumImageSize imageSize = (EnumImageSize) o1;
         Long imageId = (Long) o2;
         if (imageId == null) {
             return "";
         }
-        return HKImageUtils.getS3ImageUrl(imageSize, imageId, isSecure);
+        return HKImageUtils.getS3ImageUrl(imageSize, imageId);
     }
 
     public static Boolean isFreeVariant(Object o) {

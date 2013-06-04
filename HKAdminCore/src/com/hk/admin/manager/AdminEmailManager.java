@@ -795,9 +795,9 @@ public class AdminEmailManager {
                 excelMap.put(EmailMapKeyConstants.productUrl, convertToWww(getProductService().getProductUrl(product, false)));
 
                 if (productMainImageId != null) {
-                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId, false));
-                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId, false));
-                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId, false));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlMedium, HKImageUtils.getS3ImageUrl(EnumImageSize.MediumSize, productMainImageId));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlTiny, HKImageUtils.getS3ImageUrl(EnumImageSize.TinySize, productMainImageId));
+                    excelMap.put(EmailMapKeyConstants.productImageUrlSmall, HKImageUtils.getS3ImageUrl(EnumImageSize.SmallSize, productMainImageId));
                 } else {
                     excelMap.put(EmailMapKeyConstants.productImageUrlMedium, "");
                     excelMap.put(EmailMapKeyConstants.productImageUrlTiny, "");
