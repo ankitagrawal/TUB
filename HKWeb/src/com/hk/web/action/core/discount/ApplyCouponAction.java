@@ -111,9 +111,9 @@ public class ApplyCouponAction extends BaseAction {
         if (coupon == null) {
             coupon = ihoManager.createIHOCoupon(user, couponCode);
         }
-        if (couponCode.equals(OfferConstants.HK_EMPLOYEE_CODE)) {
+        /*if (coupon == null) {
             coupon = employeeManager.createEmpCoupon(user, couponCode);
-        }
+        }*/
 
         if (coupon == null) {
             message = new LocalizableMessage("/ApplyCoupon.action.invalid.coupon").getMessage(getContext().getLocale());

@@ -120,9 +120,9 @@ public class CartResource extends BaseAction {
     if (coupon == null) {
       coupon = ihoManager.createIHOCoupon(user, couponCode);
     }
-    if (coupon == null) {
+    /*if (coupon == null) {
       coupon = employeeManager.createEmpCoupon(user, couponCode);
-    }
+    }*/
 
     if (coupon == null) {
       message = "Coupon code is invalid.";
