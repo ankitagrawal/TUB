@@ -44,62 +44,43 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     @Autowired
     EmailRecepientDao emailRecepientDao;
 
-
+    /*send mail for in stock products*/
     public void sendNotifyMeEmailForInStockProducts(final float notifyConversionRate, final int bufferRate) {
-        Map<String, List<NotifyMe>> finalUserListForNotificationMap = sendNotifyMeEmail(notifyConversionRate, bufferRate, false, null);
-        //send mails
+        List<NotifyMe> notifyMeListForInStockProduct = notifyMeDao.getNotifyMeListForProductVariantInStock();
+        Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, false, notifyMeListForInStockProduct);
         adminEmailManager.sendNotifyUsersMails(finalUserListForNotificationMap);
     }
 
+
+     /*send mails for product which are deleted or hidden or out of stock*/
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate, List<NotifyMe> notifyMeList) {
-        Map<String, List<NotifyMe>> finalUserListForNotificationMap = sendNotifyMeEmail(notifyConversionRate, bufferRate, true, notifyMeList);
-        //send mails
+        Map<String, List<NotifyMe>> finalUserListForNotificationMap = evaluateNotifyMeRequest(notifyConversionRate, bufferRate, true, notifyMeList);
         return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
     }
 
 
-    public Map<String, List<NotifyMe>> sendNotifyMeEmail(final float notifyConversionRate, final int bufferRate, boolean isSimilarProduct, List<NotifyMe> notifyMeList) {
+    public Map<String, List<NotifyMe>> evaluateNotifyMeRequest(final float notifyConversionRate, final int bufferRate, boolean isSimilarProduct, List<NotifyMe> notifyMeList) {
 
         Map<String, Integer> allowedUserPerVariantMap = new HashMap<String, Integer>();
         Map<String, List<NotifyMe>> finalUserListForNotificationMap = new HashMap<String, List<NotifyMe>>();
         Map<String, Integer> userPerVariantAlreadyNotifiedMap = new HashMap<String, Integer>();
-        List<NotifyMe> finalNotifyList;
-        if (isSimilarProduct) {
-            finalNotifyList = notifyMeList;
-        } else {
-            finalNotifyList = notifyMeDao.getNotifyMeListForProductVariantInStock();
-        }
-        try {
 
-            for (NotifyMe notifyMe : finalNotifyList) {
+        try {
+            for (NotifyMe notifyMe : notifyMeList) {
                 ProductVariant productVariant = notifyMe.getProductVariant();
                 String productVariantId = notifyMe.getProductVariant().getId();
                 String email = notifyMe.getEmail();
-                int allowedUserNumber;
+                int allowedUserNumber = 0;
                 // get number of eligible user  to be notified for variant by formula
                 if (!(allowedUserPerVariantMap.containsKey(productVariantId))) {
-                    /*Check for inventory*/
-                    int availableInventory = adminInventoryService.getNetInventory(productVariant).intValue();
-                    int bookedInventory = adminInventoryService.getBookedInventory(productVariant).intValue();
-                    int unbookedInventory = availableInventory - bookedInventory;
-                    allowedUserNumber = availableInventory;
-                    /* For Similar Products*/
+                    /*send mails if unbooked inventory is greater that zero*/
+                    int unbookedInventory = adminInventoryService.getNetInventory(productVariant).intValue() - (adminInventoryService.getBookedInventory(productVariant).intValue());
                     if (isSimilarProduct) {
                         /* product is OOS for similar product Notify me */
-                        if (unbookedInventory == 0) {
-                            /* for  OOS  Product Send according sum of Invn of 3 similar products*/
-                            int similarProductInventory = getSumOFSimilarProductInventory(productVariant);
-                            if (similarProductInventory > 0) {
-                                unbookedInventory = similarProductInventory;
-                            }
-                        }
-                        if (unbookedInventory > 0) {
-                            allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
-                            allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
-                        }
-
-                    } else {
-                        /*For Notify me */
+                        unbookedInventory = unbookedInventory > 0 ? unbookedInventory : getSumOfSimilarProductInventory(productVariant);
+                    }
+                    /* Calculate number of users eligible for sending mails */
+                    if (unbookedInventory > 0) {
                         allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
                         allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
                     }
@@ -107,46 +88,30 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 } else {
                     allowedUserNumber = allowedUserPerVariantMap.get(productVariantId);
                 }
-                if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
-                    userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
-                }
-                Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
-                if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
-                    /* get List of user to be informed */
-                    List<NotifyMe> notifyMeListPerUser = null;
-                    boolean isEligible = false;
-                    if ((finalUserListForNotificationMap.containsKey(email))) {
-                        notifyMeListPerUser = finalUserListForNotificationMap.get(email);
-                    } else {
-                        notifyMeListPerUser = new ArrayList<NotifyMe>();
+                if (allowedUserNumber > 0) {
+                    if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
+                        userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
                     }
-
-                    User user = userService.findByLogin(email);
-                    if (user != null) {
-                        if (user.isSubscribedForNotify()) {
-                            isEligible = true;
-                        }
-                    } else {
-                        // find existing recipients and check for subscribed
-                        EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(email);
-                        if (emailRecepient != null) {
-                            if (emailRecepient.isSubscribed()) {
-                                isEligible = true;
-                            }
+                    Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
+                    if (alreadyNotified != null && alreadyNotified < allowedUserNumber) {
+                        /*  List of Notify request per users*/
+                        List<NotifyMe> notifyMeListPerUser ;
+                        if ((finalUserListForNotificationMap.containsKey(email))) {
+                            notifyMeListPerUser = finalUserListForNotificationMap.get(email);
                         } else {
-                            isEligible = true;
+                            notifyMeListPerUser = new ArrayList<NotifyMe>();
+                        }
+                        /*check for user subscription*/
+                        if (isUserSubscribed(email)) {
+                            boolean productAlreadyPresent = userNotifyListAlreadyContainsProduct(notifyMeListPerUser, notifyMe.getProductVariant());
+                            if (!productAlreadyPresent) {
+                                notifyMeListPerUser.add(notifyMe);
+                                finalUserListForNotificationMap.put(email, notifyMeListPerUser);
+                                userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                            }
                         }
 
                     }
-                    if (isEligible) {
-                        boolean productAlreadyPresent = notifyListAlreadyContainsProduct(notifyMeListPerUser, notifyMe.getProductVariant());
-                        if (!productAlreadyPresent) {
-                            notifyMeListPerUser.add(notifyMe);
-                            finalUserListForNotificationMap.put(email, notifyMeListPerUser);
-                            userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
-                        }
-                    }
-
                 }
             }
 
@@ -156,7 +121,34 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         return finalUserListForNotificationMap;
     }
 
-    private int getSumOFSimilarProductInventory(ProductVariant productVariant) {
+
+    private boolean isUserSubscribed(String email) {
+        boolean isSubscribed = false;
+        User user = userService.findByLogin(email);
+        if (user != null) {
+            if (user.isSubscribedForNotify()) {
+                isSubscribed = true;
+            }
+        } else {
+            // find existing recipients and check for subscribed
+            EmailRecepient emailRecepient = emailRecepientDao.findByRecepient(email);
+            if (emailRecepient != null) {
+                if (emailRecepient.isSubscribed()) {
+                    isSubscribed = true;
+                }
+            } else {
+                isSubscribed = true;
+            }
+
+        }
+        return isSubscribed;
+
+    }
+
+
+
+    /* To evaluate  no. of users to be notified for product which is  OOS : sum inventory of first three of  similar product list order by desc inventory*/
+    private int getSumOfSimilarProductInventory(ProductVariant productVariant) {
         int sumOfUnbookedInvn = 0;
         List<ProductInventoryDto> productInventoryDtos = getProductVariantOfSimilarProductWithNthMaxAvailableInventory(productVariant, 3);
 
@@ -167,6 +159,8 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         }
         return sumOfUnbookedInvn;
     }
+
+
 
 
     public List<ProductInventoryDto> getProductVariantOfSimilarProductWithNthMaxAvailableInventory(ProductVariant productVariant, int numberOfSimilarProduct) {
@@ -188,6 +182,8 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
 
+
+
     public List<Product> getInStockSimilarProductsWithMaxInvn(ProductVariant productVariant, int noOfSimilarProduct) {
         List<ProductInventoryDto> similarProductListInvn = getProductVariantOfSimilarProductWithAvailableInventory(productVariant);
         List<Product> similarProductList = new ArrayList<Product>();
@@ -204,6 +200,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         }
         return similarProductList;
     }
+
 
 
     public List<ProductInventoryDto> getProductVariantOfSimilarProductWithAvailableInventory(ProductVariant productVariant) {
@@ -231,7 +228,9 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
 
-    private boolean notifyListAlreadyContainsProduct(List<NotifyMe> notifyMeList, ProductVariant productVariant) {
+
+
+    private boolean userNotifyListAlreadyContainsProduct(List<NotifyMe> notifyMeList, ProductVariant productVariant) {
         if (notifyMeList != null) {
             for (NotifyMe notifyMe : notifyMeList) {
                 if (notifyMe.getProductVariant().getProduct().getId().equals(productVariant.getProduct().getId())) {

@@ -74,7 +74,7 @@
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">
                 <div id="table_container">
-                    Total Product Variant = ${notifyMeBean.totalProductVariant}
+                    Total Product Variant = ${notifyMeBean.totalProductVariant} <br/>
                     <s:layout-render name="/layouts/embed/paginationResultCount.jsp" paginatedBean="${notifyMeBean}"/>
                     <s:layout-render name="/layouts/embed/pagination.jsp" paginatedBean="${notifyMeBean}"/>
 
@@ -123,7 +123,7 @@
                                 <td>
                                     <c:set var="similarProductInventoryList"
                                            value="${hk:similarProductWithUnbookedInventory(notifyMeDto.productVariant)}"/>
-                                    name -- unbooked inventory
+                                    Name -- Unbooked Inventory <br/>
                                     <c:forEach items="${similarProductInventoryList}" var="productInventoryDto">
                                         ${productInventoryDto.product.id} -- ${productInventoryDto.inventory}
                                         <br/>
