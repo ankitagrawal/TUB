@@ -277,26 +277,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
-    @Override
-    public boolean updatePaymentFamily(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {
-        boolean isUpdated = false;
-        for (HkPaymentResponse hkPaymentResponse : hkPaymentResponseList){
-            for (Payment hkPaymentRequest : hkPaymentRequestList){
 
-                if(EnumPaymentTransactionType.SALE.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())){
-                    if(hkPaymentRequest.getGatewayOrderId() != hkPaymentResponse.getGatewayOrderId()){
-
-                    }
-                } else if(EnumPaymentTransactionType.REFUND.getName().equalsIgnoreCase(hkPaymentResponse.getTransactionType())){
-                    if (hkPaymentRequest.getGatewayReferenceId() != hkPaymentResponse.getGatewayReferenceId() && hkPaymentRequest.getRrn() != hkPaymentResponse.getRrn()){
-
-                    }
-                }
-            }
-        }
-
-        return isUpdated;
-    }
 
     @Override
     public List<Map<String, Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) {

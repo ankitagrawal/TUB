@@ -76,8 +76,6 @@ public interface PaymentService {
 
     public void verifyHkRequestAndResponse(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList) throws HealthkartPaymentGatewayException;
 
-    public boolean updatePaymentFamily(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
-
     public List<Map<String,Object>> mapRequestAndResponseObject(List<Payment> hkPaymentRequestList, List<HkPaymentResponse> hkPaymentResponseList);
 
     public void verifyForConsistencyOfRequestAndResponseList(List<Map<String,Object>> requestResponseMappedList) throws HealthkartPaymentGatewayException;

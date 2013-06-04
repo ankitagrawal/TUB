@@ -9,6 +9,7 @@ import com.hk.domain.core.PaymentStatus;
 import com.hk.domain.payment.Gateway;
 import com.hk.exception.HealthkartPaymentGatewayException;
 import com.hk.pact.service.payment.HkPaymentService;
+import com.hk.pojo.HkPaymentResponse;
 import com.hk.util.PaymentFinder;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.validation.Validate;
@@ -49,6 +50,8 @@ public class CheckPaymentAction extends BaseAction {
     private Order order;
 
     private List<Payment> paymentList;
+
+    List<HkPaymentResponse> hkPaymentResponseList;
 
     @Validate(required = true, on = {"acceptAsAuthPending", "acceptAsSuccessful"})
     private Payment payment;
@@ -101,7 +104,7 @@ public class CheckPaymentAction extends BaseAction {
     @DontValidate
     public Resolution seekPayment() {
         try{
-            paymentList = paymentManager.seekPayment(gatewayOrderId);
+            hkPaymentResponseList = paymentManager.seekPayment(gatewayOrderId);
 
         } catch (HealthkartPaymentGatewayException e){
             logger.info("Payment Seek exception for gateway order id" + gatewayOrderId, e);
