@@ -13,6 +13,7 @@ import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
 import com.hk.pact.dao.TaxDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
+import com.hk.pact.service.core.TaxService;
 import com.hk.pact.service.order.B2BOrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.ForwardResolution;
@@ -55,10 +56,8 @@ public class AccountingInvoiceAction extends BaseAction {
   @Autowired
   B2BOrderService b2bOrderService;
 
-  @Autowired
-  TaxDao taxDao;
 
-  private List<EnumTax> enumTaxes = taxDao.getEnumTaxByType(TaxConstants.VAT_TYPE);
+  private List<EnumTax> enumTaxes = EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE);
 
   private ReverseOrder reverseOrder;
 

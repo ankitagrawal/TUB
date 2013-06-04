@@ -19,4 +19,7 @@ public interface TaxService {
 
 	public List<Tax> getSurchargeList();
 
+//	public List<EnumTax> getEnumTaxByType(String type);
+
+
 }

@@ -55,21 +55,5 @@ public class TaxDaoImpl extends BaseDaoImpl implements TaxDao {
         return (List<Tax>) findByNamedParams(query, new String[]{"type"}, new Object[]{type});
 		}
 
-	public List<EnumTax> getEnumTaxByType(String type){
-		List<EnumTax> enumTaxList = new ArrayList<EnumTax>();
-		if(type.equals(TaxConstants.VAT_TYPE)){
-			enumTaxList.add(EnumTax.SERVICE_10_3);
-			enumTaxList.add(EnumTax.VAT_5_25);
-			enumTaxList.add(EnumTax.VAT_13_125);
-			enumTaxList.add(EnumTax.VAT_negative_5);
-			enumTaxList.add(EnumTax.VAT_0);
-			enumTaxList.add(EnumTax.VAT_12_5);
-			enumTaxList.add(EnumTax.VAT_5);
-			enumTaxList.add(EnumTax.VAT_12_36);
-			enumTaxList.add(EnumTax.VAT_10_3);
-			enumTaxList.add(EnumTax.NA);
-			enumTaxList.add(EnumTax.VAT_2);
-		}
-		return enumTaxList;
-	}
+	
 }

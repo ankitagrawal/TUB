@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.hk.constants.core.TaxConstants;
 import com.hk.pact.dao.TaxDao;
+import com.hk.pact.service.core.TaxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,13 +63,11 @@ public class AccountingInvoicePdfGenerator {
     @Autowired
     BaseDao                         baseDao;
 
-	@Autowired
-	TaxDao taxDao;
 
     private InvoiceDto              invoiceDto;
     private B2bUserDetails b2bUserDetails;
     private Category                sexualCareCategory;
-    private java.util.List<EnumTax> enumTaxes = taxDao.getEnumTaxByType(TaxConstants.VAT_TYPE);
+    private java.util.List<EnumTax> enumTaxes = EnumTax.getEnumTaxByType(TaxConstants.VAT_TYPE);
 
     public void generateAccountingInvoicePDF(java.util.List<ShippingOrder> shippingOrderList, String pdfFilePath) {
         logger.info("Inside generateAccountingInvoicePDF of AccountingInvoicePdfGenerator .");

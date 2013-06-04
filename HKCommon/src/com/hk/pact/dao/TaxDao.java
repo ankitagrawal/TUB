@@ -18,7 +18,6 @@ public interface TaxDao extends BaseDao{
 
 		public List<Tax> getTaxListByType(List<String> taxType);
 //    public Tax findByValue(Double taxValue);
-	public List<EnumTax> getEnumTaxByType(String type);
 
 
 }
