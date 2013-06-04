@@ -56,7 +56,7 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
     }
 
     public int sendNotifyMeEmailForDeletedOOSHidden(final float notifyConversionRate, final int bufferRate, List<NotifyMe> notifyMeList) {
-        Map<String, List<NotifyMe>> finalUserListForNotificationMap = sendNotifyMeEmail(notifyConversionRate, bufferRate, false, notifyMeList);
+        Map<String, List<NotifyMe>> finalUserListForNotificationMap = sendNotifyMeEmail(notifyConversionRate, bufferRate, true, notifyMeList);
         //send mails
         return adminEmailManager.sendNotifyUserMailsForDeletedOOSHiddenProducts(finalUserListForNotificationMap);
     }
@@ -89,26 +89,21 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                     allowedUserNumber = availableInventory;
                     /* For Similar Products*/
                     if (isSimilarProduct) {
-                        /* product is OOS */
+                        /* product is OOS for similar product Notify me */
                         if (unbookedInventory == 0) {
-                            /* for  OOS  Product Send according to 1st similar product with Max inventory*/
-                            int similarProductInventory = getSimilarProductInventory(productVariant);
-                            if (similarProductInventory == 0) {
-                                /*don't send mails for this case where products is OOS and all similarProducts are not present or OOS*/
-                                allowedUserPerVariantMap.put(productVariantId, -1);
-                            } else {
-                                /*similar product inventory*/
-                                allowedUserPerVariantMap.put(productVariantId, similarProductInventory);
+                            /* for  OOS  Product Send according sum of Invn of 3 similar products*/
+                            int similarProductInventory = getSumOFSimilarProductInventory(productVariant);
+                            if (similarProductInventory > 0) {
+                                unbookedInventory = similarProductInventory;
                             }
-
-                        } else {
-                            /*deleted-hidden  product is in stock*/
+                        }
+                        if (unbookedInventory > 0) {
                             allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
                             allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
-
                         }
+
                     } else {
-                        /*For Product In Stock*/
+                        /*For Notify me */
                         allowedUserNumber = (int) (unbookedInventory / (notifyConversionRate * bufferRate));
                         allowedUserPerVariantMap.put(productVariantId, allowedUserNumber);
                     }
@@ -119,8 +114,8 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
                 if (!(userPerVariantAlreadyNotifiedMap.containsKey(productVariantId))) {
                     userPerVariantAlreadyNotifiedMap.put(productVariantId, 0);
                 }
-                int alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
-                if (alreadyNotified < allowedUserNumber && allowedUserNumber != -1) {
+                Integer alreadyNotified = userPerVariantAlreadyNotifiedMap.get(productVariantId);
+                if (alreadyNotified != null &&  alreadyNotified < allowedUserNumber ) {
                     /* get List of user to be informed */
                     List<NotifyMe> notifyMeListPerUser = null;
                     boolean isEligible = false;
@@ -148,9 +143,12 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
 
                     }
                     if (isEligible) {
-                        notifyMeListPerUser.add(notifyMe);
-                        finalUserListForNotificationMap.put(email, notifyMeListPerUser);
-                        userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                        boolean productAlreadyPresent = notifyListAlreadyContainsProduct(notifyMeListPerUser, notifyMe.getProductVariant());
+                        if (!productAlreadyPresent) {
+                            notifyMeListPerUser.add(notifyMe);
+                            finalUserListForNotificationMap.put(email, notifyMeListPerUser);
+                            userPerVariantAlreadyNotifiedMap.put(productVariantId, (alreadyNotified + 1));
+                        }
                     }
 
                 }
@@ -163,13 +161,16 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         return finalUserListForNotificationMap;
     }
 
-    private int getSimilarProductInventory(ProductVariant productVariant) {
-        int unbookedInventory = 0;
-        List<ProductInventoryDomain> productInventoryDomains = getProductVariantOfSimilarProductWithNthMaxAvailableInventory(productVariant, 1);
-        if (productInventoryDomains != null && productInventoryDomains.size() > 0) {
-            unbookedInventory = productInventoryDomains.get(0).getInventory();
+    private int getSumOFSimilarProductInventory(ProductVariant productVariant) {
+        int sumOfUnbookedInvn = 0;
+        List<ProductInventoryDomain> productInventoryDomains = getProductVariantOfSimilarProductWithNthMaxAvailableInventory(productVariant, 3);
+
+        if (productInventoryDomains != null) {
+            for (ProductInventoryDomain productInventoryDomain : productInventoryDomains) {
+                sumOfUnbookedInvn = sumOfUnbookedInvn + productInventoryDomain.getInventory();
+            }
         }
-        return unbookedInventory;
+        return sumOfUnbookedInvn;
     }
 
 
@@ -234,6 +235,20 @@ public class ProductVariantNotifyMeEmailServiceImpl implements ProductVariantNot
         }
 
         return similarProductWithInvnInDescOrder;
+    }
+
+
+    private boolean notifyListAlreadyContainsProduct(List<NotifyMe> notifyMeList, ProductVariant productVariant) {
+        if (notifyMeList != null) {
+            for (NotifyMe notifyMe : notifyMeList) {
+                if (notifyMe.getProductVariant().getProduct().getId().equals(productVariant.getProduct().getId())) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
     }
 
 }

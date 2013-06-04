@@ -231,7 +231,7 @@ public class NotifyMeListAction extends BasePaginatedAction implements Validatio
 
     /*For Similar Products*/
     public Resolution sendAllMailsForDeletedProducts() {
-        if (!productDeleted && productInStock && !productHidden) {
+        if (!productDeleted && (productInStock != null && !productInStock) && (productHidden != null && !productHidden)) {
             addRedirectAlertMessage(new SimpleMessage("Please mark product as deleted/OOS/Hidden value , to qualify for similar product mails"));
             return new ForwardResolution("/pages/admin/notifyMeSimilarProduct.jsp");
         }

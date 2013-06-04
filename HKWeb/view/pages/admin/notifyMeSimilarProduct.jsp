@@ -13,63 +13,63 @@
     <s:layout-component name="content">
 
         <fieldset>
-            <legend>Search Similar Products</legend>
-            <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-                <s:errors/>
-                <br/>
-                <label>Start
-                    Date:</label><s:text class="date_input startDate" style="width:150px"
-                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
-                &nbsp; &nbsp;
-                <label>End
-                    Date:</label><s:text class="date_input endDate" style="width:150px"
-                                         formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
-                <label>Product Id</label><s:text style="width:150px" name="product"/>
-                <label>Product Variant Id</label><s:text style="width:150px" name="productVariant"/><br/>
-                <label>Primary Category</label><s:select name="primaryCategory">
-                <s:option value="">-ALL-</s:option>
-                <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
-                                           value="name" label="displayName"/>
+        <legend>Search Similar Products</legend>
+        <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
+            <s:errors/>
+            <br/>
+            <label>Start
+                Date:</label><s:text class="date_input startDate" style="width:150px"
+                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="startDate"/>
+            &nbsp; &nbsp;
+            <label>End
+                Date:</label><s:text class="date_input endDate" style="width:150px"
+                                     formatPattern="<%=FormatUtils.defaultDateFormatPattern%>" name="endDate"/>
+            <label>Product Id</label><s:text style="width:150px" name="product"/>
+            <label>Product Variant Id</label><s:text style="width:150px" name="productVariant"/><br/>
+            <label>Primary Category</label><s:select name="primaryCategory">
+            <s:option value="">-ALL-</s:option>
+            <hk:master-data-collection service="<%=MasterDataDao.class%>" serviceProperty="topLevelCategoryList"
+                                       value="name" label="displayName"/>
+        </s:select>
+            <label>Product Out of stock:</label>
+            <s:select name="productInStock">
+                <s:option value="">--All--</s:option>
+                <s:option value="true">True</s:option>
+                <s:option value="false">False</s:option>
             </s:select>
-                <label>Product Out of stock:</label>
-                <s:select name="productInStock">
-                    <s:option value="">--All--</s:option>
-                    <s:option value="true">True</s:option>
-                    <s:option value="false">False</s:option>
-                </s:select>
-                <label>Product Deleted:</label>
-                <s:select name="productDeleted">
-                    <s:option value="true">True</s:option>
-                    <s:option value="false">False</s:option>
-                </s:select>
-                <label>Product Hidden:</label>
-                <s:select name="productHidden">
-                    <s:option value="">--All--</s:option>
-                    <s:option value="true">True</s:option>
-                    <s:option value="false">False</s:option>
-                </s:select>
-                <s:submit name="notifyMeListForDeletedHiddenOOSProduct" value="Search"/>
-            </s:form>
-        </fieldset>
+            <label>Product Deleted:</label>
+            <s:select name="productDeleted">
+                <s:option value="true">True</s:option>
+                <s:option value="false">False</s:option>
+            </s:select>
+            <label>Product Hidden:</label>
+            <s:select name="productHidden">
+                <s:option value="">--All--</s:option>
+                <s:option value="true">True</s:option>
+                <s:option value="false">False</s:option>
+            </s:select>
+            <s:submit name="notifyMeListForDeletedHiddenOOSProduct" value="Search"/>
 
-        <fieldset>
-            <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
-            <s:form beanclass="com.hk.web.action.admin.marketing.NotifyMeListAction">
-                <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
-                <ol>
-                <li>
-                <label>Conversion Rate</label>
-                <s:text name="conversionRate"/>
-                </li>
-                <li>
-                <label>Buffer Rate</label>
-                <s:text name="bufferRate"/>
-                </li>
-                </ol>
-                </shiro:hasPermission>
-                <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"  />
-            </s:form>
-        </fieldset>
+            </fieldset>
+
+            <fieldset>
+                <legend>Send All Mails for Similar Product By Above Filled Filter</legend>
+                    <shiro:hasPermission name="<%=PermissionConstants.NOTIFY_ME_BULK_EMAIL%>">
+                        <ol>
+                            <li>
+                                <label>Conversion Rate</label>
+                                <s:text name="conversionRate"/>
+                            </li>
+                            <li>
+                                <label>Buffer Rate</label>
+                                <s:text name="bufferRate"/>
+                            </li>
+                        </ol>
+                    </shiro:hasPermission>
+                    <s:submit name="sendAllMailsForDeletedProducts" value="SendMailsForDeletedHiddenOOS"/>
+            </fieldset>
+        </s:form>
+
 
         <c:choose>
             <c:when test="${notifyMeBean.notifyMeDtoList!=null}">

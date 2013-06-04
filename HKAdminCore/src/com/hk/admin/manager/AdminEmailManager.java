@@ -343,8 +343,9 @@ public class AdminEmailManager {
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
             NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
             User user = userService.findByLogin(emailId);
-
-
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = sdf.format(new Date());
+            valuesMap.put("currentDate", currentDate);
             /* find existing recipients or create recipients through the emails ids passed */
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
             if (user != null) {
@@ -356,7 +357,6 @@ public class AdminEmailManager {
             if (notifyMeListPerUser.size() > 1) {
                 /*User has asked for multiple variant notification  */
                 valuesMap.put("productNotifyList", notifyMeListPerUser);
-
                 Map<String, List<Product>> productSimilarProductMap = new HashMap<String, List<Product>>();
                 for (NotifyMe notifyMe : notifyMeListPerUser) {
                     List<Product> similarProductList = productVariantNotifyMeEmailService.getInStockSimilarProductsWithMaxInvn(notifyMe.getProductVariant(), 3);
