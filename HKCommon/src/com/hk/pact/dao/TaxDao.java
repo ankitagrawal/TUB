@@ -9,6 +9,8 @@ public interface TaxDao extends BaseDao{
 
     
     public Tax findByName(String name) ;
+
+	public Tax findById(Long id);
         
     public List<Tax> taxListForReport() ;
 
@@ -17,6 +19,8 @@ public interface TaxDao extends BaseDao{
 		public List<Tax> getCentralTaxList();
 
 		public List<Tax> getTaxListByType(List<String> taxType);
+
+	public List<Tax> getTaxList();
 //    public Tax findByValue(Double taxValue);
 
 
