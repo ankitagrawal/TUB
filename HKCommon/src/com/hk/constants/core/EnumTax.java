@@ -2,6 +2,9 @@ package com.hk.constants.core;
 
 import com.hk.domain.core.Tax;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum EnumTax {
 
     SERVICE_10_3(1L, "Service Tax @ 10.3%", .103D, "VAT"),
@@ -51,10 +54,16 @@ public enum EnumTax {
 		return id;
 	}
 
-  public Tax asTax() {
+	public String getType() {
+		return type;
+	}
+
+	public Tax asTax() {
     Tax tax = new Tax();
     tax.setName(name);
     tax.setValue(value);
     return tax;
   }
+
+	
 }

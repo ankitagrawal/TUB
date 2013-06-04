@@ -4,12 +4,14 @@ import com.akube.framework.stripes.action.BaseAction;
 import com.hk.admin.dto.accounting.InvoiceDto;
 import com.hk.admin.dto.accounting.ReverseOrderInvoiceDto;
 import com.hk.constants.core.EnumTax;
+import com.hk.constants.core.TaxConstants;
 import com.hk.domain.order.ReplacementOrder;
 import com.hk.domain.order.ShippingOrder;
 import com.hk.domain.reverseOrder.ReverseOrder;
 import com.hk.domain.user.B2bUserDetails;
 import com.hk.helper.InvoiceNumHelper;
 import com.hk.manager.OrderManager;
+import com.hk.pact.dao.TaxDao;
 import com.hk.pact.dao.user.B2bUserDetailsDao;
 import com.hk.pact.service.order.B2BOrderService;
 import net.sourceforge.stripes.action.DefaultHandler;
@@ -20,6 +22,7 @@ import net.sourceforge.stripes.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,7 +55,10 @@ public class AccountingInvoiceAction extends BaseAction {
   @Autowired
   B2BOrderService b2bOrderService;
 
-  private List<EnumTax> enumTaxes = Arrays.asList(EnumTax.values());
+  @Autowired
+  TaxDao taxDao;
+
+  private List<EnumTax> enumTaxes = taxDao.getEnumTaxByType(TaxConstants.VAT_TYPE);
 
   private ReverseOrder reverseOrder;
 
@@ -121,6 +127,8 @@ public class AccountingInvoiceAction extends BaseAction {
       return new ForwardResolution("pages/admin/adminHome.jsp");
     }
   }
+
+	
 
   public String getDefaultCourier() {
     return defaultCourier;

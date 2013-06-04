@@ -15,7 +15,8 @@ public interface TaxService {
     
     public Tax getServiceTax(); 
 
-		public List<Tax> getTaxList() ;
+	public List<Tax> getTaxList() ;
 
-		public List<Tax> getSurchargeList();
+	public List<Tax> getSurchargeList();
+
 }
