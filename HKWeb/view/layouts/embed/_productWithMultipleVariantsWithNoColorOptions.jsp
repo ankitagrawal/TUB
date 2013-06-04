@@ -12,9 +12,6 @@
       Product product = (Product) pageContext.getAttribute("product");
       pageContext.setAttribute("product", product);
 
-      boolean isSecure = pageContext.getRequest().isSecure();
-      pageContext.setAttribute("isSecure", isSecure);
-
       SubscriptionProduct subscriptionProduct = (SubscriptionProduct) pageContext.getAttribute("subscriptionProduct");
       pageContext.setAttribute("subscriptionProduct", subscriptionProduct);
   %>
@@ -53,11 +50,11 @@
                           <c:choose>
                               <c:when test="${variant.mainProductImageId != null}">
                                   <a href='javascript:void(0);'
-                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId,isSecure)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId,isSecure)}'}"><img
-                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId,isSecure)}' style="max-height:75px;max-width: 75px;"></a>
+                                     rel="{gallery: 'gal1', smallimage: '${hk:getS3ImageUrl(imageMediumSize, variant.mainProductImageId)}',largeimage: '${hk:getS3ImageUrl(imageLargeSize, variant.mainProductImageId)}'}"><img
+                                          src='${hk:getS3ImageUrl(imageSmallSize, variant.mainImageId)}' style="max-height:75px;max-width: 75px;"></a>
                               </c:when>
                               <c:otherwise>
-                                  <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId,isSecure)}" alt="${product.name}"
+                                  <img src="${hk:getS3ImageUrl(imageSmallSize, product.mainImageId)}" alt="${product.name}"
                                        title="${product.name}"  style="max-height:75px;max-width:75px;">
                               </c:otherwise>
                           </c:choose>

@@ -54,7 +54,7 @@
         method: 'feed',
         name: '${name}',
         link: 'www.healthkart.com/product/${topOrderedVariant.product.slug}/${topOrderedVariant.product.id}?fbshare=1',
-        picture: '${topOrderedVariant.product.mainImageId == null ? "http://www.healthkart.com/images/logo.png": hk:getS3ImageUrl(imageSize_thumb, topOrderedVariant.product.mainImageId, false)}',
+        picture: '${topOrderedVariant.product.mainImageId == null ? "http://www.healthkart.com/images/logo.png": hk:getS3ImageUrl(imageSize_thumb, topOrderedVariant.product.mainImageId)}',
         description: 'One-stop shop for authentic Nutrition, Beauty, Medical Devices and Baby Care Products'
       },
           function(response) {

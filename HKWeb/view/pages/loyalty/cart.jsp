@@ -83,10 +83,7 @@
  <c:set var="imageMediumSize" value="<%=EnumImageSize.MediumSize%>"/>
  <c:set var="imageSmallSize" value="<%=EnumImageSize.TinySize%>"/>
  <c:set var="imageSmallSizeCorousal" value="<%=EnumImageSize.SmallSize%>"/>
-<%
-boolean isSecure = pageContext.getRequest().isSecure();
-pageContext.setAttribute("isSecure", isSecure);
-%>
+
 
 		<div style="display: none;">
 			<s:link beanclass="com.hk.web.action.core.loyaltypg.CartAction" id="update-qty-url" event="updateQuantity" />
@@ -115,7 +112,7 @@ pageContext.setAttribute("isSecure", isSecure);
 										<tr>
 											<td width="20%">
 											<c:set var="imageId" value = "${lp.variant.product.mainImageId }" />
-											<img src="${hk:getS3ImageUrl(imageSmallSize, imageId,isSecure)}" alt="${lp.variant.product.name}"/>
+											<img src="${hk:getS3ImageUrl(imageSmallSize, imageId)}" alt="${lp.variant.product.name}"/>
 											</td>
 											<td width="80%">
 												<h8>${lp.variant.product.name}</h8>

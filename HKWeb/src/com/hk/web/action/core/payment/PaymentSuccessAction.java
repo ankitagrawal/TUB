@@ -2,6 +2,7 @@ package com.hk.web.action.core.payment;
 
 import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
+import net.sourceforge.stripes.action.Ssl;
 import net.sourceforge.stripes.validation.Validate;
 
 import org.slf4j.Logger;
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Component;
 
 import com.akube.framework.stripes.action.BaseAction;
 import com.hk.constants.core.Keys;
+import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.payment.EnumPaymentMode;
 import com.hk.constants.payment.EnumPaymentStatus;
 import com.hk.domain.coupon.Coupon;
+import com.hk.domain.loyaltypg.UserOrderKarmaProfile;
 import com.hk.domain.offer.OfferInstance;
+import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
 import com.hk.domain.payment.Payment;
 import com.hk.dto.pricing.PricingDto;
@@ -23,6 +27,7 @@ import com.hk.impl.service.codbridge.OrderEventPublisher;
 import com.hk.loyaltypg.service.LoyaltyProgramService;
 import com.hk.pact.dao.payment.PaymentDao;
 import com.hk.pact.dao.user.UserDao;
+import com.hk.pact.service.inventory.InventoryService;
 import com.hk.pact.service.order.OrderLoggingService;
 import com.hk.pact.service.order.OrderService;
 import com.hk.pact.service.order.RewardPointService;
@@ -67,6 +72,8 @@ public class PaymentSuccessAction extends BaseAction {
 	LoyaltyProgramService loyaltyProgramService;
     @Autowired
     OrderEventPublisher orderEventPublisher;
+    
+    @Autowired InventoryService inventoryService;
 
     public Resolution pre() {
         this.payment = this.paymentDao.findByGatewayOrderId(this.gatewayOrderId);
@@ -93,6 +100,14 @@ public class PaymentSuccessAction extends BaseAction {
             }
             //moved to orderManager, orderPaymentReceived
 //            orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
+         
+            // Check Inventory health of order lineItems
+            for (CartLineItem cartLineItem : order.getCartLineItems()) {
+            	if(cartLineItem.getLineItemType().getId().equals(EnumCartLineItemType.Product.asCartLineItemType().getId())) {
+            		inventoryService.checkInventoryHealth(cartLineItem.getProductVariant());
+            	}
+            }
+            
             this.orderEventPublisher.publishOrderPlacedEvent(this.order);
 
             //todo disabling, cod conversion and repay prepaid order as for now, need to do qa if the functionality still works or not
@@ -155,7 +170,10 @@ public class PaymentSuccessAction extends BaseAction {
         }
 
 	    //Loyalty program
-        this.loyaltyPointsEarned= this.loyaltyProgramService.creditKarmaPoints(this.order);
+        UserOrderKarmaProfile karmaProfile = loyaltyProgramService.getUserOrderKarmaProfile(order.getId());
+        if (karmaProfile!=null) {
+        	loyaltyPointsEarned = karmaProfile.getKarmaPoints(); 
+        }
 
         return new ForwardResolution("/pages/payment/paymentSuccess.jsp");
     }

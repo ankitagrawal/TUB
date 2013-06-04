@@ -13,9 +13,7 @@
 <%
     Double cashBackPercentage = Double.parseDouble((String)ServiceLocatorFactory.getProperty(Keys.Env.cashBackPercentage));
     Long defaultGateway = Long.parseLong((String)ServiceLocatorFactory.getProperty(Keys.Env.defaultGateway));
-    
-    boolean isSecure = pageContext.getRequest().isSecure();
-    pageContext.setAttribute("isSecure", isSecure);
+
 %>
 <c:set var="paymentStatusPending" value="<%=EnumPaymentStatus.AUTHORIZATION_PENDING.getId()%>"/>
 <c:set var="paymentModeCOD" value="<%=EnumPaymentMode.COD.getId()%>"/>

@@ -182,9 +182,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     rewardPointService.cancelReferredOrderRewardPoint(rewardPoint);
                 }
             }
-            if (order.getUser().getRoleStrings().contains(RoleConstants.HK_LOYALTY_USER)) {
-            	this.loyaltyProgramService.cancelLoyaltyPoints(order);
-            }
+            this.loyaltyProgramService.cancelLoyaltyPoints(order);
             
             // Send Email Comm. for HK Users Only
             if (order.getStore() != null && (order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID) 
@@ -290,7 +288,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             subscriptionOrderService.markSubscriptionOrderAsShipped(order);
 
             // incase of other store orders
-            if (!order.getStore().getId().equals(StoreService.DEFAULT_STORE_ID)) {
+            if (order.getStore().getCallbackRestUrl() != null ) {
                 order = orderService.save(order);
                 storeOrderService.updateOrderStatusInStore(order);
             }
