@@ -21,13 +21,11 @@ import com.hk.constants.order.EnumCartLineItemType;
 import com.hk.constants.order.EnumOrderLifecycleActivity;
 import com.hk.domain.order.CartLineItem;
 import com.hk.domain.order.Order;
-import com.hk.domain.user.User;
 import com.hk.hkjunction.observers.OrderStatusMessage;
 import com.hk.hkjunction.observers.OrderType;
 import com.hk.hkjunction.producer.Producer;
 import com.hk.hkjunction.producer.ProducerFactory;
 import com.hk.hkjunction.producer.ProducerTypeEnum;
-import com.hk.pact.service.UserService;
 import com.hk.pact.service.codbridge.UserCallResponseObserver;
 import com.hk.pact.service.codbridge.UserCartDetail;
 import com.hk.pact.service.order.OrderLoggingService;
@@ -59,8 +57,6 @@ public class OrderEventPublisher {
     
     @Autowired OrderLoggingService orderLoggingService;
     
-    @Autowired UserService userService;
-
     @PostConstruct
     void init() {
     	int poolSize = 50;
@@ -150,11 +146,13 @@ public class OrderEventPublisher {
 				@Override
 				public void run() {
 					try {
+						UserThreadLocal.set(order.getUser());
 						orderService.splitBOCreateShipmentEscalateSOAndRelatedTasks(order);
 					} catch (Throwable t) {
 						logger.error("Error while Splitting the order", t);
-						User adminUser = userService.getAdminUser();
-						orderLoggingService.logOrderActivity(order, adminUser, orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
+						orderLoggingService.logOrderActivity(order, order.getUser(), orderLoggingService.getOrderLifecycleActivity(EnumOrderLifecycleActivity.OrderCouldNotBeAutoSplit), t.getMessage());
+					} finally {
+						UserThreadLocal.unset();
 					}
 				}
 			});
