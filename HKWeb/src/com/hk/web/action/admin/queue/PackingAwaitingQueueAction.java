@@ -119,21 +119,30 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution moveToActionAwaiting() {
-        if (!shippingOrderList.isEmpty()) {
-            for (ShippingOrder shippingOrder : shippingOrderList) {
-                if (shippingOrder.getReason() == null){
-                    addRedirectAlertMessage(new SimpleMessage("Reason must be selected for Shipping Order :" + shippingOrder.getId()));
-                     return new RedirectResolution(PackingAwaitingQueueAction.class);
-                }
-                adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
-            }
-            addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
-        } else {
-            addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
-        }
+           if (!shippingOrderList.isEmpty()) {
+               List<ShippingOrder> shippingOrdersWithoutReason = new ArrayList<ShippingOrder>();
+               String shippingOrderIds = "";
+               for (ShippingOrder shippingOrder : shippingOrderList) {
+                   if (shippingOrder.getReason() == null) {
+                       shippingOrdersWithoutReason.add(shippingOrder);
+                       shippingOrderIds = shippingOrderIds + shippingOrder.getId() + ",";
+                   } else {
+                       adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
+                   }
+               }
+               if (shippingOrdersWithoutReason.size() > 1) {
+                   addRedirectAlertMessage(new SimpleMessage("Reasons must be slected for shipping order -> " + shippingOrderIds));
+                    return new RedirectResolution(PackingAwaitingQueueAction.class);
+               }
 
-        return new RedirectResolution(PackingAwaitingQueueAction.class);
-    }
+               addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));
+           } else {
+               addRedirectAlertMessage(new SimpleMessage("Please select at least one order to be moved back to action awaiting"));
+           }
+
+           return new RedirectResolution(PackingAwaitingQueueAction.class);
+       }
+
 
     @Secure(hasAnyPermissions = { PermissionConstants.UPDATE_PACKING_QUEUE }, authActionBean = AdminPermissionAction.class)
     public Resolution reAssignToPackingQueue() {
