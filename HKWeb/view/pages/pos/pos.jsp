@@ -384,7 +384,7 @@
 			</table>
 			
 			<div id="loyaltyDiv" style="font-size: 14px;"> 
-					<span id="newLoyaltyCustomer">&nbsp;<s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" ></s:checkbox> Add as Loyalty User</span> 
+					<span id="newLoyaltyCustomer">&nbsp;<s:checkbox name="addLoyaltyUser" id="addLoyaltyUser" checked="checked"></s:checkbox> Add as Loyalty User</span> 
 				
 				<span id="oldLoyaltyCustomer" style="float:left;">
 					Presently <span id="loyaltyCustomerName"> </span>  has <span id="badgeName"> </span> 

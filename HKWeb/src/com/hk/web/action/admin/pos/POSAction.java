@@ -358,8 +358,10 @@ public class POSAction extends BaseAction {
 		if (loyaltyUser) {
 			loyaltyProgramService.creditKarmaPoints(order);
 			loyaltyProgramService.approveKarmaPoints(order);
+			if (loyaltyProgramService.getUserOrderKarmaProfile(order.getId()) !=null ) {
+				loyaltyPointsEarned = loyaltyProgramService.getUserOrderKarmaProfile(order.getId()).getKarmaPoints();
+			}
 			loyaltyProgramService.updateUserBadgeInfo(customer);
-			loyaltyPointsEarned = loyaltyProgramService.getUserOrderKarmaProfile(order.getId()).getKarmaPoints();
 		}
 		shippingOrderToPrint = shippingOrder;
 		StringBuilder redirectMessage = new StringBuilder("Order processed successfully. ");
