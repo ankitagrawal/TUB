@@ -80,11 +80,11 @@ public class UserServiceImpl implements UserService {
         	} else {
         		loggedOnUser = getAdminUser();
         	}
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
         	if(UserThreadLocal.get() != null) {
         		return getUserDao().getUserById(UserThreadLocal.get().getId());
         	} else {
-        		throw e;
+        		throw new RuntimeException(e);
         	}
         }
         return loggedOnUser;
