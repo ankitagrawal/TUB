@@ -121,6 +121,10 @@ public class PackingAwaitingQueueAction extends BasePaginatedAction {
     public Resolution moveToActionAwaiting() {
         if (!shippingOrderList.isEmpty()) {
             for (ShippingOrder shippingOrder : shippingOrderList) {
+                if (shippingOrder.getReason() == null){
+                    addRedirectAlertMessage(new SimpleMessage("Reason must be selected for Shipping Order :" + shippingOrder.getId()));
+                     return new RedirectResolution(PackingAwaitingQueueAction.class);
+                }
                 adminShippingOrderService.moveShippingOrderBackToActionQueue(shippingOrder);
             }
             addRedirectAlertMessage(new SimpleMessage("Orders have been moved back to Action Awaiting"));

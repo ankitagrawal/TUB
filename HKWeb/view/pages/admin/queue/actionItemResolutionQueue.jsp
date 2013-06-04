@@ -185,7 +185,7 @@
 
                         (<s:link beanclass="com.hk.web.action.admin.queue.action.ActionItemCRUD" event="view"
                                  class="editBuckets">
-                        <s:param name="actionItem" value="${actionItem.id}"/> Edit Action Item
+                        <s:param name="actionItem" value="${actionItem.id}"/> Change Buckets
                     </s:link>)
                     </div>
                       
