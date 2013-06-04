@@ -163,21 +163,20 @@
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
         </a>
-        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Dymatize">
-          <img src="${pageContext.request.contextPath}/images/banners/brandoftheweek.jpg" alt="Brand Of the Week - DYMATIZE!"
+        <a href="${pageContext.request.contextPath}/brand/sports-nutrition/Twinlab">
+          <img src="${pageContext.request.contextPath}/images/banners/Twinlab-Small.jpg" alt="Brand Of the Week - Twinlab!"
                class="small_banner"/>
         </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq healthNutrition}">
-        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
-        <a class="bulkOrder" href="#" style="cursor: pointer;">
-          <img src="${pageContext.request.contextPath}/images/banners/nutrition_bulk_order.jpg" alt="Bulk Order above 25000/-" class="small_banner"/>
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Patanjali">
+          <img src="${pageContext.request.contextPath}/images/banners/patanjali-banner.jpg" alt="Patanjali Offer" class="small_banner"/>
         </a>
-        <img src="<hk:vhostImage/>/images/banners/free-shipping-500.jpg" alt="Free shipping and COD"
-             class="small_banner"/>
+        <a href="${pageContext.request.contextPath}/brand/health-nutrition/Vitamin+Shoppe">
+          <img src="${pageContext.request.contextPath}/images/banners/VS.jpg" alt="Vitamin Shoppe" class="small_banner"/>
+        </a>
       </c:when>
       <c:when test="${categoryBean.category.name eq homeLiving}">
-        <%--<a href="${pageContext.request.contextPath}/pages/offers/sports-nutrition/offers.jsp">--%>
         <a class="bulkOrder" href="#" style="cursor: pointer;">
           <img src="<hk:vhostImage/>/images/banners/14-days-return.jpg" alt="14 Days Return Policy"
                class="small_banner"/>
