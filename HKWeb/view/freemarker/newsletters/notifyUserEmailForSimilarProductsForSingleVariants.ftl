@@ -1,5 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -123,7 +121,8 @@
                                             style="color:#000000; font-family:Verdana, Geneva, sans-serif; font-size:15px; line-height:18px; font-weight:bold;">
                                             <a href="www.healthkart.com/product/${simProduct.slug}/${simProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${simProduct.id}-${currentDate}"
                                                target="_blank"
-                                               style="color:#000; text-decoration:none; outline:none;">${simProduct.name}</a></td>
+                                               style="color:#000; text-decoration:none; outline:none;">${simProduct.name}</a>
+                                        </td>
                                     </#list>
                                     </tr>
                                     <tr>
@@ -142,7 +141,8 @@
                                                 <tr>
                                                     <td valign="middle"
                                                         style="color:#000; font-family:Verdana, Geneva, sans-serif; font-weight:bold;">
-                                                        <a href="www.healthkart.com/product/${simProduct.slug}/${simProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${simProduct.id}-${currentDate}" target="_blank"
+                                                        <a href="www.healthkart.com/product/${simProduct.slug}/${simProduct.id}?utm_source=notifyme_similar&utm_medium=email&utm_campaign=${simProduct.id}-${currentDate}"
+                                                           target="_blank"
                                                            style="font-weight:bold; color:#000; padding:2px 10px 4px 10px; text-decoration:none; font-size:15px; display:block; border:1px solid #000;">Buy
                                                             Now</a></td>
                                                 </tr>
@@ -181,7 +181,8 @@
             </tr>
             <tr>
                 <td valign="top" align="center"><a href="http://www.healthkart.com" target="_blank"><img
-                        src="images/healthkart.png" border="0" alt="healthkart.com"/></a></td>
+                        src="http://img.healthkart.com/email/logos/hk_logo_bw.jpg" border="0" alt="healthkart.com"/></a>
+                </td>
             </tr>
             <tr>
                 <td valign="top">&nbsp;</td>
@@ -195,10 +196,11 @@
             <tr>
                 <td width="106" height="60" style="color:#606060; font-size:13px;">Spread the word:</td>
                 <td width="39" align="left" valign="middle"><a href="http://www.facebook.com/healthkart"
-                                                               target="_blank"><img src="images/facebook.png"
-                                                                                    alt="Facebook" title="Facebook"
-                                                                                    border="0"/></a></td>
-                <td width="43" align="left" valign="middle"><a href="http://twitter.com/healthkart"><img
+                                                               target="_blank"><img
+                        src="http://img.healthkart.com/email/logos/facebook.png"
+                        alt="Facebook" title="Facebook"
+                        border="0"/></a></td>
+                <td width="43" align="left" valign="middle"><a href="http://img.healthkart.com/email/logos/twitter.png"><img
                         src="images/twitter.png" alt="Twitter" title="Twitter" border="0"/></a></td>
                 <td width="312" align="right" valign="middle" style="color:#606060; font-size:13px;">e: <a
                         href="mailto:info@healthkart.com" title="info@healthkart.com" style="color:#606060">info@healthkart.com</a>

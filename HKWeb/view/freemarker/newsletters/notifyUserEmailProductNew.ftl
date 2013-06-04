@@ -68,9 +68,8 @@ You requested to be notified when ${product.name} was back in stock
                     <td height="15"></td>
                 </tr>
                 <tr>
-                <#assign aDateTime = .now>
                     <td height="15"><a
-                            href="www.healthkart.com/product/${product.slug}/${product.id}?utm_source=notifyme&utm_medium=email&utm_campaign=${product.id}-${aDateTime}"><img
+                            href="www.healthkart.com/product/${product.slug}/${product.id}?utm_source=notifyme&utm_medium=email&utm_campaign=${product.id}-${currentDate}"><img
                             src="http://img.healthkart.com/email/notify_user_emailer_new/images/shop_now.jpg"
                             alt="Click here to shop now" width="157" height="26" border="0"/></a></td>
                 </tr>

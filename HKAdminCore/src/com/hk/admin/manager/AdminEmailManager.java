@@ -407,6 +407,9 @@ public class AdminEmailManager {
             List<NotifyMe> notifyMeListPerUser = userNotifyMeListMap.get(emailId);
             NotifyMe notifyMeObject = notifyMeListPerUser.get(0);
             User user = userService.findByLogin(emailId);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = sdf.format(new Date());
+
             // find existing recipients or create recipients through the emails ids passed
             EmailRecepient emailRecepient = getEmailRecepientDao().getOrCreateEmailRecepient(emailId);
             if (user != null) {
@@ -416,6 +419,7 @@ public class AdminEmailManager {
             }
 
             valuesMap.put("notifiedUser", notifyMeObject);
+            valuesMap.put("currentDate", currentDate);
             if (notifyMeListPerUser.size() > 1) {
                 //User has asked for multiple variant notification
                 valuesMap.put("notifyList", notifyMeListPerUser);
