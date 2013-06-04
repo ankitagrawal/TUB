@@ -626,7 +626,7 @@ public class ExtraInventoryAction extends BasePaginatedAction {
 		if (purchaseOrder != null) {
 			newPurchaseOrderId = purchaseOrder.getId();
 		}
-		taxList = getMasterDataDao().getTaxList();
+		taxList = taxDao.getLocalTaxList();
 		noCache();
 		addRedirectAlertMessage(new SimpleMessage("PO and PoLine Item has been created !!! with New PO ID - "
 				+ newPurchaseOrder.getId()));
