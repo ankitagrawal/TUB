@@ -13,7 +13,7 @@
 <s:useActionBean beanclass="com.hk.web.action.admin.sku.SkuAction" var="skuAction"/>
 <%
     TaxDao taxDao = ServiceLocatorFactory.getService(TaxDao.class);
-  List<Tax> taxList = taxDao.getLocalTaxList();
+  List<Tax> taxList = taxDao.getTaxList();
   pageContext.setAttribute("taxList", taxList);
 
   WarehouseDao warehouseDao = ServiceLocatorFactory.getService(WarehouseDao.class);
