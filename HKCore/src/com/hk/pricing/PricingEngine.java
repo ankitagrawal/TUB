@@ -478,14 +478,20 @@ public class PricingEngine {
         
         // For loyalty store
         if (lineitems != null && lineitems.size() > 0) {
-			Order order = lineitems.iterator().next().getOrder();
-			if (order.getStore().getId().equals(EnumStore.LOYALTYPG.asStore().getId())) {
-				for (CartLineItem lineitem : lineitems) {
-					if (lineitem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.getId())) {
-						lineitem.setDiscountOnHkPrice(lineitem.getHkPrice());
-					}
-				}
-			}
+        	Order order = null;
+        	for (CartLineItem lineitem : lineitems) {
+        		if (lineitem.getOrder() != null) {
+        			order = lineitem.getOrder();
+        			break;
+        		}
+        	}
+        	if(order != null && order.getStore().getId().equals(EnumStore.LOYALTYPG.asStore().getId())) {
+        		for (CartLineItem lineitem : lineitems) {
+        			if (lineitem.getLineItemType().getId().equals(EnumCartLineItemType.Shipping.getId())) {
+                        lineitem.setDiscountOnHkPrice(lineitem.getHkPrice());
+                    }
+            	}
+        	}
         }
 
     }
